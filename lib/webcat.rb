@@ -1,4 +1,6 @@
 module Webcat
+  VERSION = '0.1'
+
   class WebcatError < StandardError; end
   class DriverNotFoundError < WebcatError; end
 
