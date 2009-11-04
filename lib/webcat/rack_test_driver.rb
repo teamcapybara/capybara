@@ -1,6 +1,18 @@
 require 'rack/test'
+require 'nokogiri'
 
 class Webcat::Driver::RackTest
+  class Node < Struct.new(:node)
+    def text
+      node.text
+    end
+    
+    def attribute(name)
+      value = node.attributes[name.to_s]
+      return value.to_s if value
+    end
+  end
+  
   include ::Rack::Test::Methods
   attr_reader :app
 
@@ -17,5 +29,15 @@ class Webcat::Driver::RackTest
   
   def body
     response.body
+  end
+  
+  def find(selector)
+    html.xpath(selector).map { |node| Node.new(node) }
+  end
+  
+private
+
+  def html
+    Nokogiri::HTML(body)
   end
 end

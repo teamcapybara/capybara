@@ -3,7 +3,20 @@ require 'rack'
 require 'net/http'
 
 class Webcat::Driver::Culerity
-  Response = Struct.new(:body)
+  class Node < Struct.new(:node)
+    def text
+      node.text
+    end
+    
+    def attribute(name)
+      value = if name.to_sym == :class
+        node.class_name
+      else
+        node.send(name.to_sym)
+      end
+      return value if value and not value.empty?
+    end
+  end
   
   attr_reader :app, :rack_server
 
@@ -29,6 +42,10 @@ class Webcat::Driver::Culerity
   
   def body
     browser.html
+  end
+  
+  def find(selector)
+    browser.elements_by_xpath(selector).map { |node| Node.new(node) }
   end
 
 private

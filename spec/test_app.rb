@@ -8,6 +8,10 @@ class TestApp < Sinatra::Base
   get '/foo' do
     'Another World'
   end
+
+  get '/with_html' do
+    erb :with_html
+  end
   
   get '/with_simple_html' do
     erb :with_simple_html
