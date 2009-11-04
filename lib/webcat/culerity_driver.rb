@@ -16,6 +16,10 @@ class Webcat::Driver::Culerity
       end
       return value if value and not value.empty?
     end
+    
+    def click
+      node.click
+    end
   end
   
   attr_reader :app, :rack_server

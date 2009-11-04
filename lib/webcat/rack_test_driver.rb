@@ -2,7 +2,7 @@ require 'rack/test'
 require 'nokogiri'
 
 class Webcat::Driver::RackTest
-  class Node < Struct.new(:node)
+  class Node < Struct.new(:session, :node)
     def text
       node.text
     end
@@ -10,6 +10,10 @@ class Webcat::Driver::RackTest
     def attribute(name)
       value = node.attributes[name.to_s]
       return value.to_s if value
+    end
+    
+    def click
+      session.visit(attribute(:href))
     end
   end
   
@@ -32,7 +36,7 @@ class Webcat::Driver::RackTest
   end
   
   def find(selector)
-    html.xpath(selector).map { |node| Node.new(node) }
+    html.xpath(selector).map { |node| Node.new(self, node) }
   end
   
 private

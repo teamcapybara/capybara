@@ -20,6 +20,10 @@ class Webcat::Session
   def visit(path)
     driver.visit(path)
   end
+  
+  def click_link(locator)
+    driver.find("//a[@id='#{locator}']").first.click
+  end
 
   def body
     driver.body

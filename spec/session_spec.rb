@@ -16,6 +16,16 @@ describe Webcat::Session do
         @session.body.should == 'Another World'
       end
     end
+    
+    describe '#click_link' do
+      context "with id given" do
+        it "should take user to the linked page" do
+          @session.visit('/with_html')
+          @session.click_link('foo')
+          @session.body.should == 'Another World'
+        end
+      end
+    end
   end
   
   context 'with rack test driver' do
