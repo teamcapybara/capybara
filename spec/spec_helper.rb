@@ -5,6 +5,8 @@ require 'webcat'
 require 'sinatra/base'
 require 'rack'
 
+alias :running :lambda
+
 class TestApp < Sinatra::Base
   get '/' do
     'Hello world!'

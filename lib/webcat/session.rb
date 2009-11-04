@@ -7,7 +7,14 @@ class Webcat::Session
   end
 
   def driver
-    @driver ||= Webcat::Driver::RackTest.new(app) 
+    @driver ||= case mode
+    when :rack_test
+      Webcat::Driver::RackTest.new(app)
+    when :culerity
+      Webcat::Driver::Culerity.new(app)
+    else
+      raise Webcat::DriverNotFoundError, "no driver called #{mode} was found"
+    end
   end
 
   def visit(path)
@@ -15,6 +22,6 @@ class Webcat::Session
   end
 
   def body
-    driver.response.body
+    driver.body
   end
 end
