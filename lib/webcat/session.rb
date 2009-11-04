@@ -22,7 +22,9 @@ class Webcat::Session
   end
   
   def click_link(locator)
-    driver.find("//a[@id='#{locator}']").first.click
+    link = driver.find("//a[@id='#{locator}']").first
+    link ||= driver.find(%{//a[text()="#{locator}"]}).first
+    link.click
   end
 
   def body

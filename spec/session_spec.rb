@@ -25,6 +25,14 @@ describe Webcat::Session do
           @session.body.should == 'Another World'
         end
       end
+      
+      context "with text given" do
+        it "should take user to the linked page" do
+          @session.visit('/with_html')
+          @session.click_link('labore')
+          @session.body.should == '<h1>Bar</h1>'
+        end
+      end
     end
   end
   
