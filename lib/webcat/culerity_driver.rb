@@ -7,6 +7,16 @@ class Webcat::Driver::Culerity
   
   attr_reader :app, :rack_server
 
+  def self.server
+    unless @_server
+      @_server = ::Culerity::run_server
+      at_exit do
+        @_server.close
+      end
+    end
+    @_server
+  end
+
   def initialize(app)
     @app = app
     @rack_server = Webcat::Server.new(@app)
@@ -26,20 +36,10 @@ private
   def url(path)
     rack_server.url(path)
   end
-
-  def server
-    unless @_server
-      @_server = ::Culerity::run_server
-      at_exit do
-        @_server.close
-      end
-    end
-    @_server
-  end
   
   def browser
     unless @_browser
-      @_browser = ::Culerity::RemoteBrowserProxy.new server, {:browser => :firefox, :log_level => :off}
+      @_browser = ::Culerity::RemoteBrowserProxy.new self.class.server, {:browser => :firefox, :log_level => :off}
       at_exit do
         @_browser.exit
       end
