@@ -28,7 +28,7 @@ class Webcat::Driver::Culerity
   end
   
   def body
-    browser.text
+    browser.html
   end
 
 private
