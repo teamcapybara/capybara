@@ -11,6 +11,10 @@ class Webcat::Driver::RackTest
     @app = app
   end
   
+  def visit(path)
+    get(path)
+  end
+  
   def body
     response.body
   end

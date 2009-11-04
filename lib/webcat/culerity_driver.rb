@@ -13,7 +13,7 @@ class Webcat::Driver::Culerity
     @rack_server.boot
   end
   
-  def get(path)
+  def visit(path)
     browser.goto(url(path))
   end
   

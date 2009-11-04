@@ -7,28 +7,8 @@ module Webcat
     end
   end
   
-  class Session
-    attr_reader :mode, :app
-
-    def initialize(mode, app)
-      @mode = mode
-      @app = app
-    end
-
-    def driver
-      @driver ||= Webcat::Driver::RackTest.new(app) 
-    end
-
-    def get(path)
-      driver.get(path)
-    end
-
-    def body
-      driver.response.body
-    end
-  end
-  
   autoload :Server, 'webcat/server'
+  autoload :Session, 'webcat/session'
 
   module Driver
     autoload :RackTest, 'webcat/rack_test_driver'

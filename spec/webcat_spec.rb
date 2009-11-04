@@ -23,11 +23,11 @@ describe Webcat::Session do
     end
   end
 
-  describe '#get' do
+  describe '#visit' do
     it "should fetch a response from the driver" do
-      @session.get('/')
+      @session.visit('/')
       @session.body.should == 'Hello world!'
-      @session.get('/foo')
+      @session.visit('/foo')
       @session.body.should == 'Another World'
     end
   end

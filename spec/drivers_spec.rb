@@ -4,9 +4,9 @@ shared_examples_for 'driver' do
   
   describe '#get' do
     it "should fetch a response" do
-      @driver.get('/')
+      @driver.visit('/')
       @driver.body.should == 'Hello world!'
-      @driver.get('/foo')
+      @driver.visit('/foo')
       @driver.body.should == 'Another World'
     end
   end
