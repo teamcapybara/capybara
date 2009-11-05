@@ -55,3 +55,12 @@ shared_examples_for 'driver' do
   end
 
 end
+
+shared_examples_for "driver with javascript support" do
+  describe '#find' do
+    it "should find dynamically changed nodes" do
+      @driver.visit('/with_js')
+      @driver.find('//p').first.text.should == 'I changed it'
+    end
+  end
+end

@@ -1,5 +1,6 @@
 class TestApp < Sinatra::Base
-  set :views, File.dirname(__FILE__) + '/views'
+  set :root, File.dirname(__FILE__)
+  set :static, true
 
   get '/' do
     'Hello world!'
@@ -11,6 +12,10 @@ class TestApp < Sinatra::Base
 
   get '/with_html' do
     erb :with_html
+  end
+  
+  get '/with_js' do
+    erb :with_js
   end
   
   get '/with_simple_html' do

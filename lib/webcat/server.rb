@@ -1,3 +1,5 @@
+require 'net/http'
+
 class Webcat::Server
   attr_reader :app
   
