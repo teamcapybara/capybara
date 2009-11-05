@@ -45,6 +45,12 @@ shared_examples_for 'driver' do
         @driver.find('//a')[1].attribute(:id).should == 'foo'
         @driver.find('//a')[1].attribute(:rel).should be_nil
       end
+      
+      it "should extract node tag name" do
+        @driver.find('//a')[0].tag_name.should == 'a'
+        @driver.find('//a')[1].tag_name.should == 'a'
+        @driver.find('//p')[1].tag_name.should == 'p'
+      end
     end
   end
 

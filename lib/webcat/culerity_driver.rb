@@ -20,6 +20,12 @@ class Webcat::Driver::Culerity
     def click
       node.click
     end
+    
+    def tag_name
+      # FIXME: this might be the dumbest way ever of getting the tag name
+      # there has to be something better...
+      node.to_xml[/^\s*<([a-z0-9\-\:]+)/, 1]
+    end
   end
   
   attr_reader :app, :rack_server

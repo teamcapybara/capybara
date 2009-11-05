@@ -15,6 +15,10 @@ class Webcat::Driver::RackTest
     def click
       session.visit(attribute(:href))
     end
+    
+    def tag_name
+      node.node_name
+    end
   end
   
   include ::Rack::Test::Methods
