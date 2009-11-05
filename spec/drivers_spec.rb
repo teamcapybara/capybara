@@ -5,21 +5,21 @@ shared_examples_for 'driver' do
   describe '#visit' do
     it "should move to another page" do
       @driver.visit('/')
-      @driver.body.should == 'Hello world!'
+      @driver.body.should include('Hello world!')
       @driver.visit('/foo')
-      @driver.body.should == 'Another World'
+      @driver.body.should include('Another World')
     end
   end
 
   describe '#body' do
     it "should return text reponses" do
       @driver.visit('/')
-      @driver.body.should == 'Hello world!'
+      @driver.body.should include('Hello world!')
     end
 
     it "should return the full response html" do
       @driver.visit('/with_simple_html')
-      @driver.body.should == '<h1>Bar</h1>'
+      @driver.body.should include('<h1>Bar</h1>')
     end
   end
 

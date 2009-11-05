@@ -18,5 +18,6 @@ module Webcat
   module Driver
     autoload :RackTest, 'webcat/rack_test_driver'
     autoload :Culerity, 'webcat/culerity_driver'
+    autoload :SafariWatir, 'webcat/safariwatir_driver'
   end
 end
