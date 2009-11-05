@@ -6,5 +6,6 @@ require 'webcat'
 require 'sinatra/base'
 require 'rack'
 require 'test_app'
+require 'drivers_spec'
 
 alias :running :lambda

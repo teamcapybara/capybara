@@ -1,5 +1,4 @@
 require 'culerity'
-require 'rack'
 
 class Webcat::Driver::Culerity
   class Node < Struct.new(:node)

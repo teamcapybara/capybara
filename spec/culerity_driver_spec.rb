@@ -1,5 +1,4 @@
 require File.expand_path('spec_helper', File.dirname(__FILE__))
-require 'drivers_spec'
 
 describe Webcat::Driver::Culerity do
   before do

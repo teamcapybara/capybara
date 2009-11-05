@@ -1,4 +1,5 @@
 require 'net/http'
+require 'rack'
 
 class Webcat::Server
   attr_reader :app
