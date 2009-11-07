@@ -18,9 +18,12 @@ describe Webcat::Session do
     end
     
     describe '#click_link' do
+      before do
+        @session.visit('/with_html')
+      end
+
       context "with id given" do
         it "should take user to the linked page" do
-          @session.visit('/with_html')
           @session.click_link('foo')
           @session.body.should == 'Another World'
         end
@@ -28,7 +31,6 @@ describe Webcat::Session do
       
       context "with text given" do
         it "should take user to the linked page" do
-          @session.visit('/with_html')
           @session.click_link('labore')
           @session.body.should == '<h1>Bar</h1>'
         end
@@ -36,9 +38,16 @@ describe Webcat::Session do
 
       context "with title given" do
         it "should take user to the linked page" do
-          @session.visit('/with_html')
           @session.click_link('awesome title')
           @session.body.should == '<h1>Bar</h1>'
+        end
+      end
+
+      context "with a locator that doesn't exist" do
+        it "should raise an error" do
+          running do
+            @session.click_link('does not exist')
+          end.should raise_error(Webcat::ElementNotFound)
         end
       end
     end

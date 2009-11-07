@@ -22,13 +22,21 @@ class Webcat::Session
   end
   
   def click_link(locator)
-    link = driver.find("//a[@id='#{locator}']").first
-    link ||= driver.find(%{//a[text()="#{locator}"]}).first
-    link ||= driver.find(%{//a[@title="#{locator}"]}).first
-    link.click
+    find_element("//a[@id='#{locator}']", %{//a[text()="#{locator}"]}, %{//a[@title="#{locator}"]}).click
   end
 
   def body
     driver.body
   end
+
+private
+
+  def find_element(*locators)
+    locators.each do |locator|
+      element = driver.find(locator).first
+      return element if element
+    end
+    raise Webcat::ElementNotFound, "element not found"
+  end
+  
 end

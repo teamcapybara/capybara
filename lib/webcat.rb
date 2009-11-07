@@ -3,6 +3,7 @@ module Webcat
 
   class WebcatError < StandardError; end
   class DriverNotFoundError < WebcatError; end
+  class ElementNotFound < WebcatError; end
 
   class << self
     attr_accessor :debug
