@@ -21,5 +21,6 @@ module Webcat
     autoload :Culerity, 'webcat/driver/culerity_driver'
     autoload :SafariWatir, 'webcat/driver/safariwatir_driver'
     autoload :FireWatir, 'webcat/driver/firewatir_driver'
+    autoload :Selenium, 'webcat/driver/selenium_driver'
   end
 end
