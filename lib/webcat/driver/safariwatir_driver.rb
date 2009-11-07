@@ -43,7 +43,9 @@ class Webcat::Driver::SafariWatir
   end
   
   def find(selector)
-    browser.send(:scripter).by_xpath(selector).map { |node| Node.new(node) }
+    foo = Struct.new(:what).new
+    foo.what = selector
+    browser.send(:scripter).operate_by_xpath(foo){}.map { |node| Node.new(node) }
   end
 
 private
