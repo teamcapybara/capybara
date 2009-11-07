@@ -8,7 +8,8 @@ module Webcat
     attr_accessor :debug
     
     def log(message)
-      puts message if debug
+      puts "[webcat] #{message}" if debug
+      true
     end
   end
   

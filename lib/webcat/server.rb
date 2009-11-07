@@ -9,7 +9,7 @@ class Webcat::Server
   end
   
   def port
-    9081
+    8080
   end
 
   def host
@@ -21,25 +21,17 @@ class Webcat::Server
   end
   
   def boot
-    Webcat.log "[webcat] Booting Rack applicartion on port #{port}"
+    Webcat.log "application has already booted" and return if responsive?
+    Webcat.log "booting Rack applicartion on port #{port}"
     start_time = Time.now
     Thread.new do
       Rack::Handler::Mongrel.run @app, :Port => port
     end
-    Webcat.log "[webcat] checking if application has booted"
+    Webcat.log "checking if application has booted"
     loop do
-      begin
-        res = Net::HTTP.start(host, port) { |http| http.get('/') }
-
-        if res.is_a?(Net::HTTPSuccess) or res.is_a?(Net::HTTPRedirection)
-          Webcat.log "[webcat] application has booted"
-          break
-        end
-      rescue Errno::ECONNREFUSED
-      end
-
-      if Time.now - start_time > 5
-        puts "[webcat] Rack application timed out during boot"
+      Webcat.log("application has booted") and break if responsive?
+      if Time.now - start_time > 10 
+        Webcat.log "Rack application timed out during boot"
         exit
       end
       
@@ -47,5 +39,15 @@ class Webcat::Server
       sleep 1
     end
   end
-  
+
+  def responsive?
+    res = Net::HTTP.start(host, port) { |http| http.get('/') }
+
+    if res.is_a?(Net::HTTPSuccess) or res.is_a?(Net::HTTPRedirection)
+      return true
+    end
+  rescue Errno::ECONNREFUSED 
+    return false
+  end
+
 end
