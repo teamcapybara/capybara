@@ -6,13 +6,21 @@ class Webcat::Driver::Culerity
       node.text
     end
     
-    def attribute(name)
+    def [](name)
       value = if name.to_sym == :class
         node.class_name
       else
         node.send(name.to_sym)
       end
       return value if value and not value.empty?
+    end
+
+    def value
+      node.value
+    end
+
+    def value=(value)
+      node.set(value.to_s)
     end
     
     def click

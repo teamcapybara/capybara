@@ -39,11 +39,21 @@ shared_examples_for 'driver' do
       end
       
       it "should extract node attributes" do
-        @driver.find('//a')[0].attribute(:href).should == '/with_simple_html'
-        @driver.find('//a')[0].attribute(:class).should == 'simple'
-        @driver.find('//a')[1].attribute(:href).should == '/foo'
-        @driver.find('//a')[1].attribute(:id).should == 'foo'
-        @driver.find('//a')[1].attribute(:rel).should be_nil
+        @driver.find('//a')[0][:href].should == '/with_simple_html'
+        @driver.find('//a')[0][:class].should == 'simple'
+        @driver.find('//a')[1][:href].should == '/foo'
+        @driver.find('//a')[1][:id].should == 'foo'
+        @driver.find('//a')[1][:rel].should be_nil
+      end
+
+      it "should extract field values" do
+        @driver.find('//input').first.value.should == 'monkey'
+      end
+
+      it "should allow assignment of field value" do
+        @driver.find('//input').first.value.should == 'monkey'
+        @driver.find('//input').first.value = 'gorilla'
+        @driver.find('//input').first.value.should == 'gorilla'
       end
       
       it "should extract node tag name" do

@@ -7,13 +7,21 @@ class Webcat::Driver::RackTest
       node.text
     end
     
-    def attribute(name)
-      value = node.attributes[name.to_s]
+    def [](name)
+      value = node[name.to_s]
       return value.to_s if value
     end
-    
+
+    def value
+      node['value'].to_s
+    end
+
+    def value=(value)
+      node['value'] = value.to_s
+    end
+
     def click
-      session.visit(attribute(:href))
+      session.visit(self[:href])
     end
     
     def tag_name
@@ -22,7 +30,7 @@ class Webcat::Driver::RackTest
   end
   
   include ::Rack::Test::Methods
-  attr_reader :app
+  attr_reader :app, :html, :body
 
   alias_method :response, :last_response
   alias_method :request, :last_request
@@ -33,19 +41,12 @@ class Webcat::Driver::RackTest
   
   def visit(path)
     get(path)
-  end
-  
-  def body
-    response.body
+    @body = response.body
+    @html = Nokogiri::HTML(body)
   end
   
   def find(selector)
     html.xpath(selector).map { |node| Node.new(self, node) }
   end
-  
-private
 
-  def html
-    Nokogiri::HTML(body)
-  end
 end
