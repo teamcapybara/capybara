@@ -33,6 +33,14 @@ describe Webcat::Session do
           @session.body.should == '<h1>Bar</h1>'
         end
       end
+
+      context "with title given" do
+        it "should take user to the linked page" do
+          @session.visit('/with_html')
+          @session.click_link('awesome title')
+          @session.body.should == '<h1>Bar</h1>'
+        end
+      end
     end
   end
   
