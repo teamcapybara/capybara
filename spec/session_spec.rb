@@ -1,99 +1,60 @@
 require File.expand_path('spec_helper', File.dirname(__FILE__))
 
-describe Webcat::Session do
-  shared_examples_for "session" do
-    describe '#app' do
-      it "should remember the application" do
-        @session.app.should == TestApp
-      end
+shared_examples_for "session" do
+  describe '#app' do
+    it "should remember the application" do
+      @session.app.should == TestApp
+    end
+  end
+
+  describe '#visit' do
+    it "should fetch a response from the driver" do
+      @session.visit('/')
+      @session.body.should == 'Hello world!'
+      @session.visit('/foo')
+      @session.body.should == 'Another World'
+    end
+  end
+  
+  describe '#click_link' do
+    before do
+      @session.visit('/with_html')
     end
 
-    describe '#visit' do
-      it "should fetch a response from the driver" do
-        @session.visit('/')
-        @session.body.should == 'Hello world!'
-        @session.visit('/foo')
+    context "with id given" do
+      it "should take user to the linked page" do
+        @session.click_link('foo')
         @session.body.should == 'Another World'
       end
     end
     
-    describe '#click_link' do
-      before do
-        @session.visit('/with_html')
+    context "with text given" do
+      it "should take user to the linked page" do
+        @session.click_link('labore')
+        @session.body.should == '<h1>Bar</h1>'
       end
+    end
 
-      context "with id given" do
-        it "should take user to the linked page" do
-          @session.click_link('foo')
-          @session.body.should == 'Another World'
-        end
+    context "with title given" do
+      it "should take user to the linked page" do
+        @session.click_link('awesome title')
+        @session.body.should == '<h1>Bar</h1>'
       end
-      
-      context "with text given" do
-        it "should take user to the linked page" do
-          @session.click_link('labore')
-          @session.body.should == '<h1>Bar</h1>'
-        end
-      end
+    end
 
-      context "with title given" do
-        it "should take user to the linked page" do
-          @session.click_link('awesome title')
-          @session.body.should == '<h1>Bar</h1>'
-        end
-      end
-
-      context "with a locator that doesn't exist" do
-        it "should raise an error" do
-          running do
-            @session.click_link('does not exist')
-          end.should raise_error(Webcat::ElementNotFound)
-        end
+    context "with a locator that doesn't exist" do
+      it "should raise an error" do
+        running do
+          @session.click_link('does not exist')
+        end.should raise_error(Webcat::ElementNotFound)
       end
     end
   end
+end
   
-  context 'with rack test driver' do
-    before do
-      @session = Webcat::Session.new(:rack_test, TestApp)
-    end
   
-    describe '#driver' do
-      it "should be a rack test driver" do
-        @session.driver.should be_an_instance_of(Webcat::Driver::RackTest)
-      end
-    end
-    
-    describe '#mode' do
-      it "should remember the mode" do
-        @session.mode.should == :rack_test
-      end
-    end
-    
-    it_should_behave_like "session"
-  end
-  
-  context 'with culerity driver' do
-    before do
-      @session = Webcat::Session.new(:culerity, TestApp)
-    end
-  
-    describe '#driver' do
-      it "should be a rack test driver" do
-        @session.driver.should be_an_instance_of(Webcat::Driver::Culerity)
-      end
-    end
-    
-    describe '#mode' do
-      it "should remember the mode" do
-        @session.mode.should == :culerity
-      end
-    end
-    
-    it_should_behave_like "session"
-  end
-  
-  context 'with non-existent driver' do
+describe Webcat::Session do
+  context 'with non-existant driver' do
     it "should raise an error" do
       running {
         Webcat::Session.new(:quox, TestApp).driver

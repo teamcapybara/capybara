@@ -7,5 +7,6 @@ require 'sinatra/base'
 require 'rack'
 require 'test_app'
 require 'drivers_spec'
+require 'session_spec'
 
 alias :running :lambda
