@@ -21,7 +21,16 @@ class Webcat::Driver::RackTest
     end
 
     def click
-      session.visit(self[:href])
+      if tag_name == 'a'
+        session.visit(self[:href])
+      elsif tag_name == 'input' and self[:type] == 'submit'
+        form = node.ancestors('form').first
+        attributes = form.xpath('//input').inject({}) do |agg, node|
+          agg[node['name'].to_s] = node['value'].to_s
+          agg
+        end
+        session.submit(form['action'].to_s, attributes) 
+      end
     end
     
     def tag_name
@@ -41,12 +50,23 @@ class Webcat::Driver::RackTest
   
   def visit(path)
     get(path)
-    @body = response.body
-    @html = Nokogiri::HTML(body)
+    cache_body
+  end
+
+  def submit(path, attributes)
+    post(path, attributes)
+    cache_body  
   end
   
   def find(selector)
     html.xpath(selector).map { |node| Node.new(self, node) }
+  end
+
+  private
+
+  def cache_body
+    @body = response.body
+    @html = Nokogiri::HTML(body)
   end
 
 end

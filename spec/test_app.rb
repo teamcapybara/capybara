@@ -21,4 +21,12 @@ class TestApp < Sinatra::Base
   get '/with_simple_html' do
     erb :with_simple_html
   end
+
+  get '/form' do
+    erb :form
+  end
+
+  post '/form' do
+    params[:form].to_yaml
+  end
 end

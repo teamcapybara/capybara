@@ -25,6 +25,10 @@ class Webcat::Session
     find_element("//a[@id='#{locator}']", %{//a[text()="#{locator}"]}, %{//a[@title="#{locator}"]}).click
   end
 
+  def click_button(locator)
+    find_element("//input[@type='submit'][@id='#{locator}']", "//input[@type='submit'][@value='#{locator}']").click
+  end
+
   def body
     driver.body
   end
