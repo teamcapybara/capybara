@@ -24,17 +24,31 @@ class Webcat::Driver::RackTest
       if tag_name == 'a'
         session.visit(self[:href])
       elsif tag_name == 'input' and self[:type] == 'submit'
-        form = node.ancestors('form').first
-        attributes = form.xpath('//input').inject({}) do |agg, node|
-          agg[node['name'].to_s] = node['value'].to_s
-          agg
-        end
-        session.submit(form['action'].to_s, attributes) 
+        Form.new(session, form).submit
       end
     end
     
     def tag_name
       node.node_name
+    end
+
+  private
+
+    def form
+      node.ancestors('form').first
+    end
+  end
+
+  class Form < Node
+    def params
+      node.xpath('//input').inject({}) do |agg, node|
+        agg[node['name'].to_s] = node['value'].to_s
+        agg
+      end
+    end
+
+    def submit
+      session.submit(node['action'].to_s, params) 
     end
   end
   

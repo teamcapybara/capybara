@@ -66,7 +66,6 @@ shared_examples_for "session" do
   end
 end
   
-  
 describe Webcat::Session do
   context 'with non-existant driver' do
     it "should raise an error" do
@@ -75,5 +74,4 @@ describe Webcat::Session do
       }.should raise_error(Webcat::DriverNotFoundError)
     end
   end
-
 end
