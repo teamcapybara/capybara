@@ -63,6 +63,14 @@ shared_examples_for "session" do
         results['foo'].should == 'blah'
       end
     end
+
+    context "with id given" do
+      it "should submit the associated form" do
+        @session.click_button('awe123')
+        results = YAML.load(@session.body)
+        results['foo'].should == 'blah'
+      end
+    end
   end
 end
   
