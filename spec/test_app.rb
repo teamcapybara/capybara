@@ -1,3 +1,6 @@
+require 'sinatra/base'
+require 'rack'
+
 class TestApp < Sinatra::Base
   set :root, File.dirname(__FILE__)
   set :static, true
@@ -29,4 +32,8 @@ class TestApp < Sinatra::Base
   post '/form' do
     params[:form].to_yaml
   end
+end
+
+if __FILE__ == $0
+  Rack::Handler::Mongrel.run TestApp, :Port => 8070
 end

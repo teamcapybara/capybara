@@ -3,8 +3,6 @@ $:.unshift(File.dirname(__FILE__))
 
 require 'rubygems'
 require 'webcat'
-require 'sinatra/base'
-require 'rack'
 require 'test_app'
 require 'drivers_spec'
 require 'session_spec'
