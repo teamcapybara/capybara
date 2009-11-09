@@ -29,6 +29,10 @@ class Webcat::Session
     find_element("//input[@type='submit'][@id='#{locator}']", "//input[@type='submit'][@value='#{locator}']").click
   end
 
+  def fill_in(locator, options={})
+    find_element("//input[@type='text'][@id='#{locator}']").value = options[:with]
+  end
+
   def body
     driver.body
   end

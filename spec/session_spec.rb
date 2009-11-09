@@ -121,6 +121,15 @@ shared_examples_for "session" do
       end
     end
   end
+
+  describe "#fill_in" do
+    it "should fill in a field by id" do
+      @session.visit('/form')
+      @session.fill_in('form_first_name', :with => 'Harry')
+      @session.click_button('awesome')
+      YAML.load(@session.body)['first_name'].should == 'Harry'
+    end
+  end
 end
   
 describe Webcat::Session do
