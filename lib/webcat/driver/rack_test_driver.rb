@@ -24,7 +24,7 @@ class Webcat::Driver::RackTest
       if tag_name == 'a'
         session.visit(self[:href])
       elsif tag_name == 'input' and self[:type] == 'submit'
-        Form.new(session, form).submit
+        Form.new(session, form).submit(self)
       end
     end
     
@@ -40,15 +40,42 @@ class Webcat::Driver::RackTest
   end
 
   class Form < Node
-    def params
-      node.xpath('//input').inject({}) do |agg, node|
-        agg[node['name'].to_s] = node['value'].to_s
+    def params(button)
+      params = []
+      params = node.xpath("//input[@type='text']").inject(params) do |agg, input|
+        agg << param(input['name'].to_s, input['value'].to_s)
         agg
       end
+      params = node.xpath("//textarea").inject(params) do |agg, textarea|
+        agg << param(textarea['name'].to_s, textarea.text.to_s)
+        agg
+      end
+      params = node.xpath("//input[@type='radio']").inject(params) do |agg, input|
+        agg << param(input['name'].to_s, input['value'].to_s) if input['checked']
+        agg
+      end
+      params = node.xpath("//input[@type='checkbox']").inject(params) do |agg, input|
+        agg << param(input['name'].to_s, input['value'].to_s) if input['checked']
+        agg
+      end
+      params = node.xpath("//select").inject(params) do |agg, select|
+        option = select.xpath("option[@selected]").first
+        option ||= select.xpath('option').first
+        agg << param(select['name'].to_s, (option['value'] || option.text).to_s) if option 
+        agg
+      end
+      params << param(button[:name], button.value) if button[:name]
+      params.join('&')
     end
 
-    def submit
-      session.submit(node['action'].to_s, params) 
+    def submit(button)
+      session.submit(node['action'].to_s, params(button)) 
+    end
+
+  private
+
+    def param(key, value)
+      "#{key}=#{value}"
     end
   end
   

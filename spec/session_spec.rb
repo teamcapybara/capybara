@@ -57,10 +57,55 @@ shared_examples_for "session" do
     end
 
     context "with value given" do
-      it "should submit the associated form" do
+      before do
         @session.click_button('awesome')
-        results = YAML.load(@session.body)
-        results['foo'].should == 'blah'
+        @results = YAML.load(@session.body)
+      end
+
+      it "should serialize and submit text fields" do
+        @results['foo'].should == 'blah'
+      end
+
+      it "should submit the button that was clicked, but not other buttons" do
+        @results['awesome'].should == 'awesome'
+        @results['crappy'].should be_nil
+      end
+
+      it "should serialize radio buttons" do
+        @results['gender'].should == 'female'
+      end
+
+      it "should serialize check boxes" do
+        @results['pets'].should include('dog', 'hamster')
+        @results['pets'].should_not include('cat')
+      end
+
+      it "should serialize text areas" do
+        @results['description'].should == 'Descriptive text goes here'
+      end
+
+      it "should serialize select tag with values" do
+        @results['locale'].should == 'en'
+      end
+
+      it "should serialize select tag without values" do
+        @results['region'].should == 'Norway'
+      end
+
+      it "should serialize first option for select tag with no selection" do
+        @results['city'].should == 'London'
+      end
+
+      it "should not serialize a select tag without options" do
+        @results['tendency'].should be_nil 
+      end
+
+      context "with multipart form" do
+        it "should attach the file"
+      end
+
+      context "with normal form" do
+        it "should serialize the file path"
       end
     end
 

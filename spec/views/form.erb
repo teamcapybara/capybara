@@ -10,6 +10,62 @@
   </p>
 
   <p>
+    <label for="form_locale">Locale</label>
+    <select name="form[locale]" id="form_locale">
+      <option value="sv">Swedish</option>
+      <option selected="selected" value="en">English</option>
+      <option value="fi">Finish</option>
+      <option value="no">Norwegian</option>
+    </select>
+  </p>
+
+  <p>
+    <label for="form_region">Region</label>
+    <select name="form[region]" id="form_region">
+      <option>Sweden</option>
+      <option selected="selected">Norway</option>
+      <option>Finland</option>
+    </select>
+  </p>
+
+  <p>
+    <label for="form_city">City</label>
+    <select name="form[city]" id="form_city">
+      <option>London</option>
+      <option>Stockholm</option>
+      <option>Paris</option>
+    </select>
+  </p>
+
+  <p>
+    <label for="form_tendency">Tendency</label>
+    <select name="form[tendency]" id="form_tendency"></select>
+  </p>
+
+  <p>
+    <label for="form_description">Description</label></br>
+    <textarea name="form[description]" id="form_description">Descriptive text goes here</textarea>
+  <p>
+
+  <p>
+    <input type="radio" name=form[gender] value="male" id="gender_male"/>
+    <label for="gender_male">Male</label>
+    <input type="radio" name=form[gender] value="female" id="gender_female" checked="checked"/>
+    <label for="gender_female">Female</label>
+    <input type="radio" name=form[gender] value="both" id="gender_both"/>
+    <label for="gender_both">Both</label>
+  </p>
+
+  <p>
+    <input type="checkbox" value="dog" name="form[pets][]" id="pets_dog" checked="checked"/>
+    <label for="pets_dog">Dog</label>
+    <input type="checkbox" value="cat" name="form[pets][]" id="pets_cat"/>
+    <label for="pets_cat">Cat</label>
+    <input type="checkbox" value="hamster" name="form[pets][]" id="pets_hamster" checked="checked"/>
+    <label for="pets_hamster">Hamster</label>
+  </p>
+
+  <p>
     <input type="submit" name="form[awesome]" id="awe123" value="awesome"/>
     <input type="submit" name="form[crappy]" id="crap321" value="crappy"/>
   </p>
