@@ -129,6 +129,13 @@ shared_examples_for "session" do
       @session.click_button('awesome')
       YAML.load(@session.body)['first_name'].should == 'Harry'
     end
+
+    it "should fill in a field by label" do
+      @session.visit('/form')
+      @session.fill_in('First Name', :with => 'Harry')
+      @session.click_button('awesome')
+      YAML.load(@session.body)['first_name'].should == 'Harry'
+    end
   end
 end
   

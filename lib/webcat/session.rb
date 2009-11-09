@@ -30,7 +30,8 @@ class Webcat::Session
   end
 
   def fill_in(locator, options={})
-    find_element("//input[@type='text'][@id='#{locator}']").value = options[:with]
+    element = find_field(locator) { |id| "//input[@type='text'][@id='#{id}']" }
+    element.value = options[:with]
   end
 
   def body
@@ -39,12 +40,22 @@ class Webcat::Session
 
 private
 
+  def find_field(locator)
+    element = find_element(yield(locator), :loose => true)
+    element ||= begin
+      label = find_element("//label[text()='#{locator}']")
+      find_element(yield(label[:for]))
+    end
+    element
+  end
+
   def find_element(*locators)
+    options = if locators.last.is_a?(Hash) then locators.pop else {} end
     locators.each do |locator|
       element = driver.find(locator).first
       return element if element
     end
-    raise Webcat::ElementNotFound, "element not found"
+    raise Webcat::ElementNotFound, "element not found" unless options[:loose]
   end
   
 end
