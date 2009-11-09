@@ -63,7 +63,11 @@ shared_examples_for "session" do
       end
 
       it "should serialize and submit text fields" do
-        @results['foo'].should == 'blah'
+        @results['first_name'].should == 'John'
+      end
+
+      it "should not serialize fields from other forms" do
+        @results['middle_name'].should be_nil
       end
 
       it "should submit the button that was clicked, but not other buttons" do
@@ -113,7 +117,7 @@ shared_examples_for "session" do
       it "should submit the associated form" do
         @session.click_button('awe123')
         results = YAML.load(@session.body)
-        results['foo'].should == 'blah'
+        results['first_name'].should == 'John'
       end
     end
   end
