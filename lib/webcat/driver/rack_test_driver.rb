@@ -42,23 +42,23 @@ class Webcat::Driver::RackTest
   class Form < Node
     def params(button)
       params = []
-      params = node.xpath("//input[@type='text']").inject(params) do |agg, input|
+      params << node.xpath("//input[@type='text']").inject([]) do |agg, input|
         agg << param(input['name'].to_s, input['value'].to_s)
         agg
       end
-      params = node.xpath("//textarea").inject(params) do |agg, textarea|
+      params << node.xpath("//textarea").inject([]) do |agg, textarea|
         agg << param(textarea['name'].to_s, textarea.text.to_s)
         agg
       end
-      params = node.xpath("//input[@type='radio']").inject(params) do |agg, input|
+      params << node.xpath("//input[@type='radio']").inject([]) do |agg, input|
         agg << param(input['name'].to_s, input['value'].to_s) if input['checked']
         agg
       end
-      params = node.xpath("//input[@type='checkbox']").inject(params) do |agg, input|
+      params << node.xpath("//input[@type='checkbox']").inject([]) do |agg, input|
         agg << param(input['name'].to_s, input['value'].to_s) if input['checked']
         agg
       end
-      params = node.xpath("//select").inject(params) do |agg, select|
+      params << node.xpath("//select").inject([]) do |agg, select|
         option = select.xpath("option[@selected]").first
         option ||= select.xpath('option').first
         agg << param(select['name'].to_s, (option['value'] || option.text).to_s) if option 
