@@ -15,11 +15,7 @@ class Webcat::Driver::Culerity
       return value if value and not value.empty?
     end
 
-    def value
-      node.value
-    end
-
-    def value=(value)
+    def set(value)
       node.set(value.to_s)
     end
     

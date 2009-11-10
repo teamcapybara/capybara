@@ -12,12 +12,12 @@ class Webcat::Driver::RackTest
       return value.to_s if value
     end
 
-    def value
-      node['value'].to_s
-    end
-
-    def value=(value)
-      node['value'] = value.to_s
+    def set(value)
+      if tag_name == 'input'
+        node['value'] = value.to_s
+      elsif tag_name == "textarea"
+        node.content = value.to_s
+      end
     end
 
     def click
@@ -64,7 +64,7 @@ class Webcat::Driver::RackTest
         agg << param(select['name'].to_s, (option['value'] || option.text).to_s) if option 
         agg
       end
-      params << param(button[:name], button.value) if button[:name]
+      params << param(button[:name], button[:value]) if button[:name]
       params.join('&')
     end
 

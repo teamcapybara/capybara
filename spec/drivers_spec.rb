@@ -46,14 +46,10 @@ shared_examples_for 'driver' do
         @driver.find('//a')[1][:rel].should be_nil
       end
 
-      it "should extract field values" do
-        @driver.find('//input').first.value.should == 'monkey'
-      end
-
       it "should allow assignment of field value" do
-        @driver.find('//input').first.value.should == 'monkey'
-        @driver.find('//input').first.value = 'gorilla'
-        @driver.find('//input').first.value.should == 'gorilla'
+        @driver.find('//input').first[:value].should == 'monkey'
+        @driver.find('//input').first.set('gorilla')
+        @driver.find('//input').first[:value].should == 'gorilla'
       end
       
       it "should extract node tag name" do

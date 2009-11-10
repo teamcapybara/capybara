@@ -30,8 +30,7 @@ class Webcat::Session
   end
 
   def fill_in(locator, options={})
-    element = find_field(locator) { |id| "//input[@type='text'][@id='#{id}']" }
-    element.value = options[:with]
+    find_field(locator, :text_field, :text_area).set(options[:with])
   end
 
   def body
@@ -40,22 +39,41 @@ class Webcat::Session
 
 private
 
-  def find_field(locator)
-    element = find_element(yield(locator), :loose => true)
-    element ||= begin
-      label = find_element("//label[text()='#{locator}']")
-      find_element(yield(label[:for]))
+  def find_field(locator, *kinds)
+    find_field_by_id(locator, *kinds) or find_field_by_label(locator, *kinds)
+  end
+
+  FIELDS_PATHS = {
+    :text_field => proc { |id| "//input[@type='text'][@id='#{id}']" },
+    :text_area => proc { |id| "//textarea[@id='#{id}']" } 
+  }
+
+  def find_field_by_id(locator, *kinds)
+    kinds.each do |kind|
+      path = FIELDS_PATHS[kind]
+      element = driver.find(path.call(locator)).first
+      return element if element
     end
-    element
+    return nil
+  end
+
+  def find_field_by_label(locator, *kinds)
+    kinds.each do |kind|
+      label = driver.find("//label[text()='#{locator}']").first
+      if label
+        element = find_field_by_id(label[:for], kind)
+        return element if element
+      end
+    end
+    return nil
   end
 
   def find_element(*locators)
-    options = if locators.last.is_a?(Hash) then locators.pop else {} end
     locators.each do |locator|
       element = driver.find(locator).first
       return element if element
     end
-    raise Webcat::ElementNotFound, "element not found" unless options[:loose]
+    raise Webcat::ElementNotFound, "element not found"
   end
   
 end

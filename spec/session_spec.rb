@@ -123,18 +123,32 @@ shared_examples_for "session" do
   end
 
   describe "#fill_in" do
-    it "should fill in a field by id" do
+    before do
       @session.visit('/form')
+    end
+    
+    it "should fill in a field by id" do
       @session.fill_in('form_first_name', :with => 'Harry')
       @session.click_button('awesome')
       YAML.load(@session.body)['first_name'].should == 'Harry'
     end
 
     it "should fill in a field by label" do
-      @session.visit('/form')
       @session.fill_in('First Name', :with => 'Harry')
       @session.click_button('awesome')
       YAML.load(@session.body)['first_name'].should == 'Harry'
+    end
+
+    it "should fill in a textarea by id" do
+      @session.fill_in('form_description', :with => 'Texty text')
+      @session.click_button('awesome')
+      YAML.load(@session.body)['description'].should == 'Texty text'
+    end
+
+    it "should fill in a textarea by label" do
+      @session.fill_in('Description', :with => 'Texty text')
+      @session.click_button('awesome')
+      YAML.load(@session.body)['description'].should == 'Texty text'
     end
   end
 end
