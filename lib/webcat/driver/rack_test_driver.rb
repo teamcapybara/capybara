@@ -42,7 +42,7 @@ class Webcat::Driver::RackTest
   class Form < Node
     def params(button)
       params = []
-      params << node.xpath(".//input[@type='text']").inject([]) do |agg, input|
+      params << node.xpath(".//input[@type='text']", ".//input[@type='password']").inject([]) do |agg, input|
         agg << param(input['name'].to_s, input['value'].to_s)
         agg
       end

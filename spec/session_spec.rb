@@ -66,6 +66,10 @@ shared_examples_for "session" do
         @results['first_name'].should == 'John'
       end
 
+      it "should serialize and submit password fields" do
+        @results['password'].should == 'seeekrit'
+      end
+
       it "should not serialize fields from other forms" do
         @results['middle_name'].should be_nil
       end
