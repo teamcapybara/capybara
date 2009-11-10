@@ -169,6 +169,38 @@ shared_examples_for "session" do
       YAML.load(@session.body)['password'].should == 'supasikrit'
     end
   end
+
+  describe "#choose" do
+
+  end
+
+  describe "#set_hidden_field" do
+
+  end
+
+  describe "#check" do
+
+  end
+
+  describe "#uncheck" do
+
+  end
+
+  describe "#select" do
+
+  end
+
+  describe "#unselect" do
+
+  end
+
+  describe "#attach_file" do
+
+  end
+
+  describe "#submit_form" do
+
+  end
 end
   
 describe Webcat::Session do
