@@ -30,7 +30,7 @@ class Webcat::Session
   end
 
   def fill_in(locator, options={})
-    find_field(locator, :text_field, :text_area).set(options[:with])
+    find_field(locator, :text_field, :text_area, :password_field).set(options[:with])
   end
 
   def body
@@ -45,7 +45,8 @@ private
 
   FIELDS_PATHS = {
     :text_field => proc { |id| "//input[@type='text'][@id='#{id}']" },
-    :text_area => proc { |id| "//textarea[@id='#{id}']" } 
+    :text_area => proc { |id| "//textarea[@id='#{id}']" },
+    :password_field => proc { |id| "//input[@type='password'][@id='#{id}']" }
   }
 
   def find_field_by_id(locator, *kinds)

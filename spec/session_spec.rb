@@ -131,13 +131,13 @@ shared_examples_for "session" do
       @session.visit('/form')
     end
     
-    it "should fill in a field by id" do
+    it "should fill in a text field by id" do
       @session.fill_in('form_first_name', :with => 'Harry')
       @session.click_button('awesome')
       YAML.load(@session.body)['first_name'].should == 'Harry'
     end
 
-    it "should fill in a field by label" do
+    it "should fill in a text field by label" do
       @session.fill_in('First Name', :with => 'Harry')
       @session.click_button('awesome')
       YAML.load(@session.body)['first_name'].should == 'Harry'
@@ -153,6 +153,20 @@ shared_examples_for "session" do
       @session.fill_in('Description', :with => 'Texty text')
       @session.click_button('awesome')
       YAML.load(@session.body)['description'].should == 'Texty text'
+    end
+
+    it "should fill in a password field by id" do
+      pending "Culerity doesn't like password fields for some reason" if @session.mode == :culerity
+      @session.fill_in('form_password', :with => 'supasikrit')
+      @session.click_button('awesome')
+      YAML.load(@session.body)['password'].should == 'supasikrit'
+    end
+
+    it "should fill in a password field by label" do
+      pending "Culerity doesn't like password fields for some reason" if @session.mode == :culerity
+      @session.fill_in('Password', :with => 'supasikrit')
+      @session.click_button('awesome')
+      YAML.load(@session.body)['password'].should == 'supasikrit'
     end
   end
 end
