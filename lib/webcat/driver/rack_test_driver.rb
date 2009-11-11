@@ -19,7 +19,11 @@ class Webcat::Driver::RackTest
         session.html.xpath("//input[@name='#{self[:name]}']").each { |node| node.remove_attribute("checked") }
         node['checked'] = 'checked'
       elsif tag_name == 'input' and type == 'checkbox'
-        node['checked'] = 'checked'
+        if value
+          node['checked'] = 'checked'
+        else
+          node.remove_attribute('checked')
+        end
       elsif tag_name == "textarea"
         node.content = value.to_s
       end

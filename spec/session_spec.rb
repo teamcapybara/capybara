@@ -224,7 +224,25 @@ shared_examples_for "session" do
   end
 
   describe "#uncheck" do
-
+    before do
+      @session.visit('/form')
+    end
+    
+    it "should uncheck a checkbox by id" do
+      pending "Culerity doesn't seem to uncheck this" if @session.mode == :culerity
+      @session.uncheck("form_pets_hamster")
+      @session.click_button('awesome')
+      YAML.load(@session.body)['pets'].should include('dog')
+      YAML.load(@session.body)['pets'].should_not include('hamster')
+    end
+    
+    it "should uncheck a checkbox by label" do
+      pending "Culerity doesn't seem to uncheck this" if @session.mode == :culerity
+      @session.uncheck("Hamster")
+      @session.click_button('awesome')
+      YAML.load(@session.body)['pets'].should include('dog')
+      YAML.load(@session.body)['pets'].should_not include('hamster')
+    end
   end
 
   describe "#select" do

@@ -44,6 +44,10 @@ class Webcat::Session
   def check(locator)
     find_field(locator, :checkbox).set(true)
   end
+  
+  def uncheck(locator)
+    find_field(locator, :checkbox).set(false)
+  end
 
   def body
     driver.body
