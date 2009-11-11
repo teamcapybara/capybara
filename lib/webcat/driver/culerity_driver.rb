@@ -19,6 +19,10 @@ class Webcat::Driver::Culerity
       node.set(value.to_s)
     end
     
+    def select(option)
+      node.select(option)
+    end
+    
     def click
       node.click
     end

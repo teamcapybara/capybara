@@ -28,6 +28,11 @@ class Webcat::Driver::RackTest
         node.content = value.to_s
       end
     end
+    
+    def select(option)
+      node.xpath(".//option").each { |node| node.remove_attribute("selected") }
+      node.xpath(".//option[text()='#{option}']").first["selected"] = 'selected'
+    end
 
     def click
       if tag_name == 'a'

@@ -246,18 +246,24 @@ shared_examples_for "session" do
   end
 
   describe "#select" do
-
-  end
-
-  describe "#unselect" do
-
+    before do
+      @session.visit('/form')
+    end
+    
+    it "should select an option from a select box by id" do
+      @session.select("Finish", :from => 'form_locale')
+      @session.click_button('awesome')
+      YAML.load(@session.body)['locale'].should == 'fi'
+    end
+    
+    it "should select an option from a select box by label" do
+      @session.select("Finish", :from => 'Locale')
+      @session.click_button('awesome')
+      YAML.load(@session.body)['locale'].should == 'fi'
+    end
   end
 
   describe "#attach_file" do
-
-  end
-
-  describe "#submit_form" do
 
   end
 end

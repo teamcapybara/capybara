@@ -48,6 +48,10 @@ class Webcat::Session
   def uncheck(locator)
     find_field(locator, :checkbox).set(false)
   end
+  
+  def select(value, options={})
+    find_field(options[:from], :select).select(value)
+  end
 
   def body
     driver.body
@@ -73,7 +77,8 @@ private
     :password_field => proc { |id| "//input[@type='password'][@id='#{id}']" },
     :radio => proc { |id| "//input[@type='radio'][@id='#{id}']" },
     :hidden_field => proc { |id| "//input[@type='hidden'][@id='#{id}']" },
-    :checkbox => proc { |id| "//input[@type='checkbox'][@id='#{id}']" }
+    :checkbox => proc { |id| "//input[@type='checkbox'][@id='#{id}']" },
+    :select => proc { |id| "//select[@id='#{id}']" }
   }
 
   def find_field_by_id(locator, *kinds)
