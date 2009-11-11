@@ -193,7 +193,16 @@ shared_examples_for "session" do
   end
 
   describe "#set_hidden_field" do
-
+    before do
+      @session.visit('/form')
+    end
+    
+    it "should set a hidden field by id" do
+      pending "Culerity doesn't like hidden fields for some reason" if @session.mode == :culerity
+      @session.set_hidden_field("form_token", :to => 'test567')
+      @session.click_button('awesome')
+      YAML.load(@session.body)['token'].should == 'test567'
+    end
   end
 
   describe "#check" do

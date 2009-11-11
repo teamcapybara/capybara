@@ -13,7 +13,7 @@ class Webcat::Driver::RackTest
     end
 
     def set(value)
-      if tag_name == 'input' and %w(text password).include?(type)
+      if tag_name == 'input' and %w(text password hidden).include?(type)
         node['value'] = value.to_s
       elsif tag_name == 'input' and type == 'radio'
         session.html.xpath("//input[@name='#{self[:name]}']").each { |node| node.remove_attribute("checked") }

@@ -36,6 +36,10 @@ class Webcat::Session
   def choose(locator)
     find_field(locator, :radio).set(true)
   end
+  
+  def set_hidden_field(locator, options={})
+    find_field(locator, :hidden_field).set(options[:to])
+  end
 
   def body
     driver.body
@@ -59,7 +63,8 @@ private
     :text_field => proc { |id| "//input[@type='text'][@id='#{id}']" },
     :text_area => proc { |id| "//textarea[@id='#{id}']" },
     :password_field => proc { |id| "//input[@type='password'][@id='#{id}']" },
-    :radio => proc { |id| "//input[@type='radio'][@id='#{id}']" }
+    :radio => proc { |id| "//input[@type='radio'][@id='#{id}']" },
+    :hidden_field => proc { |id| "//input[@type='hidden'][@id='#{id}']" }
   }
 
   def find_field_by_id(locator, *kinds)
