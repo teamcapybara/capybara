@@ -70,6 +70,10 @@ shared_examples_for "session" do
         @results['password'].should == 'seeekrit'
       end
 
+      it "should serialize and submit hidden fields" do
+        @results['token'].should == '12345'
+      end
+
       it "should not serialize fields from other forms" do
         @results['middle_name'].should be_nil
       end
