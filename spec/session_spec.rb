@@ -206,7 +206,21 @@ shared_examples_for "session" do
   end
 
   describe "#check" do
-
+    before do
+      @session.visit('/form')
+    end
+    
+    it "should check a checkbox by id" do
+      @session.check("form_pets_cat")
+      @session.click_button('awesome')
+      YAML.load(@session.body)['pets'].should include('dog', 'cat', 'hamster')
+    end
+    
+    it "should check a checkbox by label" do
+      @session.check("Cat")
+      @session.click_button('awesome')
+      YAML.load(@session.body)['pets'].should include('dog', 'cat', 'hamster')
+    end
   end
 
   describe "#uncheck" do
