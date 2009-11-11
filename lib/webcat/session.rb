@@ -22,11 +22,11 @@ class Webcat::Session
   end
   
   def click_link(locator)
-    find_element("//a[@id='#{locator}']", %{//a[text()="#{locator}"]}, %{//a[@title="#{locator}"]}).click
+    find_link(locator).click
   end
 
   def click_button(locator)
-    find_element("//input[@type='submit'][@id='#{locator}']", "//input[@type='submit'][@value='#{locator}']").click
+    find_button(locator).click
   end
 
   def fill_in(locator, options={})
@@ -38,6 +38,14 @@ class Webcat::Session
   end
 
 private
+
+  def find_link(locator)
+    find_element("//a[@id='#{locator}']", %{//a[text()="#{locator}"]}, %{//a[@title="#{locator}"]})
+  end
+
+  def find_button(locator)
+    find_element("//input[@type='submit'][@id='#{locator}']", "//input[@type='submit'][@value='#{locator}']")
+  end
 
   def find_field(locator, *kinds)
     find_field_by_id(locator, *kinds) or find_field_by_label(locator, *kinds)
