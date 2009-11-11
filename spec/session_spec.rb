@@ -171,7 +171,21 @@ shared_examples_for "session" do
   end
 
   describe "#choose" do
-
+    before do
+      @session.visit('/form')
+    end
+    
+    it "should choose a radio button by id" do
+      @session.choose("gender_male")
+      @session.click_button('awesome')
+      YAML.load(@session.body)['gender'].should == 'male'
+    end
+    
+    it "should choose a radio button by label" do
+      @session.choose("Both")
+      @session.click_button('awesome')
+      YAML.load(@session.body)['gender'].should == 'both'
+    end
   end
 
   describe "#set_hidden_field" do

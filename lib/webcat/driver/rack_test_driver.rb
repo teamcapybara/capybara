@@ -13,8 +13,11 @@ class Webcat::Driver::RackTest
     end
 
     def set(value)
-      if tag_name == 'input'
+      if tag_name == 'input' and %w(text password).include?(type)
         node['value'] = value.to_s
+      elsif tag_name == 'input' and type == 'radio'
+        session.html.xpath("//input[@name='#{self[:name]}']").each { |node| node.remove_attribute("checked") }
+        node['checked'] = 'checked'
       elsif tag_name == "textarea"
         node.content = value.to_s
       end
@@ -23,7 +26,7 @@ class Webcat::Driver::RackTest
     def click
       if tag_name == 'a'
         session.visit(self[:href])
-      elsif tag_name == 'input' and self[:type] == 'submit'
+      elsif tag_name == 'input' and type == 'submit'
         Form.new(session, form).submit(self)
       end
     end
@@ -33,6 +36,10 @@ class Webcat::Driver::RackTest
     end
 
   private
+  
+    def type
+      self[:type]
+    end
 
     def form
       node.ancestors('form').first
