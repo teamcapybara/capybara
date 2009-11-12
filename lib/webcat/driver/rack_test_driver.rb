@@ -125,6 +125,7 @@ class Webcat::Driver::RackTest
 
   def submit(path, attributes)
     post(path, attributes)
+    follow_redirect! while response.redirect?
     cache_body  
   end
   

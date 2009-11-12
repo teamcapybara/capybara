@@ -125,6 +125,11 @@ shared_examples_for "session" do
         results['first_name'].should == 'John'
       end
     end
+
+    it "should follow redirects" do
+      @session.click_button('Go FAR')
+      @session.body.should include('You landed')
+    end
   end
 
   describe "#fill_in" do

@@ -29,6 +29,10 @@ class TestApp < Sinatra::Base
     erb :form
   end
 
+  post '/redirect' do
+    redirect '/redirect_again'
+  end
+
   get '/redirect' do
     redirect '/redirect_again'
   end
