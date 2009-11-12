@@ -29,6 +29,18 @@ class TestApp < Sinatra::Base
     erb :form
   end
 
+  get '/redirect' do
+    redirect '/redirect_again'
+  end
+
+  get '/redirect_again' do
+    redirect '/landed'
+  end
+
+  get '/landed' do
+    "You landed"
+  end
+
   post '/form' do
     params[:form].to_yaml
   end

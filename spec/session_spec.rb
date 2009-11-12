@@ -49,6 +49,11 @@ shared_examples_for "session" do
         end.should raise_error(Webcat::ElementNotFound)
       end
     end
+
+    it "should follow redirects" do
+      @session.click_link('Redirect')
+      @session.body.should include('You landed')
+    end
   end
 
   describe '#click_button' do

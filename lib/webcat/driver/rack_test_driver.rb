@@ -119,6 +119,7 @@ class Webcat::Driver::RackTest
   
   def visit(path)
     get(path)
+    follow_redirect! while response.redirect?
     cache_body
   end
 
