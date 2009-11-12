@@ -13,7 +13,7 @@ class Webcat::Driver::RackTest
     end
 
     def set(value)
-      if tag_name == 'input' and %w(text password hidden).include?(type)
+      if tag_name == 'input' and %w(text password hidden file).include?(type)
         node['value'] = value.to_s
       elsif tag_name == 'input' and type == 'radio'
         session.html.xpath("//input[@name='#{self[:name]}']").each { |node| node.remove_attribute("checked") }
@@ -60,40 +60,50 @@ class Webcat::Driver::RackTest
   class Form < Node
     def params(button)
       params = []
-      params << node.xpath(".//input[@type='text']", ".//input[@type='hidden']", ".//input[@type='password']").inject([]) do |agg, input|
-        agg << param(input['name'].to_s, input['value'].to_s)
+      params += node.xpath(".//input[@type='text']", ".//input[@type='hidden']", ".//input[@type='password']").inject([]) do |agg, input|
+        agg << [input['name'].to_s, input['value'].to_s]
         agg
       end
-      params << node.xpath(".//textarea").inject([]) do |agg, textarea|
-        agg << param(textarea['name'].to_s, textarea.text.to_s)
+      params += node.xpath(".//textarea").inject([]) do |agg, textarea|
+        agg << [textarea['name'].to_s, textarea.text.to_s]
         agg
       end
-      params << node.xpath(".//input[@type='radio']").inject([]) do |agg, input|
-        agg << param(input['name'].to_s, input['value'].to_s) if input['checked']
+      params += node.xpath(".//input[@type='radio']").inject([]) do |agg, input|
+        agg << [input['name'].to_s, input['value'].to_s] if input['checked']
         agg
       end
-      params << node.xpath(".//input[@type='checkbox']").inject([]) do |agg, input|
-        agg << param(input['name'].to_s, input['value'].to_s) if input['checked']
+      params += node.xpath(".//input[@type='checkbox']").inject([]) do |agg, input|
+        agg << [input['name'].to_s, input['value'].to_s] if input['checked']
         agg
       end
-      params << node.xpath(".//select").inject([]) do |agg, select|
+      params += node.xpath(".//select").inject([]) do |agg, select|
         option = select.xpath(".//option[@selected]").first
         option ||= select.xpath('.//option').first
-        agg << param(select['name'].to_s, (option['value'] || option.text).to_s) if option 
+        agg << [select['name'].to_s, (option['value'] || option.text).to_s] if option 
         agg
       end
-      params << param(button[:name], button[:value]) if button[:name]
-      params.join('&')
+      params += node.xpath(".//input[@type='file']").inject([]) do |agg, input|
+        if multipart?
+          agg << [input['name'].to_s, Rack::Test::UploadedFile.new(input['value'].to_s)]
+        else
+          agg << [input['name'].to_s, File.basename(input['value'].to_s)]
+        end
+        agg
+      end
+      params.push [button[:name], button[:value]] if button[:name]
+      if multipart?
+        params.inject({}) { |agg, (key, value)| agg[key] = value; agg }
+      else
+        params.map { |key, value| "#{key}=#{value}" }.join('&')
+      end
     end
 
     def submit(button)
       session.submit(node['action'].to_s, params(button)) 
     end
 
-  private
-
-    def param(key, value)
-      "#{key}=#{value}"
+    def multipart?
+      self[:enctype] == "multipart/form-data"
     end
   end
   

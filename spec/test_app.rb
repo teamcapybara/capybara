@@ -32,6 +32,10 @@ class TestApp < Sinatra::Base
   post '/form' do
     params[:form].to_yaml
   end
+
+  post '/upload' do
+    params[:form][:document][:tempfile].read
+  end
 end
 
 if __FILE__ == $0

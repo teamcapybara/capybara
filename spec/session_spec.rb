@@ -111,14 +111,6 @@ shared_examples_for "session" do
       it "should not serialize a select tag without options" do
         @results['tendency'].should be_nil 
       end
-
-      context "with multipart form" do
-        it "should attach the file"
-      end
-
-      context "with normal form" do
-        it "should serialize the file path"
-      end
     end
 
     context "with id given" do
@@ -264,6 +256,37 @@ shared_examples_for "session" do
   end
 
   describe "#attach_file" do
+    before do
+      @session.visit('/form')
+    end
+    
+    context "with normal form" do
+      it "should set a file path by id" do
+        @session.attach_file "form_image", __FILE__
+        @session.click_button('awesome')
+        YAML.load(@session.body)['image'].should == File.basename(__FILE__)
+      end
+
+      it "should set a file path by label" do
+        @session.attach_file "Image", __FILE__
+        @session.click_button('awesome')
+        YAML.load(@session.body)['image'].should == File.basename(__FILE__)
+      end
+    end
+
+    context "with multipart form" do
+      it "should set a file path by id" do
+        @session.attach_file "form_document", __FILE__
+        @session.click_button('Upload')
+        @session.body.should == File.read(__FILE__)
+      end
+
+      it "should set a file path by label" do
+        @session.attach_file "Document", __FILE__
+        @session.click_button('Upload')
+        @session.body.should == File.read(__FILE__)
+      end
+    end
 
   end
 end

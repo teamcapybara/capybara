@@ -52,6 +52,10 @@ class Webcat::Session
   def select(value, options={})
     find_field(options[:from], :select).select(value)
   end
+  
+  def attach_file(locator, path)
+    find_field(locator, :file_field).set(path)
+  end
 
   def body
     driver.body
@@ -78,7 +82,8 @@ private
     :radio => proc { |id| "//input[@type='radio'][@id='#{id}']" },
     :hidden_field => proc { |id| "//input[@type='hidden'][@id='#{id}']" },
     :checkbox => proc { |id| "//input[@type='checkbox'][@id='#{id}']" },
-    :select => proc { |id| "//select[@id='#{id}']" }
+    :select => proc { |id| "//select[@id='#{id}']" },
+    :file_field => proc { |id| "//input[@type='file'][@id='#{id}']" }
   }
 
   def find_field_by_id(locator, *kinds)
