@@ -94,6 +94,20 @@ describe Webcat do
     end
 
     it_should_behave_like "session"
+
+    it "should be possible to include it in another class" do
+      klass = Class.new do
+        include Webcat
+      end
+      foo = klass.new
+      foo.app = TestApp
+      foo.visit('/with_html')
+      foo.click_link('ullamco')
+      foo.body.should include('Another World')
+      foo.app = proc { [200, {}, "Another Application"] }
+      foo.visit('/')
+      foo.body.should include('Another Application')
+    end
   end
 
 end
