@@ -61,7 +61,7 @@ shared_examples_for "session" do
       @session.visit('/form')
     end
 
-    context "with value given" do
+    context "with value given on a submit button" do
       before do
         @session.click_button('awesome')
         @results = YAML.load(@session.body)
@@ -118,9 +118,25 @@ shared_examples_for "session" do
       end
     end
 
-    context "with id given" do
+    context "with id given on a submit button" do
       it "should submit the associated form" do
         @session.click_button('awe123')
+        results = YAML.load(@session.body)
+        results['first_name'].should == 'John'
+      end
+    end
+
+    context "with value given on an image button" do
+      it "should submit the associated form" do
+        @session.click_button('okay')
+        results = YAML.load(@session.body)
+        results['first_name'].should == 'John'
+      end
+    end
+
+    context "with id given on an image button" do
+      it "should submit the associated form" do
+        @session.click_button('okay556')
         results = YAML.load(@session.body)
         results['first_name'].should == 'John'
       end

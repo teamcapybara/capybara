@@ -68,7 +68,12 @@ private
   end
 
   def find_button(locator)
-    find_element("//input[@type='submit'][@id='#{locator}']", "//input[@type='submit'][@value='#{locator}']")
+    find_element(
+      "//input[@type='submit'][@id='#{locator}']",
+      "//input[@type='submit'][@value='#{locator}']",
+      "//input[@type='image'][@id='#{locator}']",
+      "//input[@type='image'][@value='#{locator}']"
+    )
   end
 
   def find_field(locator, *kinds)

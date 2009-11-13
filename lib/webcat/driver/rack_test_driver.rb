@@ -37,7 +37,7 @@ class Webcat::Driver::RackTest
     def click
       if tag_name == 'a'
         session.visit(self[:href])
-      elsif tag_name == 'input' and type == 'submit'
+      elsif tag_name == 'input' and %w(submit image).include?(type)
         Form.new(session, form).submit(self)
       end
     end
