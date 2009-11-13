@@ -60,6 +60,10 @@ class Webcat::Session
   def body
     driver.body
   end
+  
+  def has_content?(content)
+    driver.find("//*[contains(child::text(),'#{content}')]").size > 0
+  end
 
 private
 

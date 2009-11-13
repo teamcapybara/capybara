@@ -280,6 +280,21 @@ shared_examples_for "session" do
       YAML.load(@session.body)['locale'].should == 'fi'
     end
   end
+  
+  describe '#has_content?' do
+    it "should be true if the given content is on the page at least once" do
+      @session.visit('/with_html')
+      @session.should have_content('est')
+      @session.should have_content('Lorem')
+      @session.should have_content('Redirect')
+    end
+    
+    it "should be false if the given content is not on the page" do
+      @session.visit('/with_html')
+      @session.should_not have_content('xxxxyzzz')
+      @session.should_not have_content('monkey')
+    end
+  end
 
   describe "#attach_file" do
     before do
