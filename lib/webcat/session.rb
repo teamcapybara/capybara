@@ -60,10 +60,24 @@ class Webcat::Session
   end
   
   def has_content?(content)
-    driver.find("//*[contains(child::text(),'#{content}')]").size > 0
+    find("//*[contains(child::text(),'#{content}')]").size > 0
+  end
+  
+  def within(scope)
+    scopes.push(scope)
+    yield
+    scopes.pop
   end
 
 private
+
+  def current_scope
+    scopes.join('')
+  end
+
+  def scopes
+    @scopes ||= []
+  end
 
   def find_link(locator)
     find_element("//a[@id='#{locator}']", %{//a[text()="#{locator}"]}, %{//a[@title="#{locator}"]})
@@ -96,7 +110,7 @@ private
   def find_field_by_id(locator, *kinds)
     kinds.each do |kind|
       path = FIELDS_PATHS[kind]
-      element = driver.find(path.call(locator)).first
+      element = find(path.call(locator)).first
       return element if element
     end
     return nil
@@ -104,7 +118,7 @@ private
 
   def find_field_by_label(locator, *kinds)
     kinds.each do |kind|
-      label = driver.find("//label[text()='#{locator}']").first
+      label = find("//label[text()='#{locator}']").first
       if label
         element = find_field_by_id(label[:for], kind)
         return element if element
@@ -115,10 +129,15 @@ private
 
   def find_element(*locators)
     locators.each do |locator|
-      element = driver.find(locator).first
+      element = find(locator).first
       return element if element
     end
     raise Webcat::ElementNotFound, "element not found"
+  end
+  
+  def find(locator)
+    locator = current_scope.to_s + locator
+    driver.find(locator)
   end
   
 end

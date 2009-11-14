@@ -324,6 +324,56 @@ shared_examples_for "session" do
     end
 
   end
+  
+  describe '#within' do
+    before do
+      @session.visit('/with_scope')
+    end
+    
+    context "with click_link" do
+      it "should click links in the given scope" do
+        @session.within("//li[contains(.,'With Simple HTML')]") do
+          @session.click_link('Go')
+        end
+        @session.body.should include('<h1>Bar</h1>')
+      end
+      
+      context "with nested scopes" do
+        it "should respect the inner scope" do
+          @session.within("//div[@id='for_bar']") do
+            @session.within("//li[contains(.,'Bar')]") do
+              @session.click_link('Go')
+            end
+          end
+          @session.body.should include('Another World')
+        end
+        
+        it "should respect the outer scope" do
+          @session.within("//div[@id='another_foo']") do
+            @session.within("//li[contains(.,'With Simple HTML')]") do
+              @session.click_link('Go')
+            end
+          end
+          @session.body.should include('Hello world')
+        end
+      end
+    end
+    
+    context "with forms" do
+      it "should fill in a field and click a button" do
+        @session.within("//li[contains(.,'Bar')]") do
+          @session.click_button('Go')
+        end
+        extract_results(@session)['first_name'].should == 'Peter'
+        @session.visit('/with_scope')
+        @session.within("//li[contains(.,'Bar')]") do
+          @session.fill_in('First Name', :with => 'Dagobert')
+          @session.click_button('Go')
+        end
+        extract_results(@session)['first_name'].should == 'Dagobert'
+      end
+    end
+  end
 end
   
 describe Webcat::Session do

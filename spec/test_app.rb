@@ -16,13 +16,17 @@ class TestApp < Sinatra::Base
   get '/with_html' do
     erb :with_html
   end
-  
+
   get '/with_js' do
     erb :with_js
   end
-  
+
   get '/with_simple_html' do
     erb :with_simple_html
+  end
+
+  get '/with_scope' do
+    erb :with_scope
   end
 
   get '/form' do

@@ -36,7 +36,7 @@ module Webcat
 
   SESSION_METHODS = [
     :visit, :body, :click_link, :click_button, :fill_in, :choose,
-    :check, :uncheck, :attach_file, :select, :has_content?
+    :check, :uncheck, :attach_file, :select, :has_content?, :within
   ]
   SESSION_METHODS.each do |method|
     class_eval <<-RUBY, __FILE__, __LINE__+1
