@@ -31,7 +31,7 @@ class Webcat::Driver::RackTest
     
     def select(option)
       node.xpath(".//option").each { |node| node.remove_attribute("selected") }
-      node.xpath(".//option[text()='#{option}']").first["selected"] = 'selected'
+      node.xpath(".//option[contains(.,'#{option}')]").first["selected"] = 'selected'
     end
 
     def click

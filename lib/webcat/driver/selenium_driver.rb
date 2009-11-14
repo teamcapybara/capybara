@@ -31,7 +31,7 @@ class Webcat::Driver::Selenium
     end
 
     def select(option)
-      node.find_element(:xpath, ".//option[text()='#{option}']").select
+      node.find_element(:xpath, ".//option[contains(.,'#{option}')]").select
     end
 
     def click

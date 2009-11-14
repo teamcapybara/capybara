@@ -80,7 +80,7 @@ private
   end
 
   def find_link(locator)
-    link = find_element("//a[@id='#{locator}']", %{//a[text()="#{locator}"]}, %{//a[@title="#{locator}"]})
+    link = find_element("//a[@id='#{locator}']", "//a[contains(.,'#{locator}')]", "//a[@title='#{locator}']")
     raise Webcat::ElementNotFound, "no button with value or id '#{locator}' found" unless link
     link
   end
@@ -124,7 +124,7 @@ private
 
   def find_field_by_label(locator, *kinds)
     kinds.each do |kind|
-      label = find("//label[text()='#{locator}']").first
+      label = find("//label[contains(.,'#{locator}')]").first
       if label
         element = find_field_by_id(label[:for], kind)
         return element if element
