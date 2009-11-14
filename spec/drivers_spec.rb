@@ -30,7 +30,7 @@ shared_examples_for 'driver' do
       end
 
       it "should find the correct number of elements" do
-        @driver.find('//a').size.should == 2
+        @driver.find('//a').size.should == 3
       end
 
       it "should extract node texts" do

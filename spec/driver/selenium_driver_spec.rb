@@ -5,6 +5,6 @@ describe Webcat::Driver::Selenium do
     @driver = Webcat::Driver::Selenium.new(TestApp)
   end
   
-  # it_should_behave_like "driver"
-  # it_should_behave_like "driver with javascript support"
+  it_should_behave_like "driver"
+  it_should_behave_like "driver with javascript support"
 end

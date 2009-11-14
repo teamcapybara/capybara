@@ -12,6 +12,8 @@ class Webcat::Session
       Webcat::Driver::RackTest.new(app)
     when :culerity
       Webcat::Driver::Culerity.new(app)
+    when :selenium
+      Webcat::Driver::Selenium.new(app)
     else
       raise Webcat::DriverNotFoundError, "no driver called #{mode} was found"
     end

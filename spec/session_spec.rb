@@ -1,6 +1,12 @@
 require File.expand_path('spec_helper', File.dirname(__FILE__))
 
+require 'nokogiri'
+
 shared_examples_for "session" do
+  def extract_results(session)
+    YAML.load Nokogiri::HTML(session.body).xpath("//pre[@id='results']").first.text
+  end
+  
   describe '#app' do
     it "should remember the application" do
       @session.app.should == TestApp
@@ -10,9 +16,9 @@ shared_examples_for "session" do
   describe '#visit' do
     it "should fetch a response from the driver" do
       @session.visit('/')
-      @session.body.should == 'Hello world!'
+      @session.body.should include('Hello world!')
       @session.visit('/foo')
-      @session.body.should == 'Another World'
+      @session.body.should include('Another World')
     end
   end
   
@@ -24,21 +30,21 @@ shared_examples_for "session" do
     context "with id given" do
       it "should take user to the linked page" do
         @session.click_link('foo')
-        @session.body.should == 'Another World'
+        @session.body.should include('Another World')
       end
     end
     
     context "with text given" do
       it "should take user to the linked page" do
         @session.click_link('labore')
-        @session.body.should == '<h1>Bar</h1>'
+        @session.body.should include('<h1>Bar</h1>')
       end
     end
 
     context "with title given" do
       it "should take user to the linked page" do
         @session.click_link('awesome title')
-        @session.body.should == '<h1>Bar</h1>'
+        @session.body.should include('<h1>Bar</h1>')
       end
     end
 
@@ -64,7 +70,7 @@ shared_examples_for "session" do
     context "with value given on a submit button" do
       before do
         @session.click_button('awesome')
-        @results = YAML.load(@session.body)
+        @results = extract_results(@session)
       end
 
       it "should serialize and submit text fields" do
@@ -121,24 +127,21 @@ shared_examples_for "session" do
     context "with id given on a submit button" do
       it "should submit the associated form" do
         @session.click_button('awe123')
-        results = YAML.load(@session.body)
-        results['first_name'].should == 'John'
+        extract_results(@session)['first_name'].should == 'John'
       end
     end
 
     context "with value given on an image button" do
       it "should submit the associated form" do
         @session.click_button('okay')
-        results = YAML.load(@session.body)
-        results['first_name'].should == 'John'
+        extract_results(@session)['first_name'].should == 'John'
       end
     end
 
     context "with id given on an image button" do
       it "should submit the associated form" do
         @session.click_button('okay556')
-        results = YAML.load(@session.body)
-        results['first_name'].should == 'John'
+        extract_results(@session)['first_name'].should == 'John'
       end
     end
 
@@ -156,39 +159,39 @@ shared_examples_for "session" do
     it "should fill in a text field by id" do
       @session.fill_in('form_first_name', :with => 'Harry')
       @session.click_button('awesome')
-      YAML.load(@session.body)['first_name'].should == 'Harry'
+      extract_results(@session)['first_name'].should == 'Harry'
     end
 
     it "should fill in a text field by label" do
       @session.fill_in('First Name', :with => 'Harry')
       @session.click_button('awesome')
-      YAML.load(@session.body)['first_name'].should == 'Harry'
+      extract_results(@session)['first_name'].should == 'Harry'
     end
 
     it "should fill in a textarea by id" do
       @session.fill_in('form_description', :with => 'Texty text')
       @session.click_button('awesome')
-      YAML.load(@session.body)['description'].should == 'Texty text'
+      extract_results(@session)['description'].should == 'Texty text'
     end
 
     it "should fill in a textarea by label" do
       @session.fill_in('Description', :with => 'Texty text')
       @session.click_button('awesome')
-      YAML.load(@session.body)['description'].should == 'Texty text'
+      extract_results(@session)['description'].should == 'Texty text'
     end
 
     it "should fill in a password field by id" do
       pending "Culerity doesn't like password fields for some reason" if @session.mode == :culerity
       @session.fill_in('form_password', :with => 'supasikrit')
       @session.click_button('awesome')
-      YAML.load(@session.body)['password'].should == 'supasikrit'
+      extract_results(@session)['password'].should == 'supasikrit'
     end
 
     it "should fill in a password field by label" do
       pending "Culerity doesn't like password fields for some reason" if @session.mode == :culerity
       @session.fill_in('Password', :with => 'supasikrit')
       @session.click_button('awesome')
-      YAML.load(@session.body)['password'].should == 'supasikrit'
+      extract_results(@session)['password'].should == 'supasikrit'
     end
   end
 
@@ -200,13 +203,13 @@ shared_examples_for "session" do
     it "should choose a radio button by id" do
       @session.choose("gender_male")
       @session.click_button('awesome')
-      YAML.load(@session.body)['gender'].should == 'male'
+      extract_results(@session)['gender'].should == 'male'
     end
     
     it "should choose a radio button by label" do
       @session.choose("Both")
       @session.click_button('awesome')
-      YAML.load(@session.body)['gender'].should == 'both'
+      extract_results(@session)['gender'].should == 'both'
     end
   end
 
@@ -219,7 +222,7 @@ shared_examples_for "session" do
       pending "Culerity doesn't like hidden fields for some reason" if @session.mode == :culerity
       @session.set_hidden_field("form_token", :to => 'test567')
       @session.click_button('awesome')
-      YAML.load(@session.body)['token'].should == 'test567'
+      extract_results(@session)['token'].should == 'test567'
     end
   end
 
@@ -231,13 +234,13 @@ shared_examples_for "session" do
     it "should check a checkbox by id" do
       @session.check("form_pets_cat")
       @session.click_button('awesome')
-      YAML.load(@session.body)['pets'].should include('dog', 'cat', 'hamster')
+      extract_results(@session)['pets'].should include('dog', 'cat', 'hamster')
     end
     
     it "should check a checkbox by label" do
       @session.check("Cat")
       @session.click_button('awesome')
-      YAML.load(@session.body)['pets'].should include('dog', 'cat', 'hamster')
+      extract_results(@session)['pets'].should include('dog', 'cat', 'hamster')
     end
   end
 
@@ -250,16 +253,16 @@ shared_examples_for "session" do
       pending "Culerity doesn't seem to uncheck this" if @session.mode == :culerity
       @session.uncheck("form_pets_hamster")
       @session.click_button('awesome')
-      YAML.load(@session.body)['pets'].should include('dog')
-      YAML.load(@session.body)['pets'].should_not include('hamster')
+      extract_results(@session)['pets'].should include('dog')
+      extract_results(@session)['pets'].should_not include('hamster')
     end
     
     it "should uncheck a checkbox by label" do
       pending "Culerity doesn't seem to uncheck this" if @session.mode == :culerity
       @session.uncheck("Hamster")
       @session.click_button('awesome')
-      YAML.load(@session.body)['pets'].should include('dog')
-      YAML.load(@session.body)['pets'].should_not include('hamster')
+      extract_results(@session)['pets'].should include('dog')
+      extract_results(@session)['pets'].should_not include('hamster')
     end
   end
 
@@ -271,13 +274,13 @@ shared_examples_for "session" do
     it "should select an option from a select box by id" do
       @session.select("Finish", :from => 'form_locale')
       @session.click_button('awesome')
-      YAML.load(@session.body)['locale'].should == 'fi'
+      extract_results(@session)['locale'].should == 'fi'
     end
     
     it "should select an option from a select box by label" do
       @session.select("Finish", :from => 'Locale')
       @session.click_button('awesome')
-      YAML.load(@session.body)['locale'].should == 'fi'
+      extract_results(@session)['locale'].should == 'fi'
     end
   end
   
@@ -305,27 +308,31 @@ shared_examples_for "session" do
       it "should set a file path by id" do
         @session.attach_file "form_image", __FILE__
         @session.click_button('awesome')
-        YAML.load(@session.body)['image'].should == File.basename(__FILE__)
+        extract_results(@session)['image'].should == File.basename(__FILE__)
       end
 
       it "should set a file path by label" do
         @session.attach_file "Image", __FILE__
         @session.click_button('awesome')
-        YAML.load(@session.body)['image'].should == File.basename(__FILE__)
+        extract_results(@session)['image'].should == File.basename(__FILE__)
       end
     end
 
     context "with multipart form" do
+      before do
+        @test_file_path = File.expand_path('fixtures/test_file.txt', File.dirname(__FILE__))
+      end
+      
       it "should set a file path by id" do
-        @session.attach_file "form_document", __FILE__
+        @session.attach_file "form_document", @test_file_path
         @session.click_button('Upload')
-        @session.body.should == File.read(__FILE__)
+        @session.body.should include(File.read(@test_file_path))
       end
 
       it "should set a file path by label" do
-        @session.attach_file "Document", __FILE__
+        @session.attach_file "Document", @test_file_path
         @session.click_button('Upload')
-        @session.body.should == File.read(__FILE__)
+        @session.body.should include(File.read(@test_file_path))
       end
     end
 

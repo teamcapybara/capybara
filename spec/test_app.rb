@@ -46,7 +46,7 @@ class TestApp < Sinatra::Base
   end
 
   post '/form' do
-    params[:form].to_yaml
+    '<pre id="results">' + params[:form].to_yaml + '</pre>'
   end
 
   post '/upload' do

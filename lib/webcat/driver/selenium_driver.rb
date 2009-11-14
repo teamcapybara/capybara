@@ -1,57 +1,83 @@
-require 'selenium/client'
-require 'webcat/driver/selenium/rc_server'
-require 'webcat/core_ext/tcp_socket'
-
+require 'selenium-webdriver'
 
 class Webcat::Driver::Selenium
   class Node < Struct.new(:node)
     def text
       node.text
     end
-    
-    def attribute(name)
-      value = if name.to_sym == :class
-        node.class_name
+
+    def [](name)
+      if name == :value
+        node.value
       else
-        node.send(name.to_sym)
+        node.attribute(name)
       end
-      return value if value and not value.empty?
+    rescue Selenium::WebDriver::Error::WebDriverError
+      nil
     end
-    
+
+    def set(value)
+      if tag_name == 'input' and %w(text password hidden file).include?(type)
+        node.clear
+        node.send_keys(value.to_s)
+      elsif tag_name == 'input' and type == 'radio'
+        node.select
+      elsif tag_name == 'input' and type == 'checkbox'
+        node.toggle
+      elsif tag_name == "textarea"
+        node.clear
+        node.send_keys(value.to_s)
+      end
+    end
+
+    def select(option)
+      node.find_element(:xpath, ".//option[text()='#{option}']").select
+    end
+
     def click
       node.click
     end
-    
+
     def tag_name
-      # FIXME: this might be the dumbest way ever of getting the tag name
-      # there has to be something better...
-      node.to_xml[/^\s*<([a-z0-9\-\:]+)/, 1]
+      node.tag_name
     end
+
+  private
+
+    def type
+      self[:type]
+    end
+
   end
-  
+
   attr_reader :app, :rack_server
 
-  def self.server
-    @server ||= Webcat::Selenium::SeleniumRCServer.new
+  def self.driver
+    unless @driver
+      @driver = Selenium::WebDriver.for :firefox
+      at_exit do
+        @driver.quit
+      end
+    end
+    @driver
   end
 
   def initialize(app)
     @app = app
     @rack_server = Webcat::Server.new(@app)
     @rack_server.boot
-    self.class.server.boot
   end
-  
+
   def visit(path)
-    browser.open(url(path))
+    driver.navigate.to(url(path))
   end
-  
+
   def body
-    browser.html
+    driver.page_source
   end
-  
+
   def find(selector)
-    browser.elements_by_xpath(selector).map { |node| Node.new(node) }
+    driver.find_elements(:xpath, selector).map { |node| Node.new(node) }
   end
 
 private
@@ -59,22 +85,9 @@ private
   def url(path)
     rack_server.url(path)
   end
-  
-  def browser
-    unless @_browser
-      @_browser = Selenium::Client::Driver.new :host => 'localhost',
-            :port => 4444, 
-            :browser => "*firefox", 
-            :url => rack_server.url('/'), 
-            :timeout_in_second => 10
-      @_browser.start_new_browser_session
-      
-      at_exit do
-        @_browser.close_current_browser_session
-      end
-    end
-    @_browser
+
+  def driver
+    self.class.driver
   end
 
 end
-
