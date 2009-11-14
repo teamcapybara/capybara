@@ -104,6 +104,16 @@ describe Webcat do
       foo.click_link('ullamco')
       foo.body.should include('Another World')
     end
+    
+    it "should provide a 'page' shortcut for more expressive tests" do
+      klass = Class.new do
+        include Webcat
+      end
+      foo = klass.new
+      foo.page.visit('/with_html')
+      foo.page.click_link('ullamco')
+      foo.page.body.should include('Another World')
+    end
   end
 
 end

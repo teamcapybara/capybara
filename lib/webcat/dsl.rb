@@ -30,6 +30,9 @@ module Webcat
 
   extend(self)
 
+  def page
+    Webcat.current_session
+  end
 
   SESSION_METHODS = [
     :visit, :body, :click_link, :click_button, :fill_in, :choose,
@@ -38,7 +41,7 @@ module Webcat
   SESSION_METHODS.each do |method|
     class_eval <<-RUBY, __FILE__, __LINE__+1
       def #{method}(*args, &block)
-        Webcat.current_session.#{method}(*args, &block)
+        page.#{method}(*args, &block)
       end
     RUBY
   end
