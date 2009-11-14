@@ -144,6 +144,14 @@ shared_examples_for "session" do
         extract_results(@session)['first_name'].should == 'John'
       end
     end
+    
+    context "with a locator that doesn't exist" do
+      it "should raise an error" do
+        running do
+          @session.click_button('does not exist')
+        end.should raise_error(Webcat::ElementNotFound)
+      end
+    end
 
     it "should follow redirects" do
       @session.click_button('Go FAR')
@@ -192,6 +200,14 @@ shared_examples_for "session" do
       @session.fill_in('Password', :with => 'supasikrit')
       @session.click_button('awesome')
       extract_results(@session)['password'].should == 'supasikrit'
+    end
+    
+    context "with a locator that doesn't exist" do
+      it "should raise an error" do
+        running do
+          @session.fill_in('does not exist', :with => 'Blah blah')
+        end.should raise_error(Webcat::ElementNotFound)
+      end
     end
   end
 

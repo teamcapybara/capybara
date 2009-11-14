@@ -80,20 +80,26 @@ private
   end
 
   def find_link(locator)
-    find_element("//a[@id='#{locator}']", %{//a[text()="#{locator}"]}, %{//a[@title="#{locator}"]})
+    link = find_element("//a[@id='#{locator}']", %{//a[text()="#{locator}"]}, %{//a[@title="#{locator}"]})
+    raise Webcat::ElementNotFound, "no button with value or id '#{locator}' found" unless link
+    link
   end
 
   def find_button(locator)
-    find_element(
+    button = find_element(
       "//input[@type='submit'][@id='#{locator}']",
       "//input[@type='submit'][@value='#{locator}']",
       "//input[@type='image'][@id='#{locator}']",
       "//input[@type='image'][@value='#{locator}']"
     )
+    raise Webcat::ElementNotFound, "no link with title, id or text '#{locator}' found" unless button
+    button
   end
 
   def find_field(locator, *kinds)
-    find_field_by_id(locator, *kinds) or find_field_by_label(locator, *kinds)
+    field = find_field_by_id(locator, *kinds) || find_field_by_label(locator, *kinds)
+    raise Webcat::ElementNotFound, "no field of kind #{kinds.inspect} with id or'#{locator}' found" unless field
+    field
   end
 
   FIELDS_PATHS = {
@@ -132,7 +138,7 @@ private
       element = find(locator).first
       return element if element
     end
-    raise Webcat::ElementNotFound, "element not found"
+    return nil
   end
   
   def find(locator)
