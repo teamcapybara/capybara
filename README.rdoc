@@ -2,28 +2,28 @@
 
 * http://github.com/jnicklas/webcat
 
-== DESCRIPTION:
+== Description:
 
 Webcat is a fledgeling replacement for webrat which aims to work with all
 browser simulators as well as rack-test. 
 
-== FEATURES/PROBLEMS:
+== Features/Problems:
 
 * FIX (list of features or problems)
 
-== SYNOPSIS:
+== Synopsis:
 
   FIX (code sample of usage)
 
-== REQUIREMENTS:
+== Requirements:
 
 * FIX (list of requirements)
 
-== INSTALL:
+== Install:
 
-* FIX (sudo gem install, anything else)
+Clone and install from github for now
 
-== LICENSE:
+== License:
 
 (The MIT License)
 
