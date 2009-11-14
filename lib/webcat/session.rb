@@ -68,6 +68,11 @@ class Webcat::Session
     yield
     scopes.pop
   end
+  
+  def save_and_open_page
+    require 'webcat/save_and_open_page'
+    Webcat::SaveAndOpenPage.save_and_open_page(body)
+  end
 
 private
 

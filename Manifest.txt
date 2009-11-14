@@ -13,6 +13,7 @@ lib/webcat/driver/safariwatir_driver.rb
 lib/webcat/driver/selenium_driver.rb
 lib/webcat/dsl.rb
 lib/webcat/rails.rb
+lib/webcat/save_and_open_page.rb
 lib/webcat/server.rb
 lib/webcat/session.rb
 script/console

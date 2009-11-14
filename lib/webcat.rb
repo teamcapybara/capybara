@@ -6,7 +6,7 @@ module Webcat
   class ElementNotFound < WebcatError; end
 
   class << self
-    attr_accessor :debug
+    attr_accessor :debug, :asset_root
     
     def log(message)
       puts "[webcat] #{message}" if debug
