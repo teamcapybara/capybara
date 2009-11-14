@@ -39,10 +39,6 @@ class Webcat::Session
     find_field(locator, :radio).set(true)
   end
   
-  def set_hidden_field(locator, options={})
-    find_field(locator, :hidden_field).set(options[:to])
-  end
-  
   def check(locator)
     find_field(locator, :checkbox).set(true)
   end
