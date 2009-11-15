@@ -71,6 +71,10 @@ class Webcat::Session
     end
   end
   
+  def has_css?(path, options={})
+    has_xpath?(Nokogiri::CSS.xpath_for(path).first, options)
+  end
+  
   def within(scope)
     scopes.push(scope)
     yield

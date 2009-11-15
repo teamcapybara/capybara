@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 module Webcat
   VERSION = '0.1'
 
