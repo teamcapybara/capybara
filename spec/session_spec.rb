@@ -6,7 +6,7 @@ shared_examples_for "session" do
   def extract_results(session)
     YAML.load Nokogiri::HTML(session.body).xpath("//pre[@id='results']").first.text
   end
-  
+
   describe '#app' do
     it "should remember the application" do
       @session.app.should == TestApp
@@ -21,7 +21,7 @@ shared_examples_for "session" do
       @session.body.should include('Another World')
     end
   end
-  
+
   describe '#click_link' do
     before do
       @session.visit('/with_html')
@@ -33,7 +33,7 @@ shared_examples_for "session" do
         @session.body.should include('Another World')
       end
     end
-    
+
     context "with text given" do
       it "should take user to the linked page" do
         @session.click_link('labore')
@@ -120,7 +120,7 @@ shared_examples_for "session" do
       end
 
       it "should not serialize a select tag without options" do
-        @results['tendency'].should be_nil 
+        @results['tendency'].should be_nil
       end
     end
 
@@ -144,7 +144,7 @@ shared_examples_for "session" do
         extract_results(@session)['first_name'].should == 'John'
       end
     end
-    
+
     context "with a locator that doesn't exist" do
       it "should raise an error" do
         running do
@@ -163,7 +163,7 @@ shared_examples_for "session" do
     before do
       @session.visit('/form')
     end
-    
+
     it "should fill in a text field by id" do
       @session.fill_in('form_first_name', :with => 'Harry')
       @session.click_button('awesome')
@@ -201,7 +201,7 @@ shared_examples_for "session" do
       @session.click_button('awesome')
       extract_results(@session)['password'].should == 'supasikrit'
     end
-    
+
     context "with a locator that doesn't exist" do
       it "should raise an error" do
         running do
@@ -215,13 +215,13 @@ shared_examples_for "session" do
     before do
       @session.visit('/form')
     end
-    
+
     it "should choose a radio button by id" do
       @session.choose("gender_male")
       @session.click_button('awesome')
       extract_results(@session)['gender'].should == 'male'
     end
-    
+
     it "should choose a radio button by label" do
       @session.choose("Both")
       @session.click_button('awesome')
@@ -233,13 +233,13 @@ shared_examples_for "session" do
     before do
       @session.visit('/form')
     end
-    
+
     it "should check a checkbox by id" do
       @session.check("form_pets_cat")
       @session.click_button('awesome')
       extract_results(@session)['pets'].should include('dog', 'cat', 'hamster')
     end
-    
+
     it "should check a checkbox by label" do
       @session.check("Cat")
       @session.click_button('awesome')
@@ -251,7 +251,7 @@ shared_examples_for "session" do
     before do
       @session.visit('/form')
     end
-    
+
     it "should uncheck a checkbox by id" do
       pending "Culerity doesn't seem to uncheck this" if @session.mode == :culerity
       @session.uncheck("form_pets_hamster")
@@ -259,7 +259,7 @@ shared_examples_for "session" do
       extract_results(@session)['pets'].should include('dog')
       extract_results(@session)['pets'].should_not include('hamster')
     end
-    
+
     it "should uncheck a checkbox by label" do
       pending "Culerity doesn't seem to uncheck this" if @session.mode == :culerity
       @session.uncheck("Hamster")
@@ -273,20 +273,20 @@ shared_examples_for "session" do
     before do
       @session.visit('/form')
     end
-    
+
     it "should select an option from a select box by id" do
       @session.select("Finish", :from => 'form_locale')
       @session.click_button('awesome')
       extract_results(@session)['locale'].should == 'fi'
     end
-    
+
     it "should select an option from a select box by label" do
       @session.select("Finish", :from => 'Locale')
       @session.click_button('awesome')
       extract_results(@session)['locale'].should == 'fi'
     end
   end
-  
+
   describe '#has_content?' do
     it "should be true if the given content is on the page at least once" do
       @session.visit('/with_html')
@@ -294,7 +294,7 @@ shared_examples_for "session" do
       @session.should have_content('Lorem')
       @session.should have_content('Redirect')
     end
-    
+
     it "should be false if the given content is not on the page" do
       @session.visit('/with_html')
       @session.should_not have_content('xxxxyzzz')
@@ -302,11 +302,55 @@ shared_examples_for "session" do
     end
   end
 
+  describe '#has_xpath?' do
+    before do
+      @session.visit('/with_html')
+    end
+
+    it "should be true if the given selector is on the page" do
+      @session.should have_xpath("//p")
+      @session.should have_xpath("//p//a[@id='foo']")
+      @session.should have_xpath("//p[contains(.,'est')]")
+    end
+
+    it "should be false if the given selector is not on the page" do
+      @session.should_not have_xpath("//abbr")
+      @session.should_not have_xpath("//p//a[@id='doesnotexist']")
+      @session.should_not have_xpath("//p[contains(.,'thisstringisnotonpage')]")
+    end
+    
+    it "should respect scopes" do
+      @session.within "//p[@id='first']" do
+        @session.should have_xpath("//a[@id='foo']")
+        @session.should_not have_xpath("//a[@id='red']")
+      end
+    end
+
+    context "with count" do
+      it "should be true if the content is on the page the given number of times" do
+        @session.should have_xpath("//p", :count => 3)
+        @session.should have_xpath("//p//a[@id='foo']", :count => 1)
+        @session.should have_xpath("//p[contains(.,'est')]", :count => 1)
+      end
+
+      it "should be false if the content is on the page the given number of times" do
+        @session.should_not have_xpath("//p", :count => 6)
+        @session.should_not have_xpath("//p//a[@id='foo']", :count => 2)
+        @session.should_not have_xpath("//p[contains(.,'est')]", :count => 5)
+      end
+
+      it "should be false if the content isn't on the page at all" do
+        @session.should_not have_xpath("//abbr", :count => 2)
+        @session.should_not have_xpath("//p//a[@id='doesnotexist']", :count => 1)
+      end
+    end
+  end
+
   describe "#attach_file" do
     before do
       @session.visit('/form')
     end
-    
+
     context "with normal form" do
       it "should set a file path by id" do
         @session.attach_file "form_image", __FILE__
@@ -325,7 +369,7 @@ shared_examples_for "session" do
       before do
         @test_file_path = File.expand_path('fixtures/test_file.txt', File.dirname(__FILE__))
       end
-      
+
       it "should set a file path by id" do
         @session.attach_file "form_document", @test_file_path
         @session.click_button('Upload')
@@ -340,12 +384,12 @@ shared_examples_for "session" do
     end
 
   end
-  
+
   describe '#within' do
     before do
       @session.visit('/with_scope')
     end
-    
+
     context "with click_link" do
       it "should click links in the given scope" do
         @session.within("//li[contains(.,'With Simple HTML')]") do
@@ -353,7 +397,7 @@ shared_examples_for "session" do
         end
         @session.body.should include('<h1>Bar</h1>')
       end
-      
+
       context "with nested scopes" do
         it "should respect the inner scope" do
           @session.within("//div[@id='for_bar']") do
@@ -363,7 +407,7 @@ shared_examples_for "session" do
           end
           @session.body.should include('Another World')
         end
-        
+
         it "should respect the outer scope" do
           @session.within("//div[@id='another_foo']") do
             @session.within("//li[contains(.,'With Simple HTML')]") do
@@ -374,7 +418,7 @@ shared_examples_for "session" do
         end
       end
     end
-    
+
     context "with forms" do
       it "should fill in a field and click a button" do
         @session.within("//li[contains(.,'Bar')]") do
@@ -391,7 +435,7 @@ shared_examples_for "session" do
     end
   end
 end
-  
+
 describe Webcat::Session do
   context 'with non-existant driver' do
     it "should raise an error" do

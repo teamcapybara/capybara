@@ -60,7 +60,15 @@ class Webcat::Session
   end
   
   def has_content?(content)
-    find("//*[contains(child::text(),'#{content}')]").size > 0
+    has_xpath?("//*[contains(child::text(),'#{content}')]")
+  end
+  
+  def has_xpath?(path, options={})
+    if options[:count]
+      find(path).size == options[:count]
+    else
+      find(path).size > 0
+    end
   end
   
   def within(scope)
