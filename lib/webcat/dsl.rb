@@ -35,7 +35,7 @@ module Webcat
   end
 
   SESSION_METHODS = [
-    :visit, :body, :click_link, :click_button, :fill_in, :choose, :has_xpath?,
+    :visit, :body, :click_link, :click_button, :fill_in, :choose, :has_xpath?, :has_css?,
     :check, :uncheck, :attach_file, :select, :has_content?, :within, :save_and_open_page
   ]
   SESSION_METHODS.each do |method|
