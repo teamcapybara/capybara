@@ -4,24 +4,77 @@
 
 == Description:
 
-Webcat is a fledgeling replacement for webrat which aims to work with all
-browser simulators as well as rack-test. 
-
-== Features/Problems:
-
-* FIX (list of features or problems)
-
-== Synopsis:
-
-  FIX (code sample of usage)
-
-== Requirements:
-
-* FIX (list of requirements)
+Webcat is a unified API for writing web application integration tests for Rack
+applications. It works with any rack application and currently has support for
+Culerity, Selenium and rack-test.
 
 == Install:
 
 Clone and install from github for now
+
+== Getting Started:
+
+You can initialize a session and start issuing commands:
+
+    require 'webcat'
+
+    session = Webcat::Session.new(:culerity, my_rack_app)
+    session.within("//form[@id='session']") do
+      session.fill_in 'Login', :with => 'user@example.com'
+      session.fill_in 'Password', :with => 'password'
+    end
+    session.click_link 'Sign in'
+
+Webcat provides a terser DSL:
+
+    require 'webcat'
+    require 'webcat/dsl'
+    
+    include Webcat
+    Webcat.default_driver = :culerity
+
+    within("//form[@id='session']") do
+      fill_in 'Login', :with => 'user@example.com'
+      fill_in 'Password', :with => 'password'
+    end
+    click_link 'Sign in'
+
+If you want to use it with Cucumber, just require:
+
+    require 'webcat/cucumber'
+    Webcat.app = my_rack_app
+
+Then write your steps like this:
+
+    When /I sign in/ do
+      within("//form[@id='session']") do
+        fill_in 'Login', :with => 'user@example.com'
+        fill_in 'Password', :with => 'password'
+      end
+      click_link 'Sign in'
+    end
+
+If you're using Rails, webcan can set up the rack app for you. Just do:
+
+    require 'webcat/cucumber'
+    require 'webcat/rails'
+
+== Gotchas:
+
+* Everything is *case sensitive*. Webcat heavily relies on XPath, which doesn't
+  support case insensitive searches.
+* Unchecking checkboxes and filling in password fields is currently broken
+  under Culerity.
+* Domain names (including subdomains) don't work under rack-test. Since it's a
+  pain to set up subdomains for the other drivers anyway, you should consider
+  an alternate solution. See for example [GIST here].
+* The set_hidden_field method from Webrat is not implemented, since it doesn't
+  work in any of the browser based drivers (Culerity, Selenium)
+* Access to session, request and response from the test is not possible. Maybe
+  we'll do response headers at some point in the future, but the others really
+  shouldn't be touched in an integration test anyway.
+* Access to Rails specific stuff (such as +controller+) is unavailable, since
+  we're not using Rails' integration testing.
 
 == License:
 
