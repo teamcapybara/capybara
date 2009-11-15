@@ -12,10 +12,13 @@ Hoe.plugin :newgem
 # Run 'rake -T' to see list of generated tasks (from gem root directory)
 $hoe = Hoe.spec 'webcat' do
   self.developer 'Jonas Nicklas', 'jonas.nicklas@gmail.com'
-  self.rubyforge_name       = self.name # TODO this is default value
+  self.rubyforge_name = self.name # TODO this is default value
 
-  self.extra_deps         = [['activesupport','>= 2.0.2']]
-
+  self.extra_deps = [
+    ['nokogiri', '>= 1.3.3'],
+    ['culerity', '>= 0.2.3'],
+    ['selenium-webdriver', '>= 0.0.3']
+  ]
 end
 
 require 'newgem/tasks'
