@@ -20,6 +20,10 @@ module Webcat
     def current_session
       session_pool["#{current_driver}#{app.object_id}"] ||= Webcat::Session.new(current_driver, app)
     end
+    
+    def reset_sessions!
+      @session_pool = nil
+    end
 
   private
 
