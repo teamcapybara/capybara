@@ -98,7 +98,7 @@ private
 
   def find_link(locator)
     link = find_element("//a[@id='#{locator}']", "//a[contains(.,'#{locator}')]", "//a[@title='#{locator}']")
-    raise Webcat::ElementNotFound, "no button with value or id '#{locator}' found" unless link
+    raise Webcat::ElementNotFound, "no link with title, id or text '#{locator}' found" unless link
     link
   end
 
@@ -109,7 +109,7 @@ private
       "//input[@type='image'][@id='#{locator}']",
       "//input[@type='image'][@value='#{locator}']"
     )
-    raise Webcat::ElementNotFound, "no link with title, id or text '#{locator}' found" unless button
+    raise Webcat::ElementNotFound, "no button with value or id '#{locator}' found" unless button
     button
   end
 
