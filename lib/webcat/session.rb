@@ -60,7 +60,7 @@ class Webcat::Session
   end
   
   def has_content?(content)
-    has_xpath?("//*[contains(child::text(),'#{content}')]")
+    has_xpath?("//*[contains(.,'#{content}')]")
   end
   
   def has_xpath?(path, options={})
