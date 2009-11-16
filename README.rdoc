@@ -75,6 +75,9 @@ If you're using Rails, webcan can set up the rack app for you. Just do:
   shouldn't be touched in an integration test anyway.
 * Access to Rails specific stuff (such as +controller+) is unavailable, since
   we're not using Rails' integration testing.
+* <a href="#"> Will cause problems under rack-test, please do
+  <a href="/same/url#"> instead. You can achieve this in Rails with
+  +link_to('foo', :anchor => '')+
 
 == License:
 
