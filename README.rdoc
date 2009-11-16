@@ -1,10 +1,10 @@
-= webcat
+= capybara
 
-* http://github.com/jnicklas/webcat
+* http://github.com/jnicklas/capybara
 
 == Description:
 
-Webcat is a unified API for writing web application integration tests for Rack
+Capybara is a unified API for writing web application integration tests for Rack
 applications. It works with any rack application and currently has support for
 Culerity, Selenium and rack-test.
 
@@ -16,22 +16,22 @@ Clone and install from github for now
 
 You can initialize a session and start issuing commands:
 
-    require 'webcat'
+    require 'capybara'
 
-    session = Webcat::Session.new(:culerity, my_rack_app)
+    session = Capybara::Session.new(:culerity, my_rack_app)
     session.within("//form[@id='session']") do
       session.fill_in 'Login', :with => 'user@example.com'
       session.fill_in 'Password', :with => 'password'
     end
     session.click_link 'Sign in'
 
-Webcat provides a terser DSL:
+Capybara provides a terser DSL:
 
-    require 'webcat'
-    require 'webcat/dsl'
+    require 'capybara'
+    require 'capybara/dsl'
     
-    include Webcat
-    Webcat.default_driver = :culerity
+    include Capybara
+    Capybara.default_driver = :culerity
 
     within("//form[@id='session']") do
       fill_in 'Login', :with => 'user@example.com'
@@ -41,8 +41,8 @@ Webcat provides a terser DSL:
 
 If you want to use it with Cucumber, just require:
 
-    require 'webcat/cucumber'
-    Webcat.app = my_rack_app
+    require 'capybara/cucumber'
+    Capybara.app = my_rack_app
 
 Then write your steps like this:
 
@@ -56,12 +56,12 @@ Then write your steps like this:
 
 If you're using Rails, webcan can set up the rack app for you. Just do:
 
-    require 'webcat/cucumber'
-    require 'webcat/rails'
+    require 'capybara/cucumber'
+    require 'capybara/rails'
 
 == Gotchas:
 
-* Everything is *case sensitive*. Webcat heavily relies on XPath, which doesn't
+* Everything is *case sensitive*. Capybara heavily relies on XPath, which doesn't
   support case insensitive searches.
 * Unchecking checkboxes and filling in password fields is currently broken
   under Culerity.

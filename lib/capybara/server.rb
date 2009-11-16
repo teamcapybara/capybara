@@ -1,7 +1,7 @@
 require 'net/http'
 require 'rack'
 
-class Webcat::Server
+class Capybara::Server
   attr_reader :app
   
   def initialize(app)
@@ -21,21 +21,21 @@ class Webcat::Server
   end
   
   def boot
-    Webcat.log "application has already booted" and return if responsive?
-    Webcat.log "booting Rack applicartion on port #{port}"
+    Capybara.log "application has already booted" and return if responsive?
+    Capybara.log "booting Rack applicartion on port #{port}"
     start_time = Time.now
     Thread.new do
       Rack::Handler::Mongrel.run @app, :Port => port
     end
-    Webcat.log "checking if application has booted"
+    Capybara.log "checking if application has booted"
     loop do
-      Webcat.log("application has booted") and break if responsive?
+      Capybara.log("application has booted") and break if responsive?
       if Time.now - start_time > 10 
-        Webcat.log "Rack application timed out during boot"
+        Capybara.log "Rack application timed out during boot"
         exit
       end
       
-      Webcat.log '.'
+      Capybara.log '.'
       sleep 1
     end
   end

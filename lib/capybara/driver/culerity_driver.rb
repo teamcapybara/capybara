@@ -1,6 +1,6 @@
 require 'culerity'
 
-class Webcat::Driver::Culerity
+class Capybara::Driver::Culerity
   class Node < Struct.new(:node)
     def text
       node.text
@@ -48,7 +48,7 @@ class Webcat::Driver::Culerity
 
   def initialize(app)
     @app = app
-    @rack_server = Webcat::Server.new(@app)
+    @rack_server = Capybara::Server.new(@app)
     @rack_server.boot
   end
   

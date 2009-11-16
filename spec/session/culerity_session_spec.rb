@@ -1,14 +1,14 @@
 require File.expand_path('../spec_helper', File.dirname(__FILE__))
 
-describe Webcat::Session do
+describe Capybara::Session do
   context 'with culerity driver' do
     before do
-      @session = Webcat::Session.new(:culerity, TestApp)
+      @session = Capybara::Session.new(:culerity, TestApp)
     end
   
     describe '#driver' do
       it "should be a rack test driver" do
-        @session.driver.should be_an_instance_of(Webcat::Driver::Culerity)
+        @session.driver.should be_an_instance_of(Capybara::Driver::Culerity)
       end
     end
     

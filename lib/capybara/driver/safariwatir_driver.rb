@@ -1,7 +1,6 @@
-require 'watir'
-Watir::Browser.default = "firefox"
+require 'safariwatir'
 
-class Webcat::Driver::FireWatir
+class Capybara::Driver::SafariWatir
   class Node < Struct.new(:node)
     def text
       node.text
@@ -31,7 +30,7 @@ class Webcat::Driver::FireWatir
 
   def initialize(app)
     @app = app
-    @rack_server = Webcat::Server.new(@app)
+    @rack_server = Capybara::Server.new(@app)
     @rack_server.boot
   end
   
@@ -44,7 +43,9 @@ class Webcat::Driver::FireWatir
   end
   
   def find(selector)
-    browser.elements_by_xpath(selector).map { |node| Node.new(node) }
+    foo = Struct.new(:what).new
+    foo.what = selector
+    browser.send(:scripter).operate_by_xpath(foo){}.map { |node| Node.new(node) }
   end
 
 private
@@ -55,7 +56,7 @@ private
   
   def browser
     unless @_browser
-      @_browser = Watir::Browser.new
+      @_browser = Watir::Safari.new
       at_exit do
         @_browser.exit
       end

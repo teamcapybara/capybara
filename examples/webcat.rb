@@ -1,4 +1,4 @@
-session = Webcat::Session.new('http://localhost:3000')
+session = Capybara::Session.new('http://localhost:3000')
 
 session.visit '/'
 

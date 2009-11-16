@@ -1,8 +1,8 @@
 require File.expand_path('../spec_helper', File.dirname(__FILE__))
 
-describe Webcat::Driver::Selenium do
+describe Capybara::Driver::Selenium do
   before do
-    @driver = Webcat::Driver::Selenium.new(TestApp)
+    @driver = Capybara::Driver::Selenium.new(TestApp)
   end
   
   it_should_behave_like "driver"

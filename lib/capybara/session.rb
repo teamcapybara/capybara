@@ -1,4 +1,4 @@
-class Webcat::Session
+class Capybara::Session
   attr_reader :mode, :app
 
   def initialize(mode, app)
@@ -9,13 +9,13 @@ class Webcat::Session
   def driver
     @driver ||= case mode
     when :rack_test
-      Webcat::Driver::RackTest.new(app)
+      Capybara::Driver::RackTest.new(app)
     when :culerity
-      Webcat::Driver::Culerity.new(app)
+      Capybara::Driver::Culerity.new(app)
     when :selenium
-      Webcat::Driver::Selenium.new(app)
+      Capybara::Driver::Selenium.new(app)
     else
-      raise Webcat::DriverNotFoundError, "no driver called #{mode} was found"
+      raise Capybara::DriverNotFoundError, "no driver called #{mode} was found"
     end
   end
 
@@ -82,15 +82,15 @@ class Webcat::Session
   def within(kind, scope=nil)
     kind, scope = :xpath, kind unless scope
     scope = css_to_xpath(scope) if kind == :css
-    raise Webcat::ElementNotFound, "scope '#{scope}' not found on page" if find(scope).empty?
+    raise Capybara::ElementNotFound, "scope '#{scope}' not found on page" if find(scope).empty?
     scopes.push(scope)
     yield
     scopes.pop
   end
   
   def save_and_open_page
-    require 'webcat/save_and_open_page'
-    Webcat::SaveAndOpenPage.save_and_open_page(body)
+    require 'capybara/save_and_open_page'
+    Capybara::SaveAndOpenPage.save_and_open_page(body)
   end
 
 private
@@ -120,7 +120,7 @@ private
 
   def find_link(locator)
     link = find_element("//a[@id='#{locator}']", "//a[contains(.,'#{locator}')]", "//a[@title='#{locator}']")
-    raise Webcat::ElementNotFound, "no link with title, id or text '#{locator}' found" unless link
+    raise Capybara::ElementNotFound, "no link with title, id or text '#{locator}' found" unless link
     link
   end
 
@@ -131,13 +131,13 @@ private
       "//input[@type='image'][@id='#{locator}']",
       "//input[@type='image'][@value='#{locator}']"
     )
-    raise Webcat::ElementNotFound, "no button with value or id '#{locator}' found" unless button
+    raise Capybara::ElementNotFound, "no button with value or id '#{locator}' found" unless button
     button
   end
 
   def find_field(locator, *kinds)
     field = find_field_by_id(locator, *kinds) || find_field_by_label(locator, *kinds)
-    raise Webcat::ElementNotFound, "no field of kind #{kinds.inspect} with id or'#{locator}' found" unless field
+    raise Capybara::ElementNotFound, "no field of kind #{kinds.inspect} with id or'#{locator}' found" unless field
     field
   end
 

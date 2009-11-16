@@ -52,7 +52,7 @@ shared_examples_for "session" do
       it "should raise an error" do
         running do
           @session.click_link('does not exist')
-        end.should raise_error(Webcat::ElementNotFound)
+        end.should raise_error(Capybara::ElementNotFound)
       end
     end
 
@@ -149,7 +149,7 @@ shared_examples_for "session" do
       it "should raise an error" do
         running do
           @session.click_button('does not exist')
-        end.should raise_error(Webcat::ElementNotFound)
+        end.should raise_error(Capybara::ElementNotFound)
       end
     end
 
@@ -206,7 +206,7 @@ shared_examples_for "session" do
       it "should raise an error" do
         running do
           @session.fill_in('does not exist', :with => 'Blah blah')
-        end.should raise_error(Webcat::ElementNotFound)
+        end.should raise_error(Capybara::ElementNotFound)
       end
     end
   end
@@ -505,7 +505,7 @@ shared_examples_for "session" do
         running {
           @session.within("//div[@id='doesnotexist']") do
           end
-        }.should raise_error(Webcat::ElementNotFound)
+        }.should raise_error(Capybara::ElementNotFound)
       end
     end
 
@@ -526,12 +526,12 @@ shared_examples_for "session" do
   end
 end
 
-describe Webcat::Session do
+describe Capybara::Session do
   context 'with non-existant driver' do
     it "should raise an error" do
       running {
-        Webcat::Session.new(:quox, TestApp).driver
-      }.should raise_error(Webcat::DriverNotFoundError)
+        Capybara::Session.new(:quox, TestApp).driver
+      }.should raise_error(Capybara::DriverNotFoundError)
     end
   end
 end

@@ -1,4 +1,4 @@
-module Webcat
+module Capybara
   class << self
     attr_writer :default_driver, :current_driver, :javascript_driver
 
@@ -22,7 +22,7 @@ module Webcat
     end
 
     def current_session
-      session_pool["#{current_driver}#{app.object_id}"] ||= Webcat::Session.new(current_driver, app)
+      session_pool["#{current_driver}#{app.object_id}"] ||= Capybara::Session.new(current_driver, app)
     end
     
     def reset_sessions!
@@ -39,7 +39,7 @@ module Webcat
   extend(self)
 
   def page
-    Webcat.current_session
+    Capybara.current_session
   end
 
   SESSION_METHODS = [

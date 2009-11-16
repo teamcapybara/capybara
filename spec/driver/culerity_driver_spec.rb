@@ -1,8 +1,8 @@
 require File.expand_path('../spec_helper', File.dirname(__FILE__))
 
-describe Webcat::Driver::Culerity do
+describe Capybara::Driver::Culerity do
   before do
-    @driver = Webcat::Driver::Culerity.new(TestApp)
+    @driver = Capybara::Driver::Culerity.new(TestApp)
   end
   
   it_should_behave_like "driver"

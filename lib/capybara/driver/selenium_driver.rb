@@ -1,6 +1,6 @@
 require 'selenium-webdriver'
 
-class Webcat::Driver::Selenium
+class Capybara::Driver::Selenium
   class Node < Struct.new(:node)
     def text
       node.text
@@ -64,7 +64,7 @@ class Webcat::Driver::Selenium
 
   def initialize(app)
     @app = app
-    @rack_server = Webcat::Server.new(@app)
+    @rack_server = Capybara::Server.new(@app)
     @rack_server.boot
   end
 

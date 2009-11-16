@@ -2,7 +2,7 @@ require 'rubygems'
 gem 'hoe', '>= 2.1.0'
 require 'hoe'
 require 'fileutils'
-require './lib/webcat'
+require './lib/capybara'
 
 Hoe.plugin :newgem
 # Hoe.plugin :website
@@ -10,7 +10,7 @@ Hoe.plugin :newgem
 
 # Generate all the Rake tasks
 # Run 'rake -T' to see list of generated tasks (from gem root directory)
-$hoe = Hoe.spec 'webcat' do
+$hoe = Hoe.spec 'capybara' do
   self.developer 'Jonas Nicklas', 'jonas.nicklas@gmail.com'
   self.rubyforge_name = self.name # TODO this is default value
 

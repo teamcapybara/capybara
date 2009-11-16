@@ -1,7 +1,7 @@
 require 'rack/test'
 require 'nokogiri'
 
-class Webcat::Driver::RackTest
+class Capybara::Driver::RackTest
   class Node < Struct.new(:session, :node)
     def text
       node.text

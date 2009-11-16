@@ -1,8 +1,8 @@
 require File.expand_path('../spec_helper', File.dirname(__FILE__))
 
-describe Webcat::Driver::SafariWatir do
+describe Capybara::Driver::SafariWatir do
   before do
-    @driver = Webcat::Driver::SafariWatir.new(TestApp)
+    @driver = Capybara::Driver::SafariWatir.new(TestApp)
   end
   
   # it_should_behave_like "driver"
