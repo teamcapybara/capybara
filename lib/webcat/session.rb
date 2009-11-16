@@ -80,6 +80,7 @@ class Webcat::Session
   end
   
   def within(scope)
+    raise Webcat::ElementNotFound, "scope '#{scope}' not found on page" if find(scope).empty?
     scopes.push(scope)
     yield
     scopes.pop

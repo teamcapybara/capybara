@@ -482,6 +482,13 @@ shared_examples_for "session" do
           @session.body.should include('Hello world')
         end
       end
+      
+      it "should raise an error if the scope is not found on the page" do
+        running {
+          @session.within("//div[@id='doesnotexist']") do
+          end
+        }.should raise_error(Webcat::ElementNotFound)
+      end
     end
 
     context "with forms" do
