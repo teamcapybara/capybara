@@ -17,7 +17,9 @@ $hoe = Hoe.spec 'capybara' do
   self.extra_deps = [
     ['nokogiri', '>= 1.3.3'],
     ['culerity', '>= 0.2.3'],
-    ['selenium-webdriver', '>= 0.0.3']
+    ['selenium-webdriver', '>= 0.0.3'],
+    ['rack', '>= 1.0.0'],
+    ['database_cleaner', '>= 0.2.3']
   ]
 end
 
