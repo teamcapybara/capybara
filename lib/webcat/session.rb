@@ -64,10 +64,14 @@ class Webcat::Session
   end
   
   def has_xpath?(path, options={})
+    results = find(path)
+    if options[:text]
+      results = filter_by_text(results, options[:text])
+    end
     if options[:count]
-      find(path).size == options[:count]
+      results.size == options[:count]
     else
-      find(path).size > 0
+      results.size > 0
     end
   end
   
@@ -87,6 +91,17 @@ class Webcat::Session
   end
 
 private
+
+  def filter_by_text(nodes, text)
+    nodes.select do |node|
+      case text
+      when String
+        node.text.include?(text)
+      when Regexp
+        node.text =~ text
+      end
+    end
+  end
 
   def current_scope
     scopes.join('')

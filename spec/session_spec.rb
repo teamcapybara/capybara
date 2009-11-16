@@ -344,6 +344,18 @@ shared_examples_for "session" do
         @session.should_not have_xpath("//p//a[@id='doesnotexist']", :count => 1)
       end
     end
+    
+    context "with text" do
+      it "should discard all matches where the given string is not contained" do
+        @session.should have_xpath("//p//a", :text => "Redirect", :count => 1)
+        @session.should_not have_xpath("//p", :text => "Doesnotexist")
+      end
+      
+      it "should discard all matches where the given regexp is not matched" do
+        @session.should have_xpath("//p//a", :text => /re[dab]i/i, :count => 1)
+        @session.should_not have_xpath("//p//a", :text => /Red$/)
+      end
+    end
   end
   
   describe '#has_css?' do
@@ -383,6 +395,18 @@ shared_examples_for "session" do
       it "should be false if the content isn't on the page at all" do
         @session.should_not have_css("abbr", :count => 2)
         @session.should_not have_css("p a.doesnotexist", :count => 1)
+      end
+    end
+    
+    context "with text" do
+      it "should discard all matches where the given string is not contained" do
+        @session.should have_css("p a", :text => "Redirect", :count => 1)
+        @session.should_not have_css("p a", :text => "Doesnotexist")
+      end
+      
+      it "should discard all matches where the given regexp is not matched" do
+        @session.should have_css("p a", :text => /re[dab]i/i, :count => 1)
+        @session.should_not have_css("p a", :text => /Red$/)
       end
     end
   end
