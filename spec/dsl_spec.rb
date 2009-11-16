@@ -36,6 +36,17 @@ describe Webcat do
       Webcat.current_driver.should == :culerity
     end
   end
+  
+  describe '#javascript_driver' do
+    it "should default to selenium" do
+      Webcat.javascript_driver.should == :selenium
+    end
+
+    it "should be changeable" do
+      Webcat.javascript_driver = :culerity
+      Webcat.javascript_driver.should == :culerity
+    end
+  end
 
   describe '#use_default_driver' do
     it "should restore the default driver" do

@@ -1,6 +1,6 @@
 module Webcat
   class << self
-    attr_writer :default_driver, :current_driver
+    attr_writer :default_driver, :current_driver, :javascript_driver
 
     attr_accessor :app
 
@@ -12,6 +12,10 @@ module Webcat
       @current_driver || default_driver 
     end
     alias_method :mode, :current_driver
+    
+    def javascript_driver
+      @javascript_driver || :selenium
+    end
 
     def use_default_driver
       @current_driver = nil 
