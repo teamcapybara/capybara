@@ -454,6 +454,24 @@ shared_examples_for "session" do
     before do
       @session.visit('/with_scope')
     end
+    
+    context "with CSS selector" do
+      it "should click links in the given scope" do
+        @session.within(:css, "ul li[contains('With Simple HTML')]") do
+          @session.click_link('Go')
+        end
+        @session.body.should include('<h1>Bar</h1>')
+      end
+    end
+    
+    context "with XPath selector" do
+      it "should click links in the given scope" do
+        @session.within(:xpath, "//li[contains(.,'With Simple HTML')]") do
+          @session.click_link('Go')
+        end
+        @session.body.should include('<h1>Bar</h1>')
+      end
+    end
 
     context "with click_link" do
       it "should click links in the given scope" do

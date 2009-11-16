@@ -76,10 +76,12 @@ class Webcat::Session
   end
   
   def has_css?(path, options={})
-    has_xpath?(Nokogiri::CSS.xpath_for(path).first, options)
+    has_xpath?(css_to_xpath(path), options)
   end
   
-  def within(scope)
+  def within(kind, scope=nil)
+    kind, scope = :xpath, kind unless scope
+    scope = css_to_xpath(scope) if kind == :css
     raise Webcat::ElementNotFound, "scope '#{scope}' not found on page" if find(scope).empty?
     scopes.push(scope)
     yield
@@ -92,6 +94,10 @@ class Webcat::Session
   end
 
 private
+
+  def css_to_xpath(css)
+    Nokogiri::CSS.xpath_for(css).first
+  end
 
   def filter_by_text(nodes, text)
     nodes.select do |node|
