@@ -457,6 +457,31 @@ shared_examples_for "session" do
     end
 
   end
+  
+  describe '#find_field' do
+    before do
+      @session.visit('/form')
+    end
+
+    it "should find any field" do
+      @session.find_field('Dog').value.should == 'dog'
+      @session.find_field('form_description').text.should == 'Descriptive text goes here'
+      @session.find_field('Region')[:name].should == 'form[region]'
+    end
+    
+    it "should raise an error if the field doesn't exist" do
+      running {
+        @session.find_field('Does not exist')
+      }.should raise_error(Capybara::ElementNotFound)
+    end
+    
+    it "should find only given kind of field" do
+      @session.find_field('form_description', :text_field, :text_area).text.should == 'Descriptive text goes here'
+      running {
+        @session.find_field('form_description', :password_field)
+      }.should raise_error(Capybara::ElementNotFound)
+    end
+  end
 
   describe '#within' do
     before do

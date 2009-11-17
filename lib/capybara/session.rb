@@ -93,6 +93,13 @@ class Capybara::Session
     Capybara::SaveAndOpenPage.save_and_open_page(body)
   end
 
+  def find_field(locator, *kinds)
+    kinds = FIELDS_PATHS.keys if kinds.empty?
+    field = find_field_by_id(locator, *kinds) || find_field_by_label(locator, *kinds)
+    raise Capybara::ElementNotFound, "no field of kind #{kinds.inspect} with id or label '#{locator}' found" unless field
+    field
+  end
+
 private
 
   def css_to_xpath(css)
@@ -133,12 +140,6 @@ private
     )
     raise Capybara::ElementNotFound, "no button with value or id '#{locator}' found" unless button
     button
-  end
-
-  def find_field(locator, *kinds)
-    field = find_field_by_id(locator, *kinds) || find_field_by_label(locator, *kinds)
-    raise Capybara::ElementNotFound, "no field of kind #{kinds.inspect} with id or label '#{locator}' found" unless field
-    field
   end
 
   FIELDS_PATHS = {
