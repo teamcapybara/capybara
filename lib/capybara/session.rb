@@ -137,7 +137,7 @@ private
 
   def find_field(locator, *kinds)
     field = find_field_by_id(locator, *kinds) || find_field_by_label(locator, *kinds)
-    raise Capybara::ElementNotFound, "no field of kind #{kinds.inspect} with id or'#{locator}' found" unless field
+    raise Capybara::ElementNotFound, "no field of kind #{kinds.inspect} with id or label '#{locator}' found" unless field
     field
   end
 
