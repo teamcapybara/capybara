@@ -47,9 +47,9 @@ shared_examples_for 'driver' do
       end
 
       it "should allow assignment of field value" do
-        @driver.find('//input').first[:value].should == 'monkey'
+        @driver.find('//input').first.value.should == 'monkey'
         @driver.find('//input').first.set('gorilla')
-        @driver.find('//input').first[:value].should == 'gorilla'
+        @driver.find('//input').first.value.should == 'gorilla'
       end
       
       it "should extract node tag name" do

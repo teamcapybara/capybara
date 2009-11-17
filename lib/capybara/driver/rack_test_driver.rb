@@ -2,7 +2,7 @@ require 'rack/test'
 require 'nokogiri'
 
 class Capybara::Driver::RackTest
-  class Node < Struct.new(:session, :node)
+  class Node < Capybara::Node
     def text
       node.text
     end
@@ -16,7 +16,7 @@ class Capybara::Driver::RackTest
       if tag_name == 'input' and %w(text password hidden file).include?(type)
         node['value'] = value.to_s
       elsif tag_name == 'input' and type == 'radio'
-        session.html.xpath("//input[@name='#{self[:name]}']").each { |node| node.remove_attribute("checked") }
+        driver.html.xpath("//input[@name='#{self[:name]}']").each { |node| node.remove_attribute("checked") }
         node['checked'] = 'checked'
       elsif tag_name == 'input' and type == 'checkbox'
         if value
@@ -36,9 +36,9 @@ class Capybara::Driver::RackTest
 
     def click
       if tag_name == 'a'
-        session.visit(self[:href])
+        driver.visit(self[:href])
       elsif tag_name == 'input' and %w(submit image).include?(type)
-        Form.new(session, form).submit(self)
+        Form.new(driver, form).submit(self)
       end
     end
     
@@ -100,9 +100,9 @@ class Capybara::Driver::RackTest
 
     def submit(button)
       if post?
-        session.submit(node['action'].to_s, params(button)) 
+        driver.submit(node['action'].to_s, params(button)) 
       else
-        session.visit(node['action'].to_s + '?' + params(button)) 
+        driver.visit(node['action'].to_s + '?' + params(button)) 
       end
     end
 

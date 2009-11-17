@@ -1,7 +1,7 @@
 require 'selenium-webdriver'
 
 class Capybara::Driver::Selenium
-  class Node < Struct.new(:node)
+  class Node < Capybara::Node
     def text
       node.text
     end
@@ -77,7 +77,7 @@ class Capybara::Driver::Selenium
   end
 
   def find(selector)
-    driver.find_elements(:xpath, selector).map { |node| Node.new(node) }
+    driver.find_elements(:xpath, selector).map { |node| Node.new(self, node) }
   end
 
 private

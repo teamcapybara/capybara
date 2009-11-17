@@ -1,7 +1,7 @@
 require 'culerity'
 
 class Capybara::Driver::Culerity
-  class Node < Struct.new(:node)
+  class Node < Capybara::Node
     def text
       node.text
     end
@@ -61,7 +61,7 @@ class Capybara::Driver::Culerity
   end
   
   def find(selector)
-    browser.elements_by_xpath(selector).map { |node| Node.new(node) }
+    browser.elements_by_xpath(selector).map { |node| Node.new(self, node) }
   end
 
 private

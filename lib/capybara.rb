@@ -18,6 +18,7 @@ module Capybara
   
   autoload :Server, 'capybara/server'
   autoload :Session, 'capybara/session'
+  autoload :Node, 'capybara/node'
 
   module Driver
     autoload :RackTest, 'capybara/driver/rack_test_driver'
