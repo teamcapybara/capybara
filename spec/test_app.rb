@@ -52,6 +52,10 @@ class TestApp < Sinatra::Base
   post '/form' do
     '<pre id="results">' + params[:form].to_yaml + '</pre>'
   end
+  
+  get '/form/get' do
+    '<pre id="results">' + params[:form].to_yaml + '</pre>'
+  end
 
   post '/upload' do
     params[:form][:document][:tempfile].read

@@ -99,11 +99,19 @@ class Capybara::Driver::RackTest
     end
 
     def submit(button)
-      session.submit(node['action'].to_s, params(button)) 
+      if post?
+        session.submit(node['action'].to_s, params(button)) 
+      else
+        session.visit(node['action'].to_s + '?' + params(button)) 
+      end
     end
 
     def multipart?
       self[:enctype] == "multipart/form-data"
+    end
+    
+    def post?
+      self[:method] =~ /post/i
     end
   end
   
