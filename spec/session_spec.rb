@@ -481,6 +481,13 @@ shared_examples_for "session" do
         @session.find_field('form_description', :password_field)
       }.should raise_error(Capybara::ElementNotFound)
     end
+    
+    it "should be aliased as 'field_labeled' for webrat compatibility" do
+      @session.field_labeled('Dog').value.should == 'dog'
+      running {
+        @session.field_labeled('Does not exist')
+      }.should raise_error(Capybara::ElementNotFound)
+    end
   end
 
   describe '#within' do

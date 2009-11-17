@@ -99,6 +99,7 @@ class Capybara::Session
     raise Capybara::ElementNotFound, "no field of kind #{kinds.inspect} with id or label '#{locator}' found" unless field
     field
   end
+  alias_method :field_labeled, :find_field
 
 private
 
