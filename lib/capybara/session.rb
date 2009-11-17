@@ -100,6 +100,23 @@ class Capybara::Session
     field
   end
   alias_method :field_labeled, :find_field
+  
+  def find_link(locator)
+    link = find_element("//a[@id='#{locator}']", "//a[contains(.,'#{locator}')]", "//a[@title='#{locator}']")
+    raise Capybara::ElementNotFound, "no link with title, id or text '#{locator}' found" unless link
+    link
+  end
+  
+  def find_button(locator)
+    button = find_element(
+      "//input[@type='submit'][@id='#{locator}']",
+      "//input[@type='submit'][@value='#{locator}']",
+      "//input[@type='image'][@id='#{locator}']",
+      "//input[@type='image'][@value='#{locator}']"
+    )
+    raise Capybara::ElementNotFound, "no button with value or id '#{locator}' found" unless button
+    button
+  end
 
 private
 
@@ -124,23 +141,6 @@ private
 
   def scopes
     @scopes ||= []
-  end
-
-  def find_link(locator)
-    link = find_element("//a[@id='#{locator}']", "//a[contains(.,'#{locator}')]", "//a[@title='#{locator}']")
-    raise Capybara::ElementNotFound, "no link with title, id or text '#{locator}' found" unless link
-    link
-  end
-
-  def find_button(locator)
-    button = find_element(
-      "//input[@type='submit'][@id='#{locator}']",
-      "//input[@type='submit'][@value='#{locator}']",
-      "//input[@type='image'][@id='#{locator}']",
-      "//input[@type='image'][@value='#{locator}']"
-    )
-    raise Capybara::ElementNotFound, "no button with value or id '#{locator}' found" unless button
-    button
   end
 
   FIELDS_PATHS = {

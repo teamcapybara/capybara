@@ -489,6 +489,40 @@ shared_examples_for "session" do
       }.should raise_error(Capybara::ElementNotFound)
     end
   end
+  
+  describe '#find_link' do
+    before do
+      @session.visit('/with_html')
+    end
+
+    it "should find any field" do
+      @session.find_link('foo').text.should == "ullamco"
+      @session.find_link('labore')[:href].should == "/with_simple_html"
+    end
+    
+    it "should raise an error if the field doesn't exist" do
+      running {
+        @session.find_link('Does not exist')
+      }.should raise_error(Capybara::ElementNotFound)
+    end
+  end
+  
+  describe '#find_button' do
+    before do
+      @session.visit('/form')
+    end
+
+    it "should find any field" do
+      @session.find_button('med')[:id].should == "mediocre"
+      @session.find_button('crap321').value.should == "crappy"
+    end
+    
+    it "should raise an error if the field doesn't exist" do
+      running {
+        @session.find_button('Does not exist')
+      }.should raise_error(Capybara::ElementNotFound)
+    end
+  end
 
   describe '#within' do
     before do
