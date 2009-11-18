@@ -102,7 +102,7 @@ class Capybara::Driver::RackTest
       if post?
         driver.submit(node['action'].to_s, params(button)) 
       else
-        driver.visit(node['action'].to_s + '?' + params(button)) 
+        driver.visit(node['action'].to_s.split('?').first + '?' + params(button)) 
       end
     end
 

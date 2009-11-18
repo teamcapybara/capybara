@@ -156,9 +156,9 @@ shared_examples_for "session" do
     it "should serialize and send GET forms" do
       @session.visit('/form')
       @session.click_button('med')
-      #puts @session.body
       @results = extract_results(@session)
       @results['middle_name'].should == 'Darren'
+      @results['foo'].should be_nil
     end
 
     it "should follow redirects" do
