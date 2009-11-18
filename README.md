@@ -165,7 +165,7 @@ Capybara is hosted on Gemcutter, install it with:
 * Domain names (including subdomains) don't work under rack-test. Since it's a
   pain to set up subdomains for the other drivers anyway, you should consider an
   alternate solution. You might use
-  [`default_url_options`](https://gist.github.com/643a758320a2926bd2ed) in Rails
+  [default_url_options](https://gist.github.com/643a758320a2926bd2ed) in Rails
   for example.
 
 * The `set_hidden_field` method from Webrat is not implemented, since it doesn't
