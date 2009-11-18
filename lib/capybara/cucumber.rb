@@ -15,6 +15,18 @@ Before('@javascript') do
   Capybara.current_driver = Capybara.javascript_driver
 end
 
-After('@javascript') do
+Before('@selenium') do
+  Capybara.current_driver = :selenium
+end
+
+Before('@culerity') do
+  Capybara.current_driver = :culerity
+end
+
+Before('@rack_test') do
+  Capybara.current_driver = :rack_test
+end
+
+After do
   Capybara.use_default_driver
 end
