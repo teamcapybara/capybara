@@ -1,24 +1,25 @@
-= capybara
+# capybara
 
 * http://github.com/jnicklas/capybara
 
-== Description:
+## Description:
 
 Capybara aims to simplify the process of integration testing Rack applications,
-such as Rails, Sinatra or Merb. It is inspired by and aims to replace Webrat
-as a DSL for interacting with a webapplication. It is agnostic about the driver
+such as Rails, Sinatra or Merb. It is inspired by and aims to replace Webrat as
+a DSL for interacting with a webapplication. It is agnostic about the driver
 running your tests and currently comes bundled with rack-test, Culerity and
 Selenium support built in.
 
-== Disclaimer:
+## Disclaimer:
 
-Capybara is alpha level software, don't use it unless you're prepared to get your hands dirty.
+Capybara is alpha level software, don't use it unless you're prepared to get
+your hands dirty.
 
-== Using Capybara with Cucumber
+## Using Capybara with Cucumber
 
 Capybara is built to work nicely with Cucumber. The API is very similar to
 Webrat, so if you know Webrat you should feel right at home. Remove any
-references to Webrat from your +env.rb+, if you're using Rails, make sure to set
+references to Webrat from your `env.rb`, if you're using Rails, make sure to set
 
     Cucumber::Rails::World.use_transactional_fixtures = false
 
@@ -43,9 +44,10 @@ Now you can use it in your steps:
       click_link 'Sign in'
     end
 
-== Default and current driver
+## Default and current driver
 
-You can set up a default driver for your features. For example if you'd prefer to run Selenium, you could do:
+You can set up a default driver for your features. For example if you'd prefer
+to run Selenium, you could do:
 
     require 'capybara/rails'
     require 'capybara/cucumber'
@@ -56,9 +58,12 @@ You can change the driver temporarily:
     Capybara.current_driver = :culerity
     Capybara.use_default_driver
 
-== Cucumber and Tags
+## Cucumber and Tags
 
-Capybara sets up some {tags}[http://wiki.github.com/aslakhellesoy/cucumber/tags] for you to use in Cucumber. Often you'll want to use run only some scenarios with a driver that supports JavaScript, Capybara makes this easy: simply tag the scenario (or feature) with @javascript:
+Capybara sets up some [tags](http://wiki.github.com/aslakhellesoy/cucumber/tags)
+for you to use in Cucumber. Often you'll want to use run only some scenarios
+with a driver that supports JavaScript, Capybara makes this easy: simply tag the
+scenario (or feature) with `@javascript`:
 
     @javascript
     Scenario: do something AJAXy
@@ -69,9 +74,10 @@ You can change which driver Capybara uses for JavaScript:
 
     Capybara.javascript_driver = :culerity
 
-There also explicit +@selenium+, +@culerity+ and +@rack_test+ tags set up for you.
+There are also explicit `@selenium`, `@culerity` and `@rack_test` tags set up
+for you.
 
-== The API
+## The API
 
 Navigation:
 
@@ -97,7 +103,7 @@ Querying:
     body
     has_xpath? – Checks if given XPath exists, takes text and count options
     has_css? – Checks if given CSS exists, takes text and count options
-    has_content – Checks if the given content is on the page
+    has_content? – Checks if the given content is on the page
     find_field
     find_link
     find_button
@@ -107,7 +113,7 @@ Debugging:
 
     save_and_open_page
 
-== Using the DSL outside cucumber
+## Using the DSL outside cucumber
 
 You can mix the DSL into any context, for example you could use it in RSpec
 examples. Just load the dsl and include it anywhere:
@@ -124,7 +130,7 @@ examples. Just load the dsl and include it anywhere:
     end
     click_link 'Sign in'
 
-== Using the sessions manually
+## Using the sessions manually
 
 For ultimate control, you can instantiate and use a session manually.
 
@@ -137,28 +143,46 @@ For ultimate control, you can instantiate and use a session manually.
     end
     session.click_link 'Sign in'
 
-== Install:
+## Install:
 
 Capybara is hosted on Gemcutter, install it with:
 
     sudo gem install capybara
 
-== Gotchas:
+## Gotchas:
 
-* Everything is *case sensitive*. Capybara heavily relies on XPath, which doesn't support case insensitive searches.
+* Everything is *case sensitive*. Capybara heavily relies on XPath, which
+  doesn't support case insensitive searches.
 
-* Unchecking checkboxes and filling in password fields is currently broken under Culerity.
+* The `have_tag` and `have_text` matchers in RSpec-Rails are not supported.
+  You should use `page.should have_css('#header p')`,
+  `page.should have_xpath('//ul/li')` and `page.should have_content('Monkey')`
+  instead.
 
-* Domain names (including subdomains) don't work under rack-test. Since it's a pain to set up subdomains for the other drivers anyway, you should consider an alternate solution. See for example [GIST here].
+* Unchecking checkboxes and filling in password fields is currently broken under
+  Culerity.
 
-* The set_hidden_field method from Webrat is not implemented, since it doesn't work in any of the browser based drivers (Culerity, Selenium)
+* Domain names (including subdomains) don't work under rack-test. Since it's a
+  pain to set up subdomains for the other drivers anyway, you should consider an
+  alternate solution. You might use
+  [`default_url_options`](https://gist.github.com/643a758320a2926bd2ed) in Rails
+  for example.
 
-* Access to session, request and response from the test is not possible. Maybe we'll do response headers at some point in the future, but the others really shouldn't be touched in an integration test anyway.
+* The `set_hidden_field` method from Webrat is not implemented, since it doesn't
+  work in any of the browser based drivers (Culerity, Selenium)
 
-* Access to Rails specific stuff (such as +controller+) is unavailable, since we're not using Rails' integration testing.
-* <a href="#"> Will cause problems under rack-test, please do <a href="/same/url#"> instead. You can achieve this in Rails with +link_to('foo', :anchor => '')+
+* Access to session, request and response from the test is not possible. Maybe
+  we'll do response headers at some point in the future, but the others really
+  shouldn't be touched in an integration test anyway.
 
-== License:
+* Access to Rails specific stuff (such as `controller`) is unavailable, since
+  we're not using Rails' integration testing.
+
+* `<a href="#">` Will cause problems under rack-test, please do
+  `<a href="/same/url#">` instead. You can achieve this in Rails with
+  `link_to('foo', :anchor => '')`
+
+## License:
 
 (The MIT License)
 
