@@ -12,6 +12,7 @@ lib/capybara/driver/rack_test_driver.rb
 lib/capybara/driver/safariwatir_driver.rb
 lib/capybara/driver/selenium_driver.rb
 lib/capybara/dsl.rb
+lib/capybara/node.rb
 lib/capybara/rails.rb
 lib/capybara/save_and_open_page.rb
 lib/capybara/server.rb
