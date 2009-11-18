@@ -1,6 +1,6 @@
 History.txt
 Manifest.txt
-README.rdoc
+README.md
 Rakefile
 examples/webcat.rb
 lib/capybara.rb
