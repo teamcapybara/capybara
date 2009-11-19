@@ -13,6 +13,8 @@ Hoe.plugin :newgem
 $hoe = Hoe.spec 'capybara' do
   self.developer 'Jonas Nicklas', 'jonas.nicklas@gmail.com'
   self.rubyforge_name = self.name # TODO this is default value
+  self.readme_file   = 'README.rdoc'
+  self.extra_rdoc_files = ['README.rdoc']
 
   self.extra_deps = [
     ['nokogiri', '>= 1.3.3'],
