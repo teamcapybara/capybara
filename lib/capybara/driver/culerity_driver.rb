@@ -16,7 +16,7 @@ class Capybara::Driver::Culerity
     end
 
     def set(value)
-      node.set(value.to_s)
+      node.set(value)
     end
     
     def select(option)

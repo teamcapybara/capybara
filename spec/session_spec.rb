@@ -261,7 +261,6 @@ shared_examples_for "session" do
     end
 
     it "should uncheck a checkbox by id" do
-      pending "Culerity doesn't seem to uncheck this" if @session.mode == :culerity
       @session.uncheck("form_pets_hamster")
       @session.click_button('awesome')
       extract_results(@session)['pets'].should include('dog')
@@ -269,7 +268,6 @@ shared_examples_for "session" do
     end
 
     it "should uncheck a checkbox by label" do
-      pending "Culerity doesn't seem to uncheck this" if @session.mode == :culerity
       @session.uncheck("Hamster")
       @session.click_button('awesome')
       extract_results(@session)['pets'].should include('dog')
