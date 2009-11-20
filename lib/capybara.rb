@@ -1,7 +1,7 @@
 require 'nokogiri'
 
 module Capybara
-  VERSION = '0.1'
+  VERSION = '0.1.1'
 
   class CapybaraError < StandardError; end
   class DriverNotFoundError < CapybaraError; end
