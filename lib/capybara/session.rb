@@ -1,4 +1,16 @@
 class Capybara::Session
+  
+  FIELDS_PATHS = {
+    :text_field => proc { |id| "//input[@type='text'][@id='#{id}']" },
+    :text_area => proc { |id| "//textarea[@id='#{id}']" },
+    :password_field => proc { |id| "//input[@type='password'][@id='#{id}']" },
+    :radio => proc { |id| "//input[@type='radio'][@id='#{id}']" },
+    :hidden_field => proc { |id| "//input[@type='hidden'][@id='#{id}']" },
+    :checkbox => proc { |id| "//input[@type='checkbox'][@id='#{id}']" },
+    :select => proc { |id| "//select[@id='#{id}']" },
+    :file_field => proc { |id| "//input[@type='file'][@id='#{id}']" }
+  }
+  
   attr_reader :mode, :app
 
   def initialize(mode, app)
@@ -102,18 +114,13 @@ class Capybara::Session
   alias_method :field_labeled, :find_field
   
   def find_link(locator)
-    link = find_element("//a[@id='#{locator}']", "//a[contains(.,'#{locator}')]", "//a[@title='#{locator}']")
+    link = find("//a[@id='#{locator}' or contains(.,'#{locator}') or @title='#{locator}']").first
     raise Capybara::ElementNotFound, "no link with title, id or text '#{locator}' found" unless link
     link
   end
   
   def find_button(locator)
-    button = find_element(
-      "//input[@type='submit'][@id='#{locator}']",
-      "//input[@type='submit'][@value='#{locator}']",
-      "//input[@type='image'][@id='#{locator}']",
-      "//input[@type='image'][@value='#{locator}']"
-    )
+    button = find("//input[@type='submit' or @type='image'][@id='#{locator}' or @value='#{locator}']").first
     raise Capybara::ElementNotFound, "no button with value or id '#{locator}' found" unless button
     button
   end
@@ -143,17 +150,6 @@ private
     @scopes ||= []
   end
 
-  FIELDS_PATHS = {
-    :text_field => proc { |id| "//input[@type='text'][@id='#{id}']" },
-    :text_area => proc { |id| "//textarea[@id='#{id}']" },
-    :password_field => proc { |id| "//input[@type='password'][@id='#{id}']" },
-    :radio => proc { |id| "//input[@type='radio'][@id='#{id}']" },
-    :hidden_field => proc { |id| "//input[@type='hidden'][@id='#{id}']" },
-    :checkbox => proc { |id| "//input[@type='checkbox'][@id='#{id}']" },
-    :select => proc { |id| "//select[@id='#{id}']" },
-    :file_field => proc { |id| "//input[@type='file'][@id='#{id}']" }
-  }
-
   def find_field_by_id(locator, *kinds)
     kinds.each do |kind|
       path = FIELDS_PATHS[kind]
@@ -170,14 +166,6 @@ private
         element = find_field_by_id(label[:for], kind)
         return element if element
       end
-    end
-    return nil
-  end
-
-  def find_element(*locators)
-    locators.each do |locator|
-      element = find(locator).first
-      return element if element
     end
     return nil
   end
