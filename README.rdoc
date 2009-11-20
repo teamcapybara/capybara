@@ -94,7 +94,7 @@ Interaction:
     fill_in – Currently broken with password fields under Culerity
     choose
     check
-    uncheck – Currently broken under Culerity
+    uncheck
     attach_file
     select
 
@@ -159,8 +159,7 @@ Capybara is hosted on Gemcutter, install it with:
   <tt>page.should have_xpath('//ul/li')</tt> and <tt>page.should
   have_content('Monkey')</tt> instead.
 
-* Unchecking checkboxes and filling in password fields is currently broken under
-  Culerity.
+* Filling in password fields is currently broken under Culerity.
 
 * Domain names (including subdomains) don't work under rack-test. Since it's a
   pain to set up subdomains for the other drivers anyway, you should consider an
