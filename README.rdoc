@@ -60,7 +60,7 @@ You can change the driver temporarily:
 
 == Cucumber and Tags
 
-Capybara sets up some [tags](http://wiki.github.com/aslakhellesoy/cucumber/tags)
+Capybara sets up some {tags}[http://wiki.github.com/aslakhellesoy/cucumber/tags]
 for you to use in Cucumber. Often you'll want to use run only some scenarios
 with a driver that supports JavaScript, Capybara makes this easy: simply tag the
 scenario (or feature) with <tt>@javascript</tt>:
@@ -91,7 +91,7 @@ Interaction:
 
     click_link
     click_button
-    fill_in – Currently broken with password fields under Culerity
+    fill_in
     choose
     check
     uncheck
@@ -151,6 +151,9 @@ Capybara is hosted on Gemcutter, install it with:
 
 == Gotchas:
 
+* Install JRuby and the 'jarib-celerity' gem (not the 'celerity' gem) for
+  Culerity support.
+
 * Everything is *case sensitive*. Capybara heavily relies on XPath, which
   doesn't support case insensitive searches.
 
@@ -158,8 +161,6 @@ Capybara is hosted on Gemcutter, install it with:
   supported. You should use <tt>page.should have_css('#header p')</tt>,
   <tt>page.should have_xpath('//ul/li')</tt> and <tt>page.should
   have_content('Monkey')</tt> instead.
-
-* Filling in password fields is currently broken under Culerity.
 
 * Domain names (including subdomains) don't work under rack-test. Since it's a
   pain to set up subdomains for the other drivers anyway, you should consider an

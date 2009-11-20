@@ -197,14 +197,12 @@ shared_examples_for "session" do
     end
 
     it "should fill in a password field by id" do
-      pending "Culerity doesn't like password fields for some reason" if @session.mode == :culerity
       @session.fill_in('form_password', :with => 'supasikrit')
       @session.click_button('awesome')
       extract_results(@session)['password'].should == 'supasikrit'
     end
 
     it "should fill in a password field by label" do
-      pending "Culerity doesn't like password fields for some reason" if @session.mode == :culerity
       @session.fill_in('Password', :with => 'supasikrit')
       @session.click_button('awesome')
       extract_results(@session)['password'].should == 'supasikrit'
