@@ -2,7 +2,6 @@ History.txt
 Manifest.txt
 README.rdoc
 Rakefile
-examples/webcat.rb
 lib/capybara.rb
 lib/capybara/cucumber.rb
 lib/capybara/driver/culerity_driver.rb
