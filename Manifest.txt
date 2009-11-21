@@ -4,7 +4,6 @@ README.rdoc
 Rakefile
 examples/webcat.rb
 lib/capybara.rb
-lib/capybara/core_ext/tcp_socket.rb
 lib/capybara/cucumber.rb
 lib/capybara/driver/culerity_driver.rb
 lib/capybara/driver/firewatir_driver.rb
