@@ -7,12 +7,12 @@ describe Capybara::SaveAndOpenPage do
     before do
 
       @time = Time.new.strftime("%Y%m%d%H%M%S")
-      name = "capybara-#{@time}.html"
+      @name = "capybara-#{@time}.html"
 
       @temp_file = mock("FILE")
       @temp_file.stub!(:write)
       @temp_file.stub!(:close)
-      @temp_file.stub!(:path).and_return(name)
+      @temp_file.stub!(:path).and_return(@name)
 
       File.should_receive(:exist?).and_return true
       File.should_receive(:new).and_return @temp_file
@@ -36,7 +36,7 @@ describe Capybara::SaveAndOpenPage do
     end
 
     it "should open the file in the browser" do
-      Capybara::SaveAndOpenPage.should_receive(:open_in_browser).with(name)
+      Capybara::SaveAndOpenPage.should_receive(:open_in_browser).with(@name)
       Capybara::SaveAndOpenPage.save_and_open_page @html
     end
   end
