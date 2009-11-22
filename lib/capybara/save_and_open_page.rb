@@ -4,10 +4,13 @@ module Capybara
 
     def save_and_open_page(html)
       name="capybara-#{Time.new.strftime("%Y%m%d%H%M%S")}.html"
+
       FileUtils.touch(name) unless File.exist?(name)
+
       tempfile = File.new(name,'w')
       tempfile.write(rewrite_css_and_image_references(html))
       tempfile.close
+
       open_in_browser(tempfile.path)
     end
 
