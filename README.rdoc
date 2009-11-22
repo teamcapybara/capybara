@@ -151,8 +151,10 @@ Capybara is hosted on Gemcutter, install it with:
 
 == Gotchas:
 
-* Install JRuby and the 'jarib-celerity' gem (not the 'celerity' gem) for
-  Culerity support.
+* Install JRuby and the 'celerity' gem, version 0.7.4 (0.7.5 has a bug with
+  password fields) under JRuby for Culerity support. Also you'll need to install
+  teh edge version of Culerity until a new gem release becomes available, since
+  0.2.3 does not work (at all!) with Capybara.
 
 * Everything is *case sensitive*. Capybara heavily relies on XPath, which
   doesn't support case insensitive searches.
@@ -165,7 +167,7 @@ Capybara is hosted on Gemcutter, install it with:
 * Domain names (including subdomains) don't work under rack-test. Since it's a
   pain to set up subdomains for the other drivers anyway, you should consider an
   alternate solution. You might use
-  [default_url_options](https://gist.github.com/643a758320a2926bd2ed) in Rails
+  {default_url_options}[https://gist.github.com/643a758320a2926bd2ed] in Rails
   for example.
 
 * The <tt>set_hidden_field</tt> method from Webrat is not implemented, since it doesn't
