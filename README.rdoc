@@ -23,11 +23,6 @@ Capybara is hosted on Gemcutter, install it with:
 * Report issues on {GitHub Issues}[http://github.com/jnicklas/capybara/issues]
 * Pull requests are very welcome!
 
-== Disclaimer:
-
-Capybara is alpha level software, don't use it unless you're prepared to get
-your hands dirty.
-
 == Using Capybara with Cucumber
 
 Capybara is built to work nicely with Cucumber. The API is very similar to
