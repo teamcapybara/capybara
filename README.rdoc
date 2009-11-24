@@ -154,9 +154,7 @@ Capybara is hosted on Gemcutter, install it with:
 == Gotchas:
 
 * Install JRuby and the 'celerity' gem, version 0.7.4 (0.7.5 has a bug with
-  password fields) under JRuby for Culerity support. Also you'll need to install
-  teh edge version of Culerity until a new gem release becomes available, since
-  0.2.3 does not work (at all!) with Capybara.
+  password fields) under JRuby for Culerity support.
 
 * Everything is *case sensitive*. Capybara heavily relies on XPath, which
   doesn't support case insensitive searches.
