@@ -14,7 +14,8 @@ Selenium support built in.
 
 * Source hosted at {GitHub}[http://github.com/jnicklas/capybara].
 * Please direct questions, discussions at the {mailing list}[http://groups.google.com/group/ruby-capybara].
-* Report issues on {GitHub Issues}[http://github.com/jnicklas/capybara]
+* Report issues on {GitHub Issues}[http://github.com/jnicklas/capybara/issues]
+* Pull requests are very welcome!
 
 == Disclaimer:
 
