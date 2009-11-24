@@ -86,6 +86,8 @@ Navigation:
 Scoping:
 
     within – Takes a block which executes in the given scope
+    within_fieldset – Execute the block in the fieldset given by id or legend
+    within_table – Execute the block in the table given by id or caption
 
 Interaction:
 
