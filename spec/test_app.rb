@@ -12,31 +12,7 @@ class TestApp < Sinatra::Base
   get '/foo' do
     'Another World'
   end
-
-  get '/with_html' do
-    erb :with_html
-  end
-
-  get '/with_js' do
-    erb :with_js
-  end
-
-  get '/with_simple_html' do
-    erb :with_simple_html
-  end
-
-  get '/with_scope' do
-    erb :with_scope
-  end
-
-  get '/form' do
-    erb :form
-  end
-
-  post '/redirect' do
-    redirect '/redirect_again'
-  end
-
+  
   get '/redirect' do
     redirect '/redirect_again'
   end
@@ -48,12 +24,24 @@ class TestApp < Sinatra::Base
   get '/landed' do
     "You landed"
   end
-
-  post '/form' do
+  
+  get '/form/get' do
     '<pre id="results">' + params[:form].to_yaml + '</pre>'
   end
   
-  get '/form/get' do
+  get '/favicon.ico' do
+    nil
+  end
+
+  get '/:view' do |view|
+    erb view.to_sym
+  end
+
+  post '/redirect' do
+    redirect '/redirect_again'
+  end
+
+  post '/form' do
     '<pre id="results">' + params[:form].to_yaml + '</pre>'
   end
 
