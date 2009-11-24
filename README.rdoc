@@ -10,6 +10,12 @@ a DSL for interacting with a webapplication. It is agnostic about the driver
 running your tests and currently comes bundled with rack-test, Culerity and
 Selenium support built in.
 
+== Install:
+
+Capybara is hosted on Gemcutter, install it with:
+
+    sudo gem install capybara
+
 == Development:
 
 * Source hosted at {GitHub}[http://github.com/jnicklas/capybara].
@@ -151,12 +157,6 @@ For ultimate control, you can instantiate and use a session manually.
       session.fill_in 'Password', :with => 'password'
     end
     session.click_link 'Sign in'
-
-== Install:
-
-Capybara is hosted on Gemcutter, install it with:
-
-    sudo gem install capybara
 
 == Gotchas:
 
