@@ -100,6 +100,18 @@ class Capybara::Session
     scopes.pop
   end
   
+  def within_fieldset(locator)
+    within "//fieldset[@id='#{locator}' or contains(legend,'#{locator}')]" do
+      yield
+    end
+  end
+  
+  def within_table(locator)
+    within "//table[@id='#{locator}' or contains(caption,'#{locator}')]" do
+      yield
+    end
+  end
+  
   def save_and_open_page
     require 'capybara/save_and_open_page'
     Capybara::SaveAndOpenPage.save_and_open_page(body)

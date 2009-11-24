@@ -10,10 +10,18 @@ a DSL for interacting with a webapplication. It is agnostic about the driver
 running your tests and currently comes bundled with rack-test, Culerity and
 Selenium support built in.
 
-== Disclaimer:
+== Install:
 
-Capybara is alpha level software, don't use it unless you're prepared to get
-your hands dirty.
+Capybara is hosted on Gemcutter, install it with:
+
+    sudo gem install capybara
+
+== Development:
+
+* Source hosted at {GitHub}[http://github.com/jnicklas/capybara].
+* Please direct questions, discussions at the {mailing list}[http://groups.google.com/group/ruby-capybara].
+* Report issues on {GitHub Issues}[http://github.com/jnicklas/capybara/issues]
+* Pull requests are very welcome!
 
 == Using Capybara with Cucumber
 
@@ -86,6 +94,8 @@ Navigation:
 Scoping:
 
     within – Takes a block which executes in the given scope
+    within_fieldset – Execute the block in the fieldset given by id or legend
+    within_table – Execute the block in the table given by id or caption
 
 Interaction:
 
@@ -143,18 +153,10 @@ For ultimate control, you can instantiate and use a session manually.
     end
     session.click_link 'Sign in'
 
-== Install:
-
-Capybara is hosted on Gemcutter, install it with:
-
-    sudo gem install capybara
-
 == Gotchas:
 
 * Install JRuby and the 'celerity' gem, version 0.7.4 (0.7.5 has a bug with
-  password fields) under JRuby for Culerity support. Also you'll need to install
-  teh edge version of Culerity until a new gem release becomes available, since
-  0.2.3 does not work (at all!) with Capybara.
+  password fields) under JRuby for Culerity support.
 
 * Everything is *case sensitive*. Capybara heavily relies on XPath, which
   doesn't support case insensitive searches.

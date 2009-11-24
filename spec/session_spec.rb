@@ -594,6 +594,50 @@ shared_examples_for "session" do
       end
     end
   end
+  
+  describe '#within_fieldset' do
+    before do
+      @session.visit('/fieldsets')
+    end
+    
+    it "should restrict scope to a fieldset given by id" do
+      @session.within_fieldset("villain_fieldset") do
+        @session.fill_in("Name", :with => 'Goldfinger')
+        @session.click_button("Create")
+      end
+      extract_results(@session)['villain_name'].should == 'Goldfinger'
+    end
+    
+    it "should restrict scope to a fieldset given by legend" do
+      @session.within_fieldset("Villain") do
+        @session.fill_in("Name", :with => 'Goldfinger')
+        @session.click_button("Create")
+      end
+      extract_results(@session)['villain_name'].should == 'Goldfinger'
+    end
+  end
+  
+  describe '#within_table' do
+    before do
+      @session.visit('/tables')
+    end
+    
+    it "should restrict scope to a fieldset given by id" do
+      @session.within_table("girl_table") do
+        @session.fill_in("Name", :with => 'Christmas')
+        @session.click_button("Create")
+      end
+      extract_results(@session)['girl_name'].should == 'Christmas'
+    end
+    
+    it "should restrict scope to a fieldset given by legend" do
+      @session.within_table("Villain") do
+        @session.fill_in("Name", :with => 'Quantum')
+        @session.click_button("Create")
+      end
+      extract_results(@session)['villain_name'].should == 'Quantum'
+    end
+  end
 end
 
 describe Capybara::Session do
