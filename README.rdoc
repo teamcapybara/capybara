@@ -10,6 +10,12 @@ a DSL for interacting with a webapplication. It is agnostic about the driver
 running your tests and currently comes bundled with rack-test, Culerity and
 Selenium support built in.
 
+== Development:
+
+* Source hosted at {GitHub}[http://github.com/jnicklas/capybara].
+* Please direct questions, discussions at the {mailing list}[http://groups.google.com/group/ruby-capybara].
+* Report issues on {GitHub Issues}[http://github.com/jnicklas/capybara]
+
 == Disclaimer:
 
 Capybara is alpha level software, don't use it unless you're prepared to get
