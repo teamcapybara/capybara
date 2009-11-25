@@ -24,6 +24,11 @@ $hoe = Hoe.spec 'capybara' do
     ['rack-test', '>= 0.5.2'],
     ['database_cleaner', '>= 0.2.3']
   ]
+  
+  self.extra_dev_deps = [
+    ['sinatra', '>= 0.9.4'],
+    ['rspec', '>= 1.2.9']
+  ]
 end
 
 require 'newgem/tasks'
