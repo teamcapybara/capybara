@@ -1,6 +1,7 @@
 module Capybara
   class << self
     attr_writer :default_driver, :current_driver, :javascript_driver
+    attr_writer :default_selector
 
     attr_accessor :app
 
@@ -27,6 +28,10 @@ module Capybara
     
     def reset_sessions!
       @session_pool = nil
+    end
+
+    def default_selector
+      @default_selector ||= :xpath
     end
 
   private

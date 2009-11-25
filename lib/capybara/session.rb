@@ -92,7 +92,7 @@ class Capybara::Session
   end
   
   def within(kind, scope=nil)
-    kind, scope = :xpath, kind unless scope
+    kind, scope = Capybara.default_selector, kind unless scope
     scope = css_to_xpath(scope) if kind == :css
     raise Capybara::ElementNotFound, "scope '#{scope}' not found on page" if find(scope).empty?
     scopes.push(scope)
