@@ -10,14 +10,15 @@ class Capybara::Session
     :select => proc { |id| "//select[@id='#{id}']" },
     :file_field => proc { |id| "//input[@type='file'][@id='#{id}']" }
   }
-  
+
   attr_reader :mode, :app
+  attr_writer :default_selector
 
   def initialize(mode, app)
     @mode = mode
     @app = app
   end
-
+  
   def driver
     @driver ||= case mode
     when :rack_test
@@ -30,7 +31,11 @@ class Capybara::Session
       raise Capybara::DriverNotFoundError, "no driver called #{mode} was found"
     end
   end
-
+  
+  def default_selector
+    @default_selector ||= :xpath
+  end
+  
   def visit(path)
     driver.visit(path)
   end
@@ -92,7 +97,7 @@ class Capybara::Session
   end
   
   def within(kind, scope=nil)
-    kind, scope = :xpath, kind unless scope
+    kind, scope = default_selector, kind unless scope
     scope = css_to_xpath(scope) if kind == :css
     raise Capybara::ElementNotFound, "scope '#{scope}' not found on page" if find(scope).empty?
     scopes.push(scope)

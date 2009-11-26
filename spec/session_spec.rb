@@ -542,7 +542,24 @@ shared_examples_for "session" do
         @session.body.should include('<h1>Bar</h1>')
       end
     end
-
+    
+    context "with the default selector" do
+      it "should use XPath" do
+        lambda {
+          @session.within("//li[contains(., 'With Simple HTML')]") { }
+        }.should_not raise_error
+      end
+    end
+    
+    context "with the default selector set to CSS" do
+      it "should use CSS" do
+        @session.default_selector = :css
+        lambda {
+          @session.within("ul li[contains('With Simple HTML')]") { }
+        }.should_not raise_error
+      end
+    end
+    
     context "with click_link" do
       it "should click links in the given scope" do
         @session.within("//li[contains(.,'With Simple HTML')]") do
