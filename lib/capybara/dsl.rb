@@ -1,7 +1,7 @@
 module Capybara
   class << self
     attr_writer :default_driver, :current_driver, :javascript_driver
-    attr_writer :default_selector
+    attr_reader :default_selector
 
     attr_accessor :app
 
@@ -10,7 +10,7 @@ module Capybara
     end
 
     def current_driver
-      @current_driver || default_driver 
+      @current_driver || default_driver
     end
     alias_method :mode, :current_driver
     
@@ -19,19 +19,28 @@ module Capybara
     end
 
     def use_default_driver
-      @current_driver = nil 
+      @current_driver = nil
     end
 
     def current_session
-      session_pool["#{current_driver}#{app.object_id}"] ||= Capybara::Session.new(current_driver, app)
+      session_pool["#{current_driver}#{app.object_id}"] ||= begin
+        session = Capybara::Session.new(current_driver, app)
+        session.default_selector = default_selector if default_selector
+        session
+      end
+    end
+    
+    def current_session?
+      session_pool.has_key?("#{current_driver}#{app.object_id}")
     end
     
     def reset_sessions!
       @session_pool = nil
     end
-
-    def default_selector
-      @default_selector ||= :xpath
+    
+    def default_selector=(selector)
+      @default_selector = selector
+      current_session.default_selector = selector if current_session?
     end
 
   private
