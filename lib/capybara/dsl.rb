@@ -1,7 +1,6 @@
 module Capybara
   class << self
     attr_writer :default_driver, :current_driver, :javascript_driver
-    attr_reader :default_selector
 
     attr_accessor :app
 
@@ -24,9 +23,7 @@ module Capybara
 
     def current_session
       session_pool["#{current_driver}#{app.object_id}"] ||= begin
-        session = Capybara::Session.new(current_driver, app)
-        session.default_selector = default_selector if default_selector
-        session
+        Capybara::Session.new(current_driver, app)
       end
     end
     
@@ -36,11 +33,6 @@ module Capybara
     
     def reset_sessions!
       @session_pool = nil
-    end
-    
-    def default_selector=(selector)
-      @default_selector = selector
-      current_session.default_selector = selector if current_session?
     end
 
   private

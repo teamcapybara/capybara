@@ -11,7 +11,6 @@ describe Capybara do
   after do
     Capybara.default_driver = nil
     Capybara.use_default_driver
-    Capybara.default_selector = nil
   end
 
   describe '#default_driver' do
@@ -106,20 +105,6 @@ describe Capybara do
       Capybara.current_session.object_id.should == object_id
       Capybara.reset_sessions!
       Capybara.current_session.object_id.should_not == object_id
-    end
-  end
-
-  describe '#default_selector' do
-    after do
-      Capybara.default_selector = nil
-    end
-    
-    it "should set the selector used in current and future sessions" do
-      Capybara.default_selector.should_not eql(:css)
-      Capybara.default_selector = :css
-      Capybara.current_session.default_selector.should eql(:css)
-      Capybara.reset_sessions!
-      Capybara.current_session.default_selector.should eql(:css)
     end
   end
 
