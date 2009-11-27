@@ -553,13 +553,16 @@ shared_examples_for "session" do
     end
     
     context "with the default selector set to CSS" do
+      after do
+        Capybara.default_selector = :xpath
+      end
+      
       it "should use CSS" do
         Capybara.default_selector = :css
         @session.within("ul li[contains('With Simple HTML')]") do
           @session.click_link('Go')
         end
         @session.body.should include('<h1>Bar</h1>')
-        Capybara.default_selector = :xpath
       end
     end
     
