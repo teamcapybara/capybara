@@ -153,6 +153,20 @@ For ultimate control, you can instantiate and use a session manually.
     end
     session.click_link 'Sign in'
 
+== XPath an CSS
+
+Capybara does not try to guess what kind of selector you are going to give it,
+if you want to use CSS with your 'within' declarations for example, you'll need
+to do:
+    
+    within(:css, 'ul li') { ... }
+
+Alternatively you can set the default selector to CSS, which may help if you are
+moving from Webrat and used CSS a lot, or simply generally prefer CSS:
+
+    Capybara.default_selector = :css
+    within('ul li') { ... }
+
 == Gotchas:
 
 * Install JRuby and the 'celerity' gem, version 0.7.4 (0.7.5 has a bug with
@@ -185,6 +199,14 @@ For ultimate control, you can instantiate and use a session manually.
 * <tt><a href="#"></tt> Will cause problems under rack-test, please do
   <tt><a href="/same/url#"></tt> instead. You can achieve this in Rails with
   <tt>link_to('foo', :anchor => '')</tt>
+
+== Contributors:
+
+The following people have dedicated their time and effort to Capybara:
+
+* Jonas Nicklas
+* Dennis Rogenius
+* Rob Holland
 
 == License:
 

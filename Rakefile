@@ -22,9 +22,8 @@ $hoe = Hoe.spec 'capybara' do
     ['selenium-webdriver', '>= 0.0.3'],
     ['rack', '>= 1.0.0'],
     ['rack-test', '>= 0.5.2'],
-    ['database_cleaner', '>= 0.2.3']
   ]
-  
+
   self.extra_dev_deps = [
     ['sinatra', '>= 0.9.4'],
     ['rspec', '>= 1.2.9']

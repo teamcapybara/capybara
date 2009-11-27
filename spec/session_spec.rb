@@ -542,7 +542,27 @@ shared_examples_for "session" do
         @session.body.should include('<h1>Bar</h1>')
       end
     end
-
+    
+    context "with the default selector" do
+      it "should use XPath" do
+        @session.within("//li[contains(., 'With Simple HTML')]") do
+          @session.click_link('Go')
+        end
+        @session.body.should include('<h1>Bar</h1>')
+      end
+    end
+    
+    context "with the default selector set to CSS" do
+      it "should use CSS" do
+        Capybara.default_selector = :css
+        @session.within("ul li[contains('With Simple HTML')]") do
+          @session.click_link('Go')
+        end
+        @session.body.should include('<h1>Bar</h1>')
+        Capybara.default_selector = :xpath
+      end
+    end
+    
     context "with click_link" do
       it "should click links in the given scope" do
         @session.within("//li[contains(.,'With Simple HTML')]") do

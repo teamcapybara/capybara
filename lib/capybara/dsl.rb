@@ -9,7 +9,7 @@ module Capybara
     end
 
     def current_driver
-      @current_driver || default_driver 
+      @current_driver || default_driver
     end
     alias_method :mode, :current_driver
     
@@ -18,11 +18,17 @@ module Capybara
     end
 
     def use_default_driver
-      @current_driver = nil 
+      @current_driver = nil
     end
 
     def current_session
-      session_pool["#{current_driver}#{app.object_id}"] ||= Capybara::Session.new(current_driver, app)
+      session_pool["#{current_driver}#{app.object_id}"] ||= begin
+        Capybara::Session.new(current_driver, app)
+      end
+    end
+    
+    def current_session?
+      session_pool.has_key?("#{current_driver}#{app.object_id}")
     end
     
     def reset_sessions!
