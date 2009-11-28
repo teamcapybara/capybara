@@ -24,7 +24,11 @@ class TestApp < Sinatra::Base
   get '/landed' do
     "You landed"
   end
-  
+
+  get '/with-quotes' do
+    %q{"No," he said, "you can't do that."}
+  end
+
   get '/form/get' do
     '<pre id="results">' + params[:form].to_yaml + '</pre>'
   end

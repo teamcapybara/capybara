@@ -82,7 +82,7 @@ module Capybara
     end
 
     def has_content?(content)
-      has_xpath?("//*[contains(.,'#{content}')]")
+      has_xpath?("//*[contains(.,#{sanitized_xpath_string(content)})]")
     end
 
     def has_xpath?(path, options={})
@@ -195,6 +195,17 @@ module Capybara
     def find(locator)
       locator = current_scope.to_s + locator
       driver.find(locator)
+    end
+
+    def sanitized_xpath_string(string)
+      if string =~ /'/
+        string = string.split("'", -1).map do |substr|
+          "'#{substr}'"
+        end.join(%q{,"'",})
+        "concat(#{string})"
+      else
+        "'#{string}'"
+      end
     end
   end
 end
