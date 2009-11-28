@@ -145,6 +145,38 @@ shared_examples_for "session" do
       end
     end
 
+    context "when the button is defined by a <button> tag" do
+
+      before do
+        @session.visit('/buttons')
+      end
+
+      context "with text given" do
+        it "should locate the button" do
+          running do
+            @session.click_button('Click me')
+          end.should_not raise_error(Capybara::ElementNotFound)
+        end
+      end
+
+      context "with id given" do
+        it "should locate the button" do
+          running do
+            @session.click_button('click_me_123')
+          end.should_not raise_error(Capybara::ElementNotFound)
+        end
+      end
+
+      context "with value given" do
+        it "should locate the button" do
+          running do
+            @session.click_button('click_me')
+          end.should_not raise_error(Capybara::ElementNotFound)
+        end
+      end
+
+    end
+
     context "with a locator that doesn't exist" do
       it "should raise an error" do
         running do
