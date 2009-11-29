@@ -153,7 +153,7 @@ For ultimate control, you can instantiate and use a session manually.
     end
     session.click_link 'Sign in'
 
-== XPath an CSS
+== XPath and CSS
 
 Capybara does not try to guess what kind of selector you are going to give it,
 if you want to use CSS with your 'within' declarations for example, you'll need
