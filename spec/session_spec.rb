@@ -325,6 +325,21 @@ shared_examples_for "session" do
       @session.should_not have_content('xxxxyzzz')
       @session.should_not have_content('monkey')
     end
+
+    it 'should handle single quotes in the content' do
+      @session.visit('/with-quotes')
+      @session.should have_content("can't")
+    end
+
+    it 'should handle double quotes in the content' do
+      @session.visit('/with-quotes')
+      @session.should have_content(%q{"No," he said})
+    end
+
+    it 'should handle mixed single and double quotes in the content' do
+      @session.visit('/with-quotes')
+      @session.should have_content(%q{"you can't do that."})
+    end
   end
 
   describe '#has_xpath?' do
