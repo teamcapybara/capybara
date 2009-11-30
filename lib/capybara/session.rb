@@ -199,7 +199,7 @@ module Capybara
     end
 
     def sanitized_xpath_string(string)
-      if string =~ /'/
+      if string.include?("'")
         string = string.split("'", -1).map do |substr|
           "'#{substr}'"
         end.join(%q{,"'",})
