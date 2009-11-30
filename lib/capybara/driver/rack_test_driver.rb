@@ -37,7 +37,7 @@ class Capybara::Driver::RackTest
     def click
       if tag_name == 'a'
         driver.visit(self[:href])
-      elsif tag_name == 'input' and %w(submit image).include?(type)
+      elsif (tag_name == 'input' or tag_name == 'button') and %w(submit image).include?(type)
         Form.new(driver, form).submit(self)
       end
     end

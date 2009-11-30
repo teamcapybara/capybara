@@ -145,6 +145,27 @@ shared_examples_for "session" do
       end
     end
 
+    context "with text given on a button defined by <button> tag" do
+      it "should submit the associated form" do
+        @session.click_button('Click me')
+        extract_results(@session)['first_name'].should == 'John'
+      end
+    end
+
+   context "with id given on a button defined by <button> tag" do
+      it "should submit the associated form" do
+        @session.click_button('click_me_123')
+        extract_results(@session)['first_name'].should == 'John'
+      end
+    end
+
+   context "with value given on a button defined by <button> tag" do
+      it "should submit the associated form" do
+        @session.click_button('click_me')
+        extract_results(@session)['first_name'].should == 'John'
+      end
+    end
+
     context "with a locator that doesn't exist" do
       it "should raise an error" do
         running do
