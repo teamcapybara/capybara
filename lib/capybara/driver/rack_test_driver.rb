@@ -60,38 +60,39 @@ class Capybara::Driver::RackTest
   class Form < Node
     def params(button)
       params = []
-      params += node.xpath(".//input[@type='text']", ".//input[@type='hidden']", ".//input[@type='password']").inject([]) do |agg, input|
-        agg << [input['name'].to_s, input['value'].to_s]
-        agg
+      inputs = node.xpath(".//input[@type='text']", ".//input[@type='hidden']", ".//input[@type='password']").map do |input|
+        [input['name'].to_s, input['value'].to_s]
       end
-      params += node.xpath(".//textarea").inject([]) do |agg, textarea|
-        agg << [textarea['name'].to_s, textarea.text.to_s]
-        agg
+      params.concat(inputs)
+      inputs = node.xpath(".//textarea").map do |textarea|
+        [textarea['name'].to_s, textarea.text.to_s]
       end
-      params += node.xpath(".//input[@type='radio']").inject([]) do |agg, input|
-        agg << [input['name'].to_s, input['value'].to_s] if input['checked']
-        agg
+      params.concat(inputs)
+      inputs = node.xpath(".//input[@type='radio']").map do |input|
+        [input['name'].to_s, input['value'].to_s] if input['checked']
       end
-      params += node.xpath(".//input[@type='checkbox']").inject([]) do |agg, input|
-        agg << [input['name'].to_s, input['value'].to_s] if input['checked']
-        agg
+      params.concat(inputs)
+      inputs = node.xpath(".//input[@type='checkbox']").map do |input|
+        [input['name'].to_s, input['value'].to_s] if input['checked']
       end
-      params += node.xpath(".//select").inject([]) do |agg, select|
+      params.concat(inputs)
+      inputs = node.xpath(".//select").map do |select|
         option = select.xpath(".//option[@selected]").first
         option ||= select.xpath('.//option').first
-        agg << [select['name'].to_s, (option['value'] || option.text).to_s] if option 
-        agg
+        option ? [select['name'].to_s, (option['value'] || option.text).to_s] : nil
       end
-      params += node.xpath(".//input[@type='file']").inject([]) do |agg, input|
+      params.concat(inputs)
+      inputs = node.xpath(".//input[@type='file']").map do |input|
         if input['value'].to_s.any?
           if multipart?
-            agg << [input['name'].to_s, Rack::Test::UploadedFile.new(input['value'].to_s)]
+            [input['name'].to_s, Rack::Test::UploadedFile.new(input['value'].to_s)]
           else
-            agg << [input['name'].to_s, File.basename(input['value'].to_s)]
+            [input['name'].to_s, File.basename(input['value'].to_s)]
           end
         end
-        agg
       end
+      params.concat(inputs)
+      params.compact!
       params.push [button[:name], button[:value]] if button[:name]
       if multipart?
         params.inject({}) { |agg, (key, value)| agg[key] = value; agg }
