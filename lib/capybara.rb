@@ -9,6 +9,11 @@ module Capybara
 
   class << self
     attr_accessor :debug, :asset_root
+    attr_writer :default_selector
+
+    def default_selector
+      @default_selector ||= :xpath
+    end
     
     def log(message)
       puts "[capybara] #{message}" if debug

@@ -1,13 +1,4 @@
 module Capybara
-
-  class << self
-    attr_writer :default_selector
-
-    def default_selector
-      @default_selector ||= :xpath
-    end
-  end
-
   class Session
 
     FIELDS_PATHS = {
