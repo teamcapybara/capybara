@@ -50,7 +50,7 @@ class TestApp < Sinatra::Base
   end
 
   post '/upload' do
-    params[:form][:document][:tempfile].read
+    params[:form][:document][:tempfile].read rescue ''
   end
 end
 

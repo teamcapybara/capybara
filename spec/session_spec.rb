@@ -486,6 +486,10 @@ shared_examples_for "session" do
         @session.click_button('Upload')
         @session.body.should include(File.read(@test_file_path))
       end
+
+      it "should not break if no file is submitted" do
+        @session.click_button('Upload')
+      end
     end
 
   end

@@ -83,10 +83,12 @@ class Capybara::Driver::RackTest
         agg
       end
       params += node.xpath(".//input[@type='file']").inject([]) do |agg, input|
-        if multipart?
-          agg << [input['name'].to_s, Rack::Test::UploadedFile.new(input['value'].to_s)]
-        else
-          agg << [input['name'].to_s, File.basename(input['value'].to_s)]
+        if input['value'].to_s.any?
+          if multipart?
+            agg << [input['name'].to_s, Rack::Test::UploadedFile.new(input['value'].to_s)]
+          else
+            agg << [input['name'].to_s, File.basename(input['value'].to_s)]
+          end
         end
         agg
       end
