@@ -174,9 +174,9 @@ module Capybara
     end
 
     def find_field_by_label(locator, *kinds)
-      kinds.each do |kind|
-        label = find("//label[text()='#{locator}']").first || find("//label[contains(.,'#{locator}')]").first
-        if label
+      label = find("//label[text()='#{locator}']").first || find("//label[contains(.,'#{locator}')]").first
+      if label
+        kinds.each do |kind|
           element = find_field_by_id(label[:for], kind)
           return element if element
         end
