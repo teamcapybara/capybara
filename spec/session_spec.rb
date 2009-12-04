@@ -205,6 +205,12 @@ shared_examples_for "session" do
       extract_results(@session)['first_name'].should == 'Harry'
     end
 
+    it "should favour exact label matches over partial matches" do
+      @session.fill_in('Name', :with => 'Harry Jones')
+      @session.click_button('awesome')
+      extract_results(@session)['name'].should == 'Harry Jones'
+    end
+
     it "should fill in a textarea by id" do
       @session.fill_in('form_description', :with => 'Texty text')
       @session.click_button('awesome')
