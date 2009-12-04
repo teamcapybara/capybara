@@ -108,13 +108,14 @@ class Capybara::Driver::RackTest
     
     def merge_param!(params, key, value)
       collection = key.sub!(/\[\]$/, '')
-      case params[key]
-      when nil
-        params[key] = collection ? [value] : value
-      when Array
-        params[key] << value
+      if collection
+        if params[key]
+          params[key] << value
+        else
+          params[key] = [value]
+        end
       else
-        params[key] = [params[key], value]
+        params[key] = value
       end
     end
   end

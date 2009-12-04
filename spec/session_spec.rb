@@ -67,6 +67,14 @@ shared_examples_for "session" do
       @session.visit('/form')
     end
 
+    context "with multiple values with the same name" do
+      it "should use the latest given value" do
+        @session.check('Terms of Use')
+        @session.click_button('awesome')
+        extract_results(@session)['terms_of_use'].should == '1'
+      end
+    end
+
     context "with value given on a submit button" do
       before do
         @session.click_button('awesome')
