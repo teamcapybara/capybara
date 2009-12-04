@@ -77,6 +77,10 @@ shared_examples_for "session" do
         @results['first_name'].should == 'John'
       end
 
+      it "should escape fields when submitting" do
+        @results['phone'].should == '+1 555 7021'
+      end
+
       it "should serialize and submit password fields" do
         @results['password'].should == 'seeekrit'
       end

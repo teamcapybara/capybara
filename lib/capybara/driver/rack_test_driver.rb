@@ -1,5 +1,6 @@
 require 'rack/test'
 require 'nokogiri'
+require 'cgi'
 
 class Capybara::Driver::RackTest
   class Node < Capybara::Node
@@ -95,17 +96,21 @@ class Capybara::Driver::RackTest
       params.compact!
       params.push [button[:name], button[:value]] if button[:name]
       if multipart?
-        params.inject({}) { |agg, (key, value)| agg[key] = value; agg }
+        Hash[
+          params.map do |key, value|
+            [key, value.is_a?(String) ? CGI.escape(value.to_s) : value]
+          end
+        ]
       else
-        params.map { |key, value| "#{key}=#{value}" }.join('&')
+        params.map { |key, value| "#{key}=#{CGI.escape(value.to_s)}" }.join('&')
       end
     end
 
     def submit(button)
       if post?
-        driver.submit(node['action'].to_s, params(button)) 
+        driver.submit(node['action'].to_s, params(button))
       else
-        driver.visit(node['action'].to_s.split('?').first + '?' + params(button)) 
+        driver.visit(node['action'].to_s.split('?').first + '?' + params(button))
       end
     end
 
