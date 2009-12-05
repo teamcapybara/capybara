@@ -30,6 +30,10 @@ class Capybara::Node
     raise "Not implemented"
   end
   
+  def drag_to(element)
+    raise "Not implemented"
+  end
+  
   def tag_name
     raise "Not implemented"
   end
