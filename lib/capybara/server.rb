@@ -1,5 +1,6 @@
 require 'net/http'
 require 'rack'
+require 'rack/handler/mongrel'
 
 class Capybara::Server
   attr_reader :app
