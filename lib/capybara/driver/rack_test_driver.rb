@@ -1,5 +1,6 @@
 require 'rack/test'
 require 'nokogiri'
+require 'cgi'
 
 class Capybara::Driver::RackTest
   class Node < Capybara::Node
@@ -59,53 +60,39 @@ class Capybara::Driver::RackTest
 
   class Form < Node
     def params(button)
-      params = []
-      inputs = node.xpath(".//input[@type='text']", ".//input[@type='hidden']", ".//input[@type='password']").map do |input|
-        [input['name'].to_s, input['value'].to_s]
+      params = {}
+      node.xpath(".//input[@type='text' or @type='hidden' or @type='password']").map do |input|
+        merge_param!(params, input['name'].to_s, input['value'].to_s)
       end
-      params.concat(inputs)
-      inputs = node.xpath(".//textarea").map do |textarea|
-        [textarea['name'].to_s, textarea.text.to_s]
+      node.xpath(".//textarea").map do |textarea|
+        merge_param!(params, textarea['name'].to_s, textarea.text.to_s)
       end
-      params.concat(inputs)
-      inputs = node.xpath(".//input[@type='radio']").map do |input|
-        [input['name'].to_s, input['value'].to_s] if input['checked']
+      node.xpath(".//input[@type='radio' or @type='checkbox']").map do |input|
+        merge_param!(params, input['name'].to_s, input['value'].to_s) if input['checked']
       end
-      params.concat(inputs)
-      inputs = node.xpath(".//input[@type='checkbox']").map do |input|
-        [input['name'].to_s, input['value'].to_s] if input['checked']
-      end
-      params.concat(inputs)
-      inputs = node.xpath(".//select").map do |select|
+      node.xpath(".//select").map do |select|
         option = select.xpath(".//option[@selected]").first
         option ||= select.xpath('.//option').first
-        option ? [select['name'].to_s, (option['value'] || option.text).to_s] : nil
+        merge_param!(params, select['name'].to_s, (option['value'] || option.text).to_s) if option
       end
-      params.concat(inputs)
-      inputs = node.xpath(".//input[@type='file']").map do |input|
+      node.xpath(".//input[@type='file']").map do |input|
         if input['value'].to_s.any?
           if multipart?
-            [input['name'].to_s, Rack::Test::UploadedFile.new(input['value'].to_s)]
+            merge_param!(params, input['name'].to_s, Rack::Test::UploadedFile.new(input['value'].to_s))
           else
-            [input['name'].to_s, File.basename(input['value'].to_s)]
+            merge_param!(params, input['name'].to_s, File.basename(input['value'].to_s))
           end
         end
       end
-      params.concat(inputs)
-      params.compact!
-      params.push [button[:name], button[:value]] if button[:name]
-      if multipart?
-        params.inject({}) { |agg, (key, value)| agg[key] = value; agg }
-      else
-        params.map { |key, value| "#{key}=#{value}" }.join('&')
-      end
+      merge_param!(params, button[:name], button[:value]) if button[:name]
+      params
     end
 
     def submit(button)
       if post?
-        driver.submit(node['action'].to_s, params(button)) 
+        driver.submit(node['action'].to_s, params(button))
       else
-        driver.visit(node['action'].to_s.split('?').first + '?' + params(button)) 
+        driver.visit(node['action'].to_s, params(button))
       end
     end
 
@@ -115,6 +102,21 @@ class Capybara::Driver::RackTest
     
     def post?
       self[:method] =~ /post/i
+    end
+    
+    private
+    
+    def merge_param!(params, key, value)
+      collection = key.sub!(/\[\]$/, '')
+      if collection
+        if params[key]
+          params[key] << value
+        else
+          params[key] = [value]
+        end
+      else
+        params[key] = value
+      end
     end
   end
   
@@ -128,8 +130,8 @@ class Capybara::Driver::RackTest
     @app = app
   end
   
-  def visit(path)
-    get(path)
+  def visit(path, attributes = {})
+    get(path, attributes)
     follow_redirect! while response.redirect?
     cache_body
   end
@@ -137,9 +139,9 @@ class Capybara::Driver::RackTest
   def submit(path, attributes)
     post(path, attributes)
     follow_redirect! while response.redirect?
-    cache_body  
+    cache_body
   end
-  
+
   def find(selector)
     html.xpath(selector).map { |node| Node.new(self, node) }
   end
