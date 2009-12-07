@@ -27,6 +27,12 @@ class Capybara::Driver::Culerity
       node.click
     end
     
+    def drag_to(element)
+      node.fire_event('mousedown')
+      element.node.fire_event('mousemove')
+      element.node.fire_event('mouseup')
+    end
+    
     def tag_name
       # FIXME: this might be the dumbest way ever of getting the tag name
       # there has to be something better...

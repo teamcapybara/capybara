@@ -67,6 +67,14 @@ shared_examples_for "session" do
       @session.visit('/form')
     end
 
+    context "with multiple values with the same name" do
+      it "should use the latest given value" do
+        @session.check('Terms of Use')
+        @session.click_button('awesome')
+        extract_results(@session)['terms_of_use'].should == '1'
+      end
+    end
+
     context "with value given on a submit button" do
       before do
         @session.click_button('awesome')
@@ -75,6 +83,10 @@ shared_examples_for "session" do
 
       it "should serialize and submit text fields" do
         @results['first_name'].should == 'John'
+      end
+
+      it "should escape fields when submitting" do
+        @results['phone'].should == '+1 555 7021'
       end
 
       it "should serialize and submit password fields" do
@@ -203,6 +215,12 @@ shared_examples_for "session" do
       @session.fill_in('First Name', :with => 'Harry')
       @session.click_button('awesome')
       extract_results(@session)['first_name'].should == 'Harry'
+    end
+
+    it "should favour exact label matches over partial matches" do
+      @session.fill_in('Name', :with => 'Harry Jones')
+      @session.click_button('awesome')
+      extract_results(@session)['name'].should == 'Harry Jones'
     end
 
     it "should fill in a textarea by id" do

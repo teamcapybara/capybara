@@ -38,6 +38,10 @@ class Capybara::Driver::Selenium
       node.click
     end
 
+    def drag_to(element)
+      node.drag_and_drop_on(element.node)
+    end
+
     def tag_name
       node.tag_name
     end

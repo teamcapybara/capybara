@@ -12,10 +12,26 @@
   </p>
 
   <p>
+    <label for="form_name">Name</label>
+    <input type="text" name="form[name]" value="John Smith" id="form_name"/>
+  </p>
+
+  <p>
+    <label for="form_phone">Phone</label>
+    <input type="text" name="form[phone]" value="+1 555 7021" id="form_phone"/>
+  </p>
+
+  <p>
     <label for="form_password">Password</label>
     <input type="password" name="form[password]" value="seeekrit" id="form_password"/>
   </p>
-  
+
+  <p>
+    <label for="form_terms_of_use">Terms of Use</label>
+    <input type="hidden" name="form[terms_of_use]" value="0" id="form_terms_of_use_default">
+    <input type="checkbox" name="form[terms_of_use]" value="1" id="form_terms_of_use">
+  </p>
+
   <p>
     <label for="form_image">Image</label>
     <input type="file" name="form[image]" id="form_image"/>
@@ -102,8 +118,8 @@
 
 <form action="/upload" method="post" enctype="multipart/form-data">
   <p>
-    <label for="form_name">Name</label>
-    <input type="file" name="form[name]" id="form_name"/>
+    <label for="form_file_name">File Name</label>
+    <input type="file" name="form[file_name]" id="form_file_name"/>
   </p>
 
   <p>

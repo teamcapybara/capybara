@@ -165,21 +165,16 @@ module Capybara
     end
 
     def find_field_by_id(locator, *kinds)
-      kinds.each do |kind|
-        path = FIELDS_PATHS[kind]
-        element = find(path.call(locator)).first
-        return element if element
-      end
-      return nil
+      field_locator = kinds.map { |kind| FIELDS_PATHS[kind].call(locator) }.join("|")
+      element = find(field_locator).first
+      return element
     end
 
     def find_field_by_label(locator, *kinds)
-      kinds.each do |kind|
-        label = find("//label[contains(.,'#{locator}')]").first
-        if label
-          element = find_field_by_id(label[:for], kind)
-          return element if element
-        end
+      label = find("//label[text()='#{locator}']").first || find("//label[contains(.,'#{locator}')]").first
+      if label
+        element = find_field_by_id(label[:for], *kinds)
+        return element if element
       end
       return nil
     end
