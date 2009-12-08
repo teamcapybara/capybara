@@ -590,7 +590,7 @@ shared_examples_for "session" do
     end
     
     it "should return an empty array when nothing was found" do
-      @session.find('//div').empty?.should be_true
+      @session.find('//div').should be_empty
     end
     
     context "within a scope" do
