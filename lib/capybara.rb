@@ -1,7 +1,7 @@
 require 'nokogiri'
 
 module Capybara
-  VERSION = '0.1.2'
+  VERSION = '0.1.3'
 
   class CapybaraError < StandardError; end
   class DriverNotFoundError < CapybaraError; end
@@ -9,6 +9,11 @@ module Capybara
 
   class << self
     attr_accessor :debug, :asset_root
+    attr_writer :default_selector
+
+    def default_selector
+      @default_selector ||= :xpath
+    end
     
     def log(message)
       puts "[capybara] #{message}" if debug

@@ -69,4 +69,14 @@ shared_examples_for "driver with javascript support" do
       @driver.find('//p').first.text.should == 'I changed it'
     end
   end
+  
+  describe '#drag_to' do
+    it "should drag and drop an object" do
+      @driver.visit('/with_js')
+      draggable = @driver.find('//div[@id="drag"]').first
+      droppable = @driver.find('//div[@id="drop"]').first
+      draggable.drag_to(droppable)
+      @driver.find('//div[contains(., "Dropped!")]').should_not be_nil
+    end
+  end
 end

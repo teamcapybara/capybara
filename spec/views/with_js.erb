@@ -3,10 +3,18 @@
     <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
     <title>with_js</title>
     <script src="/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">
     //<![CDATA[
       $(function() {
         $('#change').text('I changed it');
+        $('#drag').draggable();
+        $('#drop').droppable({
+          drop: function(event, ui) {
+            ui.draggable.remove()
+            $(this).html('Dropped!');
+          }
+        });
       });
     //]]>
     </script>
@@ -16,5 +24,11 @@
     <h1>FooBar</h1>
     
     <p id="change">This is text</p>
+    <div id="drag">
+      <p>This is a draggable element.</p>
+    </div>
+    <div id="drop">
+      <p>It should be dropped here.</p>
+    </div>
   </body>
 </html>

@@ -67,6 +67,14 @@ shared_examples_for "session" do
       @session.visit('/form')
     end
 
+    context "with multiple values with the same name" do
+      it "should use the latest given value" do
+        @session.check('Terms of Use')
+        @session.click_button('awesome')
+        extract_results(@session)['terms_of_use'].should == '1'
+      end
+    end
+
     context "with value given on a submit button" do
       before do
         @session.click_button('awesome')
@@ -75,6 +83,10 @@ shared_examples_for "session" do
 
       it "should serialize and submit text fields" do
         @results['first_name'].should == 'John'
+      end
+
+      it "should escape fields when submitting" do
+        @results['phone'].should == '+1 555 7021'
       end
 
       it "should serialize and submit password fields" do
@@ -205,6 +217,12 @@ shared_examples_for "session" do
       extract_results(@session)['first_name'].should == 'Harry'
     end
 
+    it "should favour exact label matches over partial matches" do
+      @session.fill_in('Name', :with => 'Harry Jones')
+      @session.click_button('awesome')
+      extract_results(@session)['name'].should == 'Harry Jones'
+    end
+
     it "should fill in a textarea by id" do
       @session.fill_in('form_description', :with => 'Texty text')
       @session.click_button('awesome')
@@ -324,6 +342,21 @@ shared_examples_for "session" do
       @session.visit('/with_html')
       @session.should_not have_content('xxxxyzzz')
       @session.should_not have_content('monkey')
+    end
+
+    it 'should handle single quotes in the content' do
+      @session.visit('/with-quotes')
+      @session.should have_content("can't")
+    end
+
+    it 'should handle double quotes in the content' do
+      @session.visit('/with-quotes')
+      @session.should have_content(%q{"No," he said})
+    end
+
+    it 'should handle mixed single and double quotes in the content' do
+      @session.visit('/with-quotes')
+      @session.should have_content(%q{"you can't do that."})
     end
   end
 
@@ -471,6 +504,10 @@ shared_examples_for "session" do
         @session.click_button('Upload')
         @session.body.should include(File.read(@test_file_path))
       end
+
+      it "should not break if no file is submitted" do
+        @session.click_button('Upload')
+      end
     end
 
   end
@@ -602,13 +639,16 @@ shared_examples_for "session" do
     end
     
     context "with the default selector set to CSS" do
+      after do
+        Capybara.default_selector = :xpath
+      end
+      
       it "should use CSS" do
         Capybara.default_selector = :css
         @session.within("ul li[contains('With Simple HTML')]") do
           @session.click_link('Go')
         end
         @session.body.should include('<h1>Bar</h1>')
-        Capybara.default_selector = :xpath
       end
     end
     

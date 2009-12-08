@@ -22,9 +22,7 @@ module Capybara
     end
 
     def current_session
-      session_pool["#{current_driver}#{app.object_id}"] ||= begin
-        Capybara::Session.new(current_driver, app)
-      end
+      session_pool["#{current_driver}#{app.object_id}"] ||= Capybara::Session.new(current_driver, app)
     end
     
     def current_session?

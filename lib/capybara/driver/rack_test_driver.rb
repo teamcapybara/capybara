@@ -1,5 +1,6 @@
 require 'rack/test'
 require 'nokogiri'
+require 'cgi'
 
 class Capybara::Driver::RackTest
   class Node < Capybara::Node
@@ -59,50 +60,39 @@ class Capybara::Driver::RackTest
 
   class Form < Node
     def params(button)
-      params = []
-      params += node.xpath(".//input[@type='text']", ".//input[@type='hidden']", ".//input[@type='password']").inject([]) do |agg, input|
-        agg << [input['name'].to_s, input['value'].to_s]
-        agg
+      params = {}
+      node.xpath(".//input[@type='text' or @type='hidden' or @type='password']").map do |input|
+        merge_param!(params, input['name'].to_s, input['value'].to_s)
       end
-      params += node.xpath(".//textarea").inject([]) do |agg, textarea|
-        agg << [textarea['name'].to_s, textarea.text.to_s]
-        agg
+      node.xpath(".//textarea").map do |textarea|
+        merge_param!(params, textarea['name'].to_s, textarea.text.to_s)
       end
-      params += node.xpath(".//input[@type='radio']").inject([]) do |agg, input|
-        agg << [input['name'].to_s, input['value'].to_s] if input['checked']
-        agg
+      node.xpath(".//input[@type='radio' or @type='checkbox']").map do |input|
+        merge_param!(params, input['name'].to_s, input['value'].to_s) if input['checked']
       end
-      params += node.xpath(".//input[@type='checkbox']").inject([]) do |agg, input|
-        agg << [input['name'].to_s, input['value'].to_s] if input['checked']
-        agg
-      end
-      params += node.xpath(".//select").inject([]) do |agg, select|
+      node.xpath(".//select").map do |select|
         option = select.xpath(".//option[@selected]").first
         option ||= select.xpath('.//option').first
-        agg << [select['name'].to_s, (option['value'] || option.text).to_s] if option 
-        agg
+        merge_param!(params, select['name'].to_s, (option['value'] || option.text).to_s) if option
       end
-      params += node.xpath(".//input[@type='file']").inject([]) do |agg, input|
-        if multipart?
-          agg << [input['name'].to_s, Rack::Test::UploadedFile.new(input['value'].to_s)]
-        else
-          agg << [input['name'].to_s, File.basename(input['value'].to_s)]
+      node.xpath(".//input[@type='file']").map do |input|
+        if input['value'].to_s.any?
+          if multipart?
+            merge_param!(params, input['name'].to_s, Rack::Test::UploadedFile.new(input['value'].to_s))
+          else
+            merge_param!(params, input['name'].to_s, File.basename(input['value'].to_s))
+          end
         end
-        agg
       end
-      params.push [button[:name], button[:value]] if button[:name]
-      if multipart?
-        params.inject({}) { |agg, (key, value)| agg[key] = value; agg }
-      else
-        params.map { |key, value| "#{key}=#{value}" }.join('&')
-      end
+      merge_param!(params, button[:name], button[:value]) if button[:name]
+      params
     end
 
     def submit(button)
       if post?
-        driver.submit(node['action'].to_s, params(button)) 
+        driver.submit(node['action'].to_s, params(button))
       else
-        driver.visit(node['action'].to_s.split('?').first + '?' + params(button)) 
+        driver.visit(node['action'].to_s, params(button))
       end
     end
 
@@ -112,6 +102,21 @@ class Capybara::Driver::RackTest
     
     def post?
       self[:method] =~ /post/i
+    end
+    
+    private
+    
+    def merge_param!(params, key, value)
+      collection = key.sub!(/\[\]$/, '')
+      if collection
+        if params[key]
+          params[key] << value
+        else
+          params[key] = [value]
+        end
+      else
+        params[key] = value
+      end
     end
   end
   
@@ -125,8 +130,8 @@ class Capybara::Driver::RackTest
     @app = app
   end
   
-  def visit(path)
-    get(path)
+  def visit(path, attributes = {})
+    get(path, attributes)
     follow_redirect! while response.redirect?
     cache_body
   end
@@ -134,9 +139,9 @@ class Capybara::Driver::RackTest
   def submit(path, attributes)
     post(path, attributes)
     follow_redirect! while response.redirect?
-    cache_body  
+    cache_body
   end
-  
+
   def find(selector)
     html.xpath(selector).map { |node| Node.new(self, node) }
   end

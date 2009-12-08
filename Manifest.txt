@@ -27,13 +27,17 @@ spec/drivers_spec.rb
 spec/dsl_spec.rb
 spec/fixtures/test_file.txt
 spec/public/jquery.js
+spec/save_and_open_page_spec.rb
 spec/session/culerity_session_spec.rb
 spec/session/rack_test_session_spec.rb
 spec/session/selenium_session_spec.rb
 spec/session_spec.rb
 spec/spec_helper.rb
 spec/test_app.rb
+spec/views/buttons.erb
+spec/views/fieldsets.erb
 spec/views/form.erb
+spec/views/tables.erb
 spec/views/with_html.erb
 spec/views/with_js.erb
 spec/views/with_scope.erb
