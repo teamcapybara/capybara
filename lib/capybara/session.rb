@@ -118,6 +118,11 @@ module Capybara
       Capybara::SaveAndOpenPage.save_and_open_page(body)
     end
 
+    def find(locator)
+      locator = current_scope.to_s + locator
+      driver.find(locator)
+    end
+
     def find_field(locator, *kinds)
       kinds = FIELDS_PATHS.keys if kinds.empty?
       field = find_field_by_id(locator, *kinds) || find_field_by_label(locator, *kinds)
@@ -133,7 +138,7 @@ module Capybara
     end
 
     def find_button(locator)
-      button = find("//input[@type='submit' or @type='image'][@id='#{locator}' or @value='#{locator}']").first \
+      button = find("//input[@type='submit' or @type='image'][@id='#{locator}' or @value='#{locator}' or @class='#{locator}']").first \
                || find("//button[@id='#{locator}' or @value='#{locator}' or contains(.,'#{locator}')]").first
       raise Capybara::ElementNotFound, "no button with value or id or text '#{locator}' found" unless button
       button
@@ -179,9 +184,15 @@ module Capybara
       return nil
     end
 
-    def find(locator)
-      locator = current_scope.to_s + locator
-      driver.find(locator)
+    def sanitized_xpath_string(string)
+      if string.include?("'")
+        string = string.split("'", -1).map do |substr|
+          "'#{substr}'"
+        end.join(%q{,"'",})
+        "concat(#{string})"
+      else
+        "'#{string}'"
+      end
     end
 
     def sanitized_xpath_string(string)
