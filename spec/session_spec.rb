@@ -597,19 +597,19 @@ shared_examples_for "session" do
     end
   end
 
-  describe '#find' do
+  describe '#all' do
     before do
       @session.visit('/with_html')
     end
 
-    it "should find any element using the given locator" do
-      @session.find('//p').should have(3).elements
-      @session.find('//h1').first.text.should == 'This is a test'
-      @session.find("//input[@id='test_field']").first[:value].should == 'monkey'
+    it "should find all elements using the given locator" do
+      @session.all('//p').should have(3).elements
+      @session.all('//h1').first.text.should == 'This is a test'
+      @session.all("//input[@id='test_field']").first[:value].should == 'monkey'
     end
     
     it "should return an empty array when nothing was found" do
-      @session.find('//div').should be_empty
+      @session.all('//div').should be_empty
     end
     
     context "within a scope" do
@@ -619,7 +619,34 @@ shared_examples_for "session" do
 
       it "should find any element using the given locator" do
         @session.within(:xpath, "//div[@id='for_bar']") do
-          @session.find('//li').should have(2).elements
+          @session.all('//li').should have(2).elements
+        end        
+      end
+    end
+  end
+
+  describe '#find' do
+    before do
+      @session.visit('/with_html')
+    end
+
+    it "should find the first element using the given locator" do
+      @session.find('//h1').text.should == 'This is a test'
+      @session.find("//input[@id='test_field']")[:value].should == 'monkey'
+    end
+    
+    it "should return nil when nothing was found" do
+      @session.find('//div').should be_nil
+    end
+    
+    context "within a scope" do
+      before do
+        @session.visit('/with_scope')
+      end
+
+      it "should find the first element using the given locator" do
+        @session.within(:xpath, "//div[@id='for_bar']") do
+          @session.find('//li').text.should =~ /With Simple HTML/
         end        
       end
     end

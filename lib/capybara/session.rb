@@ -93,7 +93,7 @@ module Capybara
     end
 
     def has_xpath?(path, options={})
-      results = find(path)
+      results = all(path)
       if options[:text]
         results = filter_by_text(results, options[:text])
       end
@@ -111,7 +111,7 @@ module Capybara
     def within(kind, scope=nil)
       kind, scope = Capybara.default_selector, kind unless scope
       scope = css_to_xpath(scope) if kind == :css
-      raise Capybara::ElementNotFound, "scope '#{scope}' not found on page" if find(scope).empty?
+      raise Capybara::ElementNotFound, "scope '#{scope}' not found on page" unless find(scope)
       scopes.push(scope)
       yield
       scopes.pop
@@ -134,9 +134,13 @@ module Capybara
       Capybara::SaveAndOpenPage.save_and_open_page(body)
     end
 
-    def find(locator)
+    def all(locator)
       locator = current_scope.to_s + locator
       driver.find(locator)
+    end
+    
+    def find(locator)
+      all(locator).first
     end
 
     def find_field(locator, *kinds)
@@ -146,12 +150,12 @@ module Capybara
     alias_method :field_labeled, :find_field
 
     def find_link(locator)
-      find("//a[@id='#{locator}' or contains(.,'#{locator}') or @title='#{locator}']").first
+      find("//a[@id='#{locator}' or contains(.,'#{locator}') or @title='#{locator}']")
     end
 
     def find_button(locator)
-      button = find("//input[@type='submit' or @type='image'][@id='#{locator}' or @value='#{locator}']").first
-      button || find("//button[@id='#{locator}' or @value='#{locator}' or contains(.,'#{locator}')]").first
+      button = find("//input[@type='submit' or @type='image'][@id='#{locator}' or @value='#{locator}']")
+      button || find("//button[@id='#{locator}' or @value='#{locator}' or contains(.,'#{locator}')]")
     end
 
   private
@@ -181,12 +185,12 @@ module Capybara
 
     def find_field_by_id(locator, *kinds)
       field_locator = kinds.map { |kind| FIELDS_PATHS[kind].call(locator) }.join("|")
-      element = find(field_locator).first
+      element = find(field_locator)
       return element
     end
 
     def find_field_by_label(locator, *kinds)
-      label = find("//label[text()='#{locator}']").first || find("//label[contains(.,'#{locator}')]").first
+      label = find("//label[text()='#{locator}']") || find("//label[contains(.,'#{locator}')]")
       if label
         element = find_field_by_id(label[:for], *kinds)
         return element if element
