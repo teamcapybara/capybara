@@ -38,25 +38,25 @@ module Capybara
     end
 
     def fill_in(locator, options={})
-      field = find(XPath.fillable_field(locator).to_s)
+      field = find(XPath.fillable_field(locator))
       raise Capybara::ElementNotFound, "cannot fill in, no text field, text area or password field with id or label '#{locator}' found" unless field
       field.set(options[:with])
     end
 
     def choose(locator)
-      field = find(XPath.radio_button(locator).to_s)
+      field = find(XPath.radio_button(locator))
       raise Capybara::ElementNotFound, "cannot choose field, no radio button with id or label '#{locator}' found" unless field
       field.set(true)
     end
 
     def check(locator)
-      field = find(XPath.checkbox(locator).to_s)
+      field = find(XPath.checkbox(locator))
       raise Capybara::ElementNotFound, "cannot check field, no checkbox with id or label '#{locator}' found" unless field
       field.set(true)
     end
 
     def uncheck(locator)
-      field = find(XPath.checkbox(locator).to_s)
+      field = find(XPath.checkbox(locator))
       raise Capybara::ElementNotFound, "cannot uncheck field, no checkbox with id or label '#{locator}' found" unless field
       field.set(false)
     end
@@ -68,7 +68,7 @@ module Capybara
     end
 
     def attach_file(locator, path)
-      field = find(XPath.file_field(locator).to_s)
+      field = find(XPath.file_field(locator))
       raise Capybara::ElementNotFound, "cannot attach file, no file field with id or label '#{locator}' found" unless field
       field.set(path)
     end
@@ -107,13 +107,13 @@ module Capybara
     end
 
     def within_fieldset(locator)
-      within XPath.fieldset(locator).to_s do
+      within XPath.fieldset(locator) do
         yield
       end
     end
 
     def within_table(locator)
-      within XPath.table(locator).to_s do
+      within XPath.table(locator) do
         yield
       end
     end
@@ -129,20 +129,20 @@ module Capybara
     end
     
     def find(locator)
-      all(locator).first
+      all(locator.to_s).first
     end
 
     def find_field(locator)
-      find(XPath.field(locator).to_s)
+      find(XPath.field(locator))
     end
     alias_method :field_labeled, :find_field
 
     def find_link(locator)
-      find(XPath.link(locator).to_s)
+      find(XPath.link(locator))
     end
 
     def find_button(locator)
-      find(XPath.button(locator).to_s)
+      find(XPath.button(locator))
     end
 
   private
