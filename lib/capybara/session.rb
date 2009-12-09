@@ -138,12 +138,11 @@ module Capybara
     alias_method :field_labeled, :find_field
 
     def find_link(locator)
-      find("//a[@id='#{locator}' or contains(.,'#{locator}') or @title='#{locator}']")
+      find(XPath.link(locator).to_s)
     end
 
     def find_button(locator)
-      button = find("//input[@type='submit' or @type='image'][@id='#{locator}' or @value='#{locator}']")
-      button || find("//button[@id='#{locator}' or @value='#{locator}' or contains(.,'#{locator}')]")
+      find(XPath.button(locator).to_s)
     end
 
   private

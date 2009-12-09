@@ -38,6 +38,15 @@ module Capybara
     def fieldset(locator)
       append("//fieldset[@id=#{s(locator)} or contains(legend,#{s(locator)})]")
     end
+    
+    def link(locator)
+      append("//a[@id=#{s(locator)} or contains(.,#{s(locator)}) or @title=#{s(locator)}]")
+    end
+    
+    def button(locator)
+      xpath = append("//input[@type='submit' or @type='image'][@id=#{s(locator)} or @value=#{s(locator)}]")
+      xpath.append("//button[@id=#{s(locator)} or @value=#{s(locator)} or contains(.,#{s(locator)})]")
+    end
 
     def text_field(locator)
       append("//input[@type='text'][@id=#{s(locator)} or @id=//label[contains(.,#{s(locator)})]/@for]")
@@ -71,7 +80,7 @@ module Capybara
       @paths.join(' | ')
     end
 
-  private
+  protected
   
     # Sanitize a String for putting it into an xpath query
     def s(string)
