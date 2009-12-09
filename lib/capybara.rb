@@ -29,8 +29,6 @@ module Capybara
   module Driver
     autoload :RackTest, 'capybara/driver/rack_test_driver'
     autoload :Culerity, 'capybara/driver/culerity_driver'
-    autoload :SafariWatir, 'capybara/driver/safariwatir_driver'
-    autoload :FireWatir, 'capybara/driver/firewatir_driver'
     autoload :Selenium, 'capybara/driver/selenium_driver'
   end
 end
