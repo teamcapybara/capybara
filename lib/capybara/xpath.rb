@@ -49,31 +49,31 @@ module Capybara
     end
 
     def text_field(locator)
-      append("//input[@type='text'][@id=#{s(locator)} or @id=//label[contains(.,#{s(locator)})]/@for]")
+      add_field(locator) { |id| "//input[@type='text'][@id=#{id}]" }
     end
 
     def password_field(locator)
-      append("//input[@type='password'][@id=#{s(locator)} or @id=//label[contains(.,#{s(locator)})]/@for]")
+      add_field(locator) { |id| "//input[@type='password'][@id=#{id}]" }
     end
 
     def text_area(locator)
-      append("//textarea[@id=#{s(locator)} or @id=//label[contains(.,#{s(locator)})]/@for]")
+      add_field(locator) { |id| "//textarea[@id=#{id}]" }
     end
 
     def radio_button(locator)
-      append("//input[@type='radio'][@id=#{s(locator)} or @id=//label[contains(.,#{s(locator)})]/@for]")
+      add_field(locator) { |id| "//input[@type='radio'][@id=#{id}]" }
     end
 
     def checkbox(locator)
-      append("//input[@type='checkbox'][@id=#{s(locator)} or @id=//label[contains(.,#{s(locator)})]/@for]")
+      add_field(locator) { |id| "//input[@type='checkbox'][@id=#{id}]" }
     end
 
     def select(locator)
-      append("//select[@id=#{s(locator)} or @id=//label[contains(.,#{s(locator)})]/@for]")
+      add_field(locator) { |id| "//select[@id=#{id}]" }
     end
 
     def file_field(locator)
-      append("//input[@type='file'][@id=#{s(locator)} or @id=//label[contains(.,#{s(locator)})]/@for]")
+      add_field(locator) { |id| "//input[@type='file'][@id=#{id}]" }
     end
 
     def to_s
@@ -81,6 +81,12 @@ module Capybara
     end
 
   protected
+  
+    def add_field(locator)
+      xpath = append(yield(s(locator)))
+      xpath.append(yield("//label[contains(.,#{s(locator)})]/@for"))
+      xpath.prepend(yield("//label[text()=#{s(locator)}]/@for"))
+    end
   
     # Sanitize a String for putting it into an xpath query
     def s(string)
@@ -92,6 +98,10 @@ module Capybara
       else
         "'#{string}'"
       end
+    end
+    
+    def prepend(path)
+      XPath.new(*[path, @paths].flatten)
     end
 
     def append(path)

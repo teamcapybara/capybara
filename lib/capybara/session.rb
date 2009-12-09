@@ -129,7 +129,16 @@ module Capybara
     end
     
     def find(locator)
-      all(locator.to_s).first
+      case locator
+      when XPath
+        locator.paths.each do |path|
+          result = all(path).first
+          return result if result
+        end
+        return nil
+      else
+        all(locator.to_s).first
+      end
     end
 
     def find_field(locator)
