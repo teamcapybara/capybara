@@ -84,7 +84,7 @@ module Capybara
   
     def add_field(locator)
       xpath = append(yield(s(locator)))
-      xpath.append(yield("//label[contains(.,#{s(locator)})]/@for"))
+      xpath = xpath.append(yield("//label[contains(.,#{s(locator)})]/@for"))
       xpath.prepend(yield("//label[text()=#{s(locator)}]/@for"))
     end
   
