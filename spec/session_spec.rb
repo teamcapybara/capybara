@@ -552,13 +552,8 @@ shared_examples_for "session" do
       @session.find_field('Region')[:name].should == 'form[region]'
     end
     
-    it "should raise an error if the field doesn't exist" do
+    it "should be nil if the field doesn't exist" do
       @session.find_field('Does not exist').should be_nil
-    end
-    
-    it "should find only given kind of field" do
-      @session.find_field('form_description', :text_field, :text_area).text.should == 'Descriptive text goes here'
-      @session.find_field('form_description', :password_field).should be_nil
     end
     
     it "should be aliased as 'field_labeled' for webrat compatibility" do

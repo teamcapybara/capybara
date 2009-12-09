@@ -1,17 +1,6 @@
 module Capybara
   class Session
 
-    FIELDS_PATHS = {
-      :text_field => proc { |id| "//input[@type='text'][@id='#{id}' or @id=//label[contains(.,'#{id}')]/@for]" },
-      :text_area => proc { |id| "//textarea[@id='#{id}' or @id=//label[contains(.,'#{id}')]/@for]" },
-      :password_field => proc { |id| "//input[@type='password'][@id='#{id}' or @id=//label[contains(.,'#{id}')]/@for]" },
-      :radio => proc { |id| "//input[@type='radio'][@id='#{id}' or @id=//label[contains(.,'#{id}')]/@for]" },
-      :hidden_field => proc { |id| "//input[@type='hidden'][@id='#{id}' or @id=//label[contains(.,'#{id}')]/@for]" },
-      :checkbox => proc { |id| "//input[@type='checkbox'][@id='#{id}' or @id=//label[contains(.,'#{id}')]/@for]" },
-      :select => proc { |id| "//select[@id='#{id}' or @id=//label[contains(.,'#{id}')]/@for]" },
-      :file_field => proc { |id| "//input[@type='file'][@id='#{id}' or @id=//label[contains(.,'#{id}')]/@for]" }
-    }
-
     attr_reader :mode, :app
 
     def initialize(mode, app)
@@ -49,37 +38,37 @@ module Capybara
     end
 
     def fill_in(locator, options={})
-      field = find_field(locator, :text_field, :text_area, :password_field)
+      field = find(XPath.fillable_field(locator).to_s)
       raise Capybara::ElementNotFound, "cannot fill in, no text field, text area or password field with id or label '#{locator}' found" unless field
       field.set(options[:with])
     end
 
     def choose(locator)
-      field = find_field(locator, :radio)
+      field = find(XPath.radio_button(locator).to_s)
       raise Capybara::ElementNotFound, "cannot choose field, no radio button with id or label '#{locator}' found" unless field
       field.set(true)
     end
 
     def check(locator)
-      field = find_field(locator, :checkbox)
+      field = find(XPath.checkbox(locator).to_s)
       raise Capybara::ElementNotFound, "cannot check field, no checkbox with id or label '#{locator}' found" unless field
       field.set(true)
     end
 
     def uncheck(locator)
-      field = find_field(locator, :checkbox)
+      field = find(XPath.checkbox(locator).to_s)
       raise Capybara::ElementNotFound, "cannot uncheck field, no checkbox with id or label '#{locator}' found" unless field
       field.set(false)
     end
 
     def select(value, options={})
-      field = find_field(options[:from], :select)
+      field = find(XPath.select(options[:from]).to_s)
       raise Capybara::ElementNotFound, "cannot select option, no select box with id or label '#{options[:from]}' found" unless field
       field.select(value)
     end
 
     def attach_file(locator, path)
-      field = find_field(locator, :file_field)
+      field = find(XPath.file_field(locator).to_s)
       raise Capybara::ElementNotFound, "cannot attach file, no file field with id or label '#{locator}' found" unless field
       field.set(path)
     end
@@ -143,9 +132,8 @@ module Capybara
       all(locator).first
     end
 
-    def find_field(locator, *kinds)
-      kinds = FIELDS_PATHS.keys if kinds.empty?
-      find(kinds.map { |kind| FIELDS_PATHS[kind].call(locator) }.join("|"))
+    def find_field(locator)
+      find(XPath.field(locator).to_s)
     end
     alias_method :field_labeled, :find_field
 
