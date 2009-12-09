@@ -138,7 +138,7 @@ module Capybara
     end
 
     def find_button(locator)
-      button = find("//input[@type='submit' or @type='image'][@id='#{locator}' or @value='#{locator}' or @class='#{locator}']").first \
+      button = find("//input[@type='submit' or @type='image'][@id='#{locator}' or @value='#{locator}']").first \
                || find("//button[@id='#{locator}' or @value='#{locator}' or contains(.,'#{locator}')]").first
       raise Capybara::ElementNotFound, "no button with value or id or text '#{locator}' found" unless button
       button
