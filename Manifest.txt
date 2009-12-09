@@ -4,10 +4,9 @@ README.rdoc
 Rakefile
 lib/capybara.rb
 lib/capybara/cucumber.rb
+lib/capybara/driver/base.rb
 lib/capybara/driver/culerity_driver.rb
-lib/capybara/driver/firewatir_driver.rb
 lib/capybara/driver/rack_test_driver.rb
-lib/capybara/driver/safariwatir_driver.rb
 lib/capybara/driver/selenium_driver.rb
 lib/capybara/dsl.rb
 lib/capybara/node.rb
@@ -15,17 +14,17 @@ lib/capybara/rails.rb
 lib/capybara/save_and_open_page.rb
 lib/capybara/server.rb
 lib/capybara/session.rb
+lib/capybara/xpath.rb
 script/console
 script/destroy
 script/generate
 spec/driver/culerity_driver_spec.rb
-spec/driver/firewatir_driver_spec.rb
 spec/driver/rack_test_driver_spec.rb
-spec/driver/safariwarit_driver_spec.rb
 spec/driver/selenium_driver_spec.rb
 spec/drivers_spec.rb
 spec/dsl_spec.rb
 spec/fixtures/test_file.txt
+spec/public/jquery-ui.js
 spec/public/jquery.js
 spec/save_and_open_page_spec.rb
 spec/session/culerity_session_spec.rb
@@ -42,3 +41,4 @@ spec/views/with_html.erb
 spec/views/with_js.erb
 spec/views/with_scope.erb
 spec/views/with_simple_html.erb
+spec/xpath_spec.rb
