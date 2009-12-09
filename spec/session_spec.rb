@@ -578,6 +578,34 @@ shared_examples_for "session" do
     end
   end
 
+  describe '#find' do
+    before do
+      @session.visit('/with_html')
+    end
+
+    it "should find any element using the given locator" do
+      @session.find('//p').should have(3).elements
+      @session.find('//h1').first.text.should == 'This is a test'
+      @session.find("//input[@id='test_field']").first[:value].should == 'monkey'
+    end
+    
+    it "should return an empty array when nothing was found" do
+      @session.find('//div').should be_empty
+    end
+    
+    context "within a scope" do
+      before do
+        @session.visit('/with_scope')
+      end
+
+      it "should find any element using the given locator" do
+        @session.within(:xpath, "//div[@id='for_bar']") do
+          @session.find('//li').should have(2).elements
+        end        
+      end
+    end
+  end
+
   describe '#within' do
     before do
       @session.visit('/with_scope')
