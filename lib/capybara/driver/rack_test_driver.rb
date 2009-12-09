@@ -2,7 +2,7 @@ require 'rack/test'
 require 'nokogiri'
 require 'cgi'
 
-class Capybara::Driver::RackTest
+class Capybara::Driver::RackTest < Capybara::Driver::Base
   class Node < Capybara::Node
     def text
       node.text

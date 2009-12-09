@@ -1,6 +1,6 @@
 require 'culerity'
 
-class Capybara::Driver::Culerity
+class Capybara::Driver::Culerity < Capybara::Driver::Base
   class Node < Capybara::Node
     def text
       node.text
@@ -68,6 +68,15 @@ class Capybara::Driver::Culerity
   
   def find(selector)
     browser.elements_by_xpath(selector).map { |node| Node.new(self, node) }
+  end
+  
+  def fetch(*paths)
+    8.times do
+      result = super
+      return result if result
+      sleep(0.1)
+    end
+    nil
   end
 
 private

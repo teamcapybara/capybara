@@ -790,6 +790,33 @@ shared_examples_for "session" do
   end
 end
 
+shared_examples_for "session with javascript support" do
+  describe '#click_link' do
+    it "should wait for asynchronous load" do
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+      @session.click_link('Has been clicked')
+    end
+  end
+  
+  describe '#click_button' do
+    it "should wait for asynchronous load" do
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+      @session.click_button('New Here')
+    end
+  end
+  
+  describe '#fill_in' do
+    it "should wait for asynchronous load" do
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+      @session.fill_in('new_field', :with => 'Testing...')
+    end
+  end
+  
+end
+
 describe Capybara::Session do
   context 'with non-existant driver' do
     it "should raise an error" do

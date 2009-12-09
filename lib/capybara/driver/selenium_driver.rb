@@ -1,6 +1,6 @@
 require 'selenium-webdriver'
 
-class Capybara::Driver::Selenium
+class Capybara::Driver::Selenium < Capybara::Driver::Base
   class Node < Capybara::Node
     def text
       node.text
@@ -82,6 +82,15 @@ class Capybara::Driver::Selenium
 
   def find(selector)
     driver.find_elements(:xpath, selector).map { |node| Node.new(self, node) }
+  end
+  
+  def fetch(*paths)
+    8.times do
+      result = super
+      return result if result
+      sleep(0.1)
+    end
+    nil
   end
 
 private
