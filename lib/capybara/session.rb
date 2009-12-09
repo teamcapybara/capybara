@@ -49,27 +49,39 @@ module Capybara
     end
 
     def fill_in(locator, options={})
-      find_field(locator, :text_field, :text_area, :password_field).set(options[:with])
+      field = find_field(locator, :text_field, :text_area, :password_field)
+      raise Capybara::ElementNotFound, "cannot fill in, no text field, text area or password field with id or label '#{locator}' found" unless field
+      field.set(options[:with])
     end
 
     def choose(locator)
-      find_field(locator, :radio).set(true)
+      field = find_field(locator, :radio)
+      raise Capybara::ElementNotFound, "cannot choose field, no radio button with id or label '#{locator}' found" unless field
+      field.set(true)
     end
 
     def check(locator)
-      find_field(locator, :checkbox).set(true)
+      field = find_field(locator, :checkbox)
+      raise Capybara::ElementNotFound, "cannot check field, no checkbox with id or label '#{locator}' found" unless field
+      field.set(true)
     end
 
     def uncheck(locator)
-      find_field(locator, :checkbox).set(false)
+      field = find_field(locator, :checkbox)
+      raise Capybara::ElementNotFound, "cannot uncheck field, no checkbox with id or label '#{locator}' found" unless field
+      field.set(false)
     end
 
     def select(value, options={})
-      find_field(options[:from], :select).select(value)
+      field = find_field(options[:from], :select)
+      raise Capybara::ElementNotFound, "cannot select option, no select box with id or label '#{options[:from]}' found" unless field
+      field.select(value)
     end
 
     def attach_file(locator, path)
-      find_field(locator, :file_field).set(path)
+      field = find_field(locator, :file_field)
+      raise Capybara::ElementNotFound, "cannot attach file, no file field with id or label '#{locator}' found" unless field
+      field.set(path)
     end
 
     def body
@@ -129,9 +141,7 @@ module Capybara
 
     def find_field(locator, *kinds)
       kinds = FIELDS_PATHS.keys if kinds.empty?
-      field = find_field_by_id(locator, *kinds) || find_field_by_label(locator, *kinds)
-      raise Capybara::ElementNotFound, "no field of kind #{kinds.inspect} with id or label '#{locator}' found" unless field
-      field
+      find_field_by_id(locator, *kinds) || find_field_by_label(locator, *kinds)
     end
     alias_method :field_labeled, :find_field
 

@@ -272,6 +272,12 @@ shared_examples_for "session" do
       @session.click_button('awesome')
       extract_results(@session)['gender'].should == 'both'
     end
+    
+    context "with a locator that doesn't exist" do
+      it "should raise an error" do
+        running { @session.choose('does not exist') }.should raise_error(Capybara::ElementNotFound)
+      end
+    end
   end
 
   describe "#check" do
@@ -289,6 +295,12 @@ shared_examples_for "session" do
       @session.check("Cat")
       @session.click_button('awesome')
       extract_results(@session)['pets'].should include('dog', 'cat', 'hamster')
+    end
+    
+    context "with a locator that doesn't exist" do
+      it "should raise an error" do
+        running { @session.check('does not exist') }.should raise_error(Capybara::ElementNotFound)
+      end
     end
   end
 
@@ -310,6 +322,12 @@ shared_examples_for "session" do
       extract_results(@session)['pets'].should include('dog')
       extract_results(@session)['pets'].should_not include('hamster')
     end
+    
+    context "with a locator that doesn't exist" do
+      it "should raise an error" do
+        running { @session.uncheck('does not exist') }.should raise_error(Capybara::ElementNotFound)
+      end
+    end
   end
 
   describe "#select" do
@@ -327,6 +345,12 @@ shared_examples_for "session" do
       @session.select("Finish", :from => 'Locale')
       @session.click_button('awesome')
       extract_results(@session)['locale'].should == 'fi'
+    end
+    
+    context "with a locator that doesn't exist" do
+      it "should raise an error" do
+        running { @session.select('foo', :from => 'does not exist') }.should raise_error(Capybara::ElementNotFound)
+      end
     end
   end
 
@@ -509,7 +533,12 @@ shared_examples_for "session" do
         @session.click_button('Upload')
       end
     end
-
+    
+    context "with a locator that doesn't exist" do
+      it "should raise an error" do
+        running { @session.attach_file('does not exist', 'foo.txt') }.should raise_error(Capybara::ElementNotFound)
+      end
+    end
   end
   
   describe '#find_field' do
@@ -524,23 +553,17 @@ shared_examples_for "session" do
     end
     
     it "should raise an error if the field doesn't exist" do
-      running {
-        @session.find_field('Does not exist')
-      }.should raise_error(Capybara::ElementNotFound)
+      @session.find_field('Does not exist').should be_nil
     end
     
     it "should find only given kind of field" do
       @session.find_field('form_description', :text_field, :text_area).text.should == 'Descriptive text goes here'
-      running {
-        @session.find_field('form_description', :password_field)
-      }.should raise_error(Capybara::ElementNotFound)
+      @session.find_field('form_description', :password_field).should be_nil
     end
     
     it "should be aliased as 'field_labeled' for webrat compatibility" do
       @session.field_labeled('Dog').value.should == 'dog'
-      running {
-        @session.field_labeled('Does not exist')
-      }.should raise_error(Capybara::ElementNotFound)
+      @session.field_labeled('Does not exist').should be_nil
     end
   end
   
