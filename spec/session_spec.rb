@@ -554,10 +554,8 @@ shared_examples_for "session" do
       @session.find_link('labore')[:href].should == "/with_simple_html"
     end
     
-    it "should raise an error if the field doesn't exist" do
-      running {
-        @session.find_link('Does not exist')
-      }.should raise_error(Capybara::ElementNotFound)
+    it "should return nil if the field doesn't exist" do
+      @session.find_link('Does not exist').should be_nil
     end
   end
   
@@ -571,10 +569,8 @@ shared_examples_for "session" do
       @session.find_button('crap321').value.should == "crappy"
     end
     
-    it "should raise an error if the field doesn't exist" do
-      running {
-        @session.find_button('Does not exist')
-      }.should raise_error(Capybara::ElementNotFound)
+    it "should return nil if the field doesn't exist" do
+      @session.find_button('Does not exist').should be_nil
     end
   end
 

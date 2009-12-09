@@ -37,11 +37,15 @@ module Capybara
     end
 
     def click_link(locator)
-      find_link(locator).click
+      link = find_link(locator)
+      raise Capybara::ElementNotFound, "no link with title, id or text '#{locator}' found" unless link
+      link.click
     end
 
     def click_button(locator)
-      find_button(locator).click
+      button = find_button(locator)
+      raise Capybara::ElementNotFound, "no button with value or id or text '#{locator}' found" unless button
+      button.click
     end
 
     def fill_in(locator, options={})
@@ -132,16 +136,12 @@ module Capybara
     alias_method :field_labeled, :find_field
 
     def find_link(locator)
-      link = find("//a[@id='#{locator}' or contains(.,'#{locator}') or @title='#{locator}']").first
-      raise Capybara::ElementNotFound, "no link with title, id or text '#{locator}' found" unless link
-      link
+      find("//a[@id='#{locator}' or contains(.,'#{locator}') or @title='#{locator}']").first
     end
 
     def find_button(locator)
-      button = find("//input[@type='submit' or @type='image'][@id='#{locator}' or @value='#{locator}']").first \
-               || find("//button[@id='#{locator}' or @value='#{locator}' or contains(.,'#{locator}')]").first
-      raise Capybara::ElementNotFound, "no button with value or id or text '#{locator}' found" unless button
-      button
+      button = find("//input[@type='submit' or @type='image'][@id='#{locator}' or @value='#{locator}']").first
+      button || find("//button[@id='#{locator}' or @value='#{locator}' or contains(.,'#{locator}')]").first
     end
 
   private
