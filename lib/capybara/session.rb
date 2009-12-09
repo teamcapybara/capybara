@@ -38,37 +38,37 @@ module Capybara
     end
 
     def fill_in(locator, options={})
-      field = find(XPath.fillable_field(locator))
+      field = get(XPath.fillable_field(locator))
       raise Capybara::ElementNotFound, "cannot fill in, no text field, text area or password field with id or label '#{locator}' found" unless field
       field.set(options[:with])
     end
 
     def choose(locator)
-      field = find(XPath.radio_button(locator))
+      field = get(XPath.radio_button(locator))
       raise Capybara::ElementNotFound, "cannot choose field, no radio button with id or label '#{locator}' found" unless field
       field.set(true)
     end
 
     def check(locator)
-      field = find(XPath.checkbox(locator))
+      field = get(XPath.checkbox(locator))
       raise Capybara::ElementNotFound, "cannot check field, no checkbox with id or label '#{locator}' found" unless field
       field.set(true)
     end
 
     def uncheck(locator)
-      field = find(XPath.checkbox(locator))
+      field = get(XPath.checkbox(locator))
       raise Capybara::ElementNotFound, "cannot uncheck field, no checkbox with id or label '#{locator}' found" unless field
       field.set(false)
     end
 
     def select(value, options={})
-      field = find(XPath.select(options[:from]).to_s)
+      field = get(XPath.select(options[:from]))
       raise Capybara::ElementNotFound, "cannot select option, no select box with id or label '#{options[:from]}' found" unless field
       field.select(value)
     end
 
     def attach_file(locator, path)
-      field = find(XPath.file_field(locator))
+      field = get(XPath.file_field(locator))
       raise Capybara::ElementNotFound, "cannot attach file, no file field with id or label '#{locator}' found" unless field
       field.set(path)
     end
@@ -129,32 +129,30 @@ module Capybara
     end
     
     def find(locator)
-      case locator
-      when XPath
-        locator.paths.each do |path|
-          result = all(path).first
-          return result if result
-        end
-        return nil
-      else
-        all(locator.to_s).first
-      end
+      all(locator.to_s).first
     end
 
     def find_field(locator)
-      find(XPath.field(locator))
+      get(XPath.field(locator))
     end
     alias_method :field_labeled, :find_field
 
     def find_link(locator)
-      find(XPath.link(locator))
+      get(XPath.link(locator))
     end
 
     def find_button(locator)
-      find(XPath.button(locator))
+      get(XPath.button(locator))
     end
 
   private
+  
+    def get(xpath)
+      xpath.paths.find do |path|
+        path = all(path).first
+        return path if path
+      end
+    end
 
     def css_to_xpath(css)
       Nokogiri::CSS.xpath_for(css).first
