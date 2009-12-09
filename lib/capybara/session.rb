@@ -44,6 +44,14 @@ module Capybara
       find_button(locator).click
     end
 
+    def drag(source_locator, target_locator)
+      source = find(source_locator).first
+      raise Capybara::ElementNotFound, "drag source '#{source_locator}' not found on page" unless source
+      target = find(target_locator).first
+      raise Capybara::ElementNotFound, "drag target '#{target_locator}' not found on page" unless target
+      source.drag_to(target)
+    end
+
     def fill_in(locator, options={})
       find_field(locator, :text_field, :text_area, :password_field).set(options[:with])
     end
@@ -73,7 +81,7 @@ module Capybara
     end
 
     def has_content?(content)
-      has_xpath?("//*[contains(.,#{sanitized_xpath_string(content)})]")
+      has_xpath?("[contains(.,#{sanitized_xpath_string(content)})] | //*[contains(.,#{sanitized_xpath_string(content)})]")
     end
 
     def has_xpath?(path, options={})

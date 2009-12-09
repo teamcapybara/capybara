@@ -47,7 +47,7 @@ module Capybara
   end
 
   SESSION_METHODS = [
-    :visit, :body, :click_link, :click_button, :fill_in, :choose, :has_xpath?, :has_css?,
+    :visit, :body, :click_link, :click_button, :drag, :fill_in, :choose, :has_xpath?, :has_css?,
     :check, :uncheck, :attach_file, :select, :has_content?, :within, :within_fieldset,
     :within_table, :save_and_open_page, :find_field, :find_link, :find_button,
     :field_labeled
