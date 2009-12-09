@@ -26,33 +26,45 @@ module Capybara
     def fillable_field(locator)
       text_field(locator).password_field(locator).text_area(locator)
     end
+    
+    def content(locator)
+      append("//*[contains(.,#{s(locator)})]")
+    end
+    
+    def table(locator)
+      append("//table[@id=#{s(locator)} or contains(caption,#{s(locator)})]")
+    end
+    
+    def fieldset(locator)
+      append("//fieldset[@id=#{s(locator)} or contains(legend,#{s(locator)})]")
+    end
 
     def text_field(locator)
-      append("//input[@type='text'][@id='#{locator}' or @id=//label[contains(.,'#{locator}')]/@for]")
+      append("//input[@type='text'][@id=#{s(locator)} or @id=//label[contains(.,#{s(locator)})]/@for]")
     end
 
     def password_field(locator)
-      append("//input[@type='password'][@id='#{locator}' or @id=//label[contains(.,'#{locator}')]/@for]")
+      append("//input[@type='password'][@id=#{s(locator)} or @id=//label[contains(.,#{s(locator)})]/@for]")
     end
 
     def text_area(locator)
-      append("//textarea[@id='#{locator}' or @id=//label[contains(.,'#{locator}')]/@for]")
+      append("//textarea[@id=#{s(locator)} or @id=//label[contains(.,#{s(locator)})]/@for]")
     end
 
     def radio_button(locator)
-      append("//input[@type='radio'][@id='#{locator}' or @id=//label[contains(.,'#{locator}')]/@for]")
+      append("//input[@type='radio'][@id=#{s(locator)} or @id=//label[contains(.,#{s(locator)})]/@for]")
     end
 
     def checkbox(locator)
-      append("//input[@type='checkbox'][@id='#{locator}' or @id=//label[contains(.,'#{locator}')]/@for]")
+      append("//input[@type='checkbox'][@id=#{s(locator)} or @id=//label[contains(.,#{s(locator)})]/@for]")
     end
 
     def select(locator)
-      append("//select[@id='#{locator}' or @id=//label[contains(.,'#{locator}')]/@for]")
+      append("//select[@id=#{s(locator)} or @id=//label[contains(.,#{s(locator)})]/@for]")
     end
 
     def file_field(locator)
-      append("//input[@type='file'][@id='#{locator}' or @id=//label[contains(.,'#{locator}')]/@for]")
+      append("//input[@type='file'][@id=#{s(locator)} or @id=//label[contains(.,#{s(locator)})]/@for]")
     end
 
     def to_s
@@ -60,6 +72,18 @@ module Capybara
     end
 
   private
+  
+    # Sanitize a String for putting it into an xpath query
+    def s(string)
+      if string.include?("'")
+        string = string.split("'", -1).map do |substr|
+          "'#{substr}'"
+        end.join(%q{,"'",})
+        "concat(#{string})"
+      else
+        "'#{string}'"
+      end
+    end
 
     def append(path)
       XPath.new(*[@paths, path].flatten)

@@ -78,7 +78,7 @@ module Capybara
     end
 
     def has_content?(content)
-      has_xpath?("//*[contains(.,#{sanitized_xpath_string(content)})]")
+      has_xpath?(XPath.content(content).to_s)
     end
 
     def has_xpath?(path, options={})
@@ -107,13 +107,13 @@ module Capybara
     end
 
     def within_fieldset(locator)
-      within "//fieldset[@id='#{locator}' or contains(legend,'#{locator}')]" do
+      within XPath.fieldset(locator).to_s do
         yield
       end
     end
 
     def within_table(locator)
-      within "//table[@id='#{locator}' or contains(caption,'#{locator}')]" do
+      within XPath.table(locator).to_s do
         yield
       end
     end
@@ -169,28 +169,6 @@ module Capybara
 
     def scopes
       @scopes ||= []
-    end
-
-    def sanitized_xpath_string(string)
-      if string.include?("'")
-        string = string.split("'", -1).map do |substr|
-          "'#{substr}'"
-        end.join(%q{,"'",})
-        "concat(#{string})"
-      else
-        "'#{string}'"
-      end
-    end
-
-    def sanitized_xpath_string(string)
-      if string.include?("'")
-        string = string.split("'", -1).map do |substr|
-          "'#{substr}'"
-        end.join(%q{,"'",})
-        "concat(#{string})"
-      else
-        "'#{string}'"
-      end
     end
   end
 end
