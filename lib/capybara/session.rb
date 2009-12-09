@@ -2,14 +2,14 @@ module Capybara
   class Session
 
     FIELDS_PATHS = {
-      :text_field => proc { |id| "//input[@type='text'][@id='#{id}']" },
-      :text_area => proc { |id| "//textarea[@id='#{id}']" },
-      :password_field => proc { |id| "//input[@type='password'][@id='#{id}']" },
-      :radio => proc { |id| "//input[@type='radio'][@id='#{id}']" },
-      :hidden_field => proc { |id| "//input[@type='hidden'][@id='#{id}']" },
-      :checkbox => proc { |id| "//input[@type='checkbox'][@id='#{id}']" },
-      :select => proc { |id| "//select[@id='#{id}']" },
-      :file_field => proc { |id| "//input[@type='file'][@id='#{id}']" }
+      :text_field => proc { |id| "//input[@type='text'][@id='#{id}' or @id=//label[contains(.,'#{id}')]/@for]" },
+      :text_area => proc { |id| "//textarea[@id='#{id}' or @id=//label[contains(.,'#{id}')]/@for]" },
+      :password_field => proc { |id| "//input[@type='password'][@id='#{id}' or @id=//label[contains(.,'#{id}')]/@for]" },
+      :radio => proc { |id| "//input[@type='radio'][@id='#{id}' or @id=//label[contains(.,'#{id}')]/@for]" },
+      :hidden_field => proc { |id| "//input[@type='hidden'][@id='#{id}' or @id=//label[contains(.,'#{id}')]/@for]" },
+      :checkbox => proc { |id| "//input[@type='checkbox'][@id='#{id}' or @id=//label[contains(.,'#{id}')]/@for]" },
+      :select => proc { |id| "//select[@id='#{id}' or @id=//label[contains(.,'#{id}')]/@for]" },
+      :file_field => proc { |id| "//input[@type='file'][@id='#{id}' or @id=//label[contains(.,'#{id}')]/@for]" }
     }
 
     attr_reader :mode, :app
@@ -145,7 +145,7 @@ module Capybara
 
     def find_field(locator, *kinds)
       kinds = FIELDS_PATHS.keys if kinds.empty?
-      find_field_by_id(locator, *kinds) || find_field_by_label(locator, *kinds)
+      find(kinds.map { |kind| FIELDS_PATHS[kind].call(locator) }.join("|"))
     end
     alias_method :field_labeled, :find_field
 
@@ -181,21 +181,6 @@ module Capybara
 
     def scopes
       @scopes ||= []
-    end
-
-    def find_field_by_id(locator, *kinds)
-      field_locator = kinds.map { |kind| FIELDS_PATHS[kind].call(locator) }.join("|")
-      element = find(field_locator)
-      return element
-    end
-
-    def find_field_by_label(locator, *kinds)
-      label = find("//label[text()='#{locator}']") || find("//label[contains(.,'#{locator}')]")
-      if label
-        element = find_field_by_id(label[:for], *kinds)
-        return element if element
-      end
-      return nil
     end
 
     def sanitized_xpath_string(string)
