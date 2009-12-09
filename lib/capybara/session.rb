@@ -38,37 +38,37 @@ module Capybara
     end
 
     def fill_in(locator, options={})
-      field = fetch(XPath.fillable_field(locator))
+      field = fetch_xpath(XPath.fillable_field(locator))
       raise Capybara::ElementNotFound, "cannot fill in, no text field, text area or password field with id or label '#{locator}' found" unless field
       field.set(options[:with])
     end
 
     def choose(locator)
-      field = fetch(XPath.radio_button(locator))
+      field = fetch_xpath(XPath.radio_button(locator))
       raise Capybara::ElementNotFound, "cannot choose field, no radio button with id or label '#{locator}' found" unless field
       field.set(true)
     end
 
     def check(locator)
-      field = fetch(XPath.checkbox(locator))
+      field = fetch_xpath(XPath.checkbox(locator))
       raise Capybara::ElementNotFound, "cannot check field, no checkbox with id or label '#{locator}' found" unless field
       field.set(true)
     end
 
     def uncheck(locator)
-      field = fetch(XPath.checkbox(locator))
+      field = fetch_xpath(XPath.checkbox(locator))
       raise Capybara::ElementNotFound, "cannot uncheck field, no checkbox with id or label '#{locator}' found" unless field
       field.set(false)
     end
 
     def select(value, options={})
-      field = fetch(XPath.select(options[:from]))
+      field = fetch_xpath(XPath.select(options[:from]))
       raise Capybara::ElementNotFound, "cannot select option, no select box with id or label '#{options[:from]}' found" unless field
       field.select(value)
     end
 
     def attach_file(locator, path)
-      field = fetch(XPath.file_field(locator))
+      field = fetch_xpath(XPath.file_field(locator))
       raise Capybara::ElementNotFound, "cannot attach file, no file field with id or label '#{locator}' found" unless field
       field.set(path)
     end
@@ -133,21 +133,21 @@ module Capybara
     end
 
     def find_field(locator)
-      fetch(XPath.field(locator))
+      fetch_xpath(XPath.field(locator))
     end
     alias_method :field_labeled, :find_field
 
     def find_link(locator)
-      fetch(XPath.link(locator))
+      fetch_xpath(XPath.link(locator))
     end
 
     def find_button(locator)
-      fetch(XPath.button(locator))
+      fetch_xpath(XPath.button(locator))
     end
 
   private
   
-    def fetch(xpath)
+    def fetch_xpath(xpath)
       driver.fetch(*xpath.paths.map { |path| current_scope.to_s + path })
     end
 
