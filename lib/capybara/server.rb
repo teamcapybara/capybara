@@ -1,3 +1,4 @@
+require 'uri'
 require 'net/http'
 require 'rack'
 require 'rack/handler/mongrel'
@@ -18,6 +19,7 @@ class Capybara::Server
   end
 
   def url(path)
+    path = URI.parse(path).request_uri if path =~ /^http/
     "http://#{host}:#{port}#{path}"
   end
   
