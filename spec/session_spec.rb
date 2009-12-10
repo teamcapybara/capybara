@@ -272,6 +272,12 @@ shared_examples_for "session" do
       @session.click_button('awesome')
       extract_results(@session)['gender'].should == 'both'
     end
+    
+    context "with a locator that doesn't exist" do
+      it "should raise an error" do
+        running { @session.choose('does not exist') }.should raise_error(Capybara::ElementNotFound)
+      end
+    end
   end
 
   describe "#check" do
@@ -289,6 +295,12 @@ shared_examples_for "session" do
       @session.check("Cat")
       @session.click_button('awesome')
       extract_results(@session)['pets'].should include('dog', 'cat', 'hamster')
+    end
+    
+    context "with a locator that doesn't exist" do
+      it "should raise an error" do
+        running { @session.check('does not exist') }.should raise_error(Capybara::ElementNotFound)
+      end
     end
   end
 
@@ -310,6 +322,12 @@ shared_examples_for "session" do
       extract_results(@session)['pets'].should include('dog')
       extract_results(@session)['pets'].should_not include('hamster')
     end
+    
+    context "with a locator that doesn't exist" do
+      it "should raise an error" do
+        running { @session.uncheck('does not exist') }.should raise_error(Capybara::ElementNotFound)
+      end
+    end
   end
 
   describe "#select" do
@@ -327,6 +345,12 @@ shared_examples_for "session" do
       @session.select("Finish", :from => 'Locale')
       @session.click_button('awesome')
       extract_results(@session)['locale'].should == 'fi'
+    end
+    
+    context "with a locator that doesn't exist" do
+      it "should raise an error" do
+        running { @session.select('foo', :from => 'does not exist') }.should raise_error(Capybara::ElementNotFound)
+      end
     end
   end
 
@@ -509,7 +533,12 @@ shared_examples_for "session" do
         @session.click_button('Upload')
       end
     end
-
+    
+    context "with a locator that doesn't exist" do
+      it "should raise an error" do
+        running { @session.attach_file('does not exist', 'foo.txt') }.should raise_error(Capybara::ElementNotFound)
+      end
+    end
   end
   
   describe '#find_field' do
@@ -524,23 +553,17 @@ shared_examples_for "session" do
     end
     
     it "should raise an error if the field doesn't exist" do
-      running {
-        @session.find_field('Does not exist')
-      }.should raise_error(Capybara::ElementNotFound)
+      @session.find_field('Does not exist').should be_nil
     end
     
     it "should find only given kind of field" do
       @session.find_field('form_description', :text_field, :text_area).text.should == 'Descriptive text goes here'
-      running {
-        @session.find_field('form_description', :password_field)
-      }.should raise_error(Capybara::ElementNotFound)
+      @session.find_field('form_description', :password_field).should be_nil
     end
     
     it "should be aliased as 'field_labeled' for webrat compatibility" do
       @session.field_labeled('Dog').value.should == 'dog'
-      running {
-        @session.field_labeled('Does not exist')
-      }.should raise_error(Capybara::ElementNotFound)
+      @session.field_labeled('Does not exist').should be_nil
     end
   end
   
@@ -554,10 +577,8 @@ shared_examples_for "session" do
       @session.find_link('labore')[:href].should == "/with_simple_html"
     end
     
-    it "should raise an error if the field doesn't exist" do
-      running {
-        @session.find_link('Does not exist')
-      }.should raise_error(Capybara::ElementNotFound)
+    it "should return nil if the field doesn't exist" do
+      @session.find_link('Does not exist').should be_nil
     end
   end
   
@@ -571,10 +592,63 @@ shared_examples_for "session" do
       @session.find_button('crap321').value.should == "crappy"
     end
     
-    it "should raise an error if the field doesn't exist" do
-      running {
-        @session.find_button('Does not exist')
-      }.should raise_error(Capybara::ElementNotFound)
+    it "should return nil if the field doesn't exist" do
+      @session.find_button('Does not exist').should be_nil
+    end
+  end
+
+  describe '#all' do
+    before do
+      @session.visit('/with_html')
+    end
+
+    it "should find all elements using the given locator" do
+      @session.all('//p').should have(3).elements
+      @session.all('//h1').first.text.should == 'This is a test'
+      @session.all("//input[@id='test_field']").first[:value].should == 'monkey'
+    end
+    
+    it "should return an empty array when nothing was found" do
+      @session.all('//div').should be_empty
+    end
+    
+    context "within a scope" do
+      before do
+        @session.visit('/with_scope')
+      end
+
+      it "should find any element using the given locator" do
+        @session.within(:xpath, "//div[@id='for_bar']") do
+          @session.all('//li').should have(2).elements
+        end        
+      end
+    end
+  end
+
+  describe '#find' do
+    before do
+      @session.visit('/with_html')
+    end
+
+    it "should find the first element using the given locator" do
+      @session.find('//h1').text.should == 'This is a test'
+      @session.find("//input[@id='test_field']")[:value].should == 'monkey'
+    end
+    
+    it "should return nil when nothing was found" do
+      @session.find('//div').should be_nil
+    end
+    
+    context "within a scope" do
+      before do
+        @session.visit('/with_scope')
+      end
+
+      it "should find the first element using the given locator" do
+        @session.within(:xpath, "//div[@id='for_bar']") do
+          @session.find('//li').text.should =~ /With Simple HTML/
+        end        
+      end
     end
   end
 

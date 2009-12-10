@@ -37,11 +37,15 @@ module Capybara
     end
 
     def click_link(locator)
-      find_link(locator).click
+      link = find_link(locator)
+      raise Capybara::ElementNotFound, "no link with title, id or text '#{locator}' found" unless link
+      link.click
     end
 
     def click_button(locator)
-      find_button(locator).click
+      button = find_button(locator)
+      raise Capybara::ElementNotFound, "no button with value or id or text '#{locator}' found" unless button
+      button.click
     end
 
     def drag(source_locator, target_locator)
@@ -53,27 +57,39 @@ module Capybara
     end
 
     def fill_in(locator, options={})
-      find_field(locator, :text_field, :text_area, :password_field).set(options[:with])
+      field = find_field(locator, :text_field, :text_area, :password_field)
+      raise Capybara::ElementNotFound, "cannot fill in, no text field, text area or password field with id or label '#{locator}' found" unless field
+      field.set(options[:with])
     end
 
     def choose(locator)
-      find_field(locator, :radio).set(true)
+      field = find_field(locator, :radio)
+      raise Capybara::ElementNotFound, "cannot choose field, no radio button with id or label '#{locator}' found" unless field
+      field.set(true)
     end
 
     def check(locator)
-      find_field(locator, :checkbox).set(true)
+      field = find_field(locator, :checkbox)
+      raise Capybara::ElementNotFound, "cannot check field, no checkbox with id or label '#{locator}' found" unless field
+      field.set(true)
     end
 
     def uncheck(locator)
-      find_field(locator, :checkbox).set(false)
+      field = find_field(locator, :checkbox)
+      raise Capybara::ElementNotFound, "cannot uncheck field, no checkbox with id or label '#{locator}' found" unless field
+      field.set(false)
     end
 
     def select(value, options={})
-      find_field(options[:from], :select).select(value)
+      field = find_field(options[:from], :select)
+      raise Capybara::ElementNotFound, "cannot select option, no select box with id or label '#{options[:from]}' found" unless field
+      field.select(value)
     end
 
     def attach_file(locator, path)
-      find_field(locator, :file_field).set(path)
+      field = find_field(locator, :file_field)
+      raise Capybara::ElementNotFound, "cannot attach file, no file field with id or label '#{locator}' found" unless field
+      field.set(path)
     end
 
     def body
@@ -85,7 +101,7 @@ module Capybara
     end
 
     def has_xpath?(path, options={})
-      results = find(path)
+      results = all(path)
       if options[:text]
         results = filter_by_text(results, options[:text])
       end
@@ -103,7 +119,7 @@ module Capybara
     def within(kind, scope=nil)
       kind, scope = Capybara.default_selector, kind unless scope
       scope = css_to_xpath(scope) if kind == :css
-      raise Capybara::ElementNotFound, "scope '#{scope}' not found on page" if find(scope).empty?
+      raise Capybara::ElementNotFound, "scope '#{scope}' not found on page" unless find(scope)
       scopes.push(scope)
       yield
       scopes.pop
@@ -126,25 +142,28 @@ module Capybara
       Capybara::SaveAndOpenPage.save_and_open_page(body)
     end
 
+    def all(locator)
+      locator = current_scope.to_s + locator
+      driver.find(locator)
+    end
+    
+    def find(locator)
+      all(locator).first
+    end
+
     def find_field(locator, *kinds)
       kinds = FIELDS_PATHS.keys if kinds.empty?
-      field = find_field_by_id(locator, *kinds) || find_field_by_label(locator, *kinds)
-      raise Capybara::ElementNotFound, "no field of kind #{kinds.inspect} with id or label '#{locator}' found" unless field
-      field
+      find_field_by_id(locator, *kinds) || find_field_by_label(locator, *kinds)
     end
     alias_method :field_labeled, :find_field
 
     def find_link(locator)
-      link = find("//a[@id='#{locator}' or contains(.,'#{locator}') or @title='#{locator}']").first
-      raise Capybara::ElementNotFound, "no link with title, id or text '#{locator}' found" unless link
-      link
+      find("//a[@id='#{locator}' or contains(.,'#{locator}') or @title='#{locator}']")
     end
 
     def find_button(locator)
-      button = find("//input[@type='submit' or @type='image'][@id='#{locator}' or @value='#{locator}']").first \
-               || find("//button[@id='#{locator}' or @value='#{locator}' or contains(.,'#{locator}')]").first
-      raise Capybara::ElementNotFound, "no button with value or id or text '#{locator}' found" unless button
-      button
+      button = find("//input[@type='submit' or @type='image'][@id='#{locator}' or @value='#{locator}']")
+      button || find("//button[@id='#{locator}' or @value='#{locator}' or contains(.,'#{locator}')]")
     end
 
   private
@@ -174,12 +193,12 @@ module Capybara
 
     def find_field_by_id(locator, *kinds)
       field_locator = kinds.map { |kind| FIELDS_PATHS[kind].call(locator) }.join("|")
-      element = find(field_locator).first
+      element = find(field_locator)
       return element
     end
 
     def find_field_by_label(locator, *kinds)
-      label = find("//label[text()='#{locator}']").first || find("//label[contains(.,'#{locator}')]").first
+      label = find("//label[text()='#{locator}']") || find("//label[contains(.,'#{locator}')]")
       if label
         element = find_field_by_id(label[:for], *kinds)
         return element if element
@@ -187,9 +206,15 @@ module Capybara
       return nil
     end
 
-    def find(locator)
-      locator = current_scope.to_s + locator
-      driver.find(locator)
+    def sanitized_xpath_string(string)
+      if string.include?("'")
+        string = string.split("'", -1).map do |substr|
+          "'#{substr}'"
+        end.join(%q{,"'",})
+        "concat(#{string})"
+      else
+        "'#{string}'"
+      end
     end
 
     def sanitized_xpath_string(string)

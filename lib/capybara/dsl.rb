@@ -49,8 +49,8 @@ module Capybara
   SESSION_METHODS = [
     :visit, :body, :click_link, :click_button, :drag, :fill_in, :choose, :has_xpath?, :has_css?,
     :check, :uncheck, :attach_file, :select, :has_content?, :within, :within_fieldset,
-    :within_table, :save_and_open_page, :find_field, :find_link, :find_button,
-    :field_labeled
+    :within_table, :save_and_open_page, :find, :find_field, :find_link, :find_button,
+    :field_labeled, :all
   ]
   SESSION_METHODS.each do |method|
     class_eval <<-RUBY, __FILE__, __LINE__+1
