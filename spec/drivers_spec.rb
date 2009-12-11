@@ -37,7 +37,7 @@ shared_examples_for 'driver' do
         @driver.find('//a')[0].text.should == 'labore'
         @driver.find('//a')[1].text.should == 'ullamco'
       end
-      
+
       it "should extract node attributes" do
         @driver.find('//a')[0][:href].should == '/with_simple_html'
         @driver.find('//a')[0][:class].should == 'simple'
@@ -51,7 +51,7 @@ shared_examples_for 'driver' do
         @driver.find('//input').first.set('gorilla')
         @driver.find('//input').first.value.should == 'gorilla'
       end
-      
+
       it "should extract node tag name" do
         @driver.find('//a')[0].tag_name.should == 'a'
         @driver.find('//a')[1].tag_name.should == 'a'
@@ -63,20 +63,27 @@ shared_examples_for 'driver' do
 end
 
 shared_examples_for "driver with javascript support" do
+  before { @driver.visit('/with_js') }
+
   describe '#find' do
     it "should find dynamically changed nodes" do
-      @driver.visit('/with_js')
       @driver.find('//p').first.text.should == 'I changed it'
     end
   end
-  
+
   describe '#drag_to' do
     it "should drag and drop an object" do
-      @driver.visit('/with_js')
       draggable = @driver.find('//div[@id="drag"]').first
       droppable = @driver.find('//div[@id="drop"]').first
       draggable.drag_to(droppable)
       @driver.find('//div[contains(., "Dropped!")]').should_not be_nil
     end
   end
+
+  describe "#evaluate_script" do
+    it "should return the value of the executed script" do
+      @driver.evaluate_script('1+1').should == 2
+    end
+  end
+
 end
