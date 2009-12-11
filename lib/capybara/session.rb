@@ -97,7 +97,7 @@ module Capybara
     end
 
     def has_content?(content)
-      has_xpath?("[contains(.,#{sanitized_xpath_string(content)})] | //*[contains(.,#{sanitized_xpath_string(content)})]")
+      has_xpath?("/descendant-or-self::*[contains(.,#{sanitized_xpath_string(content)})]")
     end
 
     def has_xpath?(path, options={})
@@ -204,17 +204,6 @@ module Capybara
         return element if element
       end
       return nil
-    end
-
-    def sanitized_xpath_string(string)
-      if string.include?("'")
-        string = string.split("'", -1).map do |substr|
-          "'#{substr}'"
-        end.join(%q{,"'",})
-        "concat(#{string})"
-      else
-        "'#{string}'"
-      end
     end
 
     def sanitized_xpath_string(string)
