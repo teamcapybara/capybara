@@ -4,6 +4,14 @@ module Capybara
   # this will generate an XPath that matches either a text field or a link
   class XPath
     class << self
+      def wrap(path)
+        if path.is_a?(self)
+          path
+        else
+          new(path.to_s)
+        end
+      end
+      
       def respond_to?(method)
         new.respond_to?(method)
       end
@@ -74,6 +82,10 @@ module Capybara
 
     def file_field(locator)
       add_field(locator) { |id| "//input[@type='file'][@id=#{id}]" }
+    end
+    
+    def scope(scope)
+      XPath.new(*paths.map { |p| scope + p })
     end
 
     def to_s

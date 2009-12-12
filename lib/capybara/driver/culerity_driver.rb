@@ -70,14 +70,7 @@ class Capybara::Driver::Culerity < Capybara::Driver::Base
     browser.elements_by_xpath(selector).map { |node| Node.new(self, node) }
   end
   
-  def fetch(*paths)
-    8.times do
-      result = super
-      return result if result
-      sleep(0.1)
-    end
-    nil
-  end
+  def wait?; true; end
 
 private
 

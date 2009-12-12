@@ -607,6 +607,13 @@ shared_examples_for "session" do
       @session.all('//div').should be_empty
     end
     
+    it "should accept an XPath instance" do
+      @session.visit('/form')
+      @xpath = Capybara::XPath.text_field('Name')
+      @result = @session.all(@xpath)
+      @result.map(&:value).should include('Smith', 'John', 'John Smith')
+    end
+    
     context "within a scope" do
       before do
         @session.visit('/with_scope')
@@ -634,6 +641,12 @@ shared_examples_for "session" do
       @session.find('//div').should be_nil
     end
     
+    it "should accept an XPath instance and respect the order of paths" do
+      @session.visit('/form')
+      @xpath = Capybara::XPath.text_field('Name')
+      @session.find(@xpath).value.should == 'John Smith'
+    end
+    
     context "within a scope" do
       before do
         @session.visit('/with_scope')
@@ -642,6 +655,39 @@ shared_examples_for "session" do
       it "should find the first element using the given locator" do
         @session.within(:xpath, "//div[@id='for_bar']") do
           @session.find('//li').text.should =~ /With Simple HTML/
+        end        
+      end
+    end
+  end
+  
+  describe '#wait_for' do
+    before do
+      @session.visit('/with_html')
+    end
+
+    it "should find the first element using the given locator" do
+      @session.wait_for('//h1').text.should == 'This is a test'
+      @session.wait_for("//input[@id='test_field']")[:value].should == 'monkey'
+    end
+    
+    it "should return nil when nothing was found" do
+      @session.wait_for('//div').should be_nil
+    end
+    
+    it "should accept an XPath instance and respect the order of paths" do
+      @session.visit('/form')
+      @xpath = Capybara::XPath.text_field('Name')
+      @session.wait_for(@xpath).value.should == 'John Smith'
+    end
+    
+    context "within a scope" do
+      before do
+        @session.visit('/with_scope')
+      end
+
+      it "should find the first element using the given locator" do
+        @session.within(:xpath, "//div[@id='for_bar']") do
+          @session.wait_for('//li').text.should =~ /With Simple HTML/
         end        
       end
     end
@@ -791,6 +837,14 @@ shared_examples_for "session" do
 end
 
 shared_examples_for "session with javascript support" do
+  describe '#wait_for' do
+    it "should wait for asynchronous load" do
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+      @session.wait_for("//a[contains(.,'Has been clicked')]")[:href].should == '#'
+    end
+  end
+
   describe '#click_link' do
     it "should wait for asynchronous load" do
       @session.visit('/with_js')

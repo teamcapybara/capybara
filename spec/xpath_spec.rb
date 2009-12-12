@@ -16,6 +16,25 @@ describe Capybara::XPath do
   it "should respond to instance methods at the class level" do
     Capybara::XPath.should respond_to(:fillable_field)
   end
+  
+  describe '.wrap' do
+    it "should return an XPath unmodified" do
+      Capybara::XPath.wrap(@xpath).should == @xpath
+    end
+    
+    it "should wrap a string in an xpath object" do
+      @xpath = Capybara::XPath.wrap('//foo/bar')
+      @xpath.should be_an_instance_of(Capybara::XPath)
+      @xpath.paths.should == ['//foo/bar']
+    end
+  end
+  
+  describe '#scope' do
+    it "should prepend the given scope to all paths" do
+      @xpath = Capybara::XPath.new('//foo/bar', '//test[@blah=foo]').scope('//quox')
+      @xpath.paths.should include('//quox//foo/bar', '//quox//test[@blah=foo]')
+    end
+  end
 
   describe '#field' do
     it "should find any field by id or label" do

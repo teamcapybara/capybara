@@ -11,10 +11,7 @@ class Capybara::Driver::Base
     raise "Not implemented"
   end
   
-  def fetch(*paths)
-    paths.find do |path|
-      result = find(path).first
-      return result if result
-    end
+  def wait?
+    false
   end
 end
