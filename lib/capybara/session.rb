@@ -138,7 +138,7 @@ module Capybara
       locator = current_scope.to_s + locator
       driver.find(locator)
     end
-    
+
     def find(locator)
       all(locator).first
     end
@@ -156,6 +156,14 @@ module Capybara
     def find_button(locator)
       button = find("//input[@type='submit' or @type='image'][@id='#{locator}' or @value='#{locator}']")
       button || find("//button[@id='#{locator}' or @value='#{locator}' or contains(.,'#{locator}')]")
+    end
+
+    def evaluate_script(script)
+      begin
+        driver.evaluate_script(script)
+      rescue NoMethodError
+        raise NotSupportedByDriverError
+      end
     end
 
   private

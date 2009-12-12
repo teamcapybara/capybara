@@ -12,7 +12,7 @@ module Capybara
       @current_driver || default_driver
     end
     alias_method :mode, :current_driver
-    
+
     def javascript_driver
       @javascript_driver || :selenium
     end
@@ -24,11 +24,11 @@ module Capybara
     def current_session
       session_pool["#{current_driver}#{app.object_id}"] ||= Capybara::Session.new(current_driver, app)
     end
-    
+
     def current_session?
       session_pool.has_key?("#{current_driver}#{app.object_id}")
     end
-    
+
     def reset_sessions!
       @session_pool = nil
     end
@@ -50,7 +50,7 @@ module Capybara
     :visit, :body, :click_link, :click_button, :fill_in, :choose, :has_xpath?, :has_css?,
     :check, :uncheck, :attach_file, :select, :has_content?, :within, :within_fieldset,
     :within_table, :save_and_open_page, :find, :find_field, :find_link, :find_button,
-    :field_labeled, :all
+    :field_labeled, :all, :evaluate_script
   ]
   SESSION_METHODS.each do |method|
     class_eval <<-RUBY, __FILE__, __LINE__+1
