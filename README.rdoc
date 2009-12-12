@@ -213,6 +213,7 @@ The following people have dedicated their time and effort to Capybara:
 * Rob Holland
 * Wincent Colaiuta
 * Andrea Fazzi
+* Aslak Hellesøy
 
 == License:
 
