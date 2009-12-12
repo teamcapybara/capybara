@@ -86,6 +86,10 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   def wait?; true; end
 
+  def evaluate_script(script)
+    driver.execute_script "return #{script}"
+  end
+
 private
 
   def url(path)

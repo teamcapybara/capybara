@@ -36,7 +36,7 @@ describe Capybara do
       Capybara.current_driver.should == :culerity
     end
   end
-  
+
   describe '#javascript_driver' do
     it "should default to selenium" do
       Capybara.javascript_driver.should == :selenium
@@ -98,7 +98,7 @@ describe Capybara do
       Capybara.current_session.app.should == Capybara.app
     end
   end
-  
+
   describe '.reset_sessions!' do
     it "should clear any persisted sessions" do
       object_id = Capybara.current_session.object_id
@@ -114,6 +114,7 @@ describe Capybara do
     end
 
     it_should_behave_like "session"
+    it_should_behave_like "session without javascript support"
 
     it "should be possible to include it in another class" do
       klass = Class.new do
@@ -124,7 +125,7 @@ describe Capybara do
       foo.click_link('ullamco')
       foo.body.should include('Another World')
     end
-    
+
     it "should provide a 'page' shortcut for more expressive tests" do
       klass = Class.new do
         include Capybara

@@ -128,7 +128,7 @@ module Capybara
         driver.find(path)
       end.flatten
     end
-    
+
     def find(locator)
       all(locator).first
     end
@@ -154,6 +154,14 @@ module Capybara
 
     def find_button(locator)
       find(XPath.button(locator))
+    end
+
+    def evaluate_script(script)
+      begin
+        driver.evaluate_script(script)
+      rescue NoMethodError
+        raise NotSupportedByDriverError
+      end
     end
 
   private

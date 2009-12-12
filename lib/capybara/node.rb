@@ -9,11 +9,11 @@ class Capybara::Node
   def text
     raise "Not implemented"
   end
-  
+
   def [](name)
     raise "Not implemented"
   end
-  
+
   def value
     self[:value]
   end
@@ -21,7 +21,7 @@ class Capybara::Node
   def set(value)
     raise "Not implemented"
   end
-  
+
   def select(option)
     raise "Not implemented"
   end
@@ -29,11 +29,11 @@ class Capybara::Node
   def click
     raise "Not implemented"
   end
-  
+
   def drag_to(element)
     raise "Not implemented"
   end
-  
+
   def tag_name
     raise "Not implemented"
   end
