@@ -119,6 +119,10 @@ Querying:
     find_button
     field_labeled
 
+Scripting:
+
+    evaluate_script – Returns the value of the executed javascript (only works on javascript supported drivers)
+
 Debugging:
 
     save_and_open_page
@@ -158,7 +162,7 @@ For ultimate control, you can instantiate and use a session manually.
 Capybara does not try to guess what kind of selector you are going to give it,
 if you want to use CSS with your 'within' declarations for example, you'll need
 to do:
-    
+
     within(:css, 'ul li') { ... }
 
 Alternatively you can set the default selector to CSS, which may help if you are
