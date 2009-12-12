@@ -36,7 +36,7 @@ module Capybara
     end
     
     def content(locator)
-      append("//*[contains(.,#{s(locator)})]")
+      append("/descendant-or-self::*[contains(.,#{s(locator)})]")
     end
     
     def table(locator)

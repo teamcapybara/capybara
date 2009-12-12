@@ -362,6 +362,13 @@ shared_examples_for "session" do
       @session.should have_content('Redirect')
     end
 
+    it "should be true if scoped to an element which has the content" do
+      @session.visit('/with_html')
+      @session.within("//a[@title='awesome title']") do
+        @session.should have_content('labore')
+      end
+    end
+
     it "should be false if the given content is not on the page" do
       @session.visit('/with_html')
       @session.should_not have_content('xxxxyzzz')

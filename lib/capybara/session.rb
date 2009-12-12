@@ -37,6 +37,14 @@ module Capybara
       button.click
     end
 
+    def drag(source_locator, target_locator)
+      source = find(source_locator)
+      raise Capybara::ElementNotFound, "drag source '#{source_locator}' not found on page" unless source
+      target = find(target_locator)
+      raise Capybara::ElementNotFound, "drag target '#{target_locator}' not found on page" unless target
+      source.drag_to(target)
+    end
+
     def fill_in(locator, options={})
       field = wait_for(XPath.fillable_field(locator))
       raise Capybara::ElementNotFound, "cannot fill in, no text field, text area or password field with id or label '#{locator}' found" unless field

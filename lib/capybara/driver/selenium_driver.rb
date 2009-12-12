@@ -17,16 +17,13 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     end
 
     def set(value)
-      if tag_name == 'input' and %w(text password hidden file).include?(type)
+      if tag_name == 'textarea' or (tag_name == 'input' and %w(text password hidden file).include?(type))
         node.clear
         node.send_keys(value.to_s)
       elsif tag_name == 'input' and type == 'radio'
         node.select
       elsif tag_name == 'input' and type == 'checkbox'
         node.toggle
-      elsif tag_name == "textarea"
-        node.clear
-        node.send_keys(value.to_s)
       end
     end
 
