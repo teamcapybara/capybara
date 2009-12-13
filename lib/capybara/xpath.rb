@@ -91,6 +91,14 @@ module Capybara
     def to_s
       @paths.join(' | ')
     end
+    
+    def append(path)
+      XPath.new(*[@paths, XPath.wrap(path).paths].flatten)
+    end
+    
+    def prepend(path)
+      XPath.new(*[XPath.wrap(path).paths, @paths].flatten)
+    end
 
   protected
   
@@ -110,14 +118,6 @@ module Capybara
       else
         "'#{string}'"
       end
-    end
-    
-    def prepend(path)
-      XPath.new(*[path, @paths].flatten)
-    end
-
-    def append(path)
-      XPath.new(*[@paths, path].flatten)
     end
 
   end

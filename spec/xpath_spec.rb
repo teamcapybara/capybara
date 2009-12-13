@@ -29,6 +29,34 @@ describe Capybara::XPath do
     end
   end
   
+  describe '#append' do
+    it "should append an XPath's paths" do
+      @xpath = Capybara::XPath.wrap('//test')
+      @xpath = @xpath.append(Capybara::XPath.wrap('//foo/bar'))
+      @xpath.paths.should == ['//test', '//foo/bar']
+    end
+    
+    it "should append an String as a new path" do
+      @xpath = Capybara::XPath.wrap('//test')
+      @xpath = @xpath.append('//foo/bar')
+      @xpath.paths.should == ['//test', '//foo/bar']
+    end
+  end
+  
+  describe '#prepend' do
+    it "should prepend an XPath's paths" do
+      @xpath = Capybara::XPath.wrap('//test')
+      @xpath = @xpath.prepend(Capybara::XPath.wrap('//foo/bar'))
+      @xpath.paths.should == ['//foo/bar', '//test']
+    end
+    
+    it "should prepend an String as a new path" do
+      @xpath = Capybara::XPath.wrap('//test')
+      @xpath = @xpath.prepend('//foo/bar')
+      @xpath.paths.should == ['//foo/bar', '//test']
+    end
+  end
+  
   describe '#scope' do
     it "should prepend the given scope to all paths" do
       @xpath = Capybara::XPath.new('//foo/bar', '//test[@blah=foo]').scope('//quox')
