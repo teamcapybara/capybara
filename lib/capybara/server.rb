@@ -4,14 +4,27 @@ require 'rack'
 require 'rack/handler/mongrel'
 
 class Capybara::Server
-  attr_reader :app
-  
+  class Identify
+    def initialize(app)
+      @app = app
+    end
+
+    def call(env)
+      if env["REQUEST_PATH"] == "/__identify__"
+        [200, {}, @app.object_id.to_s]
+      else
+        @app.call(env)
+      end
+    end
+  end
+
+
+  attr_reader :app, :port
+
   def initialize(app)
     @app = app
-  end
-  
-  def port
-    8080
+    find_available_port
+    boot
   end
 
   def host
@@ -22,34 +35,59 @@ class Capybara::Server
     path = URI.parse(path).request_uri if path =~ /^http/
     "http://#{host}:#{port}#{path}"
   end
-  
+
+  def responsive?
+    is_running_on_port?(port)
+  end
+
+private
+
   def boot
     Capybara.log "application has already booted" and return if responsive?
     Capybara.log "booting Rack applicartion on port #{port}"
-    start_time = Time.now
-    Thread.new do
-      Rack::Handler::Mongrel.run @app, :Port => port
-    end
-    Capybara.log "checking if application has booted"
-    loop do
-      Capybara.log("application has booted") and break if responsive?
-      if Time.now - start_time > 10 
-        Capybara.log "Rack application timed out during boot"
-        exit
+
+    Timeout.timeout(10) do
+      Thread.new do
+        Rack::Handler::Mongrel.run Identify.new(@app), :Port => port
       end
-      
-      Capybara.log '.'
-      sleep 1
+      Capybara.log "checking if application has booted"
+
+      loop do
+        Capybara.log("application has booted") and break if responsive?
+        sleep 0.5
+      end
     end
+  rescue Timeout::Error
+    Capybara.log "Rack application timed out during boot"
+    exit
   end
 
-  def responsive?
-    res = Net::HTTP.start(host, port) { |http| http.get('/') }
+  def find_available_port
+    @port = 9887
+    @port += 1 while is_port_open?(@port) and not is_running_on_port?(@port)
+  end
+
+  def is_running_on_port?(tested_port)
+    res = Net::HTTP.start(host, tested_port) { |http| http.get('/__identify__') }
 
     if res.is_a?(Net::HTTPSuccess) or res.is_a?(Net::HTTPRedirection)
-      return true
+      return res.body == @app.object_id.to_s
     end
-  rescue Errno::ECONNREFUSED 
+  rescue Errno::ECONNREFUSED
+    return false
+  end
+
+  def is_port_open?(tested_port)
+    Timeout::timeout(1) do
+      begin
+        s = TCPSocket.new(host, tested_port)
+        s.close
+        return true
+      rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
+        return false
+      end
+    end
+  rescue Timeout::Error
     return false
   end
 

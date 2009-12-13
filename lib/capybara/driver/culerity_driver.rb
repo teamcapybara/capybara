@@ -55,7 +55,6 @@ class Capybara::Driver::Culerity < Capybara::Driver::Base
   def initialize(app)
     @app = app
     @rack_server = Capybara::Server.new(@app)
-    @rack_server.boot
   end
 
   def visit(path)
