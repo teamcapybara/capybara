@@ -21,6 +21,29 @@ shared_examples_for "session" do
       @session.body.should include('Another World')
     end
   end
+  
+  describe '#click' do
+    it "should click on a link" do
+      @session.visit('/with_html')
+      @session.click('labore')
+      @session.body.should include('<h1>Bar</h1>')
+    end
+    
+    it "should click on a button" do
+      @session.visit('/form')
+      @session.click('awe123')
+      extract_results(@session)['first_name'].should == 'John'
+    end
+    
+    context "with a locator that doesn't exist" do
+      it "should raise an error" do
+        @session.visit('/with_html')
+        running do
+          @session.click('does not exist')
+        end.should raise_error(Capybara::ElementNotFound)
+      end
+    end
+  end
 
   describe '#click_link' do
     before do
@@ -869,6 +892,14 @@ shared_examples_for "session with javascript support" do
       @session.visit('/with_js')
       @session.click_link('Click me')
       @session.wait_for("//a[contains(.,'Has been clicked')]")[:href].should == '#'
+    end
+  end
+
+  describe '#click' do
+    it "should wait for asynchronous load" do
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+      @session.click('Has been clicked')
     end
   end
 

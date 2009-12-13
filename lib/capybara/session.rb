@@ -25,6 +25,12 @@ module Capybara
       driver.visit(path)
     end
 
+    def click(locator)
+      link = wait_for(XPath.link(locator).button(locator))
+      raise Capybara::ElementNotFound, "no link or button '#{locator}' found" unless link
+      link.click
+    end
+
     def click_link(locator)
       link = wait_for(XPath.link(locator))
       raise Capybara::ElementNotFound, "no link with title, id or text '#{locator}' found" unless link
