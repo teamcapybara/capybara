@@ -538,6 +538,7 @@ shared_examples_for "session" do
 
       it "should not break if no file is submitted" do
         @session.click_button('Upload')
+        @session.body.should include('No file uploaded')
       end
     end
 

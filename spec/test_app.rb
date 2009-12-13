@@ -50,7 +50,7 @@ class TestApp < Sinatra::Base
   end
 
   post '/upload' do
-    params[:form][:document][:tempfile].read rescue ''
+    params[:form][:document][:tempfile].read rescue 'No file uploaded'
   end
 end
 
