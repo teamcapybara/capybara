@@ -66,11 +66,15 @@ You can change the driver temporarily:
     Capybara.current_driver = :culerity
     Capybara.use_default_driver
 
+You can do this in Before and After blocks to temporarily switch to a different
+driver. Note that switching driver creates a new session, so you may not be able
+to switch in the middle of a Scenario.
+
 == Cucumber and Tags
 
 Capybara sets up some {tags}[http://wiki.github.com/aslakhellesoy/cucumber/tags]
-for you to use in Cucumber. Often you'll want to use run only some scenarios
-with a driver that supports JavaScript, Capybara makes this easy: simply tag the
+for you to use in Cucumber. Often you'll want to run only some scenarios with a
+driver that supports JavaScript, Capybara makes this easy: simply tag the
 scenario (or feature) with <tt>@javascript</tt>:
 
     @javascript
@@ -82,8 +86,8 @@ You can change which driver Capybara uses for JavaScript:
 
     Capybara.javascript_driver = :culerity
 
-There are also explicit <tt>@selenium</tt>, <tt>@culerity</tt> and <tt>@rack_test</tt> tags set up
-for you.
+There are also explicit <tt>@selenium</tt>, <tt>@culerity</tt> and
+<tt>@rack_test</tt> tags set up for you.
 
 == The API
 
@@ -190,8 +194,8 @@ moving from Webrat and used CSS a lot, or simply generally prefer CSS:
   {default_url_options}[https://gist.github.com/643a758320a2926bd2ed] in Rails
   for example.
 
-* The <tt>set_hidden_field</tt> method from Webrat is not implemented, since it doesn't
-  work in any of the browser based drivers (Culerity, Selenium)
+* The <tt>set_hidden_field</tt> method from Webrat is not implemented, since it
+  doesn't work in any of the browser based drivers (Culerity, Selenium)
 
 * Access to session, request and response from the test is not possible. Maybe
   we'll do response headers at some point in the future, but the others really
