@@ -171,11 +171,7 @@ module Capybara
     end
 
     def evaluate_script(script)
-      begin
-        driver.evaluate_script(script)
-      rescue NoMethodError
-        raise NotSupportedByDriverError
-      end
+      driver.evaluate_script(script)
     end
 
   private
