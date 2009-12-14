@@ -44,9 +44,9 @@ module Capybara
     end
 
     def drag(source_locator, target_locator)
-      source = find(source_locator)
+      source = wait_for(source_locator)
       raise Capybara::ElementNotFound, "drag source '#{source_locator}' not found on page" unless source
-      target = find(target_locator)
+      target = wait_for(target_locator)
       raise Capybara::ElementNotFound, "drag target '#{target_locator}' not found on page" unless target
       source.drag_to(target)
     end
