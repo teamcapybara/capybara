@@ -57,31 +57,31 @@ module Capybara
     end
 
     def text_field(locator)
-      add_field(locator) { |id| "//input[@type='text'][@id=#{id}]" }
+      add_field(locator, "//input[@type='text']")
     end
 
     def password_field(locator)
-      add_field(locator) { |id| "//input[@type='password'][@id=#{id}]" }
+      add_field(locator, "//input[@type='password']")
     end
 
     def text_area(locator)
-      add_field(locator) { |id| "//textarea[@id=#{id}]" }
+      add_field(locator, "//textarea")
     end
 
     def radio_button(locator)
-      add_field(locator) { |id| "//input[@type='radio'][@id=#{id}]" }
+      add_field(locator, "//input[@type='radio']")
     end
 
     def checkbox(locator)
-      add_field(locator) { |id| "//input[@type='checkbox'][@id=#{id}]" }
+      add_field(locator, "//input[@type='checkbox']")
     end
 
     def select(locator)
-      add_field(locator) { |id| "//select[@id=#{id}]" }
+      add_field(locator, "//select")
     end
 
     def file_field(locator)
-      add_field(locator) { |id| "//input[@type='file'][@id=#{id}]" }
+      add_field(locator, "//input[@type='file']")
     end
     
     def scope(scope)
@@ -102,10 +102,10 @@ module Capybara
 
   protected
   
-    def add_field(locator)
-      xpath = append(yield(s(locator)))
-      xpath = xpath.append(yield("//label[contains(.,#{s(locator)})]/@for"))
-      xpath.prepend(yield("//label[text()=#{s(locator)}]/@for"))
+    def add_field(locator, field)
+      xpath = append("#{field}[@id=#{s(locator)}]")
+      xpath = xpath.append("#{field}[@id=//label[contains(.,#{s(locator)})]/@for]")
+      xpath.prepend("#{field}[@id=//label[text()=#{s(locator)}]/@for]")
     end
   
     # Sanitize a String for putting it into an xpath query
