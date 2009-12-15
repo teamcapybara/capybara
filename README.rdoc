@@ -26,18 +26,15 @@ Capybara is hosted on Gemcutter, install it with:
 == Using Capybara with Cucumber
 
 Capybara is built to work nicely with Cucumber. The API is very similar to
-Webrat, so if you know Webrat you should feel right at home. Remove any
-references to Webrat from your <tt>env.rb</tt>, if you're using Rails, make sure to set
+Webrat, so if you know Webrat you should feel right at home. Support for
+Capybara is built into cucumber-rails 0.2. In your Rails app, just run:
 
-    Cucumber::Rails::World.use_transactional_fixtures = false
+    script/generate cucumber --capybara
 
-Capybara uses DatabaseCleaner to truncate the database. Require Capybara in your
-env.rb. For Rails do this:
+And everything should be set up and ready to go.
 
-    require 'capybara/rails'
-    require 'capybara/cucumber'
-
-For other frameworks, you'll need to set the Rack app manually:
+If you want to use Capybara with Cucumber outside Rails (for example with Merb
+or Sinatra), you'll need require capybara and set the Rack app manually:
 
     require 'capybara/cucumber'
     Capybara.app = MyRackApp
