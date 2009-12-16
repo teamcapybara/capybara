@@ -1,5 +1,4 @@
 require File.expand_path('spec_helper', File.dirname(__FILE__))
-
 require 'nokogiri'
 
 shared_examples_for "session without javascript support" do
