@@ -1,6 +1,7 @@
-require 'culerity'
 
-class Capybara::Driver::Culerity < Capybara::Driver::Base
+
+
+class Capybara::Driver::Celerity < Capybara::Driver::Base
   class Node < Capybara::Node
     def text
       node.text
@@ -40,8 +41,8 @@ class Capybara::Driver::Culerity < Capybara::Driver::Base
     end
   end
 
-  attr_reader :app, :rack_server
-
+  attr_reader :app, :rack_server, :host, :port, :celerity_options, :culerity
+  
   def self.server
     unless @_server
       @_server = ::Culerity::run_server
@@ -51,12 +52,31 @@ class Capybara::Driver::Culerity < Capybara::Driver::Base
     end
     @_server
   end
-
-  def initialize(app)
+  
+  def initialize(app, options = {})
+   
     @app = app
-    @rack_server = Capybara::Server.new(@app)
+    
+    top_opts = [:driver, :host, :port, :rack, :culerity]
+    
+    if options[:rack] == false
+      @host = options[:host] || 'localhost'
+      @port = options[:port] || '3001'
+      Capybara.log("celerity driver using #{host}:#{port}")
+    else
+      @rack_server = Capybara::Server.new(@app)
+      Capybara.log("celerity driver using rack")
+    end
+    
+    @celerity_options = {
+      :browser   => :firefox, 
+      :log_level => :off
+    }.merge(options.reject {|k,v| top_opts.include?(k) })
+     
+    @culerity = options[:culerity] || !RUBY_PLATFORM.match(/java/) 
+     
   end
-
+   
   def visit(path)
     browser.goto(url(path))
   end
@@ -75,20 +95,35 @@ class Capybara::Driver::Culerity < Capybara::Driver::Base
     browser.execute_script "#{script}"
   end
 
+ 
+    
 private
 
   def url(path)
-    rack_server.url(path)
+    if rack_server
+      rack_server.url(path)
+    else
+      "http://#{host}:#{port}#{path}"
+    end
   end
 
   def browser
     unless @_browser
-      @_browser = ::Culerity::RemoteBrowserProxy.new self.class.server, {:browser => :firefox, :log_level => :off}
-      at_exit do
-        @_browser.exit
+      if culerity
+        Capybara.log "celerity driver via Culerity" 
+        require 'culerity'
+        @_browser = ::Culerity::RemoteBrowserProxy.new self.class.server, celerity_options
+        at_exit do
+          @_browser.exit
+        end
+      else 
+        require 'celerity'
+        @_browser = ::Celerity::Browser.new(celerity_options)         
       end
     end
+    
     @_browser
+    
   end
 
 end

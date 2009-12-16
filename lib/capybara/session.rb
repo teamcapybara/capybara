@@ -1,21 +1,28 @@
 module Capybara
   class Session
 
-    attr_reader :mode, :app
+    attr_reader :app, :mode, :mode_options
 
     def initialize(mode, app)
-      @mode = mode
+      if mode.respond_to?(:has_key?)
+        @mode = mode[:driver] 
+        @mode_options = mode
+      else
+        @mode = mode
+        @mode_options = {}
+      end
+      
       @app = app
     end
-
+    
     def driver
       @driver ||= case mode
       when :rack_test
         Capybara::Driver::RackTest.new(app)
-      when :culerity
-        Capybara::Driver::Culerity.new(app)
       when :selenium
         Capybara::Driver::Selenium.new(app)
+      when :culerity, :celerity
+        Capybara::Driver::Celerity.new(app, mode_options)
       else
         raise Capybara::DriverNotFoundError, "no driver called #{mode} was found"
       end
