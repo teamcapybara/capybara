@@ -6,7 +6,7 @@ require 'capybara'
 require 'test_app'
 require 'drivers_spec'
 require 'session_spec'
-Dir[File.dirname(__FILE__)+'/sessions/*'].each { |group| 
+Dir[File.dirname(__FILE__)+'/dsl/*'].each { |group| 
   require group
   include Object.const_get(group.match(/.*[\/]{1}([\w]*)[.rb]./).captures.first.gsub(/\/(.?)/) { "::#{$1.upcase}" }.gsub(/(?:^|_)(.)/) { $1.upcase })
 }
