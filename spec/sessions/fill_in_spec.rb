@@ -17,6 +17,12 @@ module FillInSpec
         extract_results(@session)['first_name'].should == 'Harry'
       end
 
+      it "should fill in a text field by label without for" do
+        @session.fill_in('Street', :with => 'Avenue Q')
+        @session.click_button('awesome')
+        extract_results(@session)['street'].should == 'Avenue Q'
+      end
+      
       it "should favour exact label matches over partial matches" do
         @session.fill_in('Name', :with => 'Harry Jones')
         @session.click_button('awesome')

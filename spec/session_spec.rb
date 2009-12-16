@@ -20,14 +20,6 @@ shared_examples_for "session" do
       @session.body.should include('Another World')
     end
   end
-
-  #describe '#click_element' do
-  #  it "should click on a element" do
-  #    @session.visit('/with_html')
-  #    @session.click_element('fool_to_cry')
-  #    @session.body.should include('<div id="fool_to_cry">and I go see her sometimes<br />And we make love, so fine<br />I put my head on her shoulder<br /></div>')
-  #  end
-  #end  
   
   it_should_behave_like "all"
   it_should_behave_like "attach_file"
