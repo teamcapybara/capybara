@@ -21,6 +21,10 @@ module Capybara
       end
     end
 
+    def current_url
+      driver.current_url
+    end
+    
     def visit(path)
       driver.visit(path)
     end

@@ -65,6 +65,10 @@ class Capybara::Driver::Culerity < Capybara::Driver::Base
     browser.html
   end
 
+  def current_url
+    browser.url
+  end
+  
   def find(selector)
     browser.elements_by_xpath(selector).map { |node| Node.new(self, node) }
   end

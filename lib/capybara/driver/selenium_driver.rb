@@ -76,6 +76,10 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     driver.page_source
   end
 
+  def current_url
+    driver.current_url
+  end
+
   def find(selector)
     driver.find_elements(:xpath, selector).map { |node| Node.new(self, node) }
   end

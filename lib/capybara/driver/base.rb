@@ -1,4 +1,8 @@
 class Capybara::Driver::Base
+  def current_url
+    raise "Not implemented"
+  end
+
   def visit(path)
     raise "Not implemented"
   end
