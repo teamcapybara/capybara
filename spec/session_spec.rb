@@ -20,27 +20,28 @@ shared_examples_for "session" do
       @session.body.should include('Another World')
     end
   end
-  
+
   it_should_behave_like "all"
   it_should_behave_like "attach_file"
   it_should_behave_like "check"
-  it_should_behave_like "choose"  
-  it_should_behave_like "click"  
+  it_should_behave_like "choose"
+  it_should_behave_like "click"
   it_should_behave_like "click_button"
   it_should_behave_like "click_link"
-  it_should_behave_like "fill_in"  
+  it_should_behave_like "fill_in"
   it_should_behave_like "find_button"
   it_should_behave_like "find_field"
   it_should_behave_like "find_link"
   it_should_behave_like "find"
-  it_should_behave_like "has_content"  
-  it_should_behave_like "has_css"  
+  it_should_behave_like "has_content"
+  it_should_behave_like "has_css"
   it_should_behave_like "has_css"
   it_should_behave_like "has_xpath"
   it_should_behave_like "select"
-  it_should_behave_like "uncheck"  
+  it_should_behave_like "uncheck"
   it_should_behave_like "wait_for"
-  it_should_behave_like "within"  
+  it_should_behave_like "within"
+  it_should_behave_like "current_url"
 end
 
 
@@ -53,4 +54,3 @@ describe Capybara::Session do
     end
   end
 end
-
