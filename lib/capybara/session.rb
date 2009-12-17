@@ -16,6 +16,7 @@ module Capybara
     end
     
     def driver
+      
       @driver ||= case mode
       when :rack_test
         Capybara::Driver::RackTest.new(app)
@@ -28,6 +29,10 @@ module Capybara
       end
     end
 
+    def response_headers
+      driver.response.headers
+    end
+    
     def visit(path)
       driver.visit(path)
     end
@@ -95,7 +100,7 @@ module Capybara
     end
 
     def body
-      driver.body
+      driver.response.body
     end
 
     def has_content?(content)

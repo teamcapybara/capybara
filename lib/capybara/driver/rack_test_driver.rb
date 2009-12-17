@@ -134,8 +134,10 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     get(path, attributes)
     follow_redirect! while response.redirect?
     cache_body
+    response
   end
-
+  
+ 
   def submit(path, attributes)
     post(path, attributes)
     follow_redirect! while response.redirect?

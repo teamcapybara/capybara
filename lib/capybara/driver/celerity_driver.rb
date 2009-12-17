@@ -80,9 +80,9 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
   def visit(path)
     browser.goto(url(path))
   end
-
-  def body
-    browser.html
+  
+  def response
+    Rack::MockResponse.new(browser.status_code, browser.response_headers, browser.html)
   end
 
   def find(selector)

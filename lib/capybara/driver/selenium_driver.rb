@@ -72,10 +72,14 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     driver.navigate.to(url(path))
   end
 
-  def body
-    driver.page_source
+  def response
+    #Can I get a response code and headers from Selenium?
+    #Maybe we should just plug in the location here
+    #and leave more header involved stuff for another driver
+    #(e.g. celerity)
+    Rack::MockResponse.new(-1, {}, driver.page_source)
   end
-
+   
   def find(selector)
     driver.find_elements(:xpath, selector).map { |node| Node.new(self, node) }
   end
