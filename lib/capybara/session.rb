@@ -47,12 +47,6 @@ module Capybara
       button.click
     end
 
-    def click_element(locator)
-      element = wait_for(XPath.element(locator)) 
-      raise Capybara::ElementNotFound, "the element '#{locator}' could not be found" unless element
-      element.click
-    end
-    
     def drag(source_locator, target_locator)
       source = wait_for(source_locator)
       raise Capybara::ElementNotFound, "drag source '#{source_locator}' not found on page" unless source

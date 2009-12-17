@@ -34,10 +34,6 @@ module Capybara
     def fillable_field(locator)
       text_field(locator).password_field(locator).text_area(locator)
     end
-
-    def element(locator)
-      append("//div[@id=#{s(locator)}]")      
-    end
     
     def content(locator)
       append("/descendant-or-self::*[contains(.,#{s(locator)})]")

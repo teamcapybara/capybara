@@ -1,4 +1,5 @@
 require File.expand_path('spec_helper', File.dirname(__FILE__))
+
 require 'nokogiri'
 
 shared_examples_for "session with javascript support" do
@@ -48,7 +49,5 @@ shared_examples_for "session with javascript support" do
       @session.fill_in('new_field', :with => 'Testing...')
     end
   end
-
-  it_should_behave_like "click_element"
   
 end
