@@ -215,6 +215,7 @@ The following people have dedicated their time and effort to Capybara:
 * Wincent Colaiuta
 * Andrea Fazzi
 * Aslak Hellesøy
+* Andrew Brown
 
 == License:
 
