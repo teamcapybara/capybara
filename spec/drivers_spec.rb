@@ -9,6 +9,11 @@ shared_examples_for 'driver' do
       @driver.visit('/foo')
       @driver.body.should include('Another World')
     end
+    
+    it "should show the correct URL" do
+    	@driver.visit('/foo')
+    	@driver.current_url.should include('/foo')
+    end
   end
 
   describe '#body' do
