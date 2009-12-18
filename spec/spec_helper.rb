@@ -12,4 +12,7 @@ Dir[File.dirname(__FILE__)+'/dsl/*'].each { |group|
 }
 require 'session_with_javascript_support_spec'
 require 'session_without_javascript_support_spec'
+require 'session_with_headers_support_spec'
+require 'session_without_headers_support_spec'
+
 alias :running :lambda

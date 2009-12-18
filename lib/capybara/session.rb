@@ -29,7 +29,7 @@ module Capybara
     end
     
     def response_headers
-      driver.response.headers
+      driver.response_headers
     end
     
     def visit(path)
@@ -99,7 +99,7 @@ module Capybara
     end
 
     def body
-      driver.response.body
+      driver.body
     end
 
     def has_content?(content)

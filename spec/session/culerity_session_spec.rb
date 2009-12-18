@@ -8,7 +8,7 @@ describe Capybara::Session do
 
     describe '#driver' do
       it "should be a rack test driver" do
-        @session.driver.should be_an_instance_of(Capybara::Driver::Celerity)
+        @session.driver.should be_an_instance_of(Capybara::Driver::Culerity)
       end
     end
 
@@ -20,5 +20,6 @@ describe Capybara::Session do
 
     it_should_behave_like "session"
     it_should_behave_like "session with javascript support"
+    it_should_behave_like "session with headers support"
   end
 end
