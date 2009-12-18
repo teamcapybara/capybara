@@ -1,7 +1,7 @@
 module Capybara
   class Session
 
-    attr_reader :app, :mode, :mode_options
+    attr_reader :mode, :app
 
     def initialize(mode, app)
       @mode = mode
