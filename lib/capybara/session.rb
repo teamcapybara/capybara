@@ -4,14 +4,7 @@ module Capybara
     attr_reader :app, :mode, :mode_options
 
     def initialize(mode, app)
-      if mode.respond_to?(:has_key?)
-        @mode = mode[:driver] 
-        @mode_options = mode
-      else
-        @mode = mode
-        @mode_options = {}
-      end
-      
+      @mode = mode
       @app = app
     end
     
@@ -22,8 +15,10 @@ module Capybara
         Capybara::Driver::RackTest.new(app)
       when :selenium
         Capybara::Driver::Selenium.new(app)
-      when :culerity, :celerity
-        Capybara::Driver::Celerity.new(app, mode_options)
+      when :celerity
+        Capybara::Driver::Celerity.new(app)
+      when :culerity
+        Capybara::Driver::Culerity.new(app)
       else
         raise Capybara::DriverNotFoundError, "no driver called #{mode} was found"
       end

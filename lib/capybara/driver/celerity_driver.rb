@@ -41,40 +41,14 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     end
   end
 
-  attr_reader :app, :rack_server, :host, :port, :celerity_options, :culerity
+  attr_reader :app, :rack_server
   
-  def self.server
-    unless @_server
-      @_server = ::Culerity::run_server
-      at_exit do
-        @_server.close
-      end
-    end
-    @_server
-  end
-  
-  def initialize(app, options = {})
-   
+  def initialize(app)
     @app = app
-    
-    top_opts = [:driver, :host, :port, :rack, :culerity]
-    
-    if options[:rack] == false
-      @host = options[:host] || 'localhost'
-      @port = options[:port] || '3001'
-      Capybara.log("celerity driver using #{host}:#{port}")
-    else
+    unless Capybara.app_host
+      Capybara.log("using app host #{Capybara.app_host}")
       @rack_server = Capybara::Server.new(@app)
-      Capybara.log("celerity driver using rack")
     end
-    
-    @celerity_options = {
-      :browser   => :firefox, 
-      :log_level => :off
-    }.merge(options.reject {|k,v| top_opts.include?(k) })
-     
-    @culerity = options[:culerity] || !RUBY_PLATFORM.match(/java/) 
-     
   end
    
   def visit(path)
@@ -99,35 +73,20 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     browser.execute_script "#{script}"
   end
 
- 
     
 private
 
   def url(path)
-    if rack_server
-      rack_server.url(path)
-    else
-      "http://#{host}:#{port}#{path}"
-    end
+    Capybara.app_host || rack_server.url(path)
   end
 
   def browser
     unless @_browser
-      if culerity
-        Capybara.log "celerity driver via Culerity" 
-        require 'culerity'
-        @_browser = ::Culerity::RemoteBrowserProxy.new self.class.server, celerity_options
-        at_exit do
-          @_browser.exit
-        end
-      else 
-        require 'celerity'
-        @_browser = ::Celerity::Browser.new(celerity_options)         
-      end
+      require 'celerity'
+      @_browser = ::Celerity::Browser.new(:browser => :firefox, :log_level => :off)
     end
     
     @_browser
-    
   end
 
 end

@@ -9,7 +9,7 @@ module Capybara
   class NotSupportedByDriverError < CapybaraError; end
 
   class << self
-    attr_accessor :debug, :asset_root
+    attr_accessor :debug, :asset_root, :app_host
     attr_writer :default_selector
 
     def default_selector
@@ -31,6 +31,7 @@ module Capybara
     autoload :Base,     'capybara/driver/base'
     autoload :RackTest, 'capybara/driver/rack_test_driver'
     autoload :Celerity, 'capybara/driver/celerity_driver'
+    autoload :Culerity, 'capybara/driver/culerity_driver'
     autoload :Selenium, 'capybara/driver/selenium_driver'
   end
 end
