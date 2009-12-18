@@ -11,10 +11,6 @@ class Capybara::Driver::Base
     raise "Not implemented"
   end
   
-  def body
-    raise "Not implemented"
-  end
-  
   def evaluate_script(script)
     raise Capybara::NotSupportedByDriverError
   end
@@ -22,4 +18,9 @@ class Capybara::Driver::Base
   def wait?
     false
   end
+  
+  def response
+    raise "Not implemented"
+  end
+  
 end
