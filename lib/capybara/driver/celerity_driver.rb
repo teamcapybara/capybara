@@ -59,10 +59,14 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     browser.url
   end
   
-  def response
-    Rack::MockResponse.new(browser.status_code, browser.response_headers, browser.html)
+  def body
+    browser.html
   end
-
+  
+  def response_headers
+    browser.response_headers
+  end
+  
   def find(selector)
     browser.elements_by_xpath(selector).map { |node| Node.new(self, node) }
   end

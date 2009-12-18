@@ -139,6 +139,10 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   def current_url
     request.url
   end
+  
+  def response_headers
+    response.headers
+  end
 
   def submit(path, attributes)
     post(path, attributes)
