@@ -1,7 +1,6 @@
 require 'culerity'
 
 class Capybara::Driver::Culerity < Capybara::Driver::Celerity
-  
 
   def self.server
     unless @_server
@@ -14,7 +13,6 @@ class Capybara::Driver::Culerity < Capybara::Driver::Celerity
   end
 
 private
-
 
   def browser
     unless @_browser

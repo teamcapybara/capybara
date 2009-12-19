@@ -1,6 +1,3 @@
-
-
-
 class Capybara::Driver::Celerity < Capybara::Driver::Base
   class Node < Capybara::Node
     def text
@@ -77,7 +74,6 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     browser.execute_script "#{script}"
   end
 
-    
 private
 
   def url(path)
