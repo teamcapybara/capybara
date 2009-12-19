@@ -43,7 +43,6 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
   def initialize(app)
     @app = app
     unless Capybara.app_host
-      Capybara.log("using app host #{Capybara.app_host}")
       @rack_server = Capybara::Server.new(@app)
     end
   end
@@ -77,7 +76,11 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
 private
 
   def url(path)
-    Capybara.app_host || rack_server.url(path)
+    if rack_server
+      rack_server.url(path)
+    else
+      Capybara.app_host.to_s + path
+    end
   end
 
   def browser

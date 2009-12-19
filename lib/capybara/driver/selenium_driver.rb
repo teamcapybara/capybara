@@ -65,7 +65,9 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   def initialize(app)
     @app = app
-    @rack_server = Capybara::Server.new(@app)
+    unless Capybara.app_host
+      @rack_server = Capybara::Server.new(@app)
+    end
   end
 
   def visit(path)
@@ -93,7 +95,11 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 private
 
   def url(path)
-    rack_server.url(path)
+    if rack_server
+      rack_server.url(path)
+    else
+      Capybara.app_host.to_s + path
+    end
   end
 
   def driver
