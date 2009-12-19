@@ -1,7 +1,11 @@
 require 'uri'
 require 'net/http'
 require 'rack'
-require 'rack/handler/mongrel'
+begin
+  require 'rack/handler/mongrel'
+rescue LoadError
+  require 'rack/handler/webrick'
+end
 
 class Capybara::Server
   class Identify
@@ -10,7 +14,7 @@ class Capybara::Server
     end
 
     def call(env)
-      if env["REQUEST_PATH"] == "/__identify__"
+      if env["PATH_INFO"] == "/__identify__"
         [200, {}, @app.object_id.to_s]
       else
         @app.call(env)
@@ -48,7 +52,11 @@ private
 
     Timeout.timeout(10) do
       Thread.new do
-        Rack::Handler::Mongrel.run Identify.new(@app), :Port => port
+        if defined?(Rack::Handler::Mongrel)
+          Rack::Handler::Mongrel.run(Identify.new(@app), :Port => port)
+        else
+          Rack::Handler::WEBrick.run(Identify.new(@app), :Port => port, :AccessLog => [])
+        end
       end
       Capybara.log "checking if application has booted"
 
