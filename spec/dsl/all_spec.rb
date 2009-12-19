@@ -18,8 +18,8 @@ module AllSpec
       it "should accept an XPath instance" do
         @session.visit('/form')
         @xpath = Capybara::XPath.text_field('Name')
-        @result = @session.all(@xpath)
-        @result.map(&:value).should include('Smith', 'John', 'John Smith')
+        @result = @session.all(@xpath).map { |r| r.value }
+        @result.should include('Smith', 'John', 'John Smith')
       end
 
       context "within a scope" do
