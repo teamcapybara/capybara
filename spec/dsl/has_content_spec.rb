@@ -15,6 +15,19 @@ module HasContentSpec
         end
       end
 
+      it "should be false if scoped to an element which does not have the content" do
+        @session.visit('/with_html')
+        @session.within("//a[@title='awesome title']") do
+          @session.should_not have_content('monkey')
+        end
+      end
+
+      it "should ignore tags" do
+        @session.visit('/with_html')
+        @session.should_not have_content('exercitation <a href="/foo" id="foo">ullamco</a> laboris')
+        @session.should have_content('exercitation ullamco laboris')
+      end
+
       it "should be false if the given content is not on the page" do
         @session.visit('/with_html')
         @session.should_not have_content('xxxxyzzz')
