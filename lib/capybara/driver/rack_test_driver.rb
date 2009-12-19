@@ -76,7 +76,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
         merge_param!(params, select['name'].to_s, (option['value'] || option.text).to_s) if option
       end
       node.xpath(".//input[@type='file']").map do |input|
-        if input['value'].to_s.any?
+        unless input['value'].to_s.empty?
           if multipart?
             merge_param!(params, input['name'].to_s, Rack::Test::UploadedFile.new(input['value'].to_s))
           else

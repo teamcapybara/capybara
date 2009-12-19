@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require 'rack'
+require 'yaml'
 
 class TestApp < Sinatra::Base
   set :root, File.dirname(__FILE__)
