@@ -46,7 +46,11 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     def tag_name
       node.node_name
     end
-
+    
+    def visible?
+      node.xpath("./ancestor-or-self::*[contains(@style, 'display:none')]").size == 0
+    end
+    
   private
   
     def type
