@@ -12,7 +12,7 @@ module AllSpec
       end
 
       it "should return an empty array when nothing was found" do
-        @session.all('//div').should be_empty
+        @session.all('//div[@id="nosuchthing"]').should be_empty
       end
 
       it "should accept an XPath instance" do

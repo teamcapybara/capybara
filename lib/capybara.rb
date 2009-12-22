@@ -11,14 +11,14 @@ module Capybara
 
   class << self
     attr_accessor :debug, :asset_root, :app_host
-    attr_writer :default_selector, :default_condition_timeout
+    attr_writer :default_selector, :default_wait_timeout
 
     def default_selector
       @default_selector ||= :xpath
     end
     
-    def default_condition_timeout
-    	@default_condition_timeout ||= 10
+    def default_wait_timeout
+    	@default_wait_timeout ||= 10
     end
 
     def log(message)

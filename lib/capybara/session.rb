@@ -167,10 +167,10 @@ module Capybara
       end
       nil
     end
-    
+  
     def wait_for_condition(script)
       begin
-        Timeout.timeout(Capybara.default_condition_timeout) do
+        Timeout.timeout(Capybara.default_wait_timeout) do
           result = false
           until result
             result = evaluate_script(script)
@@ -178,10 +178,24 @@ module Capybara
           return result
         end
       rescue Timeout::Error
-      	return false
+        return false
       end
     end
 
+    def wait_until(timeout = Capybara.default_wait_timeout, &block)
+      return yield unless driver.wait?
+      
+      returned = nil
+      
+      Timeout.timeout(timeout) do      
+        until returned = yield
+          sleep(0.1)
+        end
+      end
+      
+      returned    
+    end
+    
     def find_field(locator)
       find(XPath.field(locator))
     end
