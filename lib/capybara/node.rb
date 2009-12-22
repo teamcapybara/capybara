@@ -37,4 +37,8 @@ class Capybara::Node
   def tag_name
     raise "Not implemented"
   end
+  
+  def visible?
+    raise "Not implemented"
+  end
 end
