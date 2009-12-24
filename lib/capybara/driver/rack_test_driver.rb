@@ -51,6 +51,10 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       node.xpath("./ancestor-or-self::*[contains(@style, 'display:none')]").size == 0
     end
     
+    def path
+      node.path
+    end
+    
   private
   
     def type

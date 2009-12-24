@@ -27,11 +27,12 @@ module Capybara
     end
   end
   
-  autoload :Server,  'capybara/server'
-  autoload :Session, 'capybara/session'
-  autoload :Node,    'capybara/node'
-  autoload :XPath,   'capybara/xpath'
-
+  autoload :Server,     'capybara/server'
+  autoload :Session,    'capybara/session'
+  autoload :Node,       'capybara/node'
+  autoload :XPath,      'capybara/xpath'
+  autoload :Searchable, 'capybara/searchable'
+  
   module Driver
     autoload :Base,     'capybara/driver/base'
     autoload :RackTest, 'capybara/driver/rack_test_driver'

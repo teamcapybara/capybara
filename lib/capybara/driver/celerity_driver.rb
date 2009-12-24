@@ -40,6 +40,11 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     def visible?
       node.visible?
     end
+    
+    def path
+      node.xpath
+    end
+    
   end
 
   attr_reader :app, :rack_server
