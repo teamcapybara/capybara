@@ -18,7 +18,7 @@ module Capybara
     end
     
     def default_wait_timeout
-    	@default_wait_timeout ||= 10
+      @default_wait_timeout ||= 1
     end
 
     def log(message)
