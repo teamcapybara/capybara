@@ -7,8 +7,8 @@
 Capybara aims to simplify the process of integration testing Rack applications,
 such as Rails, Sinatra or Merb. It is inspired by and aims to replace Webrat as
 a DSL for interacting with a webapplication. It is agnostic about the driver
-running your tests and currently comes bundled with rack-test, Culerity and
-Selenium support built in.
+running your tests and currently comes bundled with rack-test, Culerity,
+Celerity and Selenium support built in.
 
 == Install:
 
@@ -86,45 +86,136 @@ You can change which driver Capybara uses for JavaScript:
 There are also explicit <tt>@selenium</tt>, <tt>@culerity</tt> and
 <tt>@rack_test</tt> tags set up for you.
 
-== The API
+== Selenium
 
-Navigation:
+At the moment, Capybara supports Webdriver, also called Selenium 2.0, *not*
+Selenium RC. Provided Firefox is installed, everything is set up for you, and
+you should be able to start using Selenium right away.
 
-    visit – The only way to get to anywhere.
+== Celerity
 
-Scoping:
+Celerity only runs on JRuby, so you'll need to install the celerity gem under
+JRuby:
 
-    within – Takes a block which executes in the given scope
-    within_fieldset – Execute the block in the fieldset given by id or legend
-    within_table – Execute the block in the table given by id or caption
+   jruby -S gem install celerity
 
-Interaction:
+Note that some specs currently fail on celerity 0.7.5, due to a bug in recent
+versions of HTMLUnit. It is recommended you use celerity 0.7.4 for the time
+being.
 
-    click_link
-    click_button
-    fill_in
-    choose
-    check
-    uncheck
-    attach_file
-    select
+== Culerity
 
-Querying:
+Install celerity as noted above, make sure JRuby is in your path. Note that
+Culerity doesn't seem to be working under Ruby 1.9 at the moment.
 
-    body
-    has_xpath? – Checks if given XPath exists, takes text and count options
-    has_css? – Checks if given CSS exists, takes text and count options
-    has_content? – Checks if the given content is on the page
-    find_field
-    find_link
-    find_button
-    field_labeled
+== The DSL
 
-Scripting:
+Capybara's DSL is inspired by Webrat. While backwards compatibility is retained 
+in a lot of cases, there are certain important differences.
 
-    evaluate_script – Returns the value of the executed javascript (only works on javascript supported drivers)
+Unlike in Webrat, all searches in Capybara are *case sensitive*. This is because
+Capybara heavily uses XPath, which doesn't support case insensitivity.
 
-Debugging:
+=== Navigating
+
+You can use the <tt>visit</tt> method to navigate to other pages:
+
+    visit('/projects')
+    visit(post_comments_path(post))
+
+The visit method only takes a single parameter, the request method is *always*
+GET.
+
+=== Clicking links and buttons
+
+You can interact with the webapp by following links and buttons. Capybara
+automatically follows any redirects, and submits forms associated with buttons.
+
+    click_link('id-of-link')
+    click_link('Link Text')
+    click_button('Save')
+    click('Link Text') # Click either a link or a button
+    click('Button Value')
+
+=== Interacting with forms
+
+Forms are everywhere in webapps, there are a number of tools for interacting
+with the various form elements:
+
+    fill_in('First Name', :with => 'John')
+    fill_in('Password', :with => 'Seekrit')
+    fill_in('Description', :with => 'Really Long Text…')
+    choose('An Option')
+    check('A Checkbox')
+    uncheck('A Checkbox')
+    attach_file('Image', '/path/to/image.jpg')
+    select('Option', :from => 'Select Box')
+
+=== Scoping
+
+Capybara makes it possible to restrict certain actions, such as interacting with
+forms or clicking links and buttons, to within a specific area of the page. For
+this purpose you can use the generic <tt>within</tt> method. Optionally you can
+specify which kind of selector (CSS or XPath to use).
+
+    within("//li[@id='employee']") do
+      fill_in 'Name', :with => 'Jimmy'
+    end
+
+    within(:css, "li#employee") do
+      fill_in 'Name', :with => 'Jimmy'
+    end
+
+You can choose which kind of selector Capybara uses by default, by setting
+<tt>Capybara.default_selector</tt>.
+
+There are special methods for restricting the scope to a specific fieldset,
+identified by either an id or the text of the fieldet's legend tag, and to a
+specific table, identified by either idea or text of the table's caption tag.
+
+    within_fieldset('Employee') do
+      fill_in 'Name', :with => 'Jimmy'
+    end
+
+    within_table('Employee') do
+      fill_in 'Name', :with => 'Jimmy'
+    end
+
+=== Querying
+
+Capybara has a rich set of options for querying the page for the existence of
+certain elements, and working with and manipulating those elements.
+
+    page.has_xpath?('//table/tr')
+    page.has_css?('table tr.foo')
+    page.has_content?('foo')
+    
+You can use with RSpecs magic matchers:
+
+    page.should have_xpath('//table/tr')
+    page.should have_css('table tr.foo')
+    page.should have_content('foo')
+
+You can also find specific elements, in order to manipulate them:
+
+    find_field('First Name').value
+    find_link('Hello').visible?
+    find_button('Send').click
+    
+    find('//table/tr').click
+    wait_for("//*[@id='overlay'").find("//h1").click
+    all('a').each { |a| a[:href] }
+
+=== Scripting
+
+In drivers which support it, you can easily evaluate JavaScript:
+
+    result = page.evaluate_script('4 + 4');
+
+=== Debugging
+
+It can be useful to take a snapshot of the page as it currently is and take a
+look at it:
 
     save_and_open_page
 
@@ -174,12 +265,6 @@ moving from Webrat and used CSS a lot, or simply generally prefer CSS:
 
 == Gotchas:
 
-* Install JRuby and the 'celerity' gem, version 0.7.4 (0.7.5 has a bug with
-  password fields) under JRuby for Culerity support.
-
-* Everything is *case sensitive*. Capybara heavily relies on XPath, which
-  doesn't support case insensitive searches.
-
 * The <tt>have_tag</tt> and <tt>have_text</tt> matchers in RSpec-Rails are not
   supported. You should use <tt>page.should have_css('#header p')</tt>,
   <tt>page.should have_xpath('//ul/li')</tt> and <tt>page.should
@@ -190,9 +275,6 @@ moving from Webrat and used CSS a lot, or simply generally prefer CSS:
   alternate solution. You might use
   {default_url_options}[https://gist.github.com/643a758320a2926bd2ed] in Rails
   for example.
-
-* The <tt>set_hidden_field</tt> method from Webrat is not implemented, since it
-  doesn't work in any of the browser based drivers (Culerity, Selenium)
 
 * Access to session, request and response from the test is not possible. Maybe
   we'll do response headers at some point in the future, but the others really
