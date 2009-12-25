@@ -11,8 +11,8 @@ shared_examples_for 'driver' do
     end
     
     it "should show the correct URL" do
-    	@driver.visit('/foo')
-    	@driver.current_url.should include('/foo')
+      @driver.visit('/foo')
+      @driver.current_url.should include('/foo')
     end
   end
 
@@ -121,7 +121,6 @@ shared_examples_for "driver with node path support" do
       @node.find('//form').has_xpath?('//table', :count => 1).should be_true
       @node.find('//form').find('//table//caption').text.should == 'Agent'
     end
-    
   end
 end
 
