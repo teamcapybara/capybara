@@ -11,21 +11,19 @@ shared_examples_for "session without javascript support" do
       }.should raise_error(Capybara::NotSupportedByDriverError)
     end
   end
-  
+
   describe '#wait_until' do
-     
-     it "should not wait for asynchronous load" do      
+     it "should not wait for asynchronous load" do
        @session.visit('/with_html')
-       
+
        before_time = Time.new
-       
-       @session.wait_until(2) do
+
+       @session.wait_until do
          @session.find('//div[@id="nosuchthing"]')
        end.should be_nil
-       
-       (Time.now - before_time).should be < 2     
+
+       (Time.now - before_time).should be < 2
      end
-     
+
    end
 end
- 

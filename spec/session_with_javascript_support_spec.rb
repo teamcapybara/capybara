@@ -30,14 +30,10 @@ shared_examples_for "session with javascript support" do
       @session.evaluate_script('activeRequests == 0').should be_true
     end
 
-    it "should timeout if block doesn't return true within timeout" do
+    it "should return false if block doesn't return true within timeout" do
       @session.visit('/with_html')
 
-      Proc.new do
-        @session.wait_until(1) do
-          @session.find('//div[@id="nosuchthing"]')
-        end
-      end.should raise_error(Timeout::Error)
+      @session.wait_until { false }.should be_false
     end
 
   end
