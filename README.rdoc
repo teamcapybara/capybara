@@ -265,11 +265,6 @@ moving from Webrat and used CSS a lot, or simply generally prefer CSS:
 
 == Gotchas:
 
-* The <tt>have_tag</tt> and <tt>have_text</tt> matchers in RSpec-Rails are not
-  supported. You should use <tt>page.should have_css('#header p')</tt>,
-  <tt>page.should have_xpath('//ul/li')</tt> and <tt>page.should
-  have_content('Monkey')</tt> instead.
-
 * Domain names (including subdomains) don't work under rack-test. Since it's a
   pain to set up subdomains for the other drivers anyway, you should consider an
   alternate solution. You might use
