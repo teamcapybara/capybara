@@ -130,40 +130,22 @@ module Capybara
     end
 
     def wait_for(locator)
-      return find(locator) unless driver.wait?
-      8.times do
-        result = find(locator)
-        return result if result
-        sleep(0.1)
-      end
-      nil
+      wait_until { find(locator) }
     end
   
     def wait_for_condition(script)
-      begin
-        Timeout.timeout(Capybara.default_wait_timeout) do
-          result = false
-          until result
-            result = evaluate_script(script)
-          end
-          return result
-        end
-      rescue Timeout::Error
-        return false
-      end
+      wait_until { evaluate_script(script) }
     end
 
-    def wait_until(timeout = Capybara.default_wait_timeout, &block)
+    def wait_until
       return yield unless driver.wait?
-
-      returned = nil
-      Timeout.timeout(timeout) do
-        sleep(0.1) until returned = yield
+      10.times do
+        if result = yield
+          return result
+        end
+        sleep(0.1)
       end
-    rescue Timeout::Error
-      return false
-    else
-      return returned    
+      nil
     end
     
     def evaluate_script(script)

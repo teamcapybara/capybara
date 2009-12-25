@@ -33,7 +33,7 @@ shared_examples_for "session with javascript support" do
     it "should return false if block doesn't return true within timeout" do
       @session.visit('/with_html')
 
-      @session.wait_until { false }.should be_false
+      @session.wait_until { false }.should be_nil
     end
 
   end
