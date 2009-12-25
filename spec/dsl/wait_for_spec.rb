@@ -11,7 +11,7 @@ module WaitForSpec
       end
 
       it "should return nil when nothing was found" do
-        @session.wait_for('//div').should be_nil
+        @session.wait_for('//div[@id="nosuchthing"]').should be_nil
       end
 
       it "should accept an XPath instance and respect the order of paths" do

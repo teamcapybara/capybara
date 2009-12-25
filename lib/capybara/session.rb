@@ -1,6 +1,7 @@
 module Capybara
   class Session
-
+    include Searchable
+    
     attr_reader :mode, :app
 
     def initialize(mode, app)
@@ -102,29 +103,9 @@ module Capybara
       driver.body
     end
 
-    def has_content?(content)
-      has_xpath?(XPath.content(content).to_s)
-    end
-
-    def has_xpath?(path, options={})
-      results = all(path)
-      if options[:text]
-        results = filter_by_text(results, options[:text])
-      end
-      if options[:count]
-        results.size == options[:count]
-      else
-        results.size > 0
-      end
-    end
-
-    def has_css?(path, options={})
-      has_xpath?(css_to_xpath(path), options)
-    end
-
     def within(kind, scope=nil)
       kind, scope = Capybara.default_selector, kind unless scope
-      scope = css_to_xpath(scope) if kind == :css
+      scope = XPath.from_css(scope) if kind == :css
       raise Capybara::ElementNotFound, "scope '#{scope}' not found on page" unless wait_for(scope)
       scopes.push(scope)
       yield
@@ -148,16 +129,6 @@ module Capybara
       Capybara::SaveAndOpenPage.save_and_open_page(body)
     end
 
-    def all(locator)
-      XPath.wrap(locator).scope(current_scope).paths.map do |path|
-        driver.find(path)
-      end.flatten
-    end
-
-    def find(locator)
-      all(locator).first
-    end
-    
     def wait_for(locator)
       return find(locator) unless driver.wait?
       8.times do
@@ -167,10 +138,10 @@ module Capybara
       end
       nil
     end
-    
+  
     def wait_for_condition(script)
       begin
-        Timeout.timeout(Capybara.default_condition_timeout) do
+        Timeout.timeout(Capybara.default_wait_timeout) do
           result = false
           until result
             result = evaluate_script(script)
@@ -178,44 +149,36 @@ module Capybara
           return result
         end
       rescue Timeout::Error
-      	return false
+        return false
       end
     end
 
-    def find_field(locator)
-      find(XPath.field(locator))
+    def wait_until(timeout = Capybara.default_wait_timeout, &block)
+      return yield unless driver.wait?
+      
+      returned = nil
+      
+      Timeout.timeout(timeout) do      
+        until returned = yield
+          sleep(0.1)
+        end
+      end
+      
+      returned    
     end
-    alias_method :field_labeled, :find_field
-
-    def find_link(locator)
-      find(XPath.link(locator))
-    end
-
-    def find_button(locator)
-      find(XPath.button(locator))
-    end
-
+    
     def evaluate_script(script)
       driver.evaluate_script(script)
     end
 
   private
 
-    def css_to_xpath(css)
-      Nokogiri::CSS.xpath_for(css).first
+    def all_unfiltered(locator)
+      XPath.wrap(locator).scope(current_scope).paths.map do |path|
+        driver.find(path)
+      end.flatten
     end
-
-    def filter_by_text(nodes, text)
-      nodes.select do |node|
-        case text
-        when String
-          node.text.include?(text)
-        when Regexp
-          node.text =~ text
-        end
-      end
-    end
-
+    
     def current_scope
       scopes.join('')
     end

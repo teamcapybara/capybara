@@ -18,6 +18,30 @@ shared_examples_for "session with javascript support" do
     end
   end
   
+  describe '#wait_until' do
+
+    it "should wait for block to return true" do      
+      @session.visit('/with_js')
+      @session.select('My Waiting Option', :from => 'waiter')
+      @session.evaluate_script('activeRequests == 1').should be_true
+      @session.wait_until do
+        @session.evaluate_script('activeRequests == 0')
+      end
+      @session.evaluate_script('activeRequests == 0').should be_true
+    end
+
+    it "should timeout if block doesn't return true within timeout" do
+      @session.visit('/with_html')
+
+      Proc.new do
+        @session.wait_until(1) do
+          @session.find('//div[@id="nosuchthing"]')
+        end
+      end.should raise_error(Timeout::Error)
+    end
+
+  end
+
   describe '#wait_for_condition' do
     it "should wait for condition to be true" do
       @session.visit('/with_js')
@@ -26,7 +50,7 @@ shared_examples_for "session with javascript support" do
       @session.wait_for_condition('activeRequests == 0').should be_true
       @session.evaluate_script('activeRequests == 0').should be_true
     end
-    
+
     it "should timeout" do
       @session.visit('/with_js')
       @session.select('Timeout', :from => 'timeout')

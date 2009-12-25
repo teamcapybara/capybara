@@ -4,6 +4,11 @@ module Capybara
   # this will generate an XPath that matches either a text field or a link
   class XPath
     class << self
+      def from_css(css)
+        Nokogiri::CSS.xpath_for(css).first
+      end
+      alias_method :for_css, :from_css
+      
       def wrap(path)
         if path.is_a?(self)
           path
@@ -26,7 +31,7 @@ module Capybara
     def initialize(*paths)
       @paths = paths
     end
-    
+
     def field(locator)
       fillable_field(locator).file_field(locator).checkbox(locator).radio_button(locator).select(locator)
     end
@@ -119,6 +124,7 @@ module Capybara
       else
         "'#{string}'"
       end
+    
     end
 
   end

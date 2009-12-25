@@ -62,6 +62,14 @@ shared_examples_for 'driver' do
         @driver.find('//a')[1].tag_name.should == 'a'
         @driver.find('//p')[1].tag_name.should == 'p'
       end
+      
+      it "should extract node visibility" do
+        
+        @driver.find('//a')[0].should be_visible
+        
+        @driver.find('//*[@id="hidden"]')[0].should_not be_visible
+        @driver.find('//*[@id="hidden_via_ancestor"]')[0].should_not be_visible
+      end
     end
   end
 
@@ -97,5 +105,39 @@ shared_examples_for "driver with header support" do
   it "should make headers available through response_headers" do
     @driver.visit('/with_simple_html')
     @driver.response_headers['Content-Type'].should == 'text/html'
+  end
+end
+
+shared_examples_for "driver with node path support" do
+  describe "node relative searching" do
+    before do
+      @driver.visit('/tables')
+      @node = @driver.find('//body').first
+    end
+  
+    it "should be able to navigate/search child nodes" do
+      @node.all('//table').size.should == 3
+      @node.find('//form').all('//table').size.should == 1
+      @node.has_xpath?('//table', :count => 3).should be_true
+      @node.find('//form').has_xpath?('//table', :count => 1).should be_true
+      @node.find('//form').find('//table//caption').text.should == 'Agent'
+    end
+    
+  end
+end
+
+shared_examples_for "driver without node path support" do
+  describe "node relative searching" do
+    before do
+      @driver.visit('/tables')
+      @node = @driver.find('//body').first
+    end
+  
+    it "should get NotSupportedByDriverError" do
+      running do
+        @node.all('//form')
+      end.should raise_error(Capybara::NotSupportedByDriverError) 
+    end
+    
   end
 end

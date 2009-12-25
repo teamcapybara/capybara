@@ -36,6 +36,15 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
       # there has to be something better...
       node.to_xml[/^\s*<([a-z0-9\-\:]+)/, 1]
     end
+    
+    def visible?
+      node.visible?
+    end
+    
+    def path
+      node.xpath
+    end
+    
   end
 
   attr_reader :app, :rack_server

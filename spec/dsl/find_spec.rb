@@ -11,7 +11,7 @@ module FindSpec
       end
 
       it "should return nil when nothing was found" do
-        @session.find('//div').should be_nil
+        @session.find('//div[@id="nosuchthing"]').should be_nil
       end
 
       it "should accept an XPath instance and respect the order of paths" do
