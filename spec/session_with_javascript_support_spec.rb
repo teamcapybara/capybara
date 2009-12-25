@@ -4,8 +4,8 @@ require 'nokogiri'
 
 shared_examples_for "session with javascript support" do
   describe "#evaluate_script" do
-    before{ @session.visit('/with_js') }
     it "should return the evaluated script" do
+      @session.visit('/with_js')
       @session.evaluate_script("1+3").should == 4
     end
   end
