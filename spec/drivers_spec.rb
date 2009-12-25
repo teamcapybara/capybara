@@ -64,11 +64,10 @@ shared_examples_for 'driver' do
       end
       
       it "should extract node visibility" do
-        
         @driver.find('//a')[0].should be_visible
         
-        @driver.find('//*[@id="hidden"]')[0].should_not be_visible
-        @driver.find('//*[@id="hidden_via_ancestor"]')[0].should_not be_visible
+        @driver.find('//div[@id="hidden"]')[0].should_not be_visible
+        @driver.find('//div[@id="hidden_via_ancestor"]')[0].should_not be_visible
       end
     end
   end

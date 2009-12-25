@@ -155,16 +155,15 @@ module Capybara
 
     def wait_until(timeout = Capybara.default_wait_timeout, &block)
       return yield unless driver.wait?
-      
+
       returned = nil
-      
-      Timeout.timeout(timeout) do      
-        until returned = yield
-          sleep(0.1)
-        end
+      Timeout.timeout(timeout) do
+        sleep(0.1) until returned = yield
       end
-      
-      returned    
+    rescue Timeout::Error
+      return false
+    else
+      return returned    
     end
     
     def evaluate_script(script)

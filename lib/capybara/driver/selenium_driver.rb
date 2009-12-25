@@ -44,7 +44,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     end
     
     def visible?
-      node.displayed?
+      node.displayed? and node.displayed? != "false"
     end
 
   private
