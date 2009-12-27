@@ -17,12 +17,18 @@ module FillInSpec
         extract_results(@session)['first_name'].should == 'Harry'
       end
 
+      it "should fill in a text field by name" do
+        @session.fill_in('form[first_name]', :with => 'Harry')
+        @session.click_button('awesome')
+        extract_results(@session)['first_name'].should == 'Harry'
+      end
+
       it "should fill in a text field by label without for" do
         @session.fill_in('Street', :with => 'Avenue Q')
         @session.click_button('awesome')
         extract_results(@session)['street'].should == 'Avenue Q'
       end
-      
+
       it "should favour exact label matches over partial matches" do
         @session.fill_in('Name', :with => 'Harry Jones')
         @session.click_button('awesome')
@@ -41,6 +47,12 @@ module FillInSpec
         extract_results(@session)['description'].should == 'Texty text'
       end
 
+      it "should fill in a textarea by name" do
+        @session.fill_in('form[description]', :with => 'Texty text')
+        @session.click_button('awesome')
+        extract_results(@session)['description'].should == 'Texty text'
+      end
+
       it "should fill in a password field by id" do
         @session.fill_in('form_password', :with => 'supasikrit')
         @session.click_button('awesome')
@@ -49,6 +61,12 @@ module FillInSpec
 
       it "should fill in a password field by label" do
         @session.fill_in('Password', :with => 'supasikrit')
+        @session.click_button('awesome')
+        extract_results(@session)['password'].should == 'supasikrit'
+      end
+
+      it "should fill in a password field by name" do
+        @session.fill_in('form[password]', :with => 'supasikrit')
         @session.click_button('awesome')
         extract_results(@session)['password'].should == 'supasikrit'
       end

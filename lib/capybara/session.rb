@@ -60,32 +60,32 @@ module Capybara
     end
 
     def fill_in(locator, options={})
-      msg = "cannot fill in, no text field, text area or password field with id or label '#{locator}' found"
+      msg = "cannot fill in, no text field, text area or password field with id, name, or label '#{locator}' found"
       locate(XPath.fillable_field(locator), msg).set(options[:with])
     end
 
     def choose(locator)
-      msg = "cannot choose field, no radio button with id or label '#{locator}' found"
+      msg = "cannot choose field, no radio button with id, name, or label '#{locator}' found"
       locate(XPath.radio_button(locator), msg).set(true)
     end
 
     def check(locator)
-      msg = "cannot check field, no checkbox with id or label '#{locator}' found"
+      msg = "cannot check field, no checkbox with id, name, or label '#{locator}' found"
       locate(XPath.checkbox(locator), msg).set(true)
     end
 
     def uncheck(locator)
-      msg = "cannot uncheck field, no checkbox with id or label '#{locator}' found"
+      msg = "cannot uncheck field, no checkbox with id, name, or label '#{locator}' found"
       locate(XPath.checkbox(locator), msg).set(false)
     end
 
     def select(value, options={})
-      msg = "cannot select option, no select box with id or label '#{options[:from]}' found"
+      msg = "cannot select option, no select box with id, name, or label '#{options[:from]}' found"
       locate(XPath.select(options[:from]), msg).select(value)
     end
 
     def attach_file(locator, path)
-      msg = "cannot attach file, no file field with id or label '#{locator}' found"
+      msg = "cannot attach file, no file field with id, name, or label '#{locator}' found"
       locate(XPath.file_field(locator), msg).set(path)
     end
 
