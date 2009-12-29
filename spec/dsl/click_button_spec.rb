@@ -1,5 +1,5 @@
 module ClickButtonSpec
-  shared_examples_for "click_button" do  
+  shared_examples_for "click_button" do
     describe '#click_button' do
       before do
         @session.visit('/form')
@@ -79,11 +79,21 @@ module ClickButtonSpec
           @session.click_button('awe123')
           extract_results(@session)['first_name'].should == 'John'
         end
+
+        it "should work with partial matches" do
+          @session.click_button('Go')
+          @session.body.should include('You landed')
+        end
       end
 
       context "with value given on an image button" do
         it "should submit the associated form" do
           @session.click_button('okay')
+          extract_results(@session)['first_name'].should == 'John'
+        end
+
+        it "should work with partial matches" do
+          @session.click_button('kay')
           extract_results(@session)['first_name'].should == 'John'
         end
       end
@@ -100,6 +110,11 @@ module ClickButtonSpec
           @session.click_button('Click me')
           extract_results(@session)['first_name'].should == 'John'
         end
+
+        it "should work with partial matches" do
+          @session.click_button('Click')
+          extract_results(@session)['first_name'].should == 'John'
+        end
       end
 
      context "with id given on a button defined by <button> tag" do
@@ -112,6 +127,11 @@ module ClickButtonSpec
      context "with value given on a button defined by <button> tag" do
         it "should submit the associated form" do
           @session.click_button('click_me')
+          extract_results(@session)['first_name'].should == 'John'
+        end
+
+        it "should work with partial matches" do
+          @session.click_button('ck_me')
           extract_results(@session)['first_name'].should == 'John'
         end
       end
@@ -136,11 +156,6 @@ module ClickButtonSpec
         @session.click_button('Go FAR')
         @session.body.should include('You landed')
       end
-
-      it "should work with partial matches" do
-        @session.click_button('Go')
-        @session.body.should include('You landed')
-      end
     end
   end
-end  
+end

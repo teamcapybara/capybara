@@ -57,8 +57,8 @@ module Capybara
     end
     
     def button(locator)
-      xpath = append("//input[@type='submit' or @type='image'][@id=#{s(locator)} or @value=#{s(locator)}]")
-      xpath.append("//button[@id=#{s(locator)} or @value=#{s(locator)} or contains(.,#{s(locator)})]")
+      xpath = append("//input[@type='submit' or @type='image'][@id=#{s(locator)} or contains(@value,#{s(locator)})]")
+      xpath.append("//button[@id=#{s(locator)} or contains(@value,#{s(locator)}) or contains(.,#{s(locator)})]")
     end
 
     def text_field(locator)
