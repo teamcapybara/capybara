@@ -136,6 +136,11 @@ module ClickButtonSpec
         @session.click_button('Go FAR')
         @session.body.should include('You landed')
       end
+
+      it "should work with partial matches" do
+        @session.click_button('Go')
+        @session.body.should include('You landed')
+      end
     end
   end
 end  
