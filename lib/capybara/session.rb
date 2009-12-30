@@ -2,6 +2,15 @@ module Capybara
   class Session
     include Searchable
     
+    DSL_METHODS = [
+      :visit, :current_url, :body, :click_link, :click_button, :drag, :fill_in,
+      :choose, :has_xpath?, :has_css?, :check, :uncheck, :attach_file, :select,
+      :has_content?, :within, :within_fieldset, :within_table,
+      :save_and_open_page, :find, :find_field, :find_link, :find_button, :find_by_id,
+      :field_labeled, :all, :wait_for, :wait_for_condition, :evaluate_script,
+      :click, :wait_until
+    ]
+    
     attr_reader :mode, :app
 
     def initialize(mode, app)

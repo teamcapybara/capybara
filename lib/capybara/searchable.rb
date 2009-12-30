@@ -36,7 +36,7 @@ module Capybara
     end
     
     def find_by_id(id) 
-      find(Xpath.for_css("##{id}"))
+      find(XPath.for_css("##{id}"))
     end
 
     def all(locator, options = {})
