@@ -1,7 +1,7 @@
 module Capybara
   class Node
     include Searchable
-    
+
     attr_reader :driver, :node
 
     def initialize(driver, node)
@@ -10,11 +10,11 @@ module Capybara
     end
 
     def text
-      raise "Not implemented"
+      raise NotImplementedError
     end
 
     def [](name)
-      raise "Not implemented"
+      raise NotImplementedError
     end
 
     def value
@@ -22,40 +22,40 @@ module Capybara
     end
 
     def set(value)
-      raise "Not implemented"
+      raise NotImplementedError
     end
 
     def select(option)
-      raise "Not implemented"
+      raise NotImplementedError
     end
 
     def click
-      raise "Not implemented"
+      raise NotImplementedError
     end
 
     def drag_to(element)
-      raise "Not implemented"
+      raise NotImplementedError
     end
 
     def tag_name
-      raise "Not implemented"
+      raise NotImplementedError
     end
 
     def visible?
-      raise "Not implemented"
+      raise NotImplementedError
     end
 
     def path
       raise NotSupportedByDriverError
     end
 
-    private 
-    
+    private
+
     def all_unfiltered(locator)
       nodes = XPath.wrap(locator).scope(path).paths.map do |path|
         driver.find(path)
       end.flatten
     end
-    
+
   end
 end
