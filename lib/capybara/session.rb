@@ -1,3 +1,5 @@
+require 'capybara/wait_until'
+
 module Capybara
   class Session
     include Searchable
@@ -38,65 +40,56 @@ module Capybara
     end
 
     def click(locator)
-      link = wait_for(XPath.link(locator).button(locator))
-      raise Capybara::ElementNotFound, "no link or button '#{locator}' found" unless link
-      link.click
+      msg = "no link or button '#{locator}' found"
+      locate(XPath.link(locator).button(locator), msg).click
     end
 
     def click_link(locator)
-      link = wait_for(XPath.link(locator))
-      raise Capybara::ElementNotFound, "no link with title, id or text '#{locator}' found" unless link
-      link.click
+      msg = "no link with title, id or text '#{locator}' found"
+      locate(XPath.link(locator), msg).click
     end
 
     def click_button(locator)
-      button = wait_for(XPath.button(locator))
-      raise Capybara::ElementNotFound, "no button with value or id or text '#{locator}' found" unless button
-      button.click
+      msg = "no button with value or id or text '#{locator}' found"
+      locate(XPath.button(locator)).click
     end
 
     def drag(source_locator, target_locator)
-      source = wait_for(source_locator)
-      raise Capybara::ElementNotFound, "drag source '#{source_locator}' not found on page" unless source
-      target = wait_for(target_locator)
-      raise Capybara::ElementNotFound, "drag target '#{target_locator}' not found on page" unless target
+      source = locate(source_locator, "drag source '#{source_locator}' not found on page")
+      
+      target = locate(target_locator, "drag target '#{target_locator}' not found on page")
+      
       source.drag_to(target)
     end
 
     def fill_in(locator, options={})
-      field = wait_for(XPath.fillable_field(locator))
-      raise Capybara::ElementNotFound, "cannot fill in, no text field, text area or password field with id or label '#{locator}' found" unless field
-      field.set(options[:with])
+      msg = "cannot fill in, no text field, text area or password field with id or label '#{locator}' found"
+      locate(XPath.fillable_field(locator), msg).set(options[:with])
     end
 
     def choose(locator)
-      field = wait_for(XPath.radio_button(locator))
-      raise Capybara::ElementNotFound, "cannot choose field, no radio button with id or label '#{locator}' found" unless field
-      field.set(true)
+      msg = "cannot choose field, no radio button with id or label '#{locator}' found"
+      locate(XPath.radio_button(locator), msg).set(true)
     end
 
     def check(locator)
-      field = wait_for(XPath.checkbox(locator))
-      raise Capybara::ElementNotFound, "cannot check field, no checkbox with id or label '#{locator}' found" unless field
-      field.set(true)
+      msg = "cannot check field, no checkbox with id or label '#{locator}' found"
+      locate(XPath.checkbox(locator), msg).set(true)
     end
 
     def uncheck(locator)
-      field = wait_for(XPath.checkbox(locator))
-      raise Capybara::ElementNotFound, "cannot uncheck field, no checkbox with id or label '#{locator}' found" unless field
-      field.set(false)
+      msg = "cannot uncheck field, no checkbox with id or label '#{locator}' found"
+      locate(XPath.checkbox(locator), msg).set(false)
     end
 
     def select(value, options={})
-      field = wait_for(XPath.select(options[:from]))
-      raise Capybara::ElementNotFound, "cannot select option, no select box with id or label '#{options[:from]}' found" unless field
-      field.select(value)
+      msg = "cannot select option, no select box with id or label '#{options[:from]}' found"
+      locate(XPath.select(options[:from])).select(value)
     end
 
     def attach_file(locator, path)
-      field = wait_for(XPath.file_field(locator))
-      raise Capybara::ElementNotFound, "cannot attach file, no file field with id or label '#{locator}' found" unless field
-      field.set(path)
+      msg = "cannot attach file, no file field with id or label '#{locator}' found"
+      locate(XPath.file_field(locator)).set(path)
     end
 
     def body
@@ -106,7 +99,7 @@ module Capybara
     def within(kind, scope=nil)
       kind, scope = Capybara.default_selector, kind unless scope
       scope = XPath.from_css(scope) if kind == :css
-      raise Capybara::ElementNotFound, "scope '#{scope}' not found on page" unless wait_for(scope)
+      locate(scope, "scope '#{scope}' not found on page")
       scopes.push(scope)
       yield
       scopes.pop
@@ -129,25 +122,29 @@ module Capybara
       Capybara::SaveAndOpenPage.save_and_open_page(body)
     end
 
-    def wait_for(locator)
-      wait_until { find(locator) }
+    #return node identified by locator or raise ElementNotFound(using desc)
+    def locate(locator, fail_msg = nil)
+      
+      fail_msg ||= "Unable to locate '#{locator}'"
+       
+      node = nil
+      begin
+        if driver.wait?
+          node = wait_until { find(locator) }
+        else
+          node = find(locator)
+        end
+      rescue Capybara::TimeoutError; end
+          
+      raise Capybara::ElementNotFound, fail_msg unless node
+      
+      node
     end
   
-    def wait_for_condition(script)
-      wait_until { evaluate_script(script) }
+    def wait_until(timeout = Capybara.default_wait_time)
+      WaitUntil.timeout(timeout) { yield }
     end
-
-    def wait_until
-      return yield unless driver.wait?
-      10.times do
-        if result = yield
-          return result
-        end
-        sleep(0.1)
-      end
-      nil
-    end
-    
+  
     def evaluate_script(script)
       driver.evaluate_script(script)
     end

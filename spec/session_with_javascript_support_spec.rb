@@ -10,17 +10,24 @@ shared_examples_for "session with javascript support" do
     end
   end
 
-  describe '#wait_for' do
+  describe '#locate' do
     it "should wait for asynchronous load" do
       @session.visit('/with_js')
       @session.click_link('Click me')
-      @session.wait_for("//a[contains(.,'Has been clicked')]")[:href].should == '#'
+      @session.locate("//a[contains(.,'Has been clicked')]")[:href].should == '#'
     end
   end
   
   describe '#wait_until' do
+    before do
+      @default_timeout = Capybara.default_wait_time
+    end
 
-    it "should wait for block to return true" do      
+    after do
+      Capybara.default_wait_time = @default_wait_time
+    end
+
+    it "should wait for block to return true" do
       @session.visit('/with_js')
       @session.select('My Waiting Option', :from => 'waiter')
       @session.evaluate_script('activeRequests == 1').should be_true
@@ -30,21 +37,31 @@ shared_examples_for "session with javascript support" do
       @session.evaluate_script('activeRequests == 0').should be_true
     end
 
-    it "should return false if block doesn't return true within timeout" do
+    it "should raise Capybara::TimeoutError if block doesn't return true within timeout" do
       @session.visit('/with_html')
-
-      @session.wait_until { false }.should be_nil
+      Proc.new do
+        @session.wait_until(0.1) do
+          @session.find('//div[@id="nosuchthing"]')
+        end
+      end.should raise_error(::Capybara::TimeoutError)
+    end
+    
+    it "should accept custom timeout in seconds" do
+      start = Time.now
+      Capybara.default_wait_time = 5
+      begin
+        @session.wait_until(0.1) { false }
+      rescue Capybara::TimeoutError; end
+      (Time.now - start).should be_close(0.1, 0.1)
     end
 
-  end
-
-  describe '#wait_for_condition' do
-    it "should wait for condition to be true" do
-      @session.visit('/with_js')
-      @session.select('My Waiting Option', :from => 'waiter')
-      @session.evaluate_script('activeRequests == 1').should be_true
-      @session.wait_for_condition('activeRequests == 0').should be_true
-      @session.evaluate_script('activeRequests == 0').should be_true
+    it "should default to Capybara.default_wait_time before timeout" do
+      start = Time.now
+      Capybara.default_wait_time = 0.2
+      begin
+        @session.wait_until { false }
+      rescue Capybara::TimeoutError; end
+      (Time.now - start).should be_close(0.2, 0.1)
     end
   end
 
