@@ -8,13 +8,19 @@ module Capybara
   class DriverNotFoundError < CapybaraError; end
   class ElementNotFound < CapybaraError; end
   class NotSupportedByDriverError < CapybaraError; end
-
+  class TimeoutError < CapybaraError; end
+  
   class << self
     attr_accessor :debug, :asset_root, :app_host
-    attr_writer :default_selector
+    attr_writer :default_selector, :default_wait_time
+    
 
     def default_selector
       @default_selector ||= :xpath
+    end
+    
+    def default_wait_time
+      @default_wait_time ||= 2
     end
 
     def log(message)
