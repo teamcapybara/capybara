@@ -3,16 +3,15 @@ require 'capybara/wait_until'
 module Capybara
   class Session
     include Searchable
-    
+
     attr_reader :mode, :app
 
     def initialize(mode, app)
       @mode = mode
       @app = app
     end
-    
+
     def driver
-      
       @driver ||= case mode
       when :rack_test
         Capybara::Driver::RackTest.new(app)
@@ -30,11 +29,11 @@ module Capybara
     def current_url
       driver.current_url
     end
-    
+
     def response_headers
       driver.response_headers
     end
-    
+
     def visit(path)
       driver.visit(path)
     end
@@ -56,9 +55,7 @@ module Capybara
 
     def drag(source_locator, target_locator)
       source = locate(source_locator, "drag source '#{source_locator}' not found on page")
-      
       target = locate(target_locator, "drag target '#{target_locator}' not found on page")
-      
       source.drag_to(target)
     end
 
@@ -133,11 +130,11 @@ module Capybara
       raise Capybara::ElementNotFound, fail_msg || "Unable to locate '#{locator}'" unless node
       return node
     end
-  
+
     def wait_until(timeout = Capybara.default_wait_time)
       WaitUntil.timeout(timeout) { yield }
     end
-  
+
     def evaluate_script(script)
       driver.evaluate_script(script)
     end
@@ -149,7 +146,7 @@ module Capybara
         driver.find(path)
       end.flatten
     end
-    
+
     def current_scope
       scopes.join('')
     end

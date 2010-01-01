@@ -8,7 +8,7 @@ module Capybara
         Nokogiri::CSS.xpath_for(css).first
       end
       alias_method :for_css, :from_css
-      
+
       def wrap(path)
         if path.is_a?(self)
           path
@@ -16,7 +16,7 @@ module Capybara
           new(path.to_s)
         end
       end
-      
+
       def respond_to?(method)
         new.respond_to?(method)
       end
@@ -39,23 +39,23 @@ module Capybara
     def fillable_field(locator)
       text_field(locator).password_field(locator).text_area(locator)
     end
-    
+
     def content(locator)
       append("/descendant-or-self::*[contains(.,#{s(locator)})]")
     end
-    
+
     def table(locator)
       append("//table[@id=#{s(locator)} or contains(caption,#{s(locator)})]")
     end
-    
+
     def fieldset(locator)
       append("//fieldset[@id=#{s(locator)} or contains(legend,#{s(locator)})]")
     end
-    
+
     def link(locator)
       append("//a[@id=#{s(locator)} or contains(.,#{s(locator)}) or @title=#{s(locator)}]")
     end
-    
+
     def button(locator)
       xpath = append("//input[@type='submit' or @type='image'][@id=#{s(locator)} or contains(@value,#{s(locator)})]")
       xpath.append("//button[@id=#{s(locator)} or contains(@value,#{s(locator)}) or contains(.,#{s(locator)})]")
@@ -88,7 +88,7 @@ module Capybara
     def file_field(locator)
       add_field(locator, "//input[@type='file']")
     end
-    
+
     def scope(scope)
       XPath.new(*paths.map { |p| scope + p })
     end
@@ -96,24 +96,24 @@ module Capybara
     def to_s
       @paths.join(' | ')
     end
-    
+
     def append(path)
       XPath.new(*[@paths, XPath.wrap(path).paths].flatten)
     end
-    
+
     def prepend(path)
       XPath.new(*[XPath.wrap(path).paths, @paths].flatten)
     end
 
   protected
-  
+
     def add_field(locator, field)
       xpath = append("#{field}[@id=#{s(locator)}]")
       xpath = xpath.append("#{field}[@id=//label[contains(.,#{s(locator)})]/@for]")
       xpath = xpath.append("//label[contains(.,#{s(locator)})]#{field}")
       xpath.prepend("#{field}[@id=//label[text()=#{s(locator)}]/@for]")
     end
-  
+
     # Sanitize a String for putting it into an xpath query
     def s(string)
       if string.include?("'")
@@ -124,7 +124,7 @@ module Capybara
       else
         "'#{string}'"
       end
-    
+
     end
 
   end

@@ -22,7 +22,6 @@ class Capybara::Server
     end
   end
 
-
   attr_reader :app, :port
 
   def initialize(app)

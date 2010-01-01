@@ -1,7 +1,7 @@
 module Capybara
   class Node
     include Searchable
-    
+
     attr_reader :driver, :node
 
     def initialize(driver, node)
@@ -49,13 +49,13 @@ module Capybara
       raise NotSupportedByDriverError
     end
 
-    private 
-    
+    private
+
     def all_unfiltered(locator)
       nodes = XPath.wrap(locator).scope(path).paths.map do |path|
         driver.find(path)
       end.flatten
     end
-    
+
   end
 end
