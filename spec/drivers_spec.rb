@@ -117,8 +117,6 @@ shared_examples_for "driver with node path support" do
     it "should be able to navigate/search child nodes" do
       @node.all('//table').size.should == 3
       @node.find('//form').all('//table').size.should == 1
-      @node.has_xpath?('//table', :count => 3).should be_true
-      @node.find('//form').has_xpath?('//table', :count => 1).should be_true
       @node.find('//form').find('//table//caption').text.should == 'Agent'
     end
   end

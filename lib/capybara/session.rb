@@ -113,6 +113,36 @@ module Capybara
         yield
       end
     end
+    
+    def has_content?(content)
+      has_xpath?(XPath.content(content).to_s)
+    end
+
+    def has_no_content?(content)
+      !has_content?(content)
+    end
+
+    def has_xpath?(path, options={})
+      results = all(path, options)
+
+      if options[:count]
+        results.size == options[:count]
+      else
+        results.size > 0
+      end
+    end
+
+    def has_no_xpath?(path, options={})
+      !has_xpath?(path, options)
+    end
+
+    def has_css?(path, options={})
+      has_xpath?(XPath.from_css(path), options)
+    end
+
+    def has_no_css?(path, options={})
+      !has_css?(path, options)
+    end
 
     def save_and_open_page
       require 'capybara/save_and_open_page'

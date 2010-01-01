@@ -1,35 +1,5 @@
 module Capybara
   module Searchable
-    def has_content?(content)
-      has_xpath?(XPath.content(content).to_s)
-    end
-
-    def has_no_content?(content)
-      !has_content?(content)
-    end
-
-    def has_xpath?(path, options={})
-      results = all(path, options)
-
-      if options[:count]
-        results.size == options[:count]
-      else
-        results.size > 0
-      end
-    end
-
-    def has_no_xpath?(path, options={})
-      !has_xpath?(path, options)
-    end
-
-    def has_css?(path, options={})
-      has_xpath?(XPath.from_css(path), options)
-    end
-
-    def has_no_css?(path, options={})
-      !has_css?(path, options)
-    end
-
     def find(locator, options = {})
       all(locator, options).first
     end
