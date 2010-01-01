@@ -1,30 +1,30 @@
 class Capybara::Driver::Base
   def current_url
-    raise "Not implemented"
+    raise NotImplementedError
   end
 
   def visit(path)
-    raise "Not implemented"
+    raise NotImplementedError
   end
-  
+
   def find(query)
-    raise "Not implemented"
+    raise NotImplementedError
   end
-  
+
   def evaluate_script(script)
     raise Capybara::NotSupportedByDriverError
   end
-  
+
   def wait?
     false
   end
-  
+
   def response_headers
     raise Capybara::NotSupportedByDriverError
   end
-  
+
   def body
-    raise "Not implemented"
+    raise NotImplementedError
   end
-  
+
 end
