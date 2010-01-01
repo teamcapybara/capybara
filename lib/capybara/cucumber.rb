@@ -15,6 +15,10 @@ Before('@selenium') do
   Capybara.current_driver = :selenium
 end
 
+Before('@celerity') do
+  Capybara.current_driver = :celerity
+end
+
 Before('@culerity') do
   Capybara.current_driver = :culerity
 end
