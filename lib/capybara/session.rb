@@ -84,12 +84,12 @@ module Capybara
 
     def select(value, options={})
       msg = "cannot select option, no select box with id or label '#{options[:from]}' found"
-      locate(XPath.select(options[:from])).select(value)
+      locate(XPath.select(options[:from]), msg).select(value)
     end
 
     def attach_file(locator, path)
       msg = "cannot attach file, no file field with id or label '#{locator}' found"
-      locate(XPath.file_field(locator)).set(path)
+      locate(XPath.file_field(locator), msg).set(path)
     end
 
     def body
