@@ -124,21 +124,14 @@ module Capybara
 
     #return node identified by locator or raise ElementNotFound(using desc)
     def locate(locator, fail_msg = nil)
-      
-      fail_msg ||= "Unable to locate '#{locator}'"
-       
-      node = nil
-      begin
-        if driver.wait?
-          node = wait_until { find(locator) }
-        else
-          node = find(locator)
-        end
-      rescue Capybara::TimeoutError; end
-          
-      raise Capybara::ElementNotFound, fail_msg unless node
-      
-      node
+      if driver.wait?
+        node = wait_until { find(locator) }
+      else
+        node = find(locator)
+      end
+    ensure
+      raise Capybara::ElementNotFound, fail_msg || "Unable to locate '#{locator}'" unless node
+      return node
     end
   
     def wait_until(timeout = Capybara.default_wait_time)
