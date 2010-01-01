@@ -82,6 +82,15 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     browser.execute_script "#{script}"
   end
 
+  def browser
+    unless @_browser
+      require 'celerity'
+      @_browser = ::Celerity::Browser.new(:browser => :firefox, :log_level => :off)
+    end
+    
+    @_browser
+  end
+
 private
 
   def url(path)
@@ -90,15 +99,6 @@ private
     else
       Capybara.app_host.to_s + path
     end
-  end
-
-  def browser
-    unless @_browser
-      require 'celerity'
-      @_browser = ::Celerity::Browser.new(:browser => :firefox, :log_level => :off)
-    end
-    
-    @_browser
   end
 
 end

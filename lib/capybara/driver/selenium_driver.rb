@@ -75,25 +75,29 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
   end
 
   def visit(path)
-    driver.navigate.to(url(path))
+    browser.navigate.to(url(path))
   end
 
   def body
-    driver.page_source
+    browser.page_source
   end
 
   def current_url
-    driver.current_url
+    browser.current_url
   end
 
   def find(selector)
-    driver.find_elements(:xpath, selector).map { |node| Node.new(self, node) }
+    browser.find_elements(:xpath, selector).map { |node| Node.new(self, node) }
   end
 
   def wait?; true; end
 
   def evaluate_script(script)
-    driver.execute_script "return #{script}"
+    browser.execute_script "return #{script}"
+  end
+  
+  def browser
+    self.class.driver
   end
 
 private
@@ -104,10 +108,6 @@ private
     else
       Capybara.app_host.to_s + path
     end
-  end
-
-  def driver
-    self.class.driver
   end
 
 end

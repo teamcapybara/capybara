@@ -12,8 +12,6 @@ class Capybara::Driver::Culerity < Capybara::Driver::Celerity
     @_server
   end
 
-private
-
   def browser
     unless @_browser
       @_browser = ::Culerity::RemoteBrowserProxy.new self.class.server, {:browser => :firefox, :log_level => :off}
