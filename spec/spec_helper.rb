@@ -18,3 +18,5 @@ require 'session_with_headers_support_spec'
 require 'session_without_headers_support_spec'
 
 alias :running :lambda
+
+Capybara.default_wait_time = 1 # less timeout so tests run faster

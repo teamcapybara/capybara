@@ -9,10 +9,6 @@ describe Capybara do
       Capybara.default_wait_time = 2
     end
     
-    it "should default to 2 seconds" do
-      Capybara.default_wait_time.should == 2
-    end
-    
     it "should be changeable" do
       Capybara.default_wait_time = 5
       Capybara.default_wait_time.should == 5
