@@ -195,6 +195,11 @@ You can use with RSpecs magic matchers:
     page.should have_xpath('//table/tr')
     page.should have_css('table tr.foo')
     page.should have_content('foo')
+    page.should have_no_content('foo')
+
+Note that <tt>page.should have_no_xpath</tt> is preferred over
+<tt>page.should_not have_xpath</tt>. Read the section on asynchronous JavaScript
+for an explanation.
 
 You can also find specific elements, in order to manipulate them:
 
@@ -218,6 +223,41 @@ It can be useful to take a snapshot of the page as it currently is and take a
 look at it:
 
     save_and_open_page
+
+== Asynchronous JavaScript (AJAX and friends)
+
+When working with asynchronous JavaScript, you might come across situations
+where you are attempting to interact with an element which is not yet present
+on the page. Capybara automatically deals with this by waiting for elements
+to appear on the page.
+
+When issuing instructions to the DSL such as:
+
+    click_link('foo')
+    click_link('bar')
+    page.should have_content('baz')
+
+If clicking on the *foo* link causes triggers an asynchronous process, such as
+an AJAX request, which, when complete will add the *bar* link to the page,
+clicking on the *bar* link would be expeced to fail, since that link doesn't
+exist yet. However Capybara is smart enought to retry finding the link for a
+brief period of time before giving up and throwing an error. The same is true of
+the next line, which looks for the content *baz* on the page; it will retry
+looking for that content for a brief time. You can adjust how long this period
+is (the default is 2 seconds):
+
+    Capybara.default_wait_time = 5
+
+Be aware that because of this behaviour, the following two statements are *not*
+identical, and you should *always* use the latter!
+
+    page.should_not have_xpath('//a')
+    page.should have_no_xpath('//a')
+
+The former would incorrectly wait for the content to appear, since the
+asynchronous process has not yet removed the element from the page, it would
+therefore fail, even though the code might be working correctly. The latter
+correctly wait for the element to disappear from the page.
 
 == Using the DSL outside cucumber
 
