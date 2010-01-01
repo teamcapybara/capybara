@@ -133,6 +133,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
   alias_method :response, :last_response
   alias_method :request, :last_request
+  alias_method :source, :body
 
   def initialize(app)
     @app = app

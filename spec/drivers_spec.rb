@@ -24,7 +24,7 @@ shared_examples_for 'driver' do
 
     it "should return the full response html" do
       @driver.visit('/with_simple_html')
-      @driver.body.should include('<h1>Bar</h1>')
+      @driver.body.should include('Bar')
     end
   end
 

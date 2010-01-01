@@ -10,7 +10,7 @@ module WithinSpec
           @session.within(:css, "ul li[contains('With Simple HTML')]") do
             @session.click_link('Go')
           end
-          @session.body.should include('<h1>Bar</h1>')
+          @session.body.should include('Bar')
         end
       end
 
@@ -19,7 +19,7 @@ module WithinSpec
           @session.within(:xpath, "//li[contains(.,'With Simple HTML')]") do
             @session.click_link('Go')
           end
-          @session.body.should include('<h1>Bar</h1>')
+          @session.body.should include('Bar')
         end
       end
 
@@ -28,7 +28,7 @@ module WithinSpec
           @session.within("//li[contains(., 'With Simple HTML')]") do
             @session.click_link('Go')
           end
-          @session.body.should include('<h1>Bar</h1>')
+          @session.body.should include('Bar')
         end
       end
 
@@ -42,7 +42,7 @@ module WithinSpec
           @session.within("ul li[contains('With Simple HTML')]") do
             @session.click_link('Go')
           end
-          @session.body.should include('<h1>Bar</h1>')
+          @session.body.should include('Bar')
         end
       end
 
@@ -51,7 +51,7 @@ module WithinSpec
           @session.within("//li[contains(.,'With Simple HTML')]") do
             @session.click_link('Go')
           end
-          @session.body.should include('<h1>Bar</h1>')
+          @session.body.should include('Bar')
         end
 
         context "with nested scopes" do

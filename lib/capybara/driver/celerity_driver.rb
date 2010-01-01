@@ -63,9 +63,13 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
   def current_url
     browser.url
   end
+  
+  def source
+    browser.html
+  end
 
   def body
-    browser.html
+    browser.document.as_xml
   end
 
   def response_headers

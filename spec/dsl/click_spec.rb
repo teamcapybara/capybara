@@ -4,7 +4,7 @@ module ClickSpec
       it "should click on a link" do
         @session.visit('/with_html')
         @session.click('labore')
-        @session.body.should include('<h1>Bar</h1>')
+        @session.body.should include('Bar')
       end
   
       it "should click on a button" do

@@ -20,6 +20,20 @@ shared_examples_for "session" do
       @session.body.should include('Another World')
     end
   end
+  
+  describe '#body' do
+    it "should return the unmodified page body" do
+      @session.visit('/')
+      @session.body.should include('Hello world!')
+    end
+  end
+  
+  describe '#source' do
+    it "should return the unmodified page source" do
+      @session.visit('/')
+      @session.source.should include('Hello world!')
+    end
+  end
 
   it_should_behave_like "all"
   it_should_behave_like "attach_file"

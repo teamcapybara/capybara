@@ -3,6 +3,23 @@ require File.expand_path('spec_helper', File.dirname(__FILE__))
 require 'nokogiri'
 
 shared_examples_for "session with javascript support" do
+  describe '#body' do
+    it "should return the current state of the page" do
+      @session.visit('/with_js')
+      @session.body.should include('I changed it')
+      @session.body.should_not include('This is text')
+    end
+  end
+
+  describe '#source' do
+    it "should return the original, unmodified source of the page" do
+      pending "cannot figure out how to do this with selenium" if @session.mode == :selenium
+      @session.visit('/with_js')
+      @session.source.should include('This is text')
+      @session.source.should_not include('I changed it')
+    end
+  end
+
   describe "#evaluate_script" do
     it "should return the evaluated script" do
       @session.visit('/with_js')

@@ -78,6 +78,10 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     browser.navigate.to(url(path))
   end
 
+  def source
+    browser.page_source
+  end
+
   def body
     browser.page_source
   end

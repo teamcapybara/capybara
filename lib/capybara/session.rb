@@ -93,6 +93,10 @@ module Capybara
       driver.body
     end
 
+    def source
+      driver.source
+    end
+
     def within(kind, scope=nil)
       kind, scope = Capybara.default_selector, kind unless scope
       scope = XPath.from_css(scope) if kind == :css

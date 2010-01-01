@@ -27,4 +27,8 @@ class Capybara::Driver::Base
     raise NotImplementedError
   end
 
+  def source
+    raise NotImplementedError
+  end
+
 end

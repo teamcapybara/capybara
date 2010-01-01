@@ -49,7 +49,7 @@ module Capybara
   SESSION_METHODS = [
     :visit, :current_url, :body, :click_link, :click_button, :drag, :fill_in,
     :choose, :has_xpath?, :has_no_xpath?, :has_css?, :has_no_css?,
-    :check, :uncheck, :attach_file, :select,
+    :check, :uncheck, :attach_file, :select, :source,
     :has_content?, :has_no_content?, :within, :within_fieldset, :within_table,
     :save_and_open_page, :find, :find_field, :find_link, :find_button,
     :field_labeled, :all, :locate, :evaluate_script,
