@@ -7,7 +7,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     def text
       node.text
     end
-    
+
     def [](name)
       value = node[name.to_s]
       return value.to_s if value
@@ -29,7 +29,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
         node.content = value.to_s
       end
     end
-    
+
     def select(option)
       node.xpath(".//option").each { |node| node.remove_attribute("selected") }
       node.xpath(".//option[contains(.,'#{option}')]").first["selected"] = 'selected'
@@ -42,21 +42,21 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
         Form.new(driver, form).submit(self)
       end
     end
-    
+
     def tag_name
       node.node_name
     end
-    
+
     def visible?
       node.xpath("./ancestor-or-self::*[contains(@style, 'display:none')]").size == 0
     end
-    
+
     def path
       node.path
     end
-    
+
   private
-  
+
     def type
       self[:type]
     end
@@ -107,13 +107,13 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     def multipart?
       self[:enctype] == "multipart/form-data"
     end
-    
+
     def post?
       self[:method] =~ /post/i
     end
-    
+
     private
-    
+
     def merge_param!(params, key, value)
       collection = key.sub!(/\[\]$/, '')
       if collection
@@ -127,17 +127,17 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       end
     end
   end
-  
+
   include ::Rack::Test::Methods
   attr_reader :app, :html, :body
 
   alias_method :response, :last_response
   alias_method :request, :last_request
-  
+
   def initialize(app)
     @app = app
   end
-  
+
   def visit(path, attributes = {})
     get(path, attributes)
     follow_redirect! while response.redirect?
@@ -147,7 +147,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   def current_url
     request.url
   end
-  
+
   def response_headers
     response.headers
   end

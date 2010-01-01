@@ -36,46 +36,46 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
       # there has to be something better...
       node.to_xml[/^\s*<([a-z0-9\-\:]+)/, 1]
     end
-    
+
     def visible?
       node.visible?
     end
-    
+
     def path
       node.xpath
     end
-    
+
   end
 
   attr_reader :app, :rack_server
-  
+
   def initialize(app)
     @app = app
     unless Capybara.app_host
       @rack_server = Capybara::Server.new(@app)
     end
   end
-   
+
   def visit(path)
     browser.goto(url(path))
   end
-  
+
   def current_url
     browser.url
   end
-  
+
   def body
     browser.html
   end
-  
+
   def response_headers
     browser.response_headers
   end
-  
+
   def find(selector)
     browser.elements_by_xpath(selector).map { |node| Node.new(self, node) }
   end
-  
+
   def wait?; true; end
 
   def evaluate_script(script)
@@ -87,7 +87,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
       require 'celerity'
       @_browser = ::Celerity::Browser.new(:browser => :firefox, :log_level => :off)
     end
-    
+
     @_browser
   end
 

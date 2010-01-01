@@ -42,7 +42,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     def tag_name
       node.tag_name
     end
-    
+
     def visible?
       node.displayed? and node.displayed? != "false"
     end
@@ -95,7 +95,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
   def evaluate_script(script)
     browser.execute_script "return #{script}"
   end
-  
+
   def browser
     self.class.driver
   end
