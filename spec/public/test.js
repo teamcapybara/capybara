@@ -14,6 +14,7 @@ $(function() {
       $(link).after('<a href="#">Has been clicked</a>');
       $(link).after('<input type="submit" value="New Here">');
       $(link).after('<input type="text" id="new_field">');
+      $('#change').remove();
     }, 500);
     return false;
   });

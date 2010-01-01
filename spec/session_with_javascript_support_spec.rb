@@ -17,7 +17,7 @@ shared_examples_for "session with javascript support" do
       @session.locate("//a[contains(.,'Has been clicked')]")[:href].should == '#'
     end
   end
-  
+
   describe '#wait_until' do
     before do
       @default_timeout = Capybara.default_wait_time
@@ -45,7 +45,7 @@ shared_examples_for "session with javascript support" do
         end
       end.should raise_error(::Capybara::TimeoutError)
     end
-    
+
     it "should accept custom timeout in seconds" do
       start = Time.now
       Capybara.default_wait_time = 5
@@ -80,7 +80,7 @@ shared_examples_for "session with javascript support" do
       @session.click_link('Has been clicked')
     end
   end
-  
+
   describe '#click_button' do
     it "should wait for asynchronous load" do
       @session.visit('/with_js')
@@ -88,7 +88,7 @@ shared_examples_for "session with javascript support" do
       @session.click_button('New Here')
     end
   end
-  
+
   describe '#fill_in' do
     it "should wait for asynchronous load" do
       @session.visit('/with_js')
@@ -96,5 +96,53 @@ shared_examples_for "session with javascript support" do
       @session.fill_in('new_field', :with => 'Testing...')
     end
   end
-  
+
+  describe '#has_xpath?' do
+    it "should wait for content to appear" do
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+      @session.should have_xpath("//input[@type='submit' and @value='New Here']")
+    end
+  end
+
+  describe '#has_no_xpath?' do
+    it "should wait for content to disappear" do
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+      @session.should have_no_xpath("//p[@id='change']")
+    end
+  end
+
+  describe '#has_css?' do
+    it "should wait for content to appear" do
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+      @session.should have_css("input[type='submit'][value='New Here']")
+    end
+  end
+
+  describe '#has_no_xpath?' do
+    it "should wait for content to disappear" do
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+      @session.should have_no_css("p#change")
+    end
+  end
+
+  describe '#has_content?' do
+    it "should wait for content to appear" do
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+      @session.should have_content("Has been clicked")
+    end
+  end
+
+  describe '#has_no_content?' do
+    it "should wait for content to disappear" do
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+      @session.should have_no_content("I changed it")
+    end
+  end
+
 end

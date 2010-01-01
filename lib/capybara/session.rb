@@ -113,27 +113,33 @@ module Capybara
         yield
       end
     end
-    
-    def has_content?(content)
-      has_xpath?(XPath.content(content).to_s)
-    end
-
-    def has_no_content?(content)
-      !has_content?(content)
-    end
 
     def has_xpath?(path, options={})
-      results = all(path, options)
+      wait_conditionally_until do
+        results = all(path, options)
 
-      if options[:count]
-        results.size == options[:count]
-      else
-        results.size > 0
+        if options[:count]
+          results.size == options[:count]
+        else
+          results.size > 0
+        end
       end
+    rescue Capybara::TimeoutError
+      return false
     end
 
     def has_no_xpath?(path, options={})
-      !has_xpath?(path, options)
+      wait_conditionally_until do
+        results = all(path, options)
+
+        if options[:count]
+          results.size != options[:count]
+        else
+          results.empty?
+        end
+      end
+    rescue Capybara::TimeoutError
+      return false
     end
 
     def has_css?(path, options={})
@@ -141,7 +147,15 @@ module Capybara
     end
 
     def has_no_css?(path, options={})
-      !has_css?(path, options)
+      has_no_xpath?(XPath.from_css(path), options)
+    end
+
+    def has_content?(content)
+      has_xpath?(XPath.content(content))
+    end
+
+    def has_no_content?(content)
+      has_no_xpath?(XPath.content(content))
     end
 
     def save_and_open_page
@@ -151,11 +165,7 @@ module Capybara
 
     #return node identified by locator or raise ElementNotFound(using desc)
     def locate(locator, fail_msg = nil)
-      if driver.wait?
-        node = wait_until { find(locator) }
-      else
-        node = find(locator)
-      end
+      node = wait_conditionally_until { find(locator) }
     ensure
       raise Capybara::ElementNotFound, fail_msg || "Unable to locate '#{locator}'" unless node
       return node
@@ -170,6 +180,10 @@ module Capybara
     end
 
   private
+
+    def wait_conditionally_until
+      if driver.wait? then wait_until { yield } else yield end
+    end
 
     def all_unfiltered(locator)
       XPath.wrap(locator).scope(current_scope).paths.map do |path|
