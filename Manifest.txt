@@ -12,8 +12,10 @@ lib/capybara/dsl.rb
 lib/capybara/node.rb
 lib/capybara/rails.rb
 lib/capybara/save_and_open_page.rb
+lib/capybara/searchable.rb
 lib/capybara/server.rb
 lib/capybara/session.rb
+lib/capybara/wait_until.rb
 lib/capybara/xpath.rb
 script/console
 script/destroy
