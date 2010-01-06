@@ -145,7 +145,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
   def visit(path, attributes = {})
     return if path.gsub(/^#{current_path}/, '') =~ /^#/
-    get(path, attributes)
+    get(path, attributes, env)
     follow_redirects!
     cache_body
   end
@@ -160,7 +160,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
   def submit(method, path, attributes)
     path = current_path if not path or path.empty? 
-    send(method, path, attributes)
+    send(method, path, attributes, env)
     follow_redirects!
     cache_body
   end
@@ -174,7 +174,7 @@ private
   def current_path
     request.path rescue ""
   end
-  
+
   def follow_redirects!
     Capybara::WaitUntil.timeout(4) do
       redirect = response.redirect?
@@ -183,6 +183,16 @@ private
     end
   rescue Capybara::TimeoutError
     raise Capybara::InfiniteRedirectError, "infinite redirect detected!"
+  end
+
+  def env
+    env = {}
+    begin
+      env["HTTP_REFERER"] = request.url
+    rescue Rack::Test::Error
+      # no request yet
+    end
+    env
   end
 
   def cache_body
