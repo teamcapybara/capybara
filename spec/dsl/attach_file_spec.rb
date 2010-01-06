@@ -23,6 +23,7 @@ module AttachFileSpec
       context "with multipart form" do
         before do
           @test_file_path = File.expand_path('../fixtures/test_file.txt', File.dirname(__FILE__))
+          @test_jpg_file_path = File.expand_path('../fixtures/capybara.jpg', File.dirname(__FILE__))
         end
 
         it "should set a file path by id" do
@@ -40,6 +41,18 @@ module AttachFileSpec
         it "should not break if no file is submitted" do
           @session.click_button('Upload')
           @session.body.should include('No file uploaded')
+        end
+
+        it "should send content type text/plain when uploading a text file" do
+          @session.attach_file "Document", @test_file_path
+          @session.click_button 'Upload'
+          @session.body.should include('text/plain')
+        end
+
+        it "should send content type image/jpeg when uploading an image" do
+          @session.attach_file "Document", @test_jpg_file_path
+          @session.click_button 'Upload'
+          @session.body.should include('image/jpeg')
         end
       end
 

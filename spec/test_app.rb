@@ -51,7 +51,14 @@ class TestApp < Sinatra::Base
   end
 
   post '/upload' do
-    params[:form][:document][:tempfile].read rescue 'No file uploaded'
+    begin
+      buffer = []
+      buffer << "Content-type: #{params[:form][:document][:type]}"
+      buffer << "File content: #{params[:form][:document][:tempfile].read}"
+      buffer.join(' | ')
+    rescue
+      'No file uploaded'
+    end
   end
 end
 
