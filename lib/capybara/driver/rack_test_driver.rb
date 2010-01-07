@@ -1,4 +1,5 @@
 require 'rack/test'
+require 'mime/types'
 require 'nokogiri'
 require 'cgi'
 
@@ -86,7 +87,9 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       node.xpath(".//input[@type='file']").map do |input|
         unless input['value'].to_s.empty?
           if multipart?
-            merge_param!(params, input['name'].to_s, Rack::Test::UploadedFile.new(input['value'].to_s))
+            content_type = MIME::Types.type_for(input['value'].to_s).first.to_s
+            file = Rack::Test::UploadedFile.new(input['value'].to_s, content_type)
+            merge_param!(params, input['name'].to_s, file)
           else
             merge_param!(params, input['name'].to_s, File.basename(input['value'].to_s))
           end

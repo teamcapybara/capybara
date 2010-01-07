@@ -15,6 +15,7 @@ Hoe.spec 'capybara' do
 
   self.extra_deps = [
     ['nokogiri', '>= 1.3.3'],
+    ['mime-types', '>= 1.16'],
     ['culerity', '>= 0.2.4'],
     ['selenium-webdriver', '>= 0.0.3'],
     ['rack', '>= 1.0.0'],
