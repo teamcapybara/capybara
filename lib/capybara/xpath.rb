@@ -38,7 +38,8 @@ module Capybara
     end
 
     def fillable_field(locator)
-      text_field(locator).password_field(locator).text_area(locator)
+      text_field(locator).password_field(locator).text_area(locator).email(locator)\
+      .url(locator).search(locator).tel(locator).color(locator)
     end
 
     def content(locator)
@@ -62,32 +63,21 @@ module Capybara
       xpath.append("//button[@id=#{s(locator)} or contains(@value,#{s(locator)}) or contains(.,#{s(locator)})]")
     end
 
-    def text_field(locator)
-      add_field(locator, "//input[@type='text']")
-    end
-
-    def password_field(locator)
-      add_field(locator, "//input[@type='password']")
-    end
-
     def text_area(locator)
       add_field(locator, "//textarea")
-    end
-
-    def radio_button(locator)
-      add_field(locator, "//input[@type='radio']")
-    end
-
-    def checkbox(locator)
-      add_field(locator, "//input[@type='checkbox']")
     end
 
     def select(locator)
       add_field(locator, "//select")
     end
 
-    def file_field(locator)
-      add_field(locator, "//input[@type='file']")
+    [ :text_field, :password_field, :radio_button, :checkbox, :file_field,
+      :email, :url, :search, :tel, :color
+    ].each do |input_type|
+      define_method(input_type) do |locator|
+        input_type = input_type.to_s.gsub("_field", "").gsub("_button", "")
+        add_field(locator, "//input[@type='#{input_type}']")
+      end
     end
 
     def scope(scope)
