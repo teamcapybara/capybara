@@ -167,11 +167,13 @@ module Capybara
       Capybara::SaveAndOpenPage.save_and_open_page(body)
     end
 
-    #return node identified by locator or raise ElementNotFound(using desc)
+    # Return element identified by locator or raise ElementNotFound (using desc).
+    # If element is hidden raise LocateHiddenElementError.
     def locate(locator, fail_msg = nil)
-      node = wait_conditionally_until { find(locator) }
+      node = wait_conditionally_until { Capybara.ignore_hidden_elements ? find(locator, :visible => true) : find(locator) }
     ensure
       raise Capybara::ElementNotFound, fail_msg || "Unable to locate '#{locator}'" unless node
+      raise Capybara::LocateHiddenElementError, "The element selected by '#{locator}' is hidden" unless node.visible?
       return node
     end
 

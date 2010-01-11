@@ -60,6 +60,22 @@ module FillInSpec
           end.should raise_error(Capybara::ElementNotFound)
         end
       end
+
+      context "with a locator that selects a hidden node" do
+        before do
+          Capybara.ignore_hidden_elements = false
+        end
+
+        after do
+          Capybara.ignore_hidden_elements = true
+        end
+
+        it "should raise an error" do
+          running do
+            @session.fill_in('First Name', :with => 'Blah blah')
+          end.should raise_error(Capybara::LocateHiddenElementError)
+        end
+      end
     end
   end
 end  

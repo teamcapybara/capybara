@@ -9,11 +9,12 @@ module Capybara
   class ElementNotFound < CapybaraError; end
   class NotSupportedByDriverError < CapybaraError; end
   class TimeoutError < CapybaraError; end
-  
+  class LocateHiddenElementError < CapybaraError; end
+
   class << self
     attr_accessor :debug, :asset_root, :app_host
     attr_writer :default_selector, :default_wait_time
-    
+    attr_writer :ignore_hidden_elements
 
     def default_selector
       @default_selector ||= :xpath
@@ -21,6 +22,10 @@ module Capybara
     
     def default_wait_time
       @default_wait_time ||= 2
+    end
+
+    def ignore_hidden_elements
+      (@ignore_hidden_elements.nil? || @ignore_hidden_elements) ? true : false
     end
 
     def log(message)

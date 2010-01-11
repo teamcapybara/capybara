@@ -22,6 +22,24 @@ module LocateSpec
         @session.locate(@xpath).value.should == 'John Smith'
       end
 
+      it "should return a visible node by default" do
+        @session.visit('/form')
+        @session.locate(Capybara::XPath.text_field('First Name')).should be_visible
+      end
+
+      context "when ignore_hidden_elements is false" do
+        after do
+          Capybara.ignore_hidden_elements = true
+        end
+        it "should raise an exception hitting a hidden element" do
+          Capybara.ignore_hidden_elements = false
+          @session.visit('/form')
+          running do
+            @session.locate(Capybara::XPath.text_field('First Name')).should_not be_visible
+          end.should raise_error(Capybara::LocateHiddenElementError)
+        end
+      end
+
       context "within a scope" do
         before do
           @session.visit('/with_scope')
