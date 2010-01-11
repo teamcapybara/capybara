@@ -83,9 +83,9 @@ describe Capybara::XPath do
     end
     
     it "should be chainable" do
-      @query = @xpath.field('First Name').password_field('First Name').to_s
+      @query = @xpath.field('First Name').input_field(:password, 'First Name').to_s
       @driver.find(@query).first.value.should == 'John'
-      @query = @xpath.field('Password').password_field('Password').to_s
+      @query = @xpath.field('Password').input_field(:password, 'Password').to_s
       @driver.find(@query).first.value.should == 'seeekrit'
     end
   end
@@ -99,7 +99,7 @@ describe Capybara::XPath do
       @query = @xpath.fillable_field('Description').to_s
       @driver.find(@query).first.text.should == 'Descriptive text goes here'
     end
-    
+
     it "should be chainable" do
       @query = @xpath.fillable_field('First Name').password_field('First Name').to_s
       @driver.find(@query).first.value.should == 'John'
@@ -218,6 +218,37 @@ describe Capybara::XPath do
       @query = @xpath.file_field('Password').password_field('Password').to_s
       @driver.find(@query).first.value.should == 'seeekrit'
     end
+  end
+  
+  [ [:email_field, 'html5_email', 'Html5 Email', 'person@email.com'],
+    [:url_field, 'html5_url', 'Html5 Url', 'http://www.example.com'],
+    [:search_field, 'html5_search', 'Html5 Search', 'what are you looking for'],
+    [:tel_field, 'html5_tel', 'Html5 Tel', '911'],
+    [:color_field, 'html5_color', 'Html5 Color', '#FFF']].each do |method, id, label, output|
+    describe "##{method}" do
+      it "should find a file field by label" do
+        @query = @xpath.send(method, label).to_s
+        @driver.find(@query).first.value.should == output
+      end
+      
+      it "should find a file field by id" do
+        @query = @xpath.send(method, id).to_s
+        @driver.find(@query).first.value.should == output
+      end
+        
+      it "should be chainable" do
+        @query = @xpath.send(method, label).password_field(label).to_s
+        @driver.find(@query).first.value.should == output
+        @query = @xpath.send(method, 'Password').password_field('Password').to_s
+        @driver.find(@query).first.value.should == 'seeekrit'
+      end
+      
+      it "should be a #fillable_field" do
+        @query = @xpath.fillable_field(label).to_s
+        @driver.find(@query).first.value.should == output
+      end
+    end
+    
   end
   
 end

@@ -10,7 +10,8 @@ module Capybara
   class NotSupportedByDriverError < CapybaraError; end
   class TimeoutError < CapybaraError; end
   class LocateHiddenElementError < CapybaraError; end
-
+  class InfiniteRedirectError < TimeoutError; end
+  
   class << self
     attr_accessor :debug, :asset_root, :app_host
     attr_writer :default_selector, :default_wait_time

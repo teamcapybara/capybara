@@ -34,11 +34,13 @@ module Capybara
     end
 
     def field(locator)
-      fillable_field(locator).file_field(locator).checkbox(locator).radio_button(locator).select(locator)
+      fillable_field(locator).input_field(:file, locator).checkbox(locator).radio_button(locator).select(locator)
     end
 
     def fillable_field(locator)
-      text_field(locator).password_field(locator).text_area(locator)
+      [:text, :password, :email, :url, :search, :tel, :color].inject(text_area(locator)) do |all, type|
+        all.input_field(type, locator)
+      end
     end
 
     def content(locator)
@@ -54,40 +56,27 @@ module Capybara
     end
 
     def link(locator)
-      append("//a[@id=#{s(locator)} or contains(.,#{s(locator)}) or @title=#{s(locator)}]")
+      xpath = append("//a[@id=#{s(locator)} or contains(.,#{s(locator)}) or contains(@title,#{s(locator)})]")
+      xpath.prepend("//a[text()=#{s(locator)} or @title=#{s(locator)}]")
     end
 
     def button(locator)
       xpath = append("//input[@type='submit' or @type='image'][@id=#{s(locator)} or contains(@value,#{s(locator)})]")
-      xpath.append("//button[@id=#{s(locator)} or contains(@value,#{s(locator)}) or contains(.,#{s(locator)})]")
-    end
-
-    def text_field(locator)
-      add_field(locator, "//input[@type='text']")
-    end
-
-    def password_field(locator)
-      add_field(locator, "//input[@type='password']")
+      xpath = xpath.append("//button[@id=#{s(locator)} or contains(@value,#{s(locator)}) or contains(.,#{s(locator)})]")
+      xpath = xpath.prepend("//input[@type='submit' or @type='image'][@value=#{s(locator)}]")
+      xpath = xpath.prepend("//button[@value=#{s(locator)} or text()=#{s(locator)}]")
     end
 
     def text_area(locator)
       add_field(locator, "//textarea")
     end
 
-    def radio_button(locator)
-      add_field(locator, "//input[@type='radio']")
-    end
-
-    def checkbox(locator)
-      add_field(locator, "//input[@type='checkbox']")
-    end
-
     def select(locator)
       add_field(locator, "//select")
     end
 
-    def file_field(locator)
-      add_field(locator, "//input[@type='file']")
+    def input_field(type, locator)
+      add_field(locator, "//input[@type='#{type}']")
     end
 
     def scope(scope)
@@ -104,6 +93,22 @@ module Capybara
 
     def prepend(path)
       XPath.new(*[XPath.wrap(path).paths, @paths].flatten)
+    end
+
+    def checkbox(locator)
+      input_field(:checkbox, locator)
+    end
+
+    def radio_button(locator)
+      input_field(:radio, locator)
+    end
+
+    [:text, :password, :email, :url, :search, :tel, :color, :file].each do |type|
+      class_eval <<-RUBY, __FILE__, __LINE__+1
+        def #{type}_field(locator)
+          input_field(:#{type}, locator)
+        end
+      RUBY
     end
 
   protected

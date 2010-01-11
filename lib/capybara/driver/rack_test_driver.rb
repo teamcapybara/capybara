@@ -144,7 +144,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
   def visit(path, attributes = {})
     get(path, attributes)
-    follow_redirect! while response.redirect?
+    follow_redirects!
     cache_body
   end
 
@@ -158,7 +158,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
   def submit(path, attributes)
     post(path, attributes)
-    follow_redirect! while response.redirect?
+    follow_redirects!
     cache_body
   end
 
@@ -167,6 +167,16 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   end
 
   private
+  
+  def follow_redirects!
+    Capybara::WaitUntil.timeout(4) do
+      redirect = response.redirect?
+      follow_redirect! if redirect
+      not redirect
+    end
+  rescue Capybara::TimeoutError
+    raise Capybara::InfiniteRedirectError, "infinite redirect detected!"
+  end
 
   def cache_body
     @body = response.body
