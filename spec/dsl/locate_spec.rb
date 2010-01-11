@@ -35,7 +35,7 @@ module LocateSpec
           Capybara.ignore_hidden_elements = false
           @session.visit('/form')
           running do
-            @session.locate(Capybara::XPath.text_field('First Name')).should_not be_visible
+            @session.locate(Capybara::XPath.text_field('First Name'))
           end.should raise_error(Capybara::LocateHiddenElementError)
         end
       end
