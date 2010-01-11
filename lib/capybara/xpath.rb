@@ -56,12 +56,15 @@ module Capybara
     end
 
     def link(locator)
-      append("//a[@id=#{s(locator)} or contains(.,#{s(locator)}) or @title=#{s(locator)}]")
+      xpath = append("//a[@id=#{s(locator)} or contains(.,#{s(locator)}) or contains(@title,#{s(locator)})]")
+      xpath.prepend("//a[text()=#{s(locator)} or @title=#{s(locator)}]")
     end
 
     def button(locator)
       xpath = append("//input[@type='submit' or @type='image'][@id=#{s(locator)} or contains(@value,#{s(locator)})]")
-      xpath.append("//button[@id=#{s(locator)} or contains(@value,#{s(locator)}) or contains(.,#{s(locator)})]")
+      xpath = xpath.append("//button[@id=#{s(locator)} or contains(@value,#{s(locator)}) or contains(.,#{s(locator)})]")
+      xpath = xpath.prepend("//input[@type='submit' or @type='image'][@value=#{s(locator)}]")
+      xpath = xpath.prepend("//button[@value=#{s(locator)} or text()=#{s(locator)}]")
     end
 
     def text_area(locator)

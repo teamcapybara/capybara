@@ -17,11 +17,31 @@ module ClickLinkSpec
           @session.click_link('labore')
           @session.body.should include('Bar')
         end
+        
+        it "should accept partial matches" do
+          @session.click_link('abo')
+          @session.body.should include('Bar')
+        end
+
+        it "should prefer exact matches over partial matches" do
+          @session.click_link('A link')
+          @session.body.should include('Bar')
+        end
       end
 
       context "with title given" do
         it "should take user to the linked page" do
           @session.click_link('awesome title')
+          @session.body.should include('Bar')
+        end
+
+        it "should accept partial matches" do
+          @session.click_link('some tit')
+          @session.body.should include('Bar')
+        end
+        
+        it "should prefer exact matches over partial matches" do
+          @session.click_link('a fine link')
           @session.body.should include('Bar')
         end
       end
