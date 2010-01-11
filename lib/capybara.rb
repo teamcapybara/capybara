@@ -9,6 +9,7 @@ module Capybara
   class ElementNotFound < CapybaraError; end
   class NotSupportedByDriverError < CapybaraError; end
   class TimeoutError < CapybaraError; end
+  class InfiniteRedirectError < TimeoutError; end
   
   class << self
     attr_accessor :debug, :asset_root, :app_host
