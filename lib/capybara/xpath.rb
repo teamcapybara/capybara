@@ -3,6 +3,7 @@ module Capybara
   #     Xpath.text_field('foo').link('blah').to_s
   # this will generate an XPath that matches either a text field or a link
   class XPath
+
     class << self
       def from_css(css)
         Nokogiri::CSS.xpath_for(css).first
@@ -109,6 +110,7 @@ module Capybara
 
     def add_field(locator, field)
       xpath = append("#{field}[@id=#{s(locator)}]")
+      xpath = xpath.append("#{field}[@name=#{s(locator)}]")
       xpath = xpath.append("#{field}[@id=//label[contains(.,#{s(locator)})]/@for]")
       xpath = xpath.append("//label[contains(.,#{s(locator)})]#{field}")
       xpath.prepend("#{field}[@id=//label[text()=#{s(locator)}]/@for]")

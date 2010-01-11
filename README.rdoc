@@ -335,6 +335,8 @@ The following people have dedicated their time and effort to Capybara:
 * Andrew Brown
 * Lenny Marks
 * Aaron Patterson
+* Dan Dofter
+* Thorbjørn Hermansen
 
 == License:
 
