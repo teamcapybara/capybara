@@ -51,6 +51,7 @@ spec/dsl/select_spec.rb
 spec/dsl/uncheck_spec.rb
 spec/dsl/within_spec.rb
 spec/dsl_spec.rb
+spec/fixtures/capybara.jpg
 spec/fixtures/test_file.txt
 spec/public/jquery-ui.js
 spec/public/jquery.js
@@ -72,6 +73,7 @@ spec/test_app.rb
 spec/views/buttons.erb
 spec/views/fieldsets.erb
 spec/views/form.erb
+spec/views/postback.erb
 spec/views/tables.erb
 spec/views/with_html.erb
 spec/views/with_js.erb

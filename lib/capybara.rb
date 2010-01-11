@@ -2,7 +2,7 @@ require 'timeout'
 require 'nokogiri'
 
 module Capybara
-  VERSION = '0.2.0'
+  VERSION = '0.3.0'
 
   class CapybaraError < StandardError; end
   class DriverNotFoundError < CapybaraError; end
