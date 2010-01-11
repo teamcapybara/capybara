@@ -166,6 +166,18 @@ module ClickButtonSpec
         @session.click_button('Go FAR')
         @session.body.should include('You landed')
       end
+      
+      it "should post pack to the same URL when no action given" do
+        @session.visit('/postback')
+        @session.click_button('With no action')
+        @session.body.should include('Postback')
+      end
+      
+      it "should post pack to the same URL when blank action given" do
+        @session.visit('/postback')
+        @session.click_button('With blank action')
+        @session.body.should include('Postback')
+      end
     end
   end
 end

@@ -58,6 +58,31 @@ module ClickLinkSpec
         @session.click_link('Redirect')
         @session.body.should include('You landed')
       end
+      
+      it "should do nothing on anchor links" do
+        @session.fill_in("test_field", :with => 'blah')
+        @session.click_link('Anchor')
+        @session.find_field("test_field").value.should == 'blah'
+        @session.click_link('Blank Anchor')
+        @session.find_field("test_field").value.should == 'blah'
+      end
+      
+      it "should do nothing on URL+anchor links for the same page" do
+        @session.fill_in("test_field", :with => 'blah')
+        @session.click_link('Anchor on same page')
+        @session.find_field("test_field").value.should == 'blah'
+      end
+      
+      it "should follow link on URL+anchor links for a different page" do
+        @session.click_link('Anchor on different page')
+        @session.body.should include('Bar')
+      end
+      
+      it "raise an error with links with no href" do
+        running do
+          @session.click_link('No Href')
+        end.should raise_error(Capybara::ElementNotFound)
+      end
     end
   end
 end  
