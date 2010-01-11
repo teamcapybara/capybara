@@ -34,10 +34,6 @@ shared_examples_for 'driver' do
         @driver.visit('/with_html')
       end
 
-      it "should find the correct number of elements" do
-        @driver.find('//a').size.should == 3
-      end
-
       it "should extract node texts" do
         @driver.find('//a')[0].text.should == 'labore'
         @driver.find('//a')[1].text.should == 'ullamco'
