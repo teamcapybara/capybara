@@ -35,7 +35,6 @@ shared_examples_for 'driver' do
       end
 
       it "should find the correct number of elements" do
-        debugger
         @driver.find('//a').size.should == 4
       end
 
