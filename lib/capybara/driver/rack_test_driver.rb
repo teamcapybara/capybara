@@ -38,7 +38,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
     def click
       if tag_name == 'a'
-        driver.visit(self[:href])
+        driver.visit(self[:href].to_s)
       elsif (tag_name == 'input' or tag_name == 'button') and %w(submit image).include?(type)
         Form.new(driver, form).submit(self)
       end
@@ -100,22 +100,18 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     end
 
     def submit(button)
-      if post?
-        driver.submit(node['action'].to_s, params(button))
-      else
-        driver.visit(node['action'].to_s, params(button))
-      end
+      driver.submit(method, node['action'].to_s, params(button))
     end
 
     def multipart?
       self[:enctype] == "multipart/form-data"
     end
 
-    def post?
-      self[:method] =~ /post/i
+  private
+    
+    def method
+      self[:method] =~ /post/i ? :post : :get
     end
-
-    private
 
     def merge_param!(params, key, value)
       collection = key.sub!(/\[\]$/, '')
@@ -143,22 +139,24 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   end
 
   def visit(path, attributes = {})
+    return if path.gsub(/^#{current_path}/, '') =~ /^#/
     get(path, attributes)
-    follow_redirect! while response.redirect?
+    follow_redirects!
     cache_body
   end
 
   def current_url
-    request.url
+    request.url rescue ""
   end
 
   def response_headers
     response.headers
   end
 
-  def submit(path, attributes)
-    post(path, attributes)
-    follow_redirect! while response.redirect?
+  def submit(method, path, attributes)
+    path = current_path if not path or path.empty? 
+    send(method, path, attributes)
+    follow_redirects!
     cache_body
   end
 
@@ -166,7 +164,21 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     html.xpath(selector).map { |node| Node.new(self, node) }
   end
 
-  private
+private
+
+  def current_path
+    request.path rescue ""
+  end
+  
+  def follow_redirects!
+    Capybara::WaitUntil.timeout(4) do
+      redirect = response.redirect?
+      follow_redirect! if redirect
+      not redirect
+    end
+  rescue Capybara::TimeoutError
+    raise Capybara::InfiniteRedirectError, "infinite redirect detected!"
+  end
 
   def cache_body
     @body = response.body

@@ -115,6 +115,11 @@ module ClickButtonSpec
           @session.click_button('Click')
           extract_results(@session)['first_name'].should == 'John'
         end
+
+        it "should prefer exact matches over partial matches" do
+          @session.click_button('Just an input')
+          extract_results(@session)['button'].should == 'button_second'
+        end
       end
 
      context "with id given on a button defined by <button> tag" do
@@ -133,6 +138,11 @@ module ClickButtonSpec
         it "should work with partial matches" do
           @session.click_button('ck_me')
           extract_results(@session)['first_name'].should == 'John'
+        end
+        
+        it "should prefer exact matches over partial matches" do
+          @session.click_button('Just a button')
+          extract_results(@session)['button'].should == 'Just a button'
         end
       end
 
@@ -155,6 +165,18 @@ module ClickButtonSpec
       it "should follow redirects" do
         @session.click_button('Go FAR')
         @session.body.should include('You landed')
+      end
+      
+      it "should post pack to the same URL when no action given" do
+        @session.visit('/postback')
+        @session.click_button('With no action')
+        @session.body.should include('Postback')
+      end
+      
+      it "should post pack to the same URL when blank action given" do
+        @session.visit('/postback')
+        @session.click_button('With blank action')
+        @session.body.should include('Postback')
       end
     end
   end

@@ -150,3 +150,35 @@
     <input type="submit" value="Go FAR"/>
   </p>
 </form>
+
+<form action="/form" method="post">
+  <p>
+    <label for="html5_email">Html5 Email</label>
+    <input type="email" name="form[html5_email]" value="person@email.com" id="html5_email"/>
+  </p>
+  <p>
+    <label for="html5_url">Html5 Url</label>
+    <input type="url" name="form[html5_url]" value="http://www.example.com" id="html5_url"/>
+  </p>
+  <p>
+    <label for="html5_search">Html5 Search</label>
+    <input type="search" name="form[html5_search]" value="what are you looking for" id="html5_search"/>
+  </p>
+  <p>
+    <label for="html5_tel">Html5 Tel</label>
+    <input type="tel" name="form[html5_tel]" value="911" id="html5_tel"/>
+  </p>
+  <p>
+    <label for="html5_color">Html5 Color</label>
+    <input type="color" name="form[html5_color]" value="#FFF" id="html5_color"/>
+  </p>
+</form>
+
+<form action="/form" method="post">
+  <p>
+    <button type="submit" name="form[button]" value="button_first">Just an input that came first</button>
+    <button type="submit" name="form[button]" value="button_second">Just an input</button>
+    <input type="submit" name="form[button]" value="Just a button that came first"/>
+    <input type="submit" name="form[button]" value="Just a button"/>
+  </p>
+</form>

@@ -2,13 +2,14 @@ require 'timeout'
 require 'nokogiri'
 
 module Capybara
-  VERSION = '0.2.0'
+  VERSION = '0.3.0'
 
   class CapybaraError < StandardError; end
   class DriverNotFoundError < CapybaraError; end
   class ElementNotFound < CapybaraError; end
   class NotSupportedByDriverError < CapybaraError; end
   class TimeoutError < CapybaraError; end
+  class InfiniteRedirectError < TimeoutError; end
   
   class << self
     attr_accessor :debug, :asset_root, :app_host
