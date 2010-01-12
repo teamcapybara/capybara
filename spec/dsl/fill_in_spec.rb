@@ -70,6 +70,12 @@ module FillInSpec
         @session.click_button('awesome')
         extract_results(@session)['password'].should == 'supasikrit'
       end
+      
+      it "should prefer exact matches over partial matches" do
+        @session.fill_in('Name', :with => 'Ford Prefect')
+        @session.click_button('awesome')
+        extract_results(@session)['name'].should == 'Ford Prefect'
+      end
 
       context "with a locator that doesn't exist" do
         it "should raise an error" do
