@@ -8,7 +8,7 @@ module Capybara
       :all, :attach_file, :body, :check, :choose, :click, :click_button, :click_link, :current_url, :drag, :evaluate_script,
       :field_labeled, :fill_in, :find, :find_button, :find_by_id, :find_field, :find_link, :has_content?, :has_css?,
       :has_no_content?, :has_no_css?, :has_no_xpath?, :has_xpath?, :locate, :save_and_open_page, :select, :source, :uncheck,
-      :visit, :wait_until, :within, :within_fieldset, :within_table
+      :visit, :wait_until, :within, :within_fieldset, :within_table,:within_frame
     ]
 
     attr_reader :mode, :app
@@ -31,6 +31,10 @@ module Capybara
       else
         raise Capybara::DriverNotFoundError, "no driver called #{mode} was found"
       end
+    end
+
+    def within_frame frame_id
+        driver.within_frame frame_id
     end
 
     def current_url
