@@ -1,5 +1,8 @@
 require File.expand_path('spec_helper', File.dirname(__FILE__))
 
+shared_examples_for 'driver with frame support' do
+    it_should_behave_like 'within_frame'
+end
 shared_examples_for 'driver' do
 
   describe '#visit' do

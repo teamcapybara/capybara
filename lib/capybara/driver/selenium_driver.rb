@@ -103,7 +103,12 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
   def browser
     self.class.driver
   end
-
+  def with_frame(frame_id)
+      old_window = browser.window_handle
+      browser.switch_to.frame(frame_id)
+      yield
+      browser.switch_to.window old_window
+  end
 private
 
   def url(path)

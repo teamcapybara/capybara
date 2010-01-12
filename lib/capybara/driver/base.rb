@@ -27,6 +27,10 @@ class Capybara::Driver::Base
     raise NotImplementedError
   end
 
+  def within_frame frame_id
+      raise Capybara::NotSupportedByDriverError
+  end
+
   def source
     raise NotImplementedError
   end
