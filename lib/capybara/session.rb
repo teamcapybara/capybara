@@ -34,7 +34,9 @@ module Capybara
     end
 
     def within_frame frame_id
-        driver.within_frame frame_id
+        driver.within_frame(frame_id) do
+            yield
+        end
     end
 
     def current_url
