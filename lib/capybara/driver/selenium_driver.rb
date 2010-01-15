@@ -44,7 +44,12 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     end
 
     def visible?
-      node.displayed? and node.displayed? != "false"
+        begin
+            node.displayed? and node.displayed? != "false"
+        rescue Selenium::WebDriver::Error::WebDriverError
+            # rescues the inevitable "Selenium::WebDriver::Error::WebDriverError: element is obsolete" if you check to see if an element that has been removed from the DOM is visible
+            return false
+        end
     end
 
   private

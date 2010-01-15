@@ -133,8 +133,8 @@ module Capybara
 
     def has_xpath?(path, options={})
       wait_conditionally_until do
+        options = {:visible => true}.merge options
         results = all(path, options)
-
         if options[:count]
           results.size == options[:count]
         else
@@ -147,6 +147,7 @@ module Capybara
 
     def has_no_xpath?(path, options={})
       wait_conditionally_until do
+        options = {:visible => true}.merge options
         results = all(path, options)
 
         if options[:count]
