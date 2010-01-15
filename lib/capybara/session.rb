@@ -51,7 +51,7 @@ module Capybara
     end
 
     def click_link(locator)
-      msg = "no link with title, id or text '#{locator}' found"
+      msg = "no link with title, id or containing text / image with alternative text like '#{locator}' found"
       locate(XPath.link(locator), msg).click
     end
 
