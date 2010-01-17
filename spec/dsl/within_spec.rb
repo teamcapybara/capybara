@@ -33,17 +33,14 @@ module WithinSpec
       end
 
       context "with the default selector set to CSS" do
-        after do
-          Capybara.default_selector = :xpath
-        end
-
+        before { Capybara.default_selector = :css } 
         it "should use CSS" do
-          Capybara.default_selector = :css
           @session.within("ul li[contains('With Simple HTML')]") do
             @session.click_link('Go')
           end
           @session.body.should include('Bar')
         end
+        after { Capybara.default_selector = :xpath } 
       end
 
       context "with click_link" do

@@ -47,53 +47,53 @@ module Capybara
 
     def click(locator)
       msg = "no link or button '#{locator}' found"
-      locate(XPath.link(locator).button(locator), msg).click
+      locate(:xpath, XPath.link(locator).button(locator), msg).click
     end
 
     def click_link(locator)
       msg = "no link with title, id or containing text / image with alternative text like '#{locator}' found"
-      locate(XPath.link(locator), msg).click
+      locate(:xpath, XPath.link(locator), msg).click
     end
 
     def click_button(locator)
       msg = "no button with value or id or text '#{locator}' found"
-      locate(XPath.button(locator)).click
+      locate(:xpath, XPath.button(locator)).click
     end
 
     def drag(source_locator, target_locator)
-      source = locate(source_locator, "drag source '#{source_locator}' not found on page")
-      target = locate(target_locator, "drag target '#{target_locator}' not found on page")
+      source = locate(:xpath, source_locator, "drag source '#{source_locator}' not found on page")
+      target = locate(:xpath, target_locator, "drag target '#{target_locator}' not found on page")
       source.drag_to(target)
     end
 
     def fill_in(locator, options={})
       msg = "cannot fill in, no text field, text area or password field with id, name, or label '#{locator}' found"
-      locate(XPath.fillable_field(locator), msg).set(options[:with])
+      locate(:xpath, XPath.fillable_field(locator), msg).set(options[:with])
     end
 
     def choose(locator)
       msg = "cannot choose field, no radio button with id, name, or label '#{locator}' found"
-      locate(XPath.radio_button(locator), msg).set(true)
+      locate(:xpath, XPath.radio_button(locator), msg).set(true)
     end
 
     def check(locator)
       msg = "cannot check field, no checkbox with id, name, or label '#{locator}' found"
-      locate(XPath.checkbox(locator), msg).set(true)
+      locate(:xpath, XPath.checkbox(locator), msg).set(true)
     end
 
     def uncheck(locator)
       msg = "cannot uncheck field, no checkbox with id, name, or label '#{locator}' found"
-      locate(XPath.checkbox(locator), msg).set(false)
+      locate(:xpath, XPath.checkbox(locator), msg).set(false)
     end
 
     def select(value, options={})
       msg = "cannot select option, no select box with id, name, or label '#{options[:from]}' found"
-      locate(XPath.select(options[:from]), msg).select(value)
+      locate(:xpath, XPath.select(options[:from]), msg).select(value)
     end
 
     def attach_file(locator, path)
       msg = "cannot attach file, no file field with id, name, or label '#{locator}' found"
-      locate(XPath.file_field(locator), msg).set(path)
+      locate(:xpath, XPath.file_field(locator), msg).set(path)
     end
 
     def body
@@ -107,7 +107,7 @@ module Capybara
     def within(kind, scope=nil)
       kind, scope = Capybara.default_selector, kind unless scope
       scope = XPath.from_css(scope) if kind == :css
-      locate(scope, "scope '#{scope}' not found on page")
+      locate(:xpath, scope, "scope '#{scope}' not found on page")
       scopes.push(scope)
       yield
       scopes.pop
@@ -175,10 +175,10 @@ module Capybara
     end
 
     #return node identified by locator or raise ElementNotFound(using desc)
-    def locate(locator, fail_msg = nil)
-      node = wait_conditionally_until { find(locator) }
+    def locate(kind_or_locator, locator=nil, fail_msg = nil)
+      node = wait_conditionally_until { find(kind_or_locator, locator) }
     ensure
-      raise Capybara::ElementNotFound, fail_msg || "Unable to locate '#{locator}'" unless node
+      raise Capybara::ElementNotFound, fail_msg || "Unable to locate '#{kind_or_locator}'" unless node
       return node
     end
 

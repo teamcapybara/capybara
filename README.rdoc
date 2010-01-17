@@ -300,12 +300,16 @@ if you want to use CSS with your 'within' declarations for example, you'll need
 to do:
 
     within(:css, 'ul li') { ... }
+    find(:css, 'ul li').text 
+    locate(:css, 'input#name').value
 
 Alternatively you can set the default selector to CSS, which may help if you are
 moving from Webrat and used CSS a lot, or simply generally prefer CSS:
 
     Capybara.default_selector = :css
     within('ul li') { ... }
+    find('ul li').text
+    locate('input#name').value
 
 == Gotchas:
 

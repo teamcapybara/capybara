@@ -11,6 +11,29 @@ module AllSpec
         @session.all("//input[@id='test_field']").first[:value].should == 'monkey'
       end
 
+      context "with css selectors" do
+        it "should find the first element using the given locator" do
+          @session.all(:css, 'h1').first.text.should == 'This is a test'
+          @session.all(:css, "input[id='test_field']").first[:value].should == 'monkey'
+        end
+      end
+
+      context "with xpath selectors" do
+        it "should find the first element using the given locator" do
+          @session.all(:xpath, '//h1').first.text.should == 'This is a test'
+          @session.all(:xpath, "//input[@id='test_field']").first[:value].should == 'monkey'
+        end
+      end
+
+      context "with css as default selector" do
+        before { Capybara.default_selector = :css }
+        it "should find the first element using the given locator" do
+          @session.all('h1').first.text.should == 'This is a test'
+          @session.all("input[id='test_field']").first[:value].should == 'monkey'
+        end
+        after { Capybara.default_selector = :xpath }
+      end
+
       it "should return an empty array when nothing was found" do
         @session.all('//div[@id="nosuchthing"]').should be_empty
       end
