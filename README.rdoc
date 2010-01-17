@@ -12,9 +12,13 @@ Celerity and Selenium support built in.
 
 == Install:
 
-Capybara is hosted on Gemcutter, install it with:
+Install as a gem:
 
     sudo gem install capybara
+
+On OSX you may have to install libffi, you can install it via MacPorts via:
+
+    sudo port install libffi
 
 == Development:
 
