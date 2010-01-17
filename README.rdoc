@@ -16,7 +16,7 @@ Install as a gem:
 
     sudo gem install capybara
 
-On OSX you may have to install libffi, you can install it via MacPorts via:
+On OSX you may have to install libffi, you can install it via MacPorts with:
 
     sudo port install libffi
 
