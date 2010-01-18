@@ -177,6 +177,14 @@ module Capybara
       has_no_xpath?(XPath.link(locator))
     end
 
+    def has_button?(locator)
+      has_xpath?(XPath.button(locator))
+    end
+
+    def has_no_button?(locator)
+      has_no_xpath?(XPath.button(locator))
+    end
+
     def has_field?(locator, options={})
       has_xpath?(XPath.field(locator, options))
     end
