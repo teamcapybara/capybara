@@ -193,6 +193,14 @@ module Capybara
       has_no_xpath?(XPath.field(locator, options))
     end
 
+    def has_checked_field?(locator)
+      has_xpath?(XPath.field(locator, :checked => true))
+    end
+
+    def has_unchecked_field?(locator)
+      has_xpath?(XPath.field(locator, :unchecked => true))
+    end
+
     def save_and_open_page
       require 'capybara/save_and_open_page'
       Capybara::SaveAndOpenPage.save_and_open_page(body)

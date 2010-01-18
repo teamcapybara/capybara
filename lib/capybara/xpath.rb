@@ -37,12 +37,16 @@ module Capybara
       if options[:with]
         fillable_field(locator, options)
       else
-        fillable_field(locator).input_field(:file, locator).checkbox(locator).radio_button(locator).select(locator)
+        xpath = fillable_field(locator)
+        xpath = xpath.input_field(:file, locator, options)
+        xpath = xpath.checkbox(locator, options)
+        xpath = xpath.radio_button(locator, options)
+        xpath.select(locator, options)
       end
     end
 
     def fillable_field(locator, options={})
-      [:text, :password, :email, :url, :search, :tel, :color].inject(text_area(locator)) do |all, type|
+      [:text, :password, :email, :url, :search, :tel, :color].inject(text_area(locator, options)) do |all, type|
         all.input_field(type, locator, options)
       end
     end
@@ -71,12 +75,12 @@ module Capybara
       xpath = xpath.prepend("//button[@value=#{s(locator)} or text()=#{s(locator)}]")
     end
 
-    def text_area(locator)
-      add_field(locator, "//textarea")
+    def text_area(locator, options)
+      add_field(locator, "//textarea", options)
     end
 
-    def select(locator)
-      add_field(locator, "//select")
+    def select(locator, options={})
+      add_field(locator, "//select", options)
     end
 
     def input_field(type, locator, options={})
@@ -99,12 +103,12 @@ module Capybara
       XPath.new(*[XPath.wrap(path).paths, @paths].flatten)
     end
 
-    def checkbox(locator)
-      input_field(:checkbox, locator)
+    def checkbox(locator, options={})
+      input_field(:checkbox, locator, options)
     end
 
-    def radio_button(locator)
-      input_field(:radio, locator)
+    def radio_button(locator, options={})
+      input_field(:radio, locator, options)
     end
 
     [:text, :password, :email, :url, :search, :tel, :color, :file].each do |type|
@@ -129,7 +133,9 @@ module Capybara
     def extract_postfix(options)
       options.inject("") do |postfix, (key, value)|
         case key
-          when :with then postfix += "[@value=#{s(value)}]"
+          when :with      then postfix += "[@value=#{s(value)}]"
+          when :checked   then postfix += "[@checked]"
+          when :unchecked then postfix += "[not(@checked)]"
         end
         postfix
       end

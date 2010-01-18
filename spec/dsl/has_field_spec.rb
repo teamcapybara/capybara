@@ -1,9 +1,9 @@
 shared_examples_for "has_field" do  
-  describe '#has_field' do
-    before do
-      @session.visit('/form')
-    end
+  before do
+    @session.visit('/form')
+  end
 
+  describe '#has_field' do
     it "should be true if the field is on the page" do
       @session.should have_field('Dog')
       @session.should have_field('form_description')
@@ -29,10 +29,6 @@ shared_examples_for "has_field" do
   end
 
   describe '#has_no_field' do
-    before do
-      @session.visit('/form')
-    end
-
     it "should be false if the field is on the page" do
       @session.should_not have_no_field('Dog')
       @session.should_not have_no_field('form_description')
@@ -54,6 +50,38 @@ shared_examples_for "has_field" do
         @session.should have_no_field('First Name', :with => 'Peter')  
         @session.should have_no_field('Wrong Name', :with => 'John')  
       end
+    end
+  end
+
+  describe '#has_checked_field?' do
+    it "should be true if a checked field is on the page" do
+      @session.should have_checked_field('gender_female')
+      @session.should have_checked_field('Hamster')
+    end
+
+    it "should be false if an unchecked field is on the page" do
+      @session.should_not have_checked_field('form_pets_cat')
+      @session.should_not have_checked_field('Male')
+    end
+
+    it "should be false if no field is on the page" do
+      @session.should_not have_checked_field('Does Not Exist')
+    end
+  end
+
+  describe '#has_unchecked_field?' do
+    it "should be false if a checked field is on the page" do
+      @session.should_not have_unchecked_field('gender_female')
+      @session.should_not have_unchecked_field('Hamster')
+    end
+
+    it "should be true if an unchecked field is on the page" do
+      @session.should have_unchecked_field('form_pets_cat')
+      @session.should have_unchecked_field('Male')
+    end
+
+    it "should be false if no field is on the page" do
+      @session.should_not have_unchecked_field('Does Not Exist')
     end
   end
 end
