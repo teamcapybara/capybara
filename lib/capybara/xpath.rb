@@ -33,13 +33,17 @@ module Capybara
       @paths = paths
     end
 
-    def field(locator)
-      fillable_field(locator).input_field(:file, locator).checkbox(locator).radio_button(locator).select(locator)
+    def field(locator, options={})
+      if options[:with]
+        fillable_field(locator, options)
+      else
+        fillable_field(locator).input_field(:file, locator).checkbox(locator).radio_button(locator).select(locator)
+      end
     end
 
-    def fillable_field(locator)
+    def fillable_field(locator, options={})
       [:text, :password, :email, :url, :search, :tel, :color].inject(text_area(locator)) do |all, type|
-        all.input_field(type, locator)
+        all.input_field(type, locator, options)
       end
     end
 
@@ -75,8 +79,8 @@ module Capybara
       add_field(locator, "//select")
     end
 
-    def input_field(type, locator)
-      add_field(locator, "//input[@type='#{type}']")
+    def input_field(type, locator, options={})
+      add_field(locator, "//input[@type='#{type}']", options)
     end
 
     def scope(scope)
@@ -113,12 +117,22 @@ module Capybara
 
   protected
 
-    def add_field(locator, field)
-      xpath = append("#{field}[@id=#{s(locator)}]")
-      xpath = xpath.append("#{field}[@name=#{s(locator)}]")
-      xpath = xpath.append("#{field}[@id=//label[contains(.,#{s(locator)})]/@for]")
-      xpath = xpath.append("//label[contains(.,#{s(locator)})]#{field}")
-      xpath.prepend("#{field}[@id=//label[text()=#{s(locator)}]/@for]")
+    def add_field(locator, field, options={})
+      postfix = extract_postfix(options)
+      xpath = append("#{field}[@id=#{s(locator)}]#{postfix}")
+      xpath = xpath.append("#{field}[@name=#{s(locator)}]#{postfix}")
+      xpath = xpath.append("#{field}[@id=//label[contains(.,#{s(locator)})]/@for]#{postfix}")
+      xpath = xpath.append("//label[contains(.,#{s(locator)})]#{field}#{postfix}")
+      xpath.prepend("#{field}[@id=//label[text()=#{s(locator)}]/@for]#{postfix}")
+    end
+
+    def extract_postfix(options)
+      options.inject("") do |postfix, (key, value)|
+        case key
+          when :with then postfix += "[@value=#{s(value)}]"
+        end
+        postfix
+      end
     end
 
     # Sanitize a String for putting it into an xpath query

@@ -169,6 +169,22 @@ module Capybara
       has_no_xpath?(XPath.content(content))
     end
 
+    def has_link?(locator)
+      has_xpath?(XPath.link(locator))
+    end
+
+    def has_no_link?(locator)
+      has_no_xpath?(XPath.link(locator))
+    end
+
+    def has_field?(locator, options={})
+      has_xpath?(XPath.field(locator, options))
+    end
+
+    def has_no_field?(locator, options={})
+      has_no_xpath?(XPath.field(locator, options))
+    end
+
     def save_and_open_page
       require 'capybara/save_and_open_page'
       Capybara::SaveAndOpenPage.save_and_open_page(body)
