@@ -1,7 +1,7 @@
 module Capybara
   module Searchable
-    def find(locator, options = {})
-      all(locator, options).first
+    def find(*args)
+      all(*args).first
     end
 
     def find_field(locator)
@@ -21,7 +21,15 @@ module Capybara
       find(XPath.for_css("##{id}"))
     end
 
-    def all(locator, options = {})
+    def all(*args)
+      options = if args.last.is_a?(Hash) then args.pop else {} end
+      if args[1].nil?
+        kind, locator = Capybara.default_selector, args.first
+      else
+        kind, locator = args
+      end
+      locator = XPath.from_css(locator) if kind == :css
+
       results = all_unfiltered(locator)
 
       if options[:text]

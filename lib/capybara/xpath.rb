@@ -56,8 +56,8 @@ module Capybara
     end
 
     def link(locator)
-      xpath = append("//a[@href][@id=#{s(locator)} or contains(.,#{s(locator)}) or contains(@title,#{s(locator)})]")
-      xpath.prepend("//a[@href][text()=#{s(locator)} or @title=#{s(locator)}]")
+      xpath = append("//a[@href][@id=#{s(locator)} or contains(.,#{s(locator)}) or contains(@title,#{s(locator)}) or img[contains(@alt,#{s(locator)})]]")
+      xpath.prepend("//a[@href][text()=#{s(locator)} or @title=#{s(locator)} or img[@alt=#{s(locator)}]]")
     end
 
     def button(locator)

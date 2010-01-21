@@ -1,3 +1,5 @@
+require 'capybara'
+
 module Capybara
   class << self
     attr_writer :default_driver, :current_driver, :javascript_driver

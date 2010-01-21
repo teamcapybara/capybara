@@ -12,17 +12,8 @@ module Capybara
   class InfiniteRedirectError < TimeoutError; end
   
   class << self
-    attr_accessor :debug, :asset_root, :app_host
-    attr_writer :default_selector, :default_wait_time
-    
-
-    def default_selector
-      @default_selector ||= :xpath
-    end
-    
-    def default_wait_time
-      @default_wait_time ||= 2
-    end
+    attr_accessor :debug, :asset_root, :app_host, :run_server
+    attr_accessor :default_selector, :default_wait_time
 
     def log(message)
       puts "[capybara] #{message}" if debug
@@ -44,3 +35,7 @@ module Capybara
     autoload :Selenium, 'capybara/driver/selenium_driver'
   end
 end
+
+Capybara.run_server = true
+Capybara.default_selector = :xpath
+Capybara.default_wait_time = 2

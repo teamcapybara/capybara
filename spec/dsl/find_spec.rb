@@ -10,6 +10,29 @@ module FindSpec
         @session.find("//input[@id='test_field']")[:value].should == 'monkey'
       end
 
+      context "with css selectors" do
+        it "should find the first element using the given locator" do
+          @session.find(:css, 'h1').text.should == 'This is a test'
+          @session.find(:css, "input[id='test_field']")[:value].should == 'monkey'
+        end
+      end
+
+      context "with xpath selectors" do
+        it "should find the first element using the given locator" do
+          @session.find(:xpath, '//h1').text.should == 'This is a test'
+          @session.find(:xpath, "//input[@id='test_field']")[:value].should == 'monkey'
+        end
+      end
+
+      context "with css as default selector" do
+        before { Capybara.default_selector = :css }
+        it "should find the first element using the given locator" do
+          @session.find('h1').text.should == 'This is a test'
+          @session.find("input[id='test_field']")[:value].should == 'monkey'
+        end
+        after { Capybara.default_selector = :xpath }
+      end
+
       it "should return nil when nothing was found" do
         @session.find('//div[@id="nosuchthing"]').should be_nil
       end

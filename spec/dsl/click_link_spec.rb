@@ -46,6 +46,23 @@ module ClickLinkSpec
         end
       end
 
+      context "with alternative text given to a contained image" do
+        it "should take user to the linked page" do
+          @session.click_link('awesome image')
+          @session.body.should include('Bar')
+        end
+
+        it "should take user to the linked page" do
+          @session.click_link('some imag')
+          @session.body.should include('Bar')
+        end
+
+        it "should prefer exact matches over partial matches" do
+          @session.click_link('fine image')
+          @session.body.should include('Bar')
+        end
+      end
+
       context "with a locator that doesn't exist" do
         it "should raise an error" do
           running do

@@ -26,26 +26,26 @@ class Capybara::Server
 
   def initialize(app)
     @app = app
-    find_available_port
-    boot
   end
 
   def host
-    'localhost'
+    "localhost" 
   end
 
   def url(path)
-    path = URI.parse(path).request_uri if path =~ /^http/
-    "http://#{host}:#{port}#{path}"
+    if path =~ /^http/
+      path
+    else
+      (Capybara.app_host || "http://#{host}:#{port}") + path.to_s
+    end
   end
 
   def responsive?
     is_running_on_port?(port)
   end
 
-private
-
   def boot
+    find_available_port
     Capybara.log "application has already booted" and return if responsive?
     Capybara.log "booting Rack applicartion on port #{port}"
 
@@ -68,6 +68,8 @@ private
     Capybara.log "Rack application timed out during boot"
     exit
   end
+
+private
 
   def find_available_port
     @port = 9887
