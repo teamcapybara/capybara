@@ -51,9 +51,9 @@ class Capybara::Server
 
     Timeout.timeout(10) do
       Thread.new do
-        if defined?(Rack::Handler::Mongrel)
+        begin
           Rack::Handler::Mongrel.run(Identify.new(@app), :Port => port)
-        else
+        rescue LoadError
           Rack::Handler::WEBrick.run(Identify.new(@app), :Port => port, :AccessLog => [])
         end
       end
