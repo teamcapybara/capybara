@@ -114,13 +114,13 @@ module Capybara
     end
 
     def within_fieldset(locator)
-      within XPath.fieldset(locator) do
+      within :xpath, XPath.fieldset(locator) do
         yield
       end
     end
 
     def within_table(locator)
-      within XPath.table(locator) do
+      within :xpath, XPath.table(locator) do
         yield
       end
     end
