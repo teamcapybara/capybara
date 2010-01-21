@@ -23,7 +23,12 @@ module Capybara
 
     def rewrite_css_and_image_references(response_html) # :nodoc:
       return response_html unless Capybara.asset_root
-      response_html.gsub(/("|')\/(stylesheets|images|javascripts)/, '\1' + Capybara.asset_root + '/\2')
+      directories = Array.new
+      Dir.new(Capybara.asset_root).entries.each do |name|
+        directories << name if File.directory?(name) && !name.to_s[0].chr.eql?('.')
+      end
+      directories_string = directories*'|'
+      response_html.gsub(/("|')\/(#{directories_string})/, '\1' + Capybara.asset_root + '/\2')
     end
   end
 end
