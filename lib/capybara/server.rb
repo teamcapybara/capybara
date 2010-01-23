@@ -1,11 +1,6 @@
 require 'uri'
 require 'net/http'
 require 'rack'
-begin
-  require 'rack/handler/mongrel'
-rescue LoadError
-  require 'rack/handler/webrick'
-end
 
 class Capybara::Server
   class Identify
@@ -52,8 +47,10 @@ class Capybara::Server
     Timeout.timeout(10) do
       Thread.new do
         begin
+          require 'rack/handler/mongrel'
           Rack::Handler::Mongrel.run(Identify.new(@app), :Port => port)
         rescue LoadError
+          require 'rack/handler/webrick'
           Rack::Handler::WEBrick.run(Identify.new(@app), :Port => port, :AccessLog => [])
         end
       end

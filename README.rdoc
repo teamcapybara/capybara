@@ -346,6 +346,8 @@ The following people have dedicated their time and effort to Capybara:
 * Dan Dofter
 * Thorbjørn Hermansen
 * Louis T.
+* Stephan Hagemann
+* Graham Ashton
 
 == License:
 
