@@ -32,6 +32,7 @@ module Capybara
     end
 
     def reset_sessions!
+      session_pool.each { |mode, session| session.cleanup! }
       @session_pool = nil
     end
 

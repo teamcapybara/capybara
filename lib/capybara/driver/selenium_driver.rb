@@ -103,6 +103,10 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     self.class.driver
   end
 
+  def cleanup!
+    browser.manage.delete_all_cookies
+  end
+
 private
 
   def url(path)

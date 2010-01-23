@@ -31,4 +31,7 @@ class Capybara::Driver::Base
     raise NotImplementedError
   end
 
+  def cleanup!
+  end
+
 end

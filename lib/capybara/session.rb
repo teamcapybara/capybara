@@ -34,6 +34,10 @@ module Capybara
       end
     end
 
+    def cleanup!
+      driver.cleanup!
+    end
+
     def current_url
       driver.current_url
     end
