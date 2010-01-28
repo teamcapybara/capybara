@@ -19,3 +19,9 @@ require 'session_without_headers_support_spec'
 alias :running :lambda
 
 Capybara.default_wait_time = 1 # less timeout so tests run faster
+
+Spec::Runner.configure do |config|
+  config.after do
+    Capybara.default_selector = :xpath
+  end
+end

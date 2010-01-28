@@ -16,6 +16,11 @@ shared_examples_for "has_xpath" do
       @session.should_not have_xpath("//p[contains(.,'thisstringisnotonpage')]")
     end
 
+    it "should use xpath even if default selector is CSS" do
+      Capybara.default_selector = :css
+      @session.should_not have_xpath("//p//a[@id='doesnotexist']")
+    end
+
     it "should respect scopes" do
       @session.within "//p[@id='first']" do
         @session.should have_xpath("//a[@id='foo']")
@@ -70,6 +75,11 @@ shared_examples_for "has_xpath" do
       @session.should have_no_xpath("//abbr")
       @session.should have_no_xpath("//p//a[@id='doesnotexist']")
       @session.should have_no_xpath("//p[contains(.,'thisstringisnotonpage')]")
+    end
+
+    it "should use xpath even if default selector is CSS" do
+      Capybara.default_selector = :css
+      @session.should have_no_xpath("//p//a[@id='doesnotexist']")
     end
 
     it "should respect scopes" do

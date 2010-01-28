@@ -132,7 +132,7 @@ module Capybara
 
     def has_xpath?(path, options={})
       wait_conditionally_until do
-        results = all(path, options)
+        results = all(:xpath, path, options)
 
         if options[:count]
           results.size == options[:count]
@@ -146,7 +146,7 @@ module Capybara
 
     def has_no_xpath?(path, options={})
       wait_conditionally_until do
-        results = all(path, options)
+        results = all(:xpath, path, options)
 
         if options[:count]
           results.size != options[:count]
