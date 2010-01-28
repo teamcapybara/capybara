@@ -40,11 +40,15 @@ spec/dsl/click_spec.rb
 spec/dsl/current_url_spec.rb
 spec/dsl/fill_in_spec.rb
 spec/dsl/find_button_spec.rb
+spec/dsl/find_by_id_spec.rb
 spec/dsl/find_field_spec.rb
 spec/dsl/find_link_spec.rb
 spec/dsl/find_spec.rb
+spec/dsl/has_button_spec.rb
 spec/dsl/has_content_spec.rb
 spec/dsl/has_css_spec.rb
+spec/dsl/has_field_spec.rb
+spec/dsl/has_link_spec.rb
 spec/dsl/has_xpath_spec.rb
 spec/dsl/locate_spec.rb
 spec/dsl/select_spec.rb
