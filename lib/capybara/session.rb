@@ -62,7 +62,7 @@ module Capybara
 
     def click_button(locator)
       msg = "no button with value or id or text '#{locator}' found"
-      locate(:xpath, XPath.button(locator)).click
+      locate(:xpath, XPath.button(locator), msg).click
     end
 
     def drag(source_locator, target_locator)
