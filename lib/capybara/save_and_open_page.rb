@@ -27,7 +27,7 @@ module Capybara
         list << name if File.directory?(name) and not name.to_s =~ /^\./
         list
       end
-      response_html.gsub(/("|')\/(#{directories.join('|')})/, '\1' + Capybara.asset_root + '/\2')
+      response_html.gsub(/("|')\/(#{directories.join('|')})/, '\1' + Capybara.asset_root.to_s + '/\2')
     end
   end
 end
