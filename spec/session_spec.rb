@@ -6,6 +6,15 @@ shared_examples_for "session" do
     YAML.load Nokogiri::HTML(session.body).xpath("//pre[@id='results']").first.text
   end
 
+  # These specs do nothing asynchronous, timeout just slows us down.
+  before do
+    Capybara.default_wait_time = 0
+  end
+
+  after do
+    Capybara.default_wait_time = 1
+  end
+
   describe '#app' do
     it "should remember the application" do
       @session.app.should == TestApp
