@@ -2,25 +2,6 @@
 
 <form action="/form" method="post">
 
-  <div style="display:none;">
-    <label for="form_first_name_hidden">
-      First Name
-      <input type="text" name="form[first_name]" value="John" id="form_first_name_hidden"/>
-    </label>
-    <button type="submit" id="hidden_button" value="click_me">Hidden button</button>
-    <input type="checkbox" id="hidden_unchecked_checkbox"/>
-    <input type="checkbox" id="hidden_checked_checkbox" checked="checked"/>
-    <label for="hidden_form_locale">Locale</label>
-    <select name="form[locale]" id="hidden_form_locale">
-      <option value="sv">Swedish</option>
-      <option selected="selected" value="en">English</option>
-      <option value="fi">Finish</option>
-      <option value="no">Norwegian</option>
-    </select>
-    <input type="radio" value="male" id="hidden_gender_male"/>
-    <input type="file" id="hidden_form_upload"/>
-  </div>
-
   <p>
     <label for="form_first_name">
       First Name
@@ -129,6 +110,13 @@
     <input type="checkbox" value="hamster" name="form[pets][]" id="form_pets_hamster" checked="checked"/>
     <label for="form_pets_hamster">Hamster</label>
   </p>
+
+  <div style="display:none;">
+    <label for="form_first_name_hidden">
+      Super Secret
+      <input type="text" name="form[super_secret]" value="test123" id="form_super_secret"/>
+    </label>
+  </div>
 
   <p>
     <input type="submit" name="form[awesome]" id="awe123" value="awesome"/>

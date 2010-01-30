@@ -36,8 +36,8 @@ module Capybara
         results = results.select { |n| n.text.match(options[:text]) }
       end
 
-      if options[:visible] == true
-        results.reject! { |n| !n.visible? }
+      if options[:visible] or Capybara.ignore_hidden_elements
+        results = results.select { |n| n.visible? }
       end
 
       results

@@ -10,6 +10,17 @@ shared_examples_for "all" do
       @session.all("//input[@id='test_field']").first[:value].should == 'monkey'
     end
 
+    it "should return an empty array when nothing was found" do
+      @session.all('//div[@id="nosuchthing"]').should be_empty
+    end
+
+    it "should accept an XPath instance" do
+      @session.visit('/form')
+      @xpath = Capybara::XPath.text_field('Name')
+      @result = @session.all(@xpath).map { |r| r.value }
+      @result.should include('Smith', 'John', 'John Smith')
+    end
+
     context "with css selectors" do
       it "should find the first element using the given locator" do
         @session.all(:css, 'h1').first.text.should == 'This is a test'
@@ -33,15 +44,14 @@ shared_examples_for "all" do
       after { Capybara.default_selector = :xpath }
     end
 
-    it "should return an empty array when nothing was found" do
-      @session.all('//div[@id="nosuchthing"]').should be_empty
-    end
-
-    it "should accept an XPath instance" do
-      @session.visit('/form')
-      @xpath = Capybara::XPath.text_field('Name')
-      @result = @session.all(@xpath).map { |r| r.value }
-      @result.should include('Smith', 'John', 'John Smith')
+    context "with visible filter" do
+      after { Capybara.ignore_hidden_elements = false }
+      it "should only find visible nodes" do
+        @session.all("//a[@title='awesome title']").should have(2).elements
+        @session.all("//a[@title='awesome title']", :visible => true).should have(1).elements
+        Capybara.ignore_hidden_elements = true
+        @session.all("//a[@title='awesome title']").should have(1).elements
+      end
     end
 
     context "within a scope" do
