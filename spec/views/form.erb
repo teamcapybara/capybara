@@ -1,6 +1,26 @@
 <h1>Form</h1>
 
 <form action="/form" method="post">
+
+  <div style="display:none;">
+    <label for="form_first_name_hidden">
+      First Name
+      <input type="text" name="form[first_name]" value="John" id="form_first_name_hidden"/>
+    </label>
+    <button type="submit" id="hidden_button" value="click_me">Hidden button</button>
+    <input type="checkbox" id="hidden_unchecked_checkbox"/>
+    <input type="checkbox" id="hidden_checked_checkbox" checked="checked"/>
+    <label for="hidden_form_locale">Locale</label>
+    <select name="form[locale]" id="hidden_form_locale">
+      <option value="sv">Swedish</option>
+      <option selected="selected" value="en">English</option>
+      <option value="fi">Finish</option>
+      <option value="no">Norwegian</option>
+    </select>
+    <input type="radio" value="male" id="hidden_gender_male"/>
+    <input type="file" id="hidden_form_upload"/>
+  </div>
+
   <p>
     <label for="form_first_name">
       First Name

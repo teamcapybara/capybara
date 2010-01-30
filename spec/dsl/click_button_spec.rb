@@ -126,6 +126,14 @@ shared_examples_for "click_button" do
         @session.click_button('click_me_123')
         extract_results(@session)['first_name'].should == 'John'
       end
+
+      it "should serialize and send GET forms" do
+        @session.visit('/form')
+        @session.click_button('med')
+        @results = extract_results(@session)
+        @results['middle_name'].should == 'Darren'
+        @results['foo'].should be_nil
+      end
     end
 
    context "with value given on a button defined by <button> tag" do
