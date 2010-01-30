@@ -5,20 +5,20 @@ module Capybara
     end
 
     def find_field(locator)
-      find(XPath.field(locator))
+      find(:xpath, XPath.field(locator))
     end
     alias_method :field_labeled, :find_field
 
     def find_link(locator)
-      find(XPath.link(locator))
+      find(:xpath, XPath.link(locator))
     end
 
     def find_button(locator)
-      find(XPath.button(locator))
+      find(:xpath, XPath.button(locator))
     end
 
     def find_by_id(id)
-      find(XPath.for_css("##{id}"))
+      find(:css, "##{id}")
     end
 
     def all(*args)
