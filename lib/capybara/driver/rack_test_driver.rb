@@ -33,7 +33,12 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
     def select(option)
       node.xpath(".//option").each { |node| node.remove_attribute("selected") }
-      node.xpath(".//option[contains(.,'#{option}')]").first["selected"] = 'selected'
+      if option_node = node.xpath(".//option[contains(.,'#{option}')]").first
+        option_node["selected"] = 'selected'
+      else
+        options = node.xpath(".//option").map { |o| "'#{o.text}'" }.join(', ')
+        raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
+      end
     end
 
     def click

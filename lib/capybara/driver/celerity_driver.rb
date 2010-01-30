@@ -19,6 +19,9 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
 
     def select(option)
       node.select(option)
+    rescue
+      options = all(:xpath, "//option").map { |o| "'#{o.text}'" }.join(', ')
+      raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
     end
 
     def click
