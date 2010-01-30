@@ -54,7 +54,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     end
 
     def visible?
-      node.xpath("./ancestor-or-self::*[contains(@style, 'display:none')]").size == 0
+      node.xpath("./ancestor-or-self::*[contains(@style, 'display:none') or contains(@style, 'display: none')]").size == 0
     end
 
     def path
