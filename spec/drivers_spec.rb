@@ -47,6 +47,10 @@ shared_examples_for 'driver' do
         @driver.find('//a')[1][:rel].should be_nil
       end
 
+      it "should extract boolean node attributes" do
+        @driver.find('//input[@id="checked_field"]')[0][:checked].should be_true
+      end
+
       it "should allow assignment of field value" do
         @driver.find('//input').first.value.should == 'monkey'
         @driver.find('//input').first.set('gorilla')

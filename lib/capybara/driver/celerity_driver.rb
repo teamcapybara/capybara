@@ -10,7 +10,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
       else
         node.send(name.to_sym)
       end
-      return value if value and not value.empty?
+      return value if value and not value.to_s.empty?
     end
 
     def set(value)
