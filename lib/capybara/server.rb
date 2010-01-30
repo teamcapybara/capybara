@@ -41,7 +41,7 @@ class Capybara::Server
 
   def boot
     find_available_port
-    Capybara.log "application has already booted" and return if responsive?
+    Capybara.log "application has already booted" and return self if responsive?
     Capybara.log "booting Rack applicartion on port #{port}"
 
     Timeout.timeout(10) do
@@ -61,6 +61,7 @@ class Capybara::Server
         sleep 0.5
       end
     end
+    self
   rescue Timeout::Error
     Capybara.log "Rack application timed out during boot"
     exit
