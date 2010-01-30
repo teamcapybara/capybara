@@ -3,6 +3,14 @@ require File.expand_path('spec_helper', File.dirname(__FILE__))
 require 'nokogiri'
 
 shared_examples_for "session with javascript support" do
+  before do
+    Capybara.default_wait_time = 1
+  end
+
+  after do
+    Capybara.default_wait_time = 0
+  end
+
   describe '#body' do
     it "should return the current state of the page" do
       @session.visit('/with_js')
