@@ -75,7 +75,7 @@ module Capybara
       xpath = xpath.prepend("//button[@value=#{s(locator)} or text()=#{s(locator)}]")
     end
 
-    def text_area(locator, options)
+    def text_area(locator, options={})
       add_field(locator, "//textarea", options)
     end
 
