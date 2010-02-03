@@ -3,6 +3,15 @@
 <form action="/form" method="post">
 
   <p>
+    <label for="form_title">Title</label>
+    <select name="form[title]" id="form_title">
+      <option>Mrs</option>
+      <option>Mr</option>
+      <option>Miss</option>
+    </select>
+  </p>
+
+  <p>
     <label for="form_first_name">
       First Name
       <input type="text" name="form[first_name]" value="John" id="form_first_name"/>

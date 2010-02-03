@@ -16,6 +16,12 @@ shared_examples_for "select" do
       extract_results(@session)['locale'].should == 'fi'
     end
 
+    it "should favour exact matches to option labels" do
+      @session.select("Mr", :from => 'Title')
+      @session.click_button('awesome')
+      extract_results(@session)['title'].should == 'Mr'
+    end
+
     context "with a locator that doesn't exist" do
       it "should raise an error" do
         running { @session.select('foo', :from => 'does not exist') }.should raise_error(Capybara::ElementNotFound)
