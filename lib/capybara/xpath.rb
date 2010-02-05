@@ -76,6 +76,7 @@ module Capybara
     end
 
     def text_area(locator, options={})
+      options = options.merge(:text => options[:with]) if options.has_key?(:with)
       add_field(locator, "//textarea", options)
     end
 
@@ -84,6 +85,7 @@ module Capybara
     end
 
     def input_field(type, locator, options={})
+      options = options.merge(:value => options[:with]) if options.has_key?(:with)
       add_field(locator, "//input[@type='#{type}']", options)
     end
 
@@ -133,7 +135,8 @@ module Capybara
     def extract_postfix(options)
       options.inject("") do |postfix, (key, value)|
         case key
-          when :with      then postfix += "[@value=#{s(value)}]"
+          when :value     then postfix += "[@value=#{s(value)}]"
+          when :text      then postfix += "[text()=#{s(value)}]"
           when :checked   then postfix += "[@checked]"
           when :unchecked then postfix += "[not(@checked)]"
         end

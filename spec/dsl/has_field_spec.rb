@@ -19,11 +19,13 @@ shared_examples_for "has_field" do
         @session.should have_field('First Name', :with => 'John')  
         @session.should have_field('Phone', :with => '+1 555 7021')  
         @session.should have_field('Street', :with => 'Sesame street 66')  
+        @session.should have_field('Description', :with => 'Descriptive text goes here')
       end
 
       it "should be false if the given field is not on the page" do
         @session.should_not have_field('First Name', :with => 'Peter')  
         @session.should_not have_field('Wrong Name', :with => 'John')  
+        @session.should_not have_field('Description', :with => 'Monkey')
       end
     end
   end
@@ -44,11 +46,13 @@ shared_examples_for "has_field" do
         @session.should_not have_no_field('First Name', :with => 'John')  
         @session.should_not have_no_field('Phone', :with => '+1 555 7021')  
         @session.should_not have_no_field('Street', :with => 'Sesame street 66')  
+        @session.should_not have_no_field('Description', :with => 'Descriptive text goes here')
       end
 
       it "should be true if the given field is not on the page" do
         @session.should have_no_field('First Name', :with => 'Peter')  
         @session.should have_no_field('Wrong Name', :with => 'John')  
+        @session.should have_no_field('Description', :with => 'Monkey')
       end
     end
   end
