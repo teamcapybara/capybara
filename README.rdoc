@@ -293,6 +293,14 @@ Normally Capybara expects to be testing an in-process Rack application, but you 
 
     visit('/')
 
+Note that rack-test does not support running against a remote server. With drivers that support it, you can also visit any URL directly:
+
+    visit('http://www.google.com')
+
+By default Capybara will try to boot a rack application automatically. You might want to switch off Capybara's rack server if you are running against a remote application:
+
+    Capybara.run_server = false
+
 == Using the sessions manually
 
 For ultimate control, you can instantiate and use a session manually.
@@ -361,6 +369,8 @@ The following people have dedicated their time and effort to Capybara:
 * Louis T.
 * Stephan Hagemann
 * Graham Ashton
+* Joseph Wilk
+* Matt Wynne
 
 == License:
 
