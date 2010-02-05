@@ -114,7 +114,7 @@ Culerity doesn't seem to be working under Ruby 1.9 at the moment.
 
 == The DSL
 
-Capybara's DSL is inspired by Webrat. While backwards compatibility is retained 
+Capybara's DSL is inspired by Webrat. While backwards compatibility is retained
 in a lot of cases, there are certain important differences.
 
 Unlike in Webrat, all searches in Capybara are *case sensitive*. This is because
@@ -193,7 +193,7 @@ certain elements, and working with and manipulating those elements.
     page.has_xpath?('//table/tr')
     page.has_css?('table tr.foo')
     page.has_content?('foo')
-    
+
 You can use with RSpecs magic matchers:
 
     page.should have_xpath('//table/tr')
@@ -210,7 +210,7 @@ You can also find specific elements, in order to manipulate them:
     find_field('First Name').value
     find_link('Hello').visible?
     find_button('Send').click
-    
+
     find('//table/tr').click
     wait_for("//*[@id='overlay'").find("//h1").click
     all('a').each { |a| a[:href] }
@@ -280,6 +280,19 @@ examples. Just load the dsl and include it anywhere:
     end
     click_link 'Sign in'
 
+== Calling remote servers
+
+Normally Capybara expects to be testing an in-process Rack application, but you can also use it to talk to a web server running anywhere on the internets, by setting app_host:
+
+    require 'capybara'
+    require 'capybara/dsl'
+
+    include Capybara
+    Capybara.current_driver = :selenium
+    Capybara.app_host = 'http://www.google.com'
+
+    visit('/')
+
 == Using the sessions manually
 
 For ultimate control, you can instantiate and use a session manually.
@@ -300,7 +313,7 @@ if you want to use CSS with your 'within' declarations for example, you'll need
 to do:
 
     within(:css, 'ul li') { ... }
-    find(:css, 'ul li').text 
+    find(:css, 'ul li').text
     locate(:css, 'input#name').value
 
 Alternatively you can set the default selector to CSS, which may help if you are
