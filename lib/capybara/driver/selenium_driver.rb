@@ -28,10 +28,13 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     end
 
     def select(option)
-      node.find_element(:xpath, ".//option[contains(.,'#{option}')]").select
-    rescue
-      options = node.find_elements(:xpath, "//option").map { |o| "'#{o.text}'" }.join(', ')
-      raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
+      if option_node = node.find_element(".//option[text()='#{option}']") ||
+                       node.find_element(".//option[contains(.,'#{option}')]")
+        option_node.select
+      else
+        options = node.find_elements(:xpath, "//option").map { |o| "'#{o.text}'" }.join(', ')
+        raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
+      end
     end
 
     def click
