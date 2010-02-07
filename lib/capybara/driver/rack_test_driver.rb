@@ -32,8 +32,9 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     end
 
     def select(option)
-      node.xpath(".//option").each { |node| node.remove_attribute("selected") }
-      if option_node = node.xpath(".//option[contains(.,'#{option}')]").first
+      node.xpath(".//option[@selected]").each { |node| node.remove_attribute("selected") }
+      if option_node = node.xpath(".//option[text()='#{option}']").first ||
+                       node.xpath(".//option[contains(.,'#{option}')]").first
         option_node["selected"] = 'selected'
       else
         options = node.xpath(".//option").map { |o| "'#{o.text}'" }.join(', ')
