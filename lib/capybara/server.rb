@@ -47,6 +47,9 @@ class Capybara::Server
     Timeout.timeout(10) do
       Thread.new do
         begin
+          require 'rack/handler/thin'
+          Rack::Handler::Thin.run(Identify.new(@app), :Port => port)
+        rescue LoadError
           require 'rack/handler/mongrel'
           Rack::Handler::Mongrel.run(Identify.new(@app), :Port => port)
         rescue LoadError
