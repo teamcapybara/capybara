@@ -113,10 +113,12 @@ module Capybara
       kind, scope = Capybara.default_selector, kind unless scope
       scope = XPath.from_css(scope) if kind == :css
       locate(:xpath, scope, "scope '#{scope}' not found on page")
-      scopes.push(scope)
-      yield
-    ensure
-      scopes.pop
+      begin
+        scopes.push(scope)
+        yield
+      ensure
+        scopes.pop
+      end
     end
 
     def within_fieldset(locator)
