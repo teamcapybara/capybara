@@ -76,6 +76,16 @@ shared_examples_for "within" do
           end
         }.should raise_error(Capybara::ElementNotFound)
       end
+
+      it "should restore the scope when an error is raised" do
+        running {
+          running {
+            @session.within("//div[@id='for_bar']") do
+              raise "Some error occured"
+            end
+          }.should raise_error
+        }.should_not change { @session.has_xpath?("//div[@id='another_foo']") }
+      end
     end
 
     context "with forms" do

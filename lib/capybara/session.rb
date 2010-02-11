@@ -115,6 +115,7 @@ module Capybara
       locate(:xpath, scope, "scope '#{scope}' not found on page")
       scopes.push(scope)
       yield
+    ensure
       scopes.pop
     end
 
