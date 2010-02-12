@@ -371,6 +371,7 @@ The following people have dedicated their time and effort to Capybara:
 * Graham Ashton
 * Joseph Wilk
 * Matt Wynne
+* Piotr Sarnacki
 
 == License:
 

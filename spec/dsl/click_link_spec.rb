@@ -75,6 +75,11 @@ shared_examples_for "click_link" do
       @session.body.should include('You landed')
     end
     
+    it "should follow redirects" do
+      @session.click_link('BackToMyself')
+      @session.body.should include('This is a test')
+    end
+    
     it "should do nothing on anchor links" do
       @session.fill_in("test_field", :with => 'blah')
       @session.click_link('Anchor')

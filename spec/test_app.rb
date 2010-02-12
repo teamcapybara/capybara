@@ -38,12 +38,16 @@ class TestApp < Sinatra::Base
     nil
   end
 
-  get '/:view' do |view|
-    erb view.to_sym
-  end
-
   post '/redirect' do
     redirect '/redirect_again'
+  end
+
+  get '/redirect_back' do
+    redirect back
+  end
+
+  get '/:view' do |view|
+    erb view.to_sym
   end
 
   post '/form' do
