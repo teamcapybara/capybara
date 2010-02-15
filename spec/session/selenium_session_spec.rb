@@ -18,8 +18,8 @@ describe Capybara::Session do
       end
     end
 
-    it_should_behave_like "session"
+    # it_should_behave_like "session"
     it_should_behave_like "session with javascript support"
-    it_should_behave_like "session without headers support"
+    # it_should_behave_like "session without headers support"
   end
 end

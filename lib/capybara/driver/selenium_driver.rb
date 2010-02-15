@@ -51,6 +51,9 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     def visible?
       node.displayed? and node.displayed? != "false"
     end
+    
+    def trigger(event)
+    end
 
   private
 

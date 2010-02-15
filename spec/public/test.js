@@ -24,4 +24,7 @@ $(function() {
       activeRequests = 0;
     }, 500);
   });
+  $('#with_focus_event').focus(function() {
+    $('body').append('<p id="focus_event_triggered">Focus Event triggered</p>')
+  });
 });

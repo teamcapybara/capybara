@@ -10,6 +10,15 @@ shared_examples_for "session with javascript support" do
   after do
     Capybara.default_wait_time = 0
   end
+  
+  describe '#find' do
+    it "should allow triggering of custom JS events" do
+      pending "cannot figure out how to do this with selenium" if @session.mode == :selenium
+      @session.visit('/with_js')
+      @session.find(:css, '#with_focus_event').trigger(:focus)
+      @session.should have_css('#focus_event_triggered')
+    end
+  end
 
   describe '#body' do
     it "should return the current state of the page" do

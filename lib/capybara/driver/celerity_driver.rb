@@ -47,6 +47,10 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     def path
       node.xpath
     end
+    
+    def trigger(event)
+      node.fire_event(event.to_s)
+    end
 
   end
 

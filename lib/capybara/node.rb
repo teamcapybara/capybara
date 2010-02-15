@@ -48,6 +48,10 @@ module Capybara
     def path
       raise NotSupportedByDriverError
     end
+    
+    def trigger(event)
+      raise NotSupportedByDriverError
+    end
 
     private
 
