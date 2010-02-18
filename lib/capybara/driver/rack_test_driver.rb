@@ -16,7 +16,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
         option = node.xpath(".//option[@selected='selected']").first || node.xpath(".//option").first
         option.content if option
       else
-        value = node[attr_name]
+        node[attr_name]
       end
     end
 
