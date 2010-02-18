@@ -10,9 +10,16 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     end
 
     def [](name)
-      value = node[name.to_s]
-      return value.to_s if value
+      attr_name = name.to_s
+      case
+      when 'select' == tag_name && 'value' == attr_name
+        option = node.xpath(".//option[@selected='selected']").first || node.xpath(".//option").first
+        option.content if option
+      else
+        value = node[attr_name]
+      end
     end
+
 
     def set(value)
       if tag_name == 'input' and %w(text password hidden file).include?(type)
