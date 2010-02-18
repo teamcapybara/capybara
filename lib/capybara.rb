@@ -14,7 +14,7 @@ module Capybara
   class InfiniteRedirectError < TimeoutError; end
   
   class << self
-    attr_accessor :debug, :asset_root, :app_host, :run_server
+    attr_accessor :debug, :asset_root, :app_host, :run_server, :default_host
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
 
     def default_selector
