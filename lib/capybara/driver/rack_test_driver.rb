@@ -79,7 +79,10 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   class Form < Node
     def params(button)
       params = {}
-      node.xpath(".//input[@type='text' or @type='hidden' or @type='password']").map do |input|
+      
+      text_fields = %w[text hidden password url color tel email search].map{|f| "@type='#{f}'"}.join(' or ')
+
+      node.xpath(".//input[#{text_fields}]").map do |input|
         merge_param!(params, input['name'].to_s, input['value'].to_s)
       end
       node.xpath(".//textarea").map do |textarea|
