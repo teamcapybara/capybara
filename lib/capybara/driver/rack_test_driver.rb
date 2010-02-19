@@ -13,8 +13,12 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       attr_name = name.to_s
       case
       when 'select' == tag_name && 'value' == attr_name
-        option = node.xpath(".//option[@selected='selected']").first || node.xpath(".//option").first
-        option.content if option
+        if node['multiple'] == 'multiple'
+          node.xpath(".//option[@selected='selected']").map { |option| option.content  }
+        else
+          option = node.xpath(".//option[@selected='selected']").first || node.xpath(".//option").first
+          option.content if option
+        end
       when 'input' == tag_name && 'checkbox' == type && 'checked' == attr_name
         node[attr_name] == 'checked' ? true : false
       else

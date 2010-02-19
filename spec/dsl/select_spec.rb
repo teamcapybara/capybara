@@ -44,6 +44,16 @@ shared_examples_for "select" do
     end
 
     context "with multiple select" do
+      it "should return an empty value" do
+        @session.find_field('Language').value.should == []
+      end
+
+      it "should return value of the selected options" do
+        @session.select("Ruby",       :from => 'Language')
+        @session.select("Javascript", :from => 'Language')
+        @session.find_field('Language').value.should include('Ruby', 'Javascript')
+      end
+
       it "should select one option" do
         @session.select("Ruby", :from => 'Language')
         @session.click_button('awesome')
