@@ -13,63 +13,92 @@ shared_examples_for "click_button" do
     end
 
     context "with value given on a submit button" do
-      before do
-        @session.click_button('awesome')
-        @results = extract_results(@session)
+      context "on a form with HTML5 fields" do        
+        before do
+          @session.click_button('html5_submit')
+          @results = extract_results(@session)
+        end
+      
+        it "should serialise and submit search fields" do
+          @results['html5_search'].should == 'what are you looking for'
+        end
+        
+        it "should serialise and submit email fields" do
+          @results['html5_email'].should == 'person@email.com'
+        end
+        
+        it "should serialise and submit url fields" do
+          @results['html5_url'].should == 'http://www.example.com'
+        end
+        
+        it "should serialise and submit tel fields" do
+          @results['html5_tel'].should == '911'
+        end
+        
+        it "should serialise and submit color fields" do
+          @results['html5_color'].should == '#FFF'
+        end  
       end
+      
+      context "on an HTML4 form" do
+        before do
+          @session.click_button('awesome')
+          @results = extract_results(@session)
+        end
 
-      it "should serialize and submit text fields" do
-        @results['first_name'].should == 'John'
-      end
+        it "should serialize and submit text fields" do
+          @results['first_name'].should == 'John'
+        end
 
-      it "should escape fields when submitting" do
-        @results['phone'].should == '+1 555 7021'
-      end
+        it "should escape fields when submitting" do
+          @results['phone'].should == '+1 555 7021'
+        end
 
-      it "should serialize and submit password fields" do
-        @results['password'].should == 'seeekrit'
-      end
+        it "should serialize and submit password fields" do
+          @results['password'].should == 'seeekrit'
+        end
 
-      it "should serialize and submit hidden fields" do
-        @results['token'].should == '12345'
-      end
+        it "should serialize and submit hidden fields" do
+          @results['token'].should == '12345'
+        end
 
-      it "should not serialize fields from other forms" do
-        @results['middle_name'].should be_nil
-      end
+        it "should not serialize fields from other forms" do
+          @results['middle_name'].should be_nil
+        end
 
-      it "should submit the button that was clicked, but not other buttons" do
-        @results['awesome'].should == 'awesome'
-        @results['crappy'].should be_nil
-      end
+        it "should submit the button that was clicked, but not other buttons" do
+          @results['awesome'].should == 'awesome'
+          @results['crappy'].should be_nil
+        end
 
-      it "should serialize radio buttons" do
-        @results['gender'].should == 'female'
-      end
+        it "should serialize radio buttons" do
+          @results['gender'].should == 'female'
+        end
 
-      it "should serialize check boxes" do
-        @results['pets'].should include('dog', 'hamster')
-        @results['pets'].should_not include('cat')
-      end
+        it "should serialize check boxes" do
+          @results['pets'].should include('dog', 'hamster')
+          @results['pets'].should_not include('cat')
+        end
 
-      it "should serialize text areas" do
-        @results['description'].should == 'Descriptive text goes here'
-      end
+        it "should serialize text areas" do
+          @results['description'].should == 'Descriptive text goes here'
+        end
 
-      it "should serialize select tag with values" do
-        @results['locale'].should == 'en'
-      end
+        it "should serialize select tag with values" do
+          @results['locale'].should == 'en'
+        end
 
-      it "should serialize select tag without values" do
-        @results['region'].should == 'Norway'
-      end
+        it "should serialize select tag without values" do
+          @results['region'].should == 'Norway'
+        end
 
-      it "should serialize first option for select tag with no selection" do
-        @results['city'].should == 'London'
-      end
+        it "should serialize first option for select tag with no selection" do
+          @results['city'].should == 'London'
+        end
 
-      it "should not serialize a select tag without options" do
-        @results['tendency'].should be_nil
+        it "should not serialize a select tag without options" do
+          @results['tendency'].should be_nil
+        end
       end
     end
 
