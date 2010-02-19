@@ -5,6 +5,17 @@ module CheckSpec
       before do
         @session.visit('/form')
       end
+      
+      describe "'checked' attribute" do
+        it "should be true if checked" do
+          @session.check("Terms of Use")
+          @session.find(:xpath, "//input[@id='form_terms_of_use']")['checked'].should be_true
+        end
+        
+        it "should be false if unchecked" do
+          @session.find(:xpath, "//input[@id='form_terms_of_use']")['checked'].should be_false
+        end
+      end
 
       it "should check a checkbox by id" do
         @session.check("form_pets_cat")
