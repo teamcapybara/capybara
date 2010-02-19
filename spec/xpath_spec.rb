@@ -166,6 +166,10 @@ describe Capybara::XPath do
       @driver.find(@query).first.value.should == 'click_me'
       @query = @xpath.button('Click me!').to_s
       @driver.find(@query).first.value.should == 'click_me'
+      @query = @xpath.button('fresh_btn').to_s
+      @driver.find(@query).first.value.should == 'i am fresh'
+      @query = @xpath.button('i am fresh').to_s
+      @driver.find(@query).first[:name].should == 'form[fresh]'
     end
   end
   
