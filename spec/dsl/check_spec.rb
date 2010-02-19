@@ -7,7 +7,7 @@ module CheckSpec
       end
       
       describe "'checked' attribute" do
-        it "should be return true if checked" do
+        it "should be true if checked" do
           @session.check("Terms of Use")
           @session.find(:xpath, "//input[@id='form_terms_of_use']")['checked'].should be_true
         end
