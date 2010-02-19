@@ -182,10 +182,6 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
 private
 
-  def build_rack_mock_session # :nodoc:
-    Rack::MockSession.new(app, Capybara.default_host)
-  end
-
   def current_path
     request.path rescue ""
   end
