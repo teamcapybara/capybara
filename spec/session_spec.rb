@@ -57,6 +57,7 @@ shared_examples_for "session" do
   it_should_behave_like "has_field"
   it_should_behave_like "select"
   it_should_behave_like "uncheck"
+  it_should_behave_like "unselect"
   it_should_behave_like "locate"
   it_should_behave_like "within"
   it_should_behave_like "current_url"

@@ -29,6 +29,10 @@ module Capybara
       raise NotImplementedError
     end
 
+    def unselect(option)
+      raise NotImplementedError
+    end
+
     def click
       raise NotImplementedError
     end

@@ -96,6 +96,11 @@ module Capybara
       locate(:xpath, XPath.select(options[:from]), msg).select(value)
     end
 
+    def unselect(value, options={})
+      msg = "cannot unselect option, no select box with id, name, or label '#{options[:from]}' found"
+      locate(:xpath, XPath.select(options[:from]), msg).unselect(value)
+    end
+
     def attach_file(locator, path)
       msg = "cannot attach file, no file field with id, name, or label '#{locator}' found"
       locate(:xpath, XPath.file_field(locator), msg).set(path)

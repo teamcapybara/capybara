@@ -54,6 +54,20 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       end
     end
 
+    def unselect(option)
+      if node['multiple'] != 'multiple'
+        raise Capybara::UnselectNotAllowed, "Cannot unselect option '#{option}' from single select box."
+      end
+
+      if option_node = node.xpath(".//option[text()='#{option}']").first ||
+                       node.xpath(".//option[contains(.,'#{option}')]").first
+        option_node.remove_attribute('selected')
+      else
+        options = node.xpath(".//option").map { |o| "'#{o.text}'" }.join(', ')
+        raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
+      end
+    end
+
     def click
       if tag_name == 'a'
         driver.visit(self[:href].to_s)
