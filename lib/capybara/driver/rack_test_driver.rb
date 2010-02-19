@@ -15,6 +15,8 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       when 'select' == tag_name && 'value' == attr_name
         option = node.xpath(".//option[@selected='selected']").first || node.xpath(".//option").first
         option.content if option
+      when 'input' == tag_name && 'checkbox' == type && 'checked' == attr_name
+        node[attr_name] == 'checked' ? true : false
       else
         node[attr_name]
       end
@@ -75,7 +77,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   private
 
     def type
-      self[:type]
+      node[:type]
     end
 
     def form
