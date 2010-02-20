@@ -7,6 +7,8 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     def [](name)
       value = if name.to_sym == :class
         node.class_name
+      elsif node.type == 'select-multiple'
+        return node.selected_options
       else
         node.send(name.to_sym)
       end
