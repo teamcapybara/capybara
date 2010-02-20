@@ -55,6 +55,7 @@ shared_examples_for "session" do
   it_should_behave_like "has_link"
   it_should_behave_like "has_button"
   it_should_behave_like "has_field"
+  it_should_behave_like "has_select"
   it_should_behave_like "select"
   it_should_behave_like "uncheck"
   it_should_behave_like "unselect"
