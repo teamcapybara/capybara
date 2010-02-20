@@ -26,6 +26,23 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
       raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
     end
 
+    def unselect(option)
+      unless node.multiple?
+        raise Capybara::UnselectNotAllowed, "Cannot unselect option '#{option}' from single select box."
+      end
+
+      # FIXME: couldn't find a clean way to unselect, so clear and reselect
+      selected_options = node.selected_options
+      if unselect_option  = selected_options.detect { |value| value == option } ||
+                            selected_options.detect { |value| value.index(option) }
+        node.clear
+        (selected_options - [unselect_option]).each { |value| node.select_value(value) }
+      else
+        options = all(:xpath, "//option").map { |o| "'#{o.text}'" }.join(', ')
+        raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
+      end
+    end
+
     def click
       node.click
     end
