@@ -222,6 +222,14 @@ module Capybara
       has_no_xpath?(XPath.select(locator, options))
     end
 
+    def has_table?(locator, options={})
+      has_xpath?(XPath.table(locator, options))
+    end
+
+    def has_no_table?(locator, options={})
+      has_no_xpath?(XPath.table(locator, options))
+    end
+
     def save_and_open_page
       require 'capybara/save_and_open_page'
       Capybara::SaveAndOpenPage.save_and_open_page(body)

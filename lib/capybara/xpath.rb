@@ -55,8 +55,16 @@ module Capybara
       append("/descendant-or-self::*[contains(.,#{s(locator)})]")
     end
 
-    def table(locator)
-      append("//table[@id=#{s(locator)} or contains(caption,#{s(locator)})]")
+    def table(locator, options={})
+      conditions = ""
+      if options[:rows]
+        row_conditions = options[:rows].map do |row|
+          row = row.map { |column| "*[self::td or self::th][text()=#{s(column)}]" }.join(sibling)
+          "tr[./#{row}]"
+        end.join(sibling)
+        conditions << "[.//#{row_conditions}]"
+      end
+      append("//table[@id=#{s(locator)} or contains(caption,#{s(locator)})]#{conditions}")
     end
 
     def fieldset(locator)
@@ -122,6 +130,11 @@ module Capybara
     end
 
   protected
+
+    # place this between to nodes to indicate that they should be siblings
+    def sibling
+      '/following-sibling::*[1]/self::'
+    end
 
     def add_field(locator, field, options={})
       postfix = extract_postfix(options)
