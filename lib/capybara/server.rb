@@ -39,6 +39,21 @@ class Capybara::Server
     is_running_on_port?(port)
   end
 
+  def handler
+    begin
+      require 'rack/handler/thin'
+      Rack::Handler::Thin
+    rescue LoadError
+      begin
+        require 'rack/handler/mongrel'
+        Rack::Handler::Mongrel
+      rescue LoadError
+        require 'rack/handler/webrick'
+        Rack::Handler::WEBrick
+      end
+    end
+  end
+
   def boot
     find_available_port
     Capybara.log "application has already booted" and return self if responsive?
@@ -46,21 +61,13 @@ class Capybara::Server
 
     Timeout.timeout(10) do
       Thread.new do
-        begin
-          require 'rack/handler/thin'
-          Rack::Handler::Thin.run(Identify.new(@app), :Port => port)
-        rescue LoadError
-          require 'rack/handler/mongrel'
-          Rack::Handler::Mongrel.run(Identify.new(@app), :Port => port)
-        rescue LoadError
-          require 'rack/handler/webrick'
-          Rack::Handler::WEBrick.run(Identify.new(@app), :Port => port, :AccessLog => [])
-        end
+        handler.run(Identify.new(@app), :Port => port, :AccessLog => [])
       end
       Capybara.log "checking if application has booted"
 
       loop do
         Capybara.log("application has booted") and break if responsive?
+        Capybara.log("waiting for application to boot...")
         sleep 0.5
       end
     end

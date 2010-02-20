@@ -9,4 +9,3 @@ Capybara.app = Rack::Builder.new do
 end.to_app
 
 Capybara.asset_root = Rails.root.join('public')
-Capybara.default_host = "http://test.host"
