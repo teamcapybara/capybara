@@ -1,9 +1,7 @@
 shared_examples_for "has_field" do  
-  before do
-    @session.visit('/form')
-  end
-
   describe '#has_field' do
+    before { @session.visit('/form') }
+
     it "should be true if the field is on the page" do
       @session.should have_field('Dog')
       @session.should have_field('form_description')
@@ -31,6 +29,8 @@ shared_examples_for "has_field" do
   end
 
   describe '#has_no_field' do
+    before { @session.visit('/form') }
+
     it "should be false if the field is on the page" do
       @session.should_not have_no_field('Dog')
       @session.should_not have_no_field('form_description')
@@ -58,6 +58,8 @@ shared_examples_for "has_field" do
   end
 
   describe '#has_checked_field?' do
+    before { @session.visit('/form') }
+
     it "should be true if a checked field is on the page" do
       @session.should have_checked_field('gender_female')
       @session.should have_checked_field('Hamster')
@@ -74,6 +76,8 @@ shared_examples_for "has_field" do
   end
 
   describe '#has_unchecked_field?' do
+    before { @session.visit('/form') }
+
     it "should be false if a checked field is on the page" do
       @session.should_not have_unchecked_field('gender_female')
       @session.should_not have_unchecked_field('Hamster')

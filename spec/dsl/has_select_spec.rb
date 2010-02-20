@@ -1,9 +1,7 @@
 shared_examples_for "has_select" do  
-  before do
-    @session.visit('/form')
-  end
-
   describe '#has_select?' do
+    before { @session.visit('/form') }
+
     it "should be true if the field is on the page" do
       @session.should have_select('Locale')
       @session.should have_select('form_region')
@@ -45,6 +43,8 @@ shared_examples_for "has_select" do
   end
 
   describe '#has_no_select?' do
+    before { @session.visit('/form') }
+
     it "should be false if the field is on the page" do
       @session.should_not have_no_select('Locale')
       @session.should_not have_no_select('form_region')
