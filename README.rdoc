@@ -25,7 +25,9 @@ On OSX you may have to install libffi, you can install it via MacPorts with:
 * Source hosted at {GitHub}[http://github.com/jnicklas/capybara].
 * Please direct questions, discussions at the {mailing list}[http://groups.google.com/group/ruby-capybara].
 * Report issues on {GitHub Issues}[http://github.com/jnicklas/capybara/issues]
-* Pull requests are very welcome!
+
+Pull requests are very welcome! Make sure your patches are well tested, Capybara is
+a testing tool after all.
 
 == Using Capybara with Cucumber
 
