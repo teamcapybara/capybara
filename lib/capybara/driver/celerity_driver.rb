@@ -7,6 +7,8 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     def [](name)
       value = if name.to_sym == :class
         node.class_name
+      elsif node.type == 'select-multiple'
+        return node.selected_options
       else
         node.send(name.to_sym)
       end
@@ -22,6 +24,23 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     rescue
       options = all(:xpath, "//option").map { |o| "'#{o.text}'" }.join(', ')
       raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
+    end
+
+    def unselect(option)
+      unless node.multiple?
+        raise Capybara::UnselectNotAllowed, "Cannot unselect option '#{option}' from single select box."
+      end
+
+      # FIXME: couldn't find a clean way to unselect, so clear and reselect
+      selected_options = node.selected_options
+      if unselect_option  = selected_options.detect { |value| value == option } ||
+                            selected_options.detect { |value| value.index(option) }
+        node.clear
+        (selected_options - [unselect_option]).each { |value| node.select_value(value) }
+      else
+        options = all(:xpath, "//option").map { |o| "'#{o.text}'" }.join(', ')
+        raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
+      end
     end
 
     def click
