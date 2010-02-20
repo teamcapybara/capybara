@@ -373,6 +373,7 @@ The following people have dedicated their time and effort to Capybara:
 * Matt Wynne
 * Piotr Sarnacki
 * Pavel Gabriel
+* Bodaniel Jeanes
 
 == License:
 
