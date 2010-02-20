@@ -35,6 +35,20 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
     end
 
+    def unselect(option)
+      if node['multiple'] != 'multiple'
+        raise Capybara::UnselectNotAllowed, "Cannot unselect option '#{option}' from single select box."
+      end
+
+      begin
+        option_node = node.find_element(:xpath, ".//option[text()='#{option}']") || node.find_element(:xpath, ".//option[contains(.,'#{option}')]")
+        option_node.clear
+      rescue
+        options = node.find_elements(:xpath, "//option").map { |o| "'#{o.text}'" }.join(', ')
+        raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
+      end
+    end
+
     def click
       node.click
     end

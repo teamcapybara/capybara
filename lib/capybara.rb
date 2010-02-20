@@ -8,6 +8,7 @@ module Capybara
   class DriverNotFoundError < CapybaraError; end
   class ElementNotFound < CapybaraError; end
   class OptionNotFound < ElementNotFound; end
+  class UnselectNotAllowed < CapybaraError; end
   class NotSupportedByDriverError < CapybaraError; end
   class TimeoutError < CapybaraError; end
   class LocateHiddenElementError < CapybaraError; end

@@ -13,8 +13,12 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       attr_name = name.to_s
       case
       when 'select' == tag_name && 'value' == attr_name
-        option = node.xpath(".//option[@selected='selected']").first || node.xpath(".//option").first
-        option.content if option
+        if node['multiple'] == 'multiple'
+          node.xpath(".//option[@selected='selected']").map { |option| option.content  }
+        else
+          option = node.xpath(".//option[@selected='selected']").first || node.xpath(".//option").first
+          option.content if option
+        end
       when 'input' == tag_name && 'checkbox' == type && 'checked' == attr_name
         node[attr_name] == 'checked' ? true : false
       else
@@ -48,6 +52,20 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       if option_node = node.xpath(".//option[text()='#{option}']").first ||
                        node.xpath(".//option[contains(.,'#{option}')]").first
         option_node["selected"] = 'selected'
+      else
+        options = node.xpath(".//option").map { |o| "'#{o.text}'" }.join(', ')
+        raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
+      end
+    end
+
+    def unselect(option)
+      if node['multiple'] != 'multiple'
+        raise Capybara::UnselectNotAllowed, "Cannot unselect option '#{option}' from single select box."
+      end
+
+      if option_node = node.xpath(".//option[text()='#{option}']").first ||
+                       node.xpath(".//option[contains(.,'#{option}')]").first
+        option_node.remove_attribute('selected')
       else
         options = node.xpath(".//option").map { |o| "'#{o.text}'" }.join(', ')
         raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
