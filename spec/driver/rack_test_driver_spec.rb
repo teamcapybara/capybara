@@ -8,5 +8,6 @@ describe Capybara::Driver::RackTest do
   it_should_behave_like "driver"
   it_should_behave_like "driver with header support"
   it_should_behave_like "driver with node path support"
+  it_should_behave_like "driver with direct HTTP support"
   
 end

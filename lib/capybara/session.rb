@@ -1,10 +1,13 @@
+require 'forwardable'
 require 'capybara/wait_until'
 
 module Capybara
   class Session
+    extend Forwardable
     include Searchable
 
     DSL_METHODS = [
+      :get, :put, :post, :delete,
       :all, :attach_file, :body, :check, :choose, :click, :click_button, :click_link, :current_url, :drag, :evaluate_script,
       :field_labeled, :fill_in, :find, :find_button, :find_by_id, :find_field, :find_link, :has_content?, :has_css?,
       :has_no_content?, :has_no_css?, :has_no_xpath?, :has_xpath?, :locate, :save_and_open_page, :select, :source, :uncheck,
@@ -34,21 +37,16 @@ module Capybara
       end
     end
 
-    def cleanup!
-      driver.cleanup!
-    end
-
-    def current_url
-      driver.current_url
-    end
-
-    def response_headers
-      driver.response_headers
-    end
-
-    def visit(path)
-      driver.visit(path)
-    end
+    def_delegator :driver, :cleanup!
+    def_delegator :driver, :current_url
+    def_delegator :driver, :response_headers
+    def_delegator :driver, :visit
+    def_delegator :driver, :body
+    def_delegator :driver, :source
+    def_delegator :driver, :get
+    def_delegator :driver, :post
+    def_delegator :driver, :put
+    def_delegator :driver, :delete
 
     def click(locator)
       msg = "no link or button '#{locator}' found"
@@ -104,14 +102,6 @@ module Capybara
     def attach_file(locator, path)
       msg = "cannot attach file, no file field with id, name, or label '#{locator}' found"
       locate(:xpath, XPath.file_field(locator), msg).set(path)
-    end
-
-    def body
-      driver.body
-    end
-
-    def source
-      driver.source
     end
 
     def within(kind, scope=nil)

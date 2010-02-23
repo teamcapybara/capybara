@@ -34,4 +34,20 @@ class Capybara::Driver::Base
   def cleanup!
   end
 
+  def get(*args)
+    raise Capybara::NotSupportedByDriverError
+  end
+  
+  def post(*args)
+    raise Capybara::NotSupportedByDriverError
+  end
+  
+  def delete(*args)
+    raise Capybara::NotSupportedByDriverError
+  end
+  
+  def put(*args)
+    raise Capybara::NotSupportedByDriverError    
+  end
+
 end

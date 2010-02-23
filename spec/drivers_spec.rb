@@ -137,3 +137,55 @@ shared_examples_for "driver without node path support" do
     
   end
 end
+
+shared_examples_for "driver with direct HTTP support" do
+  describe "direct HTTP calls" do
+    it "should create a response for a GET" do
+      @driver.get('/tables')
+      @driver.body.should_not be_nil
+    end
+    
+    it "should create a response for a PUT" do
+      @driver.put('/tables')
+      @driver.body.should_not be_nil
+    end
+    
+    it "should create a response for a POST" do
+      @driver.post('/table')
+      @driver.body.should_not be_nil
+    end
+    
+    it "should create a response for a DELETE" do
+      @driver.delete('/table')
+      @driver.body.should_not be_nil
+    end
+  end
+end
+
+shared_examples_for "driver without direct HTTP support" do
+  describe "direct HTTP calls" do
+    it "should get NotSupportedByDriverError for a GET" do
+      running do
+        @driver.get('/tables')
+      end.should raise_error(Capybara::NotSupportedByDriverError) 
+    end
+    
+    it "should get NotSupportedByDriverError for a PUT" do
+      running do
+        @driver.put('/tables')
+      end.should raise_error(Capybara::NotSupportedByDriverError) 
+    end
+    
+    it "should get NotSupportedByDriverError  for a POST" do
+      running do
+        @driver.post('/tables')
+      end.should raise_error(Capybara::NotSupportedByDriverError) 
+    end
+    
+    it "should get NotSupportedByDriverError  for a DELETE" do
+      running do
+        @driver.delete('/tables')
+      end.should raise_error(Capybara::NotSupportedByDriverError) 
+    end
+  end
+end
