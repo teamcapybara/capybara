@@ -13,33 +13,33 @@ shared_examples_for "click_button" do
     end
 
     context "with value given on a submit button" do
-      context "on a form with HTML5 fields" do        
+      context "on a form with HTML5 fields" do
         before do
           @session.click_button('html5_submit')
           @results = extract_results(@session)
         end
-      
+
         it "should serialise and submit search fields" do
           @results['html5_search'].should == 'what are you looking for'
         end
-        
+
         it "should serialise and submit email fields" do
           @results['html5_email'].should == 'person@email.com'
         end
-        
+
         it "should serialise and submit url fields" do
           @results['html5_url'].should == 'http://www.example.com'
         end
-        
+
         it "should serialise and submit tel fields" do
           @results['html5_tel'].should == '911'
         end
-        
+
         it "should serialise and submit color fields" do
           @results['html5_color'].should == '#FFF'
-        end  
+        end
       end
-      
+
       context "on an HTML4 form" do
         before do
           @session.click_button('awesome')
@@ -175,7 +175,7 @@ shared_examples_for "click_button" do
         @session.click_button('ck_me')
         extract_results(@session)['first_name'].should == 'John'
       end
-      
+
       it "should prefer exact matches over partial matches" do
         @session.click_button('Just a button')
         extract_results(@session)['button'].should == 'Just a button'
@@ -190,6 +190,12 @@ shared_examples_for "click_button" do
       end
     end
 
+    it "should serialize and send valueless buttons that were clicked" do
+      @session.click_button('No Value!')
+      @results = extract_results(@session)
+      @results['no_value'].should_not be_nil
+    end
+
     it "should serialize and send GET forms" do
       @session.visit('/form')
       @session.click_button('med')
@@ -202,13 +208,13 @@ shared_examples_for "click_button" do
       @session.click_button('Go FAR')
       @session.body.should include('You landed')
     end
-    
+
     it "should post pack to the same URL when no action given" do
       @session.visit('/postback')
       @session.click_button('With no action')
       @session.body.should include('Postback')
     end
-    
+
     it "should post pack to the same URL when blank action given" do
       @session.visit('/postback')
       @session.click_button('With blank action')
