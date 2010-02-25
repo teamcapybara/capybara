@@ -113,6 +113,18 @@ shared_examples_for "click_button" do
         @session.body.should include('You landed')
       end
     end
+    
+    context "with alt given on an image button" do
+      it "should submit the associated form" do
+        @session.click_button('oh hai thar')
+        extract_results(@session)['first_name'].should == 'John'
+      end
+
+      it "should work with partial matches" do
+        @session.click_button('hai')
+        extract_results(@session)['first_name'].should == 'John'
+      end
+    end
 
     context "with value given on an image button" do
       it "should submit the associated form" do
