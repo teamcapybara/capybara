@@ -16,6 +16,14 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       nil
     end
 
+    def value
+      if tag_name == "select" and self[:multiple]
+        node.find_elements(:xpath, ".//option").select { |n| n.selected? }.map { |n| n.text }
+      else
+        super
+      end
+    end
+
     def set(value)
       if tag_name == 'textarea' or (tag_name == 'input' and %w(text password hidden file).include?(type))
         node.clear
