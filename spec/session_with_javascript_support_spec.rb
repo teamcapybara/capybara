@@ -90,12 +90,17 @@ shared_examples_for "session with javascript support" do
     end
 
     it "should default to Capybara.default_wait_time before timeout" do
+      @session.driver # init the driver to exclude init timing from test
       start = Time.now
       Capybara.default_wait_time = 0.2
       begin
         @session.wait_until { false }
       rescue Capybara::TimeoutError; end
-      (Time.now - start).should be_close(0.2, 0.1)
+      if @session.driver.has_shortcircuit_timeout
+        (Time.now - start).should be_close(0, 0.1)
+      else
+        (Time.now - start).should be_close(0.2, 0.1)
+      end
     end
   end
 

@@ -115,9 +115,15 @@ shared_examples_for "driver with node path support" do
     end
   
     it "should be able to navigate/search child nodes" do
-      @node.all('//table').size.should == 5
-      @node.find('//form').all('//table').size.should == 1
-      @node.find('//form').find('//table//caption').text.should == 'Agent'
+      if @driver.obeys_absolute_xpath
+        @node.all('.//table').size.should == 5
+        @node.find('.//form').all('.//table').size.should == 1
+        @node.find('.//form').find('.//table//caption').text.should == 'Agent'
+      else
+        @node.all('//table').size.should == 5
+        @node.find('//form').all('//table').size.should == 1
+        @node.find('//form').find('//table//caption').text.should == 'Agent'
+      end
     end
   end
 end

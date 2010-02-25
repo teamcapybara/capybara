@@ -19,6 +19,9 @@ class Capybara::Driver::Base
     false
   end
 
+  def wait_until *args
+  end
+
   def response_headers
     raise Capybara::NotSupportedByDriverError
   end
@@ -32,6 +35,14 @@ class Capybara::Driver::Base
   end
 
   def cleanup!
+  end
+
+  def obeys_absolute_xpath
+    false
+  end
+
+  def has_shortcircuit_timeout
+    false
   end
 
 end
