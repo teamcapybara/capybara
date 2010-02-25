@@ -14,7 +14,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     end
 
     def value
-      if node.type == 'select-multiple'
+      if tag_name == "select" and node.multiple?
         node.selected_options
       else
         super
