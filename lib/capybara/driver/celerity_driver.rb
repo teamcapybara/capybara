@@ -77,6 +77,14 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
       node.fire_event(event.to_s)
     end
 
+  private
+
+    def all_unfiltered(locator)
+      noko_node = Nokogiri::HTML(driver.body).xpath(node.xpath).first
+      all_nodes = noko_node.xpath(locator).map { |n| n.path }.join(' | ')
+      driver.find(all_nodes)
+    end
+
   end
 
   attr_reader :app, :rack_server

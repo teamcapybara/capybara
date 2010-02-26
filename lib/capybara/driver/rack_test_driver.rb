@@ -94,6 +94,10 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
   private
 
+    def all_unfiltered(locator)
+      node.xpath(locator).map { |n| self.class.new(driver, n) }
+    end
+
     def type
       node[:type]
     end

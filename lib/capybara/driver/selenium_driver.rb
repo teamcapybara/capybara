@@ -78,6 +78,10 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   private
 
+    def all_unfiltered(locator)
+      node.find_elements(:xpath, locator).map { |n| self.class.new(driver, n) }
+    end
+
     def type
       self[:type]
     end
