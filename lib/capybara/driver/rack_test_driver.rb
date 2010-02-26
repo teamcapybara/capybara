@@ -217,7 +217,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 private
 
   def build_rack_mock_session # :nodoc:
-    Rack::MockSession.new(app, Capybara.default_host)
+    Rack::MockSession.new(app, Capybara.default_host || "example.org")
   end
 
   def current_path
