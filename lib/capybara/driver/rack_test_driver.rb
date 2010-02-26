@@ -94,6 +94,10 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
   private
 
+    def all_unfiltered(locator)
+      node.xpath(locator).map { |n| self.class.new(driver, n) }
+    end
+
     def type
       node[:type]
     end
@@ -211,6 +215,10 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   end
 
 private
+
+  def build_rack_mock_session # :nodoc:
+    Rack::MockSession.new(app, Capybara.default_host || "example.org")
+  end
 
   def current_path
     request.path rescue ""
