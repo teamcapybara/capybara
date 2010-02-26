@@ -1,4 +1,34 @@
-=== 0.0.1 2009-11-04
+# Version 0.3.5
 
-* 1 major enhancement:
-  * Initial release
+Release date: 2010-02-26
+
+This is a mostly backwards compatible release, it does break
+the API in some minor places, which should hopefully not affect
+too many users, please read the release notes carefully!
+
+### Breaking
+
+* Relative searching in a node (e.g. find('//p').all('//a')) will now follow XPath standard
+  this means that if you want to find descendant nodes only, you'll need to prefix a dot!
+* `visit` now accepts fully qualified URLs for drivers that support it.
+* Capybara will always try to run a rack server, unless you set Capybara.run_sever = false
+
+### Changed
+
+* thin is preferred over mongrel and webrick, since it is Ruby 1.9 compatible
+* click_button and click will find <input type="button">, clicking them does nothing in RackTest
+
+### Added
+
+* Much improved error messages in a multitude of places
+* More semantic page querying with has_link?, has_button?, etc...
+* Option to ignore hidden elements when querying and interacting with the page
+* Support for multiple selects
+
+### Fixed
+
+* find_by_id is no longer broken
+* clicking links where the image's alt attribute contains the text is now possible
+* within_fieldset and within_table work when the default selector is CSS
+* boolean attributes work the same across drivers (return true/false)
+
