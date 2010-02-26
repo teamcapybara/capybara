@@ -1,7 +1,7 @@
 require File.expand_path('../spec_helper', File.dirname(__FILE__))
 
 describe Capybara::Driver::Culerity do
-  before do
+  before(:all) do
     @driver = Capybara::Driver::Culerity.new(TestApp)
   end
   
