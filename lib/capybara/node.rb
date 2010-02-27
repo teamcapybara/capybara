@@ -56,14 +56,5 @@ module Capybara
     def trigger(event)
       raise NotSupportedByDriverError
     end
-
-    private
-
-    def all_unfiltered(locator)
-      nodes = XPath.wrap(locator).scope(path).paths.map do |path|
-        driver.find(path)
-      end.flatten
-    end
-
   end
 end
