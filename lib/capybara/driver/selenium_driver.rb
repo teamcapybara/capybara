@@ -31,7 +31,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       elsif tag_name == 'input' and type == 'radio'
         node.select
       elsif tag_name == 'input' and type == 'checkbox'
-        node.toggle
+        node.click
       end
     end
 

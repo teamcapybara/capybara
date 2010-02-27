@@ -132,6 +132,14 @@ shared_examples_for "session with javascript support" do
       end
     end
 
+    describe '#check' do
+      it "should trigger associated events" do
+        @session.visit('/with_js')
+        @session.check('checkbox_with_event')
+        @session.should have_css('#checkbox_event_triggered');
+      end
+    end
+
     describe '#has_xpath?' do
       it "should wait for content to appear" do
         @session.visit('/with_js')
