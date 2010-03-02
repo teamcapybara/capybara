@@ -37,7 +37,7 @@ class Capybara::Driver::Base
   def cleanup!
   end
 
-  def has_shortcircuit_timeout
+  def has_shortcircuit_timeout?
     false
   end
 

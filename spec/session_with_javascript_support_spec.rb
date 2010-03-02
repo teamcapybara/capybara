@@ -97,7 +97,7 @@ shared_examples_for "session with javascript support" do
         begin
           @session.wait_until { false }
         rescue Capybara::TimeoutError; end
-        if @session.driver.has_shortcircuit_timeout
+        if @session.driver.has_shortcircuit_timeout?
           (Time.now - start).should be_close(0, 0.1)
         else
           (Time.now - start).should be_close(0.2, 0.1)
