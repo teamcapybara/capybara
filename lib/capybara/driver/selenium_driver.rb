@@ -31,7 +31,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       elsif tag_name == 'input' and type == 'radio'
         node.select
       elsif tag_name == 'input' and type == 'checkbox'
-        node.toggle
+        node.click
       end
     end
 
@@ -77,6 +77,10 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     end
 
   private
+
+    def all_unfiltered(locator)
+      node.find_elements(:xpath, locator).map { |n| self.class.new(driver, n) }
+    end
 
     def type
       self[:type]

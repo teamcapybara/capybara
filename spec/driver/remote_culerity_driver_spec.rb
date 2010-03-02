@@ -1,13 +1,10 @@
 require File.expand_path('../spec_helper', File.dirname(__FILE__))
 
 describe Capybara::Driver::Culerity do
-  before do
-    @driver = Capybara::Driver::Culerity.new(TestApp)
-  end
-  
   before(:all) do
     Capybara.app_host = "http://capybara-testapp.heroku.com"
     Capybara.run_server = false
+    @driver = Capybara::Driver::Culerity.new(TestApp)
   end
   
   after(:all) do
