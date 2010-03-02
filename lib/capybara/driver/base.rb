@@ -37,10 +37,6 @@ class Capybara::Driver::Base
   def cleanup!
   end
 
-  def obeys_absolute_xpath
-    false
-  end
-
   def has_shortcircuit_timeout
     false
   end
