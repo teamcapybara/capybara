@@ -111,8 +111,6 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     def params(button)
       params = {}
 
-      text_fields = %w[text hidden password url color tel email search].map{|f| "@type='#{f}'"}.join(' or ')
-
       node.xpath(".//input[@type!='radio' and @type!='checkbox' and @type!='submit']").map do |input|
         merge_param!(params, input['name'].to_s, input['value'].to_s)
       end
