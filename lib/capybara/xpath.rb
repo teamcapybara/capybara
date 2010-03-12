@@ -5,11 +5,6 @@ module Capybara
   class XPath
 
     class << self
-      def from_css(css)
-        Nokogiri::CSS.xpath_for(css).first
-      end
-      alias_method :for_css, :from_css
-
       def wrap(path)
         if path.is_a?(self)
           path
@@ -32,6 +27,11 @@ module Capybara
     def initialize(*paths)
       @paths = paths
     end
+
+    def from_css(css)
+      append(Nokogiri::CSS.xpath_for(css).first)
+    end
+    alias_method :for_css, :from_css
 
     def field(locator, options={})
       if options[:with]
