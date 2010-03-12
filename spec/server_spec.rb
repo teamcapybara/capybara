@@ -10,6 +10,12 @@ describe Capybara::Server do
     
     @res.body.should include('Hello Server')
   end
+
+  it "should do nothing when no server given" do
+    running do
+      @server = Capybara::Server.new(nil).boot
+    end.should_not raise_error
+  end
   
   it "should find an available port" do
     @app1 = proc { |env| [200, {}, "Hello Server!"]}

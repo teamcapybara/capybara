@@ -55,6 +55,7 @@ class Capybara::Server
   end
 
   def boot
+    return self unless @app
     find_available_port
     Capybara.log "application has already booted" and return self if responsive?
     Capybara.log "booting Rack applicartion on port #{port}"
