@@ -15,7 +15,7 @@ module Capybara
 
     attr_reader :mode, :app
 
-    def initialize(mode, app)
+    def initialize(mode, app=nil)
       @mode = mode
       @app = app
     end
