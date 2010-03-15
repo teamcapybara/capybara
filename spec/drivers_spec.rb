@@ -72,6 +72,26 @@ shared_examples_for 'driver' do
     end
   end
 
+  describe "node relative searching" do
+    before do
+      @driver.visit('/tables')
+      @node = @driver.find('//body').first
+    end
+  
+    it "should be able to navigate/search child node" do
+      @node.all('//table').size.should == 5
+      @node.find('//form').all('.//table').size.should == 1
+      @node.find('//form').find('.//table//caption').text.should == 'Agent'
+      if @driver.class == Capybara::Driver::Selenium
+        pending("Selenium gets this wrong, see http://code.google.com/p/selenium/issues/detail?id=403") do
+          @node.find('//form').all('//table').size.should == 5
+        end
+      else
+        @node.find('//form').all('//table').size.should == 5
+      end
+    end
+  end
+
 end
 
 shared_examples_for "driver with javascript support" do
@@ -97,7 +117,6 @@ shared_examples_for "driver with javascript support" do
       @driver.evaluate_script('1+1').should == 2
     end
   end
-
 end
 
 shared_examples_for "driver with header support" do

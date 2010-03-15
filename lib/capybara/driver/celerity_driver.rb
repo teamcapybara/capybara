@@ -14,7 +14,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     end
 
     def value
-      if node.type == 'select-multiple'
+      if tag_name == "select" and node.multiple?
         node.selected_options
       else
         super
@@ -75,6 +75,14 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     
     def trigger(event)
       node.fire_event(event.to_s)
+    end
+
+  private
+
+    def all_unfiltered(locator)
+      noko_node = Nokogiri::HTML(driver.body).xpath(node.xpath).first
+      all_nodes = noko_node.xpath(locator).map { |n| n.path }.join(' | ')
+      driver.find(all_nodes)
     end
 
   end

@@ -16,6 +16,14 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       nil
     end
 
+    def value
+      if tag_name == "select" and self[:multiple]
+        node.find_elements(:xpath, ".//option").select { |n| n.selected? }.map { |n| n.text }
+      else
+        super
+      end
+    end
+
     def set(value)
       if tag_name == 'textarea' or (tag_name == 'input' and %w(text password hidden file).include?(type))
         node.clear
@@ -23,7 +31,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       elsif tag_name == 'input' and type == 'radio'
         node.select
       elsif tag_name == 'input' and type == 'checkbox'
-        node.toggle
+        node.click
       end
     end
 
@@ -69,6 +77,10 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     end
 
   private
+
+    def all_unfiltered(locator)
+      node.find_elements(:xpath, locator).map { |n| self.class.new(driver, n) }
+    end
 
     def type
       self[:type]

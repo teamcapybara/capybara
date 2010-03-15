@@ -94,6 +94,10 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
   private
 
+    def all_unfiltered(locator)
+      node.xpath(locator).map { |n| self.class.new(driver, n) }
+    end
+
     def type
       node[:type]
     end
@@ -106,7 +110,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   class Form < Node
     def params(button)
       params = {}
-      
+
       text_fields = %w[text hidden password url color tel email search].map{|f| "@type='#{f}'"}.join(' or ')
 
       node.xpath(".//input[#{text_fields}]").map do |input|
@@ -141,7 +145,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
           end
         end
       end
-      merge_param!(params, button[:name], button[:value]) if button[:name]
+      merge_param!(params, button[:name], button[:value] || "") if button[:name]
       params
     end
 
@@ -154,7 +158,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     end
 
   private
-    
+
     def method
       self[:method] =~ /post/i ? :post : :get
     end
@@ -199,7 +203,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   end
 
   def submit(method, path, attributes)
-    path = current_path if not path or path.empty? 
+    path = current_path if not path or path.empty?
     send(method, path, attributes, env)
     follow_redirects!
   end
@@ -226,6 +230,10 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   end
   
 private
+
+  def build_rack_mock_session # :nodoc:
+    Rack::MockSession.new(app, Capybara.default_host || "www.example.com")
+  end
 
   def current_path
     request.path rescue ""

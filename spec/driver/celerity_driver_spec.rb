@@ -2,7 +2,7 @@ require File.expand_path('../spec_helper', File.dirname(__FILE__))
 
 if RUBY_PLATFORM =~ /java/
   describe Capybara::Driver::Celerity do
-    before do
+    before(:all) do
       @driver = Capybara::Driver::Celerity.new(TestApp)
     end
 

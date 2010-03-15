@@ -27,4 +27,7 @@ $(function() {
   $('#with_focus_event').focus(function() {
     $('body').append('<p id="focus_event_triggered">Focus Event triggered</p>')
   });
+  $('#checkbox_with_event').click(function() {
+    $('body').append('<p id="checkbox_event_triggered">Checkbox event triggered</p>')
+  });
 });
