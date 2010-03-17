@@ -7,7 +7,6 @@ module Capybara
     include Searchable
 
     DSL_METHODS = [
-      :get, :put, :post, :delete,
       :all, :attach_file, :body, :check, :choose, :click, :click_button, :click_link, :current_url, :drag, :evaluate_script,
       :field_labeled, :fill_in, :find, :find_button, :find_by_id, :find_field, :find_link, :has_content?, :has_css?,
       :has_no_content?, :has_no_css?, :has_no_xpath?, :has_xpath?, :locate, :save_and_open_page, :select, :source, :uncheck,
@@ -44,10 +43,6 @@ module Capybara
     def_delegator :driver, :visit
     def_delegator :driver, :body
     def_delegator :driver, :source
-    def_delegator :driver, :get
-    def_delegator :driver, :post
-    def_delegator :driver, :put
-    def_delegator :driver, :delete
 
     def click(locator)
       msg = "no link or button '#{locator}' found"

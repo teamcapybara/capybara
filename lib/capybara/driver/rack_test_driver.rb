@@ -212,15 +212,6 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     html.xpath(selector).map { |node| Node.new(self, node) }
   end
   
-  ['get', 'post', 'put', 'delete'].each do |method|
-    class_eval <<-RUBY, __FILE__, __LINE__+1
-      def #{method}(*args, &block)
-        reset_cache
-        super
-      end
-    RUBY
-  end
-  
   def body
     @body ||= response.body
   end
