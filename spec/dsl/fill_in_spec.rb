@@ -52,6 +52,18 @@ shared_examples_for "fill_in" do
       extract_results(@session)['password'].should == 'supasikrit'
     end
 
+    it "should fill in a field with a custom type" do
+      @session.fill_in('Schmooo', :with => 'Schmooo is the game')
+      @session.click_button('awesome')
+      extract_results(@session)['schmooo'].should == 'Schmooo is the game'
+    end
+
+    it "should fill in a password field by name" do
+      @session.fill_in('form[password]', :with => 'supasikrit')
+      @session.click_button('awesome')
+      extract_results(@session)['password'].should == 'supasikrit'
+    end
+
     it "should fill in a password field by label" do
       @session.fill_in('Password', :with => 'supasikrit')
       @session.click_button('awesome')

@@ -5,11 +5,6 @@ module Capybara
   class XPath
 
     class << self
-      def from_css(css)
-        Nokogiri::CSS.xpath_for(css).first
-      end
-      alias_method :for_css, :from_css
-
       def wrap(path)
         if path.is_a?(self)
           path
@@ -33,6 +28,27 @@ module Capybara
       @paths = paths
     end
 
+    def scope(scope)
+      XPath.new(*paths.map { |p| scope + p })
+    end
+
+    def to_s
+      @paths.join(' | ')
+    end
+
+    def append(path)
+      XPath.new(*[@paths, XPath.wrap(path).paths].flatten)
+    end
+
+    def prepend(path)
+      XPath.new(*[XPath.wrap(path).paths, @paths].flatten)
+    end
+
+    def from_css(css)
+      append(Nokogiri::CSS.xpath_for(css).first)
+    end
+    alias_method :for_css, :from_css
+
     def field(locator, options={})
       if options[:with]
         fillable_field(locator, options)
@@ -46,9 +62,7 @@ module Capybara
     end
 
     def fillable_field(locator, options={})
-      [:text, :password, :email, :url, :search, :tel, :color].inject(text_area(locator, options)) do |all, type|
-        all.input_field(type, locator, options)
-      end
+      text_area(locator, options).text_field(locator, options)
     end
 
     def content(locator)
@@ -84,6 +98,11 @@ module Capybara
       xpath = xpath.prepend("//button[@value=#{s(locator)} or text()=#{s(locator)}]")
     end
 
+    def text_field(locator, options={})
+      options = options.merge(:value => options[:with]) if options.has_key?(:with)
+      add_field(locator, "//input[@type!='radio' and @type!='checkbox' and @type!='hidden']", options)
+    end
+
     def text_area(locator, options={})
       options = options.merge(:text => options[:with]) if options.has_key?(:with)
       add_field(locator, "//textarea", options)
@@ -91,27 +110,6 @@ module Capybara
 
     def select(locator, options={})
       add_field(locator, "//select", options)
-    end
-
-    def input_field(type, locator, options={})
-      options = options.merge(:value => options[:with]) if options.has_key?(:with)
-      add_field(locator, "//input[@type='#{type}']", options)
-    end
-
-    def scope(scope)
-      XPath.new(*paths.map { |p| scope + p })
-    end
-
-    def to_s
-      @paths.join(' | ')
-    end
-
-    def append(path)
-      XPath.new(*[@paths, XPath.wrap(path).paths].flatten)
-    end
-
-    def prepend(path)
-      XPath.new(*[XPath.wrap(path).paths, @paths].flatten)
     end
 
     def checkbox(locator, options={})
@@ -122,15 +120,16 @@ module Capybara
       input_field(:radio, locator, options)
     end
 
-    [:text, :password, :email, :url, :search, :tel, :color, :file].each do |type|
-      class_eval <<-RUBY, __FILE__, __LINE__+1
-        def #{type}_field(locator)
-          input_field(:#{type}, locator)
-        end
-      RUBY
+    def file_field(locator, options={})
+      input_field(:file, locator, options)
     end
 
   protected
+
+    def input_field(type, locator, options={})
+      options = options.merge(:value => options[:with]) if options.has_key?(:with)
+      add_field(locator, "//input[@type='#{type}']", options)
+    end
 
     # place this between to nodes to indicate that they should be siblings
     def sibling

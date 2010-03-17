@@ -28,9 +28,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
 
     def set(value)
-      if tag_name == 'input' and %w(text password hidden file).include?(type)
-        node['value'] = value.to_s
-      elsif tag_name == 'input' and type == 'radio'
+      if tag_name == 'input' and type == 'radio'
         driver.html.xpath("//input[@name='#{self[:name]}']").each { |node| node.remove_attribute("checked") }
         node['checked'] = 'checked'
       elsif tag_name == 'input' and type == 'checkbox'
@@ -39,6 +37,8 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
         else
           node.remove_attribute('checked')
         end
+      elsif tag_name == 'input'
+        node['value'] = value.to_s
       elsif tag_name == "textarea"
         node.content = value.to_s
       end
@@ -111,9 +111,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     def params(button)
       params = {}
 
-      text_fields = %w[text hidden password url color tel email search].map{|f| "@type='#{f}'"}.join(' or ')
-
-      node.xpath(".//input[#{text_fields}]").map do |input|
+      node.xpath(".//input[@type!='radio' and @type!='checkbox' and @type!='submit']").map do |input|
         merge_param!(params, input['name'].to_s, input['value'].to_s)
       end
       node.xpath(".//textarea").map do |textarea|
