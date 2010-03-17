@@ -125,34 +125,3 @@ shared_examples_for "driver with header support" do
     @driver.response_headers['Content-Type'].should == 'text/html'
   end
 end
-
-shared_examples_for "driver with node path support" do
-  describe "node relative searching" do
-    before do
-      @driver.visit('/tables')
-      @node = @driver.find('//body').first
-    end
-  
-    it "should be able to navigate/search child nodes" do
-      @node.all('//table').size.should == 3
-      @node.find('//form').all('//table').size.should == 1
-      @node.find('//form').find('//table//caption').text.should == 'Agent'
-    end
-  end
-end
-
-shared_examples_for "driver without node path support" do
-  describe "node relative searching" do
-    before do
-      @driver.visit('/tables')
-      @node = @driver.find('//body').first
-    end
-  
-    it "should get NotSupportedByDriverError" do
-      running do
-        @node.all('//form')
-      end.should raise_error(Capybara::NotSupportedByDriverError) 
-    end
-    
-  end
-end
