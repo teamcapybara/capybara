@@ -21,16 +21,11 @@ module Capybara
     end
 
     def driver
-      @driver ||= case mode
-      when :rack_test
-        Capybara::Driver::RackTest.new(app)
-      when :selenium
-        Capybara::Driver::Selenium.new(app)
-      when :celerity
-        Capybara::Driver::Celerity.new(app)
-      when :culerity
-        Capybara::Driver::Culerity.new(app)
-      else
+      @driver ||= begin                    
+        string = mode.to_s
+        string.gsub!(%r{(^.)|(_.)}) { |m| m[m.length-1,1].upcase }
+        Capybara::Driver.const_get(string.to_sym).new(app)
+      rescue NameError
         raise Capybara::DriverNotFoundError, "no driver called #{mode} was found"
       end
     end
@@ -245,7 +240,7 @@ module Capybara
     end
 
     def wait_until(timeout = Capybara.default_wait_time)
-      WaitUntil.timeout(timeout) { yield }
+      WaitUntil.timeout(timeout,driver) { yield }
     end
 
     def evaluate_script(script)

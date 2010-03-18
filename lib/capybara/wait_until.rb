@@ -4,7 +4,7 @@ module Capybara
 
     class << self
 
-      def timeout(seconds = 1, &block)
+      def timeout(seconds = 1, driver = nil, &block)
         start_time = Time.now
 
         result = nil
@@ -12,9 +12,12 @@ module Capybara
         until result
           return result if result = yield
 
-          if (Time.now - start_time) > seconds
-             raise TimeoutError
+          delay = seconds - (Time.now - start_time)
+          if delay <= 0
+            raise TimeoutError
           end
+
+          driver && driver.wait_until(delay)
         end
       end
 
