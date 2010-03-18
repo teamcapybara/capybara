@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{capybara}
-  s.version = "0.3.0"
+  s.version = "0.3.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jonas Nicklas"]
-  s.date = %q{2010-02-25}
+  s.date = %q{2010-03-18}
   s.description = %q{Capybara aims to simplify the process of integration testing Rack applications,
 such as Rails, Sinatra or Merb. It is inspired by and aims to replace Webrat as
 a DSL for interacting with a webapplication. It is agnostic about the driver
@@ -19,7 +19,7 @@ Celerity and Selenium support built in.}
   s.rdoc_options = ["--main", "README.rdoc"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{capybara}
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{Capybara aims to simplify the process of integration testing Rack applications, such as Rails, Sinatra or Merb}
 
   if s.respond_to? :specification_version then
