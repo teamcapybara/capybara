@@ -55,6 +55,9 @@ Now you can use it in your steps:
       click_link 'Sign in'
     end
 
+Please note that while Capybara uses XPath selectors by default, Cucumber explicitly
+changes this to CSS in `env.rb`.  See "XPath and CSS" below.
+
 == Default and current driver
 
 You can set up a default driver for your features. For example if you'd prefer
@@ -151,7 +154,7 @@ with the various form elements:
     fill_in('First Name', :with => 'John')
     fill_in('Password', :with => 'Seekrit')
     fill_in('Description', :with => 'Really Long Text…')
-    choose('An Option')
+    choose('A Radio Button')
     check('A Checkbox')
     uncheck('A Checkbox')
     attach_file('Image', '/path/to/image.jpg')
@@ -177,7 +180,7 @@ You can choose which kind of selector Capybara uses by default, by setting
 
 There are special methods for restricting the scope to a specific fieldset,
 identified by either an id or the text of the fieldet's legend tag, and to a
-specific table, identified by either idea or text of the table's caption tag.
+specific table, identified by either id or text of the table's caption tag.
 
     within_fieldset('Employee') do
       fill_in 'Name', :with => 'Jimmy'
@@ -255,7 +258,7 @@ is (the default is 2 seconds):
     Capybara.default_wait_time = 5
 
 Be aware that because of this behaviour, the following two statements are *not*
-identical, and you should *always* use the latter!
+equivalent, and you should *always* use the latter!
 
     page.should_not have_xpath('//a')
     page.should have_no_xpath('//a')
@@ -263,12 +266,12 @@ identical, and you should *always* use the latter!
 The former would incorrectly wait for the content to appear, since the
 asynchronous process has not yet removed the element from the page, it would
 therefore fail, even though the code might be working correctly. The latter
-correctly wait for the element to disappear from the page.
+correctly waits for the element to disappear from the page.
 
 == Using the DSL outside cucumber
 
 You can mix the DSL into any context, for example you could use it in RSpec
-examples. Just load the dsl and include it anywhere:
+examples. Just load the DSL and include it anywhere:
 
     require 'capybara'
     require 'capybara/dsl'
