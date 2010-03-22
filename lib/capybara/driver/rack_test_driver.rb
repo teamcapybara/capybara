@@ -217,8 +217,18 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   def html
     @html ||= Nokogiri::HTML(body)
   end
+
+  def get(*args, &block); reset_cache; super; end
+  def post(*args, &block); reset_cache; super; end
+  def put(*args, &block); reset_cache; super; end
+  def delete(*args, &block); reset_cache; super; end
   
 private
+
+  def reset_cache
+    @body = nil
+    @html = nil
+  end
 
   def build_rack_mock_session # :nodoc:
     Rack::MockSession.new(app, Capybara.default_host || "www.example.com")
