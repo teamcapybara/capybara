@@ -83,10 +83,8 @@ describe Capybara::XPath do
     end
     
     it "should be chainable" do
-      @query = @xpath.field('First Name').input_field(:password, 'First Name').to_s
+      @query = @xpath.field('First Name').button('Click me!').to_s
       @driver.find(@query).first.value.should == 'John'
-      @query = @xpath.field('Password').input_field(:password, 'Password').to_s
-      @driver.find(@query).first.value.should == 'seeekrit'
     end
   end
   
@@ -101,45 +99,11 @@ describe Capybara::XPath do
     end
 
     it "should be chainable" do
-      @query = @xpath.fillable_field('First Name').password_field('First Name').to_s
+      @query = @xpath.fillable_field('First Name').button('Click me!').to_s
       @driver.find(@query).first.value.should == 'John'
-      @query = @xpath.fillable_field('Password').password_field('Password').to_s
-      @driver.find(@query).first.value.should == 'seeekrit'
     end
   end
 
-  describe '#text_field' do
-    it "should find a text field by id or label" do
-      @query = @xpath.text_field('form_first_name').to_s
-      @driver.find(@query).first.value.should == 'John'
-      @query = @xpath.text_field('First Name').to_s
-      @driver.find(@query).first.value.should == 'John'
-    end
-
-    it "should be chainable" do
-      @query = @xpath.text_field('First Name').password_field('First Name').to_s
-      @driver.find(@query).first.value.should == 'John'
-      @query = @xpath.text_field('Password').password_field('Password').to_s
-      @driver.find(@query).first.value.should == 'seeekrit'
-    end
-  end
-
-  describe '#password_field' do
-    it "should find a password field by id or label" do
-      @query = @xpath.password_field('form_password').to_s
-      @driver.find(@query).first.value.should == 'seeekrit'
-      @query = @xpath.password_field('Password').to_s
-      @driver.find(@query).first.value.should == 'seeekrit'
-    end
-
-    it "should be chainable" do
-      @query = @xpath.password_field('First Name').text_field('First Name').to_s
-      @driver.find(@query).first.value.should == 'John'
-      @query = @xpath.password_field('Password').text_field('Password').to_s
-      @driver.find(@query).first.value.should == 'seeekrit'
-    end
-  end
-  
   describe '#text_area' do
     it "should find a text area by id or label" do
       @query = @xpath.text_area('form_description').to_s
@@ -149,10 +113,8 @@ describe Capybara::XPath do
     end
     
     it "should be chainable" do
-      @query = @xpath.text_area('Description').password_field('Description').to_s
+      @query = @xpath.text_area('Description').button('Click me!').to_s
       @driver.find(@query).first.text.should == 'Descriptive text goes here'
-      @query = @xpath.text_area('Password').password_field('Password').to_s
-      @driver.find(@query).first.value.should == 'seeekrit'
     end
   end
 
@@ -182,10 +144,8 @@ describe Capybara::XPath do
     end
     
     it "should be chainable" do
-      @query = @xpath.radio_button('Male').password_field('Male').to_s
+      @query = @xpath.radio_button('Male').button('Click me!').to_s
       @driver.find(@query).first.value.should == 'male'
-      @query = @xpath.radio_button('Password').password_field('Password').to_s
-      @driver.find(@query).first.value.should == 'seeekrit'
     end
   end
   
@@ -198,10 +158,8 @@ describe Capybara::XPath do
     end
     
     it "should be chainable" do
-      @query = @xpath.checkbox('Cat').password_field('Cat').to_s
+      @query = @xpath.checkbox('Cat').button('Click me!').to_s
       @driver.find(@query).first.value.should == 'cat'
-      @query = @xpath.checkbox('Password').password_field('Password').to_s
-      @driver.find(@query).first.value.should == 'seeekrit'
     end
   end
 
@@ -214,58 +172,9 @@ describe Capybara::XPath do
     end
     
     it "should be chainable" do
-      @query = @xpath.select('Region').password_field('Region').to_s
+      @query = @xpath.select('Region').button('Click me!').to_s
       @driver.find(@query).first[:name].should == 'form[region]'
-      @query = @xpath.select('Password').password_field('Password').to_s
-      @driver.find(@query).first.value.should == 'seeekrit'
     end
-  end
-  
-  describe '#file_field' do
-    it "should find a file field by id or label" do
-      @query = @xpath.file_field('Document').to_s
-      @driver.find(@query).first[:name].should == 'form[document]'
-      @query = @xpath.file_field('form_document').to_s
-      @driver.find(@query).first[:name].should == 'form[document]'
-    end
-    
-    it "should be chainable" do
-      @query = @xpath.file_field('Document').password_field('Document').to_s
-      @driver.find(@query).first[:name].should == 'form[document]'
-      @query = @xpath.file_field('Password').password_field('Password').to_s
-      @driver.find(@query).first.value.should == 'seeekrit'
-    end
-  end
-  
-  [ [:email_field, 'html5_email', 'Html5 Email', 'person@email.com'],
-    [:url_field, 'html5_url', 'Html5 Url', 'http://www.example.com'],
-    [:search_field, 'html5_search', 'Html5 Search', 'what are you looking for'],
-    [:tel_field, 'html5_tel', 'Html5 Tel', '911'],
-    [:color_field, 'html5_color', 'Html5 Color', '#FFF']].each do |method, id, label, output|
-    describe "##{method}" do
-      it "should find a file field by label" do
-        @query = @xpath.send(method, label).to_s
-        @driver.find(@query).first.value.should == output
-      end
-      
-      it "should find a file field by id" do
-        @query = @xpath.send(method, id).to_s
-        @driver.find(@query).first.value.should == output
-      end
-        
-      it "should be chainable" do
-        @query = @xpath.send(method, label).password_field(label).to_s
-        @driver.find(@query).first.value.should == output
-        @query = @xpath.send(method, 'Password').password_field('Password').to_s
-        @driver.find(@query).first.value.should == 'seeekrit'
-      end
-      
-      it "should be a #fillable_field" do
-        @query = @xpath.fillable_field(label).to_s
-        @driver.find(@query).first.value.should == output
-      end
-    end
-    
   end
   
 end
