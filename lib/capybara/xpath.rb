@@ -66,7 +66,7 @@ module Capybara
     end
 
     def content(locator)
-      append("/descendant-or-self::*[contains(.,#{s(locator)})]")
+      append("/descendant-or-self::*[contains(normalize-space(.),#{s(locator)})]")
     end
 
     def table(locator, options={})
