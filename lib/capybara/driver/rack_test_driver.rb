@@ -176,7 +176,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   end
 
   include ::Rack::Test::Methods
-  attr_reader :app, :html, :body
+  attr_reader :app
 
   alias_method :response, :last_response
   alias_method :request, :last_request
@@ -190,7 +190,6 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     return if path.gsub(/^#{current_path}/, '') =~ /^#/
     get(path, attributes, env)
     follow_redirects!
-    cache_body
   end
 
   def current_url
@@ -205,13 +204,20 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     path = current_path if not path or path.empty?
     send(method, path, attributes, env)
     follow_redirects!
-    cache_body
   end
 
   def find(selector)
     html.xpath(selector).map { |node| Node.new(self, node) }
   end
-
+  
+  def body
+    @body ||= response.body
+  end
+  
+  def html
+    @html ||= Nokogiri::HTML(body)
+  end
+  
 private
 
   def build_rack_mock_session # :nodoc:
@@ -242,9 +248,9 @@ private
     env
   end
 
-  def cache_body
-    @body = response.body
-    @html = Nokogiri::HTML(body)
+  def reset_cache
+    @body = nil
+    @html = nil
   end
 
 end
