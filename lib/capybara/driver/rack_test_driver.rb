@@ -180,7 +180,6 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
   alias_method :response, :last_response
   alias_method :request, :last_request
-  alias_method :source, :body
 
   def initialize(app)
     @app = app
@@ -217,6 +216,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   def html
     @html ||= Nokogiri::HTML(body)
   end
+  alias_method :source, :body
 
   def get(*args, &block); reset_cache; super; end
   def post(*args, &block); reset_cache; super; end
