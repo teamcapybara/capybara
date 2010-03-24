@@ -93,7 +93,7 @@ private
     if res.is_a?(Net::HTTPSuccess) or res.is_a?(Net::HTTPRedirection)
       return res.body == @app.object_id.to_s
     end
-  rescue Errno::ECONNREFUSED
+  rescue Errno::ECONNREFUSED, Errno::EBADF
     return false
   end
 
