@@ -383,6 +383,7 @@ The following people have dedicated their time and effort to Capybara:
 * Darrin Holst
 * Steven Parkes
 * Davide Marquês
+* Lucas Prim
 
 == License:
 
