@@ -3,6 +3,10 @@ class Capybara::Driver::Base
     raise NotImplementedError
   end
 
+  def current_path
+    URI.parse(current_url).path
+  end
+
   def visit(path)
     raise NotImplementedError
   end

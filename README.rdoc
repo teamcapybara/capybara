@@ -141,6 +141,10 @@ You can use the <tt>visit</tt> method to navigate to other pages:
 The visit method only takes a single parameter, the request method is *always*
 GET.
 
+You can get the current path of the browsing session for test assertions:
+
+    current_path.should == post_comments_path(post)
+
 === Clicking links and buttons
 
 You can interact with the webapp by following links and buttons. Capybara

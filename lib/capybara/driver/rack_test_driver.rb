@@ -191,7 +191,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   end
 
   def process(method, path, attributes = {})
-    return if path.gsub(/^#{current_path}/, '') =~ /^#/
+    return if path.gsub(/^#{request_path}/, '') =~ /^#/
     send(method, path, attributes, env)
     follow_redirects!
   end
@@ -205,7 +205,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   end
 
   def submit(method, path, attributes)
-    path = current_path if not path or path.empty?
+    path = request_path if not path or path.empty?
     send(method, path, attributes, env)
     follow_redirects!
   end
@@ -239,7 +239,7 @@ private
     Rack::MockSession.new(app, Capybara.default_host || "www.example.com")
   end
 
-  def current_path
+  def request_path
     request.path rescue ""
   end
 

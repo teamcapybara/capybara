@@ -18,6 +18,11 @@ shared_examples_for 'driver' do
       @driver.visit('/foo')
       @driver.current_url.should include('/foo')
     end
+
+    it 'should show the correct location' do
+      @driver.visit('/foo')
+      @driver.current_path.should == '/foo'
+    end
   end
 
   describe '#body' do
