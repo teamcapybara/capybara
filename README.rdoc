@@ -196,6 +196,17 @@ specific table, identified by either id or text of the table's caption tag.
       fill_in 'Name', :with => 'Jimmy'
     end
 
+You can also specify a scope to be used for future searches with the <tt>scope_to</tt>.
+It returns a handle to the session scoped to the provided selector.
+
+    scope = page.scope_to("//div[@id='foo']")
+    scope.has_xpath("//a[@class='bar']")
+
+You can also chain scopes by calling <tt>scope_to</tt> on an existing scope.
+
+    more_scope = scope.scope_to("//p")
+    more_scope.has_xpath("//a[@class='baz']")
+
 === Querying
 
 Capybara has a rich set of options for querying the page for the existence of

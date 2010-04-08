@@ -126,6 +126,14 @@ module Capybara
       end
     end
 
+    def scope_to(*locator)
+      scoped_session = self.clone
+      scoped_session.instance_eval do
+        @scopes = scopes + locator
+      end
+      scoped_session
+    end
+
     def has_xpath?(path, options={})
       wait_conditionally_until do
         results = all(:xpath, path, options)
