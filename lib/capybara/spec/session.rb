@@ -1,5 +1,9 @@
-require File.expand_path('spec_helper', File.dirname(__FILE__))
+require 'capybara/spec/test_app'
 require 'nokogiri'
+
+Dir[File.dirname(__FILE__)+'/session/*'].each { |group| 
+  require group
+}
 
 shared_examples_for "session" do
   def extract_results(session)

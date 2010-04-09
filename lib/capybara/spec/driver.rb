@@ -1,4 +1,8 @@
-require File.expand_path('spec_helper', File.dirname(__FILE__))
+require 'capybara/spec/test_app'
+
+Dir[File.dirname(__FILE__)+'/driver/*'].each { |group| 
+  require group
+}
 
 shared_examples_for 'driver' do
 

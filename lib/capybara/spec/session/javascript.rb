@@ -1,7 +1,3 @@
-require File.expand_path('spec_helper', File.dirname(__FILE__))
-
-require 'nokogiri'
-
 shared_examples_for "session with javascript support" do
   describe 'all JS specs' do
     before do
@@ -193,5 +189,16 @@ shared_examples_for "session with javascript support" do
       end
     end
 
+  end
+end
+
+shared_examples_for "session without javascript support" do
+  describe "#evaluate_script" do
+    before{ @session.visit('/with_simple_html') }
+    it "should raise an error" do
+      running {
+        @session.evaluate_script('3 + 3')
+      }.should raise_error(Capybara::NotSupportedByDriverError)
+    end
   end
 end
