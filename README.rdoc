@@ -217,7 +217,7 @@ You can also find specific elements, in order to manipulate them:
     find_button('Send').click
 
     find('//table/tr').click
-    wait_for("//*[@id='overlay'").find("//h1").click
+    locate("//*[@id='overlay'").find("//h1").click
     all('a').each { |a| a[:href] }
 
 === Scripting
