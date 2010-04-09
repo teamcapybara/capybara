@@ -276,26 +276,27 @@ examples. Just load the DSL and include it anywhere:
     require 'capybara'
     require 'capybara/dsl'
 
-    include Capybara
     Capybara.default_driver = :culerity
 
-    within("//form[@id='session']") do
-      fill_in 'Login', :with => 'user@example.com'
-      fill_in 'Password', :with => 'password'
+    module MyModule
+      include Capybara
+
+      def login!
+        within("//form[@id='session']") do
+          fill_in 'Login', :with => 'user@example.com'
+          fill_in 'Password', :with => 'password'
+        end
+        click_link 'Sign in'
+      end
     end
-    click_link 'Sign in'
 
 == Calling remote servers
 
 Normally Capybara expects to be testing an in-process Rack application, but you can also use it to talk to a web server running anywhere on the internets, by setting app_host:
 
-    require 'capybara'
-    require 'capybara/dsl'
-
-    include Capybara
     Capybara.current_driver = :selenium
     Capybara.app_host = 'http://www.google.com'
-
+    ... 
     visit('/')
 
 Note that rack-test does not support running against a remote server. With drivers that support it, you can also visit any URL directly:
