@@ -2,8 +2,6 @@ require 'timeout'
 require 'nokogiri'
 
 module Capybara
-  VERSION = '0.3.6'
-
   class CapybaraError < StandardError; end
   class DriverNotFoundError < CapybaraError; end
   class ElementNotFound < CapybaraError; end
@@ -37,6 +35,7 @@ module Capybara
   autoload :Node,       'capybara/node'
   autoload :XPath,      'capybara/xpath'
   autoload :Searchable, 'capybara/searchable'
+  autoload :VERSION,    'capybara/version'
   
   module Driver
     autoload :Base,     'capybara/driver/base'
