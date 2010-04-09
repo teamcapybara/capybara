@@ -74,7 +74,8 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
     def click
       if tag_name == 'a'
-        driver.visit(self[:href].to_s)
+        method = self["data-method"] || :get
+        driver.process(method, self[:href].to_s)
       elsif (tag_name == 'input' or tag_name == 'button') and %w(submit image).include?(type)
         Form.new(driver, form).submit(self)
       end
@@ -186,8 +187,12 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   end
 
   def visit(path, attributes = {})
+    process(:get, path, attributes)
+  end
+
+  def process(method, path, attributes = {})
     return if path.gsub(/^#{current_path}/, '') =~ /^#/
-    get(path, attributes, env)
+    send(method, path, attributes, env)
     follow_redirects!
   end
 

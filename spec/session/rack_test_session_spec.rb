@@ -18,6 +18,14 @@ describe Capybara::Session do
       end
     end
 
+    describe '#click_link' do
+      it "should use data-method if available" do
+        @session.visit "/with_html"
+        @session.click_link "A link with data-method"
+        @session.body.should == 'The requested object was deleted'
+      end
+    end
+
     it_should_behave_like "session"
     it_should_behave_like "session without javascript support"
     it_should_behave_like "session with headers support"

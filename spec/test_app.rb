@@ -42,6 +42,10 @@ class TestApp < Sinatra::Base
     redirect '/redirect_again'
   end
 
+  delete "/delete" do
+    "The requested object was deleted"
+  end
+
   get '/redirect_back' do
     redirect back
   end
