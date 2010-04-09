@@ -1,3 +1,22 @@
+# Versiob 0.3.7
+
+Release date: 2010-04-09
+
+This is a drop in compatible maintainance release. It's mostly
+important for driver authors.
+
+### Added
+
+* RackTest scans for data-method which rails3 uses to change the request method
+
+### Fixed
+
+* Don't hang when starting server on Windoze
+
+### Changed
+
+* The driver and session specs are now located inside lib! Driver authors can simply require them.
+
 # Version 0.3.6
 
 Release date: 2010-03-22
