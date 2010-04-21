@@ -82,7 +82,11 @@ shared_examples_for "fill_in" do
       @session.click_button('awesome')
       extract_results(@session)['name'].should == 'Ford Prefect'
     end
-
+    
+    it "should throw an exception if a hash containing 'with' is not provided" do
+      lambda{@session.fill_in 'Name', 'ignu'}.should raise_error
+    end
+    
     context "with ignore_hidden_fields" do
       before { Capybara.ignore_hidden_elements = true }
       after  { Capybara.ignore_hidden_elements = false }
