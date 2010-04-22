@@ -10,7 +10,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       if name == :value
         node.value
       else
-        node.attribute(name)
+        node.attribute(name.to_s)
       end
     rescue Selenium::WebDriver::Error::WebDriverError
       nil
