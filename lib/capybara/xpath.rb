@@ -5,6 +5,17 @@ module Capybara
   class XPath
 
     class << self
+      def escape(string)
+        if string.include?("'")
+          string = string.split("'", -1).map do |substr|
+            "'#{substr}'"
+          end.join(%q{,"'",})
+          "concat(#{string})"
+        else
+          "'#{string}'"
+        end
+      end
+      
       def wrap(path)
         if path.is_a?(self)
           path
@@ -161,15 +172,7 @@ module Capybara
 
     # Sanitize a String for putting it into an xpath query
     def s(string)
-      if string.include?("'")
-        string = string.split("'", -1).map do |substr|
-          "'#{substr}'"
-        end.join(%q{,"'",})
-        "concat(#{string})"
-      else
-        "'#{string}'"
-      end
-
+      XPath.escape(string)
     end
 
   end

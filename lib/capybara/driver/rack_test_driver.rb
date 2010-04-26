@@ -29,7 +29,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
     def set(value)
       if tag_name == 'input' and type == 'radio'
-        driver.html.xpath("//input[@name='#{self[:name]}']").each { |node| node.remove_attribute("checked") }
+        driver.html.xpath("//input[@name=#{Capybara::XPath.escape(self[:name])}]").each { |node| node.remove_attribute("checked") }
         node['checked'] = 'checked'
       elsif tag_name == 'input' and type == 'checkbox'
         if value
@@ -49,8 +49,8 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
         node.xpath(".//option[@selected]").each { |node| node.remove_attribute("selected") }
       end
 
-      if option_node = node.xpath(".//option[text()='#{option}']").first ||
-                       node.xpath(".//option[contains(.,'#{option}')]").first
+      if option_node = node.xpath(".//option[text()=#{Capybara::XPath.escape(option)}]").first ||
+                       node.xpath(".//option[contains(.,#{Capybara::XPath.escape(option)})]").first
         option_node["selected"] = 'selected'
       else
         options = node.xpath(".//option").map { |o| "'#{o.text}'" }.join(', ')
@@ -63,8 +63,8 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
         raise Capybara::UnselectNotAllowed, "Cannot unselect option '#{option}' from single select box."
       end
 
-      if option_node = node.xpath(".//option[text()='#{option}']").first ||
-                       node.xpath(".//option[contains(.,'#{option}')]").first
+      if option_node = node.xpath(".//option[text()=#{Capybara::XPath.escape(option)}]").first ||
+                       node.xpath(".//option[contains(.,#{Capybara::XPath.escape(option)})]").first
         option_node.remove_attribute('selected')
       else
         options = node.xpath(".//option").map { |o| "'#{o.text}'" }.join(', ')
