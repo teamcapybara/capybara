@@ -26,8 +26,8 @@ module Capybara
       
       context "with :text filter" do
         before do
-          @node1 = stub(Node, :text => 'node one text')
-          @node2 = stub(Node, :text => 'node two text')      
+          @node1 = stub(Node, :text => 'node one text (with parens)')
+          @node2 = stub(Node, :text => 'node two text [-]')
           @searchable.stub(:all_unfiltered).and_return([@node1, @node2])
         end
         
@@ -40,6 +40,11 @@ module Capybara
           @searchable.all('//x', :text => "node one").should == [@node1]
           @searchable.all('//x', :text => "node two").should == [@node2]
         end   
+
+        it "should allow Regexp reserved words in text" do
+          @searchable.all('//x', :text => "node one text (with parens)").should == [@node1]
+          @searchable.all('//x', :text => "node two text [-]").should == [@node2]
+        end
       end
       
       context "with :visible filter" do
