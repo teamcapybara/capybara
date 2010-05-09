@@ -32,9 +32,9 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
         driver.html.xpath("//input[@name=#{Capybara::XPath.escape(self[:name])}]").each { |node| node.remove_attribute("checked") }
         node['checked'] = 'checked'
       elsif tag_name == 'input' and type == 'checkbox'
-        if value
+        if value && !node['checked']
           node['checked'] = 'checked'
-        else
+        elsif !value && node['checked']
           node.remove_attribute('checked')
         end
       elsif tag_name == 'input'
