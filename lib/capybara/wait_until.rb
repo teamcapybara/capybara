@@ -18,6 +18,8 @@ module Capybara
           end
 
           driver && driver.wait_until(delay)
+
+          sleep(0.05)
         end
       end
 
