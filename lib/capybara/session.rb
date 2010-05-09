@@ -119,7 +119,7 @@ module Capybara
       end
     end
 
-    def within_frame frame_id
+    def within_frame(frame_id)
       driver.within_frame(frame_id) do
         yield
       end
