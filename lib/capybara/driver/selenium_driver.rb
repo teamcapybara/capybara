@@ -70,7 +70,12 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     end
 
     def visible?
-      node.displayed? and node.displayed? != "false"
+        begin
+            node.displayed? and node.displayed? != "false"
+        rescue Selenium::WebDriver::Error::WebDriverError
+            # rescues the inevitable "Selenium::WebDriver::Error::WebDriverError: element is obsolete" if you check to see if an element that has been removed from the DOM is visible
+            return false
+        end
     end
     
     def trigger(event)
@@ -138,6 +143,13 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   def cleanup!
     browser.manage.delete_all_cookies
+  end
+
+  def within_frame(frame_id)
+    old_window = browser.window_handle
+    browser.switch_to.frame(frame_id)
+    yield
+    browser.switch_to.window old_window
   end
 
 private
