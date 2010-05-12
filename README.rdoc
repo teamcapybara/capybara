@@ -27,7 +27,8 @@ On OSX you may have to install libffi, you can install it via MacPorts with:
 * Report issues on {GitHub Issues}[http://github.com/jnicklas/capybara/issues]
 
 Pull requests are very welcome! Make sure your patches are well tested, Capybara is
-a testing tool after all.
+a testing tool after all. Please create a topic branch for every separate change
+you make, I will not pull anything from your master branch.
 
 == Using Capybara with Cucumber
 

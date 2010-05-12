@@ -1,4 +1,20 @@
-# Versiob 0.3.7
+# Version 0.3.8
+
+Release date: 2010-05-12
+
+### Added
+
+* Within_frame method to execute a block of code within a particular iframe (Selenium only!)
+
+### Fixed
+
+* Single quotes are properly escaped with `select` under rack-test and Selenium.
+* The :text option for searches now escapes regexp special characters when a string is given.
+* Selenium now correctly checks already checked checkboxes (same with uncheck)
+* Timing issue which caused Selenium to hang under certain circumstances.
+* Selenium now resolves attributes even if they are given as a Symbol
+
+# Version 0.3.7
 
 Release date: 2010-04-09
 
