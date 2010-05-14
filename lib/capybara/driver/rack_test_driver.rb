@@ -26,6 +26,13 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       end
     end
 
+    def value
+      if tag_name == 'textarea'
+        node.content
+      else
+        super
+      end
+    end
 
     def set(value)
       if tag_name == 'input' and type == 'radio'
