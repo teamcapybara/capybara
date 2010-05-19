@@ -218,6 +218,7 @@ shared_examples_for "click_button" do
 
     it "should follow redirects" do
       @session.click_button('Go FAR')
+      @session.driver.current_url.should match(%r{/landed$})
       @session.body.should include('You landed')
     end
 
