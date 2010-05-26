@@ -183,6 +183,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   alias_method :request, :last_request
 
   def initialize(app)
+    raise ArgumentError, "rack-test requires a rack application, but none was given" unless app
     @app = app
   end
 
