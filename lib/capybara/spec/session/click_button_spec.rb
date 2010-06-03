@@ -99,6 +99,15 @@ shared_examples_for "click_button" do
         it "should not serialize a select tag without options" do
           @results['tendency'].should be_nil
         end
+
+        it "should not submit disabled fields" do
+          @results['disabled_text_field'].should be_nil
+          @results['disabled_textarea'].should be_nil
+          @results['disabled_checkbox'].should be_nil
+          @results['disabled_radio'].should be_nil
+          @results['disabled_select'].should be_nil
+          @results['disabled_file'].should be_nil
+        end
       end
     end
 

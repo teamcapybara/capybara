@@ -166,6 +166,50 @@
   </div>
 
   <p>
+    <label for="form_disabled_text_field">
+      Disabled Text Field
+      <input type="text" name="form[disabled_text_field]" value="Should not see me" id="form_disabled_text_field" disabled="disabled" />
+    </label>
+  </p>
+
+  <p>
+    <label for="form_disabled_textarea">
+      Disabled Textarea
+      <textarea name="form[disabled_textarea]" value="Should not see me" id="form_disabled_textarea" disabled="disabled" />
+    </label>
+  </p>
+
+  <p>
+    <label for="form_disabled_checkbox">
+      Disabled Checkbox
+      <input type="checkbox" name="form[disabled_checkbox]" value="Should not see me" id="form_disabled_checkbox" checked="checked" disabled="disabled" />
+    </label>
+  </p>
+
+  <p>
+    <label for="form_disabled_radio">
+      Disabled Checkbox
+      <input type="radio" name="form[disabled_radio]" value="Should not see me" id="form_disabled_radio" checked="checked" disabled="disabled" />
+    </label>
+  </p>
+
+  <p>
+    <label for="form_disabled_select">
+      Disabled Select
+      <select name="form[disabled_select]" id="form_disabled_select" disabled="disabled">
+        <option value="Should not see me" selected="selected">Should not see me</option>
+      </select>
+    </label>
+  </p>
+
+  <p>
+    <label for="form_disabled_file">
+      Disabled File
+      <input type="file" name="form[disabled_file]" value="/should/not/see/me" id="form_disabled_file" disabled="disabled" />
+    </label>
+  </p>
+
+  <p>
     <input type="button" name="form[fresh]" id="fresh_btn" value="i am fresh"/>
     <input type="submit" name="form[awesome]" id="awe123" value="awesome"/>
     <input type="submit" name="form[crappy]" id="crap321" value="crappy"/>
