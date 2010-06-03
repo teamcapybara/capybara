@@ -55,20 +55,23 @@ class Capybara::Server
   end
 
   def boot
+    return self unless @app
     find_available_port
     Capybara.log "application has already booted" and return self if responsive?
     Capybara.log "booting Rack applicartion on port #{port}"
 
-    Timeout.timeout(10) do
-      Thread.new do
-        handler.run(Identify.new(@app), :Port => port, :AccessLog => [])
-      end
-      Capybara.log "checking if application has booted"
+    Thread.new do
+      handler.run(Identify.new(@app), :Port => port, :AccessLog => [])
+    end
+    Capybara.log "checking if application has booted"
 
-      loop do
-        Capybara.log("application has booted") and break if responsive?
-        Capybara.log("waiting for application to boot...")
+    Capybara::WaitUntil.timeout(10) do
+      if responsive?
+        Capybara.log("application has booted")
+        true
+      else
         sleep 0.5
+        false
       end
     end
     self
@@ -90,7 +93,7 @@ private
     if res.is_a?(Net::HTTPSuccess) or res.is_a?(Net::HTTPRedirection)
       return res.body == @app.object_id.to_s
     end
-  rescue Errno::ECONNREFUSED
+  rescue Errno::ECONNREFUSED, Errno::EBADF
     return false
   end
 

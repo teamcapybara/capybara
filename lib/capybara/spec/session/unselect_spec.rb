@@ -25,6 +25,12 @@ shared_examples_for "unselect" do
         extract_results(@session)['underwear'].should include('Commando', 'Boxer Briefs')
         extract_results(@session)['underwear'].should_not include('Briefs')
       end
+
+      it "should escape quotes" do
+        @session.unselect("Frenchman's Pantalons", :from => 'Underwear')
+        @session.click_button('awesome')
+        extract_results(@session)['underwear'].should_not include("Frenchman's Pantalons")
+      end
     end
 
     context "with single select" do

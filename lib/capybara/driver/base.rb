@@ -19,6 +19,9 @@ class Capybara::Driver::Base
     false
   end
 
+  def wait_until *args
+  end
+
   def response_headers
     raise Capybara::NotSupportedByDriverError
   end
@@ -27,11 +30,19 @@ class Capybara::Driver::Base
     raise NotImplementedError
   end
 
+  def within_frame(frame_id)
+    raise Capybara::NotSupportedByDriverError
+  end
+
   def source
     raise NotImplementedError
   end
 
   def cleanup!
+  end
+
+  def has_shortcircuit_timeout?
+    false
   end
 
 end

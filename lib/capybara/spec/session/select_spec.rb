@@ -31,6 +31,18 @@ shared_examples_for "select" do
       extract_results(@session)['title'].should == 'Mr'
     end
 
+    it "should escape quotes" do
+      @session.select("John's made-up language", :from => 'Locale')
+      @session.click_button('awesome')
+      extract_results(@session)['locale'].should == 'jo'
+    end
+
+    it "match labels with preceding or trailing whitespace" do
+      @session.select("Lojban", :from => 'Locale')
+      @session.click_button('awesome')
+      extract_results(@session)['locale'].should == 'jbo'
+    end
+
     context "with a locator that doesn't exist" do
       it "should raise an error" do
         running { @session.select('foo', :from => 'does not exist') }.should raise_error(Capybara::ElementNotFound)

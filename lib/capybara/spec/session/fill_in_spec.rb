@@ -52,6 +52,19 @@ shared_examples_for "fill_in" do
       extract_results(@session)['password'].should == 'supasikrit'
     end
 
+    it "should fill in a field with a custom type" do
+      pending "selenium doesn't seem to find custom fields" if @session.mode == :selenium
+      @session.fill_in('Schmooo', :with => 'Schmooo is the game')
+      @session.click_button('awesome')
+      extract_results(@session)['schmooo'].should == 'Schmooo is the game'
+    end
+
+    it "should fill in a password field by name" do
+      @session.fill_in('form[password]', :with => 'supasikrit')
+      @session.click_button('awesome')
+      extract_results(@session)['password'].should == 'supasikrit'
+    end
+
     it "should fill in a password field by label" do
       @session.fill_in('Password', :with => 'supasikrit')
       @session.click_button('awesome')
@@ -69,7 +82,11 @@ shared_examples_for "fill_in" do
       @session.click_button('awesome')
       extract_results(@session)['name'].should == 'Ford Prefect'
     end
-
+    
+    it "should throw an exception if a hash containing 'with' is not provided" do
+      lambda{@session.fill_in 'Name', 'ignu'}.should raise_error
+    end
+    
     context "with ignore_hidden_fields" do
       before { Capybara.ignore_hidden_elements = true }
       after  { Capybara.ignore_hidden_elements = false }

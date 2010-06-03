@@ -1,54 +1,43 @@
+require 'forwardable'
 require 'capybara/wait_until'
 
 module Capybara
   class Session
+    extend Forwardable
     include Searchable
 
     DSL_METHODS = [
       :all, :attach_file, :body, :check, :choose, :click, :click_button, :click_link, :current_url, :drag, :evaluate_script,
       :field_labeled, :fill_in, :find, :find_button, :find_by_id, :find_field, :find_link, :has_content?, :has_css?,
       :has_no_content?, :has_no_css?, :has_no_xpath?, :has_xpath?, :locate, :save_and_open_page, :select, :source, :uncheck,
-      :visit, :wait_until, :within, :within_fieldset, :within_table, :has_link?, :has_no_link?, :has_button?, :has_no_button?,
-      :has_field?, :has_no_field?, :has_checked_field?, :has_unchecked_field?
+      :visit, :wait_until, :within, :within_fieldset, :within_table, :within_frame, :has_link?, :has_no_link?, :has_button?,
+      :has_no_button?,    :has_field?, :has_no_field?, :has_checked_field?, :has_unchecked_field?, :has_no_table?, :has_table?,
+      :unselect, :has_select?, :has_no_select?
     ]
 
     attr_reader :mode, :app
 
-    def initialize(mode, app)
+    def initialize(mode, app=nil)
       @mode = mode
       @app = app
     end
 
     def driver
-      @driver ||= case mode
-      when :rack_test
-        Capybara::Driver::RackTest.new(app)
-      when :selenium
-        Capybara::Driver::Selenium.new(app)
-      when :celerity
-        Capybara::Driver::Celerity.new(app)
-      when :culerity
-        Capybara::Driver::Culerity.new(app)
-      else
+      @driver ||= begin                    
+        string = mode.to_s
+        string.gsub!(%r{(^.)|(_.)}) { |m| m[m.length-1,1].upcase }
+        Capybara::Driver.const_get(string.to_sym).new(app)
+      rescue NameError
         raise Capybara::DriverNotFoundError, "no driver called #{mode} was found"
       end
     end
 
-    def cleanup!
-      driver.cleanup!
-    end
-
-    def current_url
-      driver.current_url
-    end
-
-    def response_headers
-      driver.response_headers
-    end
-
-    def visit(path)
-      driver.visit(path)
-    end
+    def_delegator :driver, :cleanup!
+    def_delegator :driver, :current_url
+    def_delegator :driver, :response_headers
+    def_delegator :driver, :visit
+    def_delegator :driver, :body
+    def_delegator :driver, :source
 
     def click(locator)
       msg = "no link or button '#{locator}' found"
@@ -73,6 +62,7 @@ module Capybara
 
     def fill_in(locator, options={})
       msg = "cannot fill in, no text field, text area or password field with id, name, or label '#{locator}' found"
+      raise "Must pass a hash containing 'with'" if not options.is_a?(Hash) or not options.has_key?(:with)
       locate(:xpath, XPath.fillable_field(locator), msg).set(options[:with])
     end
 
@@ -106,14 +96,6 @@ module Capybara
       locate(:xpath, XPath.file_field(locator), msg).set(path)
     end
 
-    def body
-      driver.body
-    end
-
-    def source
-      driver.source
-    end
-
     def within(kind, scope=nil)
       kind, scope = Capybara.default_selector, kind unless scope
       scope = XPath.from_css(scope) if kind == :css
@@ -134,6 +116,12 @@ module Capybara
 
     def within_table(locator)
       within :xpath, XPath.table(locator) do
+        yield
+      end
+    end
+
+    def within_frame(frame_id)
+      driver.within_frame(frame_id) do
         yield
       end
     end
@@ -244,7 +232,7 @@ module Capybara
     end
 
     def wait_until(timeout = Capybara.default_wait_time)
-      WaitUntil.timeout(timeout) { yield }
+      WaitUntil.timeout(timeout,driver) { yield }
     end
 
     def evaluate_script(script)

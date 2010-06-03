@@ -33,6 +33,7 @@ module Capybara
       results = all_unfiltered(locator)
 
       if options[:text]
+        options[:text] = Regexp.escape(options[:text]) unless options[:text].kind_of?(Regexp)
         results = results.select { |n| n.text.match(options[:text]) }
       end
 

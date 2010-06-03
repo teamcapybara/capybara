@@ -10,10 +10,18 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       if name == :value
         node.value
       else
-        node.attribute(name)
+        node.attribute(name.to_s)
       end
     rescue Selenium::WebDriver::Error::WebDriverError
       nil
+    end
+
+    def value
+      if tag_name == "select" and self[:multiple]
+        node.find_elements(:xpath, ".//option").select { |n| n.selected? }.map { |n| n.text }
+      else
+        super
+      end
     end
 
     def set(value)
@@ -21,14 +29,14 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
         node.clear
         node.send_keys(value.to_s)
       elsif tag_name == 'input' and type == 'radio'
-        node.select
+        node.click
       elsif tag_name == 'input' and type == 'checkbox'
-        node.toggle
+        node.click if node.attribute('checked') != value
       end
     end
 
     def select(option)
-      option_node = node.find_element(:xpath, ".//option[text()='#{option}']") || node.find_element(:xpath, ".//option[contains(.,'#{option}')]")
+      option_node = node.find_element(:xpath, ".//option[normalize-space(text())=#{Capybara::XPath.escape(option)}]") || node.find_element(:xpath, ".//option[contains(.,#{Capybara::XPath.escape(option)})]")
       option_node.select
     rescue 
       options = node.find_elements(:xpath, "//option").map { |o| "'#{o.text}'" }.join(', ')
@@ -41,7 +49,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       end
 
       begin
-        option_node = node.find_element(:xpath, ".//option[text()='#{option}']") || node.find_element(:xpath, ".//option[contains(.,'#{option}')]")
+        option_node = node.find_element(:xpath, ".//option[normalize-space(text())=#{Capybara::XPath.escape(option)}]") || node.find_element(:xpath, ".//option[contains(.,#{Capybara::XPath.escape(option)})]")
         option_node.clear
       rescue
         options = node.find_elements(:xpath, "//option").map { |o| "'#{o.text}'" }.join(', ')
@@ -69,6 +77,10 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     end
 
   private
+
+    def all_unfiltered(locator)
+      node.find_elements(:xpath, locator).map { |n| self.class.new(driver, n) }
+    end
 
     def type
       self[:type]
@@ -126,6 +138,13 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   def cleanup!
     browser.manage.delete_all_cookies
+  end
+
+  def within_frame(frame_id)
+    old_window = browser.window_handle
+    browser.switch_to.frame(frame_id)
+    yield
+    browser.switch_to.window old_window
   end
 
 private

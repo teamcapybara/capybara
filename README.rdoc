@@ -27,7 +27,8 @@ On OSX you may have to install libffi, you can install it via MacPorts with:
 * Report issues on {GitHub Issues}[http://github.com/jnicklas/capybara/issues]
 
 Pull requests are very welcome! Make sure your patches are well tested, Capybara is
-a testing tool after all.
+a testing tool after all. Please create a topic branch for every separate change
+you make.
 
 == Using Capybara with Cucumber
 
@@ -54,6 +55,9 @@ Now you can use it in your steps:
       end
       click_link 'Sign in'
     end
+
+Please note that while Capybara uses XPath selectors by default, Cucumber explicitly
+changes this to CSS in `env.rb`.  See "XPath and CSS" below.
 
 == Default and current driver
 
@@ -97,6 +101,11 @@ There are also explicit <tt>@selenium</tt>, <tt>@culerity</tt> and
 At the moment, Capybara supports Webdriver, also called Selenium 2.0, *not*
 Selenium RC. Provided Firefox is installed, everything is set up for you, and
 you should be able to start using Selenium right away.
+
+If desired, you can change Selenium browser to :chrome or :ie:
+
+   require "selenium-webdriver"
+   Selenium::WebDriver.for :chrome
 
 == Celerity
 
@@ -151,7 +160,7 @@ with the various form elements:
     fill_in('First Name', :with => 'John')
     fill_in('Password', :with => 'Seekrit')
     fill_in('Description', :with => 'Really Long Text…')
-    choose('An Option')
+    choose('A Radio Button')
     check('A Checkbox')
     uncheck('A Checkbox')
     attach_file('Image', '/path/to/image.jpg')
@@ -177,7 +186,7 @@ You can choose which kind of selector Capybara uses by default, by setting
 
 There are special methods for restricting the scope to a specific fieldset,
 identified by either an id or the text of the fieldet's legend tag, and to a
-specific table, identified by either idea or text of the table's caption tag.
+specific table, identified by either id or text of the table's caption tag.
 
     within_fieldset('Employee') do
       fill_in 'Name', :with => 'Jimmy'
@@ -214,7 +223,7 @@ You can also find specific elements, in order to manipulate them:
     find_button('Send').click
 
     find('//table/tr').click
-    wait_for("//*[@id='overlay'").find("//h1").click
+    locate("//*[@id='overlay'").find("//h1").click
     all('a').each { |a| a[:href] }
 
 === Scripting
@@ -255,7 +264,7 @@ is (the default is 2 seconds):
     Capybara.default_wait_time = 5
 
 Be aware that because of this behaviour, the following two statements are *not*
-identical, and you should *always* use the latter!
+equivalent, and you should *always* use the latter!
 
     page.should_not have_xpath('//a')
     page.should have_no_xpath('//a')
@@ -263,36 +272,37 @@ identical, and you should *always* use the latter!
 The former would incorrectly wait for the content to appear, since the
 asynchronous process has not yet removed the element from the page, it would
 therefore fail, even though the code might be working correctly. The latter
-correctly wait for the element to disappear from the page.
+correctly waits for the element to disappear from the page.
 
 == Using the DSL outside cucumber
 
 You can mix the DSL into any context, for example you could use it in RSpec
-examples. Just load the dsl and include it anywhere:
+examples. Just load the DSL and include it anywhere:
 
     require 'capybara'
     require 'capybara/dsl'
 
-    include Capybara
     Capybara.default_driver = :culerity
 
-    within("//form[@id='session']") do
-      fill_in 'Login', :with => 'user@example.com'
-      fill_in 'Password', :with => 'password'
+    module MyModule
+      include Capybara
+
+      def login!
+        within("//form[@id='session']") do
+          fill_in 'Login', :with => 'user@example.com'
+          fill_in 'Password', :with => 'password'
+        end
+        click_link 'Sign in'
+      end
     end
-    click_link 'Sign in'
 
 == Calling remote servers
 
 Normally Capybara expects to be testing an in-process Rack application, but you can also use it to talk to a web server running anywhere on the internets, by setting app_host:
 
-    require 'capybara'
-    require 'capybara/dsl'
-
-    include Capybara
     Capybara.current_driver = :selenium
     Capybara.app_host = 'http://www.google.com'
-
+    ... 
     visit('/')
 
 Note that rack-test does not support running against a remote server. With drivers that support it, you can also visit any URL directly:
@@ -352,31 +362,6 @@ moving from Webrat and used CSS a lot, or simply generally prefer CSS:
 * <tt><a href="#"></tt> Will cause problems under rack-test, please do
   <tt><a href="/same/url#"></tt> instead. You can achieve this in Rails with
   <tt>link_to('foo', :anchor => '')</tt>
-
-== Contributors:
-
-The following people have dedicated their time and effort to Capybara:
-
-* Jonas Nicklas
-* Dennis Rogenius
-* Rob Holland
-* Wincent Colaiuta
-* Andrea Fazzi
-* Aslak Hellesøy
-* Andrew Brown
-* Lenny Marks
-* Aaron Patterson
-* Dan Dofter
-* Thorbjørn Hermansen
-* Louis T.
-* Stephan Hagemann
-* Graham Ashton
-* Joseph Wilk
-* Matt Wynne
-* Piotr Sarnacki
-* Pavel Gabriel
-* Bodaniel Jeanes
-* Carl Porth
 
 == License:
 

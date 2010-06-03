@@ -2,8 +2,6 @@ require 'timeout'
 require 'nokogiri'
 
 module Capybara
-  VERSION = '0.3.0'
-
   class CapybaraError < StandardError; end
   class DriverNotFoundError < CapybaraError; end
   class ElementNotFound < CapybaraError; end
@@ -15,7 +13,7 @@ module Capybara
   class InfiniteRedirectError < TimeoutError; end
   
   class << self
-    attr_accessor :debug, :asset_root, :app_host, :run_server
+    attr_accessor :debug, :asset_root, :app_host, :run_server, :default_host
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
 
     def default_selector
@@ -37,6 +35,7 @@ module Capybara
   autoload :Node,       'capybara/node'
   autoload :XPath,      'capybara/xpath'
   autoload :Searchable, 'capybara/searchable'
+  autoload :VERSION,    'capybara/version'
   
   module Driver
     autoload :Base,     'capybara/driver/base'
