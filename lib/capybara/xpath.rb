@@ -152,8 +152,8 @@ module Capybara
           when :text      then postfix += "[text()=#{s(value)}]"
           when :checked   then postfix += "[@checked]"
           when :unchecked then postfix += "[not(@checked)]"
-          when :options   then postfix += value.map { |o| "[./option/text()=#{s(o)}]" }.join
-          when :selected  then postfix += [value].flatten.map { |o| "[./option[@selected]/text()=#{s(o)}]" }.join
+          when :options   then postfix += value.map { |o| "[.//option/text()=#{s(o)}]" }.join
+          when :selected  then postfix += [value].flatten.map { |o| "[.//option[@selected]/text()=#{s(o)}]" }.join
         end
         postfix
       end
