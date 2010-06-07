@@ -114,6 +114,10 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
   def response_headers
     browser.response_headers
   end
+  
+  def response_code
+    browser.status_code
+  end
 
   def find(selector)
     browser.elements_by_xpath(selector).map { |node| Node.new(self, node) }

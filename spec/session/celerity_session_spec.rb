@@ -21,7 +21,7 @@ if RUBY_PLATFORM =~ /java/
     it_should_behave_like "session"
     it_should_behave_like "session with javascript support"
     it_should_behave_like "session with headers support"
-    it_should_behave_like "session without response code support"
+    it_should_behave_like "session with response code support"
   end
 else
   puts "#{File.basename(__FILE__)} requires JRuby; skipping.."
