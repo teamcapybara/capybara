@@ -133,7 +133,7 @@ end
 shared_examples_for "driver with response code support" do
   it "should make the response code available through response_code" do
     @driver.visit('/with_simple_html')
-    @driver.response_code.should == '200'
+    @driver.response_code.should == 200
   end
 end
 

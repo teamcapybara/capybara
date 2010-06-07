@@ -2,7 +2,7 @@ shared_examples_for "session with response code support" do
   describe '#response_code' do
     it "should return response codes" do
       @session.visit('/with_simple_html')     
-      @session.response_code.should == '200'
+      @session.response_code.should == 200
     end
   end
 end

@@ -204,6 +204,10 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   def response_headers
     response.headers
   end
+  
+  def response_code
+    response.status
+  end
 
   def submit(method, path, attributes)
     path = current_path if not path or path.empty?
