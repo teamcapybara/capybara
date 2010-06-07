@@ -35,6 +35,7 @@ module Capybara
     def_delegator :driver, :cleanup!
     def_delegator :driver, :current_url
     def_delegator :driver, :response_headers
+    def_delegator :driver, :response_code
     def_delegator :driver, :visit
     def_delegator :driver, :body
     def_delegator :driver, :source

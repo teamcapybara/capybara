@@ -130,6 +130,22 @@ shared_examples_for "driver with header support" do
   end
 end
 
+shared_examples_for "driver with response code support" do
+  it "should make the response code available through response_code" do
+    @driver.visit('/with_simple_html')
+    @driver.response_code.should == '200'
+  end
+end
+
+shared_examples_for "driver without response code support" do
+  it "should raise when trying to access the response code available through response_code" do
+    @driver.visit('/with_simple_html')
+    lambda {
+      @driver.response_code
+    }.should raise_error(Capybara::NotSupportedByDriverError)
+  end
+end
+
 shared_examples_for "driver with frame support" do
   describe '#within_frame' do
     before(:each) do

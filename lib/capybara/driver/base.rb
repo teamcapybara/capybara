@@ -25,6 +25,10 @@ class Capybara::Driver::Base
   def response_headers
     raise Capybara::NotSupportedByDriverError
   end
+  
+  def response_code
+    raise Capybara::NotSupportedByDriverError
+  end
 
   def body
     raise NotImplementedError

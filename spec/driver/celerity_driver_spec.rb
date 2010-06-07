@@ -9,6 +9,7 @@ if RUBY_PLATFORM =~ /java/
     it_should_behave_like "driver"
     it_should_behave_like "driver with javascript support"
     it_should_behave_like "driver with header support"
+    it_should_behave_like "driver without response code support"
     
   end
 else
