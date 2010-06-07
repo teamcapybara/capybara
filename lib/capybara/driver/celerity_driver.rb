@@ -115,7 +115,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     browser.response_headers
   end
   
-  def response_code
+  def status_code
     browser.status_code
   end
 

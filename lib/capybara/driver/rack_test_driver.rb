@@ -205,7 +205,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     response.headers
   end
   
-  def response_code
+  def status_code
     response.status
   end
 

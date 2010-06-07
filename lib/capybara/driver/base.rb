@@ -26,7 +26,7 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError
   end
   
-  def response_code
+  def status_code
     raise Capybara::NotSupportedByDriverError
   end
 
