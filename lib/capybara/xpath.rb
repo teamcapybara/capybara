@@ -111,7 +111,7 @@ module Capybara
 
     def text_field(locator, options={})
       options = options.merge(:value => options[:with]) if options.has_key?(:with)
-      add_field(locator, "//input[@type!='radio' and @type!='checkbox' and @type!='hidden']", options)
+      add_field(locator, "//input[not(@type) or (@type!='radio' and @type!='checkbox' and @type!='hidden')]", options)
     end
 
     def text_area(locator, options={})

@@ -58,6 +58,12 @@ shared_examples_for "fill_in" do
       extract_results(@session)['schmooo'].should == 'Schmooo is the game'
     end
 
+    it "should fill in a field without a type" do
+      @session.fill_in('Phone', :with => '+1 555 7022')
+      @session.click_button('awesome')
+      extract_results(@session)['phone'].should == '+1 555 7022'
+    end
+
     it "should fill in a password field by name" do
       @session.fill_in('form[password]', :with => 'supasikrit')
       @session.click_button('awesome')
