@@ -130,6 +130,22 @@ shared_examples_for "driver with header support" do
   end
 end
 
+shared_examples_for "driver with status code support" do
+  it "should make the status code available through status_code" do
+    @driver.visit('/with_simple_html')
+    @driver.status_code.should == 200
+  end
+end
+
+shared_examples_for "driver without status code support" do
+  it "should raise when trying to access the status code available through status_code" do
+    @driver.visit('/with_simple_html')
+    lambda {
+      @driver.status_code
+    }.should raise_error(Capybara::NotSupportedByDriverError)
+  end
+end
+
 shared_examples_for "driver with frame support" do
   describe '#within_frame' do
     before(:each) do

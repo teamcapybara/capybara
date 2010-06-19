@@ -15,4 +15,5 @@ describe Capybara::Driver::Selenium do
 
   it_should_behave_like "driver"
   it_should_behave_like "driver with javascript support"
+  it_should_behave_like "driver without status code support"
 end
