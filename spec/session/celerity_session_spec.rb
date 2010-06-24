@@ -7,7 +7,7 @@ if RUBY_PLATFORM =~ /java/
     end
 
     describe '#driver' do
-      it "should be a rack test driver" do
+      it "should be a celerity driver" do
         @session.driver.should be_an_instance_of(Capybara::Driver::Celerity)
       end
     end

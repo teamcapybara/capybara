@@ -13,7 +13,7 @@ class TestApp < Sinatra::Base
   get '/foo' do
     'Another World'
   end
-  
+
   get '/redirect' do
     redirect '/redirect_again'
   end
@@ -33,7 +33,7 @@ class TestApp < Sinatra::Base
   get '/form/get' do
     '<pre id="results">' + params[:form].to_yaml + '</pre>'
   end
-  
+
   get '/favicon.ico' do
     nil
   end
@@ -48,6 +48,16 @@ class TestApp < Sinatra::Base
 
   get '/redirect_back' do
     redirect back
+  end
+
+  get '/set_cookie' do
+    cookie_value = 'test_cookie'
+    response.set_cookie('capybara', cookie_value)
+    "Cookie set to #{cookie_value}"
+  end
+
+  get '/get_cookie' do
+    request.cookies['capybara']
   end
 
   get '/:view' do |view|
