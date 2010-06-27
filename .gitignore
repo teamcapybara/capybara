@@ -1,6 +1,7 @@
 .idea/
 .DS_Store
 pkg
+tmp
 *~
 spec.opts
-
+capybara-*.html
