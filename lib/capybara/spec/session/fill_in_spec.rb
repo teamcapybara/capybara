@@ -22,6 +22,12 @@ shared_examples_for "fill_in" do
       extract_results(@session)['street'].should == 'Avenue Q'
     end
 
+    it "should fill in a url field by label without for" do
+      @session.fill_in('Html5 Url', :with => 'http://www.avenueq.com')
+      @session.click_button('html5_submit')
+      extract_results(@session)['html5_url'].should == 'http://www.avenueq.com'
+    end
+
     it "should favour exact label matches over partial matches" do
       @session.fill_in('Name', :with => 'Harry Jones')
       @session.click_button('awesome')
