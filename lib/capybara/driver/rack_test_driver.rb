@@ -204,7 +204,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   def response_headers
     response.headers
   end
-  
+
   def status_code
     response.status
   end
@@ -218,21 +218,25 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   def find(selector)
     html.xpath(selector).map { |node| Node.new(self, node) }
   end
-  
+
   def body
     @body ||= response.body
   end
-  
+
   def html
     @html ||= Nokogiri::HTML(body)
   end
   alias_method :source, :body
 
+  def cleanup!
+    clear_cookies
+  end
+
   def get(*args, &block); reset_cache; super; end
   def post(*args, &block); reset_cache; super; end
   def put(*args, &block); reset_cache; super; end
   def delete(*args, &block); reset_cache; super; end
-  
+
 private
 
   def reset_cache
@@ -264,11 +268,6 @@ private
       # no request yet
     end
     env
-  end
-
-  def reset_cache
-    @body = nil
-    @html = nil
   end
 
 end

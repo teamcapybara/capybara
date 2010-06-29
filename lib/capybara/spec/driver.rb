@@ -1,6 +1,6 @@
 require 'capybara/spec/test_app'
 
-Dir[File.dirname(__FILE__)+'/driver/*'].each { |group| 
+Dir[File.dirname(__FILE__)+'/driver/*'].each { |group|
   require group
 }
 
@@ -13,7 +13,7 @@ shared_examples_for 'driver' do
       @driver.visit('/foo')
       @driver.body.should include('Another World')
     end
-    
+
     it "should show the correct URL" do
       @driver.visit('/foo')
       @driver.current_url.should include('/foo')
@@ -66,10 +66,10 @@ shared_examples_for 'driver' do
         @driver.find('//a')[1].tag_name.should == 'a'
         @driver.find('//p')[1].tag_name.should == 'p'
       end
-      
+
       it "should extract node visibility" do
         @driver.find('//a')[0].should be_visible
-        
+
         @driver.find('//div[@id="hidden"]')[0].should_not be_visible
         @driver.find('//div[@id="hidden_via_ancestor"]')[0].should_not be_visible
       end
@@ -81,7 +81,7 @@ shared_examples_for 'driver' do
       @driver.visit('/tables')
       @node = @driver.find('//body').first
     end
-  
+
     it "should be able to navigate/search child node" do
       @node.all('//table').size.should == 5
       @node.find('//form').all('.//table').size.should == 1
@@ -95,7 +95,6 @@ shared_examples_for 'driver' do
       end
     end
   end
-
 end
 
 shared_examples_for "driver with javascript support" do
@@ -173,6 +172,25 @@ shared_examples_for "driver with frame support" do
         @driver.find("//*[@id='divInFrameTwo']")[0].text.should eql 'This is the text of divInFrameTwo'
       end
       @driver.find("//*[@id='divInMainWindow']")[0].text.should eql 'This is the text for divInMainWindow'
+    end
+  end
+end
+
+shared_examples_for "driver with cookies support" do
+  describe "#cleanup" do
+    it "should set and clean cookies" do
+      @driver.visit('/get_cookie')
+      @driver.body.should_not include('test_cookie')
+
+      @driver.visit('/set_cookie')
+      @driver.body.should include('Cookie set to test_cookie')
+
+      @driver.visit('/get_cookie')
+      @driver.body.should include('test_cookie')
+
+      @driver.cleanup!
+      @driver.visit('/get_cookie')
+      @driver.body.should_not include('test_cookie')
     end
   end
 end

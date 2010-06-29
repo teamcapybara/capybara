@@ -72,7 +72,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     def path
       node.xpath
     end
-    
+
     def trigger(event)
       node.fire_event(event.to_s)
     end
@@ -102,7 +102,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
   def current_url
     browser.url
   end
-  
+
   def source
     browser.html
   end
@@ -114,7 +114,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
   def response_headers
     browser.response_headers
   end
-  
+
   def status_code
     browser.status_code
   end
@@ -136,6 +136,10 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     end
 
     @_browser
+  end
+
+  def cleanup!
+    browser.clear_cookies
   end
 
 private

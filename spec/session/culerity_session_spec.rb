@@ -7,7 +7,7 @@ describe Capybara::Session do
     end
 
     describe '#driver' do
-      it "should be a rack test driver" do
+      it "should be a culerity driver" do
         @session.driver.should be_an_instance_of(Capybara::Driver::Culerity)
       end
     end
