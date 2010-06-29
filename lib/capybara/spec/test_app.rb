@@ -22,6 +22,15 @@ class TestApp < Sinatra::Base
     redirect '/landed'
   end
 
+  get '/redirect/:times/times' do
+    times = params[:times].to_i
+    if times.zero?
+      "redirection complete"
+    else
+      redirect "/redirect/#{times - 1}/times"
+    end
+  end
+
   get '/landed' do
     "You landed"
   end
