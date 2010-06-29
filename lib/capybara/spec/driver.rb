@@ -60,6 +60,10 @@ shared_examples_for 'driver' do
         @driver.find('//input[@id="checked_field"]')[0][:checked].should be_true
       end
 
+      it "should allow retrieval of the value" do
+        @driver.find('//textarea').first.value.should == 'banana'
+      end
+
       it "should allow assignment of field value" do
         @driver.find('//input').first.value.should == 'monkey'
         @driver.find('//input').first.set('gorilla')
