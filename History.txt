@@ -1,3 +1,23 @@
+# Version 0.3.9
+
+Release data: 2010-06-30
+
+### Added
+
+* status_code which returns the HTTP status code of the last response (no Selenium!)
+* Capybara.save_and_open_page to store tempfiles
+
+### Fixed
+
+* When no rack app is set and the app is called, a more descriptive error is raised
+* select now works with optgroups
+* Don't submit image buttons unless they were clicked under rack-test
+* Support custom field types under Selenium
+* Support input fields without a type, treat them as though they were text fields
+* Redirect now throws an error after 5 redirects, as per RFC
+* Selenium now properly raises an error when Node#trigger is called
+* Node#value now returns the correct value for textareas under rack-test
+
 # Version 0.3.8
 
 Release date: 2010-05-12
