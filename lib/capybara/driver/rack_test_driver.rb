@@ -244,6 +244,13 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   def put(*args, &block); reset_cache; super; end
   def delete(*args, &block); reset_cache; super; end
 
+  def follow_redirects!
+    5.times do
+      follow_redirect! if response.redirect?
+    end
+    raise Capybara::InfiniteRedirectError, "infinite redirect detected!" if response.redirect?
+  end
+
 private
 
   def reset_cache
@@ -257,16 +264,6 @@ private
 
   def request_path
     request.path rescue ""
-  end
-
-  def follow_redirects!
-    5.times do
-      follow_redirect! if response.redirect?
-    end
-
-    if response.redirect?
-      raise Capybara::InfiniteRedirectError, "infinite redirect detected!"
-    end
   end
 
   def env
