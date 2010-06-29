@@ -5,7 +5,7 @@ module Capybara
     def save_and_open_page(html)
       name = File.join(*[Capybara.save_and_open_page_path, "capybara-#{Time.new.strftime("%Y%m%d%H%M%S")}.html"].compact)
 
-      unless Capybara.save_and_open_page_path.blank? || File.directory?(Capybara.save_and_open_page_path )
+      unless Capybara.save_and_open_page_path.nil? || File.directory?(Capybara.save_and_open_page_path )
         FileUtils.mkdir_p(Capybara.save_and_open_page_path)
       end
       FileUtils.touch(name) unless File.exist?(name)
