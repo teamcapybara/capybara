@@ -256,8 +256,10 @@ private
     5.times do
       follow_redirect! if response.redirect?
     end
-  rescue Capybara::TimeoutError
-    raise Capybara::InfiniteRedirectError, "infinite redirect detected!"
+
+    if response.redirect?
+      raise Capybara::InfiniteRedirectError, "infinite redirect detected!"
+    end
   end
 
   def env
