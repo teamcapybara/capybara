@@ -73,9 +73,6 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       node.displayed? and node.displayed? != "false"
     end
     
-    def trigger(event)
-    end
-
   private
 
     def all_unfiltered(locator)
