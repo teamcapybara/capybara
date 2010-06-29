@@ -248,7 +248,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     5.times do
       follow_redirect! if response.redirect?
     end
-    raise Capybara::InfiniteRedirectError, "infinite redirect detected!" if response.redirect?
+    raise Capybara::InfiniteRedirectError, "redirected more than 5 times, check for infinite redirects." if response.redirect?
   end
 
 private
