@@ -39,6 +39,52 @@ shared_examples_for "session" do
     end
   end
 
+  describe '#scope_to' do
+    let(:scope) { @session.scope_to("//p[@id='first']") }
+    let(:more_scope) { scope.scope_to("//a[@id='foo']") }
+
+    before do
+      @session.visit('/with_html')
+    end
+
+    it 'has a simple link' do
+      scope.should have_xpath("//a[@class='simple']")
+    end
+
+    it 'does not have a redirect link' do
+      scope.should have_no_xpath("//a[@id='red']")
+    end
+
+    it 'does have a redirect link' do
+      @session.should have_xpath("//a[@id='red']")
+    end
+
+    it 'does not share scopes' do
+      @session.should have_xpath("//a[@id='red']")
+      scope.should have_no_xpath("//a[@id='red']")
+      @session.should have_xpath("//a[@id='red']")
+    end
+
+    context 'more_scope' do
+      it 'has the text for foo' do
+        more_scope.should have_content('ullamco')
+      end
+
+      it 'does not have a simple link' do
+        more_scope.should have_no_xpath("//a[@class='simple']")
+      end
+
+      it 'has not overridden scope' do
+        scope.should have_xpath("//a[@class='simple']")
+      end
+
+      it 'has not overridden session' do
+        @session.should have_xpath("//p[@id='second']")
+      end
+    end
+
+  end
+
   it_should_behave_like "all"
   it_should_behave_like "attach_file"
   it_should_behave_like "check"
