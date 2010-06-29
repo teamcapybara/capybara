@@ -11,15 +11,16 @@ module Capybara
   class TimeoutError < CapybaraError; end
   class LocateHiddenElementError < CapybaraError; end
   class InfiniteRedirectError < TimeoutError; end
-  
+
   class << self
     attr_accessor :debug, :asset_root, :app_host, :run_server, :default_host
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
+    attr_accessor :save_and_open_page_path
 
     def default_selector
       @default_selector ||= :xpath
     end
-    
+
     def default_wait_time
       @default_wait_time ||= 2
     end
@@ -29,14 +30,14 @@ module Capybara
       true
     end
   end
-  
+
   autoload :Server,     'capybara/server'
   autoload :Session,    'capybara/session'
   autoload :Node,       'capybara/node'
   autoload :XPath,      'capybara/xpath'
   autoload :Searchable, 'capybara/searchable'
   autoload :VERSION,    'capybara/version'
-  
+
   module Driver
     autoload :Base,     'capybara/driver/base'
     autoload :RackTest, 'capybara/driver/rack_test_driver'

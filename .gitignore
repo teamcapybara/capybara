@@ -1,7 +1,8 @@
 .idea/
 .DS_Store
 pkg
+tmp
 *~
 spec.opts
-
 .rvmrc
+capybara-*.html
