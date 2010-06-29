@@ -128,6 +128,10 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   def wait?; true; end
 
+  def execute_script(script)
+    browser.execute_script script
+  end
+
   def evaluate_script(script)
     browser.execute_script "return #{script}"
   end

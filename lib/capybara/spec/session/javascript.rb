@@ -35,9 +35,17 @@ shared_examples_for "session with javascript support" do
     end
 
     describe "#evaluate_script" do
-      it "should return the evaluated script" do
+      it "should evaluate the given script and return whatever it produces" do
         @session.visit('/with_js')
         @session.evaluate_script("1+3").should == 4
+      end
+    end
+
+    describe "#execute_script" do
+      it "should execute the given script and return nothing" do
+        @session.visit('/with_js')
+        @session.execute_script("$('#change').text('Funky Doodle')").should be_nil
+        @session.should have_css('#change', :text => 'Funky Doodle')
       end
     end
 

@@ -236,6 +236,10 @@ module Capybara
       WaitUntil.timeout(timeout,driver) { yield }
     end
 
+    def execute_script(script)
+      driver.execute_script(script)
+    end
+
     def evaluate_script(script)
       driver.evaluate_script(script)
     end

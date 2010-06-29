@@ -228,7 +228,12 @@ You can also find specific elements, in order to manipulate them:
 
 === Scripting
 
-In drivers which support it, you can easily evaluate JavaScript:
+In drivers which support it, you can easily execute JavaScript:
+
+    page.execute_script("$('body').empty()")
+
+For simple expressions, you can return the result of the script. Note
+that this may break with more complicated expressions:
 
     result = page.evaluate_script('4 + 4');
 
