@@ -249,10 +249,8 @@ private
   end
 
   def follow_redirects!
-    Capybara::WaitUntil.timeout(4) do
-      redirect = response.redirect?
-      follow_redirect! if redirect
-      not redirect
+    5.times do
+      follow_redirect! if response.redirect?
     end
   rescue Capybara::TimeoutError
     raise Capybara::InfiniteRedirectError, "infinite redirect detected!"
