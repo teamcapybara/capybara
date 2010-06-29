@@ -31,4 +31,5 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency("sinatra", [">= 0.9.4"])
   s.add_development_dependency("rspec", [">= 1.2.9"])
+  s.add_development_dependency("launchy", [">= 0.3.5"])
 end
