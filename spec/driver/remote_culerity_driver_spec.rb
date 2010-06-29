@@ -13,8 +13,8 @@ describe Capybara::Driver::Culerity do
   end
 
   it "should navigate to a fully qualified remote page" do
-    @driver.visit('http://elabs.se/contact')
-    @driver.body.should include('Edithouse eLabs AB')
+    @driver.visit('http://capybara-testapp.heroku.com/foo')
+    @driver.body.should include('Another World')
   end
   
   it_should_behave_like "driver"
