@@ -237,7 +237,7 @@ module Capybara
     def locate(kind_or_locator, locator=nil, fail_msg = nil)
       node = wait_conditionally_until { find(kind_or_locator, locator) }
     ensure
-      raise Capybara::ElementNotFound, fail_msg || "Unable to locate '#{kind_or_locator}'" unless node
+      raise Capybara::ElementNotFound, fail_msg || "Unable to locate '#{locator || kind_or_locator}'" unless node
       return node
     end
 

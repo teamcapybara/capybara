@@ -38,6 +38,12 @@ shared_examples_for "locate" do
       end.should raise_error(Capybara::ElementNotFound, "arghh")
     end
 
+    it "should raise ElementNotFound with a useful default message if nothing was found" do
+      running do
+        @session.locate(:xpath, '//div[@id="nosuchthing"]').should be_nil
+      end.should raise_error(Capybara::ElementNotFound, "Unable to locate '//div[@id=\"nosuchthing\"]'")
+    end
+
     it "should accept an XPath instance and respect the order of paths" do
       @session.visit('/form')
       @xpath = Capybara::XPath.text_field('Name')
