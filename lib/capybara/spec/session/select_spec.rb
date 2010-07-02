@@ -37,7 +37,15 @@ shared_examples_for "select" do
       extract_results(@session)['locale'].should == 'jo'
     end
 
-    it "match labels with preceding or trailing whitespace" do
+    it "should obey from" do
+      @session.select("Miss", :from => "Other title")
+      @session.click_button('awesome')
+      results = extract_results(@session)
+      results['other_title'].should == "Miss"
+      results['title'].should_not == "Miss"
+    end
+
+    it "show match labels with preceding or trailing whitespace" do
       @session.select("Lojban", :from => 'Locale')
       @session.click_button('awesome')
       extract_results(@session)['locale'].should == 'jbo'
