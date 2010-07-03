@@ -6,6 +6,7 @@ Release data: 2010-06-30
 
 * status_code which returns the HTTP status code of the last response (no Selenium!)
 * Capybara.save_and_open_page to store tempfiles
+* RackTest and Culerity drivers now clean up after themselves properly
 
 ### Fixed
 
