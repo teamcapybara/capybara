@@ -1,6 +1,6 @@
 # Version 0.3.9
 
-Release data: 2010-06-30
+Release data: 2010-07-03
 
 ### Added
 
