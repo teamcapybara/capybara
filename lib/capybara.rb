@@ -48,6 +48,6 @@ module Capybara
 end
 
 Capybara.run_server = true
-Capybara.default_selector = :xpath
+Capybara.default_selector = :css
 Capybara.default_wait_time = 2
 Capybara.ignore_hidden_elements = false

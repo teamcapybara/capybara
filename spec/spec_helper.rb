@@ -13,7 +13,7 @@ alias :running :lambda
 Capybara.default_wait_time = 0 # less timeout so tests run faster
 
 Spec::Runner.configure do |config|
-  config.after do
+  config.before do
     Capybara.default_selector = :xpath
   end
 end
