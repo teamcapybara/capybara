@@ -1,5 +1,5 @@
 require 'forwardable'
-require 'capybara/wait_until'
+require 'capybara/timeout'
 
 module Capybara
   class Session
@@ -242,7 +242,7 @@ module Capybara
     end
 
     def wait_until(timeout = Capybara.default_wait_time)
-      WaitUntil.timeout(timeout,driver) { yield }
+      Capybara.timeout(timeout,driver) { yield }
     end
 
     def execute_script(script)

@@ -1,6 +1,7 @@
 require 'uri'
 require 'net/http'
 require 'rack'
+require 'capybara/timeout'
 
 class Capybara::Server
   class Identify
@@ -65,7 +66,7 @@ class Capybara::Server
     end
     Capybara.log "checking if application has booted"
 
-    Capybara::WaitUntil.timeout(10) do
+    Capybara.timeout(10) do
       if responsive?
         Capybara.log("application has booted")
         true
