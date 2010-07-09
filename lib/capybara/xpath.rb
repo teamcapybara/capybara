@@ -56,7 +56,7 @@ module Capybara
     end
 
     def from_css(css)
-      append(Nokogiri::CSS.xpath_for(css).first)
+      XPath.new(*[@paths, Nokogiri::CSS.xpath_for(css)].flatten)
     end
     alias_method :for_css, :from_css
 

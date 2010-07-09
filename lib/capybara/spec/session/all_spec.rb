@@ -22,9 +22,13 @@ shared_examples_for "all" do
     end
 
     context "with css selectors" do
-      it "should find the first element using the given locator" do
+      it "should find all elements using the given selector" do
         @session.all(:css, 'h1').first.text.should == 'This is a test'
         @session.all(:css, "input[id='test_field']").first[:value].should == 'monkey'
+      end
+
+      it "should find all elements when given a list of selectors" do
+        @session.all(:css, 'h1, p').should have(4).elements
       end
     end
 
