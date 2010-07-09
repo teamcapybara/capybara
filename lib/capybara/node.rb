@@ -13,12 +13,6 @@ module Capybara
       super || @driver_node.respond_to?(method)
     end
 
-    def all_unfiltered(locator)
-      XPath.wrap(locator).paths.map do |path|
-        @driver_node.send(:all_unfiltered, path)
-      end.flatten
-    end
-
     def click_link_or_button(locator)
       msg = "no link or button '#{locator}' found"
       locate(:xpath, XPath.link(locator).button(locator), msg).click
@@ -168,29 +162,12 @@ module Capybara
       has_no_xpath?(XPath.table(locator, options))
     end
 
-    def save_and_open_page
-      require 'capybara/save_and_open_page'
-      Capybara::SaveAndOpenPage.save_and_open_page(body)
-    end
-
     #return node identified by locator or raise ElementNotFound(using desc)
     def locate(kind_or_locator, locator=nil, fail_msg = nil)
       node = wait_conditionally_until { find(kind_or_locator, locator) }
     ensure
       raise Capybara::ElementNotFound, fail_msg || "Unable to locate '#{locator || kind_or_locator}'" unless node
       return node
-    end
-
-    def wait_until(timeout = Capybara.default_wait_time)
-      Capybara.timeout(timeout,driver) { yield }
-    end
-
-    def execute_script(script)
-      driver.execute_script(script)
-    end
-
-    def evaluate_script(script)
-      driver.evaluate_script(script)
     end
 
     def find(*args)
@@ -244,6 +221,12 @@ module Capybara
     end
 
   protected
+
+    def all_unfiltered(locator)
+      XPath.wrap(locator).paths.map do |path|
+        @driver_node.send(:all_unfiltered, path)
+      end.flatten
+    end
 
     def driver
       @session.driver

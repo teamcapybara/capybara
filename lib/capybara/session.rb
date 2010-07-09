@@ -80,6 +80,23 @@ module Capybara
       end
     end
 
+    def wait_until(timeout = Capybara.default_wait_time)
+      Capybara.timeout(timeout,driver) { yield }
+    end
+
+    def execute_script(script)
+      driver.execute_script(script)
+    end
+
+    def evaluate_script(script)
+      driver.evaluate_script(script)
+    end
+
+    def save_and_open_page
+      require 'capybara/save_and_open_page'
+      Capybara::SaveAndOpenPage.save_and_open_page(body)
+    end
+
   private
 
     def current_node
