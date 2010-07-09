@@ -33,8 +33,14 @@ module Capybara
       results = all_unfiltered(locator)
 
       if options[:text]
-        options[:text] = Regexp.escape(options[:text]) unless options[:text].kind_of?(Regexp)
-        results = results.select { |n| n.text.match(options[:text]) }
+
+        if options[:text].kind_of?(Regexp)
+          regexp = options[:text]
+        else
+          regexp = Regexp.escape(options[:text]) 
+        end
+
+        results = results.select { |n| n.text.match(regexp) }
       end
 
       if options[:visible] or Capybara.ignore_hidden_elements
