@@ -23,8 +23,8 @@ shared_examples_for "has_xpath" do
 
     it "should respect scopes" do
       @session.within "//p[@id='first']" do
-        @session.should have_xpath("//a[@id='foo']")
-        @session.should_not have_xpath("//a[@id='red']")
+        @session.should have_xpath(".//a[@id='foo']")
+        @session.should_not have_xpath(".//a[@id='red']")
       end
     end
 
@@ -84,8 +84,8 @@ shared_examples_for "has_xpath" do
 
     it "should respect scopes" do
       @session.within "//p[@id='first']" do
-        @session.should_not have_no_xpath("//a[@id='foo']")
-        @session.should have_no_xpath("//a[@id='red']")
+        @session.should_not have_no_xpath(".//a[@id='foo']")
+        @session.should have_no_xpath(".//a[@id='red']")
       end
     end
 

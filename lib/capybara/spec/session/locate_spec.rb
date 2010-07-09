@@ -57,7 +57,7 @@ shared_examples_for "locate" do
 
       it "should find the first element using the given locator" do
         @session.within(:xpath, "//div[@id='for_bar']") do
-          @session.locate('//li').text.should =~ /With Simple HTML/
+          @session.locate('.//li').text.should =~ /With Simple HTML/
         end        
       end
     end

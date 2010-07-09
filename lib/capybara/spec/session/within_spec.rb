@@ -53,7 +53,7 @@ shared_examples_for "within" do
       context "with nested scopes" do
         it "should respect the inner scope" do
           @session.within("//div[@id='for_bar']") do
-            @session.within("//li[contains(.,'Bar')]") do
+            @session.within(".//li[contains(.,'Bar')]") do
               @session.click_link('Go')
             end
           end
@@ -62,7 +62,7 @@ shared_examples_for "within" do
 
         it "should respect the outer scope" do
           @session.within("//div[@id='another_foo']") do
-            @session.within("//li[contains(.,'With Simple HTML')]") do
+            @session.within(".//li[contains(.,'With Simple HTML')]") do
               @session.click_link('Go')
             end
           end
@@ -82,12 +82,12 @@ shared_examples_for "within" do
           @session.within("//div[@id='for_bar']") do
             running {
               running {
-                @session.within("//div[@id='doesnotexist']") do
+                @session.within(".//div[@id='doesnotexist']") do
                 end
               }.should raise_error(Capybara::ElementNotFound)
-            }.should_not change { @session.has_xpath?("//div[@id='another_foo']") }.from(false)
+            }.should_not change { @session.has_xpath?(".//div[@id='another_foo']") }.from(false)
           end
-        }.should_not change { @session.has_xpath?("//div[@id='another_foo']") }.from(true)
+        }.should_not change { @session.has_xpath?(".//div[@id='another_foo']") }.from(true)
       end
     end
 

@@ -9,6 +9,16 @@ shared_examples_for "find" do
       @session.find("//input[@id='test_field']")[:value].should == 'monkey'
     end
 
+    it "should act return a session like object" do
+      @session.visit('/form')
+      @form = @session.find(:css, '#get-form')
+      @form.should have_field('Middle Name')
+      @form.should have_no_field('Languages')
+      @form.fill_in('Middle Name', :with => 'Monkey')
+      @form.click_button('med')
+      extract_results(@session)['middle_name'].should == 'Monkey'
+    end
+
     context "with css selectors" do
       it "should find the first element using the given locator" do
         @session.find(:css, 'h1').text.should == 'This is a test'
@@ -49,7 +59,7 @@ shared_examples_for "find" do
 
       it "should find the first element using the given locator" do
         @session.within(:xpath, "//div[@id='for_bar']") do
-          @session.find('//li').text.should =~ /With Simple HTML/
+          @session.find('.//li').text.should =~ /With Simple HTML/
         end
       end
     end

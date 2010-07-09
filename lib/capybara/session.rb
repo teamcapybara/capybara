@@ -4,7 +4,6 @@ require 'capybara/timeout'
 module Capybara
   class Session
     extend Forwardable
-    include Searchable
 
     DSL_METHODS = [
       :all, :attach_file, :body, :check, :choose, :click, :click_button, :click_link, :current_url, :drag, :evaluate_script,
@@ -128,14 +127,6 @@ module Capybara
       end
     end
 
-    def scope_to(*locator)
-      scoped_session = self.clone
-      scoped_session.instance_eval do
-        @scopes = scopes + locator
-      end
-      scoped_session
-    end
-
     def has_xpath?(path, options={})
       wait_conditionally_until do
         results = all(:xpath, path, options)
@@ -253,7 +244,62 @@ module Capybara
       driver.evaluate_script(script)
     end
 
+    def find(*args)
+      all(*args).first
+    end
+
+    def find_field(locator)
+      find(:xpath, XPath.field(locator))
+    end
+    alias_method :field_labeled, :find_field
+
+    def find_link(locator)
+      find(:xpath, XPath.link(locator))
+    end
+
+    def find_button(locator)
+      find(:xpath, XPath.button(locator))
+    end
+
+    def find_by_id(id)
+      find(:css, "##{id}")
+    end
+
+    def all(*args)
+      options = if args.last.is_a?(Hash) then args.pop else {} end
+      if args[1].nil?
+        kind, locator = Capybara.default_selector, args.first
+      else
+        kind, locator = args
+      end
+      locator = XPath.from_css(locator) if kind == :css
+
+      results = all_unfiltered(locator)
+
+      if options[:text]
+
+        if options[:text].kind_of?(Regexp)
+          regexp = options[:text]
+        else
+          regexp = Regexp.escape(options[:text]) 
+        end
+
+        results = results.select { |n| n.text.match(regexp) }
+      end
+
+      if options[:visible] or Capybara.ignore_hidden_elements
+        results = results.select { |n| n.visible? }
+      end
+
+      results.map { |n| Capybara::Node.new(self, n) }
+    end
+
   private
+
+    # temporary hack until inheritance chain is fixed
+    def session
+      self
+    end
 
     def wait_conditionally_until
       if driver.wait? then wait_until { yield } else yield end
@@ -266,7 +312,7 @@ module Capybara
     end
 
     def current_scope
-      scopes.join('')
+      scopes.join('/')
     end
 
     def scopes

@@ -1,8 +1,6 @@
 module Capybara
   module Driver
     class Node
-      include Searchable
-
       attr_reader :driver, :node
 
       def initialize(driver, node)

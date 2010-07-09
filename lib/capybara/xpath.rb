@@ -40,7 +40,7 @@ module Capybara
     end
 
     def scope(scope)
-      XPath.new(*paths.map { |p| scope + p })
+      XPath.new(*paths.map { |p| scope + '/' + p })
     end
 
     def to_s
@@ -56,7 +56,7 @@ module Capybara
     end
 
     def from_css(css)
-      XPath.new(*[@paths, Nokogiri::CSS.xpath_for(css)].flatten)
+      XPath.new(*[@paths, Nokogiri::CSS.xpath_for(css).map { |selector| '.' + selector }].flatten)
     end
     alias_method :for_css, :from_css
 
@@ -77,7 +77,7 @@ module Capybara
     end
 
     def content(locator)
-      append("/descendant-or-self::*[contains(normalize-space(.),#{s(locator)})]")
+      append("./descendant-or-self::*[contains(normalize-space(.),#{s(locator)})]")
     end
 
     def table(locator, options={})
@@ -89,38 +89,38 @@ module Capybara
         end.join(sibling)
         conditions << "[.//#{row_conditions}]"
       end
-      append("//table[@id=#{s(locator)} or contains(caption,#{s(locator)})]#{conditions}")
+      append(".//table[@id=#{s(locator)} or contains(caption,#{s(locator)})]#{conditions}")
     end
 
     def fieldset(locator)
-      append("//fieldset[@id=#{s(locator)} or contains(legend,#{s(locator)})]")
+      append(".//fieldset[@id=#{s(locator)} or contains(legend,#{s(locator)})]")
     end
 
     def link(locator)
-      xpath = append("//a[@href][@id=#{s(locator)} or contains(.,#{s(locator)}) or contains(@title,#{s(locator)}) or img[contains(@alt,#{s(locator)})]]")
-      xpath.prepend("//a[@href][text()=#{s(locator)} or @title=#{s(locator)} or img[@alt=#{s(locator)}]]")
+      xpath = append(".//a[@href][@id=#{s(locator)} or contains(.,#{s(locator)}) or contains(@title,#{s(locator)}) or img[contains(@alt,#{s(locator)})]]")
+      xpath.prepend(".//a[@href][text()=#{s(locator)} or @title=#{s(locator)} or img[@alt=#{s(locator)}]]")
     end
 
     def button(locator)
-      xpath = append("//input[@type='submit' or @type='image' or @type='button'][@id=#{s(locator)} or contains(@value,#{s(locator)})]")
-      xpath = xpath.append("//button[@id=#{s(locator)} or contains(@value,#{s(locator)}) or contains(.,#{s(locator)})]")
-      xpath = xpath.prepend("//input[@type='submit' or @type='image' or @type='button'][@value=#{s(locator)}]")
-      xpath = xpath.prepend("//input[@type='image'][@alt=#{s(locator)} or contains(@alt,#{s(locator)})]")
-      xpath = xpath.prepend("//button[@value=#{s(locator)} or text()=#{s(locator)}]")
+      xpath = append(".//input[@type='submit' or @type='image' or @type='button'][@id=#{s(locator)} or contains(@value,#{s(locator)})]")
+      xpath = xpath.append(".//button[@id=#{s(locator)} or contains(@value,#{s(locator)}) or contains(.,#{s(locator)})]")
+      xpath = xpath.prepend(".//input[@type='submit' or @type='image' or @type='button'][@value=#{s(locator)}]")
+      xpath = xpath.prepend(".//input[@type='image'][@alt=#{s(locator)} or contains(@alt,#{s(locator)})]")
+      xpath = xpath.prepend(".//button[@value=#{s(locator)} or text()=#{s(locator)}]")
     end
 
     def text_field(locator, options={})
       options = options.merge(:value => options[:with]) if options.has_key?(:with)
-      add_field(locator, "//input[not(@type) or (@type!='radio' and @type!='checkbox' and @type!='hidden')]", options)
+      add_field(locator, ".//input[not(@type) or (@type!='radio' and @type!='checkbox' and @type!='hidden')]", options)
     end
 
     def text_area(locator, options={})
       options = options.merge(:text => options[:with]) if options.has_key?(:with)
-      add_field(locator, "//textarea", options)
+      add_field(locator, ".//textarea", options)
     end
 
     def select(locator, options={})
-      add_field(locator, "//select", options)
+      add_field(locator, ".//select", options)
     end
 
     def checkbox(locator, options={})
@@ -139,7 +139,7 @@ module Capybara
 
     def input_field(type, locator, options={})
       options = options.merge(:value => options[:with]) if options.has_key?(:with)
-      add_field(locator, "//input[@type='#{type}']", options)
+      add_field(locator, ".//input[@type='#{type}']", options)
     end
 
     # place this between to nodes to indicate that they should be siblings
@@ -152,7 +152,8 @@ module Capybara
       xpath = append("#{field}[@id=#{s(locator)}]#{postfix}")
       xpath = xpath.append("#{field}[@name=#{s(locator)}]#{postfix}")
       xpath = xpath.append("#{field}[@id=//label[contains(.,#{s(locator)})]/@for]#{postfix}")
-      xpath = xpath.append("//label[contains(.,#{s(locator)})]#{field}#{postfix}")
+      # FIXME: Label should not be scoped to node, temporary workaround!!!
+      xpath = xpath.append(".//label[contains(.,#{s(locator)})]/#{field}#{postfix}")
       xpath.prepend("#{field}[@id=//label[text()=#{s(locator)}]/@for]#{postfix}")
     end
 
