@@ -39,10 +39,6 @@ module Capybara
       @paths = paths
     end
 
-    def scope(scope)
-      XPath.new(*paths.map { |p| scope + '/' + p })
-    end
-
     def to_s
       @paths.join(' | ')
     end
