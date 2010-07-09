@@ -83,10 +83,8 @@ class Capybara::Server
 private
 
   def find_available_port
-    server = TCPServer.new('127.0.0.1', 0)
-    @port = server.addr[1]
-  ensure
-    server.close if server
+    @port = 9887
+    @port += 1 while is_port_open?(@port) and not is_running_on_port?(@port)
   end
 
   def is_running_on_port?(tested_port)
@@ -96,6 +94,20 @@ private
       return res.body == @app.object_id.to_s
     end
   rescue Errno::ECONNREFUSED, Errno::EBADF
+    return false
+  end
+
+  def is_port_open?(tested_port)
+    Timeout::timeout(1) do
+      begin
+        s = TCPSocket.new(host, tested_port)
+        s.close
+        return true
+      rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
+        return false
+      end
+    end
+  rescue Timeout::Error
     return false
   end
 
