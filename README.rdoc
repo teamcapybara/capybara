@@ -1,4 +1,4 @@
-= capybara
+= Capybara
 
 * http://github.com/jnicklas/capybara
 
