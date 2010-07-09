@@ -25,14 +25,14 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
       node.set(value)
     end
 
-    def select(option)
+    def select_option(option)
       node.select(option)
     rescue
       options = all(:xpath, "//option").map { |o| "'#{o.text}'" }.join(', ')
       raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
     end
 
-    def unselect(option)
+    def unselect_option(option)
       unless node.multiple?
         raise Capybara::UnselectNotAllowed, "Cannot unselect option '#{option}' from single select box."
       end

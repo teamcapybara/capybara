@@ -41,7 +41,7 @@ module Capybara
     def_delegator :driver, :body
     def_delegator :driver, :source
 
-    def click(locator)
+    def click_link_or_button(locator)
       msg = "no link or button '#{locator}' found"
       locate(:xpath, XPath.link(locator).button(locator), msg).click
     end
@@ -85,12 +85,12 @@ module Capybara
 
     def select(value, options={})
       msg = "cannot select option, no select box with id, name, or label '#{options[:from]}' found"
-      locate(:xpath, XPath.select(options[:from]), msg).select(value)
+      locate(:xpath, XPath.select(options[:from]), msg).select_option(value)
     end
 
     def unselect(value, options={})
       msg = "cannot unselect option, no select box with id, name, or label '#{options[:from]}' found"
-      locate(:xpath, XPath.select(options[:from]), msg).unselect(value)
+      locate(:xpath, XPath.select(options[:from]), msg).unselect_option(value)
     end
 
     def attach_file(locator, path)

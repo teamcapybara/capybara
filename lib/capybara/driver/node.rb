@@ -26,11 +26,11 @@ module Capybara
         raise NotImplementedError
       end
 
-      def select(option)
+      def select_option(option)
         raise NotImplementedError
       end
 
-      def unselect(option)
+      def unselect_option(option)
         raise NotImplementedError
       end
 
