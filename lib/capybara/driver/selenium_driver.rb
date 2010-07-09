@@ -73,11 +73,11 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       node.displayed? and node.displayed? != "false"
     end
     
-  private
-
-    def all_unfiltered(locator)
+    def find(locator)
       node.find_elements(:xpath, locator).map { |n| self.class.new(driver, n) }
     end
+
+  private
 
     def type
       self[:type]

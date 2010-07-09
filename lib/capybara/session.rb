@@ -41,7 +41,7 @@ module Capybara
     def_delegator :driver, :source
 
     def document
-      Capybara::Document.new(self)
+      Capybara::Document.new(self, driver)
     end
 
     def method_missing(*args)

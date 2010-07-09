@@ -1,6 +1,11 @@
 module Capybara
   class Node
-    attr_reader :session
+    attr_reader :session, :base
+
+    def initialize(session, base)
+      @session = session
+      @base = base
+    end
 
     def click_link_or_button(locator)
       msg = "no link or button '#{locator}' found"
@@ -189,7 +194,9 @@ module Capybara
       end
       locator = XPath.from_css(locator) if kind == :css
 
-      results = all_unfiltered(locator)
+      results = XPath.wrap(locator).paths.map do |path|
+        base.find(path)
+      end.flatten
 
       if options[:text]
 
