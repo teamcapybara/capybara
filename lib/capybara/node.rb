@@ -1,17 +1,6 @@
 module Capybara
   class Node
-    def initialize(session, driver_node)
-      @session = session
-      @driver_node = driver_node
-    end
-
-    def method_missing(*args)
-      @driver_node.send(*args)
-    end
-
-    def respond_to?(method)
-      super || @driver_node.respond_to?(method)
-    end
+    attr_reader :session
 
     def click_link_or_button(locator)
       msg = "no link or button '#{locator}' found"
@@ -217,25 +206,18 @@ module Capybara
         results = results.select { |n| n.visible? }
       end
 
-      results.map { |n| Capybara::Node.new(self, n) }
+      results.map { |n| Capybara::Element.new(self, n) }
     end
 
   protected
 
-    def all_unfiltered(locator)
-      XPath.wrap(locator).paths.map do |path|
-        @driver_node.send(:all_unfiltered, path)
-      end.flatten
-    end
-
     def driver
-      @session.driver
+      session.driver
     end
 
     def wait_conditionally_until
       if driver.wait? then wait_until { yield } else yield end
     end
-
 
   end
 end
