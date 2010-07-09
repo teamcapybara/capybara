@@ -1,5 +1,5 @@
 class Capybara::Driver::Celerity < Capybara::Driver::Base
-  class Node < Capybara::Node
+  class Node < Capybara::Driver::Node
     def text
       node.text
     end

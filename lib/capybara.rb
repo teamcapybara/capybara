@@ -33,13 +33,13 @@ module Capybara
 
   autoload :Server,     'capybara/server'
   autoload :Session,    'capybara/session'
-  autoload :Node,       'capybara/node'
   autoload :XPath,      'capybara/xpath'
   autoload :Searchable, 'capybara/searchable'
   autoload :VERSION,    'capybara/version'
 
   module Driver
     autoload :Base,     'capybara/driver/base'
+    autoload :Node,     'capybara/driver/node'
     autoload :RackTest, 'capybara/driver/rack_test_driver'
     autoload :Celerity, 'capybara/driver/celerity_driver'
     autoload :Culerity, 'capybara/driver/culerity_driver'

@@ -1,7 +1,7 @@
 require 'selenium-webdriver'
 
 class Capybara::Driver::Selenium < Capybara::Driver::Base
-  class Node < Capybara::Node
+  class Node < Capybara::Driver::Node
     def text
       node.text
     end
