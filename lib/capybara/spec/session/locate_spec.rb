@@ -9,6 +9,11 @@ shared_examples_for "locate" do
       @session.locate("//input[@id='test_field']")[:value].should == 'monkey'
     end
 
+    it "should find the first element using the given locator and options" do
+      @session.locate('//a', :text => 'Redirect')[:id].should == 'red'
+      @session.locate(:css, 'a', :text => 'A link')[:title].should == 'twas a fine link'
+    end
+
     context "with css selectors" do
       it "should find the first element using the given locator" do
         @session.locate(:css, 'h1').text.should == 'This is a test'
@@ -34,7 +39,7 @@ shared_examples_for "locate" do
 
     it "should raise ElementNotFound with specified fail message if nothing was found" do
       running do
-        @session.locate(:xpath, '//div[@id="nosuchthing"]', 'arghh').should be_nil
+        @session.locate(:xpath, '//div[@id="nosuchthing"]', :message => 'arghh').should be_nil
       end.should raise_error(Capybara::ElementNotFound, "arghh")
     end
 

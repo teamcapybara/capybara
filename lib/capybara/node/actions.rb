@@ -3,53 +3,53 @@ module Capybara
     module Actions
       def click_link_or_button(locator)
         msg = "no link or button '#{locator}' found"
-        locate(:xpath, XPath.link(locator).button(locator), msg).click
+        locate(:xpath, XPath.link(locator).button(locator), :message => msg).click
       end
 
       def click_link(locator)
         msg = "no link with title, id or text '#{locator}' found"
-        locate(:xpath, XPath.link(locator), msg).click
+        locate(:xpath, XPath.link(locator), :message => msg).click
       end
 
       def click_button(locator)
         msg = "no button with value or id or text '#{locator}' found"
-        locate(:xpath, XPath.button(locator), msg).click
+        locate(:xpath, XPath.button(locator), :message => msg).click
       end
 
       def fill_in(locator, options={})
         msg = "cannot fill in, no text field, text area or password field with id, name, or label '#{locator}' found"
         raise "Must pass a hash containing 'with'" if not options.is_a?(Hash) or not options.has_key?(:with)
-        locate(:xpath, XPath.fillable_field(locator), msg).set(options[:with])
+        locate(:xpath, XPath.fillable_field(locator), :message => msg).set(options[:with])
       end
 
       def choose(locator)
         msg = "cannot choose field, no radio button with id, name, or label '#{locator}' found"
-        locate(:xpath, XPath.radio_button(locator), msg).set(true)
+        locate(:xpath, XPath.radio_button(locator), :message => msg).set(true)
       end
 
       def check(locator)
         msg = "cannot check field, no checkbox with id, name, or label '#{locator}' found"
-        locate(:xpath, XPath.checkbox(locator), msg).set(true)
+        locate(:xpath, XPath.checkbox(locator), :message => msg).set(true)
       end
 
       def uncheck(locator)
         msg = "cannot uncheck field, no checkbox with id, name, or label '#{locator}' found"
-        locate(:xpath, XPath.checkbox(locator), msg).set(false)
+        locate(:xpath, XPath.checkbox(locator), :message => msg).set(false)
       end
 
       def select(value, options={})
         msg = "cannot select option, no select box with id, name, or label '#{options[:from]}' found"
-        locate(:xpath, XPath.select(options[:from]), msg).select_option(value)
+        locate(:xpath, XPath.select(options[:from]), :message => msg).select_option(value)
       end
 
       def unselect(value, options={})
         msg = "cannot unselect option, no select box with id, name, or label '#{options[:from]}' found"
-        locate(:xpath, XPath.select(options[:from]), msg).unselect_option(value)
+        locate(:xpath, XPath.select(options[:from]), :message => msg).unselect_option(value)
       end
 
       def attach_file(locator, path)
         msg = "cannot attach file, no file field with id, name, or label '#{locator}' found"
-        locate(:xpath, XPath.file_field(locator), msg).set(path)
+        locate(:xpath, XPath.file_field(locator), :message => msg).set(path)
       end
 
       def drag(source_locator, target_locator)

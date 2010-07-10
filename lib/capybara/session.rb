@@ -56,7 +56,7 @@ module Capybara
     end
 
     def within(kind, scope=nil)
-      new_scope = locate(kind, scope, "scope '#{scope || kind}' not found on page")
+      new_scope = locate(kind, scope, :message => "scope '#{scope || kind}' not found on page")
       begin
         scopes.push(new_scope)
         yield

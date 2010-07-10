@@ -2,10 +2,11 @@ module Capybara
   class Node
     module Finders
       #return node identified by locator or raise ElementNotFound(using desc)
-      def locate(kind_or_locator, locator=nil, fail_msg = nil)
-        node = wait_conditionally_until { find(kind_or_locator, locator) }
+      def locate(*args)
+        node = wait_conditionally_until { find(*args) }
       ensure
-        raise Capybara::ElementNotFound, fail_msg || "Unable to locate '#{locator || kind_or_locator}'" unless node
+        options = if args.last.is_a?(Hash) then args.last else {} end
+        raise Capybara::ElementNotFound, options[:message] || "Unable to locate '#{args[1] || args[0]}'" unless node
         return node
       end
 
