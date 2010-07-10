@@ -379,6 +379,20 @@ moving from Webrat and used CSS a lot, or simply generally prefer CSS:
     find('ul li').text
     locate('input#name').value
 
+== Beware the XPath // trap
+
+In XPath the expression // means something very specific, and it might not be what
+you think. Contrary to common belief, // means "anywhere in the document" not "anywhere
+in the current context". As an example:
+
+    page.find('//body').all('//script')
+
+You might expect this to find all script tags in the body, but actually, it finds all
+script tags in the entire document, not only those in the body! What you're looking
+for is the .// expression which means "any descendant of the current node":
+
+    page.find('//body').all('.//script')
+
 == Gotchas:
 
 * Domain names (including subdomains) don't work under rack-test. Since it's a
