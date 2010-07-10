@@ -33,7 +33,6 @@ module Capybara
 
     def_delegator :driver, :cleanup!
     def_delegator :driver, :current_url
-    def_delegator :driver, :current_path
     def_delegator :driver, :response_headers
     def_delegator :driver, :status_code
     def_delegator :driver, :visit
@@ -50,6 +49,10 @@ module Capybara
 
     def respond_to?(method)
       super || current_node.respond_to?(method)
+    end
+
+    def current_path
+      URI.parse(current_url).path
     end
 
     def within(kind, scope=nil)

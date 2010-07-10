@@ -17,7 +17,7 @@ module Capybara
       end
 
       def value
-        self[:value]
+        raise NotImplementedError
       end
 
       def set(value)

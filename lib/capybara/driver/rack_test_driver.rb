@@ -30,7 +30,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       if tag_name == 'textarea'
         node.content
       else
-        super
+        self[:value]
       end
     end
 

@@ -20,7 +20,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       if tag_name == "select" and self[:multiple]
         node.find_elements(:xpath, ".//option").select { |n| n.selected? }.map { |n| n.text }
       else
-        super
+        self[:value]
       end
     end
 
