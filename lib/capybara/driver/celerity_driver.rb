@@ -80,7 +80,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     def find(locator)
       noko_node = Nokogiri::HTML(driver.body).xpath(node.xpath).first
       all_nodes = noko_node.xpath(locator).map { |n| n.path }.join(' | ')
-      driver.find(all_nodes)
+      if all_nodes.empty? then [] else driver.find(all_nodes) end
     end
 
   end
