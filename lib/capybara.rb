@@ -35,8 +35,8 @@ module Capybara
   autoload :Session,    'capybara/session'
   autoload :XPath,      'capybara/xpath'
   autoload :Node,       'capybara/node'
-  autoload :Document,   'capybara/document'
-  autoload :Element,    'capybara/element'
+  autoload :Document,   'capybara/node'
+  autoload :Element,    'capybara/node'
   autoload :VERSION,    'capybara/version'
 
   module Driver
