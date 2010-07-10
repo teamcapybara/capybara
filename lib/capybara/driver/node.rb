@@ -1,8 +1,6 @@
 module Capybara
   module Driver
     class Node
-      include Searchable
-
       attr_reader :driver, :node
 
       def initialize(driver, node)
@@ -19,18 +17,18 @@ module Capybara
       end
 
       def value
-        self[:value]
+        raise NotImplementedError
       end
 
       def set(value)
         raise NotImplementedError
       end
 
-      def select(option)
+      def select_option(option)
         raise NotImplementedError
       end
 
-      def unselect(option)
+      def unselect_option(option)
         raise NotImplementedError
       end
 
@@ -56,6 +54,12 @@ module Capybara
       
       def trigger(event)
         raise NotSupportedByDriverError
+      end
+
+      def inspect
+        %(#<Capybara::Driver::Node tag="#{tag_name}" path="#{path}">)
+      rescue NotSupportedByDriverError
+        %(#<Capybara::Driver::Node tag="#{tag_name}">)
       end
     end
   end

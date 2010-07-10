@@ -1,9 +1,5 @@
 require 'capybara/spec/test_app'
 
-Dir[File.dirname(__FILE__)+'/driver/*'].each { |group|
-  require group
-}
-
 shared_examples_for 'driver' do
 
   describe '#visit' do
@@ -17,11 +13,6 @@ shared_examples_for 'driver' do
     it "should show the correct URL" do
       @driver.visit('/foo')
       @driver.current_url.should include('/foo')
-    end
-
-    it 'should show the correct location' do
-      @driver.visit('/foo')
-      @driver.current_path.should == '/foo'
     end
   end
 
@@ -84,26 +75,6 @@ shared_examples_for 'driver' do
       end
     end
   end
-
-  describe "node relative searching" do
-    before do
-      @driver.visit('/tables')
-      @node = @driver.find('//body').first
-    end
-
-    it "should be able to navigate/search child node" do
-      @node.all('//table').size.should == 5
-      @node.find('//form').all('.//table').size.should == 1
-      @node.find('//form').find('.//table//caption').text.should == 'Agent'
-      if @driver.class == Capybara::Driver::Selenium
-        pending("Selenium gets this wrong, see http://code.google.com/p/selenium/issues/detail?id=403") do
-          @node.find('//form').all('//table').size.should == 5
-        end
-      else
-        @node.find('//form').all('//table').size.should == 5
-      end
-    end
-  end
 end
 
 shared_examples_for "driver with javascript support" do
@@ -117,10 +88,11 @@ shared_examples_for "driver with javascript support" do
 
   describe '#drag_to' do
     it "should drag and drop an object" do
+      pending "drag/drop is currently broken under celerity/culerity" if @driver.is_a?(Capybara::Driver::Celerity)
       draggable = @driver.find('//div[@id="drag"]').first
       droppable = @driver.find('//div[@id="drop"]').first
       draggable.drag_to(droppable)
-      @driver.find('//div[contains(., "Dropped!")]').should_not be_nil
+      @driver.find('//div[contains(., "Dropped!")]').should_not be_empty
     end
   end
 

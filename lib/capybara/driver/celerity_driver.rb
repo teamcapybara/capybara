@@ -17,7 +17,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
       if tag_name == "select" and node.multiple?
         node.selected_options
       else
-        super
+        self[:value]
       end
     end
 
@@ -25,14 +25,14 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
       node.set(value)
     end
 
-    def select(option)
+    def select_option(option)
       node.select(option)
     rescue
-      options = all(:xpath, "//option").map { |o| "'#{o.text}'" }.join(', ')
+      options = find("//option").map { |o| "'#{o.text}'" }.join(', ')
       raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
     end
 
-    def unselect(option)
+    def unselect_option(option)
       unless node.multiple?
         raise Capybara::UnselectNotAllowed, "Cannot unselect option '#{option}' from single select box."
       end
@@ -44,7 +44,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
         node.clear
         (selected_options - [unselect_option]).each { |value| node.select_value(value) }
       else
-        options = all(:xpath, "//option").map { |o| "'#{o.text}'" }.join(', ')
+        options = find("//option").map { |o| "'#{o.text}'" }.join(', ')
         raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
       end
     end
@@ -77,12 +77,10 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
       node.fire_event(event.to_s)
     end
 
-  private
-
-    def all_unfiltered(locator)
+    def find(locator)
       noko_node = Nokogiri::HTML(driver.body).xpath(node.xpath).first
       all_nodes = noko_node.xpath(locator).map { |n| n.path }.join(' | ')
-      driver.find(all_nodes)
+      if all_nodes.empty? then [] else driver.find(all_nodes) end
     end
 
   end

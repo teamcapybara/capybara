@@ -65,7 +65,7 @@ shared_examples_for "all" do
 
       it "should find any element using the given locator" do
         @session.within(:xpath, "//div[@id='for_bar']") do
-          @session.all('//li').should have(2).elements
+          @session.all('.//li').should have(2).elements
         end
       end
     end

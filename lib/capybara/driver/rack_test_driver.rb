@@ -30,7 +30,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       if tag_name == 'textarea'
         node.content
       else
-        super
+        self[:value]
       end
     end
 
@@ -51,7 +51,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       end
     end
 
-    def select(option)
+    def select_option(option)
       if node['multiple'] != 'multiple'
         node.xpath(".//option[@selected]").each { |node| node.remove_attribute("selected") }
       end
@@ -65,7 +65,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       end
     end
 
-    def unselect(option)
+    def unselect_option(option)
       if node['multiple'] != 'multiple'
         raise Capybara::UnselectNotAllowed, "Cannot unselect option '#{option}' from single select box."
       end
@@ -100,11 +100,11 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       node.path
     end
 
-  private
-
-    def all_unfiltered(locator)
+    def find(locator)
       node.xpath(locator).map { |n| self.class.new(driver, n) }
     end
+
+  private
 
     def type
       node[:type]

@@ -1,7 +1,7 @@
 require 'uri'
 require 'net/http'
 require 'rack'
-require 'capybara/timeout'
+require 'capybara/util/timeout'
 
 module Capybara
   class Server

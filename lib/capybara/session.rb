@@ -1,17 +1,16 @@
 require 'forwardable'
-require 'capybara/timeout'
+require 'capybara/util/timeout'
 
 module Capybara
   class Session
     extend Forwardable
-    include Searchable
 
     DSL_METHODS = [
-      :all, :attach_file, :body, :check, :choose, :click, :click_button, :click_link, :current_url, :drag, :evaluate_script,
+      :all, :attach_file, :body, :check, :choose, :click_link_or_button, :click_button, :click_link, :current_url, :drag, :evaluate_script,
       :field_labeled, :fill_in, :find, :find_button, :find_by_id, :find_field, :find_link, :has_content?, :has_css?,
       :has_no_content?, :has_no_css?, :has_no_xpath?, :has_xpath?, :locate, :save_and_open_page, :select, :source, :uncheck,
       :visit, :wait_until, :within, :within_fieldset, :within_table, :within_frame, :has_link?, :has_no_link?, :has_button?,
-      :has_no_button?,    :has_field?, :has_no_field?, :has_checked_field?, :has_unchecked_field?, :has_no_table?, :has_table?,
+      :has_no_button?, :has_field?, :has_no_field?, :has_checked_field?, :has_unchecked_field?, :has_no_table?, :has_table?,
       :unselect, :has_select?, :has_no_select?, :current_path, :scope_to
     ]
 
@@ -34,76 +33,32 @@ module Capybara
 
     def_delegator :driver, :cleanup!
     def_delegator :driver, :current_url
-    def_delegator :driver, :current_path
     def_delegator :driver, :response_headers
     def_delegator :driver, :status_code
     def_delegator :driver, :visit
     def_delegator :driver, :body
     def_delegator :driver, :source
 
-    def click(locator)
-      msg = "no link or button '#{locator}' found"
-      locate(:xpath, XPath.link(locator).button(locator), msg).click
+    def document
+      Capybara::Document.new(self, driver)
     end
 
-    def click_link(locator)
-      msg = "no link with title, id or text '#{locator}' found"
-      locate(:xpath, XPath.link(locator), msg).click
+    def method_missing(*args)
+      current_node.send(*args)
     end
 
-    def click_button(locator)
-      msg = "no button with value or id or text '#{locator}' found"
-      locate(:xpath, XPath.button(locator), msg).click
+    def respond_to?(method)
+      super || current_node.respond_to?(method)
     end
 
-    def drag(source_locator, target_locator)
-      source = locate(:xpath, source_locator, "drag source '#{source_locator}' not found on page")
-      target = locate(:xpath, target_locator, "drag target '#{target_locator}' not found on page")
-      source.drag_to(target)
-    end
-
-    def fill_in(locator, options={})
-      msg = "cannot fill in, no text field, text area or password field with id, name, or label '#{locator}' found"
-      raise "Must pass a hash containing 'with'" if not options.is_a?(Hash) or not options.has_key?(:with)
-      locate(:xpath, XPath.fillable_field(locator), msg).set(options[:with])
-    end
-
-    def choose(locator)
-      msg = "cannot choose field, no radio button with id, name, or label '#{locator}' found"
-      locate(:xpath, XPath.radio_button(locator), msg).set(true)
-    end
-
-    def check(locator)
-      msg = "cannot check field, no checkbox with id, name, or label '#{locator}' found"
-      locate(:xpath, XPath.checkbox(locator), msg).set(true)
-    end
-
-    def uncheck(locator)
-      msg = "cannot uncheck field, no checkbox with id, name, or label '#{locator}' found"
-      locate(:xpath, XPath.checkbox(locator), msg).set(false)
-    end
-
-    def select(value, options={})
-      msg = "cannot select option, no select box with id, name, or label '#{options[:from]}' found"
-      locate(:xpath, XPath.select(options[:from]), msg).select(value)
-    end
-
-    def unselect(value, options={})
-      msg = "cannot unselect option, no select box with id, name, or label '#{options[:from]}' found"
-      locate(:xpath, XPath.select(options[:from]), msg).unselect(value)
-    end
-
-    def attach_file(locator, path)
-      msg = "cannot attach file, no file field with id, name, or label '#{locator}' found"
-      locate(:xpath, XPath.file_field(locator), msg).set(path)
+    def current_path
+      URI.parse(current_url).path
     end
 
     def within(kind, scope=nil)
-      kind, scope = Capybara.default_selector, kind unless scope
-      scope = XPath.from_css(scope) if kind == :css
-      locate(:xpath, scope, "scope '#{scope}' not found on page")
+      new_scope = locate(kind, scope, "scope '#{scope || kind}' not found on page")
       begin
-        scopes.push(scope)
+        scopes.push(new_scope)
         yield
       ensure
         scopes.pop
@@ -128,119 +83,6 @@ module Capybara
       end
     end
 
-    def scope_to(*locator)
-      scoped_session = self.clone
-      scoped_session.instance_eval do
-        @scopes = scopes + locator
-      end
-      scoped_session
-    end
-
-    def has_xpath?(path, options={})
-      wait_conditionally_until do
-        results = all(:xpath, path, options)
-
-        if options[:count]
-          results.size == options[:count]
-        else
-          results.size > 0
-        end
-      end
-    rescue Capybara::TimeoutError
-      return false
-    end
-
-    def has_no_xpath?(path, options={})
-      wait_conditionally_until do
-        results = all(:xpath, path, options)
-
-        if options[:count]
-          results.size != options[:count]
-        else
-          results.empty?
-        end
-      end
-    rescue Capybara::TimeoutError
-      return false
-    end
-
-    def has_css?(path, options={})
-      has_xpath?(XPath.from_css(path), options)
-    end
-
-    def has_no_css?(path, options={})
-      has_no_xpath?(XPath.from_css(path), options)
-    end
-
-    def has_content?(content)
-      has_xpath?(XPath.content(content))
-    end
-
-    def has_no_content?(content)
-      has_no_xpath?(XPath.content(content))
-    end
-
-    def has_link?(locator)
-      has_xpath?(XPath.link(locator))
-    end
-
-    def has_no_link?(locator)
-      has_no_xpath?(XPath.link(locator))
-    end
-
-    def has_button?(locator)
-      has_xpath?(XPath.button(locator))
-    end
-
-    def has_no_button?(locator)
-      has_no_xpath?(XPath.button(locator))
-    end
-
-    def has_field?(locator, options={})
-      has_xpath?(XPath.field(locator, options))
-    end
-
-    def has_no_field?(locator, options={})
-      has_no_xpath?(XPath.field(locator, options))
-    end
-
-    def has_checked_field?(locator)
-      has_xpath?(XPath.field(locator, :checked => true))
-    end
-
-    def has_unchecked_field?(locator)
-      has_xpath?(XPath.field(locator, :unchecked => true))
-    end
-
-    def has_select?(locator, options={})
-      has_xpath?(XPath.select(locator, options))
-    end
-
-    def has_no_select?(locator, options={})
-      has_no_xpath?(XPath.select(locator, options))
-    end
-
-    def has_table?(locator, options={})
-      has_xpath?(XPath.table(locator, options))
-    end
-
-    def has_no_table?(locator, options={})
-      has_no_xpath?(XPath.table(locator, options))
-    end
-
-    def save_and_open_page
-      require 'capybara/save_and_open_page'
-      Capybara::SaveAndOpenPage.save_and_open_page(body)
-    end
-
-    #return node identified by locator or raise ElementNotFound(using desc)
-    def locate(kind_or_locator, locator=nil, fail_msg = nil)
-      node = wait_conditionally_until { find(kind_or_locator, locator) }
-    ensure
-      raise Capybara::ElementNotFound, fail_msg || "Unable to locate '#{locator || kind_or_locator}'" unless node
-      return node
-    end
-
     def wait_until(timeout = Capybara.default_wait_time)
       Capybara.timeout(timeout,driver) { yield }
     end
@@ -253,24 +95,19 @@ module Capybara
       driver.evaluate_script(script)
     end
 
+    def save_and_open_page
+      require 'capybara/util/save_and_open_page'
+      Capybara.save_and_open_page(body)
+    end
+
   private
 
-    def wait_conditionally_until
-      if driver.wait? then wait_until { yield } else yield end
-    end
-
-    def all_unfiltered(locator)
-      XPath.wrap(locator).scope(current_scope).paths.map do |path|
-        driver.find(path)
-      end.flatten
-    end
-
-    def current_scope
-      scopes.join('')
+    def current_node
+      scopes.last
     end
 
     def scopes
-      @scopes ||= []
+      @scopes ||= [document]
     end
   end
 end

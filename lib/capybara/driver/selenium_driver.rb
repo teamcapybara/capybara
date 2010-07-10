@@ -20,7 +20,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       if tag_name == "select" and self[:multiple]
         node.find_elements(:xpath, ".//option").select { |n| n.selected? }.map { |n| n.text }
       else
-        super
+        self[:value]
       end
     end
 
@@ -35,15 +35,15 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       end
     end
 
-    def select(option)
+    def select_option(option)
       option_node = node.find_element(:xpath, ".//option[normalize-space(text())=#{Capybara::XPath.escape(option)}]") || node.find_element(:xpath, ".//option[contains(.,#{Capybara::XPath.escape(option)})]")
       option_node.select
     rescue 
-      options = node.find_elements(:xpath, "//option").map { |o| "'#{o.text}'" }.join(', ')
+      options = node.find_elements(:xpath, ".//option").map { |o| "'#{o.text}'" }.join(', ')
       raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
     end
 
-    def unselect(option)
+    def unselect_option(option)
       if node['multiple'] != 'multiple'
         raise Capybara::UnselectNotAllowed, "Cannot unselect option '#{option}' from single select box."
       end
@@ -52,7 +52,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
         option_node = node.find_element(:xpath, ".//option[normalize-space(text())=#{Capybara::XPath.escape(option)}]") || node.find_element(:xpath, ".//option[contains(.,#{Capybara::XPath.escape(option)})]")
         option_node.clear
       rescue
-        options = node.find_elements(:xpath, "//option").map { |o| "'#{o.text}'" }.join(', ')
+        options = node.find_elements(:xpath, ".//option").map { |o| "'#{o.text}'" }.join(', ')
         raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
       end
     end
@@ -73,11 +73,11 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       node.displayed? and node.displayed? != "false"
     end
     
-  private
-
-    def all_unfiltered(locator)
+    def find(locator)
       node.find_elements(:xpath, locator).map { |n| self.class.new(driver, n) }
     end
+
+  private
 
     def type
       self[:type]
