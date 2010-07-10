@@ -23,16 +23,35 @@ module Capybara
   end
 
   class Element < Node
-    # TODO: maybe we should explicitely delegate?
-    def method_missing(*args)
-      @base.send(*args)
+    extend Forwardable
+
+    def_delegator :base, :text
+    def_delegator :base, :[]
+    def_delegator :base, :value
+    def_delegator :base, :set
+    def_delegator :base, :select_option
+    def_delegator :base, :unselect_option
+    def_delegator :base, :click
+    def_delegator :base, :tag_name
+    def_delegator :base, :visible?
+    def_delegator :base, :path
+    def_delegator :base, :trigger
+
+    def drag_to(node)
+      base.drag_to(node.base)
     end
 
-    def respond_to?(method)
-      super || @base.respond_to?(method)
+    def inspect
+      %(#<Capybara::Element tag="#{tag_name}" path="#{path}">)
+    rescue NotSupportedByDriverError
+      %(#<Capybara::Element tag="#{tag_name}">)
     end
+
   end
 
   class Document < Node
+    def inspect
+      %(#<Capybara::Document>)
+    end
   end
 end

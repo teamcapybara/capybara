@@ -55,6 +55,12 @@ module Capybara
       def trigger(event)
         raise NotSupportedByDriverError
       end
+
+      def inspect
+        %(#<Capybara::Driver::Node tag="#{tag_name}" path="#{path}">)
+      rescue NotSupportedByDriverError
+        %(#<Capybara::Driver::Node tag="#{tag_name}">)
+      end
     end
   end
 end
