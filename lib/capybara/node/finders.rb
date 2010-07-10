@@ -37,19 +37,14 @@ module Capybara
           base.find(path)
         end.flatten
 
-        if options[:text]
+        if text = options[:text]
+          text = Regexp.escape(text) unless text.kind_of?(Regexp)
 
-          if options[:text].kind_of?(Regexp)
-            regexp = options[:text]
-          else
-            regexp = Regexp.escape(options[:text]) 
-          end
-
-          results = results.select { |n| n.text.match(regexp) }
+          results = results.select { |node| node.text.match(text) }
         end
 
         if options[:visible] or Capybara.ignore_hidden_elements
-          results = results.select { |n| n.visible? }
+          results = results.select { |node| node.visible? }
         end
 
         results.map { |n| Capybara::Element.new(self, n) }
