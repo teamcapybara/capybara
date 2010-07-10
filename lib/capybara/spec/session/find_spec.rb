@@ -9,14 +9,20 @@ shared_examples_for "find" do
       @session.find("//input[@id='test_field']")[:value].should == 'monkey'
     end
 
-    it "should act return a session like object" do
-      @session.visit('/form')
-      @form = @session.find(:css, '#get-form')
-      @form.should have_field('Middle Name')
-      @form.should have_no_field('Languages')
-      @form.fill_in('Middle Name', :with => 'Monkey')
-      @form.click_button('med')
-      extract_results(@session)['middle_name'].should == 'Monkey'
+    describe 'the returned node' do
+      it "should act like a session object" do
+        @session.visit('/form')
+        @form = @session.find(:css, '#get-form')
+        @form.should have_field('Middle Name')
+        @form.should have_no_field('Languages')
+        @form.fill_in('Middle Name', :with => 'Monkey')
+        @form.click_button('med')
+        extract_results(@session)['middle_name'].should == 'Monkey'
+      end
+
+      it "should scope CSS selectors" do
+        @session.find(:css, '#second').should have_no_css('h1')
+      end
     end
 
     context "with css selectors" do
