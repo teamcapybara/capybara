@@ -59,7 +59,7 @@ module Capybara
       end
 
       def wait_conditionally_until
-        if driver.wait? then wait_until { yield } else yield end
+        if driver.wait? then session.wait_until { yield } else yield end
       end
 
     end
