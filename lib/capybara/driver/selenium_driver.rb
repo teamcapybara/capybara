@@ -39,7 +39,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       option_node = node.find_element(:xpath, ".//option[normalize-space(text())=#{Capybara::XPath.escape(option)}]") || node.find_element(:xpath, ".//option[contains(.,#{Capybara::XPath.escape(option)})]")
       option_node.select
     rescue 
-      options = node.find_elements(:xpath, "//option").map { |o| "'#{o.text}'" }.join(', ')
+      options = node.find_elements(:xpath, ".//option").map { |o| "'#{o.text}'" }.join(', ')
       raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
     end
 
@@ -52,7 +52,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
         option_node = node.find_element(:xpath, ".//option[normalize-space(text())=#{Capybara::XPath.escape(option)}]") || node.find_element(:xpath, ".//option[contains(.,#{Capybara::XPath.escape(option)})]")
         option_node.clear
       rescue
-        options = node.find_elements(:xpath, "//option").map { |o| "'#{o.text}'" }.join(', ')
+        options = node.find_elements(:xpath, ".//option").map { |o| "'#{o.text}'" }.join(', ')
         raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
       end
     end
