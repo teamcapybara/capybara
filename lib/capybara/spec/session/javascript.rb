@@ -109,11 +109,11 @@ shared_examples_for "session with javascript support" do
       end
     end
 
-    describe '#click' do
+    describe '#click_link_or_button' do
       it "should wait for asynchronous load" do
         @session.visit('/with_js')
         @session.click_link('Click me')
-        @session.click('Has been clicked')
+        @session.click_link_or_button('Has been clicked')
       end
     end
 
