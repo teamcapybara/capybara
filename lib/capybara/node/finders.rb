@@ -47,7 +47,7 @@ module Capybara
           results = results.select { |node| node.visible? }
         end
 
-        results.map { |n| Capybara::Element.new(self, n) }
+        results.map { |n| Capybara::Element.new(session, n) }
       end
 
     protected
