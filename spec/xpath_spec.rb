@@ -57,13 +57,6 @@ describe Capybara::XPath do
     end
   end
   
-  describe '#scope' do
-    it "should prepend the given scope to all paths" do
-      @xpath = Capybara::XPath.new('//foo/bar', '//test[@blah=foo]').scope('//quox')
-      @xpath.paths.should include('//quox//foo/bar', '//quox//test[@blah=foo]')
-    end
-  end
-
   describe '#field' do
     it "should find any field by id or label" do
       @query = @xpath.field('First Name').to_s
