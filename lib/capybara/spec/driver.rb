@@ -88,10 +88,11 @@ shared_examples_for "driver with javascript support" do
 
   describe '#drag_to' do
     it "should drag and drop an object" do
+      pending "drag/drop is currently broken under celerity/culerity" if @driver.is_a?(Capybara::Driver::Celerity)
       draggable = @driver.find('//div[@id="drag"]').first
       droppable = @driver.find('//div[@id="drop"]').first
       draggable.drag_to(droppable)
-      @driver.find('//div[contains(., "Dropped!")]').should_not be_nil
+      @driver.find('//div[contains(., "Dropped!")]').should_not be_empty
     end
   end
 
