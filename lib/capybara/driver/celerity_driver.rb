@@ -28,7 +28,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     def select_option(option)
       node.select(option)
     rescue
-      options = all(:xpath, "//option").map { |o| "'#{o.text}'" }.join(', ')
+      options = find("//option").map { |o| "'#{o.text}'" }.join(', ')
       raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
     end
 
@@ -44,7 +44,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
         node.clear
         (selected_options - [unselect_option]).each { |value| node.select_value(value) }
       else
-        options = all(:xpath, "//option").map { |o| "'#{o.text}'" }.join(', ')
+        options = find("//option").map { |o| "'#{o.text}'" }.join(', ')
         raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
       end
     end
