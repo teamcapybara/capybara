@@ -187,14 +187,8 @@ module Capybara
 
     def all(*args)
       options = if args.last.is_a?(Hash) then args.pop else {} end
-      if args[1].nil?
-        kind, locator = Capybara.default_selector, args.first
-      else
-        kind, locator = args
-      end
-      locator = XPath.from_css(locator) if kind == :css
 
-      results = XPath.wrap(locator).paths.map do |path|
+      results = XPath.wrap(normalize_locator(*args)).paths.map do |path|
         base.find(path)
       end.flatten
 
@@ -217,6 +211,12 @@ module Capybara
     end
 
   protected
+
+    def normalize_locator(kind, locator=nil)
+      kind, locator = Capybara.default_selector, kind if locator.nil?
+      locator = XPath.from_css(locator) if kind == :css
+      locator
+    end
 
     def driver
       session.driver
