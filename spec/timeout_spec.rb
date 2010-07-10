@@ -1,7 +1,7 @@
 require File.expand_path('spec_helper', File.dirname(__FILE__))
 
 require 'capybara'
-require 'capybara/timeout'
+require 'capybara/util/timeout'
 
 module Capybara
   

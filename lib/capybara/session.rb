@@ -1,5 +1,5 @@
 require 'forwardable'
-require 'capybara/timeout'
+require 'capybara/util/timeout'
 
 module Capybara
   class Session
@@ -93,8 +93,8 @@ module Capybara
     end
 
     def save_and_open_page
-      require 'capybara/save_and_open_page'
-      Capybara::SaveAndOpenPage.save_and_open_page(body)
+      require 'capybara/util/save_and_open_page'
+      Capybara.save_and_open_page(body)
     end
 
   private

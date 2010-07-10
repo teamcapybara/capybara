@@ -1,7 +1,5 @@
 module Capybara
-  module SaveAndOpenPage
-    extend(self)
-
+  class << self
     def save_and_open_page(html)
       name = File.join(*[Capybara.save_and_open_page_path, "capybara-#{Time.new.strftime("%Y%m%d%H%M%S")}.html"].compact)
 
@@ -16,6 +14,8 @@ module Capybara
 
       open_in_browser(tempfile.path)
     end
+
+  protected
 
     def open_in_browser(path) # :nodoc
       require "launchy"
