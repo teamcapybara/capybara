@@ -183,6 +183,49 @@ with the various form elements:
     attach_file('Image', '/path/to/image.jpg')
     select('Option', :from => 'Select Box')
 
+=== Querying
+
+Capybara has a rich set of options for querying the page for the existence of
+certain elements, and working with and manipulating those elements.
+
+    page.has_xpath?('//table/tr')
+    page.has_css?('table tr.foo')
+    page.has_content?('foo')
+
+You can use with RSpecs magic matchers:
+
+    page.should have_xpath('//table/tr')
+    page.should have_css('table tr.foo')
+    page.should have_content('foo')
+    page.should have_no_content('foo')
+
+Note that <tt>page.should have_no_xpath</tt> is preferred over
+<tt>page.should_not have_xpath</tt>. Read the section on asynchronous JavaScript
+for an explanation.
+
+=== Finding
+
+You can also find specific elements, in order to manipulate them:
+
+    find_field('First Name').value
+    find_link('Hello').visible?
+    find_button('Send').click
+
+    find('//table/tr').click
+    locate("//*[@id='overlay'").find("//h1").click
+    all('a').each { |a| a[:href] }
+
+Note that there's a difference between <tt>locate</tt> and <tt>find</tt>. <tt>locate</tt>
+will wait for an element to appear on the page, as explained in the AJAX section. If the element
+does not appear it will raise an error. <tt>find</tt> will check if the element is there and
+immediately return nil if it is not.
+
+These elements all have all the Capybara DSL methods available, so you can restrict them
+to specific parts of the page:
+
+    locate(:css, '#navigation').click_link('Home')
+    locate(:css, '#navigation').should have_button('Sign out')
+
 === Scoping
 
 Capybara makes it possible to restrict certain actions, such as interacting with
@@ -212,52 +255,6 @@ specific table, identified by either id or text of the table's caption tag.
     within_table('Employee') do
       fill_in 'Name', :with => 'Jimmy'
     end
-
-You can also specify a scope to be used for future searches with the <tt>scope_to</tt>.
-It returns a handle to the session scoped to the provided selector.
-
-    scope = page.scope_to("//div[@id='foo']")
-    scope.has_xpath("//a[@class='bar']")
-
-You can also chain scopes by calling <tt>scope_to</tt> on an existing scope.
-
-    more_scope = scope.scope_to("//p")
-    more_scope.has_xpath("//a[@class='baz']")
-
-=== Querying
-
-Capybara has a rich set of options for querying the page for the existence of
-certain elements, and working with and manipulating those elements.
-
-    page.has_xpath?('//table/tr')
-    page.has_css?('table tr.foo')
-    page.has_content?('foo')
-
-You can use with RSpecs magic matchers:
-
-    page.should have_xpath('//table/tr')
-    page.should have_css('table tr.foo')
-    page.should have_content('foo')
-    page.should have_no_content('foo')
-
-Note that <tt>page.should have_no_xpath</tt> is preferred over
-<tt>page.should_not have_xpath</tt>. Read the section on asynchronous JavaScript
-for an explanation.
-
-You can also find specific elements, in order to manipulate them:
-
-    find_field('First Name').value
-    find_link('Hello').visible?
-    find_button('Send').click
-
-    find('//table/tr').click
-    locate("//*[@id='overlay'").find("//h1").click
-    all('a').each { |a| a[:href] }
-
-Note that there's a difference between <tt>locate</tt> and <tt>find</tt>. <tt>locate</tt>
-will wait for an element to appear on the page, as explained in the AJAX section. If the element
-does not appear it will raise an error. <tt>find</tt> will check if the element is there and
-immediately return nil if it is not.
 
 === Scripting
 
