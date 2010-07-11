@@ -1,9 +1,7 @@
-require 'forwardable'
 require 'capybara/util/timeout'
 
 module Capybara
   class Session
-    extend Forwardable
 
     DSL_METHODS = [
       :all, :attach_file, :body, :check, :choose, :click_link_or_button, :click_button, :click_link, :current_url, :drag, :evaluate_script,
@@ -31,28 +29,36 @@ module Capybara
       end
     end
 
-    def_delegator :driver, :cleanup!
-    def_delegator :driver, :current_url
-    def_delegator :driver, :response_headers
-    def_delegator :driver, :status_code
-    def_delegator :driver, :visit
-    def_delegator :driver, :body
-    def_delegator :driver, :source
-
-    def document
-      Capybara::Document.new(self, driver)
+    def cleanup!
+      driver.cleanup!
     end
 
-    def method_missing(*args)
-      current_node.send(*args)
+    def response_headers
+      driver.response_headers
     end
 
-    def respond_to?(method)
-      super || current_node.respond_to?(method)
+    def status_code
+      driver.status_code
+    end
+
+    def body
+      driver.body
+    end
+
+    def source
+      driver.source
+    end
+
+    def current_url
+      driver.current_url
     end
 
     def current_path
       URI.parse(current_url).path
+    end
+
+    def visit(url)
+      driver.visit(url)
     end
 
     def within(kind, scope=nil)
@@ -98,6 +104,18 @@ module Capybara
     def save_and_open_page
       require 'capybara/util/save_and_open_page'
       Capybara.save_and_open_page(body)
+    end
+
+    def document
+      Capybara::Document.new(self, driver)
+    end
+
+    def method_missing(*args)
+      current_node.send(*args)
+    end
+
+    def respond_to?(method)
+      super || current_node.respond_to?(method)
     end
 
   private

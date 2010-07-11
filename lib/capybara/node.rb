@@ -23,19 +23,49 @@ module Capybara
   end
 
   class Element < Node
-    extend Forwardable
+    def text
+      base.text
+    end
 
-    def_delegator :base, :text
-    def_delegator :base, :[]
-    def_delegator :base, :value
-    def_delegator :base, :set
-    def_delegator :base, :select_option
-    def_delegator :base, :unselect_option
-    def_delegator :base, :click
-    def_delegator :base, :tag_name
-    def_delegator :base, :visible?
-    def_delegator :base, :path
-    def_delegator :base, :trigger
+    def [](attribute)
+      base[attribute]
+    end
+
+    def value
+      base.value
+    end
+
+    def set(value)
+      base.set(value)
+    end
+
+    def select_option(option)
+      base.select_option(option)
+    end
+
+    def unselect_option(option)
+      base.unselect_option(option)
+    end
+
+    def click
+      base.click
+    end
+
+    def tag_name
+      base.tag_name
+    end
+
+    def visible
+      base.visible?
+    end
+
+    def path
+      base.path
+    end
+
+    def trigger(event)
+      base.trigger(event)
+    end
 
     def drag_to(node)
       base.drag_to(node.base)
