@@ -59,17 +59,13 @@ module Capybara
     def boot
       return self unless @app
       find_available_port
-      Capybara.log "application has already booted" and return self if responsive?
-      Capybara.log "booting Rack applicartion on port #{port}"
 
       Thread.new do
         handler.run(Identify.new(@app), :Port => port, :AccessLog => [])
       end
-      Capybara.log "checking if application has booted"
 
       Capybara.timeout(10) do
         if responsive?
-          Capybara.log("application has booted")
           true
         else
           sleep 0.5
@@ -78,7 +74,7 @@ module Capybara
       end
       self
     rescue Timeout::Error
-      Capybara.log "Rack application timed out during boot"
+      puts "Rack application timed out during boot"
       exit
     end
 
