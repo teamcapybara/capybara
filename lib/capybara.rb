@@ -17,14 +17,6 @@ module Capybara
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
     attr_accessor :save_and_open_page_path
 
-    def default_selector
-      @default_selector ||= :xpath
-    end
-
-    def default_wait_time
-      @default_wait_time ||= 2
-    end
-
     def configure
       yield self
     end
@@ -48,7 +40,9 @@ module Capybara
   end
 end
 
-Capybara.run_server = true
-Capybara.default_selector = :css
-Capybara.default_wait_time = 2
-Capybara.ignore_hidden_elements = false
+Capybara.configure do |config|
+  config.run_server = true
+  config.default_selector = :css
+  config.default_wait_time = 2
+  config.ignore_hidden_elements = false
+end
