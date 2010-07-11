@@ -17,6 +17,31 @@ module Capybara
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
     attr_accessor :save_and_open_page_path
 
+    ##
+    #
+    # Configure Capybara to suite your needs.
+    #
+    #     Capybara.configure do |config|
+    #       config.run_server = false
+    #       config.app_host   = 'http://www.google.com'
+    #     end
+    #
+    # === Configurable options
+    #
+    # [asset_root = String]               Where static assets are located, used by save_and_open_page
+    # [app_host = String]                 The default host to use when giving a relative URL to visit
+    # [run_server = Boolean]              Whether to start a Rack server for the given Rack app (Default: true)
+    # [default_selector = :css/:xpath]    Methods which take a selector use the given type by default (Default: CSS)
+    # [default_wait_time = Integer]       The number of seconds to wait for asynchronour processes to finish (Default: 2)
+    # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: false)
+    #
+    # === DSL Options
+    #
+    # when using capybara/dsl, the following options are also available:
+    #
+    # [default_driver = Symbol]           The name of the driver to use by default. (Default: :rack_test)
+    # [javascript_driver = Symbol]        The name of a driver to use for JavaScript enabled tests. (Default: :selenium)
+    #
     def configure
       yield self
     end
