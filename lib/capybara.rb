@@ -24,6 +24,10 @@ module Capybara
     def default_wait_time
       @default_wait_time ||= 2
     end
+
+    def configure
+      yield self
+    end
   end
 
   autoload :Server,     'capybara/server'

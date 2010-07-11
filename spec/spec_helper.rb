@@ -14,6 +14,8 @@ Capybara.default_wait_time = 0 # less timeout so tests run faster
 
 Spec::Runner.configure do |config|
   config.before do
-    Capybara.default_selector = :xpath
+    Capybara.configure do |config|
+      config.default_selector = :xpath
+    end
   end
 end
