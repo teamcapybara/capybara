@@ -393,6 +393,12 @@ for is the .// expression which means "any descendant of the current node":
 
     page.find('//body').all('.//script')
 
+The same thing goes for within:
+
+    within('//body') do
+      page.find('.//script')
+    end
+
 == Gotchas:
 
 * Domain names (including subdomains) don't work under rack-test. Since it's a
