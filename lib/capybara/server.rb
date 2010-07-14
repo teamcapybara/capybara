@@ -19,6 +19,12 @@ module Capybara
       end
     end
 
+    class << self
+      def ports
+        @ports ||= {}
+      end
+    end
+
     attr_reader :app, :port
 
     def initialize(app)
@@ -38,7 +44,13 @@ module Capybara
     end
 
     def responsive?
-      is_running_on_port?(port)
+      res = Net::HTTP.start(host, @port) { |http| http.get('/__identify__') }
+
+      if res.is_a?(Net::HTTPSuccess) or res.is_a?(Net::HTTPRedirection)
+        return res.body == @app.object_id.to_s
+      end
+    rescue Errno::ECONNREFUSED, Errno::EBADF
+      return false
     end
 
     def handler
@@ -57,56 +69,32 @@ module Capybara
     end
 
     def boot
-      return self unless @app
-      find_available_port
+      if @app
+        @port = Capybara::Server.ports[@app.object_id]
+          
+        if not @port or not responsive?
+          @port = find_available_port
+          Capybara::Server.ports[@app.object_id] = @port
 
-      Thread.new do
-        handler.run(Identify.new(@app), :Port => port, :AccessLog => [])
-      end
+          Thread.new { handler.run(Identify.new(@app), :Port => @port, :AccessLog => []) }
 
-      Capybara.timeout(10) do
-        if responsive?
-          true
-        else
-          sleep 0.5
-          false
+          Capybara.timeout(10) { if responsive? then true else sleep(0.5) and false end }
         end
       end
-      self
     rescue Timeout::Error
       puts "Rack application timed out during boot"
       exit
+    else
+      self
     end
 
   private
 
     def find_available_port
-      @port = 9887
-      @port += 1 while is_port_open?(@port) and not is_running_on_port?(@port)
-    end
-
-    def is_running_on_port?(tested_port)
-      res = Net::HTTP.start(host, tested_port) { |http| http.get('/__identify__') }
-
-      if res.is_a?(Net::HTTPSuccess) or res.is_a?(Net::HTTPRedirection)
-        return res.body == @app.object_id.to_s
-      end
-    rescue Errno::ECONNREFUSED, Errno::EBADF
-      return false
-    end
-
-    def is_port_open?(tested_port)
-      Timeout::timeout(1) do
-        begin
-          s = TCPSocket.new(host, tested_port)
-          s.close
-          return true
-        rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
-          return false
-        end
-      end
-    rescue Timeout::Error
-      return false
+      server = TCPServer.new('127.0.0.1', 0)
+      server.addr[1]
+    ensure
+      server.close if server
     end
 
   end
