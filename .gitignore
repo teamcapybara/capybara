@@ -6,3 +6,5 @@ tmp
 spec.opts
 .rvmrc
 capybara-*.html
+.yardoc
+doc

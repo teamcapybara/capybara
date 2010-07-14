@@ -64,9 +64,7 @@ module Capybara
     #
     # Returns a hash of response headers. Not supported by all drivers (e.g. Selenium)
     #
-    # === Returns
-    #
-    # [Hash{String => String}]    A hash of response headers.
+    # @return [Hash{String => String}] A hash of response headers.
     #
     def response_headers
       driver.response_headers
@@ -76,9 +74,7 @@ module Capybara
     #
     # Returns the current HTTP status code as an Integer. Not supported by all drivers (e.g. Selenium)
     #
-    # === Returns
-    #
-    # [Integer]   Current HTTP status code
+    # @return [Integer] Current HTTP status code
     #
     def status_code
       driver.status_code
@@ -86,9 +82,7 @@ module Capybara
 
     ##
     #
-    # === Returns
-    #
-    # [String]    A snapshot of the HTML of the current document, as it looks right now
+    # @return [String] A snapshot of the HTML of the current document, as it looks right now
     #
     def body
       driver.body
@@ -96,9 +90,7 @@ module Capybara
 
     ##
     #
-    # === Returns
-    #
-    # [String]    HTML source of the document, before being modified by JavaScript.
+    # @return [String] HTML source of the document, before being modified by JavaScript.
     #
     def source
       driver.source
@@ -106,9 +98,7 @@ module Capybara
 
     ##
     #
-    # === Returns
-    #
-    # [String]    Path of the current page, without any domain information
+    # @return [String] Path of the current page, without any domain information
     #
     def current_path
       URI.parse(current_url).path
@@ -116,9 +106,7 @@ module Capybara
 
     ##
     #
-    # === Returns
-    #
-    # [String]    Fully qualified URL of the current page
+    # @return [String] Fully qualified URL of the current page
     #
     def current_url
       driver.current_url
@@ -140,9 +128,7 @@ module Capybara
     #     Capybara.app_host = 'http://google.com'
     #     session.visit('/') # visits the google homepage
     #
-    # === Parameters
-    #
-    # [url (String)]    The URL to navigate to
+    # @param [String] url     The URL to navigate to
     #
     def visit(url)
       driver.visit(url)
@@ -164,10 +150,8 @@ module Capybara
     #       fill_in('Street', :with => '12 Main Street')
     #     end
     #
-    # === Parameters
-    #
-    # [kind (:css, :xpath, String)]   The type of selector or the selector if the second argument is blank
-    # [selector (String)]             The selector within which to execute the given block
+    # @param [:css, :xpath, String] kind    The type of selector or the selector if the second argument is blank
+    # @param [String] selector              The selector within which to execute the given block
     #
     def within(kind, selector=nil)
       new_scope = locate(kind, selector, :message => "scope '#{selector || kind}' not found on page")
@@ -183,9 +167,7 @@ module Capybara
     #
     # Execute the given block within the a specific fieldset given the id or legend of that fieldset.
     #
-    # === Parameters
-    #
-    # [locator (String)]    Id or legend of the fieldset
+    # @param [String] locator    Id or legend of the fieldset
     #
     def within_fieldset(locator)
       within :xpath, XPath.fieldset(locator) do
@@ -197,9 +179,7 @@ module Capybara
     #
     # Execute the given block within the a specific table given the id or caption of that table.
     #
-    # === Parameters
-    #
-    # [locator (String)]    Id or caption of the table
+    # @param [String] locator    Id or caption of the table
     #
     def within_table(locator)
       within :xpath, XPath.table(locator) do
@@ -212,9 +192,7 @@ module Capybara
     # Execute the given block within the given iframe given the id of that iframe. Only works on
     # some drivers (e.g. Selenium)
     #
-    # === Parameters
-    #
-    # [locator (String)]    Id of the frame
+    # @param [String] locator    Id of the frame
     #
     def within_frame(frame_id)
       driver.within_frame(frame_id) do
@@ -226,9 +204,7 @@ module Capybara
     #
     # Retry executing the block until a truthy result is returned or the timeout time is exceeded
     #
-    # === Parameters
-    #
-    # [timeout (Integer)]   The amount of seconds to retry executing the given block
+    # @param [Integer] timeout   The amount of seconds to retry executing the given block
     #
     def wait_until(timeout = Capybara.default_wait_time)
       Capybara.timeout(timeout,driver) { yield }
@@ -240,9 +216,7 @@ module Capybara
     # complex objects, such as jQuery statements. +execute_script+ should always be used over
     # +evaluate_script+ whenever possible.
     #
-    # === Parameters
-    #
-    # [script (String)]   A string of JavaScript to execute
+    # @param [String] script   A string of JavaScript to execute
     #
     def execute_script(script)
       driver.execute_script(script)
@@ -254,13 +228,8 @@ module Capybara
     # scripts that return complex objects, such as jQuery statements. +execute_script+ might
     # be a better alternative.
     #
-    # === Parameters
-    #
-    # [script (String)]   A string of JavaScript to evaluate
-    #
-    # === Returns
-    #
-    # [Object]            The result of the evaluated JavaScript (may be driver specific)
+    # @param  [String] script   A string of JavaScript to evaluate
+    # @return [Object]          The result of the evaluated JavaScript (may be driver specific)
     #
     def evaluate_script(script)
       driver.evaluate_script(script)
