@@ -53,8 +53,8 @@ module Capybara
       end
 
       def drag(source_locator, target_locator)
-        source = locate(:xpath, source_locator, "drag source '#{source_locator}' not found on page")
-        target = locate(:xpath, target_locator, "drag target '#{target_locator}' not found on page")
+        source = locate(:xpath, source_locator, :message => "drag source '#{source_locator}' not found on page")
+        target = locate(:xpath, target_locator, :message => "drag target '#{target_locator}' not found on page")
         source.drag_to(target)
       end
     end
