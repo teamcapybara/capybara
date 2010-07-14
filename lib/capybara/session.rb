@@ -4,8 +4,8 @@ module Capybara
 
   ##
   #
-  # The Session class represents a single users interaction with the system. The Session can use
-  # any of the unerdlying drivers. A session can be initialized manually like this:
+  # The Session class represents a single user's interaction with the system. The Session can use
+  # any of the underlying drivers. A session can be initialized manually like this:
   #
   #     session = Capybara::Session.new(:culerity, MyRackApp)
   #
@@ -150,7 +150,7 @@ module Capybara
 
     ##
     #
-    # Execute the given block for a particular scope on the page. Within fill find the first
+    # Execute the given block for a particular scope on the page. Within will find the first
     # element matching the given selector and execute the block scoped to that element:
     #
     #     within(:xpath, '//div[@id="delivery-address"]') do

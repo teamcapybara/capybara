@@ -19,7 +19,7 @@ module Capybara
 
     ##
     #
-    # Configure Capybara to suite your needs.
+    # Configure Capybara to suit your needs.
     #
     #     Capybara.configure do |config|
     #       config.run_server = false
@@ -32,7 +32,7 @@ module Capybara
     # [app_host = String]                 The default host to use when giving a relative URL to visit
     # [run_server = Boolean]              Whether to start a Rack server for the given Rack app (Default: true)
     # [default_selector = :css/:xpath]    Methods which take a selector use the given type by default (Default: CSS)
-    # [default_wait_time = Integer]       The number of seconds to wait for asynchronour processes to finish (Default: 2)
+    # [default_wait_time = Integer]       The number of seconds to wait for asynchronous processes to finish (Default: 2)
     # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: false)
     #
     # === DSL Options
