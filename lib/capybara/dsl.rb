@@ -27,10 +27,6 @@ module Capybara
       session_pool["#{current_driver}#{app.object_id}"] ||= Capybara::Session.new(current_driver, app)
     end
 
-    def current_session?
-      session_pool.has_key?("#{current_driver}#{app.object_id}")
-    end
-
     def reset_sessions!
       session_pool.each { |mode, session| session.cleanup! }
       @session_pool = nil
