@@ -23,6 +23,10 @@ module Capybara
   end
 
   class Element < Node
+    def native
+      base.native
+    end
+
     def text
       base.text
     end

@@ -1,11 +1,11 @@
 module Capybara
   module Driver
     class Node
-      attr_reader :driver, :node
+      attr_reader :driver, :native
 
-      def initialize(driver, node)
+      def initialize(driver, native)
         @driver = driver
-        @node = node
+        @native = native
       end
 
       def text

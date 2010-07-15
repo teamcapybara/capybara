@@ -1,48 +1,48 @@
 class Capybara::Driver::Celerity < Capybara::Driver::Base
   class Node < Capybara::Driver::Node
     def text
-      node.text
+      native.text
     end
 
     def [](name)
       value = if name.to_sym == :class
-        node.class_name
+        native.class_name
       else
-        node.send(name.to_sym)
+        native.send(name.to_sym)
       end
       return value if value and not value.to_s.empty?
     end
 
     def value
-      if tag_name == "select" and node.multiple?
-        node.selected_options
+      if tag_name == "select" and native.multiple?
+        native.selected_options
       else
         self[:value]
       end
     end
 
     def set(value)
-      node.set(value)
+      native.set(value)
     end
 
     def select_option(option)
-      node.select(option)
+      native.select(option)
     rescue
       options = find("//option").map { |o| "'#{o.text}'" }.join(', ')
       raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
     end
 
     def unselect_option(option)
-      unless node.multiple?
+      unless native.multiple?
         raise Capybara::UnselectNotAllowed, "Cannot unselect option '#{option}' from single select box."
       end
 
       # FIXME: couldn't find a clean way to unselect, so clear and reselect
-      selected_options = node.selected_options
+      selected_options = native.selected_options
       if unselect_option  = selected_options.detect { |value| value == option } ||
                             selected_options.detect { |value| value.index(option) }
-        node.clear
-        (selected_options - [unselect_option]).each { |value| node.select_value(value) }
+        native.clear
+        (selected_options - [unselect_option]).each { |value| native.select_value(value) }
       else
         options = find("//option").map { |o| "'#{o.text}'" }.join(', ')
         raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
@@ -50,35 +50,35 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     end
 
     def click
-      node.click
+      native.click
     end
 
     def drag_to(element)
-      node.fire_event('mousedown')
-      element.node.fire_event('mousemove')
-      element.node.fire_event('mouseup')
+      native.fire_event('mousedown')
+      element.native.fire_event('mousemove')
+      element.native.fire_event('mouseup')
     end
 
     def tag_name
       # FIXME: this might be the dumbest way ever of getting the tag name
       # there has to be something better...
-      node.to_xml[/^\s*<([a-z0-9\-\:]+)/, 1]
+      native.to_xml[/^\s*<([a-z0-9\-\:]+)/, 1]
     end
 
     def visible?
-      node.visible?
+      native.visible?
     end
 
     def path
-      node.xpath
+      native.xpath
     end
 
     def trigger(event)
-      node.fire_event(event.to_s)
+      native.fire_event(event.to_s)
     end
 
     def find(locator)
-      noko_node = Nokogiri::HTML(driver.body).xpath(node.xpath).first
+      noko_node = Nokogiri::HTML(driver.body).xpath(native.xpath).first
       all_nodes = noko_node.xpath(locator).map { |n| n.path }.join(' | ')
       if all_nodes.empty? then [] else driver.find(all_nodes) end
     end

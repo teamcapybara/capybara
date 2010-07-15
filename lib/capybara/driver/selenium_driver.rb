@@ -3,14 +3,14 @@ require 'selenium-webdriver'
 class Capybara::Driver::Selenium < Capybara::Driver::Base
   class Node < Capybara::Driver::Node
     def text
-      node.text
+      native.text
     end
 
     def [](name)
       if name == :value
-        node.value
+        native.value
       else
-        node.attribute(name.to_s)
+        native.attribute(name.to_s)
       end
     rescue Selenium::WebDriver::Error::WebDriverError
       nil
@@ -18,7 +18,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
     def value
       if tag_name == "select" and self[:multiple]
-        node.find_elements(:xpath, ".//option").select { |n| n.selected? }.map { |n| n.text }
+        native.find_elements(:xpath, ".//option").select { |n| n.selected? }.map { |n| n.text }
       else
         self[:value]
       end
@@ -26,55 +26,55 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
     def set(value)
       if tag_name == 'input' and type == 'radio'
-        node.click
+        native.click
       elsif tag_name == 'input' and type == 'checkbox'
-        node.click if node.attribute('checked') != value
+        native.click if native.attribute('checked') != value
       elsif tag_name == 'textarea' or tag_name == 'input'
-        node.clear
-        node.send_keys(value.to_s)
+        native.clear
+        native.send_keys(value.to_s)
       end
     end
 
     def select_option(option)
-      option_node = node.find_element(:xpath, ".//option[normalize-space(text())=#{Capybara::XPath.escape(option)}]") || node.find_element(:xpath, ".//option[contains(.,#{Capybara::XPath.escape(option)})]")
+      option_node = native.find_element(:xpath, ".//option[normalize-space(text())=#{Capybara::XPath.escape(option)}]") || native.find_element(:xpath, ".//option[contains(.,#{Capybara::XPath.escape(option)})]")
       option_node.select
     rescue 
-      options = node.find_elements(:xpath, ".//option").map { |o| "'#{o.text}'" }.join(', ')
+      options = native.find_elements(:xpath, ".//option").map { |o| "'#{o.text}'" }.join(', ')
       raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
     end
 
     def unselect_option(option)
-      if node['multiple'] != 'multiple'
+      if native['multiple'] != 'multiple'
         raise Capybara::UnselectNotAllowed, "Cannot unselect option '#{option}' from single select box."
       end
 
       begin
-        option_node = node.find_element(:xpath, ".//option[normalize-space(text())=#{Capybara::XPath.escape(option)}]") || node.find_element(:xpath, ".//option[contains(.,#{Capybara::XPath.escape(option)})]")
+        option_node = native.find_element(:xpath, ".//option[normalize-space(text())=#{Capybara::XPath.escape(option)}]") || native.find_element(:xpath, ".//option[contains(.,#{Capybara::XPath.escape(option)})]")
         option_node.clear
       rescue
-        options = node.find_elements(:xpath, ".//option").map { |o| "'#{o.text}'" }.join(', ')
+        options = native.find_elements(:xpath, ".//option").map { |o| "'#{o.text}'" }.join(', ')
         raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
       end
     end
 
     def click
-      node.click
+      native.click
     end
 
     def drag_to(element)
-      node.drag_and_drop_on(element.node)
+      native.drag_and_drop_on(element.native)
     end
 
     def tag_name
-      node.tag_name
+      native.tag_name
     end
 
     def visible?
-      node.displayed? and node.displayed? != "false"
+      native.displayed? and native.displayed? != "false"
     end
     
     def find(locator)
-      node.find_elements(:xpath, locator).map { |n| self.class.new(driver, n) }
+      native.find_elements(:xpath, locator).map { |n| self.class.new(driver, n) }
     end
 
   private
