@@ -42,7 +42,7 @@ Capybara is built into cucumber-rails 0.2. In your Rails app, just run:
 And everything should be set up and ready to go.
 
 If you want to use Capybara with Cucumber outside Rails (for example with Merb
-or Sinatra), you'll need require capybara and set the Rack app manually:
+or Sinatra), you'll need to require Capybara and set the Rack app manually:
 
     require 'capybara/cucumber'
     Capybara.app = MyRackApp
@@ -50,15 +50,12 @@ or Sinatra), you'll need require capybara and set the Rack app manually:
 Now you can use it in your steps:
 
     When /I sign in/ do
-      within("//form[@id='session']") do
+      within("#session") do
         fill_in 'Login', :with => 'user@example.com'
         fill_in 'Password', :with => 'password'
       end
       click_link 'Sign in'
     end
-
-Please note that while Capybara uses XPath selectors by default, Cucumber explicitly
-changes this to CSS in `env.rb`.  See "XPath and CSS" below.
 
 == Default and current driver
 
@@ -364,20 +361,17 @@ For ultimate control, you can instantiate and use a session manually.
 == XPath and CSS
 
 Capybara does not try to guess what kind of selector you are going to give it,
-if you want to use CSS with your 'within' declarations for example, you'll need
+if you want to use XPath with your 'within' declarations for example, you'll need
 to do:
 
-    within(:css, 'ul li') { ... }
-    find(:css, 'ul li').text
-    locate(:css, 'input#name').value
+    within(:xpath, '//ul/li') { ... }
+    find(:xpath, '//ul/li').text
+    locate(:xpath, '//li[contains(.//a[@href = "#"]/text(), "foo")]').value
 
-Alternatively you can set the default selector to CSS, which may help if you are
-moving from Webrat and used CSS a lot, or simply generally prefer CSS:
+Alternatively you can set the default selector to XPath:
 
-    Capybara.default_selector = :css
-    within('ul li') { ... }
-    find('ul li').text
-    locate('input#name').value
+    Capybara.default_selector = :xpath
+    find('//ul/li').text
 
 == Beware the XPath // trap
 
@@ -401,22 +395,13 @@ The same thing goes for within:
 
 == Gotchas:
 
-* Domain names (including subdomains) don't work under rack-test. Since it's a
-  pain to set up subdomains for the other drivers anyway, you should consider an
-  alternate solution. You might use
-  {default_url_options}[https://gist.github.com/643a758320a2926bd2ed] in Rails
-  for example.
-
-* Access to session, request and response from the test is not possible. Maybe
-  we'll do response headers at some point in the future, but the others really
-  shouldn't be touched in an integration test anyway.
+* Access to session and request is not possible from the test, Access to
+  response is limited. Some drivers allow access to response headers and HTTP
+  status code, but this kind of functionality is not provided by some drivers,
+  such as Selenium.
 
 * Access to Rails specific stuff (such as <tt>controller</tt>) is unavailable,
   since we're not using Rails' integration testing.
-
-* <tt><a href="#"></tt> Will cause problems under rack-test, please do
-  <tt><a href="/same/url#"></tt> instead. You can achieve this in Rails with
-  <tt>link_to('foo', :anchor => '')</tt>
 
 == License:
 
