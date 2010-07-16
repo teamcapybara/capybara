@@ -1,7 +1,13 @@
 module Capybara
-  # this is a class for generating XPath queries, use it like this:
+
+  ##
+  #
+  # This is a class for generating XPath queries, use it like this:
+  #
   #     Xpath.text_field('foo').link('blah').to_s
-  # this will generate an XPath that matches either a text field or a link
+  #
+  # This will generate an XPath that matches either a text field or a link.
+  #
   class XPath
 
     class << self
