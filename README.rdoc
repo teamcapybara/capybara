@@ -403,6 +403,13 @@ The same thing goes for within:
 * Access to Rails specific stuff (such as <tt>controller</tt>) is unavailable,
   since we're not using Rails' integration testing.
 
+* Freezing time: It's common practice to mock out the Time so that features
+  that depend on the current Date work as expected. This can be problematic,
+  since Capybara's AJAX timing uses the system time, resulting in Capybara
+  never timing out and just hanging when a failure occurs. It's still possible to
+  use plugins which allow you to travel in time, rather than freeze time.
+  One such plugin is {Timecop}[http://github.com/jtrupiano/timecop].
+
 == License:
 
 (The MIT License)
