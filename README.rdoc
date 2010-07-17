@@ -11,6 +11,9 @@ running your tests and currently comes bundled with rack-test, Culerity,
 Celerity and Selenium support built in. env.js support is available as the
 {capybara-envjs gem}[http://github.com/smparkes/capybara-envjs].
 
+Online documentation is availbable
+{at rdoc.info}[http://rdoc.info/projects/jnicklas/capybara].
+
 == Install:
 
 Install as a gem:
