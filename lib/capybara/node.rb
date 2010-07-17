@@ -22,7 +22,7 @@ module Capybara
   #     session.fill_in('Foo', :with => 'Bar')    # from Capybara::Node::Actions
   #     bar = session.locate('#bar')              # from Capybara::Node::Finders
   #     bar.select('Baz', :from => 'Quox')        # from Capybara::Node::Actions
-  #     session.has_css('#foobar')                # from Capybara::Node::Matchers
+  #     session.has_css?('#foobar')               # from Capybara::Node::Matchers
   #
   class Node
     attr_reader :session, :base

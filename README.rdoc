@@ -163,8 +163,8 @@ automatically follows any redirects, and submits forms associated with buttons.
     click_link('id-of-link')
     click_link('Link Text')
     click_button('Save')
-    click('Link Text') # Click either a link or a button
-    click('Button Value')
+    click_link_or_button('Link Text')
+    click_link_or_button('Button Value')
 
 === Interacting with forms
 
@@ -189,7 +189,7 @@ certain elements, and working with and manipulating those elements.
     page.has_css?('table tr.foo')
     page.has_content?('foo')
 
-You can use with RSpecs magic matchers:
+You can these use with RSpec's magic matchers:
 
     page.should have_xpath('//table/tr')
     page.should have_css('table tr.foo')
