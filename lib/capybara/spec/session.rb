@@ -41,7 +41,7 @@ shared_examples_for "session" do
   it_should_behave_like "attach_file"
   it_should_behave_like "check"
   it_should_behave_like "choose"
-  it_should_behave_like "click"
+  it_should_behave_like "click_link_or_button"
   it_should_behave_like "click_button"
   it_should_behave_like "click_link"
   it_should_behave_like "fill_in"

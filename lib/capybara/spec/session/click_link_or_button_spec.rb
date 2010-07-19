@@ -1,4 +1,4 @@
-shared_examples_for "click" do
+shared_examples_for "click_link_or_button" do
   describe '#click' do
     it "should click on a link" do
       @session.visit('/with_html')
