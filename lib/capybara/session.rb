@@ -237,6 +237,15 @@ module Capybara
 
     ##
     #
+    # @deprecated click is deprecated, please use {Capybara::Node::Actions#click_link_or_button} instead
+    #
+    def click(locator)
+      warn "DEPRECATED: click is deprecated, use click_link_or_button instead"
+      current_node.click_link_or_button(locator)
+    end
+
+    ##
+    #
     # Save a snapshot of the page and open it in a browser for inspection
     #
     def save_and_open_page

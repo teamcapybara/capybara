@@ -12,6 +12,12 @@ shared_examples_for "click_link_or_button" do
       extract_results(@session)['first_name'].should == 'John'
     end
 
+    it "should be aliased as click for backward compatibility" do
+      @session.visit('/form')
+      @session.click('awe123')
+      extract_results(@session)['first_name'].should == 'John'
+    end
+
     context "with a locator that doesn't exist" do
       it "should raise an error" do
         @session.visit('/with_html')
