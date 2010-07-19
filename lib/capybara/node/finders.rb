@@ -29,7 +29,15 @@ module Capybara
         raise Capybara::ElementNotFound, options[:message] || "Unable to find '#{args[1] || args[0]}'" unless node
         return node
       end
-      alias_method :locate, :find
+
+      ##
+      #
+      # @deprecated {#find} now behaves like locate used to. Use {#find} instead.
+      #
+      def locate(*args)
+        warn "DEPRECATED: Please use #find instead of #locate"
+        find(*args)
+      end
 
       ##
       #
