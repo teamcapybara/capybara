@@ -9,8 +9,10 @@ shared_examples_for "find_by_id" do
       @session.find_by_id('hidden_via_ancestor').tag_name.should == 'div'
     end
 
-    it "should return nil if no element with id is found" do
-      @session.find_by_id('nothing_with_this_id').should be_nil
+    it "should raise error if no element with id is found" do
+      running do
+        @session.find_by_id('nothing_with_this_id')
+      end.should raise_error(Capybara::ElementNotFound)
     end
   end
 end

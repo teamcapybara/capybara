@@ -4,47 +4,32 @@ module Capybara
 
       ##
       #
-      # Find an Element based on the given arguments. +locate+ is a stricter version of +find+.
-      # Find simply returns nil if the element is not found, in contrast +locate+ will raise an
-      # error if the element is not found. The error message can be customized through the
-      # +:message+ option.
+      # Find an Element based on the given arguments. +find+ will raise an error if the element
+      # is not found. The error message can be customized through the +:message+ option.
       #
-      # If the driver is capable of executing JavaScript, locate will wait for a set amount of time
+      # If the driver is capable of executing JavaScript, +find+ will wait for a set amount of time
       # and continuously retry finding the element until either the element is found or the time
-      # expires. The length of time +locate+ will wait is controlled through Capybara.default_wait_time
+      # expires. The length of time +find+ will wait is controlled through Capybara.default_wait_time
       # and defaults to 2 seconds.
       #
-      # Locate takes the same options as +find+ and +all+.
+      # +find+ takes the same options as +all+.
       #
-      #     page.locate('#foo').locate('.bar')
-      #     page.locate(:xpath, '//div[contains("bar")]')
-      #     page.locate('li', :text => 'Quox').click_link('Delete')
+      #     page.find('#foo').find('.bar')
+      #     page.find(:xpath, '//div[contains("bar")]')
+      #     page.find('li', :text => 'Quox').click_link('Delete')
       #
       # @param (see Capybara::Node::Finders#all)
       # @return [Capybara::Element]           The found element
       # @raise  [Capybara::ElementNotFound]   If the element can't be found before time expires
       #
-      def locate(*args)
-        node = wait_conditionally_until { find(*args) }
+      def find(*args)
+        node = wait_conditionally_until { all(*args).first }
       ensure
         options = if args.last.is_a?(Hash) then args.last else {} end
-        raise Capybara::ElementNotFound, options[:message] || "Unable to locate '#{args[1] || args[0]}'" unless node
+        raise Capybara::ElementNotFound, options[:message] || "Unable to find '#{args[1] || args[0]}'" unless node
         return node
       end
-
-      ##
-      #
-      # Find works identically to all, except that it returns only the first element found. If the element
-      # cannot be found on the page, find returns nil. See also +locate+ for a stricter variation of find.
-      #
-      #     page.find('#contact_form').fill_in('Name', :with => 'John')
-      #
-      # @param (see Capybara::Node::Finders#all)
-      # @return [Capybara::Element]   The found element
-      #
-      def find(*args)
-        all(*args).first
-      end
+      alias_method :locate, :find
 
       ##
       #

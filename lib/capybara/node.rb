@@ -10,7 +10,7 @@ module Capybara
   # Capybara::Element or a document through Capybara::Document.
   #
   # Both types of Node share the same methods, used for interacting with the
-  # elements on the page. These methods are devided into three categories,
+  # elements on the page. These methods are divided into three categories,
   # finders, actions and matchers. These are found in the modules
   # Capybara::Node::Finders, Capybara::Node::Actions and Capybara::Node::Matchers
   # respectively.
@@ -20,7 +20,7 @@ module Capybara
   #     session = Capybara::Session.new(:rack_test, my_app)
   #     session.visit('/')
   #     session.fill_in('Foo', :with => 'Bar')    # from Capybara::Node::Actions
-  #     bar = session.locate('#bar')              # from Capybara::Node::Finders
+  #     bar = session.find('#bar')              # from Capybara::Node::Finders
   #     bar.select('Baz', :from => 'Quox')        # from Capybara::Node::Actions
   #     session.has_css?('#foobar')               # from Capybara::Node::Matchers
   #
@@ -50,7 +50,7 @@ module Capybara
   #
   #     session = Capybara::Session.new(:rack_test, my_app)
   #
-  #     bar = session.locate('#bar')              # from Capybara::Node::Finders
+  #     bar = session.find('#bar')              # from Capybara::Node::Finders
   #     bar.select('Baz', :from => 'Quox')        # from Capybara::Node::Actions
   #
   # Elements also have access to HTML attributes and other properties of the
@@ -183,8 +183,8 @@ module Capybara
     #
     # Drag the element to the given other element.
     #
-    #     source = page.locate('#foo')
-    #     target = page.locate('#bar')
+    #     source = page.find('#foo')
+    #     target = page.find('#bar')
     #     source.drag_to(target)
     #
     # @param [Capybara::Element] node     The element to drag to

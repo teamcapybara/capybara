@@ -10,8 +10,10 @@ shared_examples_for "find_link" do
       @session.find_link('labore')[:href].should == "/with_simple_html"
     end
 
-    it "should return nil if the field doesn't exist" do
-      @session.find_link('Does not exist').should be_nil
+    it "should raise error if the field doesn't exist" do
+      running do
+        @session.find_link('Does not exist')
+      end.should raise_error(Capybara::ElementNotFound)
     end
   end
 end

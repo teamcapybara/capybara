@@ -211,20 +211,18 @@ You can also find specific elements, in order to manipulate them:
     find_link('Hello').visible?
     find_button('Send').click
 
-    find('//table/tr').click
-    locate("//*[@id='overlay'").find("//h1").click
+    find(:xpath, "//table/tr").click
+    find("#overlay").find("h1").click
     all('a').each { |a| a[:href] }
 
-Note that there's a difference between <tt>locate</tt> and <tt>find</tt>. <tt>locate</tt>
-will wait for an element to appear on the page, as explained in the AJAX section. If the element
-does not appear it will raise an error. <tt>find</tt> will check if the element is there and
-immediately return nil if it is not.
+Note that <tt>find</tt> will wait for an element to appear on the page, as explained in the
+AJAX section. If the element does not appear it will raise an error.
 
 These elements all have all the Capybara DSL methods available, so you can restrict them
 to specific parts of the page:
 
-    locate(:css, '#navigation').click_link('Home')
-    locate(:css, '#navigation').should have_button('Sign out')
+    find('#navigation').click_link('Home')
+    find('#navigation').should have_button('Sign out')
 
 === Scoping
 
@@ -369,7 +367,7 @@ to do:
 
     within(:xpath, '//ul/li') { ... }
     find(:xpath, '//ul/li').text
-    locate(:xpath, '//li[contains(.//a[@href = "#"]/text(), "foo")]').value
+    find(:xpath, '//li[contains(.//a[@href = "#"]/text(), "foo")]').value
 
 Alternatively you can set the default selector to XPath:
 

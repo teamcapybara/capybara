@@ -1,4 +1,4 @@
-shared_examples_for "find" do  
+shared_examples_for "find" do
   describe '#find' do
     before do
       @session.visit('/with_html')
@@ -7,6 +7,16 @@ shared_examples_for "find" do
     it "should find the first element using the given locator" do
       @session.find('//h1').text.should == 'This is a test'
       @session.find("//input[@id='test_field']")[:value].should == 'monkey'
+    end
+
+    it "should be aliased as locate for backward compatibility" do
+      @session.locate('//h1').text.should == 'This is a test'
+      @session.locate("//input[@id='test_field']")[:value].should == 'monkey'
+    end
+
+    it "should find the first element using the given locator and options" do
+      @session.find('//a', :text => 'Redirect')[:id].should == 'red'
+      @session.find(:css, 'a', :text => 'A link')[:title].should == 'twas a fine link'
     end
 
     describe 'the returned node' do
@@ -48,8 +58,16 @@ shared_examples_for "find" do
       after { Capybara.default_selector = :xpath }
     end
 
-    it "should return nil when nothing was found" do
-      @session.find('//div[@id="nosuchthing"]').should be_nil
+    it "should raise ElementNotFound with specified fail message if nothing was found" do
+      running do
+        @session.find(:xpath, '//div[@id="nosuchthing"]', :message => 'arghh').should be_nil
+      end.should raise_error(Capybara::ElementNotFound, "arghh")
+    end
+
+    it "should raise ElementNotFound with a useful default message if nothing was found" do
+      running do
+        @session.find(:xpath, '//div[@id="nosuchthing"]').should be_nil
+      end.should raise_error(Capybara::ElementNotFound, "Unable to find '//div[@id=\"nosuchthing\"]'")
     end
 
     it "should accept an XPath instance and respect the order of paths" do
@@ -66,7 +84,7 @@ shared_examples_for "find" do
       it "should find the first element using the given locator" do
         @session.within(:xpath, "//div[@id='for_bar']") do
           @session.find('.//li').text.should =~ /With Simple HTML/
-        end
+        end        
       end
     end
   end

@@ -154,7 +154,7 @@ module Capybara
     # @param [String] selector              The selector within which to execute the given block
     #
     def within(kind, selector=nil)
-      new_scope = locate(kind, selector, :message => "scope '#{selector || kind}' not found on page")
+      new_scope = find(kind, selector, :message => "scope '#{selector || kind}' not found on page")
       begin
         scopes.push(new_scope)
         yield

@@ -11,7 +11,7 @@ module Capybara
       #
       def click_link_or_button(locator)
         msg = "no link or button '#{locator}' found"
-        locate(:xpath, XPath.link(locator).button(locator), :message => msg).click
+        find(:xpath, XPath.link(locator).button(locator), :message => msg).click
       end
 
       ##
@@ -23,7 +23,7 @@ module Capybara
       #
       def click_link(locator)
         msg = "no link with title, id or text '#{locator}' found"
-        locate(:xpath, XPath.link(locator), :message => msg).click
+        find(:xpath, XPath.link(locator), :message => msg).click
       end
 
       ##
@@ -34,7 +34,7 @@ module Capybara
       #
       def click_button(locator)
         msg = "no button with value or id or text '#{locator}' found"
-        locate(:xpath, XPath.button(locator), :message => msg).click
+        find(:xpath, XPath.button(locator), :message => msg).click
       end
 
       ##
@@ -50,7 +50,7 @@ module Capybara
       def fill_in(locator, options={})
         msg = "cannot fill in, no text field, text area or password field with id, name, or label '#{locator}' found"
         raise "Must pass a hash containing 'with'" if not options.is_a?(Hash) or not options.has_key?(:with)
-        locate(:xpath, XPath.fillable_field(locator), :message => msg).set(options[:with])
+        find(:xpath, XPath.fillable_field(locator), :message => msg).set(options[:with])
       end
 
       ##
@@ -64,7 +64,7 @@ module Capybara
       #
       def choose(locator)
         msg = "cannot choose field, no radio button with id, name, or label '#{locator}' found"
-        locate(:xpath, XPath.radio_button(locator), :message => msg).set(true)
+        find(:xpath, XPath.radio_button(locator), :message => msg).set(true)
       end
 
       ##
@@ -78,7 +78,7 @@ module Capybara
       #
       def check(locator)
         msg = "cannot check field, no checkbox with id, name, or label '#{locator}' found"
-        locate(:xpath, XPath.checkbox(locator), :message => msg).set(true)
+        find(:xpath, XPath.checkbox(locator), :message => msg).set(true)
       end
 
       ##
@@ -92,7 +92,7 @@ module Capybara
       #
       def uncheck(locator)
         msg = "cannot uncheck field, no checkbox with id, name, or label '#{locator}' found"
-        locate(:xpath, XPath.checkbox(locator), :message => msg).set(false)
+        find(:xpath, XPath.checkbox(locator), :message => msg).set(false)
       end
 
       ##
@@ -107,7 +107,7 @@ module Capybara
       #
       def select(value, options={})
         msg = "cannot select option, no select box with id, name, or label '#{options[:from]}' found"
-        locate(:xpath, XPath.select(options[:from]), :message => msg).select_option(value)
+        find(:xpath, XPath.select(options[:from]), :message => msg).select_option(value)
       end
 
       ##
@@ -122,7 +122,7 @@ module Capybara
       #
       def unselect(value, options={})
         msg = "cannot unselect option, no select box with id, name, or label '#{options[:from]}' found"
-        locate(:xpath, XPath.select(options[:from]), :message => msg).unselect_option(value)
+        find(:xpath, XPath.select(options[:from]), :message => msg).unselect_option(value)
       end
 
       ##
@@ -137,7 +137,7 @@ module Capybara
       #
       def attach_file(locator, path)
         msg = "cannot attach file, no file field with id, name, or label '#{locator}' found"
-        locate(:xpath, XPath.file_field(locator), :message => msg).set(path)
+        find(:xpath, XPath.file_field(locator), :message => msg).set(path)
       end
 
       ##
@@ -147,8 +147,8 @@ module Capybara
       # @deprecated    Use Capybara::Element#drag_to instead.
       #
       def drag(source_locator, target_locator)
-        source = locate(:xpath, source_locator, :message => "drag source '#{source_locator}' not found on page")
-        target = locate(:xpath, target_locator, :message => "drag target '#{target_locator}' not found on page")
+        source = find(:xpath, source_locator, :message => "drag source '#{source_locator}' not found on page")
+        target = find(:xpath, target_locator, :message => "drag target '#{target_locator}' not found on page")
         source.drag_to(target)
       end
     end

@@ -10,13 +10,17 @@ shared_examples_for "find_field" do
       @session.find_field('Region')[:name].should == 'form[region]'
     end
 
-    it "should be nil if the field doesn't exist" do
-      @session.find_field('Does not exist').should be_nil
+    it "should raise error if the field doesn't exist" do
+      running do
+        @session.find_field('Does not exist')
+      end.should raise_error(Capybara::ElementNotFound)
     end
 
     it "should be aliased as 'field_labeled' for webrat compatibility" do
       @session.field_labeled('Dog').value.should == 'dog'
-      @session.field_labeled('Does not exist').should be_nil
+      running do
+        @session.field_labeled('Does not exist')
+      end.should raise_error(Capybara::ElementNotFound)
     end
   end
 end
