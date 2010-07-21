@@ -1,0 +1,3 @@
+source :gemcutter
+
+gemspec
