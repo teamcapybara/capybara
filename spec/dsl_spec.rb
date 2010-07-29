@@ -99,15 +99,6 @@ describe Capybara do
     end
   end
 
-  describe '.reset_sessions!' do
-    it "should clear any persisted sessions" do
-      object_id = Capybara.current_session.object_id
-      Capybara.current_session.object_id.should == object_id
-      Capybara.reset_sessions!
-      Capybara.current_session.object_id.should_not == object_id
-    end
-  end
-
   describe 'the DSL' do
     before do
       @session = Capybara
