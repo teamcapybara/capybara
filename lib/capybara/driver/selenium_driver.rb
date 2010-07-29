@@ -131,7 +131,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     self.class.driver
   end
 
-  def cleanup!
+  def reset!
     browser.manage.delete_all_cookies
   end
 

@@ -56,9 +56,10 @@ module Capybara
     #
     # Reset the session, removing all cookies.
     #
-    def cleanup!
-      driver.cleanup!
+    def reset!
+      driver.reset!
     end
+    alias_method :cleanup!, :reset!
 
     ##
     #

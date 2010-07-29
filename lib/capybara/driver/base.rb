@@ -46,7 +46,12 @@ class Capybara::Driver::Base
   def wait_until(*args)
   end
 
+  def reset!
+  end
+
   def cleanup!
+    warn "DEPRECATED: #cleanup! has been renamed to #reset!"
+    reset!
   end
 
   def has_shortcircuit_timeout?

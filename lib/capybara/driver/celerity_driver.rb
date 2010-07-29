@@ -140,7 +140,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     @_browser
   end
 
-  def cleanup!
+  def reset!
     browser.clear_cookies
   end
 

@@ -241,7 +241,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   end
   alias_method :source, :body
 
-  def cleanup!
+  def reset!
     clear_cookies
   end
 
