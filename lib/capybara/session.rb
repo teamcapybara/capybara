@@ -170,7 +170,7 @@ module Capybara
     # @param [String] locator    Id or legend of the fieldset
     #
     def within_fieldset(locator)
-      within :xpath, XPath.fieldset(locator) do
+      within :xpath, Capybara::XPath.fieldset(locator) do
         yield
       end
     end
@@ -182,7 +182,7 @@ module Capybara
     # @param [String] locator    Id or caption of the table
     #
     def within_table(locator)
-      within :xpath, XPath.table(locator) do
+      within :xpath, Capybara::XPath.table(locator) do
         yield
       end
     end

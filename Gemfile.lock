@@ -9,6 +9,11 @@ PATH
       rack-test (>= 0.5.4)
       selenium-webdriver (>= 0.0.3)
 
+PATH
+  remote: /Users/jonas/Projects/xpath
+  specs:
+    xpath (0.0.1)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -52,4 +57,5 @@ DEPENDENCIES
   rspec (>= 1.2.9)
   selenium-webdriver (>= 0.0.3)
   sinatra (>= 0.9.4)
+  xpath!
   yard (>= 0.5.8)

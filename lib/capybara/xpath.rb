@@ -1,3 +1,9 @@
+require 'xpath'
+
+::XPath::Collection.class_eval do
+  alias_method :paths, :expressions
+end
+
 module Capybara
 
   ##
@@ -11,6 +17,17 @@ module Capybara
   class XPath
 
     class << self
+      include ::XPath
+
+      def link(locator)
+        link = descendant(:a).where(attr(:href))
+        var = varstring(:locator)
+        ::XPath::Collection.new(
+          link.where(text.equals(var) | attr(:title).equals(var) | descendant(:img).where(attr(:alt).equals(var))),
+          link.where(attr(:id).contains(var) | contains(var) | attr(:title).contains(var) | descendant(:img).where(attr(:alt).contains(var)))
+        ).apply(:locator => locator)
+      end
+
       def escape(string)
         if string.include?("'")
           string = string.split("'", -1).map do |substr|
@@ -27,6 +44,14 @@ module Capybara
           path
         else
           new(path.to_s)
+        end
+      end
+
+      def tempwrap(path)
+        if path.is_a?(::XPath::Collection)
+          path.map { |p| p.to_xpath }
+        else
+          wrap(path).paths
         end
       end
 
