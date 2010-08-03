@@ -19,34 +19,30 @@ module Capybara
     class << self
       include ::XPath
 
-      def locator
-        varstring(:locator)
-      end
-
       def collection(*args)
         ::XPath::Collection.new(*args)
       end
 
       def link(locator)
-        link = descendant(:a).where(attr(:href))
+        link = descendant(:a)[attr(:href)]
         collection(
-          link.where(text.equals(locator) | attr(:title).equals(locator) | descendant(:img).where(attr(:alt).equals(locator))),
-          link.where(attr(:id).contains(locator) | contains(locator) | attr(:title).contains(locator) | descendant(:img).where(attr(:alt).contains(locator)))
-        ).apply(:locator => locator)
+          link[text.equals(locator) | attr(:title).equals(locator) | descendant(:img)[attr(:alt).equals(locator)]],
+          link[attr(:id).contains(locator) | contains(locator) | attr(:title).contains(locator) | descendant(:img)[attr(:alt).contains(locator)]]
+        )
       end
 
       def button(locator)
-        input = descendant(:input).where(attr(:type).one_of('submit', 'image', 'button'))
+        input = descendant(:input)[attr(:type).one_of('submit', 'image', 'button')]
         button = descendant(:button)
-        image = descendant(:input).where(attr(:type).equals('image'))
+        image = descendant(:input)[attr(:type).equals('image')]
         collection(
-          button.where(attr(:value).equals(locator) | text.equals(locator)),
-          input.where(attr(:value).equals(locator)),
-          image.where(attr(:alt).equals(locator)),
-          input.where(attr(:id).equals(locator) | attr(:value).contains(locator)),
-          button.where(attr(:id).equals(locator) | attr(:value).contains(locator) | contains(locator)),
-          image.where(attr(:alt).contains(locator))
-        ).apply(:locator => locator)
+          button[attr(:value).equals(locator) | text.equals(locator)],
+          input[attr(:value).equals(locator)],
+          image[attr(:alt).equals(locator)],
+          input[attr(:id).equals(locator) | attr(:value).contains(locator)],
+          button[attr(:id).equals(locator) | attr(:value).contains(locator) | contains(locator)],
+          image[attr(:alt).contains(locator)]
+        )
       end
 
       def escape(string)
