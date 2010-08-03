@@ -19,12 +19,33 @@ module Capybara
     class << self
       include ::XPath
 
+      def locator
+        varstring(:locator)
+      end
+
+      def collection(*args)
+        ::XPath::Collection.new(*args)
+      end
+
       def link(locator)
         link = descendant(:a).where(attr(:href))
-        var = varstring(:locator)
-        ::XPath::Collection.new(
-          link.where(text.equals(var) | attr(:title).equals(var) | descendant(:img).where(attr(:alt).equals(var))),
-          link.where(attr(:id).contains(var) | contains(var) | attr(:title).contains(var) | descendant(:img).where(attr(:alt).contains(var)))
+        collection(
+          link.where(text.equals(locator) | attr(:title).equals(locator) | descendant(:img).where(attr(:alt).equals(locator))),
+          link.where(attr(:id).contains(locator) | contains(locator) | attr(:title).contains(locator) | descendant(:img).where(attr(:alt).contains(locator)))
+        ).apply(:locator => locator)
+      end
+
+      def button(locator)
+        input = descendant(:input).where(attr(:type).one_of('submit', 'image', 'button'))
+        button = descendant(:button)
+        image = descendant(:input).where(attr(:type).equals('image'))
+        collection(
+          button.where(attr(:value).equals(locator) | text.equals(locator)),
+          input.where(attr(:value).equals(locator)),
+          image.where(attr(:alt).equals(locator)),
+          input.where(attr(:id).equals(locator) | attr(:value).contains(locator)),
+          button.where(attr(:id).equals(locator) | attr(:value).contains(locator) | contains(locator)),
+          image.where(attr(:alt).contains(locator))
         ).apply(:locator => locator)
       end
 
@@ -121,19 +142,6 @@ module Capybara
 
     def fieldset(locator)
       append(".//fieldset[@id=#{s(locator)} or contains(legend,#{s(locator)})]")
-    end
-
-    def link(locator)
-      xpath = append(".//a[@href][@id=#{s(locator)} or contains(.,#{s(locator)}) or contains(@title,#{s(locator)}) or img[contains(@alt,#{s(locator)})]]")
-      xpath.prepend(".//a[@href][text()=#{s(locator)} or @title=#{s(locator)} or img[@alt=#{s(locator)}]]")
-    end
-
-    def button(locator)
-      xpath = append(".//input[@type='submit' or @type='image' or @type='button'][@id=#{s(locator)} or contains(@value,#{s(locator)})]")
-      xpath = xpath.append(".//button[@id=#{s(locator)} or contains(@value,#{s(locator)}) or contains(.,#{s(locator)})]")
-      xpath = xpath.prepend(".//input[@type='submit' or @type='image' or @type='button'][@value=#{s(locator)}]")
-      xpath = xpath.prepend(".//input[@type='image'][@alt=#{s(locator)} or contains(@alt,#{s(locator)})]")
-      xpath = xpath.prepend(".//button[@value=#{s(locator)} or text()=#{s(locator)}]")
     end
 
     def text_field(locator, options={})
