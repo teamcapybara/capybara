@@ -72,7 +72,7 @@ shared_examples_for "find" do
 
     it "should accept an XPath instance and respect the order of paths" do
       @session.visit('/form')
-      @xpath = Capybara::XPath.text_field('Name')
+      @xpath = Capybara::XPath.fillable_field('Name')
       @session.find(@xpath).value.should == 'John Smith'
     end
 

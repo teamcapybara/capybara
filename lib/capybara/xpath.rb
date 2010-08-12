@@ -28,6 +28,10 @@ module Capybara
         link[attr(:id).equals(locator) | text.is(locator) | attr(:title).is(locator) | descendant(:img)[attr(:alt).is(locator)]]
       end
 
+      def content(locator)
+        child(:"descendant-or-self::*")[current.n.contains(locator)]
+      end
+
       def button(locator)
         collection(
           descendant(:input)[attr(:type).one_of('submit', 'image', 'button')][attr(:id).equals(locator) | attr(:value).is(locator)],
@@ -40,21 +44,25 @@ module Capybara
         collection(link(locator), button(locator))
       end
 
+      def fieldset(locator)
+        descendant(:fieldset)[attr(:id).equals(locator) | descendant(:legend)[text.is(locator)]]
+      end
+
       def field(locator, options={})
         if options[:with]
           fillable_field(locator, options)
         else
-          #xpath = fillable_field(locator)
-          #xpath = xpath.input_field(:file, locator, options)
-          #xpath = xpath.checkbox(locator, options)
-          #xpath = xpath.radio_button(locator, options)
-          #xpath.select(locator, options)
-          xpath = super
+          xpath = descendant(:input, :textarea, :select)[attr(:type).one_of('submit', 'image', 'hidden').inverse]
+          xpath = locate_field(xpath, locator)
+          xpath = xpath[field_value(options[:with])] if options.has_key?(:with)
+          xpath = xpath[attr(:checked)] if options[:checked]
+          xpath = xpath[attr(:checked).inverse] if options[:unchecked]
+          xpath
         end
       end
 
       def fillable_field(locator, options={})
-        xpath = descendant(:input, :textarea)[attr(:type).one_of('submit', 'image', 'radio', 'checkbox', 'hidden').inverse]
+        xpath = descendant(:input, :textarea)[attr(:type).one_of('submit', 'image', 'radio', 'checkbox', 'hidden', 'file').inverse]
         xpath = locate_field(xpath, locator)
         xpath = xpath[field_value(options[:with])] if options.has_key?(:with)
         xpath
@@ -74,10 +82,6 @@ module Capybara
       def extract_postfix(options)
         options.inject("") do |postfix, (key, value)|
           case key
-            when :value     then postfix += "[@value=#{s(value)}]"
-            when :text      then postfix += "[text()=#{s(value)}]"
-            when :checked   then postfix += "[@checked]"
-            when :unchecked then postfix += "[not(@checked)]"
             when :options   then postfix += value.map { |o| "[.//option/text()=#{s(o)}]" }.join
             when :selected  then postfix += [value].flatten.map { |o| "[.//option[@selected]/text()=#{s(o)}]" }.join
           end
@@ -145,26 +149,6 @@ module Capybara
     end
     alias_method :for_css, :from_css
 
-    def field(locator, options={})
-      if options[:with]
-        fillable_field(locator, options)
-      else
-        xpath = fillable_field(locator)
-        xpath = xpath.input_field(:file, locator, options)
-        xpath = xpath.checkbox(locator, options)
-        xpath = xpath.radio_button(locator, options)
-        xpath.select(locator, options)
-      end
-    end
-
-    def fillable_field(locator, options={})
-      text_area(locator, options).text_field(locator, options)
-    end
-
-    def content(locator)
-      append("./descendant-or-self::*[contains(normalize-space(.),#{s(locator)})]")
-    end
-
     def table(locator, options={})
       conditions = ""
       if options[:rows]
@@ -177,19 +161,6 @@ module Capybara
       append(".//table[@id=#{s(locator)} or contains(caption,#{s(locator)})]#{conditions}")
     end
 
-    def fieldset(locator)
-      append(".//fieldset[@id=#{s(locator)} or contains(legend,#{s(locator)})]")
-    end
-
-    def text_field(locator, options={})
-      options = options.merge(:value => options[:with]) if options.has_key?(:with)
-      add_field(locator, ".//input[not(@type) or (@type!='radio' and @type!='checkbox' and @type!='hidden')]", options)
-    end
-
-    def text_area(locator, options={})
-      options = options.merge(:text => options[:with]) if options.has_key?(:with)
-      add_field(locator, ".//textarea", options)
-    end
 
     def select(locator, options={})
       add_field(locator, ".//select", options)
