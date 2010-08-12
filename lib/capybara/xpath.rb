@@ -40,6 +40,51 @@ module Capybara
         collection(link(locator), button(locator))
       end
 
+      def field(locator, options={})
+        if options[:with]
+          fillable_field(locator, options)
+        else
+          #xpath = fillable_field(locator)
+          #xpath = xpath.input_field(:file, locator, options)
+          #xpath = xpath.checkbox(locator, options)
+          #xpath = xpath.radio_button(locator, options)
+          #xpath.select(locator, options)
+          xpath = super
+        end
+      end
+
+      def fillable_field(locator, options={})
+        xpath = descendant(:input, :textarea)[attr(:type).one_of('submit', 'image', 'radio', 'checkbox', 'hidden').inverse]
+        xpath = locate_field(xpath, locator)
+        xpath = xpath[field_value(options[:with])] if options.has_key?(:with)
+        xpath
+      end
+
+      def field_value(value)
+        (text.is(value) & name.equals('textarea')) | (attr(:value).equals(value) & name.equals('textarea').inverse)
+      end
+
+      def locate_field(xpath, locator)
+        collection(
+          xpath[attr(:id).equals(locator) | attr(:name).equals(locator) | attr(:id).equals(anywhere(:label)[text.is(locator)].attr(:for))],
+          descendant(:label)[text.is(locator)].descendant(xpath)
+        )
+      end
+
+      def extract_postfix(options)
+        options.inject("") do |postfix, (key, value)|
+          case key
+            when :value     then postfix += "[@value=#{s(value)}]"
+            when :text      then postfix += "[text()=#{s(value)}]"
+            when :checked   then postfix += "[@checked]"
+            when :unchecked then postfix += "[not(@checked)]"
+            when :options   then postfix += value.map { |o| "[.//option/text()=#{s(o)}]" }.join
+            when :selected  then postfix += [value].flatten.map { |o| "[.//option[@selected]/text()=#{s(o)}]" }.join
+          end
+          postfix
+        end
+      end
+
       def escape(string)
         if string.include?("'")
           string = string.split("'", -1).map do |substr|
