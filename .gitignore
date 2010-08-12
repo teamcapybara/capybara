@@ -8,3 +8,4 @@ spec.opts
 capybara-*.html
 .yardoc
 doc
+.bundle
