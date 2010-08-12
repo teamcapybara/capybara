@@ -11,7 +11,7 @@ module Capybara
       #
       def click_link_or_button(locator)
         msg = "no link or button '#{locator}' found"
-        find(:xpath, Capybara::XPath.link(locator).button(locator), :message => msg).click
+        find(:xpath, Capybara::XPath.link_or_button(locator), :message => msg).click
       end
 
       ##

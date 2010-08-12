@@ -25,24 +25,19 @@ module Capybara
 
       def link(locator)
         link = descendant(:a)[attr(:href)]
-        collection(
-          link[text.equals(locator) | attr(:title).equals(locator) | descendant(:img)[attr(:alt).equals(locator)]],
-          link[attr(:id).contains(locator) | contains(locator) | attr(:title).contains(locator) | descendant(:img)[attr(:alt).contains(locator)]]
-        )
+        link[attr(:id).equals(locator) | text.is(locator) | attr(:title).is(locator) | descendant(:img)[attr(:alt).is(locator)]]
       end
 
       def button(locator)
-        input = descendant(:input)[attr(:type).one_of('submit', 'image', 'button')]
-        button = descendant(:button)
-        image = descendant(:input)[attr(:type).equals('image')]
         collection(
-          button[attr(:value).equals(locator) | text.equals(locator)],
-          input[attr(:value).equals(locator)],
-          image[attr(:alt).equals(locator)],
-          input[attr(:id).equals(locator) | attr(:value).contains(locator)],
-          button[attr(:id).equals(locator) | attr(:value).contains(locator) | contains(locator)],
-          image[attr(:alt).contains(locator)]
+          descendant(:input)[attr(:type).one_of('submit', 'image', 'button')][attr(:id).equals(locator) | attr(:value).is(locator)],
+          descendant(:button)[attr(:id).equals(locator) | attr(:value).is(locator) | text.is(locator)],
+          descendant(:input)[attr(:type).equals('image')][attr(:alt).is(locator)]
         )
+      end
+
+      def link_or_button(locator)
+        collection(link(locator), button(locator))
       end
 
       def escape(string)
@@ -65,8 +60,9 @@ module Capybara
       end
 
       def tempwrap(path)
-        if path.is_a?(::XPath::Collection)
-          path.map { |p| p.to_xpath }
+        if path.is_a?(::XPath::Expression) or path.is_a?(::XPath::Collection)
+          paths = path.to_xpaths
+          paths
         else
           wrap(path).paths
         end
