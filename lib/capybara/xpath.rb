@@ -54,7 +54,6 @@ module Capybara
         else
           xpath = descendant(:input, :textarea, :select)[attr(:type).one_of('submit', 'image', 'hidden').inverse]
           xpath = locate_field(xpath, locator)
-          xpath = xpath[field_value(options[:with])] if options.has_key?(:with)
           xpath = xpath[attr(:checked)] if options[:checked]
           xpath = xpath[attr(:checked).inverse] if options[:unchecked]
           xpath
@@ -68,6 +67,32 @@ module Capybara
         xpath
       end
 
+      def select(locator, options={})
+        xpath = locate_field(descendant(:select), locator)
+
+        options[:options].each do |option|
+          xpath = xpath[descendant(:option).text.equals(option)]
+        end if options[:options]
+
+        [options[:selected]].flatten.each do |option|
+          xpath = xpath[descendant(:option)[attr(:selected)].text.equals(option)]
+        end if options[:selected]
+
+        xpath
+      end
+
+      def checkbox(locator, options={})
+        xpath = locate_field(descendant(:input)[attr(:type).equals('checkbox')], locator)
+      end
+
+      def radio_button(locator, options={})
+        locate_field(descendant(:input)[attr(:type).equals('radio')], locator)
+      end
+
+      def file_field(locator, options={})
+        locate_field(descendant(:input)[attr(:type).equals('file')], locator)
+      end
+
       def field_value(value)
         (text.is(value) & name.equals('textarea')) | (attr(:value).equals(value) & name.equals('textarea').inverse)
       end
@@ -77,16 +102,6 @@ module Capybara
           xpath[attr(:id).equals(locator) | attr(:name).equals(locator) | attr(:id).equals(anywhere(:label)[text.is(locator)].attr(:for))],
           descendant(:label)[text.is(locator)].descendant(xpath)
         )
-      end
-
-      def extract_postfix(options)
-        options.inject("") do |postfix, (key, value)|
-          case key
-            when :options   then postfix += value.map { |o| "[.//option/text()=#{s(o)}]" }.join
-            when :selected  then postfix += [value].flatten.map { |o| "[.//option[@selected]/text()=#{s(o)}]" }.join
-          end
-          postfix
-        end
       end
 
       def escape(string)
@@ -162,21 +177,6 @@ module Capybara
     end
 
 
-    def select(locator, options={})
-      add_field(locator, ".//select", options)
-    end
-
-    def checkbox(locator, options={})
-      input_field(:checkbox, locator, options)
-    end
-
-    def radio_button(locator, options={})
-      input_field(:radio, locator, options)
-    end
-
-    def file_field(locator, options={})
-      input_field(:file, locator, options)
-    end
 
     def option(name)
       append(".//option[normalize-space(text())=#{s(name)}]").append(".//option[contains(.,#{s(name)})]")
