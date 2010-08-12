@@ -19,6 +19,11 @@ module Capybara
     class << self
       include ::XPath
 
+      def from_css(css)
+        collection(*Nokogiri::CSS.xpath_for(css).map { |selector| ::XPath::Expression::Literal.new(:".#{selector}") }.flatten)
+      end
+      alias_method :for_css, :from_css
+
       def collection(*args)
         ::XPath::Collection.new(*args)
       end
@@ -159,10 +164,6 @@ module Capybara
       XPath.new(*[XPath.wrap(path).paths, @paths].flatten)
     end
 
-    def from_css(css)
-      XPath.new(*[@paths, Nokogiri::CSS.xpath_for(css).map { |selector| '.' + selector }].flatten)
-    end
-    alias_method :for_css, :from_css
 
     def table(locator, options={})
       conditions = ""
