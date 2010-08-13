@@ -121,7 +121,7 @@ module Capybara
       def all(*args)
         options = if args.last.is_a?(Hash) then args.pop else {} end
 
-        results = Capybara::XPath.tempwrap(normalize_locator(*args)).map do |path|
+        results = Capybara::XPath.wrap(normalize_locator(*args)).map do |path|
           base.find(path)
         end.flatten
 
