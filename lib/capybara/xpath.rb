@@ -109,6 +109,28 @@ module Capybara
         )
       end
 
+      def table(locator, options={})
+        xpath = descendant(:table)[attr(:id).equals(locator) | descendant(:caption).contains(locator)]
+        xpath = xpath[table_rows(options[:rows])] if options[:rows]
+        xpath
+      end
+
+      def table_rows(rows)
+        row_conditions = descendant(:tr)[table_row(rows.first)] 
+        rows.drop(1).each do |row|
+          row_conditions = row_conditions.next_sibling(:tr)[table_row(row)]
+        end
+        row_conditions
+      end
+
+      def table_row(cells)
+        cell_conditions = child(:td, :th)[text.equals(cells.first)] 
+        cells.drop(1).each do |cell|
+          cell_conditions = cell_conditions.next_sibling(:td, :th)[text.equals(cell)]
+        end
+        cell_conditions
+      end
+
       def escape(string)
         if string.include?("'")
           string = string.split("'", -1).map do |substr|
@@ -165,17 +187,6 @@ module Capybara
     end
 
 
-    def table(locator, options={})
-      conditions = ""
-      if options[:rows]
-        row_conditions = options[:rows].map do |row|
-          row = row.map { |column| "*[self::td or self::th][text()=#{s(column)}]" }.join(sibling)
-          "tr[./#{row}]"
-        end.join(sibling)
-        conditions << "[.//#{row_conditions}]"
-      end
-      append(".//table[@id=#{s(locator)} or contains(caption,#{s(locator)})]#{conditions}")
-    end
 
 
 
@@ -192,7 +203,6 @@ module Capybara
 
     # place this between to nodes to indicate that they should be siblings
     def sibling
-      '/following-sibling::*[1]/self::'
     end
 
     def add_field(locator, field, options={})
