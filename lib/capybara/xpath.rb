@@ -1,19 +1,7 @@
 require 'xpath'
 
-::XPath::Collection.class_eval do
-  alias_method :paths, :expressions
-end
-
 module Capybara
 
-  ##
-  #
-  # This is a class for generating XPath queries, use it like this:
-  #
-  #     Xpath.text_field('foo').link('blah').to_s
-  #
-  # This will generate an XPath that matches either a text field or a link.
-  #
   module XPath
 
     include ::XPath
@@ -53,16 +41,16 @@ module Capybara
       if options[:with]
         fillable_field(locator, options)
       else
-        xpath = descendant(:input, :textarea, :select)[attr(:type).one_of('submit', 'image', 'hidden').inverse]
+        xpath = descendant(:input, :textarea, :select)[~attr(:type).one_of('submit', 'image', 'hidden')]
         xpath = locate_field(xpath, locator)
         xpath = xpath[attr(:checked)] if options[:checked]
-        xpath = xpath[attr(:checked).inverse] if options[:unchecked]
+        xpath = xpath[~attr(:checked)] if options[:unchecked]
         xpath
       end
     end
 
     def fillable_field(locator, options={})
-      xpath = descendant(:input, :textarea)[attr(:type).one_of('submit', 'image', 'radio', 'checkbox', 'hidden', 'file').inverse]
+      xpath = descendant(:input, :textarea)[~attr(:type).one_of('submit', 'image', 'radio', 'checkbox', 'hidden', 'file')]
       xpath = locate_field(xpath, locator)
       xpath = xpath[field_value(options[:with])] if options.has_key?(:with)
       xpath
@@ -120,17 +108,6 @@ module Capybara
       cell_conditions
     end
 
-    def escape(string)
-      if string.include?("'")
-        string = string.split("'", -1).map do |substr|
-          "'#{substr}'"
-        end.join(%q{,"'",})
-        "concat(#{string})"
-      else
-        "'#{string}'"
-      end
-    end
-    
     def wrap(path)
       if path.respond_to?(:to_xpaths)
         path.to_xpaths
@@ -153,7 +130,7 @@ module Capybara
     end
 
     def field_value(value)
-      (text.is(value) & name.equals('textarea')) | (attr(:value).equals(value) & name.equals('textarea').inverse)
+      (text.is(value) & name.equals('textarea')) | (attr(:value).equals(value) & ~name.equals('textarea'))
     end
   end
 end

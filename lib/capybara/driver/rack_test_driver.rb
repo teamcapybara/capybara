@@ -36,7 +36,8 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
     def set(value)
       if tag_name == 'input' and type == 'radio'
-        driver.html.xpath("//input[@name=#{Capybara::XPath.escape(self[:name])}]").each { |node| node.remove_attribute("checked") }
+        other_radios_xpath = ::XPath.generate { |x| x.anywhere(:input)[x.attr(:name).equals(self[:name])] }.to_s
+        driver.html.xpath(other_radios_xpath).each { |node| node.remove_attribute("checked") }
         native['checked'] = 'checked'
       elsif tag_name == 'input' and type == 'checkbox'
         if value && !native['checked']
