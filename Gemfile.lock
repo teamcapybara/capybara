@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/jnicklas/xpath.git
-  revision: 07cbb7a
+  revision: 18be9a2
   specs:
     xpath (0.0.1)
 

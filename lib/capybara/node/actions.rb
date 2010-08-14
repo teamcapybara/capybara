@@ -11,7 +11,7 @@ module Capybara
       #
       def click_link_or_button(locator)
         msg = "no link or button '#{locator}' found"
-        find(:xpath, Capybara::XPath.link_or_button(locator), :message => msg).click
+        find(:xpath, XPath::HTML.link_or_button(locator), :message => msg).click
       end
 
       ##
@@ -23,7 +23,7 @@ module Capybara
       #
       def click_link(locator)
         msg = "no link with title, id or text '#{locator}' found"
-        find(:xpath, Capybara::XPath.link(locator), :message => msg).click
+        find(:xpath, XPath::HTML.link(locator), :message => msg).click
       end
 
       ##
@@ -34,7 +34,7 @@ module Capybara
       #
       def click_button(locator)
         msg = "no button with value or id or text '#{locator}' found"
-        find(:xpath, Capybara::XPath.button(locator), :message => msg).click
+        find(:xpath, XPath::HTML.button(locator), :message => msg).click
       end
 
       ##
@@ -50,7 +50,7 @@ module Capybara
       def fill_in(locator, options={})
         msg = "cannot fill in, no text field, text area or password field with id, name, or label '#{locator}' found"
         raise "Must pass a hash containing 'with'" if not options.is_a?(Hash) or not options.has_key?(:with)
-        find(:xpath, Capybara::XPath.fillable_field(locator), :message => msg).set(options[:with])
+        find(:xpath, XPath::HTML.fillable_field(locator), :message => msg).set(options[:with])
       end
 
       ##
@@ -64,7 +64,7 @@ module Capybara
       #
       def choose(locator)
         msg = "cannot choose field, no radio button with id, name, or label '#{locator}' found"
-        find(:xpath, Capybara::XPath.radio_button(locator), :message => msg).set(true)
+        find(:xpath, XPath::HTML.radio_button(locator), :message => msg).set(true)
       end
 
       ##
@@ -78,7 +78,7 @@ module Capybara
       #
       def check(locator)
         msg = "cannot check field, no checkbox with id, name, or label '#{locator}' found"
-        find(:xpath, Capybara::XPath.checkbox(locator), :message => msg).set(true)
+        find(:xpath, XPath::HTML.checkbox(locator), :message => msg).set(true)
       end
 
       ##
@@ -92,7 +92,7 @@ module Capybara
       #
       def uncheck(locator)
         msg = "cannot uncheck field, no checkbox with id, name, or label '#{locator}' found"
-        find(:xpath, Capybara::XPath.checkbox(locator), :message => msg).set(false)
+        find(:xpath, XPath::HTML.checkbox(locator), :message => msg).set(false)
       end
 
       ##
@@ -108,8 +108,8 @@ module Capybara
       def select(value, options={})
         no_select_msg = "cannot select option, no select box with id, name, or label '#{options[:from]}' found"
         no_option_msg = "cannot select option, no option with text '#{value}' in select box '#{options[:from]}'"
-        select = find(:xpath, Capybara::XPath.select(options[:from]), :message => no_select_msg)
-        select.find(:xpath, Capybara::XPath.option(value), :message => no_option_msg).select_option
+        select = find(:xpath, XPath::HTML.select(options[:from]), :message => no_select_msg)
+        select.find(:xpath, XPath::HTML.option(value), :message => no_option_msg).select_option
       end
 
       ##
@@ -125,8 +125,8 @@ module Capybara
       def unselect(value, options={})
         no_select_msg = "cannot unselect option, no select box with id, name, or label '#{options[:from]}' found"
         no_option_msg = "cannot unselect option, no option with text '#{value}' in select box '#{options[:from]}'"
-        select = find(:xpath, Capybara::XPath.select(options[:from]), :message => no_select_msg)
-        select.find(:xpath, Capybara::XPath.option(value), :message => no_option_msg).unselect_option
+        select = find(:xpath, XPath::HTML.select(options[:from]), :message => no_select_msg)
+        select.find(:xpath, XPath::HTML.option(value), :message => no_option_msg).unselect_option
       end
 
       ##
@@ -141,7 +141,7 @@ module Capybara
       #
       def attach_file(locator, path)
         msg = "cannot attach file, no file field with id, name, or label '#{locator}' found"
-        find(:xpath, Capybara::XPath.file_field(locator), :message => msg).set(path)
+        find(:xpath, XPath::HTML.file_field(locator), :message => msg).set(path)
       end
 
       ##

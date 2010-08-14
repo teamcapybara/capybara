@@ -1,5 +1,6 @@
 require 'timeout'
 require 'nokogiri'
+require 'xpath'
 
 module Capybara
   class CapybaraError < StandardError; end
@@ -49,7 +50,6 @@ module Capybara
 
   autoload :Server,     'capybara/server'
   autoload :Session,    'capybara/session'
-  autoload :XPath,      'capybara/xpath'
   autoload :Node,       'capybara/node'
   autoload :Document,   'capybara/node'
   autoload :Element,    'capybara/node'

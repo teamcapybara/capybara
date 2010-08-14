@@ -16,7 +16,7 @@ shared_examples_for "all" do
 
     it "should accept an XPath instance" do
       @session.visit('/form')
-      @xpath = Capybara::XPath.fillable_field('Name')
+      @xpath = XPath::HTML.fillable_field('Name')
       @result = @session.all(@xpath).map { |r| r.value }
       @result.should include('Smith', 'John', 'John Smith')
     end
