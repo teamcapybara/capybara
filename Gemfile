@@ -1,4 +1,4 @@
 source :gemcutter
 
 gemspec
-gem 'xpath', :path => '../xpath'
+gem 'xpath', :git => 'git://github.com/jnicklas/xpath.git'
