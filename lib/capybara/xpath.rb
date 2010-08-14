@@ -8,9 +8,8 @@ module Capybara
     extend self
 
     def from_css(css)
-      collection(*Nokogiri::CSS.xpath_for(css).map { |selector| ::XPath::Expression::Literal.new(:".#{selector}") }.flatten)
+      XPath::Union.new(*Nokogiri::CSS.xpath_for(css).map { |selector| ::XPath::Expression::Literal.new(:".#{selector}") }.flatten)
     end
-    alias_method :for_css, :from_css
 
     def link(locator)
       link = descendant(:a)[attr(:href)]
@@ -22,15 +21,13 @@ module Capybara
     end
 
     def button(locator)
-      collection(
-        descendant(:input)[attr(:type).one_of('submit', 'image', 'button')][attr(:id).equals(locator) | attr(:value).is(locator)],
-        descendant(:button)[attr(:id).equals(locator) | attr(:value).is(locator) | text.is(locator)],
-        descendant(:input)[attr(:type).equals('image')][attr(:alt).is(locator)]
-      )
+      button = descendant(:input)[attr(:type).one_of('submit', 'image', 'button')][attr(:id).equals(locator) | attr(:value).is(locator)]
+      button += descendant(:button)[attr(:id).equals(locator) | attr(:value).is(locator) | text.is(locator)]
+      button += descendant(:input)[attr(:type).equals('image')][attr(:alt).is(locator)]
     end
 
     def link_or_button(locator)
-      collection(link(locator), button(locator))
+      link(locator) + button(locator)
     end
 
     def fieldset(locator)
@@ -118,15 +115,9 @@ module Capybara
 
   protected
 
-    def collection(*args)
-      ::XPath::Collection.new(*args)
-    end
-
     def locate_field(xpath, locator)
-      collection(
-        xpath[attr(:id).equals(locator) | attr(:name).equals(locator) | attr(:id).equals(anywhere(:label)[text.is(locator)].attr(:for))],
-        descendant(:label)[text.is(locator)].descendant(xpath)
-      )
+      locate_field = xpath[attr(:id).equals(locator) | attr(:name).equals(locator) | attr(:id).equals(anywhere(:label)[text.is(locator)].attr(:for))]
+      locate_field += descendant(:label)[text.is(locator)].descendant(xpath)
     end
 
     def field_value(value)
