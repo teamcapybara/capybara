@@ -12,6 +12,7 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
+    celerity (0.7.9)
     configuration (1.1.0)
     culerity (0.2.10)
     ffi (0.6.3)
@@ -41,6 +42,7 @@ PLATFORMS
 
 DEPENDENCIES
   capybara!
+  celerity (>= 0.7.9)
   culerity (>= 0.2.4)
   launchy (>= 0.3.5)
   mime-types (>= 1.16)
