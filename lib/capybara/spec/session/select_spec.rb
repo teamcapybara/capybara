@@ -59,7 +59,7 @@ shared_examples_for "select" do
 
     context "with an option that doesn't exist" do
       it "should raise an error" do
-        running { @session.select('Does not Exist', :from => 'form_locale') }.should raise_error(Capybara::OptionNotFound)
+        running { @session.select('Does not Exist', :from => 'form_locale') }.should raise_error(Capybara::ElementNotFound)
       end
     end
 

@@ -113,22 +113,18 @@ module Capybara
 
     ##
     #
-    # Select the given option if the element is a select box
+    # Select this node if is an option element inside a select tag
     #
-    # @param [String] option    The option to select
-    #
-    def select_option(option)
-      base.select_option(option)
+    def select_option
+      base.select_option
     end
 
     ##
     #
-    # Unselect the given option if the element is a select box
+    # Unselect this node if is an option element inside a multiple select tag
     #
-    # @param [String] option    The option to unselect
-    #
-    def unselect_option(option)
-      base.unselect_option(option)
+    def unselect_option
+      base.unselect_option
     end
 
     ##

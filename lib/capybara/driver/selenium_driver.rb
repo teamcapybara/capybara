@@ -35,26 +35,15 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       end
     end
 
-    def select_option(option)
-      option_node = native.find_element(:xpath, ".//option[normalize-space(text())=#{Capybara::XPath.escape(option)}]") || native.find_element(:xpath, ".//option[contains(.,#{Capybara::XPath.escape(option)})]")
-      option_node.select
-    rescue 
-      options = native.find_elements(:xpath, ".//option").map { |o| "'#{o.text}'" }.join(', ')
-      raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
+    def select_option
+      native.select
     end
 
-    def unselect_option(option)
-      if native['multiple'] != 'multiple'
-        raise Capybara::UnselectNotAllowed, "Cannot unselect option '#{option}' from single select box."
+    def unselect_option
+      if select_node['multiple'] != 'multiple'
+        raise Capybara::UnselectNotAllowed, "Cannot unselect option from single select box."
       end
-
-      begin
-        option_node = native.find_element(:xpath, ".//option[normalize-space(text())=#{Capybara::XPath.escape(option)}]") || native.find_element(:xpath, ".//option[contains(.,#{Capybara::XPath.escape(option)})]")
-        option_node.clear
-      rescue
-        options = native.find_elements(:xpath, ".//option").map { |o| "'#{o.text}'" }.join(', ')
-        raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
-      end
+      native.clear
     end
 
     def click
@@ -78,6 +67,11 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     end
 
   private
+
+    # a reference to the select node if this is an option node
+    def select_node
+      find('./ancestor::select').first
+    end
 
     def type
       self[:type]

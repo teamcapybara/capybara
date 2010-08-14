@@ -47,7 +47,7 @@ shared_examples_for "unselect" do
 
     context "with an option that doesn't exist" do
       it "should raise an error" do
-        running { @session.unselect('Does not Exist', :from => 'form_underwear') }.should raise_error(Capybara::OptionNotFound)
+        running { @session.unselect('Does not Exist', :from => 'form_underwear') }.should raise_error(Capybara::ElementNotFound)
       end
     end
   end

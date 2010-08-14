@@ -51,32 +51,18 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       end
     end
 
-    def select_option(option)
-      if native['multiple'] != 'multiple'
-        native.xpath(".//option[@selected]").each { |node| node.remove_attribute("selected") }
+    def select_option
+      if select_node['multiple'] != 'multiple'
+        select_node.find(".//option[@selected]").each { |node| node.native.remove_attribute("selected") }
       end
-
-      if option_node = native.xpath(".//option[text()=#{Capybara::XPath.escape(option)}]").first ||
-                       native.xpath(".//option[contains(.,#{Capybara::XPath.escape(option)})]").first
-        option_node["selected"] = 'selected'
-      else
-        options = native.xpath(".//option").map { |o| "'#{o.text}'" }.join(', ')
-        raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
-      end
+      native["selected"] = 'selected'
     end
 
-    def unselect_option(option)
-      if native['multiple'] != 'multiple'
-        raise Capybara::UnselectNotAllowed, "Cannot unselect option '#{option}' from single select box."
+    def unselect_option
+      if select_node['multiple'] != 'multiple'
+        raise Capybara::UnselectNotAllowed, "Cannot unselect option from single select box."
       end
-
-      if option_node = native.xpath(".//option[text()=#{Capybara::XPath.escape(option)}]").first ||
-                       native.xpath(".//option[contains(.,#{Capybara::XPath.escape(option)})]").first
-        option_node.remove_attribute('selected')
-      else
-        options = native.xpath(".//option").map { |o| "'#{o.text}'" }.join(', ')
-        raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
-      end
+      native.remove_attribute('selected')
     end
 
     def click
@@ -105,6 +91,11 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     end
 
   private
+
+    # a reference to the select node if this is an option node
+    def select_node
+      find('./ancestor::select').first
+    end
 
     def type
       native[:type]

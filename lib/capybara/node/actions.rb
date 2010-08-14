@@ -106,8 +106,10 @@ module Capybara
       # @param [String] locator           Which check box to uncheck
       #
       def select(value, options={})
-        msg = "cannot select option, no select box with id, name, or label '#{options[:from]}' found"
-        find(:xpath, XPath.select(options[:from]), :message => msg).select_option(value)
+        no_select_msg = "cannot select option, no select box with id, name, or label '#{options[:from]}' found"
+        no_option_msg = "cannot select option, no option with text '#{value}' in select box '#{options[:from]}'"
+        select = find(:xpath, XPath.select(options[:from]), :message => no_select_msg)
+        select.find(:xpath, XPath.option(value), :message => no_option_msg).select_option
       end
 
       ##
@@ -121,8 +123,10 @@ module Capybara
       # @param [String] locator           Which check box to uncheck
       #
       def unselect(value, options={})
-        msg = "cannot unselect option, no select box with id, name, or label '#{options[:from]}' found"
-        find(:xpath, XPath.select(options[:from]), :message => msg).unselect_option(value)
+        no_select_msg = "cannot unselect option, no select box with id, name, or label '#{options[:from]}' found"
+        no_option_msg = "cannot unselect option, no option with text '#{value}' in select box '#{options[:from]}'"
+        select = find(:xpath, XPath.select(options[:from]), :message => no_select_msg)
+        select.find(:xpath, XPath.option(value), :message => no_option_msg).unselect_option
       end
 
       ##

@@ -25,28 +25,19 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
       native.set(value)
     end
 
-    def select_option(option)
-      native.select(option)
-    rescue
-      options = find("//option").map { |o| "'#{o.text}'" }.join(', ')
-      raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
+    def select_option
+      native.click
     end
 
-    def unselect_option(option)
-      unless native.multiple?
-        raise Capybara::UnselectNotAllowed, "Cannot unselect option '#{option}' from single select box."
+    def unselect_option
+      unless select_node.native.multiple?
+        raise Capybara::UnselectNotAllowed, "Cannot unselect option from single select box."
       end
 
       # FIXME: couldn't find a clean way to unselect, so clear and reselect
-      selected_options = native.selected_options
-      if unselect_option  = selected_options.detect { |value| value == option } ||
-                            selected_options.detect { |value| value.index(option) }
-        native.clear
-        (selected_options - [unselect_option]).each { |value| native.select_value(value) }
-      else
-        options = find("//option").map { |o| "'#{o.text}'" }.join(', ')
-        raise Capybara::OptionNotFound, "No such option '#{option}' in this select box. Available options: #{options}"
-      end
+      selected_nodes = select_node.find('.//option[@selected]')
+      select_node.native.clear
+      selected_nodes.each { |n| n.click unless n.path == path }
     end
 
     def click
@@ -82,6 +73,14 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
       all_nodes = noko_node.xpath(locator).map { |n| n.path }.join(' | ')
       if all_nodes.empty? then [] else driver.find(all_nodes) end
     end
+
+  protected
+
+    # a reference to the select node if this is an option node
+    def select_node
+      find('./ancestor::select').first
+    end
+
 
   end
 

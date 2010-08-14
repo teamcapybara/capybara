@@ -137,6 +137,10 @@ module Capybara
       input_field(:file, locator, options)
     end
 
+    def option(name)
+      append(".//option[normalize-space(text())=#{s(name)}]").append(".//option[contains(.,#{s(name)})]")
+    end
+
   protected
 
     def input_field(type, locator, options={})
