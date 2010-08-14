@@ -24,10 +24,6 @@ module Capybara
     end
     alias_method :for_css, :from_css
 
-    def collection(*args)
-      ::XPath::Collection.new(*args)
-    end
-
     def link(locator)
       link = descendant(:a)[attr(:href)]
       link[attr(:id).equals(locator) | text.is(locator) | attr(:title).is(locator) | descendant(:img)[attr(:alt).is(locator)]]
@@ -98,19 +94,8 @@ module Capybara
       locate_field(descendant(:input)[attr(:type).equals('file')], locator)
     end
 
-    def field_value(value)
-      (text.is(value) & name.equals('textarea')) | (attr(:value).equals(value) & name.equals('textarea').inverse)
-    end
-
     def option(name)
       descendant(:option)[text.n.is(name)]
-    end
-
-    def locate_field(xpath, locator)
-      collection(
-        xpath[attr(:id).equals(locator) | attr(:name).equals(locator) | attr(:id).equals(anywhere(:label)[text.is(locator)].attr(:for))],
-        descendant(:label)[text.is(locator)].descendant(xpath)
-      )
     end
 
     def table(locator, options={})
@@ -152,6 +137,23 @@ module Capybara
       else
         [path.to_s].flatten
       end
+    end
+
+  protected
+
+    def collection(*args)
+      ::XPath::Collection.new(*args)
+    end
+
+    def locate_field(xpath, locator)
+      collection(
+        xpath[attr(:id).equals(locator) | attr(:name).equals(locator) | attr(:id).equals(anywhere(:label)[text.is(locator)].attr(:for))],
+        descendant(:label)[text.is(locator)].descendant(xpath)
+      )
+    end
+
+    def field_value(value)
+      (text.is(value) & name.equals('textarea')) | (attr(:value).equals(value) & name.equals('textarea').inverse)
     end
   end
 end
