@@ -1,11 +1,11 @@
 require 'timeout'
 require 'nokogiri'
+require 'xpath'
 
 module Capybara
   class CapybaraError < StandardError; end
   class DriverNotFoundError < CapybaraError; end
   class ElementNotFound < CapybaraError; end
-  class OptionNotFound < ElementNotFound; end
   class UnselectNotAllowed < CapybaraError; end
   class NotSupportedByDriverError < CapybaraError; end
   class TimeoutError < CapybaraError; end
@@ -49,7 +49,6 @@ module Capybara
 
   autoload :Server,     'capybara/server'
   autoload :Session,    'capybara/session'
-  autoload :XPath,      'capybara/xpath'
   autoload :Node,       'capybara/node'
   autoload :Document,   'capybara/node'
   autoload :Element,    'capybara/node'

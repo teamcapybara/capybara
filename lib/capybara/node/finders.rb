@@ -47,7 +47,7 @@ module Capybara
       # @return [Capybara::Element]   The found element
       #
       def find_field(locator)
-        find(:xpath, XPath.field(locator))
+        find(:xpath, XPath::HTML.field(locator))
       end
       alias_method :field_labeled, :find_field
 
@@ -59,7 +59,7 @@ module Capybara
       # @return [Capybara::Element]   The found element
       #
       def find_link(locator)
-        find(:xpath, XPath.link(locator))
+        find(:xpath, XPath::HTML.link(locator))
       end
 
       ##
@@ -70,7 +70,7 @@ module Capybara
       # @return [Capybara::Element]   The found element
       #
       def find_button(locator)
-        find(:xpath, XPath.button(locator))
+        find(:xpath, XPath::HTML.button(locator))
       end
 
       ##
@@ -121,7 +121,7 @@ module Capybara
       def all(*args)
         options = if args.last.is_a?(Hash) then args.pop else {} end
 
-        results = XPath.wrap(normalize_locator(*args)).paths.map do |path|
+        results = XPath::HTML.wrap(normalize_locator(*args)).map do |path|
           base.find(path)
         end.flatten
 
@@ -142,7 +142,7 @@ module Capybara
 
       def normalize_locator(kind, locator=nil)
         kind, locator = Capybara.default_selector, kind if locator.nil?
-        locator = XPath.from_css(locator) if kind == :css
+        locator = XPath::HTML.from_css(locator) if kind == :css
         locator
       end
 
