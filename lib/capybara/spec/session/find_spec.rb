@@ -49,6 +49,14 @@ shared_examples_for "find" do
       end
     end
 
+    context "with custom selector" do
+      it "should use the custom selector" do
+        Capybara.add_selector(:monkey) { |name| ".//*[@id='#{name}_monkey']" }
+        @session.find(:monkey, 'john').text.should == 'Monkey John'
+        @session.find(:monkey, 'paul').text.should == 'Monkey Paul'
+      end
+    end
+
     context "with css as default selector" do
       before { Capybara.default_selector = :css }
       it "should find the first element using the given locator" do

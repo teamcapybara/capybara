@@ -142,8 +142,7 @@ module Capybara
 
       def normalize_locator(kind, locator=nil)
         kind, locator = Capybara.default_selector, kind if locator.nil?
-        locator = XPath::HTML.from_css(locator) if kind == :css
-        locator
+        Capybara.selectors[kind.to_sym].call(locator)
       end
 
       def wait_conditionally_until
