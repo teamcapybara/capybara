@@ -90,7 +90,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       native.xpath(locator).map { |n| self.class.new(driver, n) }
     end
 
-  private
+    private
 
     # a reference to the select node if this is an option node
     def select_node
@@ -154,7 +154,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       self[:enctype] == "multipart/form-data"
     end
 
-  private
+    private
 
     def method
       self[:method] =~ /post/i ? :post : :get
@@ -191,7 +191,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
   def process(method, path, attributes = {})
     return if path.gsub(/^#{request_path}/, '') =~ /^#/
-    send(method, path, attributes, env)
+    send(method, to_binary(path), to_binary( attributes ), env)
     follow_redirects!
   end
 
@@ -207,9 +207,23 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     response.status
   end
 
+  def to_binary(object)
+    return object unless Kernel.const_defined?(:Encoding)
+
+    if object.respond_to?(:force_encoding)
+      object.dup.force_encoding(Encoding::ASCII_8BIT)
+    elsif object.respond_to?(:each_pair) #Hash
+      {}.tap { |x| object.each_pair {|k,v| x[to_binary(k)] = to_binary(v) } }
+    elsif object.respond_to?(:each) #Array
+      object.map{|x| to_binary(x)}
+    else
+      object
+    end
+  end
+
   def submit(method, path, attributes)
     path = request_path if not path or path.empty?
-    send(method, path, attributes, env)
+    send(method, to_binary(path), to_binary(attributes), env)
     follow_redirects!
   end
 
@@ -242,7 +256,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     raise Capybara::InfiniteRedirectError, "redirected more than 5 times, check for infinite redirects." if response.redirect?
   end
 
-private
+  private
 
   def reset_cache
     @body = nil
