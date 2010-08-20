@@ -1,9 +1,3 @@
-GIT
-  remote: git://github.com/jnicklas/xpath.git
-  revision: 18be9a2
-  specs:
-    xpath (0.0.1)
-
 PATH
   remote: .
   specs:
@@ -15,6 +9,7 @@ PATH
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       selenium-webdriver (>= 0.0.3)
+      xpath (>= 0.1.0)
 
 GEM
   remote: http://rubygems.org/
@@ -42,6 +37,7 @@ GEM
       rubyzip
     sinatra (1.0)
       rack (>= 1.0)
+    xpath (0.1.0)
     yard (0.5.8)
 
 PLATFORMS
@@ -59,5 +55,5 @@ DEPENDENCIES
   rspec (>= 1.2.9)
   selenium-webdriver (>= 0.0.3)
   sinatra (>= 0.9.4)
-  xpath!
+  xpath (>= 0.1.0)
   yard (>= 0.5.8)
