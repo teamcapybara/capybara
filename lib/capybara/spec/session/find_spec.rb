@@ -42,6 +42,13 @@ shared_examples_for "find" do
       end
     end
 
+    context "with id selectors" do
+      it "should find the first element using the given locator" do
+        @session.find(:id, 'john_monkey').text.should == 'Monkey John'
+        @session.find(:id, 'red').text.should == 'Redirect'
+      end
+    end
+
     context "with xpath selectors" do
       it "should find the first element using the given locator" do
         @session.find(:xpath, '//h1').text.should == 'This is a test'

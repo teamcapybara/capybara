@@ -80,4 +80,5 @@ Capybara.configure do |config|
 end
 
 Capybara.add_selector(:xpath) { |xpath| xpath }
+Capybara.add_selector(:id)    { |id| XPath.generate { |x| x.descendant(:*)[x.attr(:id) == id] } }
 Capybara.add_selector(:css)   { |css| XPath::HTML.from_css(css) }
