@@ -91,7 +91,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       native.xpath(locator).map { |n| self.class.new(driver, n) }
     end
 
-    private
+  private
 
     # a reference to the select node if this is an option node
     def select_node
@@ -155,7 +155,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       self[:enctype] == "multipart/form-data"
     end
 
-    private
+  private
 
     def method
       self[:method] =~ /post/i ? :post : :get
@@ -257,7 +257,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     raise Capybara::InfiniteRedirectError, "redirected more than 5 times, check for infinite redirects." if response.redirect?
   end
 
-  private
+private
 
   def reset_cache
     @body = nil
