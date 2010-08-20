@@ -1,6 +1,37 @@
+# Version 0.4.0.rc
+
+Release date:
+
+### Changed
+
+* within and find/locate now follow the XPath spec in that //foo finds all nodes in the document, instead of
+  only for the context node. See this post for details: http://groups.google.com/group/ruby-capybara/browse_thread/thread/b129067979df21b3
+* within now executes within the first found instance of the selector, not in all of them
+* find now waits for AJAX requests and raises an exception when the element is not found (same as locate used to do)
+* The default selector is now CSS, not XPath
+
+### Deprecated
+
+* Session#click has been renamed click_link_or_button and the old click has been deprecated
+* Node#node has been renamed native
+* Node#locate is deprecated in favor of Node#find, which now behaves identically
+
+### Added
+
+* It's now possible to call all session methods on nodes, like `find('#foo').fill_in(...)`
+* Custom selectors can be added with Capybara.add_selector
+* The :id selector is added by default, use it lile `find(:id, 'foo')`
+* Added Capybara.configure for less wordy configuration
+
+### Fixed
+
+* CSS selectors with multiple selectors, such as "h1, h2" now work correctly
+* Port is automatically assigned instead of guessing
+* Strip encodings in rack-test, no more warnings!
+
 # Version 0.3.9
 
-Release data: 2010-07-03
+Release date: 2010-07-03
 
 ### Added
 
