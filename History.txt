@@ -28,6 +28,7 @@ Release date:
 * CSS selectors with multiple selectors, such as "h1, h2" now work correctly
 * Port is automatically assigned instead of guessing
 * Strip encodings in rack-test, no more warnings!
+* RackTest no longer submits disabled fields
 
 # Version 0.3.9
 
