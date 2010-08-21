@@ -111,16 +111,16 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     def params(button)
       params = {}
 
-      native.xpath(".//input[not(@type) or (@type!='radio' and @type!='checkbox' and @type!='submit' and @type!='image')]").map do |input|
+      native.xpath(".//input[not(@disabled) and (not(@type) or (@type!='radio' and @type!='checkbox' and @type!='submit' and @type!='image'))]").map do |input|
         merge_param!(params, input['name'].to_s, input['value'].to_s)
       end
-      native.xpath(".//textarea").map do |textarea|
+      native.xpath(".//textarea[not(@disabled)]").map do |textarea|
         merge_param!(params, textarea['name'].to_s, textarea.text.to_s)
       end
-      native.xpath(".//input[@type='radio' or @type='checkbox']").map do |input|
+      native.xpath(".//input[not(@disabled) and (@type='radio' or @type='checkbox')]").map do |input|
         merge_param!(params, input['name'].to_s, input['value'].to_s) if input['checked']
       end
-      native.xpath(".//select").map do |select|
+      native.xpath(".//select[not(@disabled)]").map do |select|
         if select['multiple'] == 'multiple'
           options = select.xpath(".//option[@selected]")
           options.each do |option|
@@ -132,7 +132,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
           merge_param!(params, select['name'].to_s, (option['value'] || option.text).to_s) if option
         end
       end
-      native.xpath(".//input[@type='file']").map do |input|
+      native.xpath(".//input[not(@disabled) and @type='file']").map do |input|
         unless input['value'].to_s.empty?
           if multipart?
             content_type = MIME::Types.type_for(input['value'].to_s).first.to_s
