@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency("mime-types", [">= 1.16"])
   s.add_runtime_dependency("culerity", [">= 0.2.4"])
   s.add_runtime_dependency("celerity", [">= 0.7.9"])
-  s.add_runtime_dependency("selenium-webdriver", [">= 0.0.3"])
+  s.add_runtime_dependency("selenium-webdriver", [">= 0.0.27"])
   s.add_runtime_dependency("rack", [">= 1.0.0"])
   s.add_runtime_dependency("rack-test", [">= 0.5.4"])
   s.add_runtime_dependency("xpath", [">= 0.1.0"])
