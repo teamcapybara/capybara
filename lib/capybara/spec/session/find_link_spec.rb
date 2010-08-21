@@ -7,7 +7,7 @@ shared_examples_for "find_link" do
 
     it "should find any field" do
       @session.find_link('foo').text.should == "ullamco"
-      @session.find_link('labore')[:href].should == "/with_simple_html"
+      @session.find_link('labore')[:href].should =~ %r(/with_simple_html$)
     end
 
     it "should raise error if the field doesn't exist" do

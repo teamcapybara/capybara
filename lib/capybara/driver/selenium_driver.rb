@@ -28,7 +28,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       if tag_name == 'input' and type == 'radio'
         native.click
       elsif tag_name == 'input' and type == 'checkbox'
-        native.click if native.attribute('checked') != value
+        native.click if value ^ native.attribute('checked').to_s.eql?("true")
       elsif tag_name == 'textarea' or tag_name == 'input'
         native.clear
         native.send_keys(value.to_s)
@@ -40,7 +40,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     end
 
     def unselect_option
-      if select_node['multiple'] != 'multiple'
+      if select_node['multiple'] != 'multiple' and select_node['multiple'] != 'true'
         raise Capybara::UnselectNotAllowed, "Cannot unselect option from single select box."
       end
       native.clear

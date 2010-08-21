@@ -73,7 +73,7 @@ shared_examples_for "session with javascript support" do
       it "should wait for asynchronous load" do
         @session.visit('/with_js')
         @session.click_link('Click me')
-        @session.find("//a[contains(.,'Has been clicked')]")[:href].should == '#'
+        @session.find(:css, "a#has-been-clicked").text.should include('Has been clicked')
       end
     end
 
