@@ -6,7 +6,7 @@
 
 Capybara aims to simplify the process of integration testing Rack applications,
 such as Rails, Sinatra or Merb. It is inspired by and aims to replace Webrat as
-a DSL for interacting with a webapplication. It is agnostic about the driver
+a DSL for interacting with a web application. It is agnostic about the driver
 running your tests and currently comes bundled with rack-test, Culerity,
 Celerity and Selenium support built in. env.js support is available as the
 {capybara-envjs gem}[http://github.com/smparkes/capybara-envjs].
