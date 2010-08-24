@@ -40,11 +40,8 @@ shared_examples_for 'driver' do
       end
 
       it "should extract node attributes" do
-        @driver.find('//a')[0][:href].should == '/with_simple_html'
         @driver.find('//a')[0][:class].should == 'simple'
-        @driver.find('//a')[1][:href].should == '/foo'
         @driver.find('//a')[1][:id].should == 'foo'
-        @driver.find('//a')[1][:rel].should be_nil
       end
 
       it "should extract boolean node attributes" do
