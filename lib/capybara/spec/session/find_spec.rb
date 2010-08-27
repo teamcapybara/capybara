@@ -4,6 +4,10 @@ shared_examples_for "find" do
       @session.visit('/with_html')
     end
 
+    after do
+      Capybara::Selector.remove(:monkey)
+    end
+
     it "should find the first element using the given locator" do
       @session.find('//h1').text.should == 'This is a test'
       @session.find("//input[@id='test_field']")[:value].should == 'monkey'
@@ -46,6 +50,7 @@ shared_examples_for "find" do
       it "should find the first element using the given locator" do
         @session.find(:id, 'john_monkey').text.should == 'Monkey John'
         @session.find(:id, 'red').text.should == 'Redirect'
+        @session.find(:red).text.should == 'Redirect'
       end
     end
 
@@ -58,9 +63,19 @@ shared_examples_for "find" do
 
     context "with custom selector" do
       it "should use the custom selector" do
-        Capybara.add_selector(:monkey) { |name| ".//*[@id='#{name}_monkey']" }
+        Capybara::Selector.add(:monkey) { |name| ".//*[@id='#{name}_monkey']" }
         @session.find(:monkey, 'john').text.should == 'Monkey John'
         @session.find(:monkey, 'paul').text.should == 'Monkey Paul'
+      end
+    end
+
+    context "with custom selector with :for option" do
+      it "should use the selector when it matches the :for option" do
+        Capybara::Selector.add(:monkey, :for => Fixnum) { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
+        @session.find(:monkey, '2').text.should == 'Monkey Paul'
+        @session.find(1).text.should == 'Monkey John'
+        @session.find(2).text.should == 'Monkey Paul'
+        @session.find('//h1').text.should == 'This is a test'
       end
     end
 

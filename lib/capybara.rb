@@ -45,14 +45,6 @@ module Capybara
     def configure
       yield self
     end
-
-    def add_selector(name, &block)
-      selectors[name.to_sym] = block
-    end
-
-    def selectors
-      @selectors ||= {}
-    end
   end
 
   autoload :Server,     'capybara/server'
@@ -60,6 +52,7 @@ module Capybara
   autoload :Node,       'capybara/node'
   autoload :Document,   'capybara/node'
   autoload :Element,    'capybara/node'
+  autoload :Selector,   'capybara/selector'
   autoload :VERSION,    'capybara/version'
 
   module Driver
@@ -79,6 +72,3 @@ Capybara.configure do |config|
   config.ignore_hidden_elements = false
 end
 
-Capybara.add_selector(:xpath) { |xpath| xpath }
-Capybara.add_selector(:id)    { |id| XPath.generate { |x| x.descendant(:*)[x.attr(:id) == id] } }
-Capybara.add_selector(:css)   { |css| XPath::HTML.from_css(css) }

@@ -121,7 +121,8 @@ module Capybara
       def all(*args)
         options = if args.last.is_a?(Hash) then args.pop else {} end
 
-        results = XPath::HTML.wrap(normalize_locator(*args)).map do |path|
+        selector = Capybara::Selector.normalize(*args)
+        results = XPath::HTML.wrap(selector).map do |path|
           base.find(path)
         end.flatten
 
@@ -139,11 +140,6 @@ module Capybara
       end
 
     protected
-
-      def normalize_locator(kind, locator=nil)
-        kind, locator = Capybara.default_selector, kind if locator.nil?
-        Capybara.selectors[kind.to_sym].call(locator)
-      end
 
       def wait_conditionally_until
         if driver.wait? then session.wait_until { yield } else yield end

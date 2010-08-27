@@ -19,8 +19,8 @@ Release date:
 ### Added
 
 * It's now possible to call all session methods on nodes, like `find('#foo').fill_in(...)`
-* Custom selectors can be added with Capybara.add_selector
-* The :id selector is added by default, use it lile `find(:id, 'foo')`
+* Custom selectors can be added with Capybara::Selector.add
+* The :id selector is added by default, use it lile `find(:id, 'foo')` or `find(:foo)`
 * Added Capybara.configure for less wordy configuration
 
 ### Fixed
