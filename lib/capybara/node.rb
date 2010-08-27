@@ -6,21 +6,21 @@ module Capybara
 
   ##
   #
-  # A Capybara::Node represents either an element on a page through the subclass
-  # Capybara::Element or a document through Capybara::Document.
+  # A {Capybara::Node} represents either an element on a page through the subclass
+  # {Capybara::Element} or a document through {Capybara::Document}.
   #
   # Both types of Node share the same methods, used for interacting with the
   # elements on the page. These methods are divided into three categories,
   # finders, actions and matchers. These are found in the modules
-  # Capybara::Node::Finders, Capybara::Node::Actions and Capybara::Node::Matchers
+  # {Capybara::Node::Finders}, {Capybara::Node::Actions} and {Capybara::Node::Matchers}
   # respectively.
   #
-  # A Capybara::Session exposes all methods from Capybara::Document directly:
+  # A {Capybara::Session} exposes all methods from {Capybara::Document} directly:
   #
   #     session = Capybara::Session.new(:rack_test, my_app)
   #     session.visit('/')
   #     session.fill_in('Foo', :with => 'Bar')    # from Capybara::Node::Actions
-  #     bar = session.find('#bar')              # from Capybara::Node::Finders
+  #     bar = session.find('#bar')                # from Capybara::Node::Finders
   #     bar.select('Baz', :from => 'Quox')        # from Capybara::Node::Actions
   #     session.has_css?('#foobar')               # from Capybara::Node::Matchers
   #
@@ -45,15 +45,15 @@ module Capybara
 
   ##
   #
-  # A Capybara::Element represents a single element on the page. It is possible
+  # A {Capybara::Element} represents a single element on the page. It is possible
   # to interact with the contents of this element the same as with a document:
   #
   #     session = Capybara::Session.new(:rack_test, my_app)
   #
   #     bar = session.find('#bar')              # from Capybara::Node::Finders
-  #     bar.select('Baz', :from => 'Quox')        # from Capybara::Node::Actions
+  #     bar.select('Baz', :from => 'Quox')      # from Capybara::Node::Actions
   #
-  # Elements also have access to HTML attributes and other properties of the
+  # {Capybara::Element} also has access to HTML attributes and other properties of the
   # element:
   #
   #      bar.value
@@ -206,6 +206,13 @@ module Capybara
 
   end
 
+  ##
+  #
+  # A {Capybara::Document} represents an HTML document. Any operation
+  # performed on it will be performed on the entire document.
+  #
+  # @see Capybara::Node
+  #
   class Document < Node
     def inspect
       %(#<Capybara::Document>)

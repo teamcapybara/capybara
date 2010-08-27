@@ -299,7 +299,7 @@ module Capybara
       ##
       #
       # Checks if the page or current node has no table with the given id
-      # or caption. See {Capybara::Note::Matchers#has_table?}.
+      # or caption. See {Capybara::Node::Matchers#has_table?}.
       #
       # @param (see Capybara::Node::Matchers#has_table?)
       # @return [Boolean]       Whether it doesn't exist

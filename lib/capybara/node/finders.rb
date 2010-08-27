@@ -4,12 +4,12 @@ module Capybara
 
       ##
       #
-      # Find an Element based on the given arguments. +find+ will raise an error if the element
+      # Find an {Capybara::Element} based on the given arguments. +find+ will raise an error if the element
       # is not found. The error message can be customized through the +:message+ option.
       #
       # If the driver is capable of executing JavaScript, +find+ will wait for a set amount of time
       # and continuously retry finding the element until either the element is found or the time
-      # expires. The length of time +find+ will wait is controlled through Capybara.default_wait_time
+      # expires. The length of time +find+ will wait is controlled through {Capybara.default_wait_time}
       # and defaults to 2 seconds.
       #
       # +find+ takes the same options as +all+.
@@ -19,6 +19,7 @@ module Capybara
       #     page.find('li', :text => 'Quox').click_link('Delete')
       #
       # @param (see Capybara::Node::Finders#all)
+      # @option options [String] :message     An error message in case the element can't be found
       # @return [Capybara::Element]           The found element
       # @raise  [Capybara::ElementNotFound]   If the element can't be found before time expires
       #
@@ -98,7 +99,7 @@ module Capybara
       #
       #
       # If the type of selector is left out, Capybara uses
-      # Capybara.default_selector. It's set to :css by default.
+      # {Capybara.default_selector}. It's set to :css by default.
       #
       #     page.all("a#person_123")
       #
