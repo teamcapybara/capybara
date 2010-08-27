@@ -39,6 +39,10 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError
   end
 
+  def within_popup(popup_handle)
+    raise Capybara::NotSupportedByDriverError
+  end
+
   def wait?
     false
   end

@@ -30,7 +30,7 @@ module Capybara
       :all, :attach_file, :body, :check, :choose, :click_link_or_button, :click_button, :click_link, :current_url, :drag, :evaluate_script,
       :field_labeled, :fill_in, :find, :find_button, :find_by_id, :find_field, :find_link, :has_content?, :has_css?,
       :has_no_content?, :has_no_css?, :has_no_xpath?, :has_xpath?, :locate, :save_and_open_page, :select, :source, :uncheck,
-      :visit, :wait_until, :within, :within_fieldset, :within_table, :within_frame, :has_link?, :has_no_link?, :has_button?,
+      :visit, :wait_until, :within, :within_fieldset, :within_table, :within_frame, :within_popup, :has_link?, :has_no_link?, :has_button?,
       :has_no_button?, :has_field?, :has_no_field?, :has_checked_field?, :has_unchecked_field?, :has_no_table?, :has_table?,
       :unselect, :has_select?, :has_no_select?, :current_path, :scope_to, :click
     ]
@@ -197,6 +197,19 @@ module Capybara
     #
     def within_frame(frame_id)
       driver.within_frame(frame_id) do
+        yield
+      end
+    end
+
+    ##
+    #
+    # Execute the given block within the given popup given the id of that popup. Only works on
+    # some drivers (e.g. Selenium)
+    #
+    # @param [String] locator    Id of the popup
+    #
+    def within_popup(popup_handle)
+      driver.within_popup(popup_handle) do
         yield
       end
     end
