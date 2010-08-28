@@ -140,8 +140,8 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     browser.switch_to.window old_window
   end
 
-  def within_popup(popup_handle, &blk)
-    browser.switch_to.window(popup_handle, &blk)
+  def within_window(handle, &blk)
+    browser.switch_to.window(handle, &blk)
   end
 
 private
