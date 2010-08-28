@@ -154,7 +154,7 @@ shared_examples_for "driver with frame support" do
   end
 end
 
-shared_examples_for "driver with support for switching windows" do
+shared_examples_for "driver with support for window switching" do
   describe '#within_window' do
     before(:each) do
       @driver.visit('/within_popups')
