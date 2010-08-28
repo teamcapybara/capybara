@@ -208,10 +208,8 @@ module Capybara
     #
     # @param [String] locator    Id of the popup
     #
-    def within_popup(popup_handle)
-      driver.within_popup(popup_handle) do
-        yield
-      end
+    def within_popup(popup_handle, &blk)
+      driver.within_popup(popup_handle, &blk)
     end
 
     ##
