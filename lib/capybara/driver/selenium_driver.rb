@@ -81,14 +81,14 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   attr_reader :app, :rack_server
 
-  def self.driver
-    unless @driver
-      @driver = Selenium::WebDriver.for :firefox
+  def browser
+    unless @browser
+      @browser = Selenium::WebDriver.for :firefox
       at_exit do
-        @driver.quit
+        @browser.quit
       end
     end
-    @driver
+    @browser
   end
 
   def initialize(app)
@@ -125,10 +125,6 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   def evaluate_script(script)
     browser.execute_script "return #{script}"
-  end
-
-  def browser
-    self.class.driver
   end
 
   def reset!
