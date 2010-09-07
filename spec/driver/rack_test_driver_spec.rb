@@ -18,7 +18,7 @@ end
 
 describe Capybara::Driver::RackTest do
   before do
-    @driver = Capybara::Driver::RackTest.new(TestApp)
+    @driver = TestSessions::RackTest.driver
   end
 
   it "should throw an error when no rack app is given" do

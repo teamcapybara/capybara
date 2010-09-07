@@ -10,7 +10,7 @@ describe Capybara::Driver::Selenium do
   end
 
   before do
-    @driver = Capybara::Driver::Selenium.new(TestApp)
+    @driver = TestSessions::Selenium.driver
   end
 
   it_should_behave_like "driver"

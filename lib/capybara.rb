@@ -97,6 +97,10 @@ Capybara.register_driver :rack_test do |app|
   Capybara::Driver::RackTest.new(app)
 end
 
+Capybara.register_driver :celerity do |app|
+  Capybara::Driver::Culerity.new(app)
+end
+
 Capybara.register_driver :culerity do |app|
   Capybara::Driver::Culerity.new(app)
 end

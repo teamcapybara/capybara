@@ -4,7 +4,7 @@ describe Capybara::Driver::Culerity do
   before(:all) do
     Capybara.app_host = "http://capybara-testapp.heroku.com"
     Capybara.run_server = false
-    @driver = Capybara::Driver::Culerity.new(TestApp)
+    @driver = TestSessions::Culerity.driver
   end
   
   after(:all) do

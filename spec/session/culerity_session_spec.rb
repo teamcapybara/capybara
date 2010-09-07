@@ -3,7 +3,7 @@ require File.expand_path('../spec_helper', File.dirname(__FILE__))
 describe Capybara::Session do
   context 'with culerity driver' do
     before(:all) do
-      @session = Capybara::Session.new(:culerity, TestApp)
+      @session = TestSessions::Culerity
     end
 
     describe '#driver' do

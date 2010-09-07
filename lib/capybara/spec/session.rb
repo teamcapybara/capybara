@@ -8,6 +8,10 @@ shared_examples_for "session" do
     YAML.load Nokogiri::HTML(session.body).xpath("//pre[@id='results']").first.text
   end
 
+  after do
+    @session.reset!
+  end
+
   describe '#app' do
     it "should remember the application" do
       @session.app.should == TestApp

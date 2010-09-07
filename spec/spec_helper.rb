@@ -14,6 +14,13 @@ alias :running :lambda
 
 Capybara.default_wait_time = 0 # less timeout so tests run faster
 
+module TestSessions
+  RackTest = Capybara::Session.new(:rack_test, TestApp)
+  Selenium = Capybara::Session.new(:selenium, TestApp)
+  Culerity = Capybara::Session.new(:culerity, TestApp)
+  Celerity = Capybara::Session.new(:celerity, TestApp)
+end
+
 Spec::Runner.configure do |config|
   config.before do
     Capybara.configure do |config|
