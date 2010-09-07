@@ -57,6 +57,7 @@ module Capybara
     def reset_sessions!
       session_pool.each { |mode, session| session.reset! }
     end
+    alias_method :reset!, :reset_sessions!
 
   private
 
