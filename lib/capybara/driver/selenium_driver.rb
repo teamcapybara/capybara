@@ -79,11 +79,11 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   end
 
-  attr_reader :app, :rack_server
+  attr_reader :app, :rack_server, :options
 
   def browser
     unless @browser
-      @browser = Selenium::WebDriver.for :firefox
+      @browser = Selenium::WebDriver.for(options[:browser] || :firefox)
       at_exit do
         @browser.quit
       end
@@ -91,8 +91,9 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     @browser
   end
 
-  def initialize(app)
+  def initialize(app, options={})
     @app = app
+    @options = options
     @rack_server = Capybara::Server.new(@app)
     @rack_server.boot if Capybara.run_server
   end
