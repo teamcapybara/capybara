@@ -1,4 +1,13 @@
 class Capybara::Driver::Base
+
+  def attach(method, id)
+    raise NotImplementedError
+  end
+
+  def attach_by
+    raise NotImplementedError
+  end
+
   def current_url
     raise NotImplementedError
   end

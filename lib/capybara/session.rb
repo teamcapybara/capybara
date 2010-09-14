@@ -54,6 +54,17 @@ module Capybara
 
     ##
     #
+    # Attach the driver to an existing window, identified by "method".
+    #
+    # @param [:title, :url, :handle] method   The type of identifier to use
+    # @param [String] identifier              The identifier
+    #
+    def attach(method, id)
+      driver.attach(method, id)
+    end
+
+    ##
+    #
     # Reset the session, removing all cookies.
     #
     def cleanup!

@@ -36,6 +36,10 @@ module Capybara
         raise NotImplementedError
       end
 
+      def click_and_attach
+        raise NotImplementedError
+      end
+
       def drag_to(element)
         raise NotImplementedError
       end

@@ -146,6 +146,14 @@ module Capybara
 
     ##
     #
+    # Click a link that opens a new browser window and attach the driver to that window
+    #
+    def click_and_attach
+      base.click_and_attach
+    end
+
+    ##
+    #
     # @return [String]      The tag name of the element
     #
     def tag_name

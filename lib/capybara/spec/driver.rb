@@ -123,6 +123,50 @@ shared_examples_for "driver without status code support" do
   end
 end
 
+shared_examples_for "driver with window support" do
+  describe '#attach' do
+    before(:each) do 
+      @driver.visit('/opens_window')
+      @driver.find('//a')[0].click
+    end
+
+    it "should be able to attach by title" do
+      @driver.attach(:title, "Opens Window")
+      @driver.body.should include('Open a window')
+      @driver.attach(:title, "Subwindow")
+      @driver.body.should include('This is a sub-window')
+    end
+
+    it "should be able to attach by url" do
+      @driver.attach(:url, "/opens_window")
+      @driver.body.should include('Open a window')
+      @driver.attach(:url, "/sub_window")
+      @driver.body.should include('This is a sub-window')
+    end
+
+    it "should be able to attach by handle" do
+      opens_window = @driver.attach(:title, "Opens Window")
+      subwindow = @driver.attach(:title, "Subwindow")
+      @driver.attach(:handle, opens_window)
+      @driver.body.should include('Open a window')
+      @driver.attach(:handle, subwindow)
+      @driver.body.should include('This is a sub-window')
+    end
+  end
+
+  describe '#click_and_attach' do
+    before(:each) do 
+      @driver.visit('/opens_window')
+    end
+
+    it "should attach to the new window" do
+      @driver.body.should include('Open a window')
+      @driver.find('//a')[0].click_and_attach
+      @driver.body.should include('This is a sub-window')
+    end
+  end
+end
+
 shared_examples_for "driver with frame support" do
   describe '#within_frame' do
     before(:each) do

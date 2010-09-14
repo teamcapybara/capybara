@@ -50,6 +50,13 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       native.click
     end
 
+    def click_and_attach
+      old_handles = driver.browser.window_handles
+      native.click
+      new_window = (driver.browser.window_handles - old_handles)[0]
+      driver.browser.switch_to.window new_window unless new_window.nil?
+    end
+
     def drag_to(element)
       native.drag_and_drop_on(element.native)
     end
@@ -95,6 +102,32 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     @app = app
     @rack_server = Capybara::Server.new(@app)
     @rack_server.boot if Capybara.run_server
+  end
+
+  def attach(method, id)
+    begin
+      case method
+        when :handle
+          browser.switch_to.window id
+        when :title
+          attach_by { browser.title == id }
+        when :url
+          attach_by { browser.current_url.include? id }
+      end
+    rescue Capybara::ElementNotFound
+      raise Capybara::ElementNotFound, "Could not find a window with #{method} '#{id}'"
+    end
+  end
+
+  def attach_by( &block )
+    original_handle = browser.window_handle
+    browser.window_handles.each do |handle|
+      browser.switch_to.window handle
+      return handle if yield
+    end
+    browser.switch_to.window original_handle
+    raise Capybara::ElementNotFound, "Unable to find window!"
+    return original_handle
   end
 
   def visit(path)
