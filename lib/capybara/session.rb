@@ -43,12 +43,12 @@ module Capybara
     end
 
     def driver
-      @driver ||= begin                    
-        string = mode.to_s
-        string.gsub!(%r{(^.)|(_.)}) { |m| m[m.length-1,1].upcase }
-        Capybara::Driver.const_get(string.to_sym).new(app)
-      rescue NameError
-        raise Capybara::DriverNotFoundError, "no driver called #{mode} was found"
+      @driver ||= begin
+        unless Capybara.drivers.has_key?(mode)
+          other_drivers = Capybara.drivers.keys.map { |key| key.inspect }
+          raise Capybara::DriverNotFoundError, "no driver called #{mode.inspect} was found, available drivers: #{other_drivers.join(', ')}"
+        end
+        Capybara.drivers[mode].call(app)
       end
     end
 
@@ -56,9 +56,10 @@ module Capybara
     #
     # Reset the session, removing all cookies.
     #
-    def cleanup!
-      driver.cleanup!
+    def reset!
+      driver.reset!
     end
+    alias_method :cleanup!, :reset!
 
     ##
     #

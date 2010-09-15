@@ -155,7 +155,7 @@ shared_examples_for "driver with frame support" do
 end
 
 shared_examples_for "driver with cookies support" do
-  describe "#cleanup" do
+  describe "#reset!" do
     it "should set and clean cookies" do
       @driver.visit('/get_cookie')
       @driver.body.should_not include('test_cookie')
@@ -166,7 +166,7 @@ shared_examples_for "driver with cookies support" do
       @driver.visit('/get_cookie')
       @driver.body.should include('test_cookie')
 
-      @driver.cleanup!
+      @driver.reset!
       @driver.visit('/get_cookie')
       @driver.body.should_not include('test_cookie')
     end

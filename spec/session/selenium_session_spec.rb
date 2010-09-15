@@ -3,7 +3,7 @@ require File.expand_path('../spec_helper', File.dirname(__FILE__))
 describe Capybara::Session do
   context 'with selenium driver' do
     before do
-      @session = Capybara::Session.new(:selenium, TestApp)
+      @session = TestSessions::Selenium
     end
 
     describe '#driver' do

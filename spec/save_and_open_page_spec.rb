@@ -10,7 +10,7 @@ describe Capybara do
       @temp_file = mock("FILE")
       @temp_file.stub!(:write)
       @temp_file.stub!(:close)
-      
+
       @html = <<-HTML
         <html>
           <head>
@@ -27,13 +27,13 @@ describe Capybara do
     describe "defaults" do
       before do
         @name = "capybara-#{@time}.html"
-        
+
         @temp_file.stub!(:path).and_return(@name)
 
         File.should_receive(:exist?).and_return true
         File.should_receive(:new).and_return @temp_file
       end
-      
+
       it "should create a new temporary file" do
         @temp_file.should_receive(:write).with @html
         Capybara.save_and_open_page @html
@@ -44,31 +44,31 @@ describe Capybara do
         Capybara.save_and_open_page @html
       end
     end
-    
+
     describe "custom output path" do
       before do
         @custom_path = File.join('tmp', 'capybara')
         @custom_name = File.join(@custom_path, "capybara-#{@time}.html")
 
         @temp_file.stub!(:path).and_return(@custom_name)
-        
+
         Capybara.should_receive(:save_and_open_page_path).at_least(:once).and_return(@custom_path)
       end
-      
+
       it "should create a new temporary file in the custom path" do
         File.should_receive(:directory?).and_return true
         File.should_receive(:exist?).and_return true
         File.should_receive(:new).and_return @temp_file
-        
+
         @temp_file.should_receive(:write).with @html
         Capybara.save_and_open_page @html
       end
-      
+
       it "should open the file - in the custom path - in the browser" do
         Capybara.should_receive(:open_in_browser).with(@custom_name)
         Capybara.save_and_open_page @html
       end
-      
+
       it "should be possible to configure output path" do
         Capybara.should respond_to(:save_and_open_page_path)
         default_setting = Capybara.save_and_open_page_path

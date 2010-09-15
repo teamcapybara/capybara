@@ -75,15 +75,15 @@ describe Capybara do
 
     it "should change with the current driver" do
       Capybara.current_session.mode.should == :rack_test
-      Capybara.current_driver = :culerity
-      Capybara.current_session.mode.should == :culerity
+      Capybara.current_driver = :selenium
+      Capybara.current_session.mode.should == :selenium
     end
 
     it "should be persistent even across driver changes" do
       object_id = Capybara.current_session.object_id
       Capybara.current_session.object_id.should == object_id
-      Capybara.current_driver = :culerity
-      Capybara.current_session.mode.should == :culerity
+      Capybara.current_driver = :selenium
+      Capybara.current_session.mode.should == :selenium
       Capybara.current_session.object_id.should_not == object_id
 
       Capybara.current_driver = :rack_test
@@ -96,15 +96,6 @@ describe Capybara do
       Capybara.app = proc {}
       Capybara.current_session.object_id.should_not == object_id
       Capybara.current_session.app.should == Capybara.app
-    end
-  end
-
-  describe '.reset_sessions!' do
-    it "should clear any persisted sessions" do
-      object_id = Capybara.current_session.object_id
-      Capybara.current_session.object_id.should == object_id
-      Capybara.reset_sessions!
-      Capybara.current_session.object_id.should_not == object_id
     end
   end
 

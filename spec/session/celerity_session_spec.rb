@@ -3,7 +3,7 @@ require File.expand_path('../spec_helper', File.dirname(__FILE__))
 if RUBY_PLATFORM =~ /java/
   describe Capybara::Driver::Celerity do
     before(:all) do
-      @session = Capybara::Session.new(:celerity, TestApp)
+      @session = TestSessions::Celerity
     end
 
     describe '#driver' do

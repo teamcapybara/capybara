@@ -55,9 +55,9 @@ module Capybara
     # as cookies.
     #
     def reset_sessions!
-      session_pool.each { |mode, session| session.cleanup! }
-      @session_pool = nil
+      session_pool.each { |mode, session| session.reset! }
     end
+    alias_method :reset!, :reset_sessions!
 
   private
 

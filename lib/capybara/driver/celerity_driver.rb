@@ -84,10 +84,11 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
 
   end
 
-  attr_reader :app, :rack_server
+  attr_reader :app, :rack_server, :options
 
-  def initialize(app)
+  def initialize(app, options={})
     @app = app
+    @options = options
     @rack_server = Capybara::Server.new(@app)
     @rack_server.boot if Capybara.run_server
   end
@@ -140,7 +141,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     @_browser
   end
 
-  def cleanup!
+  def reset!
     browser.clear_cookies
   end
 
