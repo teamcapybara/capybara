@@ -3,13 +3,14 @@ require File.expand_path('spec_helper', File.dirname(__FILE__))
 require 'capybara'
 
 describe Capybara do
-  
+
   describe 'default_wait_time' do
     after do
-      Capybara.default_wait_time = 2
+      Capybara.default_wait_time = @previous_default_time
     end
-    
+
     it "should be changeable" do
+      @previous_default_time = Capybara.default_wait_time
       Capybara.default_wait_time = 5
       Capybara.default_wait_time.should == 5
     end
@@ -25,5 +26,5 @@ describe Capybara do
       session.body.should include("Hello world!")
     end
   end
-  
+
 end
