@@ -26,6 +26,12 @@ shared_examples_for "click_link" do
         @session.click_link('A link')
         @session.body.should include('Bar')
       end
+
+      it "should match text within markup" do
+        @session.click_link('With Markup')
+        @session.body.should include('Bar')
+      end
+
     end
 
     context "with title given" do
