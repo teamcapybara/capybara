@@ -61,7 +61,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     def visible?
       native.displayed? and native.displayed? != "false"
     end
-    
+
     def find(locator)
       native.find_elements(:xpath, locator).map { |n| self.class.new(driver, n) }
     end
@@ -83,7 +83,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   def browser
     unless @browser
-      @browser = Selenium::WebDriver.for(options[:browser] || :firefox)
+      @browser = Selenium::WebDriver.for(options.delete(:browser) || :firefox, options)
       at_exit do
         @browser.quit
       end
