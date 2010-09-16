@@ -120,10 +120,6 @@ JRuby:
 
    jruby -S gem install celerity
 
-Note that some specs currently fail on celerity 0.7.5, due to a bug in recent
-versions of HTMLUnit. It is recommended you use celerity 0.7.4 for the time
-being.
-
 == Culerity
 
 Install celerity as noted above, make sure JRuby is in your path. Note that
@@ -340,7 +336,7 @@ Normally Capybara expects to be testing an in-process Rack application, but you 
 
     Capybara.current_driver = :selenium
     Capybara.app_host = 'http://www.google.com'
-    ... 
+    ...
     visit('/')
 
 Note that rack-test does not support running against a remote server. With drivers that support it, you can also visit any URL directly:
