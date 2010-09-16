@@ -422,6 +422,27 @@ The same thing goes for within:
       end
     end
 
+== Configuring and adding drivers
+
+Capybara makes it convenient to switch between different drivers. It also exposes
+an API to tweak those drivers with whatever settings you want, or to add your own
+drivers. This is how to switch the selenium driver to use chrome:
+
+    Capybara.register_driver :selenium do |app|
+      Capybara::Driver::Selenium.new(app, :browser => :chrome)
+    end
+
+However, it's also possible to give this a different name, so tests can switch
+between using different browsers effortlessly:
+
+    Capybara.register_driver :selenium_chrome do |app|
+      Capybara::Driver::Selenium.new(app, :browser => :chrome)
+    end
+
+Whatever is returned from the block should conform to the API described by
+Capybara::Driver::Base, it does not however have to inherit from this class.
+Gems can use this API to add their own drivers to Capybara.
+
 == Gotchas:
 
 * Access to session and request is not possible from the test, Access to
