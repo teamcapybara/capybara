@@ -108,11 +108,6 @@ At the moment, Capybara supports Webdriver, also called Selenium 2.0, *not*
 Selenium RC. Provided Firefox is installed, everything is set up for you, and
 you should be able to start using Selenium right away.
 
-If desired, you can change Selenium browser to :chrome or :ie:
-
-   require "selenium-webdriver"
-   Selenium::WebDriver.for :chrome
-
 == Celerity
 
 Celerity only runs on JRuby, so you'll need to install the celerity gem under
