@@ -5,7 +5,7 @@ require 'yard'
 desc "Run all examples"
 Spec::Rake::SpecTask.new('spec') do |t|
   t.spec_opts = ['--color']
-  t.spec_files = FileList['spec/**/*.rb']
+  t.spec_files = FileList['spec/**/*_spec.rb']
 end
 
 YARD::Rake::YardocTask.new do |t|

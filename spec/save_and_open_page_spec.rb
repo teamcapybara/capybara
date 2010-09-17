@@ -1,4 +1,4 @@
-require File.expand_path('spec_helper', File.dirname(__FILE__))
+require 'spec_helper'
 
 require 'capybara/util/save_and_open_page'
 require 'launchy'
