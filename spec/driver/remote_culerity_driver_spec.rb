@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Capybara::Driver::Culerity do
+describe Capybara::Driver::Culerity, :jruby => :installed do
   before(:all) do
     Capybara.app_host = "http://capybara-testapp.heroku.com"
     @driver = TestSessions::Culerity.driver

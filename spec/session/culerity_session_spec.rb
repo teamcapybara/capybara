@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Capybara::Session do
+describe Capybara::Session, :jruby => :installed do
   context 'with culerity driver' do
     before(:all) do
       @session = TestSessions::Culerity
