@@ -1,6 +1,7 @@
 require 'spec_helper'
 
-describe Capybara::Driver::Culerity do
+describe Capybara::Driver::Culerity, :jruby => :installed do
+
   before(:all) do
     @driver = TestSessions::Culerity.driver
   end

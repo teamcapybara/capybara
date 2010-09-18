@@ -3,8 +3,7 @@ $:.unshift(File.expand_path('../lib', File.dirname(__FILE__)))
 require 'rubygems'
 require "bundler/setup"
 
-require 'spec'
-require 'spec/autorun'
+require 'rspec'
 require 'capybara'
 require 'capybara/spec/driver'
 require 'capybara/spec/session'
@@ -20,7 +19,19 @@ module TestSessions
   Celerity = Capybara::Session.new(:celerity, TestApp)
 end
 
-Spec::Runner.configure do |config|
+RSpec.configure do |config|
+
+  running_with_jruby = RUBY_PLATFORM =~ /java/
+  jruby_installed = `which jruby` && $?.success?
+
+  warn "** Skipping Celerity specs because platform is not Java" unless running_with_jruby
+  warn "** Skipping Culerity specs because JRuby is not installed" unless jruby_installed
+
+  config.filter_run_excluding(:jruby => lambda { |value|
+    return true if value == :platform && !running_with_jruby
+    return true if value == :installed && !jruby_installed
+  })
+
   config.before do
     Capybara.configure do |config|
       config.default_selector = :xpath
