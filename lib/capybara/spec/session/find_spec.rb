@@ -14,6 +14,7 @@ shared_examples_for "find" do
     end
 
     it "should be aliased as locate for backward compatibility" do
+      Capybara.should_receive(:deprecate).with("locate", "find").twice
       @session.locate('//h1').text.should == 'This is a test'
       @session.locate("//input[@id='test_field']")[:value].should == 'monkey'
     end

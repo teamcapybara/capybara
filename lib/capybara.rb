@@ -66,6 +66,10 @@ module Capybara
     def drivers
       @drivers ||= {}
     end
+
+    def deprecate(method, alternate_method)
+      warn "DEPRECATED: ##{method} is deprecated, please use ##{alternate_method} instead"
+    end
   end
 
   autoload :Server,     'capybara/server'

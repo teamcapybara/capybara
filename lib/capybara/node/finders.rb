@@ -36,7 +36,7 @@ module Capybara
       # @deprecated {#find} now behaves like locate used to. Use {#find} instead.
       #
       def locate(*args)
-        warn "DEPRECATED: Please use #find instead of #locate"
+        Capybara.deprecate("locate", "find")
         find(*args)
       end
 

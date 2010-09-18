@@ -50,7 +50,7 @@ class Capybara::Driver::Base
   end
 
   def cleanup!
-    warn "DEPRECATED: #cleanup! has been renamed to #reset!"
+    Capybara.deprecate("cleanup!", "reset!")
     reset!
   end
 

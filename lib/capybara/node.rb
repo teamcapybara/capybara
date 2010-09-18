@@ -77,7 +77,7 @@ module Capybara
     # @deprecated node is deprecated, please use {Capybara::Element#native} instead
     #
     def node
-      warn "DEPRECATED: #node is deprecated, please use #native instead"
+      Capybara.deprecate("node", "native")
       native
     end
 

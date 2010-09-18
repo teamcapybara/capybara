@@ -241,7 +241,7 @@ module Capybara
     # @deprecated click is deprecated, please use {Capybara::Node::Actions#click_link_or_button} instead
     #
     def click(locator)
-      warn "DEPRECATED: click is deprecated, use click_link_or_button instead"
+      Capybara.deprecate("click", "click_link_or_button")
       current_node.click_link_or_button(locator)
     end
 

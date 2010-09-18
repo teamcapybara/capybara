@@ -13,6 +13,7 @@ shared_examples_for "click_link_or_button" do
     end
 
     it "should be aliased as click for backward compatibility" do
+      Capybara.should_receive(:deprecate).with("click", "click_link_or_button")
       @session.visit('/form')
       @session.click('awe123')
       extract_results(@session)['first_name'].should == 'John'
