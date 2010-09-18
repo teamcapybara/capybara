@@ -42,7 +42,7 @@ shared_examples_for "has_field" do
     end
 
     context 'with value' do
-      it "should be flase if a field with the given value is on the page" do
+      it "should be false if a field with the given value is on the page" do
         @session.should_not have_no_field('First Name', :with => 'John')  
         @session.should_not have_no_field('Phone', :with => '+1 555 7021')  
         @session.should_not have_no_field('Street', :with => 'Sesame street 66')  
