@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Capybara::Driver::Selenium do
   before do
-    Capybara.app_host = "http://capybara-testapp.heroku.com"
+    #Capybara.app_host = "http://capybara-testapp.heroku.com"
     @driver = TestSessions::Selenium.driver
   end
 
