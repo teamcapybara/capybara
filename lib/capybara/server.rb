@@ -73,7 +73,7 @@ module Capybara
         @port = Capybara::Server.ports[@app.object_id]
           
         if not @port or not responsive?
-          @port = find_available_port
+          @port = Capybara.server_port || find_available_port
           Capybara::Server.ports[@app.object_id] = @port
 
           Thread.new { handler.run(Identify.new(@app), :Port => @port, :AccessLog => []) }

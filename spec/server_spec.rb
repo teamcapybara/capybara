@@ -17,6 +17,18 @@ describe Capybara::Server do
     end.should_not raise_error
   end
 
+  it "should use specified port" do
+    Capybara.server_port = 22789
+
+    @app = proc { |env| [200, {}, "Hello Server!"]}
+    @server = Capybara::Server.new(@app).boot
+
+    @res = Net::HTTP.start(@server.host, 22789) { |http| http.get('/') }
+    @res.body.should include('Hello Server')
+
+    Capybara.server_port = nil
+  end
+
   it "should find an available port" do
     @app1 = proc { |env| [200, {}, "Hello Server!"]}
     @app2 = proc { |env| [200, {}, "Hello Second Server!"]}
