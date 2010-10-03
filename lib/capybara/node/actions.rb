@@ -106,10 +106,15 @@ module Capybara
       # @param [String] locator           Which check box to uncheck
       #
       def select(value, options={})
-        no_select_msg = "cannot select option, no select box with id, name, or label '#{options[:from]}' found"
-        no_option_msg = "cannot select option, no option with text '#{value}' in select box '#{options[:from]}'"
-        select = find(:xpath, XPath::HTML.select(options[:from]), :message => no_select_msg)
-        select.find(:xpath, XPath::HTML.option(value), :message => no_option_msg).select_option
+        if options.has_key?(:from)
+          no_select_msg = "cannot select option, no select box with id, name, or label '#{options[:from]}' found"
+          no_option_msg = "cannot select option, no option with text '#{value}' in select box '#{options[:from]}'"
+          select = find(:xpath, XPath::HTML.select(options[:from]), :message => no_select_msg)
+          select.find(:xpath, XPath::HTML.option(value), :message => no_option_msg).select_option
+        else
+          no_option_msg = "cannot select option, no option with text '#{value}'"
+          find(:xpath, XPath::HTML.option(value), :message => no_option_msg).select_option
+        end
       end
 
       ##
@@ -123,10 +128,15 @@ module Capybara
       # @param [String] locator           Which check box to uncheck
       #
       def unselect(value, options={})
-        no_select_msg = "cannot unselect option, no select box with id, name, or label '#{options[:from]}' found"
-        no_option_msg = "cannot unselect option, no option with text '#{value}' in select box '#{options[:from]}'"
-        select = find(:xpath, XPath::HTML.select(options[:from]), :message => no_select_msg)
-        select.find(:xpath, XPath::HTML.option(value), :message => no_option_msg).unselect_option
+        if options.has_key?(:from)
+          no_select_msg = "cannot unselect option, no select box with id, name, or label '#{options[:from]}' found"
+          no_option_msg = "cannot unselect option, no option with text '#{value}' in select box '#{options[:from]}'"
+          select = find(:xpath, XPath::HTML.select(options[:from]), :message => no_select_msg)
+          select.find(:xpath, XPath::HTML.option(value), :message => no_option_msg).unselect_option
+        else
+          no_option_msg = "cannot unselect option, no option with text '#{value}'"
+          find(:xpath, XPath::HTML.option(value), :message => no_option_msg).unselect_option
+        end
       end
 
       ##

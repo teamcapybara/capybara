@@ -3,7 +3,7 @@ shared_examples_for "select" do
     before do
       @session.visit('/form')
     end
-    
+
     it "should return value of the first option" do
       @session.find_field('Title').value.should == 'Mrs'
     end
@@ -23,6 +23,12 @@ shared_examples_for "select" do
       @session.select("Finish", :from => 'Locale')
       @session.click_button('awesome')
       extract_results(@session)['locale'].should == 'fi'
+    end
+
+    it "should select an option without giving a select box" do
+      @session.select("Mr")
+      @session.click_button('awesome')
+      extract_results(@session)['title'].should == 'Mr'
     end
 
     it "should favour exact matches to option labels" do
