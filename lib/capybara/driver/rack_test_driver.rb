@@ -14,10 +14,10 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       case
       when 'select' == tag_name && 'value' == attr_name
         if native['multiple'] == 'multiple'
-          native.xpath(".//option[@selected='selected']").map { |option| option.content  }
+          native.xpath(".//option[@selected='selected']").map { |option| option[:value] || option.content  }
         else
           option = native.xpath(".//option[@selected='selected']").first || native.xpath(".//option").first
-          option.content if option
+          option[:value] || option.content if option
         end
       when 'input' == tag_name && 'checkbox' == type && 'checked' == attr_name
         native[attr_name] == 'checked' ? true : false
