@@ -60,6 +60,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bundler (~> 1.0)
   capybara!
   celerity (>= 0.7.9)
   culerity (>= 0.2.4)
