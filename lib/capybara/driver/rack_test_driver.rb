@@ -70,7 +70,8 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       if tag_name == 'a'
         method = self["data-method"] || :get
         driver.process(method, self[:href].to_s)
-      elsif (tag_name == 'input' or tag_name == 'button') and %w(submit image).include?(type)
+      elsif (tag_name == 'input' and %w(submit image).include?(type)) or
+          ((tag_name == 'button') and type.nil? or type == "submit")
         Form.new(driver, form).submit(self)
       end
     end

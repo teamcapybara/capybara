@@ -12,6 +12,12 @@ shared_examples_for "click_link_or_button" do
       extract_results(@session)['first_name'].should == 'John'
     end
 
+    it "should click on a button with no type attribute" do
+      @session.visit('/form')
+      @session.click_link_or_button('no_type')
+      extract_results(@session)['first_name'].should == 'John'
+    end
+
     it "should be aliased as click for backward compatibility" do
       Capybara.should_receive(:deprecate).with("click", "click_link_or_button")
       @session.visit('/form')
