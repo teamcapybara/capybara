@@ -16,12 +16,17 @@ module Capybara
       end
 
       def normalize(name_or_locator, locator=nil)
-        if locator
+        xpath = if locator
           all[name_or_locator.to_sym].call(locator)
         else
           selector = all.values.find { |s| s.match?(name_or_locator) }
           selector ||= all[Capybara.default_selector]
           selector.call(name_or_locator)
+        end
+        if xpath.respond_to?(:to_xpaths)
+          xpath.to_xpaths
+        else
+          [xpath.to_s].flatten
         end
       end
     end
@@ -43,5 +48,5 @@ module Capybara
 end
 
 Capybara::Selector.add(:xpath) { |xpath| xpath }
-Capybara::Selector.add(:css) { |css| XPath::HTML.from_css(css) }
+Capybara::Selector.add(:css) { |css| XPath.css(css) }
 Capybara::Selector.add(:id, :for => Symbol) { |id| XPath.descendant(:*)[XPath.attr(:id) == id.to_s] }
