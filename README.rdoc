@@ -5,10 +5,10 @@
 == Description:
 
 Capybara aims to simplify the process of integration testing Rack applications,
-such as Rails, Sinatra or Merb. It is inspired by and aims to replace Webrat as
-a DSL for interacting with a web application. It is agnostic about the driver
-running your tests and currently comes bundled with rack-test, Culerity,
-Celerity and Selenium support built in. env.js support is available as the
+such as Rails, Sinatra or Merb. Capybara simulates how a real user would
+interact with a web application. It is agnostic about the driver running your
+tests and currently comes bundled with rack-test, Culerity, Celerity and Selenium
+support built in. env.js support is available as the
 {capybara-envjs gem}[http://github.com/smparkes/capybara-envjs].
 
 Online documentation is availbable
@@ -41,11 +41,10 @@ Capybara uses bundler in development. To set up a development environment, simpl
 
 == Using Capybara with Cucumber
 
-Capybara is built to work nicely with Cucumber. The API is very similar to
-Webrat, so if you know Webrat you should feel right at home. Support for
-Capybara is built into cucumber-rails 0.2. In your Rails app, just run:
+Capybara is built to work nicely with Cucumber. Support for Capybara is built into
+cucumber-rails. In your Rails app, just run:
 
-    script/generate cucumber --capybara
+    rails generate cucumber:install --capybara
 
 And everything should be set up and ready to go.
 
@@ -225,18 +224,15 @@ to specific parts of the page:
 Capybara makes it possible to restrict certain actions, such as interacting with
 forms or clicking links and buttons, to within a specific area of the page. For
 this purpose you can use the generic <tt>within</tt> method. Optionally you can
-specify which kind of selector (CSS or XPath to use).
+specify which kind of selector to use.
 
-    within("//li[@id='employee']") do
+    within("li#employee") do
       fill_in 'Name', :with => 'Jimmy'
     end
 
-    within(:css, "li#employee") do
+    within(:xpath, "//li[@id='employee']") do
       fill_in 'Name', :with => 'Jimmy'
     end
-
-You can choose which kind of selector Capybara uses by default, by setting
-<tt>Capybara.default_selector</tt>.
 
 There are special methods for restricting the scope to a specific fieldset,
 identified by either an id or the text of the fieldet's legend tag, and to a
@@ -295,8 +291,8 @@ is (the default is 2 seconds):
 Be aware that because of this behaviour, the following two statements are *not*
 equivalent, and you should *always* use the latter!
 
-    page.should_not have_xpath('//a')
-    page.should have_no_xpath('//a')
+    page.should_not have_xpath('a')
+    page.should have_no_xpath('a')
 
 The former would incorrectly wait for the content to appear, since the
 asynchronous process has not yet removed the element from the page, it would
@@ -327,18 +323,23 @@ examples. Just load the DSL and include it anywhere:
 
 == Calling remote servers
 
-Normally Capybara expects to be testing an in-process Rack application, but you can also use it to talk to a web server running anywhere on the internets, by setting app_host:
+Normally Capybara expects to be testing an in-process Rack application, but you
+can also use it to talk to a web server running anywhere on the internets, by
+setting app_host:
 
     Capybara.current_driver = :selenium
     Capybara.app_host = 'http://www.google.com'
     ...
     visit('/')
 
-Note that rack-test does not support running against a remote server. With drivers that support it, you can also visit any URL directly:
+Note that rack-test does not support running against a remote server. With
+drivers that support it, you can also visit any URL directly:
 
     visit('http://www.google.com')
 
-By default Capybara will try to boot a rack application automatically. You might want to switch off Capybara's rack server if you are running against a remote application:
+By default Capybara will try to boot a rack application automatically. You
+might want to switch off Capybara's rack server if you are running against a
+remote application:
 
     Capybara.run_server = false
 
