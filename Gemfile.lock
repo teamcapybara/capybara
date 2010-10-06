@@ -30,7 +30,7 @@ GEM
     nokogiri (1.4.3.1-java)
       weakling (>= 0.0.3)
     rack (1.2.1)
-    rack-test (0.5.4)
+    rack-test (0.5.6)
       rack (>= 1.0)
     rake (0.8.7)
     rspec (2.0.0.beta.22)

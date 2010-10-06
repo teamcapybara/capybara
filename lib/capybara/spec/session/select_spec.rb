@@ -13,6 +13,10 @@ shared_examples_for "select" do
       @session.find_field('Title').value.should == 'Miss'
     end
 
+    it "should return the value attribute rather than content if present" do
+      @session.find_field('Locale').value.should == 'en'
+    end
+
     it "should select an option from a select box by id" do
       @session.select("Finish", :from => 'form_locale')
       @session.click_button('awesome')
@@ -91,6 +95,10 @@ shared_examples_for "select" do
         @session.select("Javascript", :from => 'Language')
         @session.click_button('awesome')
         extract_results(@session)['languages'].should include('Ruby', 'Javascript')
+      end
+      
+      it "should return value attribute rather than content if present" do
+        @session.find_field('Underwear').value.should include('thermal')
       end
     end
   end
