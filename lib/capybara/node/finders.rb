@@ -122,8 +122,7 @@ module Capybara
       def all(*args)
         options = if args.last.is_a?(Hash) then args.pop else {} end
 
-        selector = Capybara::Selector.normalize(*args)
-        results = XPath::HTML.wrap(selector).map do |path|
+        results = Capybara::Selector.normalize(*args).map do |path|
           base.find(path)
         end.flatten
 

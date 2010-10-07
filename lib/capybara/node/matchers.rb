@@ -91,7 +91,7 @@ module Capybara
       # @return [Boolean]                         If the selector exists
       #
       def has_css?(path, options={})
-        has_xpath?(XPath::HTML.from_css(path), options)
+        has_xpath?(XPath.css(path), options)
       end
 
       ##
@@ -103,7 +103,7 @@ module Capybara
       # @return [Boolean]
       #
       def has_no_css?(path, options={})
-        has_no_xpath?(XPath::HTML.from_css(path), options)
+        has_no_xpath?(XPath.css(path), options)
       end
 
       ##
