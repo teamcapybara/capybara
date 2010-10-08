@@ -32,7 +32,7 @@ module Capybara
     end
 
     def host
-      "localhost" 
+      "localhost"
     end
 
     def url(path)
@@ -53,30 +53,24 @@ module Capybara
       return false
     end
 
-    def handler
-      begin
-        require 'rack/handler/thin'
-        Rack::Handler::Thin
-      rescue LoadError
-        begin
-          require 'rack/handler/mongrel'
-          Rack::Handler::Mongrel
-        rescue LoadError
-          require 'rack/handler/webrick'
-          Rack::Handler::WEBrick
-        end
-      end
-    end
-
     def boot
       if @app
         @port = Capybara::Server.ports[@app.object_id]
-          
+
         if not @port or not responsive?
           @port = Capybara.server_port || find_available_port
           Capybara::Server.ports[@app.object_id] = @port
 
-          Thread.new { handler.run(Identify.new(@app), :Port => @port, :AccessLog => []) }
+          Thread.new do
+            begin
+              require 'rack/handler/thin'
+              Thin::Logging.silent = true
+              Rack::Handler::Thin.run(Identify.new(@app), :Port => @port)
+            rescue LoadError
+              require 'rack/handler/webrick'
+              Rack::Handler::WEBrick.run(Identify.new(@app), :Port => @port, :AccessLog => [], :Logger => WEBrick::Log::new(nil, 0))
+            end
+          end
 
           Capybara.timeout(10) { if responsive? then true else sleep(0.5) and false end }
         end
