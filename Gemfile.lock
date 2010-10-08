@@ -9,7 +9,7 @@ PATH
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       selenium-webdriver (>= 0.0.27)
-      xpath (~> 0.1.1)
+      xpath (~> 0.1.2)
 
 GEM
   remote: http://rubygems.org/
@@ -51,7 +51,7 @@ GEM
     sinatra (1.0)
       rack (>= 1.0)
     weakling (0.0.4-java)
-    xpath (0.1.1)
+    xpath (0.1.2)
       nokogiri (~> 1.3)
     yard (0.6.1)
 
@@ -72,5 +72,5 @@ DEPENDENCIES
   rspec (>= 2.0.0.beta.22)
   selenium-webdriver (>= 0.0.27)
   sinatra (>= 0.9.4)
-  xpath (~> 0.1.1)
+  xpath (~> 0.1.2)
   yard (>= 0.5.8)

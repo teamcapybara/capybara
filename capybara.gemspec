@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency("selenium-webdriver", [">= 0.0.27"])
   s.add_runtime_dependency("rack", [">= 1.0.0"])
   s.add_runtime_dependency("rack-test", [">= 0.5.4"])
-  s.add_runtime_dependency("xpath", ["~> 0.1.1"])
+  s.add_runtime_dependency("xpath", ["~> 0.1.2"])
 
   s.add_development_dependency("sinatra", [">= 0.9.4"])
   s.add_development_dependency("rspec", [">= 2.0.0.beta.22"])
