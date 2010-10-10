@@ -1,4 +1,5 @@
 require 'rack/test'
+require 'rack/utils'
 require 'mime/types'
 require 'nokogiri'
 require 'cgi'
@@ -163,16 +164,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     end
 
     def merge_param!(params, key, value)
-      collection = key.sub!(/\[\]$/, '')
-      if collection
-        if params[key]
-          params[key] << value
-        else
-          params[key] = [value]
-        end
-      else
-        params[key] = value
-      end
+      Rack::Utils.normalize_params(params, key, value)
     end
   end
 
