@@ -68,6 +68,25 @@ shared_examples_for "session" do
   it_should_behave_like "unselect"
   it_should_behave_like "within"
   it_should_behave_like "current_url"
+
+  it "should encode complex field names, like array[][value]" do
+    @session.visit('/form')
+    @session.fill_in('address1_city', :with =>'Paris')
+    @session.fill_in('address1_street', :with =>'CDG')
+    @session.fill_in('address2_city', :with => 'Mikolaiv')
+    @session.fill_in('address2_street', :with => 'PGS')
+    @session.click_button "awesome"
+
+    addresses=extract_results(@session)["addresses"]
+    addresses.should have(2).addresses
+
+    addresses[0]["street"].should == 'CDG'
+    addresses[0]["city"].should   == 'Paris'
+
+    addresses[1]["street"].should == 'PGS'
+    addresses[1]["city"].should   == 'Mikolaiv'
+  end
+
 end
 
 
