@@ -32,7 +32,7 @@ module Capybara
       :has_no_content?, :has_no_css?, :has_no_xpath?, :has_xpath?, :locate, :save_and_open_page, :select, :source, :uncheck,
       :visit, :wait_until, :within, :within_fieldset, :within_table, :within_frame, :within_window, :has_link?, :has_no_link?, :has_button?,
       :has_no_button?, :has_field?, :has_no_field?, :has_checked_field?, :has_unchecked_field?, :has_no_table?, :has_table?,
-      :unselect, :has_select?, :has_no_select?, :current_path, :scope_to, :click
+      :unselect, :has_select?, :has_no_select?, :current_path, :click, :has_selector?, :has_no_selector?
     ]
 
     attr_reader :mode, :app
