@@ -15,13 +15,18 @@ Release date:
 * Session#click has been renamed click_link_or_button and the old click has been deprecated
 * Node#node has been renamed native
 * Node#locate is deprecated in favor of Node#find, which now behaves identically
+* Session#drag is deprecated, please use Node#drag_to(other_node) instead
 
 ### Added
 
+* Pretty much everything is properly documented now
 * It's now possible to call all session methods on nodes, like `find('#foo').fill_in(...)`
 * Custom selectors can be added with Capybara::Selector.add
 * The :id selector is added by default, use it lile `find(:id, 'foo')` or `find(:foo)`
+* Added Node#has_selector? so any kind of selector can be queried.
 * Added Capybara.configure for less wordy configuration
+* Added within_window to switch between different windows (currently Selenium only)
+* Capybara.server_port to provide a fixed port if wanted (defaults to automatic selection)
 
 ### Fixed
 
@@ -29,6 +34,11 @@ Release date:
 * Port is automatically assigned instead of guessing
 * Strip encodings in rack-test, no more warnings!
 * RackTest no longer submits disabled fields
+* Servers no longer output annoying debug information when started
+* TCP port selection is left to Ruby to decide, no more port guessing
+* Select boxes now return option value instead of text if present
+* The default has been changed from localhost to 127.0.0.1, should fix some obscure selenium bugs
+* RackTest now supports complex field names, such as foo[bar][][baz]
 
 # Version 0.3.9
 
