@@ -1,6 +1,6 @@
 # Version 0.4.0.rc
 
-Release date:
+Release date: 2010-10-12
 
 ### Changed
 
