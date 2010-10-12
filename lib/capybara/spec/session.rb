@@ -26,14 +26,14 @@ shared_examples_for "session" do
       @session.body.should include('Another World')
     end
   end
-  
+
   describe '#body' do
     it "should return the unmodified page body" do
       @session.visit('/')
       @session.body.should include('Hello world!')
     end
   end
-  
+
   describe '#source' do
     it "should return the unmodified page source" do
       @session.visit('/')
@@ -57,6 +57,7 @@ shared_examples_for "session" do
   it_should_behave_like "has_content"
   it_should_behave_like "has_css"
   it_should_behave_like "has_css"
+  it_should_behave_like "has_selector"
   it_should_behave_like "has_xpath"
   it_should_behave_like "has_link"
   it_should_behave_like "has_button"
