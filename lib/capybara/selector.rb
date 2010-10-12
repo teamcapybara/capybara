@@ -49,4 +49,4 @@ end
 
 Capybara::Selector.add(:xpath) { |xpath| xpath }
 Capybara::Selector.add(:css) { |css| XPath.css(css) }
-Capybara::Selector.add(:id, :for => Symbol) { |id| XPath.descendant(:*)[XPath.attr(:id) == id.to_s] }
+Capybara::Selector.add(:id, :for => Symbol) { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
