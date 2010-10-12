@@ -41,7 +41,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
         native['checked'] = 'checked'
       elsif tag_name == 'input' and type == 'checkbox'
         if value && !native['checked']
-          native['checked'] = 'checked'
+          native['checked'] = 'checked' unless native['disabled'] == 'disabled'
         elsif !value && native['checked']
           native.remove_attribute('checked')
         end
