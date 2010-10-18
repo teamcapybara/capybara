@@ -9,3 +9,4 @@ capybara-*.html
 .yardoc
 doc
 .bundle
+tags
