@@ -15,7 +15,7 @@ module Capybara
   class << self
     attr_accessor :asset_root, :app_host, :run_server, :default_host
     attr_accessor :server_port
-    attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements, :default_timeout
+    attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements, :server_timeout
     attr_accessor :save_and_open_page_path
 
     ##
@@ -35,7 +35,7 @@ module Capybara
     # [default_selector = :css/:xpath]    Methods which take a selector use the given type by default (Default: CSS)
     # [default_wait_time = Integer]       The number of seconds to wait for asynchronous processes to finish (Default: 2)
     # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: false)
-    # [default_timeout = Integer]         The number of seconds to call timeout (Default: 10)[ 1-10 = faster machine, 10+ = slow machines]
+    # [server_timeout = Integer]         The number of seconds to call timeout (Default: 10)[ 1-10 = faster machine, 10+ = slow machines]
     #
     # === DSL Options
     #
@@ -97,7 +97,7 @@ Capybara.configure do |config|
   config.default_selector = :css
   config.default_wait_time = 2
   config.ignore_hidden_elements = false
-  config.default_timeout = 10
+  config.server_timeout = 10
 end
 
 Capybara.register_driver :rack_test do |app|

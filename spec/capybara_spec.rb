@@ -14,14 +14,14 @@ describe Capybara do
     end
   end
 
-  describe 'default_timeout' do
+  describe 'server_timeout' do
     after do
-      Capybara.default_timeout = @previous_default_timeout
+      Capybara.server_timeout = @previous_server_timeout
     end
     it "should be changeable" do
-      @previous_default_timeout = Capybara.default_timeout
-      Capybara.default_timeout = 5
-      Capybara.default_time.should == 5
+      @previous_server_timeout = Capybara.server_timeout
+      Capybara.server_timeout = 5
+      Capybara.server_timeout.should == 5
     end
   end
 
