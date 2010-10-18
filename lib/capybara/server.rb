@@ -72,7 +72,7 @@ module Capybara
             end
           end
 
-          Capybara.timeout(10) { if responsive? then true else sleep(0.5) and false end }
+          Capybara.timeout(Capybara.default_timeout) { if responsive? then true else sleep(0.5) and false end }
         end
       end
     rescue Timeout::Error

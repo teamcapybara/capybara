@@ -14,6 +14,17 @@ describe Capybara do
     end
   end
 
+  describe 'default_timeout' do
+    after do
+      Capybara.default_timeout = @previous_default_timeout
+    end
+    it "should be changeable" do
+      @previous_default_timeout = Capybara.default_timeout
+      Capybara.default_timeout = 5
+      Capybara.default_time.should == 5
+    end
+  end
+
   describe '.register_driver' do
     it "should add a new driver" do
       Capybara.register_driver :schmoo do |app|
