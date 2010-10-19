@@ -22,13 +22,6 @@ module Capybara
       end.should raise_error(::Capybara::TimeoutError)
     end
     
-    it "should raise Capybara::Timeout if setting default timeout to 0.1" do
-      Capybara.server_timeout = 0.1
-      running do
-        Capybara.timeout { false }
-      end.should raise_error(::Capybara::TimeoutError)
-    end
-
   end
 
 end
