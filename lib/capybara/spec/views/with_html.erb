@@ -35,6 +35,11 @@
   <input type="text" checked="checked" id="checked_field">
   <a href="/redirect"><img src="http://www.foobar.sun/dummy_image.jpg" width="20" height="20" alt="very fine image" /></a>
   <a href="/with_simple_html"><img src="http://www.foobar.sun/dummy_image.jpg" width="20" height="20" alt="fine image" /></a>
+
+  <a href="?query_string=true">Naked Query String</a>
+  <% if params[:query_string] %>
+    <em>Query String sent</em>
+  <% end %>
 </p>
 
 <div id="hidden" style="display: none;">
