@@ -15,7 +15,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
 
     def value
       if tag_name == "select" and native.multiple?
-        native.selected_options
+        find(".//option[@selected]").map { |n| n.value || n.text }
       else
         self[:value]
       end
