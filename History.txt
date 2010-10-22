@@ -1,3 +1,18 @@
+# Version 0.4.0
+
+Release date: 2010-10-22
+
+### Changed
+
+* The Selector API was changed slightly, use Capybara.add_selector, see README
+
+### Fixed
+
+* Celerity driver is registered properly
+* has_selector? and has_no_selector? added to DSL
+* Multiple selects return correct values under C[cu]lerity
+* Naked query strings are handled correctly by rack-test
+
 # Version 0.4.0.rc
 
 Release date: 2010-10-12
