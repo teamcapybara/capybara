@@ -64,6 +64,42 @@ module Capybara
       drivers[name] = block
     end
 
+    ##
+    #
+    # Add a new selector to Capybara. Selectors can be used by various methods in Capybara
+    # to find certain elements on the page in a more convenient way. For example adding a
+    # selector to find certain table rows might look like this:
+    #
+    #     Capybara.add_selector(:row) do
+    #       xpath { |num| ".//tbody/tr[#{num}]" }
+    #     end
+    #
+    # This makes it possible to use this selector in a cariety of ways:
+    #
+    #     find(:row, 3)
+    #     page.find('table#myTable').find(:row, 3).text
+    #     page.find('table#myTable').has_selector?(:row, 3)
+    #     within(:row, 3) { page.should have_content('$100.000') }
+    #
+    # It might be convenient to specify that the selector is automatically chosen for certain
+    # values. This way you don't have to explicitely specify that you are looking for a row, or
+    # an id. Let's say we want Capybara to treat any Symbols sent into methods like find to be
+    # treated as though they were element ids. We could achieve this like so:
+    #
+    #     Capybara.add_selector(:id) do
+    #       xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
+    #       match { |value| value.is_a?(Symbol) }
+    #     end
+    #
+    # Now we can retrieve elements by id like this:
+    #
+    #     find(:post_123)
+    #
+    # Note that this particular selector already ships with Capybara.
+    #
+    # @param [Symbol] name    The name of the selector to add
+    # @yield                  A block executed in the context of the new {Capybara::Selector}
+    #
     def add_selector(name, &block)
       Capybara::Selector.add(name, &block)
     end
