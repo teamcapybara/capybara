@@ -8,7 +8,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
     def [](name)
       if name == :value
-        native.value
+        value
       else
         native.attribute(name.to_s)
       end
@@ -17,10 +17,10 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     end
 
     def value
-      if tag_name == "select" and self[:multiple]
+      if tag_name == "select" and self[:multiple] and not self[:multiple] == "false"
         native.find_elements(:xpath, ".//option").select { |n| n.selected? }.map { |n| n.value || n.text }
       else
-        self[:value]
+        native.value
       end
     end
 
