@@ -64,7 +64,9 @@ shared_examples_for "find" do
 
     context "with custom selector" do
       it "should use the custom selector" do
-        Capybara::Selector.add(:monkey) { |name| ".//*[@id='#{name}_monkey']" }
+        Capybara.add_selector(:monkey) do
+          xpath { |name| ".//*[@id='#{name}_monkey']" }
+        end
         @session.find(:monkey, 'john').text.should == 'Monkey John'
         @session.find(:monkey, 'paul').text.should == 'Monkey Paul'
       end
@@ -72,7 +74,10 @@ shared_examples_for "find" do
 
     context "with custom selector with :for option" do
       it "should use the selector when it matches the :for option" do
-        Capybara::Selector.add(:monkey, :for => Fixnum) { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
+        Capybara.add_selector(:monkey) do
+          xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
+          match { |value| value.is_a?(Fixnum) }
+        end
         @session.find(:monkey, '2').text.should == 'Monkey Paul'
         @session.find(1).text.should == 'Monkey John'
         @session.find(2).text.should == 'Monkey Paul'
@@ -115,7 +120,7 @@ shared_examples_for "find" do
       it "should find the first element using the given locator" do
         @session.within(:xpath, "//div[@id='for_bar']") do
           @session.find('.//li').text.should =~ /With Simple HTML/
-        end        
+        end
       end
     end
   end

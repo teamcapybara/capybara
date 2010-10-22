@@ -382,19 +382,28 @@ Alternatively you can set the default selector to XPath:
 Capybara allows you to add custom selectors, which can be very useful if you
 find yourself using the same kinds of selectors very often:
 
-    Capybara::Selector.add(:id) { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
-    Capybara::Selector.add(:row) { |num| ".//tbody/tr[#{num}]" }
+    Capybara.add_selector(:id) do
+      xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
+    end
 
-These must always return an XPath expression as a String, or an XPath expression
-generated through the XPath gem. You can now use these selectors like this:
+    Capybara.add_selector(:row) do
+      xpath { |num| ".//tbody/tr[#{num}]" }
+    end
+
+The block given to xpath must always return an XPath expression as a String, or
+an XPath expression generated through the XPath gem. You can now use these
+selectors like this:
 
     find(:id, 'post_123')
     find(:row, 3)
 
-You can specify an optional :for option which will automatically use the
-selector if it matches the argument to find using ===:
+You can specify an optional match option which will automatically use the
+selector if it matches the argument:
 
-    Capybara::Selector.add(:id, :for => Symbol) { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
+    Capybara.add_selector(:id) do
+      xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
+      match { |value| value.is_a?(Symbol) }
+    end
 
 Now use it like this:
 

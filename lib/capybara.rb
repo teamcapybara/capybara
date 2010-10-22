@@ -64,6 +64,10 @@ module Capybara
       drivers[name] = block
     end
 
+    def add_selector(name, &block)
+      Capybara::Selector.add(name, &block)
+    end
+
     def drivers
       @drivers ||= {}
     end

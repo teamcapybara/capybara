@@ -1,14 +1,14 @@
 module Capybara
   class Selector
-    attr_reader :name, :options, :block
+    attr_reader :name
 
     class << self
       def all
         @selectors ||= {}
       end
 
-      def add(name, options={}, &block)
-        all[name.to_sym] = Capybara::Selector.new(name.to_sym, options, &block)
+      def add(name, &block)
+        all[name.to_sym] = Capybara::Selector.new(name.to_sym, &block)
       end
 
       def remove(name)
@@ -31,22 +31,40 @@ module Capybara
       end
     end
 
-    def initialize(name, options={}, &block)
+    def initialize(name, &block)
       @name = name
-      @options = options
-      @block = block
+      instance_eval(&block)
+    end
+
+    def xpath(&block)
+      @xpath = block if block
+      @xpath
+    end
+
+    def match(&block)
+      @match = block if block
+      @match
     end
 
     def call(locator)
-      @block.call(locator)
+      @xpath.call(locator)
     end
 
     def match?(locator)
-      @options[:for] and @options[:for] === locator
+      @match and @match.call(locator)
     end
   end
 end
 
-Capybara::Selector.add(:xpath) { |xpath| xpath }
-Capybara::Selector.add(:css) { |css| XPath.css(css) }
-Capybara::Selector.add(:id, :for => Symbol) { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
+Capybara.add_selector(:xpath) do
+  xpath { |xpath| xpath }
+end
+
+Capybara.add_selector(:css) do
+  xpath { |css| XPath.css(css) }
+end
+
+Capybara.add_selector(:id) do
+  xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
+  match { |value| value.is_a?(Symbol) }
+end
