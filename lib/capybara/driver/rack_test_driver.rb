@@ -20,6 +20,14 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
           option = native.xpath(".//option[@selected='selected']").first || native.xpath(".//option").first
           option[:value] || option.content if option
         end
+      # BJM: adds support for extracting the 'text' (ie content) of the selected option, instead of the value
+      when 'select' == tag_name && 'content' == attr_name
+        if native['multiple'] == 'multiple'
+          native.xpath(".//option[@selected='selected']").map { |option| option.content  }
+        else
+          option = native.xpath(".//option[@selected='selected']").first || native.xpath(".//option").first
+          option.content if option
+        end
       when 'input' == tag_name && 'checkbox' == type && 'checked' == attr_name
         native[attr_name] == 'checked' ? true : false
       else
