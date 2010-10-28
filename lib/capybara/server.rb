@@ -62,14 +62,7 @@ module Capybara
           Capybara::Server.ports[@app.object_id] = @port
 
           Thread.new do
-            begin
-              require 'rack/handler/thin'
-              Thin::Logging.silent = true
-              Rack::Handler::Thin.run(Identify.new(@app), :Port => @port)
-            rescue LoadError
-              require 'rack/handler/webrick'
-              Rack::Handler::WEBrick.run(Identify.new(@app), :Port => @port, :AccessLog => [], :Logger => WEBrick::Log::new(nil, 0))
-            end
+            Capybara.server.call(Identify.new(@app), @port)
           end
 
           Capybara.timeout(10) { if responsive? then true else sleep(0.5) and false end }

@@ -108,6 +108,38 @@ module Capybara
       @drivers ||= {}
     end
 
+    ##
+    #
+    # Register a proc that Capybara will call to run the Rack application.
+    #
+    #     Capybara.server do |app, port|
+    #       require 'rack/handler/mongrel'
+    #       Rack::Handler::Mongrel.run(app, :Port => port)
+    #     end
+    #
+    # By default, Capybara will try to run thin, falling back to webrick.
+    #
+    # @yield [app, port]                      This block recieves a rack app and port and should run a Rack handler
+    #
+    def server(&block)
+      if block_given?
+        @server = block
+      else
+        @server
+      end
+    end
+
+    def run_default_server(app, port)
+      begin
+        require 'rack/handler/thin'
+        Thin::Logging.silent = true
+        Rack::Handler::Thin.run(app, :Port => port)
+      rescue LoadError
+        require 'rack/handler/webrick'
+        Rack::Handler::WEBrick.run(app, :Port => port, :AccessLog => [], :Logger => WEBrick::Log::new(nil, 0))
+      end
+    end
+
     def deprecate(method, alternate_method)
       warn "DEPRECATED: ##{method} is deprecated, please use ##{alternate_method} instead"
     end
@@ -133,6 +165,7 @@ end
 
 Capybara.configure do |config|
   config.run_server = true
+  config.server {|app, port| Capybara.run_default_server(app, port)}
   config.default_selector = :css
   config.default_wait_time = 2
   config.ignore_hidden_elements = false
