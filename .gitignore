@@ -4,6 +4,7 @@ pkg
 tmp
 *~
 *swp
+*gem
 spec.opts
 .rvmrc
 capybara-*.html
