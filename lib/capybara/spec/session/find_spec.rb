@@ -13,12 +13,6 @@ shared_examples_for "find" do
       @session.find("//input[@id='test_field']")[:value].should == 'monkey'
     end
 
-    it "should be aliased as locate for backward compatibility" do
-      Capybara.should_receive(:deprecate).with("locate", "find").twice
-      @session.locate('//h1').text.should == 'This is a test'
-      @session.locate("//input[@id='test_field']")[:value].should == 'monkey'
-    end
-
     it "should find the first element using the given locator and options" do
       @session.find('//a', :text => 'Redirect')[:id].should == 'red'
       @session.find(:css, 'a', :text => 'A link')[:title].should == 'twas a fine link'

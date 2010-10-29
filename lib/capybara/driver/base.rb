@@ -30,7 +30,7 @@ class Capybara::Driver::Base
   def response_headers
     raise Capybara::NotSupportedByDriverError
   end
-  
+
   def status_code
     raise Capybara::NotSupportedByDriverError
   end
@@ -51,11 +51,6 @@ class Capybara::Driver::Base
   end
 
   def reset!
-  end
-
-  def cleanup!
-    Capybara.deprecate("cleanup!", "reset!")
-    reset!
   end
 
   def has_shortcircuit_timeout?

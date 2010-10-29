@@ -13,6 +13,7 @@ module Capybara
         msg = "no link or button '#{locator}' found"
         find(:xpath, XPath::HTML.link_or_button(locator), :message => msg).click
       end
+      alias_method :click_on, :click_link_or_button
 
       ##
       #
@@ -152,18 +153,6 @@ module Capybara
       def attach_file(locator, path)
         msg = "cannot attach file, no file field with id, name, or label '#{locator}' found"
         find(:xpath, XPath::HTML.file_field(locator), :message => msg).set(path)
-      end
-
-      ##
-      #
-      # Drag one element to another
-      #
-      # @deprecated    Use Capybara::Element#drag_to instead.
-      #
-      def drag(source_locator, target_locator)
-        source = find(:xpath, source_locator, :message => "drag source '#{source_locator}' not found on page")
-        target = find(:xpath, target_locator, :message => "drag target '#{target_locator}' not found on page")
-        source.drag_to(target)
       end
     end
   end

@@ -33,15 +33,6 @@ module Capybara
 
       ##
       #
-      # @deprecated {#find} now behaves like locate used to. Use {#find} instead.
-      #
-      def locate(*args)
-        Capybara.deprecate("locate", "find")
-        find(*args)
-      end
-
-      ##
-      #
       # Find a form field on the page. The field can be found by its name, id or label text.
       #
       # @param [String] locator       Which field to find

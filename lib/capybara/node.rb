@@ -74,15 +74,6 @@ module Capybara
 
     ##
     #
-    # @deprecated node is deprecated, please use {Capybara::Element#native} instead
-    #
-    def node
-      Capybara.deprecate("node", "native")
-      native
-    end
-
-    ##
-    #
     # @return [String]    The text of the element
     #
     def text
