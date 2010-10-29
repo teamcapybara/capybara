@@ -25,4 +25,22 @@ describe Capybara do
     end
   end
 
+  describe ".server" do
+    after do
+      Capybara.server {|app, port| Capybara.run_default_server(app, port)}
+    end
+
+    it "should default to a proc that calls run_default_server" do
+      mock_app = mock('app')
+      Capybara.should_receive(:run_default_server).with(mock_app, 8000)
+      Capybara.server.call(mock_app, 8000)
+    end
+
+    it "should return a custom server proc" do
+      server = lambda {|app, port|}
+      Capybara.server(&server)
+      Capybara.server.should == server
+    end
+  end
+
 end
