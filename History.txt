@@ -1,3 +1,11 @@
+# Version 0.4.1
+
+Release date:
+
+### Added
+
+* New click_on alias for click_link_or_button, shorter yet unambiguous.
+
 # Version 0.4.0
 
 Release date: 2010-10-22
