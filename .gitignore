@@ -3,6 +3,7 @@
 pkg
 tmp
 *~
+*swp
 spec.opts
 .rvmrc
 capybara-*.html
