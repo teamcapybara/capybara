@@ -8,15 +8,6 @@ shared_examples_for "session with javascript support" do
       Capybara.default_wait_time = 0
     end
 
-    describe '#drag' do
-      it "should drag and drop an object" do
-        pending "drag/drop is currently broken under celerity/culerity" if @session.driver.is_a?(Capybara::Driver::Celerity)
-        @session.visit('/with_js')
-        @session.drag('//div[@id="drag"]', '//div[@id="drop"]')
-        @session.find('//div[contains(., "Dropped!")]').should_not be_nil
-      end
-    end
-
     describe 'Node#drag_to' do
       it "should drag and drop an object" do
         pending "drag/drop is currently broken under celerity/culerity" if @session.driver.is_a?(Capybara::Driver::Celerity)
@@ -27,7 +18,7 @@ shared_examples_for "session with javascript support" do
         @session.find('//div[contains(., "Dropped!")]').should_not be_nil
       end
     end
-    
+
     describe '#find' do
       it "should allow triggering of custom JS events" do
         pending "cannot figure out how to do this with selenium" if @session.mode == :selenium
