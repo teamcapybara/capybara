@@ -113,7 +113,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     def params(button)
       params = {}
 
-      native.xpath(".//input[not(@disabled) and (not(@type) or (@type!='radio' and @type!='checkbox' and @type!='submit' and @type!='image'))]").map do |input|
+      native.xpath(".//input[not(@disabled) and (not(@type) or (@type!='radio' and not(@type='file' and @multiple) and @type!='checkbox' and @type!='submit' and @type!='image'))]").map do |input|
         merge_param!(params, input['name'].to_s, input['value'].to_s)
       end
       native.xpath(".//textarea[not(@disabled)]").map do |textarea|
