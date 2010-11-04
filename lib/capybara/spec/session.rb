@@ -78,7 +78,7 @@ shared_examples_for "session" do
     @session.fill_in('address2_street', :with => 'PGS')
     @session.click_button "awesome"
 
-    addresses=extract_results(@session)["addresses"]
+    addresses = extract_results(@session)["addresses"]
     addresses.should have(2).addresses
 
     addresses[0]["street"].should == 'CDG'
