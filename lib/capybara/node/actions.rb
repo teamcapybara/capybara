@@ -50,7 +50,7 @@ module Capybara
       #
       def fill_in(locator, options={})
         msg = "cannot fill in, no text field, text area or password field with id, name, or label '#{locator}' found"
-        raise "Must pass a hash containing 'with'" if not options.is_a?(Hash) or not options.has_key?(:with)
+        raise "Must pass a hash containing 'with'" if  !options.is_a?(Hash) || !options.has_key?(:with)
         find(:xpath, XPath::HTML.fillable_field(locator), :message => msg).set(options[:with])
       end
 

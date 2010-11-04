@@ -17,7 +17,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     end
 
     def value
-      if tag_name == "select" and self[:multiple] and not self[:multiple] == "false"
+      if tag_name == "select" && self[:multiple] && !(self[:multiple] == "false")
         native.find_elements(:xpath, ".//option").select { |n| n.selected? }.map { |n| n.value || n.text }
       else
         native.value
@@ -25,11 +25,11 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     end
 
     def set(value)
-      if tag_name == 'input' and type == 'radio'
+      if tag_name == 'input' && type == 'radio'
         native.click
-      elsif tag_name == 'input' and type == 'checkbox'
+      elsif tag_name == 'input' && type == 'checkbox'
         native.click if value ^ native.attribute('checked').to_s.eql?("true")
-      elsif tag_name == 'textarea' or tag_name == 'input'
+      elsif tag_name == 'textarea' || tag_name == 'input'
         native.clear
         native.send_keys(value.to_s)
       end
@@ -40,7 +40,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     end
 
     def unselect_option
-      if select_node['multiple'] != 'multiple' and select_node['multiple'] != 'true'
+      if select_node['multiple'] != 'multiple' && select_node['multiple'] != 'true'
         raise Capybara::UnselectNotAllowed, "Cannot unselect option from single select box."
       end
       native.clear
@@ -59,7 +59,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     end
 
     def visible?
-      native.displayed? and native.displayed? != "false"
+      native.displayed? && native.displayed? != "false"
     end
 
     def find(locator)
