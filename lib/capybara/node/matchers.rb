@@ -33,15 +33,11 @@ module Capybara
       # @return [Boolean]                         If the expression exists
       #
       def has_selector?(*args)
-        options = if args.last.is_a?(Hash) then args.last else {} end
+        options = args.last.is_a?(Hash) ? args.last : {}
         wait_conditionally_until do
           results = all(*args)
 
-          if options[:count]
-            results.size == options[:count]
-          else
-            results.size > 0
-          end
+          options[:count] ? results.size == options[:count] : results.size > 0
         end
       rescue Capybara::TimeoutError
         return false
@@ -56,15 +52,11 @@ module Capybara
       # @return [Boolean]
       #
       def has_no_selector?(*args)
-        options = if args.last.is_a?(Hash) then args.last else {} end
+        options = args.last.is_a?(Hash) ? args.last : {}
         wait_conditionally_until do
           results = all(*args)
 
-          if options[:count]
-            results.size != options[:count]
-          else
-            results.empty?
-          end
+          options[:count] ? results.size != options[:count] : results.empty?
         end
       rescue Capybara::TimeoutError
         return false
