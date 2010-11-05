@@ -226,3 +226,16 @@ shared_examples_for "driver with infinite redirect detection" do
     end.should raise_error(Capybara::InfiniteRedirectError)
   end
 end
+
+shared_examples_for "driver with contenteditable support" do
+  before do
+    @driver.visit('/contenteditable')
+  end
+  
+  it "should allow assignment to nodes with contenteditable attribute true" do
+    @driver.find(%Q{//*[@contenteditable='true']}).first.set('Bafoon')
+    @driver.find(%Q{//*[@class='edit-me']}).first.text.should == 'Bafoon'
+  end
+  
+  
+end
