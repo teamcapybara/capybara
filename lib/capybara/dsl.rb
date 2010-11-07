@@ -41,6 +41,17 @@ module Capybara
 
     ##
     #
+    # Yield a block using a specific driver
+    #
+    def using_driver(driver)
+      Capybara.current_driver = driver
+      yield
+    ensure
+      Capybara.use_default_driver
+    end
+
+    ##
+    #
     # The current Capybara::Session base on what is set as Capybara.app and Capybara.current_driver
     #
     # @return [Capybara::Session]     The currently used session
