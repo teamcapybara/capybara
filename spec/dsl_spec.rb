@@ -56,6 +56,32 @@ describe Capybara do
     end
   end
 
+  describe '#using_driver' do
+    before do
+      Capybara.current_driver.should_not == :selenium
+    end
+
+    it 'should set the driver using Capybara.current_driver=' do
+      driver = nil
+      Capybara.using_driver(:selenium) { driver = Capybara.current_driver }
+      driver.should == :selenium
+    end
+
+    it 'should reset the driver using Capybara.use_default_driver, even if an exception occurs' do
+      begin
+        Capybara.using_driver(:selenium) { raise "ohnoes!" }
+      rescue Exception
+      end
+      Capybara.current_driver.should == Capybara.default_driver
+    end
+
+    it 'should yield the passed block' do
+      called = false
+      Capybara.using_driver(:selenium) { called = true }
+      called.should == true
+    end
+  end
+
   describe '#app' do
     it "should be changeable" do
       Capybara.app = "foobar"
