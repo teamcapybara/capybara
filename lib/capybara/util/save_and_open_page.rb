@@ -26,11 +26,10 @@ module Capybara
 
     def rewrite_css_and_image_references(response_html) # :nodoc:
       return response_html unless Capybara.asset_root
-      directories = Dir.new(Capybara.asset_root).entries.inject([]) do |list, name|
-        list << name if File.directory?(name) and not name.to_s =~ /^\./
-        list
-      end
-      response_html.gsub(/("|')\/(#{directories.join('|')})/, '\1' + Capybara.asset_root.to_s + '/\2')
+      directories = Dir.new(Capybara.asset_root).entries.select { |name|
+        File.directory?(name) and not name.to_s =~ /^\./
+      }
+      response_html.gsub(/=("|')\/(#{directories.join('|')})/, '=\1' + Capybara.asset_root.to_s + '/\2')
     end
   end
 end
