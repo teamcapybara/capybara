@@ -68,7 +68,7 @@ module Capybara
           Capybara.timeout(10) { if responsive? then true else sleep(0.5) and false end }
         end
       end
-    rescue Timeout::Error
+    rescue TimeoutError
       puts "Rack application timed out during boot"
       exit
     else
