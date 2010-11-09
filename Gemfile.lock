@@ -15,6 +15,8 @@ GEM
   remote: http://rubygems.org/
   specs:
     celerity (0.8.2)
+    childprocess (0.1.4)
+      ffi (~> 0.6.3)
     configuration (1.1.0)
     culerity (0.2.12)
     diff-lcs (1.1.2)
@@ -44,8 +46,9 @@ GEM
       rspec-core (~> 2.0.1)
       rspec-expectations (~> 2.0.1)
     rubyzip (0.9.4)
-    selenium-webdriver (0.0.27)
-      ffi (>= 0.6.1)
+    selenium-webdriver (0.0.29)
+      childprocess (>= 0.0.7)
+      ffi (~> 0.6.3)
       json_pure
       rubyzip
     sinatra (1.0)
