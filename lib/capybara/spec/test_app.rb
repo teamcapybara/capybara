@@ -87,6 +87,17 @@ class TestApp < Sinatra::Base
       'No file uploaded'
     end
   end
+
+  post '/upload_multiple' do
+    begin
+      buffer = []
+      buffer << "Content-type: #{params[:form][:multiple_documents][0][:type]}"
+      buffer << "File content: #{params[:form][:multiple_documents][0][:tempfile].read}"
+      buffer.join(' | ')
+    rescue
+      'No files uploaded'
+    end
+  end
 end
 
 if __FILE__ == $0

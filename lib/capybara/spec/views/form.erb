@@ -266,6 +266,22 @@
   <p>
 </form>
 
+<form action="/upload_multiple" method="post" enctype="multipart/form-data">
+  <p>
+    <label for="form_multiple_file_name">File Name</label>
+    <input type="file" name="form[multiple_file_name]" id="form_multiple_file_name"/>
+  </p>
+
+  <p>
+    <label for="form_multiple_documents">Multiple Documents</label>
+    <input type="file" name="form[multiple_documents][]" id="form_multiple_documents" multiple />
+  </p>
+
+  <p>
+    <input type="submit" value="Upload Multiple"/>
+  <p>
+</form>
+
 <form action="/redirect" method="post">
   <p>
     <input type="submit" value="Go FAR"/>

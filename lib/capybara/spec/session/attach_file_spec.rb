@@ -53,6 +53,12 @@ shared_examples_for "attach_file" do
         @session.click_button 'Upload'
         @session.body.should include('image/jpeg')
       end
+
+      it  "should not break when using HTML5 multiple file input" do
+        @session.attach_file "Multiple Documents", @test_file_path
+        @session.click_button('Upload Multiple')
+        @session.body.should include(File.read(@test_file_path))
+      end
     end
 
     context "with a locator that doesn't exist" do
