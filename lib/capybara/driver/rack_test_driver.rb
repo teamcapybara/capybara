@@ -1,3 +1,4 @@
+require 'capybara/util/string'
 require 'rack/test'
 require 'rack/utils'
 require 'mime/types'
@@ -11,28 +12,11 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     end
 
     def [](name)
-      attr_name = name.to_s
-      case
-      when 'select' == tag_name && 'value' == attr_name
-        if native['multiple'] == 'multiple'
-          native.xpath(".//option[@selected='selected']").map { |option| option[:value] || option.content  }
-        else
-          option = native.xpath(".//option[@selected='selected']").first || native.xpath(".//option").first
-          option[:value] || option.content if option
-        end
-      when 'input' == tag_name && 'checkbox' == type && 'checked' == attr_name
-        native[attr_name] == 'checked' ? true : false
-      else
-        native[attr_name]
-      end
+      string_node[name]
     end
 
     def value
-      if tag_name == 'textarea'
-        native.content
-      else
-        self[:value]
-      end
+      string_node.value
     end
 
     def set(value)
@@ -82,7 +66,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     end
 
     def visible?
-      native.xpath("./ancestor-or-self::*[contains(@style, 'display:none') or contains(@style, 'display: none')]").size == 0
+      string_node.visible?
     end
 
     def path
@@ -94,6 +78,10 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     end
 
   private
+
+    def string_node
+      @string_node ||= Capybara::StringNode.new(native)
+    end
 
     # a reference to the select node if this is an option node
     def select_node

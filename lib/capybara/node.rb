@@ -38,6 +38,10 @@ module Capybara
 
   protected
 
+    def wait?
+      driver.wait?
+    end
+
     def driver
       session.driver
     end

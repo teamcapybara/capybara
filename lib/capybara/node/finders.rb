@@ -114,7 +114,7 @@ module Capybara
         options = if args.last.is_a?(Hash) then args.pop else {} end
 
         results = Capybara::Selector.normalize(*args).map do |path|
-          base.find(path)
+          find_in_base(path)
         end.flatten
 
         if text = options[:text]
@@ -127,13 +127,21 @@ module Capybara
           results = results.select { |node| node.visible? }
         end
 
-        results.map { |n| Capybara::Element.new(session, n) }
+        convert_elements(results)
       end
 
     protected
 
+      def find_in_base(xpath)
+        base.find(xpath)
+      end
+
+      def convert_elements(elements)
+        elements.map { |element| Capybara::Element.new(session, element) }
+      end
+
       def wait_conditionally_until
-        if driver.wait? then session.wait_until { yield } else yield end
+        if wait? then session.wait_until { yield } else yield end
       end
 
     end
