@@ -135,7 +135,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
   def browser
     unless @_browser
       require 'celerity'
-      @_browser = ::Celerity::Browser.new(:browser => :firefox, :log_level => :off)
+      @_browser = ::Celerity::Browser.new(options)
     end
 
     @_browser
