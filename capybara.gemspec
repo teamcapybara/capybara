@@ -35,4 +35,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency("rspec", [">= 2.0.0"])
   s.add_development_dependency("launchy", [">= 0.3.5"])
   s.add_development_dependency("yard", [">= 0.5.8"])
+  s.add_development_dependency("fuubar", [">= 0.0.1"])
 end
