@@ -102,7 +102,7 @@ shared_examples_for "session with javascript support" do
         begin
           @session.wait_until(0.1) { false }
         rescue Capybara::TimeoutError; end
-        (Time.now - start).should be_close(0.1, 0.1)
+        (Time.now - start).should be_within(0.1).of(0.1)
       end
 
       it "should default to Capybara.default_wait_time before timeout" do
@@ -113,9 +113,9 @@ shared_examples_for "session with javascript support" do
           @session.wait_until { false }
         rescue Capybara::TimeoutError; end
         if @session.driver.has_shortcircuit_timeout?
-          (Time.now - start).should be_close(0, 0.1)
+          (Time.now - start).should be_within(0.1).of(0)
         else
-          (Time.now - start).should be_close(0.2, 0.1)
+          (Time.now - start).should be_within(0.1).of(0.2)
         end
       end
     end
