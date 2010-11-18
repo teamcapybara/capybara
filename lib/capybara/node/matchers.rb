@@ -201,11 +201,14 @@ module Capybara
       # Checks if the page or current node has a link with the given
       # text or id.
       #
-      # @param [String] locator      The text or id of a link to check for
-      # @return [Boolean]            Whether it exists
+      # @param [String] locator           The text or id of a link to check for
+      # @param options
+      # @option options [String] :href    The value the href attribute must be
+      # @return [Boolean]                 Whether it exists
       #
-      def has_link?(locator)
-        has_xpath?(XPath::HTML.link(locator))
+      def has_link?(locator, options={})
+        options = set_link_options options
+        has_xpath?(XPath::HTML.link(locator, options))
       end
 
       ##
@@ -213,11 +216,12 @@ module Capybara
       # Checks if the page or current node has no link with the given
       # text or id.
       #
-      # @param [String] locator      The text or id of a link to check for
+      # @param (see Capybara::Node::Finders#has_link?)
       # @return [Boolean]            Whether it doesn't exist
       #
-      def has_no_link?(locator)
-        has_no_xpath?(XPath::HTML.link(locator))
+      def has_no_link?(locator, options={})
+        options = set_link_options options
+        has_no_xpath?(XPath::HTML.link(locator, options))
       end
 
       ##
@@ -372,6 +376,11 @@ module Capybara
       #
       def has_no_table?(locator, options={})
         has_no_xpath?(XPath::HTML.table(locator, options))
+      end
+
+      private
+      def set_link_options(options)
+        String===options ? {:href => options} : options
       end
     end
   end
