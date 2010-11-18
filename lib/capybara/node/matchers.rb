@@ -37,9 +37,9 @@ module Capybara
         wait_conditionally_until do
           results = all(*args)
 
-          return false if results.empty?
-
           case
+          when results.empty?
+            false
           when options[:between]
             options[:between] === results.size
           when options[:count]
@@ -51,7 +51,6 @@ module Capybara
           else
             results.size > 0
           end
- 
         end
       rescue Capybara::TimeoutError
         return false
@@ -70,9 +69,9 @@ module Capybara
         wait_conditionally_until do
           results = all(*args)
 
-          return true if results.empty?
-
           case
+          when results.empty?
+            true
           when options[:between]
             not(options[:between] === results.size)
           when options[:count]
@@ -84,7 +83,6 @@ module Capybara
           else
             results.empty?
           end
-
         end
       rescue Capybara::TimeoutError
         return false
