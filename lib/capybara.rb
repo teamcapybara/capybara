@@ -13,7 +13,7 @@ module Capybara
 
   class << self
     attr_accessor :asset_root, :app_host, :run_server, :default_host
-    attr_accessor :server_port
+    attr_accessor :server_port, :server_boot_timeout
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
     attr_accessor :save_and_open_page_path
 
@@ -208,6 +208,7 @@ end
 Capybara.configure do |config|
   config.run_server = true
   config.server {|app, port| Capybara.run_default_server(app, port)}
+  config.server_boot_timeout = 10
   config.default_selector = :css
   config.default_wait_time = 2
   config.ignore_hidden_elements = false

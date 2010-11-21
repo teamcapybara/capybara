@@ -62,4 +62,27 @@ describe Capybara::Server do
     @server2a.port.should == @server2b.port
   end
 
+  it "should wait specified time for the app to boot" do
+    @slow_app = proc { |env| sleep(1); [200, {}, "Hello Slow Server!"] }
+
+    Capybara.server_boot_timeout = 1.5
+    @server = Capybara::Server.new(@slow_app).boot
+
+    @res = Net::HTTP.start(@server.host, @server.port) { |http| http.get('/') }
+    @res.body.should include('Hello Slow Server')
+  end
+
+  it "should raise an exception if boot timeout is exceeded" do
+    @slow_app = proc { |env| sleep(1); [200, {}, "Hello Slow Server!"] }
+
+    # HACK: Capybara::Server does Kernel#exit on timeout, which makes it difficult
+    # to test. This makes it easier.
+    TestableServer = Class.new(Capybara::Server) do
+      def exit; :timeout; end
+    end
+
+    Capybara.server_boot_timeout = 0.5
+    TestableServer.new(@slow_app).boot.should == :timeout
+  end
+
 end
