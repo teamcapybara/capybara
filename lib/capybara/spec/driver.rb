@@ -42,6 +42,7 @@ shared_examples_for 'driver' do
       it "should extract node attributes" do
         @driver.find('//a')[0][:class].should == 'simple'
         @driver.find('//a')[1][:id].should == 'foo'
+        @driver.find('//input')[0][:type].should == 'text'
       end
 
       it "should extract boolean node attributes" do

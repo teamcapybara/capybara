@@ -5,11 +5,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
     end
 
     def [](name)
-      value = if name.to_sym == :class
-        native.class_name
-      else
-        native.send(name.to_sym)
-      end
+      value = native.attribute_value(name.to_sym)
       return value if value and not value.to_s.empty?
     end
 
@@ -17,7 +13,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
       if tag_name == "select" and native.multiple?
         find(".//option[@selected]").map { |n| n.value || n.text }
       else
-        self[:value]
+        native.value
       end
     end
 
