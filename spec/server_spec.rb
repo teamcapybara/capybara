@@ -75,14 +75,11 @@ describe Capybara::Server do
   it "should raise an exception if boot timeout is exceeded" do
     @slow_app = proc { |env| sleep(1); [200, {}, "Hello Slow Server!"] }
 
-    # HACK: Capybara::Server does Kernel#exit on timeout, which makes it difficult
-    # to test. This makes it easier.
-    TestableServer = Class.new(Capybara::Server) do
-      def exit; :timeout; end
-    end
-
     Capybara.server_boot_timeout = 0.5
-    TestableServer.new(@slow_app).boot.should == :timeout
+    server = Capybara::Server.new(@slow_app)
+    server.stub(:exit).and_return(:timeout)
+    server.stub(:puts)
+    server.boot.should == :timeout
   end
 
 end
