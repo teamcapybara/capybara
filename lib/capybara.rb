@@ -1,7 +1,6 @@
 require 'timeout'
 require 'nokogiri'
 require 'xpath'
-
 module Capybara
   class CapybaraError < StandardError; end
   class DriverNotFoundError < CapybaraError; end
@@ -132,7 +131,7 @@ module Capybara
     ##
     #
     # Wraps the given string, which should contain an HTML document or fragment
-    # in a {Capybara::StringNode} which exposes all {Capybara::Node::Matchers} and
+    # in a {Capybara::Node::Simple} which exposes all {Capybara::Node::Matchers} and
     # {Capybara::Node::Finders}. This allows you to query any string containing
     # HTML in the exact same way you would query the current document in a Capybara
     # session. For example:
@@ -150,10 +149,10 @@ module Capybara
     #     node.find('ul').find('li').text # => 'Home'
     #
     # @param [String] html              An html fragment or document
-    # @return [Capybara::StringNode]    A node which has Capybara's finders and matchers
+    # @return [Capybara::Node::Simple]   A node which has Capybara's finders and matchers
     #
     def string(html)
-      StringNode.new(html)
+      Capybara::Node::Simple.new(html)
     end
 
     ##
@@ -183,12 +182,18 @@ module Capybara
 
   autoload :Server,     'capybara/server'
   autoload :Session,    'capybara/session'
-  autoload :Node,       'capybara/node'
-  autoload :StringNode, 'capybara/util/string'
-  autoload :Document,   'capybara/node'
-  autoload :Element,    'capybara/node'
   autoload :Selector,   'capybara/selector'
   autoload :VERSION,    'capybara/version'
+
+  module Node
+    autoload :Base,       'capybara/node/base'
+    autoload :Simple,     'capybara/node/simple'
+    autoload :Element,    'capybara/node/element'
+    autoload :Document,   'capybara/node/document'
+    autoload :Finders,    'capybara/node/finders'
+    autoload :Matchers,   'capybara/node/matchers'
+    autoload :Actions,    'capybara/node/actions'
+  end
 
   module Driver
     autoload :Base,     'capybara/driver/base'

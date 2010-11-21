@@ -79,7 +79,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   private
 
     def string_node
-      @string_node ||= Capybara::StringNode.new(native)
+      @string_node ||= Capybara::Node::Simple.new(native)
     end
 
     # a reference to the select node if this is an option node

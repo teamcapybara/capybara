@@ -1,5 +1,5 @@
 module Capybara
-  class Node
+  module Node
     module Actions
 
       ##

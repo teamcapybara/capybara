@@ -257,7 +257,7 @@ module Capybara
     end
 
     def document
-      Capybara::Document.new(self, driver)
+      Capybara::Node::Document.new(self, driver)
     end
 
     def method_missing(*args)

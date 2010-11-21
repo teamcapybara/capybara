@@ -1,5 +1,5 @@
 module Capybara
-  class Node
+  module Node
     module Finders
 
       ##
@@ -137,7 +137,7 @@ module Capybara
       end
 
       def convert_elements(elements)
-        elements.map { |element| Capybara::Element.new(session, element) }
+        elements.map { |element| Capybara::Node::Element.new(session, element) }
       end
 
       def wait_conditionally_until
