@@ -156,6 +156,15 @@ module Capybara
       StringNode.new(html)
     end
 
+    ##
+    #
+    # Runs Capybara's default server for the given application and port
+    # under most circumstances you should not have to call this method
+    # manually.
+    #
+    # @param [Rack Application] app    The rack application to run
+    # @port [Fixnum] port              The port to run the application on
+    #
     def run_default_server(app, port)
       begin
         require 'rack/handler/thin'
