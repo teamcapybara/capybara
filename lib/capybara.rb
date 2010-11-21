@@ -129,6 +129,33 @@ module Capybara
       end
     end
 
+    ##
+    #
+    # Wraps the given string, which should contain an HTML document or fragment
+    # in a {Capybara::StringNode} which exposes all {Capybara::Node::Matchers} and
+    # {Capybara::Node::Finders}. This allows you to query any string containing
+    # HTML in the exact same way you would query the current document in a Capybara
+    # session. For example:
+    #
+    #     node = Capybara.string <<-HTML
+    #       <ul>
+    #         <li id="home">Home</li>
+    #         <li id="projects">Projects</li>
+    #       </ul>
+    #     HTML
+    #
+    #     node.find('#projects').text # => 'Projects'
+    #     node.has_selector?('li#home', :text => 'Home')
+    #     node.has_selector?(:projects)
+    #     node.find('ul').find('li').text # => 'Home'
+    #
+    # @param [String] html              An html fragment or document
+    # @return [Capybara::StringNode]    A node which has Capybara's finders and matchers
+    #
+    def string(html)
+      StringNode.new(html)
+    end
+
     def run_default_server(app, port)
       begin
         require 'rack/handler/thin'
@@ -148,6 +175,7 @@ module Capybara
   autoload :Server,     'capybara/server'
   autoload :Session,    'capybara/session'
   autoload :Node,       'capybara/node'
+  autoload :StringNode, 'capybara/util/string'
   autoload :Document,   'capybara/node'
   autoload :Element,    'capybara/node'
   autoload :Selector,   'capybara/selector'

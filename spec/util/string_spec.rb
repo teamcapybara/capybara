@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'capybara/util/string'
 
 describe Capybara do
   describe '.string' do

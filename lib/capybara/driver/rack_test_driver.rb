@@ -1,4 +1,3 @@
-require 'capybara/util/string'
 require 'rack/test'
 require 'rack/utils'
 require 'mime/types'

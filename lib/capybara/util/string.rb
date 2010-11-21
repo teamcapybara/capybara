@@ -1,8 +1,4 @@
 module Capybara
-  def self.string(html)
-    StringNode.new(Nokogiri::HTML(html))
-  end
-
   class StringNode
     include Capybara::Node::Finders
     include Capybara::Node::Matchers
@@ -10,6 +6,7 @@ module Capybara
     attr_reader :native
 
     def initialize(native)
+      native = Nokogiri::HTML(native) if native.is_a?(String)
       @native = native
     end
 
