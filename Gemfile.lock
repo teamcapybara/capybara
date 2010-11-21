@@ -82,3 +82,6 @@ DEPENDENCIES
   sinatra (>= 0.9.4)
   xpath (~> 0.1.2)
   yard (>= 0.5.8)
+
+METADATA
+  version: 1.0.6
