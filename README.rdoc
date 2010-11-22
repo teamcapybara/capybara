@@ -473,6 +473,12 @@ Gems can use this API to add their own drivers to Capybara.
   use plugins which allow you to travel in time, rather than freeze time.
   One such plugin is {Timecop}[http://github.com/jtrupiano/timecop].
 
+* When using Rack::Test, beware if attempting to visit absolute URLs. For
+  example, a session might not be shared between visits to <tt>posts_path</tt>
+  and <tt>posts_url</tt>. If testing an absolute URL in an Action Mailer email,
+  set <tt>default_url_options</tt> to match the Rails default of
+  <tt>www.example.com</tt>.
+
 == License:
 
 (The MIT License)
