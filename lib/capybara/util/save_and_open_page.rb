@@ -31,7 +31,7 @@ module Capybara
         (root+name).directory? and not name.to_s =~ /^\./
       }
       if not directories.empty?
-        response_html.gsub!(/("|')\/(#{directories.join('|')})/, '\1' + root + '/\2')
+        response_html.gsub!(/("|')\/(#{directories.join('|')})(?!>)/, '\1' + root + '/\2')
       end
       return response_html
     end
