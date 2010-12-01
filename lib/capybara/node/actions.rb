@@ -111,7 +111,7 @@ module Capybara
           no_select_msg = "cannot select option, no select box with id, name, or label '#{options[:from]}' found"
           no_option_msg = "cannot select option, no option with text '#{value}' in select box '#{options[:from]}'"
           select = find(:xpath, XPath::HTML.select(options[:from]), :message => no_select_msg)
-          select.find(:xpath, XPath::HTML.option(value), :message => no_option_msg).select_option
+          select.find(:xpath, option_xpath_for(value), :message => no_option_msg).select_option
         else
           no_option_msg = "cannot select option, no option with text '#{value}'"
           find(:xpath, XPath::HTML.option(value), :message => no_option_msg).select_option
@@ -153,6 +153,17 @@ module Capybara
       def attach_file(locator, path)
         msg = "cannot attach file, no file field with id, name, or label '#{locator}' found"
         find(:xpath, XPath::HTML.file_field(locator), :message => msg).set(path)
+      end
+
+      private
+      def option_xpath_for(value)
+        if [:any, :anything, :whatever].include? value
+          ".//option[@value != '']"
+        elsif value == :first_item
+          ".//option[1]"
+        else
+          XPath::HTML.option(value)
+        end
       end
     end
   end
