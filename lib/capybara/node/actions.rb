@@ -102,9 +102,10 @@ module Capybara
       # box is a multiple select, +select+ can be called multiple times to select more than
       # one option. The select box can be found via its name, id or label text.
       #
-      #     page.uncheck('German')
+      #     page.select 'March', :from => 'Month'
       #
       # @param [String] locator           Which check box to uncheck
+      # @param [Hash{:from => String}]    The id, name or label of the select box
       #
       def select(value, options={})
         if options.has_key?(:from)
