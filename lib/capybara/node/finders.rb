@@ -25,9 +25,10 @@ module Capybara
       #
       def find(*args)
         node = wait_conditionally_until { all(*args).first }
-      ensure
-        options = if args.last.is_a?(Hash) then args.last else {} end
-        raise Capybara::ElementNotFound, options[:message] || "Unable to find '#{args[1] || args[0]}'" unless node
+        unless node
+          options = if args.last.is_a?(Hash) then args.last else {} end
+          raise Capybara::ElementNotFound, options[:message] || "Unable to find '#{args[1] || args[0]}'"
+        end
         return node
       end
 
