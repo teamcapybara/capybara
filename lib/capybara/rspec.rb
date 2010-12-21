@@ -1,7 +1,7 @@
 require 'capybara'
 require 'capybara/dsl'
 
-Rspec.configure do |config|
+RSpec.configure do |config|
   config.include Capybara
   config.after do
     Capybara.reset_sessions!
