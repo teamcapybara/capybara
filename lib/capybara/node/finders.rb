@@ -24,7 +24,10 @@ module Capybara
       # @raise  [Capybara::ElementNotFound]   If the element can't be found before time expires
       #
       def find(*args)
-        node = wait_conditionally_until { all(*args).first }
+        begin
+          node = wait_conditionally_until { all(*args).first }
+        rescue TimeoutError
+        end
         unless node
           options = if args.last.is_a?(Hash) then args.last else {} end
           raise Capybara::ElementNotFound, options[:message] || "Unable to find '#{args[1] || args[0]}'"
