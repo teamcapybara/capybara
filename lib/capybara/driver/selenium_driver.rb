@@ -83,7 +83,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   def browser
     unless @browser
-      @browser = Selenium::WebDriver.for(options.delete(:browser) || :firefox, options)
+      @browser = Selenium::WebDriver.for(options[:browser] || :firefox, options)
       at_exit do
         @browser.quit
       end
