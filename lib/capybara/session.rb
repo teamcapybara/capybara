@@ -151,11 +151,11 @@ module Capybara
     #       fill_in('Street', :with => '12 Main Street')
     #     end
     #
-    # @param [:css, :xpath, String] kind    The type of selector or the selector if the second argument is blank
-    # @param [String] selector              The selector within which to execute the given block
+    # @param (see Capybara::Node::Finders#all)
+    # @raise  [Capybara::ElementNotFound]   If the scope can't be found before time expires
     #
-    def within(kind, selector=nil)
-      new_scope = find(kind, selector, :message => "scope '#{selector || kind}' not found on page")
+    def within(*args)
+      new_scope = find(*args)
       begin
         scopes.push(new_scope)
         yield
