@@ -26,6 +26,16 @@ describe Capybara::Session do
       end
     end
 
+    describe "#attach_file" do
+      context "with multipart form" do
+        it "should submit an empty form-data section if no file is submitted" do
+          @session.visit("/form")
+          @session.click_button("Upload Empty")
+          @session.body.should include('Successfully ignored empty file field.')
+        end
+      end
+    end
+
     it_should_behave_like "session"
     it_should_behave_like "session without javascript support"
     it_should_behave_like "session with headers support"

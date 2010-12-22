@@ -250,6 +250,17 @@
   <p>
 </form>
 
+<form action="/upload_empty" method="post" enctype="multipart/form-data">
+  <p>
+    <label for="form_file_name">File Name</label>
+    <input type="file" name="form[file]" id="form_file"/>
+  </p>
+
+  <p>
+    <input type="submit" value="Upload Empty"/>
+  <p>
+</form>
+
 <form action="/upload" method="post" enctype="multipart/form-data">
   <p>
     <label for="form_file_name">File Name</label>
