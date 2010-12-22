@@ -124,7 +124,13 @@ module Capybara
           results = results.select { |node| node.text.match(text) }
         end
 
-        if options[:visible] or Capybara.ignore_hidden_elements
+        ignore_hidden = if options.has_key?(:visible)
+          options[:visible]
+        else
+          Capybara.ignore_hidden_elements
+        end
+
+        if ignore_hidden
           results = results.select { |node| node.visible? }
         end
 

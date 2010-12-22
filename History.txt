@@ -5,6 +5,7 @@ Release date:
 ### Added
 
 * New click_on alias for click_link_or_button, shorter yet unambiguous.
+* Finders now accept :visible => false which will find all elements regardless of Capybara.ignore_hidden_elements
 
 # Version 0.4.0
 
