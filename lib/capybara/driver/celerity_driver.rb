@@ -11,7 +11,7 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
 
     def value
       if tag_name == "select" and native.multiple?
-        find(".//option[@selected]").map { |n| n.value || n.text }
+        find(".//option[@selected]").map { |n| if n.has_value? then n.value else n.text end }
       else
         native.value
       end
@@ -77,7 +77,9 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
       find('./ancestor::select').first
     end
 
-
+    def has_value?
+      native.object.hasAttribute('value')
+    end
   end
 
   attr_reader :app, :rack_server, :options

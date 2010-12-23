@@ -32,7 +32,7 @@ describe 'capybara/rspec' do
   end
 
   it "switches to the javascript driver when giving it as metadata", :js => true do
-    Capybara.current_driver.should == :selenium
+    Capybara.current_driver.should == Capybara.javascript_driver
   end
 
   it "switches to the given driver when giving it as metadata", :driver => :culerity do
