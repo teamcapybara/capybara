@@ -25,7 +25,7 @@ module Capybara
       #
       def find(*args)
         begin
-          node = wait_conditionally_until { all(*args).first }
+          node = wait_conditionally_until { first(*args) }
         rescue TimeoutError
         end
         unless node
@@ -140,6 +140,30 @@ module Capybara
         convert_elements(results)
       end
 
+      def first(*args)
+        options = if args.last.is_a?(Hash) then args.pop else {} end
+
+        if text = options[:text]
+          text = Regexp.escape(text) unless text.kind_of?(Regexp)
+        end
+
+        ignore_hidden = if options.has_key?(:visible)
+          options[:visible]
+        else
+          Capybara.ignore_hidden_elements
+        end
+
+        Capybara::Selector.normalize(*args).each do |path|
+          first = find_in_base(path).find do |node|
+            (!text || node.text.match(text)) && (!ignore_hidden || node.visible?)
+          end
+
+          return convert_element(first) if first
+        end
+
+        nil
+      end
+
     protected
 
       def find_in_base(xpath)
@@ -147,7 +171,11 @@ module Capybara
       end
 
       def convert_elements(elements)
-        elements.map { |element| Capybara::Node::Element.new(session, element) }
+        elements.map { |element| convert_element(element) }
+      end
+
+      def convert_element(element)
+        Capybara::Node::Element.new(session, element)
       end
 
       def wait_conditionally_until
