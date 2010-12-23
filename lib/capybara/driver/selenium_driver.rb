@@ -59,7 +59,8 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     end
 
     def visible?
-      native.displayed? and native.displayed? != "false"
+      displayed = native.displayed?
+      displayed and displayed != "false"
     end
 
     def find(locator)
