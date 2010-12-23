@@ -104,8 +104,8 @@ module Capybara
         native.xpath(xpath).map { |node| self.class.new(node) }
       end
 
-      def convert_elements(elements)
-        elements
+      def convert_element(element)
+        element
       end
 
       def wait?
