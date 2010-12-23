@@ -43,7 +43,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       if select_node['multiple'] != 'multiple' and select_node['multiple'] != 'true'
         raise Capybara::UnselectNotAllowed, "Cannot unselect option from single select box."
       end
-      native.clear
+      native.toggle if selected?
     end
 
     def click
@@ -62,6 +62,13 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
       displayed = native.displayed?
       displayed and displayed != "false"
     end
+
+    def selected?
+      selected = native.selected?
+      selected and selected != "false"
+    end
+
+    alias :checked? :selected?
 
     def find(locator)
       native.find_elements(:xpath, locator).map { |n| self.class.new(driver, n) }

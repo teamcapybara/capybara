@@ -48,6 +48,14 @@ module Capybara
         raise NotImplementedError
       end
 
+      def checked?
+        raise NotImplementedError
+      end
+
+      def selected?
+        raise NotImplementedError
+      end
+
       def path
         raise NotSupportedByDriverError
       end

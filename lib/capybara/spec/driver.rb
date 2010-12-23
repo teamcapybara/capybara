@@ -71,6 +71,20 @@ shared_examples_for 'driver' do
         @driver.find('//div[@id="hidden"]')[0].should_not be_visible
         @driver.find('//div[@id="hidden_via_ancestor"]')[0].should_not be_visible
       end
+
+      it "should extract node checked state" do
+        @driver.visit('/form')
+        @driver.find('//input[@id="gender_female"]')[0].should be_checked
+        @driver.find('//input[@id="gender_male"]')[0].should_not be_checked
+        @driver.find('//h1')[0].should_not be_checked
+      end
+
+      it "should extract node selected state" do
+        @driver.visit('/form')
+        @driver.find('//option[@value="en"]')[0].should be_selected
+        @driver.find('//option[@value="sv"]')[0].should_not be_selected
+        @driver.find('//h1')[0].should_not be_selected
+      end
     end
   end
 end

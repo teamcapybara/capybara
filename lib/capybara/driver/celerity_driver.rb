@@ -56,6 +56,18 @@ class Capybara::Driver::Celerity < Capybara::Driver::Base
       native.visible?
     end
 
+    def checked?
+      native.checked?
+    rescue # https://github.com/langalex/culerity/issues/issue/33
+      false
+    end
+
+    def selected?
+      native.selected?
+    rescue # https://github.com/langalex/culerity/issues/issue/33
+      false
+    end
+
     def path
       native.xpath
     end

@@ -68,6 +68,14 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       string_node.visible?
     end
 
+    def checked?
+      self[:checked]
+    end
+
+    def selected?
+      self[:selected]
+    end
+
     def path
       native.path
     end

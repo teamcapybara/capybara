@@ -127,6 +127,23 @@ module Capybara
           results = results.select { |node| node.text.match(text) }
         end
 
+        if value = options[:with]
+          results = results.select { |node| node.value == value }
+        end
+
+        if options[:checked]
+          results = results.select { |node| node.checked? }
+        end
+
+        if options[:unchecked]
+          results = results.reject { |node| node.checked? }
+        end
+
+        if selected = options[:selected]
+          selected = [selected].flatten
+          results = results.select { |node| has_selected_options?(node, selected) }
+        end
+
         ignore_hidden = if options.has_key?(:visible)
           options[:visible]
         else
@@ -144,6 +161,11 @@ module Capybara
 
       def find_in_base(xpath)
         base.find(xpath)
+      end
+
+      def has_selected_options?(node, expected)
+        actual = node.find('.//option').select { |option| option.selected? }.map { |option| option.text }
+        (expected - actual).empty?
       end
 
       def convert_elements(elements)
