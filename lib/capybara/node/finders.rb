@@ -115,56 +115,50 @@ module Capybara
       # @return [Capybara::Element]                       The found elements
       #
       def all(*args)
-        options = if args.last.is_a?(Hash) then args.pop else {} end
+        options = normalized_options(*args)
 
         results = Capybara::Selector.normalize(*args).map do |path|
           find_in_base(path)
         end.flatten
 
-        if text = options[:text]
-          text = Regexp.escape(text) unless text.kind_of?(Regexp)
-
-          results = results.select { |node| node.text.match(text) }
-        end
-
-        ignore_hidden = if options.has_key?(:visible)
-          options[:visible]
-        else
-          Capybara.ignore_hidden_elements
-        end
-
-        if ignore_hidden
-          results = results.select { |node| node.visible? }
-        end
+        results = results.select { |node| matches_options(node, options) }
 
         convert_elements(results)
       end
 
       def first(*args)
-        options = if args.last.is_a?(Hash) then args.pop else {} end
-
-        if text = options[:text]
-          text = Regexp.escape(text) unless text.kind_of?(Regexp)
-        end
-
-        ignore_hidden = if options.has_key?(:visible)
-          options[:visible]
-        else
-          Capybara.ignore_hidden_elements
-        end
+        options = normalized_options(*args)
 
         Capybara::Selector.normalize(*args).each do |path|
-          first = find_in_base(path).find do |node|
-            (!text || node.text.match(text)) && (!ignore_hidden || node.visible?)
+          find_in_base(path).each do |node|
+            if matches_options(node, options)
+              return convert_element(node)
+            end
           end
-
-          return convert_element(first) if first
         end
 
         nil
       end
 
     protected
+
+      def normalized_options(*args)
+        options = if args.last.is_a?(Hash) then args.pop.dup else {} end
+
+        if text = options[:text]
+          options[:text] = Regexp.escape(text) unless text.kind_of?(Regexp)
+        end
+
+        if !options.has_key?(:visible)
+          options[:visible] = Capybara.ignore_hidden_elements
+        end
+
+        options
+      end
+
+      def matches_options(node, options)
+        (!options[:text] || node.text.match(options[:text])) && (!options[:visible] || node.visible?)
+      end
 
       def find_in_base(xpath)
         base.find(xpath)
