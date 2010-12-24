@@ -48,6 +48,16 @@ describe Capybara::Driver::RackTest do
     end
   end
 
+  it "should prefix urls with Capybara.app_host if app_host is set" do
+    Capybara.app_host = nil
+    @driver.visit('/')
+    @driver.last_request.url.should == 'http://www.example.com/'
+
+    Capybara.app_host = 'http://foo.example.com'
+    @driver.visit('/')
+    @driver.last_request.url.should == 'http://foo.example.com/'
+  end
+
   it_should_behave_like "driver"
   it_should_behave_like "driver with header support"
   it_should_behave_like "driver with status code support"
