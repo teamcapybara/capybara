@@ -224,6 +224,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
   def submit(method, path, attributes)
     path = request_path if not path or path.empty?
+    path = Capybara.app_host + path if Capybara.app_host and path.start_with?('/')
     send(method, to_binary(path), to_binary(attributes), env)
     follow_redirects!
   end
