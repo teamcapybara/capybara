@@ -118,7 +118,7 @@ end
 shared_examples_for "driver with header support" do
   it "should make headers available through response_headers" do
     @driver.visit('/with_simple_html')
-    @driver.response_headers['Content-Type'].should == 'text/html'
+    @driver.response_headers['Content-Type'].should =~ /text\/html/
   end
 end
 
