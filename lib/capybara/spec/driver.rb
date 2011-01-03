@@ -207,6 +207,18 @@ shared_examples_for "driver with support for window switching" do
       end
       @driver.find("//*[@id='divInMainWindow']")[0].text.should eql 'This is the text for divInMainWindow'
     end
+
+    it "should find firstPopup by title" do
+      @driver.within_window("This is the title of the first popup") do
+        @driver.find("//*[@id='divInPopupOne']")[0].text.should eql 'This is the text of divInPopupOne'
+      end
+    end
+
+    it "should find firstPopup by url" do
+      @driver.within_window("/popup_one") do
+        @driver.find("//*[@id='divInPopupOne']")[0].text.should eql 'This is the text of divInPopupOne'
+      end
+    end
   end
 end
 

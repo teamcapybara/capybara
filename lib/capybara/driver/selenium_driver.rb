@@ -148,7 +148,23 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     browser.switch_to.window old_window
   end
 
-  def within_window(handle, &blk)
+  def find_window( selector )
+    original_handle = browser.window_handle
+    browser.window_handles.each do |handle|
+      browser.switch_to.window handle
+      if( selector == browser.execute_script("return window.name") ||
+          browser.title.include?(selector) ||
+          browser.current_url.include?(selector) ||
+          (selector == handle) )
+        browser.switch_to.window original_handle
+        return handle
+      end
+    end
+    raise Capybara::ElementNotFound, "Could not find a window identified by #{selector}"
+  end
+
+  def within_window(selector, &blk)
+    handle = find_window( selector )
     browser.switch_to.window(handle, &blk)
   end
 
