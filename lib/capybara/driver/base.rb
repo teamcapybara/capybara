@@ -47,6 +47,10 @@ class Capybara::Driver::Base
     false
   end
 
+  def wait_for_ajax(handle)
+    raise Capybara::NotSupportedByDriverError
+  end
+
   def wait_until(*args)
   end
 

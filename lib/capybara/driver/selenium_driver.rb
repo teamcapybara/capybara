@@ -128,6 +128,14 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   def wait?; true; end
 
+  def wait_for_ajax(timeout)
+    load_wait_for_ajax_support()
+    yield
+    Capybara.timeout(timeout,self) { 
+      evaluate_script( "window.capybaraRequestsOutstanding <= 0" ) 
+    }
+  end
+
   def execute_script(script)
     browser.execute_script script
   end
@@ -169,6 +177,31 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
   end
 
 private
+  def load_wait_for_ajax_support()
+    browser.execute_script %{
+window.capybaraRequestsOutstanding = 0;
+(function() { // Overriding XMLHttpRequest
+    var oldXHR = window.XMLHttpRequest;
+
+    function newXHR() {
+        var realXHR = new oldXHR();
+
+        window.capybaraRequestsOutstanding++;
+        realXHR.addEventListener("readystatechange", function() { 
+            if( realXHR.readyState == 4 ) {
+              setTimeout( function() {
+                window.capybaraRequestsOutstanding--;
+              }, 500 );
+            }
+        }, false);
+
+        return realXHR;
+    }
+
+    window.XMLHttpRequest = newXHR;
+})();
+    }
+  end
 
   def url(path)
     rack_server.url(path)

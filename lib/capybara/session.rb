@@ -30,7 +30,7 @@ module Capybara
       :all, :first, :attach_file, :body, :check, :choose, :click_link_or_button, :click_button, :click_link, :current_url, :drag, :evaluate_script,
       :field_labeled, :fill_in, :find, :find_button, :find_by_id, :find_field, :find_link, :has_content?, :has_css?,
       :has_no_content?, :has_no_css?, :has_no_xpath?, :has_xpath?, :locate, :save_and_open_page, :select, :source, :uncheck,
-      :visit, :wait_until, :within, :within_fieldset, :within_table, :within_frame, :within_window, :has_link?, :has_no_link?, :has_button?,
+      :visit, :wait_until, :wait_for_ajax, :within, :within_fieldset, :within_table, :within_frame, :within_window, :has_link?, :has_no_link?, :has_button?,
       :has_no_button?, :has_field?, :has_no_field?, :has_checked_field?, :has_unchecked_field?, :has_no_table?, :has_table?,
       :unselect, :has_select?, :has_no_select?, :current_path, :click, :has_selector?, :has_no_selector?, :click_on
     ]
@@ -218,8 +218,20 @@ module Capybara
     #
     # @param [Integer] timeout   The amount of seconds to retry executing the given block
     #
+    #yield
     def wait_until(timeout = Capybara.default_wait_time)
       Capybara.timeout(timeout,driver) { yield }
+    end
+
+    ##
+    #
+    # Execute the contents of the block and wait until no ajax requests are in flight, or the timeout is exceeded
+    #
+    # @param [Integer] timeout   The amount of seconds to wait for ajax requests to return
+    #
+    #yield
+    def wait_for_ajax(timeout = Capybara.default_wait_time)
+      driver.wait_for_ajax( timeout ) { yield }
     end
 
     ##

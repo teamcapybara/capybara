@@ -113,6 +113,20 @@ shared_examples_for "driver with javascript support" do
       @driver.evaluate_script('1+1').should == 2
     end
   end
+
+end
+
+shared_examples_for "driver with wait_for_ajax support" do
+  before { @driver.visit('/with_js') }
+  describe "#wait_for_ajax" do
+    it "should wait for all ajax requests to finish" do
+      @driver.wait_for_ajax(5) do 
+        puts "Firing request"
+        @driver.find('//input[@id="fire_ajax_request"]').first.click
+      end
+      @driver.find('//p[@id="ajax_request_done"]').should_not be_empty
+    end
+  end
 end
 
 shared_examples_for "driver with header support" do

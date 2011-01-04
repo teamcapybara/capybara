@@ -59,6 +59,11 @@ class TestApp < Sinatra::Base
     redirect back
   end
 
+  get '/slow_response' do
+    sleep 2
+    'Finally!'
+  end
+
   get '/set_cookie' do
     cookie_value = 'test_cookie'
     response.set_cookie('capybara', cookie_value)
