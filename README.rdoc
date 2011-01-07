@@ -483,6 +483,9 @@ Whatever is returned from the block should conform to the API described by
 Capybara::Driver::Base, it does not however have to inherit from this class.
 Gems can use this API to add their own drivers to Capybara.
 
+The {Selenium wiki}[http://code.google.com/p/selenium/wiki/RubyBindings] has
+additional info about how the underlying driver can be configured.
+
 == Gotchas:
 
 * Access to session and request is not possible from the test, Access to
