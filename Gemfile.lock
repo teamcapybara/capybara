@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    capybara (0.4.0)
+    capybara (0.4.1.rc)
       celerity (>= 0.7.9)
       culerity (>= 0.2.4)
       mime-types (>= 1.16)
@@ -9,12 +9,12 @@ PATH
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       selenium-webdriver (>= 0.0.27)
-      xpath (~> 0.1.2)
+      xpath (~> 0.1.3)
 
 PATH
   remote: xpath
   specs:
-    xpath (0.1.2)
+    xpath (0.1.3)
       nokogiri (~> 1.3)
 
 GEM
