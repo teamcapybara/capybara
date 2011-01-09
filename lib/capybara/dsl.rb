@@ -57,7 +57,7 @@ module Capybara
     # @return [Capybara::Session]     The currently used session
     #
     def current_session
-      session_pool["#{current_driver}#{app.object_id}"] ||= Capybara::Session.new(current_driver, app)
+      session_pool[session_namespace] ||= Capybara::Session.new(current_driver, app)
     end
 
     ##
@@ -70,7 +70,33 @@ module Capybara
     end
     alias_method :reset!, :reset_sessions!
 
+    ##
+    #
+    # Switch to a different session, referenced by name, execute the provided block and return to
+    # the default session. This is useful for testing interactions between two browser sessions.
+    #
+    def in_session(name, &block)
+      return unless block_given?
+
+      namespace                 = "#{session_namespace}:#{name}"
+      previous_session          = current_session
+      session_pool[namespace] ||= Capybara::Session.new(current_driver, app)
+
+      self.current_session = session_pool[namespace]
+      yield
+    ensure
+      self.current_session = previous_session
+    end
+
   private
+
+    def current_session=(session)
+      session_pool[session_namespace] = session
+    end
+
+    def session_namespace
+      "#{current_driver}#{app.object_id}"
+    end
 
     def session_pool
       @session_pool ||= {}
@@ -78,6 +104,15 @@ module Capybara
   end
 
   extend(self)
+
+  ##
+  #
+  # Shortcut to working in a different session. This is useful when Capybara is included
+  # in a class or module.
+  #
+  def in_session(name, &block)
+    Capybara.in_session(name, &block)
+  end
 
   ##
   #
