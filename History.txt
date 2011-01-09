@@ -4,8 +4,34 @@ Release date:
 
 ### Added
 
-* New click_on alias for click_link_or_button, shorter yet unambiguous.
-* Finders now accept :visible => false which will find all elements regardless of Capybara.ignore_hidden_elements
+* New click_on alias for click_link_or_button, shorter yet unambiguous. [Jonas Nicklas]
+* Finders now accept :visible => false which will find all elements regardless of Capybara.ignore_hidden_elements [Jonas Nicklas]
+* Configure how the server is started via Capybara.server { |app, port| ... }. [John Firebough]
+* Added :between, :maximum and :minimum options to has_selector and friends [James B. Byrne]
+* New Capybara.string util function which allows matchers on arbitrary strings, mostly for helper and view specs [David Chelimsky and Jonas Nicklas]
+* Server boot timeout is now configurable, via Capybara.server_boot_timeout [Adam Cigánek]
+* Built in support for RSpec [Jonas Nicklas]
+* Capybara.using_driver to switch to a different driver temporarily [Jeff Kreeftmeijer]
+* Added Session#first which is somewhat speedier than Session#all, use it internally for speed boost [John Firebaugh]
+
+### Changed
+
+* Session#within now accepts the same arguments as other finders, like Session#all and Session#find [Jonas Nicklas]
+
+### Removed
+
+* All deprecations from 0.4.0 have been removed. [Jonas Nicklas]
+
+### Fixed
+
+* Don't mangle URLs in save_and_open_page when using self-closing tags [Adam Spiers]
+* Catch correct error when server boot times out [Jonas Nicklas]
+* Celerity driver now properly passes through options, making it configurable [Jonas Nicklas]
+* Better implementation of attributes in C[ue]lerity, should fix issues with attributes with strange names [Jonas Nicklas]
+* Session#find no longer swallows errors [Jonas Nicklas]
+* Fix problems with multiple file inputs [Philip Arndt]
+* Submit multipart forms as multipart under rack-test even if they contain no files [Ryan Kinderman]
+* Matchers like has_select? and has_checked_field? now work with dynamically changed values [John Firebaugh]
 
 # Version 0.4.0
 
