@@ -1,0 +1,3 @@
+[submodule "xpath"]
+	path = xpath
+	url = git://github.com/jnicklas/xpath.git
