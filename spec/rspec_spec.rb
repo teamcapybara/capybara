@@ -50,16 +50,68 @@ describe Capybara::RSpec::StringMatchers do
   include Capybara::RSpec::StringMatchers
   before { Capybara.default_selector = :css }
   after  { Capybara.default_selector = :xpath }
+  describe "have_css matcher" do
+    context "with should" do
+      it "passes if has_css? returns true" do
+        "<h1>Text</h1>".should have_css('h1')
+      end
+
+      it "fails if has_css? returns false" do
+        expect do
+          "<h1>Text</h1>".should have_css('h2')
+        end.to raise_error(/expected css .* to return something/)
+      end
+    end
+
+    context "with should_not" do
+      it "passes if has_no_css? returns true" do
+        "<h1>Text</h1>".should_not have_css('h2')
+      end
+
+      it "fails if has_no_css? returns false" do
+        expect do
+          "<h1>Text</h1>".should_not have_css('h1')
+        end.to raise_error(/expected css .* not to return anything/)
+      end
+    end
+  end
+
+  describe "have_xpath matcher" do
+    context "with should" do
+      it "passes if has_xpath? returns true" do
+        "<h1>Text</h1>".should have_xpath('//h1')
+      end
+
+      it "fails if has_xpath? returns false" do
+        expect do
+          "<h1>Text</h1>".should have_xpath('//h2')
+        end.to raise_error(/expected xpath .* to return something/)
+      end
+    end
+
+    context "with should_not" do
+      it "passes if has_no_xpath? returns true" do
+        "<h1>Text</h1>".should_not have_xpath('//h2')
+      end
+
+      it "fails if has_no_xpath? returns false" do
+        expect do
+          "<h1>Text</h1>".should_not have_xpath('//h1')
+        end.to raise_error(/expected xpath .* not to return anything/)
+      end
+    end
+  end
+
   describe "have_selector matcher" do
     context "with should" do
-      it "passes if the String has_selector?" do
+      it "passes if has_selector? returns true" do
         "<h1>Text</h1>".should have_selector('h1')
       end
 
-      it "fails if the String returns false from has_selector?" do
+      it "fails if has_selector? returns false" do
         expect do
           "<h1>Text</h1>".should have_selector('h2')
-        end.to raise_error(/expected selector .* to return/)
+        end.to raise_error(/expected selector .* to return something/)
       end
     end
 
@@ -71,7 +123,7 @@ describe Capybara::RSpec::StringMatchers do
       it "fails if has_no_selector? returns false" do
         expect do
           "<h1>Text</h1>".should_not have_selector('h1')
-        end.to raise_error(/expected selector .* not to return/)
+        end.to raise_error(/expected selector .* not to return anything/)
       end
     end
   end
