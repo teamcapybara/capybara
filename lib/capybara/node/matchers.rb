@@ -207,7 +207,6 @@ module Capybara
       # @return [Boolean]                 Whether it exists
       #
       def has_link?(locator, options={})
-        options = set_link_options options
         has_xpath?(XPath::HTML.link(locator, options))
       end
 
@@ -220,7 +219,6 @@ module Capybara
       # @return [Boolean]            Whether it doesn't exist
       #
       def has_no_link?(locator, options={})
-        options = set_link_options options
         has_no_xpath?(XPath::HTML.link(locator, options))
       end
 
@@ -376,11 +374,6 @@ module Capybara
       #
       def has_no_table?(locator, options={})
         has_no_xpath?(XPath::HTML.table(locator, options))
-      end
-
-      private
-      def set_link_options(options)
-        String===options ? {:href => options} : options
       end
     end
   end
