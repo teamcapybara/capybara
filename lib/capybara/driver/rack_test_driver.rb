@@ -68,6 +68,14 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
       string_node.visible?
     end
 
+    def checked?
+      self[:checked]
+    end
+
+    def selected?
+      self[:selected]
+    end
+
     def path
       native.path
     end
@@ -97,6 +105,21 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   end
 
   class Form < Node
+    # This only needs to inherit from Rack::Test::UploadedFile because Rack::Test checks for
+    # the class specifically when determing whether to consturct the request as multipart.
+    # That check should be based solely on the form element's 'enctype' attribute value,
+    # which should probably be provided to Rack::Test in its non-GET request methods.
+    class NilUploadedFile < Rack::Test::UploadedFile
+      def initialize
+        @empty_file = Tempfile.new("nil_uploaded_file")
+        @empty_file.close
+      end
+
+      def original_filename; ""; end
+      def content_type; "application/octet-stream"; end
+      def path; @empty_file.path; end
+    end
+
     def params(button)
       params = {}
 
@@ -122,14 +145,17 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
         end
       end
       native.xpath(".//input[not(@disabled) and @type='file']").map do |input|
-        unless input['value'].to_s.empty?
-          if multipart?
-            content_type = MIME::Types.type_for(input['value'].to_s).first.to_s
-            file = Rack::Test::UploadedFile.new(input['value'].to_s, content_type)
-            merge_param!(params, input['name'].to_s, file)
-          else
-            merge_param!(params, input['name'].to_s, File.basename(input['value'].to_s))
-          end
+        if multipart?
+          file = \
+            if (value = input['value']).to_s.empty?
+              NilUploadedFile.new
+            else
+              content_type = MIME::Types.type_for(value).first.to_s
+              Rack::Test::UploadedFile.new(value, content_type)
+            end
+          merge_param!(params, input['name'].to_s, file)
+        else
+          merge_param!(params, input['name'].to_s, File.basename(input['value'].to_s))
         end
       end
       merge_param!(params, button[:name], button[:value] || "") if button[:name]

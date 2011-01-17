@@ -3,7 +3,7 @@ require 'capybara/rspec'
 
 Capybara.app = TestApp
 
-describe 'capybara/rspec' do
+describe 'capybara/rspec', :type => :acceptance do
   it "should include Capybara in rpsec" do
     visit('/foo')
     page.body.should include('Another World')
@@ -32,10 +32,16 @@ describe 'capybara/rspec' do
   end
 
   it "switches to the javascript driver when giving it as metadata", :js => true do
-    Capybara.current_driver.should == :selenium
+    Capybara.current_driver.should == Capybara.javascript_driver
   end
 
   it "switches to the given driver when giving it as metadata", :driver => :culerity do
     Capybara.current_driver.should == :culerity
+  end
+end
+
+describe 'capybara/rspec', :type => :other do
+  it "should not include Capybara" do
+    expect { visit('/') }.to raise_error(NoMethodError)
   end
 end

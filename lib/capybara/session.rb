@@ -27,7 +27,7 @@ module Capybara
   #
   class Session
     DSL_METHODS = [
-      :all, :attach_file, :body, :check, :choose, :click_link_or_button, :click_button, :click_link, :current_url, :drag, :evaluate_script,
+      :all, :first, :attach_file, :body, :check, :choose, :click_link_or_button, :click_button, :click_link, :current_url, :drag, :evaluate_script,
       :field_labeled, :fill_in, :find, :find_button, :find_by_id, :find_field, :find_link, :has_content?, :has_css?,
       :has_no_content?, :has_no_css?, :has_no_xpath?, :has_xpath?, :locate, :save_and_open_page, :select, :source, :uncheck,
       :visit, :wait_until, :within, :within_fieldset, :within_table, :within_frame, :within_window, :has_link?, :has_no_link?, :has_button?,
@@ -151,11 +151,11 @@ module Capybara
     #       fill_in('Street', :with => '12 Main Street')
     #     end
     #
-    # @param [:css, :xpath, String] kind    The type of selector or the selector if the second argument is blank
-    # @param [String] selector              The selector within which to execute the given block
+    # @param (see Capybara::Node::Finders#all)
+    # @raise  [Capybara::ElementNotFound]   If the scope can't be found before time expires
     #
-    def within(kind, selector=nil)
-      new_scope = find(kind, selector, :message => "scope '#{selector || kind}' not found on page")
+    def within(*args)
+      new_scope = find(*args)
       begin
         scopes.push(new_scope)
         yield

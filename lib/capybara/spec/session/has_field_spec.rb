@@ -25,6 +25,16 @@ shared_examples_for "has_field" do
         @session.should_not have_field('Wrong Name', :with => 'John')  
         @session.should_not have_field('Description', :with => 'Monkey')
       end
+
+      it "should be true after the field has been filled in with the given value" do
+        @session.fill_in('First Name', :with => 'Jonas')
+        @session.should have_field('First Name', :with => 'Jonas')
+      end
+
+      it "should be false after the field has been filled in with a different value" do
+        @session.fill_in('First Name', :with => 'Jonas')
+        @session.should_not have_field('First Name', :with => 'John')
+      end
     end
   end
 
@@ -54,6 +64,16 @@ shared_examples_for "has_field" do
         @session.should have_no_field('Wrong Name', :with => 'John')  
         @session.should have_no_field('Description', :with => 'Monkey')
       end
+
+      it "should be false after the field has been filled in with the given value" do
+        @session.fill_in('First Name', :with => 'Jonas')
+        @session.should_not have_no_field('First Name', :with => 'Jonas')
+      end
+
+      it "should be true after the field has been filled in with a different value" do
+        @session.fill_in('First Name', :with => 'Jonas')
+        @session.should have_no_field('First Name', :with => 'John')
+      end
     end
   end
 
@@ -73,6 +93,26 @@ shared_examples_for "has_field" do
     it "should be false if no field is on the page" do
       @session.should_not have_checked_field('Does Not Exist')
     end
+
+    it "should be true after an unchecked checkbox is checked" do
+      @session.check('form_pets_cat')
+      @session.should have_checked_field('form_pets_cat')
+    end
+
+    it "should be false after a checked checkbox is unchecked" do
+      @session.uncheck('form_pets_dog')
+      @session.should_not have_checked_field('form_pets_dog')
+    end
+
+    it "should be true after an unchecked radio button is chosen" do
+      @session.choose('gender_male')
+      @session.should have_checked_field('gender_male')
+    end
+
+    it "should be false after another radio button in the group is chosen" do
+      @session.choose('gender_male')
+      @session.should_not have_checked_field('gender_female')
+    end
   end
 
   describe '#has_unchecked_field?' do
@@ -90,6 +130,26 @@ shared_examples_for "has_field" do
 
     it "should be false if no field is on the page" do
       @session.should_not have_unchecked_field('Does Not Exist')
+    end
+
+    it "should be false after an unchecked checkbox is checked" do
+      @session.check('form_pets_cat')
+      @session.should_not have_unchecked_field('form_pets_cat')
+    end
+
+    it "should be true after a checked checkbox is unchecked" do
+      @session.uncheck('form_pets_dog')
+      @session.should have_unchecked_field('form_pets_dog')
+    end
+
+    it "should be false after an unchecked radio button is chosen" do
+      @session.choose('gender_male')
+      @session.should_not have_unchecked_field('gender_male')
+    end
+
+    it "should be true after another radio button in the group is chosen" do
+      @session.choose('gender_male')
+      @session.should have_unchecked_field('gender_female')
     end
   end
 end

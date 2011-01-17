@@ -90,15 +90,20 @@ If you prefer RSpec to using Cucumber, you can use the built in RSpec support:
 
 You can now use it in your examples:
 
-    it "signs me in" do
-      within("#session") do
-        fill_in 'Login', :with => 'user@example.com'
-        fill_in 'Password', :with => 'password'
+    describe "the signup process", :type => :acceptance do
+      it "signs me in" do
+        within("#session") do
+          fill_in 'Login', :with => 'user@example.com'
+          fill_in 'Password', :with => 'password'
+        end
+        click_link 'Sign in'
       end
-      click_link 'Sign in'
     end
 
-RSpec's metadata feature can be used to switch to a different driver. Use the
+Capybara is only included for examples which have the type
+<tt>:acceptance</tt>.
+
+RSpec's metadata feature can be used to switch to a different driver. Use
 <tt>:js => true</tt> to switch to the javascript driver, or provide a
 <tt>:driver</tt> option to switch to one specific driver. For example:
 
@@ -482,6 +487,9 @@ between using different browsers effortlessly:
 Whatever is returned from the block should conform to the API described by
 Capybara::Driver::Base, it does not however have to inherit from this class.
 Gems can use this API to add their own drivers to Capybara.
+
+The {Selenium wiki}[http://code.google.com/p/selenium/wiki/RubyBindings] has
+additional info about how the underlying driver can be configured.
 
 == Gotchas:
 

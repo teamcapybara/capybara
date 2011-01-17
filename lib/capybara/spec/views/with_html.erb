@@ -14,7 +14,7 @@
   et dolore magna aliqua. Ut enim ad minim veniam,
   quis nostrud exercitation <a href="/foo" id="foo">ullamco</a> laboris nisi
   ut aliquip ex ea commodo consequat.
-  <a href="/with_simple_html"><img src="http://www.foobar.sun/dummy_image.jpg" width="20" height="20" alt="awesome image" /></a>
+  <a href="/with_simple_html"><img width="20" height="20" alt="awesome image" /></a>
 </p>
 
 <p class="para" id="second">
@@ -41,8 +41,8 @@
   <a href="/with_html#anchor">Anchor on same page</a>
   <input type="text" value="" id="test_field">
   <input type="text" checked="checked" id="checked_field">
-  <a href="/redirect"><img src="http://www.foobar.sun/dummy_image.jpg" width="20" height="20" alt="very fine image" /></a>
-  <a href="/with_simple_html"><img src="http://www.foobar.sun/dummy_image.jpg" width="20" height="20" alt="fine image" /></a>
+  <a href="/redirect"><img width="20" height="20" alt="very fine image" /></a>
+  <a href="/with_simple_html"><img width="20" height="20" alt="fine image" /></a>
 
   <a href="?query_string=true">Naked Query String</a>
   <% if params[:query_string] %>
@@ -53,6 +53,14 @@
 <div id="hidden" style="display: none;">
   <div id="hidden_via_ancestor">Inside element with hidden ancestor</div>
   <a href="/with_simple_html" title="awesome title" class="simple">hidden link</a>
+</div>
+
+<div style="display: none;">
+  <a class="visibility">hidden link</a>
+</div>
+
+<div>
+  <a class="visibility">visible link</a>
 </div>
 
 <ul>

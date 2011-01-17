@@ -77,6 +77,14 @@ class TestApp < Sinatra::Base
     '<pre id="results">' + params[:form].to_yaml + '</pre>'
   end
 
+  post '/upload_empty' do
+    if params[:form][:file].nil?
+      'Successfully ignored empty file field.'
+    else
+      'Something went wrong.'
+    end
+  end
+
   post '/upload' do
     begin
       buffer = []

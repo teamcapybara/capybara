@@ -26,6 +26,26 @@ shared_examples_for "has_select" do
         @session.should_not have_select('Underwear', :selected => ['Briefs', 'Nonexistant'])
         @session.should_not have_select('Underwear', :selected => ['Briefs', 'Boxers'])
       end
+
+      it "should be true after the given value is selected" do
+        @session.select('Swedish', :from => 'Locale')
+        @session.should have_select('Locale', :selected => 'Swedish')
+      end
+
+      it "should be false after a different value is selected" do
+        @session.select('Swedish', :from => 'Locale')
+        @session.should_not have_select('Locale', :selected => 'English')
+      end
+
+      it "should be true after the given values are selected" do
+        @session.select('Boxers', :from => 'Underwear')
+        @session.should have_select('Underwear', :selected => ['Briefs', 'Boxers', 'Commando'])
+      end
+
+      it "should be false after one of the values is unselected" do
+        @session.unselect('Briefs', :from => 'Underwear')
+        @session.should_not have_select('Underwear', :selected => ['Briefs', 'Commando'])
+      end
     end
 
     context 'with options' do
@@ -68,6 +88,26 @@ shared_examples_for "has_select" do
         @session.should have_no_select('City', :selected => 'Not there')
         @session.should have_no_select('Underwear', :selected => ['Briefs', 'Nonexistant'])
         @session.should have_no_select('Underwear', :selected => ['Briefs', 'Boxers'])
+      end
+
+      it "should be false after the given value is selected" do
+        @session.select('Swedish', :from => 'Locale')
+        @session.should_not have_no_select('Locale', :selected => 'Swedish')
+      end
+
+      it "should be true after a different value is selected" do
+        @session.select('Swedish', :from => 'Locale')
+        @session.should have_no_select('Locale', :selected => 'English')
+      end
+
+      it "should be false after the given values are selected" do
+        @session.select('Boxers', :from => 'Underwear')
+        @session.should_not have_no_select('Underwear', :selected => ['Briefs', 'Boxers', 'Commando'])
+      end
+
+      it "should be true after one of the values is unselected" do
+        @session.unselect('Briefs', :from => 'Underwear')
+        @session.should have_no_select('Underwear', :selected => ['Briefs', 'Commando'])
       end
     end
 

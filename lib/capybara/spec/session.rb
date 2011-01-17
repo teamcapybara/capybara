@@ -42,6 +42,7 @@ shared_examples_for "session" do
   end
 
   it_should_behave_like "all"
+  it_should_behave_like "first"
   it_should_behave_like "attach_file"
   it_should_behave_like "check"
   it_should_behave_like "choose"

@@ -1,4 +1,4 @@
-shared_examples_for "within" do  
+shared_examples_for "within" do
   describe '#within' do
     before do
       @session.visit('/with_scope')
@@ -7,6 +7,13 @@ shared_examples_for "within" do
     context "with CSS selector" do
       it "should click links in the given scope" do
         @session.within(:css, "ul li[contains('With Simple HTML')]") do
+          @session.click_link('Go')
+        end
+        @session.body.should include('Bar')
+      end
+
+      it "should accept additional options" do
+        @session.within(:css, "ul li", :text => 'With Simple HTML') do
           @session.click_link('Go')
         end
         @session.body.should include('Bar')
@@ -32,14 +39,14 @@ shared_examples_for "within" do
     end
 
     context "with the default selector set to CSS" do
-      before { Capybara.default_selector = :css } 
+      before { Capybara.default_selector = :css }
       it "should use CSS" do
         @session.within("ul li[contains('With Simple HTML')]") do
           @session.click_link('Go')
         end
         @session.body.should include('Bar')
       end
-      after { Capybara.default_selector = :xpath } 
+      after { Capybara.default_selector = :xpath }
     end
 
     context "with click_link" do

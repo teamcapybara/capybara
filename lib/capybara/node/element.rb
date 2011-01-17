@@ -114,6 +114,26 @@ module Capybara
 
       ##
       #
+      # Whether or not the element is checked.
+      #
+      # @return [Boolean]     Whether the element is checked
+      #
+      def checked?
+        base.checked?
+      end
+
+      ##
+      #
+      # Whether or not the element is selected.
+      #
+      # @return [Boolean]     Whether the element is selected
+      #
+      def selected?
+        base.selected?
+      end
+
+      ##
+      #
       # An XPath expression describing where on the page the element can be found
       #
       # @return [String]      An XPath expression
