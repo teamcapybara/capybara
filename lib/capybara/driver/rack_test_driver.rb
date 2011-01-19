@@ -249,7 +249,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   alias_method :source, :body
 
   def reset!
-    clear_cookies
+    clear_rack_mock_session
   end
 
   def get(*args, &block); reset_cache; super; end
@@ -273,6 +273,13 @@ private
 
   def build_rack_mock_session # :nodoc:
     Rack::MockSession.new(app, Capybara.default_host || "www.example.com")
+  end
+
+  # Rack::Test::Methods does not provide methods for manipulating the session
+  # list so these must be manipulated directly.
+  def clear_rack_mock_session
+    @_rack_test_sessions = nil
+    @_rack_mock_sessions = nil
   end
 
   def request_path
