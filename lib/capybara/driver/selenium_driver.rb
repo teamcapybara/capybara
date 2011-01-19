@@ -155,6 +155,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 private
 
   def url(path)
+    path = "/#{path}" unless path =~ /^\//
     rack_server.url(path)
   end
 

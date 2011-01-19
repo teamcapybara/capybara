@@ -14,6 +14,11 @@ shared_examples_for 'driver' do
       @driver.visit('/foo')
       @driver.current_url.should include('/foo')
     end
+
+    it "should prefix paths with slashes to make sure the url is valid" do
+      @driver.visit('foo')
+      @driver.current_url.should include('/foo')
+    end
   end
 
   describe '#body' do
