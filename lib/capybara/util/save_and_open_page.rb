@@ -1,7 +1,13 @@
 module Capybara
   class << self
     def save_and_open_page(html)
-      name = File.join(*[Capybara.save_and_open_page_path, "capybara-#{Time.new.strftime("%Y%m%d%H%M%S")}.html"].compact)
+      saved_page = save_page(html)
+      open_in_browser(saved_page)
+    end
+
+    def save_page(html, filename = nil)
+      filename = "capybara-#{Time.new.strftime("%Y%m%d%H%M%S")}.html" unless filename
+      name = File.join(*[Capybara.save_and_open_page_path, filename].compact)
 
       unless Capybara.save_and_open_page_path.nil? || File.directory?(Capybara.save_and_open_page_path )
         FileUtils.mkdir_p(Capybara.save_and_open_page_path)
@@ -11,8 +17,13 @@ module Capybara
       tempfile = File.new(name,'w')
       tempfile.write(rewrite_css_and_image_references(html))
       tempfile.close
+      tempfile.path
+    end
 
-      open_in_browser(tempfile.path)
+    def delete_saved_pages
+      Dir.glob File.join(Capybara.save_and_open_page_path, '*.html') do |filename|
+        File.delete(filename)
+      end
     end
 
   protected

@@ -13,6 +13,7 @@ Release date:
 * Built in support for RSpec [Jonas Nicklas]
 * Capybara.using_driver to switch to a different driver temporarily [Jeff Kreeftmeijer]
 * Added Session#first which is somewhat speedier than Session#all, use it internally for speed boost [John Firebaugh]
+* Capybara.save_failed_scenarios to keep a copy of the html when a scenario fails [Yves Senn]
 
 ### Changed
 

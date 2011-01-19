@@ -14,6 +14,21 @@ describe Capybara do
     end
   end
 
+  describe "save_failed_scenarios" do
+    after do
+      Capybara.save_failed_scenarios = true
+    end
+
+    it "should be true by default" do
+      Capybara.save_failed_scenarios.should == true
+    end
+
+    it "should be changeable" do
+      Capybara.save_failed_scenarios = false
+      Capybara.save_failed_scenarios.should == false
+    end
+  end
+
   describe '.register_driver' do
     it "should add a new driver" do
       Capybara.register_driver :schmoo do |app|

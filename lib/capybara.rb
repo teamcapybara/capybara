@@ -15,7 +15,7 @@ module Capybara
     attr_accessor :asset_root, :app_host, :run_server, :default_host
     attr_accessor :server_port, :server_boot_timeout
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
-    attr_accessor :save_and_open_page_path
+    attr_accessor :save_and_open_page_path, :save_failed_scenarios
 
     ##
     #
@@ -212,6 +212,7 @@ Capybara.configure do |config|
   config.default_selector = :css
   config.default_wait_time = 2
   config.ignore_hidden_elements = false
+  config.save_failed_scenarios = true
 end
 
 Capybara.register_driver :rack_test do |app|

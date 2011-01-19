@@ -3,7 +3,27 @@ require 'spec_helper'
 require 'capybara/util/save_and_open_page'
 require 'launchy'
 describe Capybara do
+
   describe ".save_and_open_page" do
+    before do
+      @name = 'tmp/capybara-test.html'
+      @html = <<-HTML
+        <html>
+          <head>
+
+          </head>
+        </html>
+      HTML
+    end
+
+    it "should open the file in the browser" do
+      Capybara.should_receive(:save_page).and_return(@name)
+      Capybara.should_receive(:open_in_browser).with(@name)
+      Capybara.save_and_open_page(@html)
+    end
+  end
+
+  describe ".save_page" do
     before do
       @time = Time.new.strftime("%Y%m%d%H%M%S")
 
@@ -56,12 +76,11 @@ describe Capybara do
 
       it "should create a new temporary file" do
         @temp_file.should_receive(:write).with @html
-        Capybara.save_and_open_page @html
+        Capybara.save_page @html
       end
 
       it "should open the file in the browser" do
-        Capybara.should_receive(:open_in_browser).with(@name)
-        Capybara.save_and_open_page @html
+        Capybara.save_page(@html).should == @name
       end
     end
 
@@ -81,12 +100,11 @@ describe Capybara do
         File.should_receive(:new).and_return @temp_file
 
         @temp_file.should_receive(:write).with @html
-        Capybara.save_and_open_page @html
+        Capybara.save_page @html
       end
 
-      it "should open the file - in the custom path - in the browser" do
-        Capybara.should_receive(:open_in_browser).with(@custom_name)
-        Capybara.save_and_open_page @html
+      it "should return the path to the file - in the custom path" do
+        Capybara.save_page(@html).should == @custom_name
       end
 
       it "should be possible to configure output path" do
@@ -97,6 +115,25 @@ describe Capybara do
             Capybara.save_and_open_page_path.should == File.join('tmp', 'capybara')
           }.should_not raise_error
         Capybara.save_and_open_page_path = default_setting
+      end
+    end
+
+    describe "custom file name" do
+      before do
+        @custom_name = 'cucumber-scenario.html'
+        @temp_file.stub!(:path).and_return(@custom_name)
+        @save_page_path = File.join('tmp','capybara')
+        Capybara.should_receive(:save_and_open_page_path).
+          at_least(:once).
+          and_return(@save_page_path)
+
+        File.should_receive(:new).and_return @temp_file
+      end
+
+      it "should use the passed argument as file name" do
+        File.should_receive(:exist?).with(File.join @save_page_path, @custom_name).and_return true
+
+        Capybara.save_page(@html, @custom_name)
       end
     end
 
@@ -140,7 +177,7 @@ describe Capybara do
       def test_with_directories(directories)
         @temp_file.should_receive(:write) \
           .with expected_html_for_asset_root_with(directories)
-        Capybara.save_and_open_page @html
+        Capybara.save_page @html
       end
 
       context "asset_root contains some directories" do
@@ -154,6 +191,23 @@ describe Capybara do
           test_with_directories([ ])
         end
       end
+    end
+  end
+
+  describe "#delete_saved_pages" do
+    before do
+      @path = File.join 'tmp', 'failed_scenarios'
+      Capybara.should_receive(:save_and_open_page_path).and_return @path
+    end
+
+    it "should remove all html files in the save_and_open_page_path directory" do
+      Dir.should_receive(:glob).with(File.join(@path, '*.html')).
+        and_yield('one.html').
+        and_yield('two.html')
+      File.should_receive(:delete).with('one.html')
+      File.should_receive(:delete).with('two.html')
+
+      Capybara.delete_saved_pages
     end
   end
 end
