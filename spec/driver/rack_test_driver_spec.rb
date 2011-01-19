@@ -53,4 +53,32 @@ describe Capybara::Driver::RackTest do
   it_should_behave_like "driver with status code support"
   it_should_behave_like "driver with cookies support"
   it_should_behave_like "driver with infinite redirect detection"
+
+  describe '#reset!' do
+    it { @driver.visit('/foo'); lambda { @driver.reset! }.should change(@driver, :current_url).to('') }
+
+    it 'should reset headers' do
+      @driver.header('FOO', 'BAR')
+      @driver.visit('/get_header')
+      @driver.body.should include('BAR')
+
+      @driver.reset!
+      @driver.visit('/get_header')
+      @driver.body.should_not include('BAR')
+    end
+
+    it 'should reset response' do
+      @driver.visit('/foo')
+      lambda { @driver.response }.should_not raise_error
+      @driver.reset!
+      lambda { @driver.response }.should raise_error
+    end
+
+    it 'should request response' do
+      @driver.visit('/foo')
+      lambda { @driver.request }.should_not raise_error
+      @driver.reset!
+      lambda { @driver.request }.should raise_error
+    end
+  end
 end
