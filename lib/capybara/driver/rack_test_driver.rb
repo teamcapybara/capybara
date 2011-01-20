@@ -123,39 +123,43 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     def params(button)
       params = {}
 
-      native.xpath(".//input[not(@disabled) and (not(@type) or (@type!='radio' and @type!='file' and @type!='checkbox' and @type!='submit' and @type!='image'))]").map do |input|
-        merge_param!(params, input['name'].to_s, input['value'].to_s)
-      end
-      native.xpath(".//textarea[not(@disabled)]").map do |textarea|
-        merge_param!(params, textarea['name'].to_s, textarea.text.to_s)
-      end
-      native.xpath(".//input[not(@disabled) and (@type='radio' or @type='checkbox')]").map do |input|
-        merge_param!(params, input['name'].to_s, input['value'].to_s) if input['checked']
-      end
-      native.xpath(".//select[not(@disabled)]").map do |select|
-        if select['multiple'] == 'multiple'
-          options = select.xpath(".//option[@selected]")
-          options.each do |option|
-            merge_param!(params, select['name'].to_s, (option['value'] || option.text).to_s)
-          end
-        else
-          option = select.xpath(".//option[@selected]").first
-          option ||= select.xpath('.//option').first
-          merge_param!(params, select['name'].to_s, (option['value'] || option.text).to_s) if option
-        end
-      end
-      native.xpath(".//input[not(@disabled) and @type='file']").map do |input|
-        if multipart?
-          file = \
-            if (value = input['value']).to_s.empty?
-              NilUploadedFile.new
+      native.xpath("(.//input|.//select|.//textarea)[not(@disabled)]").map do |field|
+        case field.name
+        when 'input'
+          if %w(radio checkbox).include? field['type']
+            merge_param!(params, field['name'].to_s, field['value'].to_s) if field['checked']
+          elsif %w(submit image).include? field['type']
+            # TO DO identify the click button here (in document order, rather
+            # than leaving until the end of the params)
+          elsif field['type'] =='file'
+            if multipart?
+              file = \
+                if (value = field['value']).to_s.empty?
+                  NilUploadedFile.new
+                else
+                  content_type = MIME::Types.type_for(value).first.to_s
+                  Rack::Test::UploadedFile.new(value, content_type)
+                end
+              merge_param!(params, field['name'].to_s, file)
             else
-              content_type = MIME::Types.type_for(value).first.to_s
-              Rack::Test::UploadedFile.new(value, content_type)
+              merge_param!(params, field['name'].to_s, File.basename(field['value'].to_s))
             end
-          merge_param!(params, input['name'].to_s, file)
-        else
-          merge_param!(params, input['name'].to_s, File.basename(input['value'].to_s))
+          else
+            merge_param!(params, field['name'].to_s, field['value'].to_s)
+          end
+        when 'select'
+          if field['multiple'] == 'multiple'
+            options = field.xpath(".//option[@selected]")
+            options.each do |option|
+              merge_param!(params, field['name'].to_s, (option['value'] || option.text).to_s)
+            end
+          else
+            option = field.xpath(".//option[@selected]").first
+            option ||= field.xpath('.//option').first
+            merge_param!(params, field['name'].to_s, (option['value'] || option.text).to_s) if option
+          end
+        when 'textarea'
+          merge_param!(params, field['name'].to_s, field.text.to_s)
         end
       end
       merge_param!(params, button[:name], button[:value] || "") if button[:name]
