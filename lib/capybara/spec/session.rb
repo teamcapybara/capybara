@@ -75,18 +75,25 @@ shared_examples_for "session" do
     @session.visit('/form')
     @session.fill_in('address1_city', :with =>'Paris')
     @session.fill_in('address1_street', :with =>'CDG')
+    @session.fill_in('address1_street', :with =>'CDG')
+    @session.select("France", :from => 'address1_country')
+
     @session.fill_in('address2_city', :with => 'Mikolaiv')
     @session.fill_in('address2_street', :with => 'PGS')
+    @session.select("Ukraine", :from => 'address2_country')
+
     @session.click_button "awesome"
 
     addresses=extract_results(@session)["addresses"]
     addresses.should have(2).addresses
 
-    addresses[0]["street"].should == 'CDG'
-    addresses[0]["city"].should   == 'Paris'
+    addresses[0]["street"].should   == 'CDG'
+    addresses[0]["city"].should     == 'Paris'
+    addresses[0]["country"].should  == 'France'
 
-    addresses[1]["street"].should == 'PGS'
-    addresses[1]["city"].should   == 'Mikolaiv'
+    addresses[1]["street"].should   == 'PGS'
+    addresses[1]["city"].should     == 'Mikolaiv'
+    addresses[1]["country"].should  == 'Ukraine'
   end
 
 end
