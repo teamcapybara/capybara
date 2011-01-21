@@ -72,9 +72,16 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 1.0)
   capybara!
+  celerity (>= 0.7.9)
+  culerity (>= 0.2.4)
   fuubar (>= 0.0.1)
   launchy (>= 0.3.5)
+  mime-types (>= 1.16)
+  nokogiri (>= 1.3.3)
+  rack (>= 1.0.0)
+  rack-test (>= 0.5.4)
   rspec (>= 2.0.0)
+  selenium-webdriver (>= 0.0.27)
   sinatra (>= 0.9.4)
   xpath!
   yard (>= 0.5.8)
