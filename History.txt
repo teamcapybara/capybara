@@ -32,6 +32,8 @@ Release date:
 * Fix problems with multiple file inputs [Philip Arndt]
 * Submit multipart forms as multipart under rack-test even if they contain no files [Ryan Kinderman]
 * Matchers like has_select? and has_checked_field? now work with dynamically changed values [John Firebaugh]
+* Preserve order of rack params
+* RackTest#reset! is more thorough
 
 # Version 0.4.0
 
