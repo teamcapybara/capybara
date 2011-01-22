@@ -102,10 +102,6 @@ module Capybara
 
   private
 
-    def current_session=(session)
-      session_pool[session_namespace] = session
-    end
-
     def session_namespace
       "#{current_driver}#{app.object_id}"
     end
