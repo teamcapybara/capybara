@@ -9,6 +9,7 @@ describe Capybara do
   end
 
   after do
+    Capybara.session_name = nil
     Capybara.default_driver = nil
     Capybara.use_default_driver
   end
@@ -123,46 +124,47 @@ describe Capybara do
       Capybara.current_session.object_id.should_not == object_id
       Capybara.current_session.app.should == Capybara.app
     end
+
+    it "should change when the session name changes" do
+      object_id = Capybara.current_session.object_id
+      Capybara.session_name = :administrator
+      Capybara.session_name.should == :administrator
+      Capybara.current_session.object_id.should_not == object_id
+      Capybara.session_name = :default
+      Capybara.session_name.should == :default
+      Capybara.current_session.object_id.should == object_id
+    end
   end
 
   describe "#in_session" do
-    let!(:default_session) { Capybara.current_session }
-
-    before do
-      @object_ids = { :default => default_session.object_id }
-    end
-
-    it "should create unique sessions by name" do
-      Capybara.in_session(:bob) { @object_ids[:bob] = Capybara.current_session.object_id }
-      Capybara.in_session(:sue) { @object_ids[:sue] = Capybara.current_session.object_id }
-
-      @object_ids.values.uniq.length.should == 3
-    end
-
-    it "should cache sessions by name" do
-      Capybara.in_session(:bob) { @object_ids[:bob] = Capybara.current_session.object_id }
-      Capybara.in_session(:sue) { @object_ids[:sue] = Capybara.current_session.object_id }
-
-      Capybara.in_session(:bob) do
-        @object_ids[:bob].should == Capybara.current_session.object_id
+    it "should change the session name for the duration of the block" do
+      Capybara.session_name.should == :default
+      Capybara.in_session(:administrator) do
+        Capybara.session_name.should == :administrator
       end
-      Capybara.in_session(:sue) do
-        @object_ids[:sue].should == Capybara.current_session.object_id
-      end
+      Capybara.session_name.should == :default
     end
 
     it "should reset the session to the default, even if an exception occurs" do
       begin
-        Capybara.in_session(:raise) { raise }
+        Capybara.in_session(:raise) do
+          raise
+        end
       rescue Exception
       end
-      Capybara.current_session.should == default_session
+      Capybara.session_name.should == :default
     end
 
     it "should yield the passed block" do
       called = false
-      Capybara.in_session(:other) { called = true }
+      Capybara.in_session(:administrator) { called = true }
       called.should == true
+    end
+  end
+
+  describe "#session_name" do
+    it "should default to :default" do
+      Capybara.session_name.should == :default
     end
   end
 

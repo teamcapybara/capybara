@@ -2,7 +2,7 @@ require 'capybara'
 
 module Capybara
   class << self
-    attr_writer :default_driver, :current_driver, :javascript_driver
+    attr_writer :default_driver, :current_driver, :javascript_driver, :session_name
 
     attr_accessor :app
 
@@ -57,7 +57,13 @@ module Capybara
     # @return [Capybara::Session]     The currently used session
     #
     def current_session
-      session_pool[session_namespace] ||= Capybara::Session.new(current_driver, app)
+      if session_name == :default
+        namespace = session_namespace
+      else
+        namespace = "#{session_namespace}:#{session_name}"
+      end
+
+      session_pool[namespace] ||= Capybara::Session.new(current_driver, app)
     end
 
     ##
@@ -72,20 +78,26 @@ module Capybara
 
     ##
     #
+    # The current session name.
+    #
+    # @return [Symbol]    The name of the currently used session.
+    #
+    def session_name
+      @session_name ||= :default
+    end
+
+    ##
+    #
     # Switch to a different session, referenced by name, execute the provided block and return to
     # the default session. This is useful for testing interactions between two browser sessions.
     #
     def in_session(name, &block)
       return unless block_given?
 
-      namespace                 = "#{session_namespace}:#{name}"
-      previous_session          = current_session
-      session_pool[namespace] ||= Capybara::Session.new(current_driver, app)
-
-      self.current_session = session_pool[namespace]
+      self.session_name = name
       yield
     ensure
-      self.current_session = previous_session
+      self.session_name = :default
     end
 
   private
