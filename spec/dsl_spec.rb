@@ -136,10 +136,10 @@ describe Capybara do
     end
   end
 
-  describe "#in_session" do
+  describe "#using_session" do
     it "should change the session name for the duration of the block" do
       Capybara.session_name.should == :default
-      Capybara.in_session(:administrator) do
+      Capybara.using_session(:administrator) do
         Capybara.session_name.should == :administrator
       end
       Capybara.session_name.should == :default
@@ -147,7 +147,7 @@ describe Capybara do
 
     it "should reset the session to the default, even if an exception occurs" do
       begin
-        Capybara.in_session(:raise) do
+        Capybara.using_session(:raise) do
           raise
         end
       rescue Exception
@@ -157,7 +157,7 @@ describe Capybara do
 
     it "should yield the passed block" do
       called = false
-      Capybara.in_session(:administrator) { called = true }
+      Capybara.using_session(:administrator) { called = true }
       called.should == true
     end
   end
@@ -196,13 +196,13 @@ describe Capybara do
       foo.page.body.should include('Another World')
     end
 
-    it "should provide an 'in_session' shortcut" do
+    it "should provide an 'using_session' shortcut" do
       klass = Class.new do
         include Capybara
       end
-      Capybara.should_receive(:in_session).with(:name)
+      Capybara.should_receive(:using_session).with(:name)
       foo = klass.new
-      foo.in_session(:name)
+      foo.using_session(:name)
     end
   end
 

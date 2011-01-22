@@ -88,12 +88,9 @@ module Capybara
 
     ##
     #
-    # Switch to a different session, referenced by name, execute the provided block and return to
-    # the default session. This is useful for testing interactions between two browser sessions.
+    # Yield a block using a specific session name.
     #
-    def in_session(name, &block)
-      return unless block_given?
-
+    def using_session(name)
       self.session_name = name
       yield
     ensure
@@ -118,8 +115,8 @@ module Capybara
   # Shortcut to working in a different session. This is useful when Capybara is included
   # in a class or module.
   #
-  def in_session(name, &block)
-    Capybara.in_session(name, &block)
+  def using_session(name, &block)
+    Capybara.using_session(name, &block)
   end
 
   ##
