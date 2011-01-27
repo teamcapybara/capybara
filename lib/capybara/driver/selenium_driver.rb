@@ -91,7 +91,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   def browser
     unless @browser
-      @browser = Selenium::WebDriver.for(options[:browser] || :firefox, options)
+      @browser = Selenium::WebDriver.for(options[:browser] || :firefox, options.reject{|k,v| k==:browser})
       at_exit do
         @browser.quit
       end
