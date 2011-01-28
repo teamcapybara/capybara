@@ -57,13 +57,7 @@ module Capybara
     # @return [Capybara::Session]     The currently used session
     #
     def current_session
-      if session_name == :default
-        namespace = session_namespace
-      else
-        namespace = "#{session_namespace}:#{session_name}"
-      end
-
-      session_pool[namespace] ||= Capybara::Session.new(current_driver, app)
+      session_pool["#{current_driver}:#{session_name}:#{app.object_id}"] ||= Capybara::Session.new(current_driver, app)
     end
 
     ##
@@ -98,10 +92,6 @@ module Capybara
     end
 
   private
-
-    def session_namespace
-      "#{current_driver}#{app.object_id}"
-    end
 
     def session_pool
       @session_pool ||= {}
