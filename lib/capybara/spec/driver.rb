@@ -26,6 +26,20 @@ shared_examples_for 'driver' do
       @driver.visit('/with_simple_html')
       @driver.body.should include('Bar')
     end
+
+    if "".respond_to?(:encoding)
+      context "encoding of response between ascii and utf8" do
+        it "should be valid with html entities" do
+          @driver.visit('/with_html_entities')
+          lambda { @driver.body.encode!("UTF-8") }.should_not raise_error
+        end
+
+        it "should be valid without html entities" do
+          @driver.visit('/with_html')
+          lambda { @driver.body.encode!("UTF-8") }.should_not raise_error
+        end
+      end
+    end
   end
 
   describe '#find' do
