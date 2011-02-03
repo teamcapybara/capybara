@@ -90,7 +90,7 @@ by adding the following line (typically to your <tt>spec_helper.rb</tt> file):
 
 You can now use it in your examples:
 
-    describe "the signup process", :type => :acceptance do
+    describe "the signup process", :type => :request do
       it "signs me in" do
         within("#session") do
           fill_in 'Login', :with => 'user@example.com'
@@ -100,9 +100,14 @@ You can now use it in your examples:
       end
     end
 
-Capybara is only included for examples which have the type
-<tt>:acceptance</tt>.  (Note that if you use the <tt>rspec-rails</tt> gem,
-Capybara is also included in controller, request, and mailer examples.)
+Capybara is only included for examples with <tt>:type => :request</tt> (or
+<tt>:acceptance</tt> for compatibility).
+
+Note that if you use the <tt>rspec-rails</tt> gem, <tt>:type => :request</tt>
+is automatically set on all files under <tt>spec/requests</tt> (and also
+<tt>spec/integration</tt>), so that's a good directory to place your Capybara specs
+in.  <tt>rspec-rails</tt> will also automatically include Capybara in
+<tt>:controller</tt> and <tt>:mailer</tt> examples.
 
 RSpec's metadata feature can be used to switch to a different driver. Use
 <tt>:js => true</tt> to switch to the javascript driver, or provide a
