@@ -3,8 +3,8 @@ require 'capybara/rspec'
 
 Capybara.app = TestApp
 
-describe 'capybara/rspec', :type => :acceptance do
-  it "should include Capybara in rpsec" do
+describe 'capybara/rspec', :type => :request do
+  it "should include Capybara in rspec" do
     visit('/foo')
     page.body.should include('Another World')
   end
