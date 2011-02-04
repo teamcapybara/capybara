@@ -11,8 +11,8 @@ tests and currently comes bundled with rack-test, Culerity, Celerity and Seleniu
 support built in. env.js support is available as the
 {capybara-envjs gem}[http://github.com/smparkes/capybara-envjs].
 
-Online documentation is availbable
-{at rdoc.info}[http://rdoc.info/projects/jnicklas/capybara].
+A complete reference is available at
+{at rubydoc.info}[http://rubydoc.info/github/jnicklas/capybara/master].
 
 == Install:
 
@@ -125,7 +125,7 @@ You'll need to roll your own for earlier versions of RSpec.
 You can use the built-in Rails support to easily get Capybara running with
 Rails:
 
-    requires 'capybara/rails'
+    require 'capybara/rails'
 
 == Using Capybara with Rack
 
@@ -182,15 +182,22 @@ Ruby 1.8.7 at this time.
 
 == The DSL
 
-Capybara's DSL is inspired by Webrat. While backwards compatibility is retained
-in a lot of cases, there are certain important differences.
+Capybara's DSL (domain-specific language) is inspired by Webrat. While
+backwards compatibility is retained in a lot of cases, there are certain
+important differences.  Unlike in Webrat, all searches in Capybara are *case
+sensitive*. This is because Capybara heavily uses XPath, which doesn't support
+case insensitivity.
 
-Unlike in Webrat, all searches in Capybara are *case sensitive*. This is because
-Capybara heavily uses XPath, which doesn't support case insensitivity.
+For a full reference of the DSL, check
+{Capybara::Session}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session]
+and the modules defined in
+{Capybara::Node}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node].
 
 === Navigating
 
-You can use the <tt>visit</tt> method to navigate to other pages:
+You can use the
+{<tt>visit</tt>}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#visit-instance_method]
+method to navigate to other pages:
 
     visit('/projects')
     visit(post_comments_path(post))
@@ -198,7 +205,9 @@ You can use the <tt>visit</tt> method to navigate to other pages:
 The visit method only takes a single parameter, the request method is *always*
 GET.
 
-You can get the current path of the browsing session for test assertions:
+You can get the {current
+path}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#current_path-instance_method]
+of the browsing session for test assertions:
 
     current_path.should == post_comments_path(post)
 
@@ -210,13 +219,14 @@ automatically follows any redirects, and submits forms associated with buttons.
     click_link('id-of-link')
     click_link('Link Text')
     click_button('Save')
-    click_link_or_button('Link Text')
-    click_link_or_button('Button Value')
+    click_on('Link Text')  # clicks on either links or buttons
+    click_on('Button Value')
 
 === Interacting with forms
 
 Forms are everywhere in webapps, there are a number of tools for interacting
-with the various form elements:
+with the various form elements (see
+{Capybara::Node::Actions}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Actions]):
 
     fill_in('First Name', :with => 'John')
     fill_in('Password', :with => 'Seekrit')
@@ -230,7 +240,8 @@ with the various form elements:
 === Querying
 
 Capybara has a rich set of options for querying the page for the existence of
-certain elements, and working with and manipulating those elements.
+certain elements, and working with and manipulating those elements (see
+{Capybara::Node::Matchers}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Matchers]).
 
     page.has_selector?('table tr')
     page.has_selector?(:xpath, '//table/tr')
@@ -257,7 +268,8 @@ for an explanation.
 
 === Finding
 
-You can also find specific elements, in order to manipulate them:
+You can also find specific elements, in order to manipulate them (see
+{Capybara::Node::Finders}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Finders]):
 
     find_field('First Name').value
     find_link('Hello').visible?
@@ -280,8 +292,9 @@ to specific parts of the page:
 
 Capybara makes it possible to restrict certain actions, such as interacting with
 forms or clicking links and buttons, to within a specific area of the page. For
-this purpose you can use the generic <tt>within</tt> method. Optionally you can
-specify which kind of selector to use.
+this purpose you can use the generic
+{<tt>within</tt>}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#within-instance_method]
+method. Optionally you can specify which kind of selector to use.
 
     within("li#employee") do
       fill_in 'Name', :with => 'Jimmy'
@@ -416,8 +429,8 @@ For ultimate control, you can instantiate and use a session manually.
 == XPath, CSS and selectors
 
 Capybara does not try to guess what kind of selector you are going to give it,
-if you want to use XPath with your 'within' declarations for example, you'll need
-to do:
+and will always use CSS by default.  If you want to use XPath, you'll need to
+do:
 
     within(:xpath, '//ul/li') { ... }
     find(:xpath, '//ul/li').text
@@ -427,6 +440,8 @@ Alternatively you can set the default selector to XPath:
 
     Capybara.default_selector = :xpath
     find('//ul/li').text
+
+Before doing this, keep in mind that XPath tends to be slower than CSS.
 
 Capybara allows you to add custom selectors, which can be very useful if you
 find yourself using the same kinds of selectors very often:
