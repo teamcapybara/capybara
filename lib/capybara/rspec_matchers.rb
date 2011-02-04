@@ -13,7 +13,11 @@ module Capybara
         end
 
         failure_message_for_should do |actual|
-          "expected #{normalized[:selector].name} #{normalized[:locator].inspect} to return something from:\n#{actual.inspect}"
+          if normalized[:selector].failure_message
+            normalized[:selector].failure_message.call(wrap(actual))
+          else
+            "expected #{normalized[:selector].name} #{normalized[:locator].inspect} to return something from:\n#{actual.inspect}"
+          end
         end
 
         failure_message_for_should_not do |actual|
