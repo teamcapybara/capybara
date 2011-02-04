@@ -16,18 +16,24 @@ module Capybara
       end
 
       def normalize(name_or_locator, locator=nil)
-        xpath = if locator
-          all[name_or_locator.to_sym].call(locator)
+        result = {}
+
+        if locator
+          result[:selector] = all[name_or_locator]
+          result[:locator] = locator
         else
-          selector = all.values.find { |s| s.match?(name_or_locator) }
-          selector ||= all[Capybara.default_selector]
-          selector.call(name_or_locator)
+          result[:selector] = all.values.find { |s| s.match?(name_or_locator) }
+          result[:locator] = name_or_locator
         end
+        result[:selector] ||= all[Capybara.default_selector]
+
+        xpath = result[:selector].call(result[:locator])
         if xpath.respond_to?(:to_xpaths)
-          xpath.to_xpaths
+          result[:xpaths] = xpath.to_xpaths
         else
-          [xpath.to_s].flatten
+          result[:xpaths] = [xpath.to_s].flatten
         end
+        result
       end
     end
 
@@ -44,6 +50,11 @@ module Capybara
     def match(&block)
       @match = block if block
       @match
+    end
+
+    def failure_message(&block)
+      @failure_message = block if block
+      @failure_message
     end
 
     def call(locator)

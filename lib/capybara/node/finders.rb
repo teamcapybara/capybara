@@ -29,8 +29,11 @@ module Capybara
         rescue TimeoutError
         end
         unless node
-          options = if args.last.is_a?(Hash) then args.last else {} end
-          raise Capybara::ElementNotFound, options[:message] || "Unable to find '#{args[1] || args[0]}'"
+          options = extract_normalized_options(args)
+          normalized = Capybara::Selector.normalize(*args)
+          message = options[:message] || "Unable to find #{normalized[:selector].name} #{normalized[:locator].inspect}"
+          message = normalized[:selector].failure_message.call(self) if normalized[:selector].failure_message
+          raise Capybara::ElementNotFound, message
         end
         return node
       end
@@ -117,7 +120,7 @@ module Capybara
       def all(*args)
         options = extract_normalized_options(args)
 
-        Capybara::Selector.normalize(*args).
+        Capybara::Selector.normalize(*args)[:xpaths].
           map    { |path| find_in_base(path) }.flatten.
           select { |node| matches_options(node, options) }.
           map    { |node| convert_element(node) }
@@ -139,7 +142,7 @@ module Capybara
       def first(*args)
         options = extract_normalized_options(args)
 
-        Capybara::Selector.normalize(*args).each do |path|
+        Capybara::Selector.normalize(*args)[:xpaths].each do |path|
           find_in_base(path).each do |node|
             if matches_options(node, options)
               return convert_element(node)
