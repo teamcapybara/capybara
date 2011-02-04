@@ -48,7 +48,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_css? returns false" do
           expect do
             page.should have_css('h1#doesnotexist')
-          end.to raise_error(/expected css .* to return something/)
+          end.to raise_error(/expected css "h1#doesnotexist" to return something/)
         end
       end
 
@@ -60,7 +60,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_no_css? returns false" do
           expect do
             page.should_not have_css('h1')
-          end.to raise_error(/expected css .* not to return anything/)
+          end.to raise_error(/expected css "h1" not to return anything/)
         end
       end
     end
@@ -134,19 +134,19 @@ describe Capybara::RSpecMatchers do
         it "fails if has_css? returns false" do
           expect do
             "<h1>Text</h1>".should have_selector('//h2')
-          end.to raise_error(%r(expected selector "//h2" to return something))
+          end.to raise_error(%r(expected xpath "//h2" to return something))
         end
       end
 
       context "with should_not" do
         it "passes if has_no_css? returns true" do
-          "<h1>Text</h1>".should_not have_selector('//h2')
+          "<h1>Text</h1>".should_not have_selector(:css, 'h2')
         end
 
         it "fails if has_no_css? returns false" do
           expect do
-            "<h1>Text</h1>".should_not have_selector('//h1')
-          end.to raise_error(%r(expected selector "//h1" not to return anything))
+            "<h1>Text</h1>".should_not have_selector(:css, 'h1')
+          end.to raise_error(%r(expected css "h1" not to return anything))
         end
       end
     end
@@ -164,19 +164,19 @@ describe Capybara::RSpecMatchers do
         it "fails if has_css? returns false" do
           expect do
             page.should have_selector("//h1[@id='doesnotexist']")
-          end.to raise_error(%r(expected selector "//h1\[@id='doesnotexist'\]" to return something))
+          end.to raise_error(%r(expected xpath "//h1\[@id='doesnotexist'\]" to return something))
         end
       end
 
       context "with should_not" do
         it "passes if has_no_css? returns true" do
-          page.should_not have_selector('//h1[@id="doesnotexist"]')
+          page.should_not have_selector(:css, 'h1#doesnotexist')
         end
 
         it "fails if has_no_css? returns false" do
           expect do
-            page.should_not have_selector('//h1')
-          end.to raise_error(%r(expected selector "//h1" not to return anything))
+            page.should_not have_selector(:css, 'h1')
+          end.to raise_error(%r(expected css "h1" not to return anything))
         end
       end
     end

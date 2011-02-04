@@ -13,11 +13,11 @@ module Capybara
         end
 
         failure_message_for_should do |actual|
-          "expected #{type} #{formatted} to return something from:\n#{actual.inspect}"
+          "expected #{normalized[:selector].name} #{normalized[:locator].inspect} to return something from:\n#{actual.inspect}"
         end
 
         failure_message_for_should_not do |actual|
-          "expected #{type} #{formatted} not to return anything from:\n#{actual.inspect}"
+          "expected #{normalized[:selector].name} #{normalized[:locator].inspect} not to return anything from:\n#{actual.inspect}"
         end
 
         define_method :wrap do |actual|
@@ -28,8 +28,12 @@ module Capybara
           end
         end
 
-        define_method :formatted do
-          args.length == 1 ? args.first.inspect : args.inspect
+        define_method :normalized do
+          @normalized ||= if type == "selector"
+            Capybara::Selector.normalize(*args)
+          else
+            Capybara::Selector.normalize(type.to_sym, *args)
+          end
         end
       end
     end
