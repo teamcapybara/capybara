@@ -14,6 +14,9 @@ class TestApp < Sinatra::Base
     'Another World'
   end
 
+  get '/request_info' do
+    "Your Request: #{request.inspect}"
+  end
   get '/redirect' do
     redirect '/redirect_again'
   end

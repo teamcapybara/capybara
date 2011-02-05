@@ -4,9 +4,11 @@ describe Capybara::Driver::Culerity, :jruby => :installed do
   before(:all) do
     Capybara.app_host = "http://capybara-testapp.heroku.com"
     @driver = TestSessions::Culerity.driver
+    Capybara.run_server = false
   end
 
   after(:all) do
+    Capybara.run_server = true
     Capybara.app_host = nil
   end
 

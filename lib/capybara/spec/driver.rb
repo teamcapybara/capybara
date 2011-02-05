@@ -103,6 +103,70 @@ shared_examples_for 'driver' do
   end
 end
 
+shared_examples_for "driver with local server" do
+  describe "Capybara.app_host" do
+    after(:each) { Capybara.app_host = nil } # reset app_host back to nil
+    def match_path(host, path)
+      match(%r{http://#{host}(:\d+)?#{path}})
+    end
+    def match_default_path(path)
+      match_path "(127.0.0.1|www.example.com)", path
+    end
+    describe "set to custom host" do
+      before { Capybara.app_host = 'http://foo.lvh.me' }
+      it "should prefix urls with Capybara.app_host if app_host is set" do
+        @driver.visit('/request_info')
+        @driver.current_url.should match_path('foo.lvh.me', '/request_info')
+      end
+      it "should use the url in request data" do
+        @driver.visit('/request_info')
+        @driver.body.should include "http://foo.lvh.me"
+      end
+      # 
+      it "forms should GET to Capybara.app_host" do
+        @driver.visit('/form')
+        @driver.current_url.should match_path('foo.lvh.me', '/form')
+              
+        @driver.find('//input[@id = "mediocre"]').first.click
+        @driver.current_url.should match_path('foo.lvh.me', '/form/get')
+      end
+      it "can be changed during test" do
+        @driver.visit('/request_info')
+        Capybara.app_host = 'http://foo2.lvh.me'
+        @driver.visit('/request_info')
+        @driver.body.should include "foo2.lvh.me"
+      end
+      it 'can be reseted to nil during test' do
+        @driver.visit('/')
+        Capybara.app_host = nil
+        @driver.visit('/form')
+        @driver.current_url.should_not match_path('foo.lvh.me', '/')
+      end
+    end
+
+    describe "set to nil" do
+      it "should not prefix urls with Capybara.app_host" do
+        @driver.visit('/')
+        @driver.current_url.should match_default_path('/')
+      end
+      # 
+      it "forms should POST normally" do
+        @driver.visit('/form')
+        @driver.current_url.should match_default_path('/form')
+              
+        @driver.find('//input[@id = "mediocre"]').first.click
+        @driver.current_url.should match_default_path('/form/get')
+      end
+      it "can be changed during test" do
+        @driver.visit('/')
+        Capybara.app_host = 'http://foo2.lvh.me'
+        @driver.visit('/request_info')
+        @driver.body.should include "foo2.lvh.me"
+      end
+    end
+  end
+  
+end
 shared_examples_for "driver with javascript support" do
   before { @driver.visit('/with_js') }
 

@@ -49,6 +49,7 @@ describe Capybara::Driver::RackTest do
   end
 
   it_should_behave_like "driver"
+  it_should_behave_like "driver with local server"
   it_should_behave_like "driver with header support"
   it_should_behave_like "driver with status code support"
   it_should_behave_like "driver with cookies support"

@@ -6,6 +6,7 @@ describe Capybara::Driver::Selenium do
   end
 
   it_should_behave_like "driver"
+  it_should_behave_like "driver with local server"
   it_should_behave_like "driver with javascript support"
   it_should_behave_like "driver with frame support"
   it_should_behave_like "driver with support for window switching"
