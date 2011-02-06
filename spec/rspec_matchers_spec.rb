@@ -168,13 +168,19 @@ describe Capybara::RSpecMatchers do
 
       context "with should" do
         it "passes if has_css? returns true" do
-          page.should have_selector('//h1')
+          page.should have_selector('//h1', :text => 'test')
         end
 
         it "fails if has_css? returns false" do
           expect do
             page.should have_selector("//h1[@id='doesnotexist']")
           end.to raise_error(%r(expected xpath "//h1\[@id='doesnotexist'\]" to return something))
+        end
+
+        it "includes text in error message" do
+          expect do
+            page.should have_selector("//h1", :text => 'wrong text')
+          end.to raise_error(%r(expected xpath "//h1" with text "wrong text" to return something))
         end
 
         it "fails with the selector's failure_message if set" do
@@ -195,8 +201,8 @@ describe Capybara::RSpecMatchers do
 
         it "fails if has_no_css? returns false" do
           expect do
-            page.should_not have_selector(:css, 'h1')
-          end.to raise_error(%r(expected css "h1" not to return anything))
+            page.should_not have_selector(:css, 'h1', :text => 'test')
+          end.to raise_error(%r(expected css "h1" with text "test" not to return anything))
         end
       end
     end

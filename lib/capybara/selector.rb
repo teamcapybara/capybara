@@ -15,15 +15,16 @@ module Capybara
         all.delete(name.to_sym)
       end
 
-      def normalize(name_or_locator, locator=nil)
+      def normalize(*args)
         result = {}
+        result[:options] = if args.last.is_a?(Hash) then args.pop else {} end
 
-        if locator
-          result[:selector] = all[name_or_locator]
-          result[:locator] = locator
+        if args[1]
+          result[:selector] = all[args[0]]
+          result[:locator] = args[1]
         else
-          result[:selector] = all.values.find { |s| s.match?(name_or_locator) }
-          result[:locator] = name_or_locator
+          result[:selector] = all.values.find { |s| s.match?(args[0]) }
+          result[:locator] = args[0]
         end
         result[:selector] ||= all[Capybara.default_selector]
 

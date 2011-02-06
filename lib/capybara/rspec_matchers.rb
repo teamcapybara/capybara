@@ -19,12 +19,18 @@ module Capybara
         if normalized[:selector].failure_message
           normalized[:selector].failure_message.call(@actual)
         else
-          "expected #{normalized[:selector].name} #{normalized[:locator].inspect} to return something"
+          "expected #{selector_name} to return something"
         end
       end
 
       def failure_message_for_should_not
-        "expected #{normalized[:selector].name} #{normalized[:locator].inspect} not to return anything"
+        "expected #{selector_name} not to return anything"
+      end
+
+      def selector_name
+        name = "#{normalized[:selector].name} #{normalized[:locator].inspect}"
+        name << " with text #{normalized[:options][:text].inspect}" if normalized[:options][:text]
+        name
       end
 
       def wrap(actual)
