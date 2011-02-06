@@ -16,3 +16,8 @@ Feature: Capybara's cucumber integration
   Scenario: selenium tag
     When I visit the root page
     Then Capybara should use the "selenium" driver
+
+  Scenario: matchers
+    When I visit the root page
+    And I use a matcher that fails
+    Then the failing exception should be nice

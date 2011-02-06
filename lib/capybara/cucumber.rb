@@ -1,7 +1,9 @@
 require 'capybara'
 require 'capybara/dsl'
+require 'capybara/rspec_matchers'
 
 World(Capybara)
+World(Capybara::RSpecMatchers)
 
 After do
   Capybara.reset_sessions!
