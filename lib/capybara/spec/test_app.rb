@@ -69,6 +69,10 @@ class TestApp < Sinatra::Base
     request.cookies['capybara']
   end
 
+  get '/get_header' do
+    env['HTTP_FOO']
+  end
+
   get '/:view' do |view|
     erb view.to_sym
   end

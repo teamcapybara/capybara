@@ -163,18 +163,30 @@
     <span>First address<span>
     <label for='address1_street'>Street</label>
     <input type="text" name="form[addresses][][street]" value="" id="address1_street">
-  
-    <label for='address1_city'>City</label>
-    <input type="text" name="form[addresses][][city]" value="" id="address1_city"> 
-  </p>  
 
-  <p>  
+    <label for='address1_city'>City</label>
+    <input type="text" name="form[addresses][][city]" value="" id="address1_city">
+
+    <label for='address1_country'>Country</label>
+    <select name="form[addresses][][country]" id="address1_country">
+      <option>France</option>
+      <option>Ukraine</option>
+    </select>
+  </p>
+
+  <p>
     <span>Second address<span>
     <label for='address2_street'>Street</label>
     <input type="text" name="form[addresses][][street]" value="" id="address2_street">
-  
+
     <label for='address2_city'>City</label>
     <input type="text" name="form[addresses][][city]" value="" id="address2_city"> 
+
+    <label for='address2_country'>Country</label>
+    <select name="form[addresses][][country]" id="address2_country">
+      <option>France</option>
+      <option>Ukraine</option>
+    </select>
   </p>
 
   <div style="display:none;">
@@ -207,7 +219,7 @@
 
   <p>
     <label for="form_disabled_radio">
-      Disabled Checkbox
+      Disabled Radio
       <input type="radio" name="form[disabled_radio]" value="Should not see me" id="form_disabled_radio" checked="checked" disabled="disabled" />
     </label>
   </p>

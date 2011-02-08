@@ -21,7 +21,8 @@ module Capybara
       require "launchy"
       Launchy::Browser.run(path)
     rescue LoadError
-      warn "Sorry, you need to install launchy to open pages: `gem install launchy`"
+      warn "Sorry, you need to install launchy (`gem install launchy`) and " <<
+        "make sure it's available to open pages with `save_and_open_page`."
     end
 
     def rewrite_css_and_image_references(response_html) # :nodoc:

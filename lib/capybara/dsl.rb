@@ -2,7 +2,7 @@ require 'capybara'
 
 module Capybara
   class << self
-    attr_writer :default_driver, :current_driver, :javascript_driver
+    attr_writer :default_driver, :current_driver, :javascript_driver, :session_name
 
     attr_accessor :app
 
@@ -57,7 +57,7 @@ module Capybara
     # @return [Capybara::Session]     The currently used session
     #
     def current_session
-      session_pool["#{current_driver}#{app.object_id}"] ||= Capybara::Session.new(current_driver, app)
+      session_pool["#{current_driver}:#{session_name}:#{app.object_id}"] ||= Capybara::Session.new(current_driver, app)
     end
 
     ##
@@ -70,6 +70,27 @@ module Capybara
     end
     alias_method :reset!, :reset_sessions!
 
+    ##
+    #
+    # The current session name.
+    #
+    # @return [Symbol]    The name of the currently used session.
+    #
+    def session_name
+      @session_name ||= :default
+    end
+
+    ##
+    #
+    # Yield a block using a specific session name.
+    #
+    def using_session(name)
+      self.session_name = name
+      yield
+    ensure
+      self.session_name = :default
+    end
+
   private
 
     def session_pool
@@ -78,6 +99,15 @@ module Capybara
   end
 
   extend(self)
+
+  ##
+  #
+  # Shortcut to working in a different session. This is useful when Capybara is included
+  # in a class or module.
+  #
+  def using_session(name, &block)
+    Capybara.using_session(name, &block)
+  end
 
   ##
   #

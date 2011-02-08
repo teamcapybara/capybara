@@ -83,14 +83,14 @@ There are also explicit <tt>@selenium</tt>, <tt>@culerity</tt> and
 
 == Using Capybara with RSpec
 
-If you prefer RSpec to using Cucumber, you can use the built in RSpec support:
+If you prefer RSpec to using Cucumber, you can use the built in RSpec support
+by adding the following line (typically to your <tt>spec_helper.rb</tt> file):
 
     require 'capybara/rspec'
-    Capybara.app = MyRackApp
 
 You can now use it in your examples:
 
-    describe "the signup process", :type => :acceptance do
+    describe "the signup process", :type => :request do
       it "signs me in" do
         within("#session") do
           fill_in 'Login', :with => 'user@example.com'
@@ -100,8 +100,14 @@ You can now use it in your examples:
       end
     end
 
-Capybara is only included for examples which have the type
-<tt>:acceptance</tt>.
+Capybara is only included for examples with <tt>:type => :request</tt> (or
+<tt>:acceptance</tt> for compatibility).
+
+Note that if you use the <tt>rspec-rails</tt> gem, <tt>:type => :request</tt>
+is automatically set on all files under <tt>spec/requests</tt> (and also
+<tt>spec/integration</tt>), so that's a good directory to place your Capybara specs
+in.  <tt>rspec-rails</tt> will also automatically include Capybara in
+<tt>:controller</tt> and <tt>:mailer</tt> examples.
 
 RSpec's metadata feature can be used to switch to a different driver. Use
 <tt>:js => true</tt> to switch to the javascript driver, or provide a
@@ -115,13 +121,25 @@ RSpec's metadata feature can be used to switch to a different driver. Use
 Note that Capybara's built in RSpec support only works with RSpec 2.0 or later.
 You'll need to roll your own for earlier versions of RSpec.
 
+== Using Capybara with Ruby on Rails
+
+You can use the built-in Rails support to easily get Capybara running with
+Rails:
+
+    requires 'capybara/rails'
+
+== Using Capybara with Rack
+
+If you're using Capybara with a non-Rails Rack application, set
+<tt>Capybara.app</tt> to your application class:
+
+    Capybara.app = MyRackApp
+
 == Default and current driver
 
 You can set up a default driver for your features. For example if you'd prefer
 to run Selenium, you could do:
 
-    require 'capybara/rails'
-    require 'capybara/cucumber'
     Capybara.default_driver = :selenium
 
 You can change the driver temporarily:
@@ -223,7 +241,7 @@ certain elements, and working with and manipulating those elements.
     page.has_css?('table tr.foo')
     page.has_content?('foo')
 
-You can these use with RSpec's magic matchers:
+You can use these with RSpec's magic matchers:
 
     page.should have_selector('table tr')
     page.should have_selector(:xpath, '//table/tr')

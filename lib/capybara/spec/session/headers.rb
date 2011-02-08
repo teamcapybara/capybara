@@ -1,8 +1,8 @@
 shared_examples_for "session with headers support" do
   describe '#response_headers' do
     it "should return response headers" do
-      @session.visit('/with_simple_html')     
-      @session.response_headers['Content-Type'].should == 'text/html'
+      @session.visit('/with_simple_html')
+      @session.response_headers['Content-Type'].should =~ %r(text/html)
     end
   end
 end

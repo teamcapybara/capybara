@@ -74,7 +74,7 @@ module Capybara
     #       xpath { |num| ".//tbody/tr[#{num}]" }
     #     end
     #
-    # This makes it possible to use this selector in a cariety of ways:
+    # This makes it possible to use this selector in a variety of ways:
     #
     #     find(:row, 3)
     #     page.find('table#myTable').find(:row, 3).text
