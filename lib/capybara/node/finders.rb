@@ -138,16 +138,17 @@ module Capybara
       #
       def first(*args)
         options = extract_normalized_options(args)
+        found_elements = []
 
         Capybara::Selector.normalize(*args).each do |path|
           find_in_base(path).each do |node|
             if matches_options(node, options)
-              return convert_element(node)
+              found_elements << convert_element(node)
+              return found_elements.last if not Capybara.prefer_visible_elements or node.visible?
             end
           end
         end
-
-        nil
+        found_elements.first
       end
 
     protected

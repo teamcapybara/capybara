@@ -1,3 +1,11 @@
+# Version 1.0.0
+
+Release date:
+
+### Changed
+
+* Capybara now prefers visible elements over hidden elements, disable by setting Capybara.prefer_visible_elements = false
+
 # Version 0.4.1
 
 Release date:
