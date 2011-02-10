@@ -12,6 +12,14 @@ module Capybara
       def inspect
         %(#<Capybara::Document>)
       end
+
+      ##
+      #
+      # @return [String]    The text of the document
+      #
+      def text
+        find('.').text
+      end
     end
   end
 end

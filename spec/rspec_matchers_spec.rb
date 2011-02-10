@@ -207,5 +207,63 @@ describe Capybara::RSpecMatchers do
       end
     end
   end
+
+  describe "have_content matcher" do
+    context "on a string" do
+      context "with should" do
+        it "passes if has_css? returns true" do
+          "<h1>Text</h1>".should have_content('Text')
+        end
+
+        it "fails if has_css? returns false" do
+          expect do
+            "<h1>Text</h1>".should have_content('No such Text')
+          end.to raise_error(/expected there to be content "No such Text" in "Text"/)
+        end
+      end
+
+      context "with should_not" do
+        it "passes if has_no_css? returns true" do
+          "<h1>Text</h1>".should_not have_content('No such Text')
+        end
+
+        it "fails if has_no_css? returns false" do
+          expect do
+            "<h1>Text</h1>".should_not have_content('Text')
+          end.to raise_error(/expected content "Text" not to return anything/)
+        end
+      end
+    end
+
+    context "on a page or node" do
+      before do
+        visit('/with_html')
+      end
+
+      context "with should" do
+        it "passes if has_css? returns true" do
+          page.should have_content('This is a test')
+        end
+
+        it "fails if has_css? returns false" do
+          expect do
+            page.should have_content('No such Text')
+          end.to raise_error(/expected there to be content "No such Text" in "(.*)This is a test(.*)"/)
+        end
+      end
+
+      context "with should_not" do
+        it "passes if has_no_css? returns true" do
+          page.should_not have_content('No such Text')
+        end
+
+        it "fails if has_no_css? returns false" do
+          expect do
+            page.should_not have_content('This is a test')
+          end.to raise_error(/expected content "This is a test" not to return anything/)
+        end
+      end
+    end
+  end
 end
 

@@ -87,3 +87,11 @@ Capybara.add_selector(:id) do
   xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
   match { |value| value.is_a?(Symbol) }
 end
+
+Capybara.add_selector(:content) do
+  xpath { |text| XPath::HTML.content(text) }
+  failure_message do |page, selector|
+    %(expected there to be content #{selector.locator.inspect} in #{page.text.inspect})
+  end
+end
+
