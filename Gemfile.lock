@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    capybara (0.4.1.1)
+    capybara (0.4.1.2)
       celerity (>= 0.7.9)
       culerity (>= 0.2.4)
       mime-types (>= 1.16)
