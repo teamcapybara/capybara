@@ -2,6 +2,13 @@ module Capybara
   class Selector
     attr_reader :name
 
+    class Normalized
+      attr_accessor :selector, :locator, :options, :xpaths
+
+      def failure_message; selector.failure_message; end
+      def name; selector.name; end
+    end
+
     class << self
       def all
         @selectors ||= {}
@@ -16,25 +23,25 @@ module Capybara
       end
 
       def normalize(*args)
-        result = {}
-        result[:options] = if args.last.is_a?(Hash) then args.pop else {} end
+        normalized = Normalized.new
+        normalized.options = if args.last.is_a?(Hash) then args.pop else {} end
 
         if args[1]
-          result[:selector] = all[args[0]]
-          result[:locator] = args[1]
+          normalized.selector = all[args[0]]
+          normalized.locator = args[1]
         else
-          result[:selector] = all.values.find { |s| s.match?(args[0]) }
-          result[:locator] = args[0]
+          normalized.selector = all.values.find { |s| s.match?(args[0]) }
+          normalized.locator = args[0]
         end
-        result[:selector] ||= all[Capybara.default_selector]
+        normalized.selector ||= all[Capybara.default_selector]
 
-        xpath = result[:selector].call(result[:locator])
+        xpath = normalized.selector.call(normalized.locator)
         if xpath.respond_to?(:to_xpaths)
-          result[:xpaths] = xpath.to_xpaths
+          normalized.xpaths = xpath.to_xpaths
         else
-          result[:xpaths] = [xpath.to_s].flatten
+          normalized.xpaths = [xpath.to_s].flatten
         end
-        result
+        normalized
       end
     end
 

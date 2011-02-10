@@ -31,8 +31,8 @@ module Capybara
         unless node
           options = extract_normalized_options(args)
           normalized = Capybara::Selector.normalize(*args)
-          message = options[:message] || "Unable to find #{normalized[:selector].name} #{normalized[:locator].inspect}"
-          message = normalized[:selector].failure_message.call(self) if normalized[:selector].failure_message
+          message = options[:message] || "Unable to find #{normalized.name} #{normalized.locator.inspect}"
+          message = normalized.failure_message.call(self, normalized) if normalized.failure_message
           raise Capybara::ElementNotFound, message
         end
         return node
@@ -120,7 +120,7 @@ module Capybara
       def all(*args)
         options = extract_normalized_options(args)
 
-        Capybara::Selector.normalize(*args)[:xpaths].
+        Capybara::Selector.normalize(*args).xpaths.
           map    { |path| find_in_base(path) }.flatten.
           select { |node| matches_options(node, options) }.
           map    { |node| convert_element(node) }
@@ -143,7 +143,7 @@ module Capybara
         options = extract_normalized_options(args)
         found_elements = []
 
-        Capybara::Selector.normalize(*args)[:xpaths].each do |path|
+        Capybara::Selector.normalize(*args).xpaths.each do |path|
           find_in_base(path).each do |node|
             if matches_options(node, options)
               found_elements << convert_element(node)

@@ -16,8 +16,8 @@ module Capybara
       end
 
       def failure_message_for_should
-        if normalized[:selector].failure_message
-          normalized[:selector].failure_message.call(@actual)
+        if normalized.failure_message
+          normalized.failure_message.call(@actual)
         else
           "expected #{selector_name} to return something"
         end
@@ -28,8 +28,8 @@ module Capybara
       end
 
       def selector_name
-        name = "#{normalized[:selector].name} #{normalized[:locator].inspect}"
-        name << " with text #{normalized[:options][:text].inspect}" if normalized[:options][:text]
+        name = "#{normalized.name} #{normalized.locator.inspect}"
+        name << " with text #{normalized.options[:text].inspect}" if normalized.options[:text]
         name
       end
 

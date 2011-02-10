@@ -79,8 +79,8 @@ shared_examples_for "find" do
       end
     end
 
-    context "with custom selector with failure_message option", :focus => true do
-      it "it should raise an error with the failure message if the element is not found" do
+    context "with custom selector with failure_message option" do
+      it "should raise an error with the failure message if the element is not found" do
         Capybara.add_selector(:monkey) do
           xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
           failure_message { |node| node.all(".//*[contains(@id, 'monkey')]").map { |node| node.text }.sort.join(', ') }
@@ -88,6 +88,16 @@ shared_examples_for "find" do
         running do
           @session.find(:monkey, '14').text.should == 'Monkey Paul'
         end.should raise_error(Capybara::ElementNotFound, "Monkey John, Monkey Paul")
+      end
+
+      it "should pass the selector as the second argument" do
+        Capybara.add_selector(:monkey) do
+          xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
+          failure_message { |node, selector| selector.name.to_s + ': ' + selector.locator + ' - ' + node.all(".//*[contains(@id, 'monkey')]").map { |node| node.text }.sort.join(', ') }
+        end
+        running do
+          @session.find(:monkey, '14').text.should == 'Monkey Paul'
+        end.should raise_error(Capybara::ElementNotFound, "monkey: 14 - Monkey John, Monkey Paul")
       end
     end
 
