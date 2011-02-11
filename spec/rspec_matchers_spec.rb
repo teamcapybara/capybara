@@ -265,5 +265,13 @@ describe Capybara::RSpecMatchers do
       end
     end
   end
+  describe "have_link matcher"
+  describe "have_button matcher"
+  describe "have_no_button matcher"
+  describe "have_field matcher"
+  describe "have_checked_field matcher"
+  describe "have_unchecked_field matcher"
+  describe "have_select matcher"
+  describe "have_table matcher"
 end
 
