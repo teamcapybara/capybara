@@ -1,6 +1,6 @@
 require 'capybara'
 require 'capybara/dsl'
-require 'capybara/rspec_matchers'
+require 'capybara/rspec/matchers'
 
 World(Capybara)
 World(Capybara::RSpecMatchers)

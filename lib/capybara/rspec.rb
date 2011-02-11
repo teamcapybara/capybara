@@ -1,7 +1,7 @@
 require 'capybara'
 require 'capybara/dsl'
 require 'rspec/core'
-require 'capybara/rspec_matchers'
+require 'capybara/rspec/matchers'
 
 RSpec.configure do |config|
   config.include Capybara, :type => :request

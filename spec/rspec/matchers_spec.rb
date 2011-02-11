@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'capybara/dsl'
-require 'capybara/rspec_matchers'
+require 'capybara/rspec/matchers'
 
 Capybara.app = TestApp
 
