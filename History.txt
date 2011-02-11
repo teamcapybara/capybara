@@ -2,9 +2,13 @@
 
 Release date:
 
+### Added
+
+* Added DSL for acceptance tests, inspired by Luismi Cavallé's Steak [Jonas Nicklas]
+
 ### Changed
 
-* Capybara now prefers visible elements over hidden elements, disable by setting Capybara.prefer_visible_elements = false
+* Capybara now prefers visible elements over hidden elements, disable by setting Capybara.prefer_visible_elements = false [Jonas Nicklas and Nicklas Ramhöj]
 
 # Version 0.4.1
 
