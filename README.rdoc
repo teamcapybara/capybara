@@ -119,6 +119,22 @@ RSpec's metadata feature can be used to switch to a different driver. Use
       it 'will switch to one specific driver', :driver => :celerity
     end
 
+Capybara also comes with a built in DSL for creating descriptive acceptance tests:
+
+    feature "signing up" do
+      background do
+        User.make(:email => 'user@example.com', :password => 'caplin')
+      end
+
+      scenario "signing in with correct credentials" do
+        within("#session") do
+          fill_in 'Login', :with => 'user@example.com'
+          fill_in 'Password', :with => 'caplin'
+        end
+        click_link 'Sign in'
+      end
+    end
+
 Note that Capybara's built in RSpec support only works with RSpec 2.0 or later.
 You'll need to roll your own for earlier versions of RSpec.
 

@@ -45,3 +45,10 @@ describe 'capybara/rspec', :type => :other do
     expect { visit('/') }.to raise_error(NoMethodError)
   end
 end
+
+feature "Feature DSL" do
+  scenario "is pulled in" do
+    visit('/foo')
+    page.body.should include('Another World')
+  end
+end
