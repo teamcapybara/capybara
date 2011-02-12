@@ -3,7 +3,7 @@ require 'spec_helper'
 require 'capybara/util/save_and_open_page'
 require 'launchy'
 describe Capybara do
-  describe ".save_and_open_page" do
+  describe ".save_page & .save_and_open_page" do
     before do
       @time = Time.new.strftime("%Y%m%d%H%M%S")
 
@@ -56,7 +56,7 @@ describe Capybara do
 
       it "should create a new temporary file" do
         @temp_file.should_receive(:write).with @html
-        Capybara.save_and_open_page @html
+        Capybara.save_page @html
       end
 
       it "should open the file in the browser" do
@@ -81,7 +81,7 @@ describe Capybara do
         File.should_receive(:new).and_return @temp_file
 
         @temp_file.should_receive(:write).with @html
-        Capybara.save_and_open_page @html
+        Capybara.save_page @html
       end
 
       it "should open the file - in the custom path - in the browser" do
@@ -140,7 +140,7 @@ describe Capybara do
       def test_with_directories(directories)
         @temp_file.should_receive(:write) \
           .with expected_html_for_asset_root_with(directories)
-        Capybara.save_and_open_page @html
+        Capybara.save_page @html
       end
 
       context "asset_root contains some directories" do
