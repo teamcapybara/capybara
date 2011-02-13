@@ -140,7 +140,7 @@ describe Capybara::RSpecMatchers do
         it "fails with the selector's failure_message if set" do
           Capybara.add_selector(:monkey) do
             xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
-            failure_message { |node| node.all(".//*[contains(@id, 'monkey')]").map { |node| node.text }.sort.join(', ') }
+            failure_message { |node, selector| node.all(".//*[contains(@id, 'monkey')]").map { |node| node.text }.sort.join(', ') }
           end
           expect do
             '<h1 id="monkey_paul">Monkey John</h1>'.should have_selector(:monkey, 14)
@@ -186,7 +186,7 @@ describe Capybara::RSpecMatchers do
         it "fails with the selector's failure_message if set" do
           Capybara.add_selector(:monkey) do
             xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
-            failure_message { |node| node.all(".//*[contains(@id, 'monkey')]").map { |node| node.text }.sort.join(', ') }
+            failure_message { |node, selector| node.all(".//*[contains(@id, 'monkey')]").map { |node| node.text }.sort.join(', ') }
           end
           expect do
             page.should have_selector(:monkey, 14)
@@ -265,8 +265,23 @@ describe Capybara::RSpecMatchers do
       end
     end
   end
+
   describe "have_link matcher"
-  describe "have_button matcher"
+
+  describe "have_button matcher" do
+    let(:html) { '<button>A button</button><button>Another button</button>' }
+
+    it "passes if there is such a button" do
+      html.should have_button('A button')
+    end
+
+    it "fails if there is no such button" do
+      expect do
+        html.should have_button('No such Button')
+      end.to raise_error(/expected there to be a button "No such Button", other buttons: "A button", "Another button"/)
+    end
+  end
+
   describe "have_no_button matcher"
   describe "have_field matcher"
   describe "have_checked_field matcher"
