@@ -269,6 +269,20 @@ describe Capybara::RSpecMatchers do
   describe "have_link matcher"
 
   describe "have_button matcher" do
+    let(:html) { '<button>A button</button><input type="submit" value="Another button"/>' }
+
+    it "passes if there is such a button" do
+      html.should have_button('A button')
+    end
+
+    it "fails if there is no such button" do
+      expect do
+        html.should have_button('No such Button')
+      end.to raise_error(/expected there to be a button "No such Button", other buttons: "A button", "Another button"/)
+    end
+  end
+
+  describe "have_field matcher" do
     let(:html) { '<button>A button</button><button>Another button</button>' }
 
     it "passes if there is such a button" do
@@ -282,8 +296,6 @@ describe Capybara::RSpecMatchers do
     end
   end
 
-  describe "have_no_button matcher"
-  describe "have_field matcher"
   describe "have_checked_field matcher"
   describe "have_unchecked_field matcher"
   describe "have_select matcher"
