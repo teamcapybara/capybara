@@ -238,7 +238,7 @@ and the modules defined in
 === Navigating
 
 You can use the
-{<tt>visit</tt>}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#visit-instance_method]
+<tt>{visit}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#visit-instance_method]</tt>
 method to navigate to other pages:
 
     visit('/projects')
@@ -308,6 +308,12 @@ Note that <tt>page.should have_no_xpath</tt> is preferred over
 <tt>page.should_not have_xpath</tt>. Read the section on asynchronous JavaScript
 for an explanation.
 
+If all else fails, you can also use the
+<tt>{page.html}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#html-instance_method]</tt>
+method to test against the raw HTML:
+
+    page.html.should match /<span>.../i
+
 === Finding
 
 You can also find specific elements, in order to manipulate them (see
@@ -335,7 +341,7 @@ to specific parts of the page:
 Capybara makes it possible to restrict certain actions, such as interacting with
 forms or clicking links and buttons, to within a specific area of the page. For
 this purpose you can use the generic
-{<tt>within</tt>}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#within-instance_method]
+<tt>{within}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#within-instance_method]</tt>
 method. Optionally you can specify which kind of selector to use.
 
     within("li#employee") do
