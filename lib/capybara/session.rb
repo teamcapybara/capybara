@@ -27,7 +27,7 @@ module Capybara
   #
   class Session
     DSL_METHODS = [
-      :all, :first, :attach_file, :body, :check, :choose, :click_link_or_button, :click_button, :click_link, :current_url, :drag, :evaluate_script,
+      :all, :first, :attach_file, :body, :html, :check, :choose, :click_link_or_button, :click_button, :click_link, :current_url, :drag, :evaluate_script,
       :field_labeled, :fill_in, :find, :find_button, :find_by_id, :find_field, :find_link, :has_content?, :has_css?,
       :has_no_content?, :has_no_css?, :has_no_xpath?, :has_xpath?, :locate, :save_and_open_page, :select, :source, :uncheck,
       :visit, :wait_until, :within, :within_fieldset, :within_table, :within_frame, :within_window, :has_link?, :has_no_link?, :has_button?,
@@ -83,11 +83,13 @@ module Capybara
 
     ##
     #
-    # @return [String] A snapshot of the HTML of the current document, as it looks right now
+    # @return [String] A snapshot of the HTML of the current document, as it
+    # looks right now (potentially modified by JavaScript).
     #
     def body
       driver.body
     end
+    alias_method :html, :body
 
     ##
     #
