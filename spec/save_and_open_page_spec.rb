@@ -5,8 +5,6 @@ require 'launchy'
 describe Capybara do
   describe ".save_page & .save_and_open_page" do
     before do
-      @time = Time.new.strftime("%Y%m%d%H%M%S")
-
       @temp_file = mock("FILE")
       @temp_file.stub!(:write)
       @temp_file.stub!(:close)
@@ -41,9 +39,7 @@ describe Capybara do
     end
 
     def default_file_expectations
-      @name = "capybara-#{@time}.html"
-
-      @temp_file.stub!(:path).and_return(@name)
+      @temp_file.stub!(:path).and_return('page.html')
 
       File.should_receive(:exist?).and_return true
       File.should_receive(:new).and_return @temp_file
@@ -56,19 +52,19 @@ describe Capybara do
 
       it "should create a new temporary file" do
         @temp_file.should_receive(:write).with @html
-        Capybara.save_page @html
+        Capybara.save_page @html, 'page.html'
       end
 
       it "should open the file in the browser" do
-        Capybara.should_receive(:open_in_browser).with(@name)
-        Capybara.save_and_open_page @html
+        Capybara.should_receive(:open_in_browser).with('page.html')
+        Capybara.save_and_open_page @html, 'page.html'
       end
     end
 
     describe "custom output path" do
       before do
         @custom_path = File.join('tmp', 'capybara')
-        @custom_name = File.join(@custom_path, "capybara-#{@time}.html")
+        @custom_name = File.join(@custom_path, 'page.html')
 
         @temp_file.stub!(:path).and_return(@custom_name)
 
@@ -81,12 +77,12 @@ describe Capybara do
         File.should_receive(:new).and_return @temp_file
 
         @temp_file.should_receive(:write).with @html
-        Capybara.save_page @html
+        Capybara.save_page @html, 'page.html'
       end
 
       it "should open the file - in the custom path - in the browser" do
         Capybara.should_receive(:open_in_browser).with(@custom_name)
-        Capybara.save_and_open_page @html
+        Capybara.save_and_open_page @html, 'page.html'
       end
 
       it "should be possible to configure output path" do
@@ -140,7 +136,7 @@ describe Capybara do
       def test_with_directories(directories)
         @temp_file.should_receive(:write) \
           .with expected_html_for_asset_root_with(directories)
-        Capybara.save_page @html
+        Capybara.save_page @html, 'page.html'
       end
 
       context "asset_root contains some directories" do
