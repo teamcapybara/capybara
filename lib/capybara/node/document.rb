@@ -18,7 +18,7 @@ module Capybara
       # @return [String]    The text of the document
       #
       def text
-        find('.').text
+        find(:xpath, '/html').text
       end
     end
   end
