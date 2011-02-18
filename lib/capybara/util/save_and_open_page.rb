@@ -1,7 +1,7 @@
 module Capybara
   class << self
     def save_page(html, file_name=nil)
-      file_name ||= "capybara-#{Time.new.strftime("%Y%m%d%H%M%S")}.html"
+      file_name ||= "capybara-#{Time.new.strftime("%Y%m%d%H%M%S")}#{Random.rand(10**10)}.html"
       name = File.join(*[Capybara.save_and_open_page_path, file_name].compact)
 
       unless Capybara.save_and_open_page_path.nil? || File.directory?(Capybara.save_and_open_page_path )
