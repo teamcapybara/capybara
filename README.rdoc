@@ -152,46 +152,65 @@ If you're using Capybara with a non-Rails Rack application, set
 
     Capybara.app = MyRackApp
 
-== Default and current driver
+== Drivers
 
-You can set up a default driver for your features. For example if you'd prefer
-to run Selenium, you could do:
+Capybara uses the same DSL to drive a variety of browser and headless drivers.
+
+=== Selecting the Driver
+
+By default, Capybara uses the +:rack_test+ driver, which is fast but does not
+support JavaScript.  You can set up a different default driver for your
+features. For example if you'd prefer to run everything in Selenium, you could
+do:
 
     Capybara.default_driver = :selenium
 
-You can change the driver temporarily:
+However, if you are using RSpec or Cucumber, you may instead want to consider
+leaving the faster +:rack_test+ as the +default_driver+, and marking only those
+tests that require a JavaScript-capable driver using <tt>:js => true</tt> or
+<tt>@javascript</tt>, respectively.  By default, JavaScript tests are run using the
++:selenium+ driver.  You can change this by setting
++Capybara.javascript_driver+.
+
+You can also change the driver temporarily (typically in the Before and After
+blocks):
 
     Capybara.current_driver = :culerity
     Capybara.use_default_driver
 
-You can do this in Before and After blocks to temporarily switch to a different
-driver. Note that switching driver creates a new session, so you may not be able
-to switch in the middle of a Scenario.
+Note that switching the driver creates a new session, so you may not be able to
+switch in the middle of a test.
 
-== Selenium
+=== Selenium
 
-At the moment, Capybara supports Webdriver, also called Selenium 2.0, *not*
-Selenium RC. Provided Firefox is installed, everything is set up for you, and
-you should be able to start using Selenium right away.
+At the moment, Capybara supports {Selenium 2.0
+(Webdriver)}[http://seleniumhq.org/docs/01_introducing_selenium.html#selenium-2-aka-selenium-webdriver],
+*not* Selenium RC. Provided Firefox is installed, everything is set up for you,
+and you should be able to start using Selenium right away.
 
 By default Capybara tried to synchronize AJAX requests, so it will wait for
 AJAX requests to finish after you've interacted with the page. You can switch
 off this behaviour by setting the driver option <tt>:resynchronize</tt> to
 <tt>false</tt>. See the section on configuring drivers.
 
-== Celerity
+=== HtmlUnit through Akephalos
+
+{Akephalos}[https://github.com/bernerdschaefer/akephalos] is perhaps the best
+HtmlUnit driver right now, but you need to install the akephalos gem to use it.
+
+=== HtmlUnit through Celerity
 
 Celerity only runs on JRuby, so you'll need to install the celerity gem under
 JRuby:
 
    jruby -S gem install celerity
 
-== Culerity
+=== HtmlUnit through Culerity
 
 Install celerity as noted above, make sure JRuby is in your path. Note that
 Culerity doesn't seem to be working under Ruby 1.9 at the moment.
 
-== env.js
+=== env.js
 
 The {capybara-envjs driver}[http://github.com/smparkes/capybara-envjs]
 uses the envjs gem ({GitHub}[http://github.com/smparkes/env-js],
@@ -392,10 +411,9 @@ asynchronous process has not yet removed the element from the page, it would
 therefore fail, even though the code might be working correctly. The latter
 correctly waits for the element to disappear from the page.
 
-== Using the DSL outside cucumber
+== Using the DSL in unsupported testing frameworks
 
-You can mix the DSL into any context, for example you could use it in RSpec
-examples. Just load the DSL and include it anywhere:
+You can mix the DSL into any context by including +Capybara+:
 
     require 'capybara'
     require 'capybara/dsl'
@@ -425,8 +443,9 @@ setting app_host:
     ...
     visit('/')
 
-Note that rack-test does not support running against a remote server. With
-drivers that support it, you can also visit any URL directly:
+Note that the default driver (+:rack_test+) does not support running against a
+remote server. With drivers that support it, you can also visit any URL
+directly:
 
     visit('http://www.google.com')
 
