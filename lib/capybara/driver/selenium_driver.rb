@@ -29,6 +29,11 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
         native.click
       elsif tag_name == 'input' and type == 'checkbox'
         native.click if value ^ native.attribute('checked').to_s.eql?("true")
+      elsif tag_name == 'input' and (type == 'text' or type == 'password')
+        maxlength = self[:maxlength].nil? ? 0 : self[:maxlength].to_i
+        value = value [0...maxlength] unless maxlength.zero?
+        native.clear
+        native.send_keys(value.to_s)
       elsif tag_name == 'textarea' or tag_name == 'input'
         native.clear
         native.send_keys(value.to_s)
