@@ -70,6 +70,12 @@ shared_examples_for "fill_in" do
       extract_results(@session)['phone'].should == '+1 555 7022'
     end
 
+    it "should fill in a text field respecting its maxlength attribute" do
+      @session.fill_in('Zipcode', :with => '52071350')
+      @session.click_button('awesome')
+      extract_results(@session)['zipcode'].should == '52071'
+    end
+
     it "should fill in a password field by name" do
       @session.fill_in('form[password]', :with => 'supasikrit')
       @session.click_button('awesome')

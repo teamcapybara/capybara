@@ -11,6 +11,10 @@ Release date:
 
 * Capybara now prefers visible elements over hidden elements, disable by setting Capybara.prefer_visible_elements = false [Jonas Nicklas and Nicklas Ramhöj]
 
+## Fixed
+
+* The Rack::Test driver now respects maxlength on text fields [Guilherme Carvalho]
+
 # Version 0.4.1
 
 Release date: 2011-01-21
