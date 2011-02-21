@@ -43,11 +43,11 @@ module Capybara
           when options[:between]
             options[:between] === results.size
           when options[:count]
-            options[:count] == results.size
+            options[:count].to_i == results.size
           when options[:maximum]
-            options[:maximum] >= results.size
+            options[:maximum].to_i >= results.size
           when options[:minimum]
-            options[:minimum] <= results.size
+            options[:minimum].to_i <= results.size
           else
             results.size > 0
           end
@@ -75,11 +75,11 @@ module Capybara
           when options[:between]
             not(options[:between] === results.size)
           when options[:count]
-            not(options[:count] == results.size)
+            not(options[:count].to_i == results.size)
           when options[:maximum]
-            not(options[:maximum] >= results.size)
+            not(options[:maximum].to_i >= results.size)
           when options[:minimum]
-            not(options[:minimum] <= results.size)
+            not(options[:minimum].to_i <= results.size)
           else
             results.empty?
           end
