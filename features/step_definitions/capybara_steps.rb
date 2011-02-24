@@ -1,4 +1,4 @@
-When /^I visit the root page$/ do
+When /^I visit the (?:root|home) page$/ do
   visit('/')
 end
 
