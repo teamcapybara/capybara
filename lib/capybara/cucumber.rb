@@ -1,4 +1,5 @@
 require 'capybara'
+
 require 'capybara/dsl'
 require 'capybara/rspec/matchers'
 
@@ -9,24 +10,17 @@ After do
   Capybara.reset_sessions!
 end
 
-Before('@javascript') do
+Before '@javascript' do
   Capybara.current_driver = Capybara.javascript_driver
 end
 
-Before('@selenium') do
-  Capybara.current_driver = :selenium
-end
-
-Before('@celerity') do
-  Capybara.current_driver = :celerity
-end
-
-Before('@culerity') do
-  Capybara.current_driver = :culerity
-end
-
-Before('@rack_test') do
-  Capybara.current_driver = :rack_test
+Before do |scenario|
+  scenario.source_tag_names.each do |tag|
+    driver_name = tag.sub(/^@/, '').to_sym
+    if Capybara.drivers.has_key?(driver_name)
+      Capybara.current_driver = driver_name
+    end
+  end
 end
 
 After do
