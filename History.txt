@@ -5,6 +5,7 @@ Release date:
 ### Added
 
 * Added DSL for acceptance tests, inspired by Luismi Cavallé's Steak [Jonas Nicklas]
+* Selenium driver automatically waits for AJAX requests to finish [mgiambalvo, Nicklas Ramhöj and Jonas Nicklas]
 
 ### Changed
 

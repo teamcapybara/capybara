@@ -1,6 +1,13 @@
 require 'selenium-webdriver'
 
 class Capybara::Driver::Selenium < Capybara::Driver::Base
+  DEFAULT_OPTIONS = {
+    :resynchronize => true,
+    :resynchronization_timeout => 10,
+    :browser => :firefox
+  }
+  SPECIAL_OPTIONS = [:browser, :resynchronize, :resynchronization_timeout]
+
   class Node < Capybara::Driver::Node
     def text
       native.text
@@ -26,32 +33,34 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
     def set(value)
       if tag_name == 'input' and type == 'radio'
-        native.click
+        click
       elsif tag_name == 'input' and type == 'checkbox'
-        native.click if value ^ native.attribute('checked').to_s.eql?("true")
+        click if value ^ native.attribute('checked').to_s.eql?("true")
       elsif tag_name == 'textarea' or tag_name == 'input'
-        native.clear
-        native.send_keys(value.to_s)
+        resynchronize do
+          native.clear
+          native.send_keys(value.to_s)
+        end
       end
     end
 
     def select_option
-      native.select
+      resynchronize { native.select }
     end
 
     def unselect_option
       if select_node['multiple'] != 'multiple' and select_node['multiple'] != 'true'
         raise Capybara::UnselectNotAllowed, "Cannot unselect option from single select box."
       end
-      native.toggle if selected?
+      resynchronize { native.toggle } if selected?
     end
 
     def click
-      native.click
+      resynchronize { native.click }
     end
 
     def drag_to(element)
-      native.drag_and_drop_on(element.native)
+      resynchronize { native.drag_and_drop_on(element.native) }
     end
 
     def tag_name
@@ -76,6 +85,10 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   private
 
+    def resynchronize
+      driver.resynchronize { yield }
+    end
+
     # a reference to the select node if this is an option node
     def select_node
       find('./ancestor::select').first
@@ -91,7 +104,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   def browser
     unless @browser
-      @browser = Selenium::WebDriver.for(options[:browser] || :firefox, options.reject{|key,val| key == :browser})
+      @browser = Selenium::WebDriver.for(options[:browser], options.reject { |key,val| SPECIAL_OPTIONS.include?(key) })
       at_exit do
         @browser.quit
       end
@@ -101,7 +114,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   def initialize(app, options={})
     @app = app
-    @options = options
+    @options = DEFAULT_OPTIONS.merge(options)
     @rack_server = Capybara::Server.new(@app)
     @rack_server.boot if Capybara.run_server
   end
@@ -128,6 +141,18 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   def wait?; true; end
 
+  def resynchronize
+    if options[:resynchronize]
+      load_wait_for_ajax_support
+      yield
+      Capybara.timeout(options[:resynchronization_timeout], self, "failed to resynchronize, ajax request timed out") do
+        evaluate_script("!window.capybaraRequestsOutstanding")
+      end
+    else
+      yield
+    end
+  end
+
   def execute_script(script)
     browser.execute_script script
   end
@@ -148,11 +173,56 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     browser.switch_to.window old_window
   end
 
-  def within_window(handle, &blk)
+  def find_window( selector )
+    original_handle = browser.window_handle
+    browser.window_handles.each do |handle|
+      browser.switch_to.window handle
+      if( selector == browser.execute_script("return window.name") ||
+          browser.title.include?(selector) ||
+          browser.current_url.include?(selector) ||
+          (selector == handle) )
+        browser.switch_to.window original_handle
+        return handle
+      end
+    end
+    raise Capybara::ElementNotFound, "Could not find a window identified by #{selector}"
+  end
+
+  def within_window(selector, &blk)
+    handle = find_window( selector )
     browser.switch_to.window(handle, &blk)
   end
 
 private
+
+  def load_wait_for_ajax_support
+    browser.execute_script <<-JS
+      window.capybaraRequestsOutstanding = 0;
+      (function() { // Overriding XMLHttpRequest
+          var oldXHR = window.XMLHttpRequest;
+
+          function newXHR() {
+              var realXHR = new oldXHR();
+
+              window.capybaraRequestsOutstanding++;
+              realXHR.addEventListener("readystatechange", function() {
+                  if( realXHR.readyState == 4 ) {
+                    setTimeout( function() {
+                      window.capybaraRequestsOutstanding--;
+                      if(window.capybaraRequestsOutstanding < 0) {
+                        window.capybaraRequestsOutstanding = 0;
+                      }
+                    }, 500 );
+                  }
+              }, false);
+
+              return realXHR;
+          }
+
+          window.XMLHttpRequest = newXHR;
+      })();
+    JS
+  end
 
   def url(path)
     rack_server.url(path)
