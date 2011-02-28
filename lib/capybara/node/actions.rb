@@ -153,6 +153,7 @@ module Capybara
       #
       def attach_file(locator, path)
         msg = "cannot attach file, no file field with id, name, or label '#{locator}' found"
+        path.gsub!(/\//, "\\") if path.match(/^C:\//)
         find(:xpath, XPath::HTML.file_field(locator), :message => msg).set(path)
       end
     end
