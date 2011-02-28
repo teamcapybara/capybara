@@ -250,6 +250,16 @@ describe Capybara::RSpecMatchers do
             page.should have_content('No such Text')
           end.to raise_error(/expected there to be content "No such Text" in "(.*)This is a test(.*)"/)
         end
+
+        context "with default selector CSS" do
+          before { Capybara.default_selector = :css }
+          it "fails if has_css? returns false" do
+            expect do
+              page.should have_content('No such Text')
+            end.to raise_error(/expected there to be content "No such Text" in "(.*)This is a test(.*)"/)
+          end
+          after { Capybara.default_selector = :xpath }
+        end
       end
 
       context "with should_not" do

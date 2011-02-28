@@ -66,6 +66,7 @@ shared_examples_for "session" do
   it_should_behave_like "has_select"
   it_should_behave_like "has_table"
   it_should_behave_like "select"
+  it_should_behave_like "text"
   it_should_behave_like "uncheck"
   it_should_behave_like "unselect"
   it_should_behave_like "within"
