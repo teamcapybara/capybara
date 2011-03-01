@@ -222,7 +222,7 @@ JavaScript outside the browser. The driver is installed by installing the capyba
 More info about the driver and env.js are available through the links above. The envjs gem only supports
 Ruby 1.8.7 at this time.
 
-== <span id=dsl>The DSL</span>
+== The DSL
 
 Capybara's DSL (domain-specific language) is inspired by Webrat. While
 backwards compatibility is retained in a lot of cases, there are certain
