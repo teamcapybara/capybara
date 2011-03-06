@@ -122,7 +122,7 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
   end
 
   def browser
-    @browser ||= Selenium.preloaded_browser || Selenium.spawn_browser(options)
+    @browser ||= self.class.preloaded_browser || self.class.spawn_browser(options)
   end
 
   def initialize(app, options={})
