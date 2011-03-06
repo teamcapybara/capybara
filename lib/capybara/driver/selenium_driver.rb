@@ -102,14 +102,27 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   attr_reader :app, :rack_server, :options
 
-  def browser
-    unless @browser
-      @browser = Selenium::WebDriver.for(options[:browser], options.reject { |key,val| SPECIAL_OPTIONS.include?(key) })
-      at_exit do
-        @browser.quit
-      end
+  @@preloaded_browser = nil
+  cattr_reader :preloaded_browser
+
+  def self.preload_browser(options = {})
+    return if @@preloaded_browser
+
+    options = DEFAULT_OPTIONS.merge(options)
+
+    @@preloaded_browser = spawn_browser(options)
+  end
+
+  def self.spawn_browser(options)
+    browser = Selenium::WebDriver.for(options[:browser], options.reject { |key,val| SPECIAL_OPTIONS.include?(key) })
+    at_exit do
+      browser.quit
     end
-    @browser
+    browser
+  end
+
+  def browser
+    @browser ||= Selenium.preloaded_browser || Selenium.spawn_browser(options)
   end
 
   def initialize(app, options={})
