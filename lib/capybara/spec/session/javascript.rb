@@ -10,7 +10,6 @@ shared_examples_for "session with javascript support" do
 
     describe 'Node#drag_to' do
       it "should drag and drop an object" do
-        pending "drag/drop is currently broken under celerity/culerity" if @session.driver.is_a?(Capybara::Driver::Celerity)
         @session.visit('/with_js')
         element = @session.find('//div[@id="drag"]')
         target = @session.find('//div[@id="drop"]')
