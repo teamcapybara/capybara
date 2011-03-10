@@ -33,7 +33,14 @@ module Capybara
       # @return [Boolean]                         If the expression exists
       #
       def has_selector?(*args)
-        options = if args.last.is_a?(Hash) then args.last else {} end
+        options = if args.last.is_a?(Hash)
+          args.last
+        elsif args.last.is_a?(Array)
+          Hash[*args.last]
+        else
+          {}
+        end
+
         wait_conditionally_until do
           results = all(*args)
 
@@ -65,7 +72,13 @@ module Capybara
       # @return [Boolean]
       #
       def has_no_selector?(*args)
-        options = if args.last.is_a?(Hash) then args.last else {} end
+        options = if args.last.is_a?(Hash)
+          args.last
+        elsif args.last.is_a?(Array)
+          Hash[*args.last]
+        else
+          {}
+        end
         wait_conditionally_until do
           results = all(*args)
 
