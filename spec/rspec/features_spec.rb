@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'capybara/rspec'
-require 'capybara/rspec/features'
 
 Capybara.app = TestApp
 
