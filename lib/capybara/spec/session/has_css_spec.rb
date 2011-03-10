@@ -54,6 +54,11 @@ shared_examples_for "has_css" do
         @session.should_not have_css("abbr", :count => 2)
         @session.should_not have_css("p a.doesnotexist", :count => 1)
       end
+
+      it "should coerce count to an integer" do
+        @session.should have_css("p", :count => "3")
+        @session.should have_css("p a#foo", :count => "1")
+      end
     end
 
     context "with maximum" do
@@ -72,6 +77,11 @@ shared_examples_for "has_css" do
         @session.should_not have_css("abbr", :maximum => 2)
         @session.should_not have_css("p a.doesnotexist", :maximum => 1)
       end
+
+      it "should coerce maximum to an integer" do
+        @session.should have_css("h2.head", :maximum => "5") # edge case
+        @session.should have_css("h2", :maximum => "10")
+      end
     end
 
     context "with minimum" do
@@ -89,6 +99,11 @@ shared_examples_for "has_css" do
       it "should be false if the content isn't on the page at all" do
         @session.should_not have_css("abbr", :minimum => 2)
         @session.should_not have_css("p a.doesnotexist", :minimum => 7)
+      end
+
+      it "should coerce minimum to an integer" do
+        @session.should have_css("h2.head", :minimum => "5") # edge case
+        @session.should have_css("h2", :minimum => "3")
       end
     end
 
@@ -160,6 +175,11 @@ shared_examples_for "has_css" do
         @session.should have_no_css("abbr", :count => 2)
         @session.should have_no_css("p a.doesnotexist", :count => 1)
       end
+
+      it "should coerce count to an integer" do
+        @session.should_not have_no_css("p", :count => "3")
+        @session.should_not have_no_css("p a#foo", :count => "1")
+      end
     end
 
     context "with maximum" do
@@ -178,6 +198,11 @@ shared_examples_for "has_css" do
         @session.should have_no_css("abbr", :maximum => 5)
         @session.should have_no_css("p a.doesnotexist", :maximum => 10)
       end
+
+      it "should coerce maximum to an integer" do
+        @session.should_not have_no_css("h2.head", :maximum => "5") # edge case
+        @session.should_not have_no_css("h2", :maximum => "10")
+      end
     end
 
     context "with minimum" do
@@ -195,6 +220,11 @@ shared_examples_for "has_css" do
       it "should be true if the content isn't on the page at all" do
         @session.should have_no_css("abbr", :minimum => 5)
         @session.should have_no_css("p a.doesnotexist", :minimum => 10)
+      end
+
+      it "should coerce minimum to an integer" do
+        @session.should_not have_no_css("h2.head", :minimum => "4") # edge case
+        @session.should_not have_no_css("h2", :minimum => "3")
       end
     end
 

@@ -63,6 +63,8 @@ describe Capybara::Server do
   end
 
   it "should wait specified time for the app to boot" do
+    pending 'this test does not work: https://groups.google.com/d/msg/ruby-capybara/QrSKTbjh5rY/egvcVFYiWZMJ'
+
     @slow_app = proc { |env| sleep(1); [200, {}, "Hello Slow Server!"] }
 
     Capybara.server_boot_timeout = 1.5
@@ -73,6 +75,8 @@ describe Capybara::Server do
   end
 
   it "should raise an exception if boot timeout is exceeded" do
+    pending 'this test does not work: https://groups.google.com/d/msg/ruby-capybara/QrSKTbjh5rY/egvcVFYiWZMJ'
+
     @slow_app = proc { |env| sleep(1); [200, {}, "Hello Slow Server!"] }
 
     Capybara.server_boot_timeout = 0.5

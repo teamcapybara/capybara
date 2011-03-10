@@ -30,6 +30,9 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
           native.remove_attribute('checked')
         end
       elsif tag_name == 'input'
+        if (type == 'text' || type == 'password') && self[:maxlength]
+          value = value[0...self[:maxlength].to_i]
+        end
         native['value'] = value.to_s
       elsif tag_name == "textarea"
         native.content = value.to_s
