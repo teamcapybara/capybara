@@ -200,8 +200,6 @@ module Capybara
     autoload :Base,     'capybara/driver/base'
     autoload :Node,     'capybara/driver/node'
     autoload :RackTest, 'capybara/driver/rack_test_driver'
-    autoload :Celerity, 'capybara/driver/celerity_driver'
-    autoload :Culerity, 'capybara/driver/culerity_driver'
     autoload :Selenium, 'capybara/driver/selenium_driver'
   end
 end
@@ -218,14 +216,6 @@ end
 
 Capybara.register_driver :rack_test do |app|
   Capybara::Driver::RackTest.new(app)
-end
-
-Capybara.register_driver :celerity do |app|
-  Capybara::Driver::Celerity.new(app)
-end
-
-Capybara.register_driver :culerity do |app|
-  Capybara::Driver::Culerity.new(app)
 end
 
 Capybara.register_driver :selenium do |app|

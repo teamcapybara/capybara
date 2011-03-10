@@ -11,3 +11,4 @@ capybara-*.html
 .yardoc
 doc
 .bundle
+Gemfile.lock
