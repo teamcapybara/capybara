@@ -20,6 +20,16 @@ describe Capybara::RSpecMatchers do
             "<h1>Text</h1>".should have_css('h2')
           end.to raise_error(/expected css "h2" to return something/)
         end
+
+        it "passes if matched node count equals expected count" do
+          "<h1>Text</h1>".should have_css('h1', :count => 1)
+        end
+
+        it "fails if matched node count does not equal expected count" do
+          expect do
+            "<h1>Text</h1>".should have_css('h1', :count => 2)
+          end.to raise_error(/expected css "h1" to return something/)
+        end
       end
 
       context "with should_not" do
@@ -30,6 +40,16 @@ describe Capybara::RSpecMatchers do
         it "fails if has_no_css? returns false" do
           expect do
             "<h1>Text</h1>".should_not have_css('h1')
+          end.to raise_error(/expected css "h1" not to return anything/)
+        end
+
+        it "passes if matched node count does not equal expected count" do
+          "<h1>Text</h1>".should_not have_css('h1', :count => 2)
+        end
+
+        it "fails if matched node count equals expected count" do
+          expect do
+            "<h1>Text</h1>".should_not have_css('h1', :count => 1)
           end.to raise_error(/expected css "h1" not to return anything/)
         end
       end

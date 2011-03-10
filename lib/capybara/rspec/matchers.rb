@@ -58,12 +58,14 @@ module Capybara
 
       def matches?(actual)
         @actual = wrap(actual)
-        @actual.send(:"has_#{name}?", locator, *options)
+        # Note: Do not pass options if none given (has_content for instance
+        # expects no options hash).
+        @actual.send(:"has_#{name}?", locator, *([options] unless options.empty?))
       end
 
       def does_not_match?(actual)
         @actual = wrap(actual)
-        @actual.send(:"has_no_#{name}?", locator, *options)
+        @actual.send(:"has_no_#{name}?", locator, *([options] unless options.empty?))
       end
 
       def failure_message_for_should
