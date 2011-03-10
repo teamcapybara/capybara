@@ -83,7 +83,7 @@ shared_examples_for "find" do
       it "should raise an error with the failure message if the element is not found" do
         Capybara.add_selector(:monkey) do
           xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
-          failure_message { |node| node.all(".//*[contains(@id, 'monkey')]").map { |node| node.text }.sort.join(', ') }
+          failure_message { |node, selector| node.all(".//*[contains(@id, 'monkey')]").map { |node| node.text }.sort.join(', ') }
         end
         running do
           @session.find(:monkey, '14').text.should == 'Monkey Paul'
