@@ -56,16 +56,18 @@ module Capybara
         @failure_message = block
       end
 
+      def arguments
+        if options.empty? then [locator] else [locator, options] end
+      end
+
       def matches?(actual)
         @actual = wrap(actual)
-        # Note: Do not pass options if none given (has_content for instance
-        # expects no options hash).
-        @actual.send(:"has_#{name}?", locator, *([options] unless options.empty?))
+        @actual.send(:"has_#{name}?", *arguments)
       end
 
       def does_not_match?(actual)
         @actual = wrap(actual)
-        @actual.send(:"has_no_#{name}?", locator, *([options] unless options.empty?))
+        @actual.send(:"has_no_#{name}?", *arguments)
       end
 
       def failure_message_for_should
