@@ -81,6 +81,7 @@ shared_examples_for "session" do
   it_should_behave_like "unselect"
   it_should_behave_like "within"
   it_should_behave_like "current_url"
+  it_should_behave_like "current_host"
 
   it "should encode complex field names, like array[][value]" do
     @session.visit('/form')
