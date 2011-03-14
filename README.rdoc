@@ -7,9 +7,8 @@
 Capybara aims to simplify the process of integration testing Rack applications,
 such as Rails, Sinatra or Merb. Capybara simulates how a real user would
 interact with a web application. It is agnostic about the driver running your
-tests and currently comes bundled with rack-test, Culerity, Celerity and Selenium
-support built in. env.js support is available as the
-{capybara-envjs gem}[http://github.com/smparkes/capybara-envjs].
+tests and currently comes with Rack::Test and Selenium support built in.
+HtmlUnit and env.js are supported through external gems.
 
 A complete reference is available at
 {at rubydoc.info}[http://rubydoc.info/github/jnicklas/capybara/master].
@@ -71,8 +70,8 @@ driver that supports JavaScript, Capybara makes this easy: simply tag the
 scenario (or feature) with <tt>@javascript</tt>:
 
     @javascript
-    Scenario: do something AJAXy
-      When I click the AJAX link
+    Scenario: do something Ajaxy
+      When I click the Ajax link
       ...
 
 You can change which driver Capybara uses for JavaScript:
@@ -104,7 +103,7 @@ You can now use it in your examples:
 Capybara is only included for examples with <tt>:type => :request</tt> (or
 <tt>:acceptance</tt> for compatibility).
 
-Note that if you use the <tt>rspec-rails</tt> gem, <tt>:type => :request</tt>
+If you use the <tt>rspec-rails</tt> gem, <tt>:type => :request</tt>
 is automatically set on all files under <tt>spec/requests</tt> (and,
 synonymously, <tt>spec/integration</tt> and <tt>spec/acceptance</tt>), so
 that's a good directory to place your Capybara specs in.  <tt>rspec-rails</tt>
@@ -159,7 +158,7 @@ Capybara uses the same DSL to drive a variety of browser and headless drivers.
 
 === Selecting the Driver
 
-By default, Capybara uses the +:rack_test+ driver, which is fast but does not
+By default, Capybara uses the <tt>:rack_test</tt> driver, which is fast but does not
 support JavaScript.  You can set up a different default driver for your
 features. For example if you'd prefer to run everything in Selenium, you could
 do:
@@ -167,11 +166,11 @@ do:
     Capybara.default_driver = :selenium
 
 However, if you are using RSpec or Cucumber, you may instead want to consider
-leaving the faster +:rack_test+ as the +default_driver+, and marking only those
+leaving the faster <tt>:rack_test</tt> as the +default_driver+, and marking only those
 tests that require a JavaScript-capable driver using <tt>:js => true</tt> or
 <tt>@javascript</tt>, respectively.  By default, JavaScript tests are run using the
-+:selenium+ driver.  You can change this by setting
-+Capybara.javascript_driver+.
+<tt>:selenium</tt> driver.  You can change this by setting
+<tt>Capybara.javascript_driver</tt>.
 
 You can also change the driver temporarily (typically in the Before and After
 blocks):
@@ -189,27 +188,26 @@ At the moment, Capybara supports {Selenium 2.0
 *not* Selenium RC. Provided Firefox is installed, everything is set up for you,
 and you should be able to start using Selenium right away.
 
-By default Capybara tried to synchronize AJAX requests, so it will wait for
-AJAX requests to finish after you've interacted with the page. You can switch
+By default Capybara tries to synchronize Ajax requests, so it will wait for
+Ajax requests to finish after you've interacted with the page. You can switch
 off this behaviour by setting the driver option <tt>:resynchronize</tt> to
 <tt>false</tt>. See the section on configuring drivers.
 
-=== HtmlUnit through Akephalos
+=== HtmlUnit
 
-{Akephalos}[https://github.com/bernerdschaefer/akephalos] is perhaps the best
-HtmlUnit driver right now, but you need to install the akephalos gem to use it.
+There are three different drivers, maintained as external gems, that you can
+use to drive {HtmlUnit}[http://htmlunit.sourceforge.net/]:
 
-=== HtmlUnit through Celerity
+* {Akephalos}[https://github.com/bernerdschaefer/akephalos] might be the best
+  HtmlUnit driver right now.
 
-Celerity only runs on JRuby, so you'll need to install the celerity gem under
-JRuby:
+* {Celerity}[https://github.com/sobrinho/capybara-celerity] only runs on JRuby,
+  so you'll need to install the celerity gem under JRuby: <tt>jruby -S gem
+  install celerity</tt>
 
-   jruby -S gem install celerity
-
-=== HtmlUnit through Culerity
-
-Install celerity as noted above, make sure JRuby is in your path. Note that
-Culerity doesn't seem to be working under Ruby 1.9 at the moment.
+* {Culerity}[https://github.com/sobrinho/capybara-culerity]: Install celerity
+  as noted above, and make sure that JRuby is in your path. Note that Culerity
+  does not seem to be working under Ruby 1.9 at the moment.
 
 === env.js
 
@@ -231,11 +229,6 @@ important differences.  Unlike in Webrat, all searches in Capybara are *case
 sensitive*. This is because Capybara heavily uses XPath, which doesn't support
 case insensitivity.
 
-For a full reference of the DSL, check
-{Capybara::Session}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session]
-and the modules defined in
-{Capybara::Node}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node].
-
 === Navigating
 
 You can use the
@@ -256,6 +249,8 @@ of the browsing session for test assertions:
 
 === Clicking links and buttons
 
+<em>Full reference: {Capybara::Node::Actions}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Actions]</em>
+
 You can interact with the webapp by following links and buttons. Capybara
 automatically follows any redirects, and submits forms associated with buttons.
 
@@ -267,13 +262,13 @@ automatically follows any redirects, and submits forms associated with buttons.
 
 === Interacting with forms
 
-Forms are everywhere in webapps, there are a number of tools for interacting
-with the various form elements (see
-{Capybara::Node::Actions}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Actions]):
+<em>Full reference: {Capybara::Node::Actions}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Actions]</em>
+
+There are a number of tools for interacting with form elements:
 
     fill_in('First Name', :with => 'John')
     fill_in('Password', :with => 'Seekrit')
-    fill_in('Description', :with => 'Really Long Text…')
+    fill_in('Description', :with => 'Really Long Text...')
     choose('A Radio Button')
     check('A Checkbox')
     uncheck('A Checkbox')
@@ -282,9 +277,10 @@ with the various form elements (see
 
 === Querying
 
+<em>Full reference: {Capybara::Node::Matchers}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Matchers]</em>
+
 Capybara has a rich set of options for querying the page for the existence of
-certain elements, and working with and manipulating those elements (see
-{Capybara::Node::Matchers}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Matchers]).
+certain elements, and working with and manipulating those elements.
 
     page.has_selector?('table tr')
     page.has_selector?(:xpath, '//table/tr')
@@ -317,8 +313,9 @@ method to test against the raw HTML:
 
 === Finding
 
-You can also find specific elements, in order to manipulate them (see
-{Capybara::Node::Finders}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Finders]):
+<em>Full reference: {Capybara::Node::Finders}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Finders]</em>
+
+You can also find specific elements, in order to manipulate them:
 
     find_field('First Name').value
     find_link('Hello').visible?
@@ -329,7 +326,7 @@ You can also find specific elements, in order to manipulate them (see
     all('a').each { |a| a[:href] }
 
 Note that <tt>find</tt> will wait for an element to appear on the page, as explained in the
-AJAX section. If the element does not appear it will raise an error.
+Ajax section. If the element does not appear it will raise an error.
 
 These elements all have all the Capybara DSL methods available, so you can restrict them
 to specific parts of the page:
@@ -383,7 +380,7 @@ look at it:
 
     save_and_open_page
 
-== Asynchronous JavaScript (AJAX and friends)
+== Asynchronous JavaScript (Ajax and friends)
 
 When working with asynchronous JavaScript, you might come across situations
 where you are attempting to interact with an element which is not yet present
@@ -397,7 +394,7 @@ When issuing instructions to the DSL such as:
     page.should have_content('baz')
 
 If clicking on the *foo* link causes triggers an asynchronous process, such as
-an AJAX request, which, when complete will add the *bar* link to the page,
+an Ajax request, which, when complete will add the *bar* link to the page,
 clicking on the *bar* link would be expeced to fail, since that link doesn't
 exist yet. However Capybara is smart enought to retry finding the link for a
 brief period of time before giving up and throwing an error. The same is true of
@@ -450,9 +447,9 @@ setting app_host:
     ...
     visit('/')
 
-Note that the default driver (+:rack_test+) does not support running against a
-remote server. With drivers that support it, you can also visit any URL
-directly:
+Note that the default driver (<tt>:rack_test</tt>) does not support running
+against a remote server. With drivers that support it, you can also visit any
+URL directly:
 
     visit('http://www.google.com')
 
@@ -464,7 +461,9 @@ remote application:
 
 == Using the sessions manually
 
-For ultimate control, you can instantiate and use a session manually.
+For ultimate control, you can instantiate and use a
+{Session}[http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session]
+manually.
 
     require 'capybara'
 
@@ -582,7 +581,7 @@ additional info about how the underlying driver can be configured.
 
 * Freezing time: It's common practice to mock out the Time so that features
   that depend on the current Date work as expected. This can be problematic,
-  since Capybara's AJAX timing uses the system time, resulting in Capybara
+  since Capybara's Ajax timing uses the system time, resulting in Capybara
   never timing out and just hanging when a failure occurs. It's still possible to
   use plugins which allow you to travel in time, rather than freeze time.
   One such plugin is {Timecop}[http://github.com/jtrupiano/timecop].
