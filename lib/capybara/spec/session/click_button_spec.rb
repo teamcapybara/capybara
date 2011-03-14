@@ -123,6 +123,18 @@ shared_examples_for "click_button" do
       end
     end
     
+    context "with title given on a submit button" do
+      it "should submit the associated form" do
+        @session.click_button('What an Awesome Button')
+        extract_results(@session)['first_name'].should == 'John'
+      end
+
+      it "should work with partial matches" do
+        @session.click_button('What an Awesome')
+        extract_results(@session)['first_name'].should == 'John'
+      end
+    end
+
     context "with alt given on an image button" do
       it "should submit the associated form" do
         @session.click_button('oh hai thar')
@@ -150,6 +162,18 @@ shared_examples_for "click_button" do
     context "with id given on an image button" do
       it "should submit the associated form" do
         @session.click_button('okay556')
+        extract_results(@session)['first_name'].should == 'John'
+      end
+    end
+
+    context "with title given on an image button" do
+      it "should submit the associated form" do
+        @session.click_button('Okay 556 Image')
+        extract_results(@session)['first_name'].should == 'John'
+      end
+
+      it "should work with partial matches" do
+        @session.click_button('Okay 556')
         extract_results(@session)['first_name'].should == 'John'
       end
     end
@@ -203,6 +227,17 @@ shared_examples_for "click_button" do
       end
     end
 
+    context "with title given on a button defined by <button> tag" do
+      it "should submit the associated form" do
+        @session.click_button('Click Title button')
+        extract_results(@session)['first_name'].should == 'John'
+      end
+
+      it "should work with partial matches" do
+        @session.click_button('Click Title')
+        extract_results(@session)['first_name'].should == 'John'
+      end
+    end
     context "with a locator that doesn't exist" do
       it "should raise an error" do
         running do
