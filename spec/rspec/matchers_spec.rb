@@ -296,7 +296,19 @@ describe Capybara::RSpecMatchers do
     end
   end
 
-  describe "have_link matcher"
+  describe "have_link matcher" do
+    let(:html) { '<a href="#">Just a link</a>' }
+
+    it "passes if there is such a button" do
+      html.should have_link('Just a link')
+    end
+
+    it "fails if there is no such button" do
+      expect do
+        html.should have_link('No such Link')
+      end.to raise_error(/expected link "No such Link"/)
+    end
+  end
 
   describe "have_button matcher" do
     let(:html) { '<button>A button</button><input type="submit" value="Another button"/>' }
@@ -326,8 +338,88 @@ describe Capybara::RSpecMatchers do
     end
   end
 
-  describe "have_checked_field matcher"
-  describe "have_unchecked_field matcher"
+  describe "have_checked_field matcher" do
+    let(:html) do
+      '<label>it is checked<input type="checkbox" checked="checked"/></label>
+      <label>unchecked field<input type="checkbox"/></label>'
+    end
+
+    context "with should" do
+      it "passes if there is such a field and it is checked" do
+        html.should have_checked_field('it is checked')
+      end
+
+      it "fails if there is such a field but it is not checked" do
+        expect do
+          html.should have_checked_field('unchecked field')
+        end.to raise_error(/expected checked_field "unchecked field"/)
+      end
+
+      it "fails if there is no such field" do
+        expect do
+          html.should have_checked_field('no such field')
+        end.to raise_error(/expected checked_field "no such field"/)
+      end
+    end
+
+    context "with should not" do
+      it "fails if there is such a field and it is checked" do
+        expect do
+          html.should_not have_checked_field('it is checked')
+        end.to raise_error(/expected checked_field "it is checked" not to return anything/)
+      end
+
+      it "passes if there is such a field but it is not checked" do
+        html.should_not have_checked_field('unchecked field')
+      end
+
+      it "passes if there is no such field" do
+        html.should_not have_checked_field('no such field')
+      end
+    end
+  end
+
+  describe "have_unchecked_field matcher" do
+    let(:html) do
+      '<label>it is checked<input type="checkbox" checked="checked"/></label>
+      <label>unchecked field<input type="checkbox"/></label>'
+    end
+
+    context "with should" do
+      it "passes if there is such a field and it is not checked" do
+        html.should have_unchecked_field('unchecked field')
+      end
+
+      it "fails if there is such a field but it is checked" do
+        expect do
+          html.should have_unchecked_field('it is checked')
+        end.to raise_error(/expected unchecked_field "it is checked"/)
+      end
+
+      it "fails if there is no such field" do
+        expect do
+          html.should have_unchecked_field('no such field')
+        end.to raise_error(/expected unchecked_field "no such field"/)
+      end
+    end
+
+    context "with should not" do
+      it "fails if there is such a field and it is not checked" do
+        expect do
+          html.should_not have_unchecked_field('unchecked field')
+        end.to raise_error(/expected unchecked_field "unchecked field" not to return anything/)
+      end
+
+      it "passes if there is such a field but it is checked" do
+        html.should_not have_unchecked_field('it is checked')
+      end
+
+      it "passes if there is no such field" do
+        html.should_not have_unchecked_field('no such field')
+      end
+    end
+  end
+
   describe "have_select matcher"
   describe "have_table matcher"
 end

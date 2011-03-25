@@ -98,6 +98,26 @@ module Capybara
         native.xpath("./ancestor-or-self::*[contains(@style, 'display:none') or contains(@style, 'display: none')]").size == 0
       end
 
+      ##
+      #
+      # Whether or not the element is checked.
+      #
+      # @return [Boolean]     Whether the element is checked
+      #
+      def checked?
+        native[:checked]
+      end
+
+      ##
+      #
+      # Whether or not the element is selected.
+      #
+      # @return [Boolean]     Whether the element is selected
+      #
+      def selected?
+        native[:selected]
+      end
+
     protected
 
       def find_in_base(xpath)

@@ -72,11 +72,11 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     end
 
     def checked?
-      self[:checked]
+      string_node.checked?
     end
 
     def selected?
-      self[:selected]
+      string_node.selected?
     end
 
     def path

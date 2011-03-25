@@ -295,6 +295,19 @@ module Capybara
 
       ##
       #
+      # Checks if the page or current node has no radio button or
+      # checkbox with the given label, value or id, that is currently
+      # checked.
+      #
+      # @param [String] locator           The label, name or id of a checked field
+      # @return [Boolean]                 Whether it doesn't exists
+      #
+      def has_no_checked_field?(locator)
+        has_no_xpath?(XPath::HTML.field(locator), :checked => true)
+      end
+
+      ##
+      #
       # Checks if the page or current node has a radio button or
       # checkbox with the given label, value or id, that is currently
       # unchecked.
@@ -304,6 +317,19 @@ module Capybara
       #
       def has_unchecked_field?(locator)
         has_xpath?(XPath::HTML.field(locator), :unchecked => true)
+      end
+
+      ##
+      #
+      # Checks if the page or current node has no radio button or
+      # checkbox with the given label, value or id, that is currently
+      # unchecked.
+      #
+      # @param [String] locator           The label, name or id of an unchecked field
+      # @return [Boolean]                 Whether it doesn't exists
+      #
+      def has_no_unchecked_field?(locator)
+        has_no_xpath?(XPath::HTML.field(locator), :unchecked => true)
       end
 
       ##
