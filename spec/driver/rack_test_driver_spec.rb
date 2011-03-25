@@ -53,6 +53,7 @@ describe Capybara::Driver::RackTest do
   it_should_behave_like "driver with status code support"
   it_should_behave_like "driver with cookies support"
   it_should_behave_like "driver with infinite redirect detection"
+  it_should_behave_like "driver with subdomain support"
 
   describe '#reset!' do
     it { @driver.visit('/foo'); lambda { @driver.reset! }.should change(@driver, :current_url).to('') }

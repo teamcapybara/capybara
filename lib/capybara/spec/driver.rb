@@ -295,3 +295,16 @@ shared_examples_for "driver with infinite redirect detection" do
     end.should raise_error(Capybara::InfiniteRedirectError)
   end
 end
+
+shared_examples_for "driver with subdomain support" do
+  it "should stay on a subdomain" do
+    @driver.visit('/')
+    @driver.current_url.should == "http://www.example.com/"
+    @driver.visit("http://subdomain.example.com/")
+    @driver.current_url.should == "http://subdomain.example.com/"
+    @driver.visit('/')
+    @driver.current_url.should == "http://subdomain.example.com/"
+    @driver.visit('/foo')
+    @driver.current_url.should == "http://subdomain.example.com/foo"
+  end
+end

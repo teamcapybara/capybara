@@ -206,6 +206,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   def process(method, path, attributes = {})
     return if path.gsub(/^#{request_path}/, '') =~ /^#/
     path = request_path + path if path =~ /^\?/
+    path = current_url.gsub(/#{request_path}$/, '') + path if path.start_with?('/') && current_url != ''
     send(method, to_binary(path), to_binary( attributes ), env)
     follow_redirects!
   end
