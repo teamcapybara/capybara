@@ -115,7 +115,7 @@ shared_examples_for "has_field" do
     end
   end
 
-  describe '#has_no_checked_field?', :focus => true do
+  describe '#has_no_checked_field?' do
     before { @session.visit('/form') }
 
     it "should be false if a checked field is on the page" do
@@ -171,7 +171,7 @@ shared_examples_for "has_field" do
     end
   end
 
-  describe '#has_no_unchecked_field?', :focus => true do
+  describe '#has_no_unchecked_field?' do
     before { @session.visit('/form') }
 
     it "should be true if a checked field is on the page" do
