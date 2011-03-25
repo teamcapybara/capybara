@@ -56,7 +56,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     def click
       if tag_name == 'a'
         method = self["data-method"] || :get
-        driver.process(method, self[:href].to_s)
+        driver.follow(method, self[:href].to_s)
       elsif (tag_name == 'input' and %w(submit image).include?(type)) or
           ((tag_name == 'button') and type.nil? or type == "submit")
         Form.new(driver, form).submit(self)
@@ -190,6 +190,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
 
   include ::Rack::Test::Methods
   attr_reader :app
+  attr_accessor :current_host
 
   alias_method :response, :last_response
   alias_method :request, :last_request
@@ -200,14 +201,37 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   end
 
   def visit(path, attributes = {})
+    reset_host!
     process(:get, path, attributes)
   end
 
+  def submit(method, path, attributes)
+    path = request_path if not path or path.empty?
+    process(method, path, attributes)
+  end
+
+  def follow(method, path, attributes = {})
+    return if path.gsub(/^#{request_path}/, '').start_with?('#')
+    process(method, path, attributes)
+  end
+
   def process(method, path, attributes = {})
-    return if path.gsub(/^#{request_path}/, '') =~ /^#/
-    path = request_path + path if path =~ /^\?/
+    new_uri = URI.parse(path)
+    current_uri = URI.parse(current_url)
+
+    path = request_path + path if path.start_with?('?')
+    path = current_host + path if path.start_with?('/')
+
+    if new_uri.host
+      @current_host = new_uri.scheme + '://' + new_uri.host
+    end
+
     send(method, to_binary(path), to_binary( attributes ), env)
     follow_redirects!
+  end
+
+  def reset_host!
+    @current_host = (Capybara.app_host || Capybara.default_host)
   end
 
   def current_url
@@ -236,12 +260,6 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
     end
   end
 
-  def submit(method, path, attributes)
-    path = request_path if not path or path.empty?
-    send(method, to_binary(path), to_binary(attributes), env)
-    follow_redirects!
-  end
-
   def find(selector)
     html.xpath(selector).map { |node| Node.new(self, node) }
   end
@@ -256,6 +274,7 @@ class Capybara::Driver::RackTest < Capybara::Driver::Base
   alias_method :source, :body
 
   def reset!
+    reset_host!
     clear_rack_mock_session
   end
 
@@ -276,10 +295,6 @@ private
   def reset_cache
     @body = nil
     @html = nil
-  end
-
-  def build_rack_mock_session # :nodoc:
-    Rack::MockSession.new(app, Capybara.default_host || "www.example.com")
   end
 
   # Rack::Test::Methods does not provide methods for manipulating the session

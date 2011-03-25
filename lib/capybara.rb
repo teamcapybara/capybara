@@ -212,6 +212,7 @@ Capybara.configure do |config|
   config.default_wait_time = 2
   config.ignore_hidden_elements = false
   config.prefer_visible_elements = true
+  config.default_host = "http://www.example.com"
 end
 
 Capybara.register_driver :rack_test do |app|

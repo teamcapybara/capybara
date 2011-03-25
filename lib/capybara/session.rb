@@ -112,7 +112,8 @@ module Capybara
     # @return [String] Host of the current page
     #
     def current_host
-      URI.parse(current_url).host
+      uri = URI.parse(current_url)
+      "#{uri.scheme}://#{uri.host}"
     end
 
     ##

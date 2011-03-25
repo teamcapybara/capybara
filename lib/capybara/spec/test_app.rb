@@ -22,6 +22,10 @@ class TestApp < Sinatra::Base
     redirect '/landed'
   end
 
+  get '/host' do
+    "Current host is #{request.domain}"
+  end
+
   get '/redirect/:times/times' do
     times = params[:times].to_i
     if times.zero?
