@@ -308,21 +308,21 @@ describe Capybara::RSpecMatchers do
     it "fails if there is no such button" do
       expect do
         html.should have_button('No such Button')
-      end.to raise_error(/expected there to be a button "No such Button", other buttons: "A button", "Another button"/)
+      end.to raise_error(/expected button "No such Button"/)
     end
   end
 
   describe "have_field matcher" do
     let(:html) { '<button>A button</button><button>Another button</button>' }
 
-    it "passes if there is such a button" do
+    it "passes if there is such a field" do
       html.should have_button('A button')
     end
 
-    it "fails if there is no such button" do
+    it "fails if there is no such field" do
       expect do
         html.should have_button('No such Button')
-      end.to raise_error(/expected there to be a button "No such Button", other buttons: "A button", "Another button"/)
+      end.to raise_error(/expected button "No such Button"/)
     end
   end
 

@@ -116,11 +116,7 @@ module Capybara
     end
 
     def have_button(button, options={})
-      HaveMatcher.new(:button, button, options) do |page, matcher|
-        buttons = page.all(:xpath, './/button | .//input[(@type="submit") or (@type="image") or (@type="button")]')
-        labels = buttons.map { |button| %("#{button[:value] or button.text}") }.join(', ')
-        %(expected there to be a button #{matcher.locator.inspect}, other buttons: #{labels})
-      end
+      HaveMatcher.new(:button, button, options)
     end
   end
 end
