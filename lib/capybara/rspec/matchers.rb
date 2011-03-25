@@ -134,5 +134,13 @@ module Capybara
     def have_unchecked_field(locator)
       HaveMatcher.new(:unchecked_field, locator)
     end
+
+    def have_select(locator, options={})
+      HaveMatcher.new(:select, locator, options)
+    end
+
+    def have_table(locator, options={})
+      HaveMatcher.new(:table, locator, options)
+    end
   end
 end

@@ -420,7 +420,32 @@ describe Capybara::RSpecMatchers do
     end
   end
 
-  describe "have_select matcher"
-  describe "have_table matcher"
+  describe "have_select matcher" do
+    let(:html) { '<label>Select Box<select></select></label>' }
+
+    it "passes if there is such a select" do
+      html.should have_select('Select Box')
+    end
+
+    it "fails if there is no such select" do
+      expect do
+        html.should have_select('No such Select box')
+      end.to raise_error(/expected select "No such Select box"/)
+    end
+  end
+
+  describe "have_table matcher" do
+    let(:html) { '<table><caption>Lovely table</caption></table>' }
+
+    it "passes if there is such a select" do
+      html.should have_table('Lovely table')
+    end
+
+    it "fails if there is no such select" do
+      expect do
+        html.should have_table('No such Table')
+      end.to raise_error(/expected table "No such Table"/)
+    end
+  end
 end
 
