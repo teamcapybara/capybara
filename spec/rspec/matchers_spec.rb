@@ -313,16 +313,16 @@ describe Capybara::RSpecMatchers do
   end
 
   describe "have_field matcher" do
-    let(:html) { '<button>A button</button><button>Another button</button>' }
+    let(:html) { '<p><label>Text field<input type="text"/></label></p>' }
 
     it "passes if there is such a field" do
-      html.should have_button('A button')
+      html.should have_field('Text field')
     end
 
     it "fails if there is no such field" do
       expect do
-        html.should have_button('No such Button')
-      end.to raise_error(/expected button "No such Button"/)
+        html.should have_field('No such Field')
+      end.to raise_error(/expected field "No such Field"/)
     end
   end
 

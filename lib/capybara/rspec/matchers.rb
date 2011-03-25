@@ -118,5 +118,9 @@ module Capybara
     def have_button(button, options={})
       HaveMatcher.new(:button, button, options)
     end
+
+    def have_field(button, options={})
+      HaveMatcher.new(:field, button, options)
+    end
   end
 end
