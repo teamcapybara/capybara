@@ -175,8 +175,9 @@ tests that require a JavaScript-capable driver using <tt>:js => true</tt> or
 You can also change the driver temporarily (typically in the Before and After
 blocks):
 
-    Capybara.current_driver = :culerity
-    Capybara.use_default_driver
+    Capybara.current_driver = :culerity  # temporarily select different driver
+    ... tests ...
+    Capybara.use_default_driver  # switch back to default driver
 
 Note that switching the driver creates a new session, so you may not be able to
 switch in the middle of a test.
