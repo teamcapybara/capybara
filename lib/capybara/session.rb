@@ -93,8 +93,7 @@ module Capybara
 
     ##
     #
-    # @return [String] A snapshot of the HTML of the current document, as it
-    # looks right now (potentially modified by JavaScript).
+    # @return [String] A snapshot of the HTML of the current document, as it looks right now (potentially modified by JavaScript).
     #
     def body
       driver.body
