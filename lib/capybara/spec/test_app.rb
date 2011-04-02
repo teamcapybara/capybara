@@ -23,7 +23,7 @@ class TestApp < Sinatra::Base
   end
 
   get '/host' do
-    "Current host is #{request.domain}"
+    "Current host is #{request.scheme}://#{request.host}"
   end
 
   get '/redirect/:times/times' do

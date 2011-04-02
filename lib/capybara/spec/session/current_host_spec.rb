@@ -13,7 +13,7 @@ shared_examples_for "current_host" do
     it "returns to the app host when visiting a relative url" do
       Capybara.app_host = "http://capybara1.elabs.se"
       @session.visit('http://capybara-testapp.heroku.com/host')
-      @session.body.should include('Current host is capybara-testapp.heroku.com')
+      @session.body.should include('Current host is http://capybara-testapp.heroku.com')
       @session.current_host.should == 'http://capybara-testapp.heroku.com'
       @session.visit('/host')
       @session.body.should include('Current host is http://capybara1.elabs.se')
