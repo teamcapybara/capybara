@@ -8,7 +8,7 @@ describe Capybara::Session do
 
     describe '#driver' do
       it "should be a rack test driver" do
-        @session.driver.should be_an_instance_of(Capybara::Driver::RackTest)
+        @session.driver.should be_an_instance_of(Capybara::RackTest::Driver)
       end
     end
 
@@ -22,7 +22,7 @@ describe Capybara::Session do
       it "should use data-method if available" do
         @session.visit "/with_html"
         @session.click_link "A link with data-method"
-        @session.body.should == 'The requested object was deleted'
+        @session.body.should include('The requested object was deleted')
       end
     end
 
