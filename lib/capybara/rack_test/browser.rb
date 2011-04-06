@@ -93,7 +93,9 @@ protected
   end
 
   def request_path
-    request.path rescue ""
+    last_request.path
+  rescue Rack::Test::Error
+    ""
   end
 
   def env

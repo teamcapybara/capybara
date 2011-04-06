@@ -51,7 +51,7 @@ shared_examples_for "session" do
     end
   end
 
-  describe '#reset!', :focus => true do
+  describe '#reset!' do
     it "removes cookies" do
       @session.visit('/set_cookie')
       @session.visit('/get_cookie')
