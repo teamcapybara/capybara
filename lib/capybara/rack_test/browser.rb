@@ -47,7 +47,9 @@ class Capybara::RackTest::Browser
   end
 
   def current_url
-    last_request.url rescue ""
+    last_request.url
+  rescue Rack::Test::Error
+    ""
   end
 
   def reset_host!
