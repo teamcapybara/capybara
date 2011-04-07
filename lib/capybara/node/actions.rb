@@ -104,7 +104,7 @@ module Capybara
       #
       #     page.select 'March', :from => 'Month'
       #
-      # @param [String] locator           Which check box to uncheck
+      # @param [String] locator           Which option to select
       # @param [Hash{:from => String}]    The id, name or label of the select box
       #
       def select(value, options={})
@@ -121,13 +121,14 @@ module Capybara
 
       ##
       #
-      # Find a select box on the page and select a particular option from it. If the select
-      # box is a multiple select, +select+ can be called multiple times to select more than
+      # Find a select box on the page and unselect a particular option from it. If the select
+      # box is a multiple select, +unselect+ can be called multiple times to unselect more than
       # one option. The select box can be found via its name, id or label text.
       #
-      #     page.uncheck('German')
+      #     page.unselect 'March', :from => 'Month'
       #
-      # @param [String] locator           Which check box to uncheck
+      # @param [String] locator           Which option to unselect
+      # @param [Hash{:from => String}]    The id, name or label of the select box
       #
       def unselect(value, options={})
         if options.has_key?(:from)
