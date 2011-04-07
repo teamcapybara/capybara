@@ -122,7 +122,7 @@ module Capybara
     #
     def current_host
       uri = URI.parse(current_url)
-      "#{uri.scheme}://#{uri.host}"
+      "#{uri.scheme}://#{uri.host}" if uri.host
     end
 
     ##
