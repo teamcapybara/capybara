@@ -163,7 +163,10 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 
   def reset!
     # Use instance variable directly so we avoid starting the browser just to reset the session
-    @browser.manage.delete_all_cookies if @browser
+    if @browser
+      @browser.manage.delete_all_cookies
+      @browser.navigate.to('about:blank')
+    end
   end
 
   def within_frame(frame_id)

@@ -75,7 +75,7 @@ shared_examples_for "session" do
       @session.current_path.should == '/with_html'
 
       @session.reset!
-      @session.current_path.should == ""
+      @session.current_path.should be_nil
     end
 
     it "resets page body" do
