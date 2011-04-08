@@ -17,7 +17,7 @@ describe Capybara do
   describe '.register_driver' do
     it "should add a new driver" do
       Capybara.register_driver :schmoo do |app|
-        Capybara::Driver::RackTest.new(app)
+        Capybara::RackTest::Driver.new(app)
       end
       session = Capybara::Session.new(:schmoo, TestApp)
       session.visit('/')

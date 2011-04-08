@@ -72,4 +72,5 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
   def post(*args, &block); browser.post(*args, &block); end
   def put(*args, &block); browser.put(*args, &block); end
   def delete(*args, &block); browser.delete(*args, &block); end
+  def header(key, value); browser.header(key, value); end
 end
