@@ -14,14 +14,14 @@ def capture(*streams)
   result.string
 end
 
-describe Capybara::Driver::RackTest do
+describe Capybara::RackTest::Driver do
   before do
     @driver = TestSessions::RackTest.driver
   end
 
   it "should throw an error when no rack app is given" do
     running do
-      Capybara::Driver::RackTest.new(nil)
+      Capybara::RackTest::Driver.new(nil)
     end.should raise_error(ArgumentError)
   end
 
