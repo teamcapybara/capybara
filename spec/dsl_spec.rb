@@ -2,7 +2,7 @@ require 'spec_helper'
 
 require 'capybara/dsl'
 
-describe Capybara do
+describe Capybara::DSL do
 
   before do
     Capybara.app = TestApp
@@ -170,7 +170,7 @@ describe Capybara do
 
   describe 'the DSL' do
     before do
-      @session = Capybara
+      @session = Class.new { include Capybara::DSL }.new
     end
 
     it_should_behave_like "session"
@@ -178,7 +178,7 @@ describe Capybara do
 
     it "should be possible to include it in another class" do
       klass = Class.new do
-        include Capybara
+        include Capybara::DSL
       end
       foo = klass.new
       foo.visit('/with_html')
@@ -188,7 +188,7 @@ describe Capybara do
 
     it "should provide a 'page' shortcut for more expressive tests" do
       klass = Class.new do
-        include Capybara
+        include Capybara::DSL
       end
       foo = klass.new
       foo.page.visit('/with_html')
@@ -198,7 +198,7 @@ describe Capybara do
 
     it "should provide an 'using_session' shortcut" do
       klass = Class.new do
-        include Capybara
+        include Capybara::DSL
       end
       Capybara.should_receive(:using_session).with(:name)
       foo = klass.new

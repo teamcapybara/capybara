@@ -3,7 +3,7 @@ require 'capybara'
 require 'capybara/dsl'
 require 'capybara/rspec/matchers'
 
-World(Capybara)
+World(Capybara::DSL)
 World(Capybara::RSpecMatchers)
 
 After do

@@ -64,7 +64,7 @@ describe Capybara do
       string.find('//h1').path.should == '/html/body/div/div[1]/h1'
     end
 
-    it "allows finding elements and extracting the path" do
+    it "allows finding elements and extracting the value" do
       string.find('//input').value.should == 'bar'
       string.find('//select').value.should == 'Capybara'
     end

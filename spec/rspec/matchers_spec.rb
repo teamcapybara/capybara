@@ -5,7 +5,7 @@ require 'capybara/rspec/matchers'
 Capybara.app = TestApp
 
 describe Capybara::RSpecMatchers do
-  include Capybara
+  include Capybara::DSL
   include Capybara::RSpecMatchers
 
   describe "have_css matcher" do

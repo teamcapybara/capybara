@@ -418,7 +418,8 @@ correctly waits for the element to disappear from the page.
 
 == Using the DSL in unsupported testing frameworks
 
-You can mix the DSL into any context by including +Capybara+:
+You can mix the DSL into any context by including +Capybara::DSL+:
+
 
     require 'capybara'
     require 'capybara/dsl'
@@ -426,7 +427,7 @@ You can mix the DSL into any context by including +Capybara+:
     Capybara.default_driver = :culerity
 
     module MyModule
-      include Capybara
+      include Capybara::DSL
 
       def login!
         within("//form[@id='session']") do

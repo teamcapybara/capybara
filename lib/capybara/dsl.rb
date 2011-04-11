@@ -1,6 +1,11 @@
 require 'capybara'
 
 module Capybara
+  def self.included(base)
+    base.send(:include, Capybara::DSL)
+    warn "`include Capybara` is deprecated please use `include Capybara::DSL` instead."
+  end
+
   class << self
     attr_writer :default_driver, :current_driver, :javascript_driver, :session_name
 
@@ -98,42 +103,44 @@ module Capybara
     end
   end
 
-  extend(self)
+  module DSL
 
-  ##
-  #
-  # Shortcut to working in a different session. This is useful when Capybara is included
-  # in a class or module.
-  #
-  def using_session(name, &block)
-    Capybara.using_session(name, &block)
+    ##
+    #
+    # Shortcut to working in a different session. This is useful when Capybara is included
+    # in a class or module.
+    #
+    def using_session(name, &block)
+      Capybara.using_session(name, &block)
+    end
+
+    ##
+    #
+    # Shortcut to accessing the current session. This is useful when Capybara is included in a
+    # class or module.
+    #
+    #     class MyClass
+    #       include Capybara::DSL
+    #
+    #       def has_header?
+    #         page.has_css?('h1')
+    #       end
+    #     end
+    #
+    # @return [Capybara::Session] The current session object
+    #
+    def page
+      Capybara.current_session
+    end
+
+    Session::DSL_METHODS.each do |method|
+      class_eval <<-RUBY, __FILE__, __LINE__+1
+        def #{method}(*args, &block)
+          page.#{method}(*args, &block)
+        end
+      RUBY
+    end
   end
 
-  ##
-  #
-  # Shortcut to accessing the current session. This is useful when Capybara is included in a
-  # class or module.
-  #
-  #     class MyClass
-  #       include Capybara
-  #
-  #       def has_header?
-  #         page.has_css?('h1')
-  #       end
-  #     end
-  #
-  # @return [Capybara::Session] The current session object
-  #
-  def page
-    Capybara.current_session
-  end
-
-  Session::DSL_METHODS.each do |method|
-    class_eval <<-RUBY, __FILE__, __LINE__+1
-      def #{method}(*args, &block)
-        page.#{method}(*args, &block)
-      end
-    RUBY
-  end
-
+  extend(Capybara::DSL)
 end
