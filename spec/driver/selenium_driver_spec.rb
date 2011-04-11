@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Capybara::Driver::Selenium do
+describe Capybara::Selenium::Driver do
   before do
     @driver = TestSessions::Selenium.driver
   end

@@ -199,7 +199,6 @@ module Capybara
   module Driver
     autoload :Base,     'capybara/driver/base'
     autoload :Node,     'capybara/driver/node'
-    autoload :Selenium, 'capybara/driver/selenium_driver'
   end
 
   module RackTest
@@ -207,6 +206,11 @@ module Capybara
     autoload :Node,    'capybara/rack_test/node'
     autoload :Form,    'capybara/rack_test/form'
     autoload :Browser, 'capybara/rack_test/browser'
+  end
+
+  module Selenium
+    autoload :Node,    'capybara/selenium/node'
+    autoload :Driver,  'capybara/selenium/driver'
   end
 end
 
@@ -226,5 +230,5 @@ Capybara.register_driver :rack_test do |app|
 end
 
 Capybara.register_driver :selenium do |app|
-  Capybara::Driver::Selenium.new(app)
+  Capybara::Selenium::Driver.new(app)
 end
