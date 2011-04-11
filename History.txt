@@ -4,17 +4,42 @@ Release date:
 
 ### Added
 
-* Added DSL for acceptance tests, inspired by Luismi Cavallé's Steak [Jonas Nicklas]
+* Added DSL for acceptance tests, inspired by Luismi Cavallé's Steak [Luismi Cavalle and Jonas Nicklas]
 * Selenium driver automatically waits for AJAX requests to finish [mgiambalvo, Nicklas Ramhöj and Jonas Nicklas]
+* Support for switching between multiple named sessions [Tristan Dunn]
+* failure_message can be specified for Selectors [Jonas Nicklas]
+* RSpec matchers [David Chelimsky and Jonas Nicklas]
+* Added save_page to save tempfile without opening in browser [Jeff Kreeftmeijer]
+* Cucumber now switches automatically to a registered driver if the tag matches the name [Jonas Nicklas]
+* Added Session#text [Jonas Nicklas and Scott Cytacki]
+* Added Session#html as an alias for Session#body [Jo Liss]
+* Added Session#current_host method [Jonas Nicklas]
+
+### Removed
+
+* Culerity and Celerity drivers have been removed and split into separate gems [Gabriel Sobrinho]
+
+### Deprecated
+
+* `include Capybara` has been deprecated in favour of `include Capybara::DSL` [Jonas Nicklas]
 
 ### Changed
 
+* Rack test driver class has been renamed from Capybara::Driver::RackTest to Capybara::RackTest::Driver [Jonas Nicklas]
+* Selenium driver class has been renamed from Capybara::Driver::Selenium to Capybara::Selenium::Driver [Jonas Nicklas]
 * Capybara now prefers visible elements over hidden elements, disable by setting Capybara.prefer_visible_elements = false [Jonas Nicklas and Nicklas Ramhöj]
 * For RSpec, :type => :request is now supported (and preferred over :acceptance) [Jo Liss]
+* Selenium driver tried to wait for AJAX requests to finish before proceeding [Jonas Nicklas and Nicklas Ramhöj]
+* Session no longer uses method missing, uses explicit delegates instead [Jonas Nicklas]
 
-## Fixed
+### Fixed
 
 * The Rack::Test driver now respects maxlength on text fields [Guilherme Carvalho]
+* Allow for more than one save_and_open_page call per second [Jo Liss]
+* Automatically convert options to :count, :minimum, :maximum, etc. to integers [Keith Marcum]
+* Rack::Test driver honours maxlength on input fields [Guilherme Carvalho]
+* Rack::Test now works as expected with domains and subdomains [Jonas Nicklas]
+* Session is reset more thoroughly between tests. [Jonas Nicklas]
 
 # Version 0.4.1
 
