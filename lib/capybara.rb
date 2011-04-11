@@ -199,6 +199,18 @@ module Capybara
   module Driver
     autoload :Base,     'capybara/driver/base'
     autoload :Node,     'capybara/driver/node'
+
+    class Selenium
+      def initialize(*args)
+        raise "Capybara::Driver::Selenium has been renamed to Capybara::Selenium::Driver"
+      end
+    end
+
+    class RackTest
+      def initialize(*args)
+        raise "Capybara::Driver::RackTest has been renamed to Capybara::RackTest::Driver"
+      end
+    end
   end
 
   module RackTest
