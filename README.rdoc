@@ -138,10 +138,21 @@ Capybara also comes with a built in DSL for creating descriptive acceptance test
 Note that Capybara's built in RSpec support only works with RSpec 2.0 or later.
 You'll need to roll your own for earlier versions of RSpec.
 
+== Using Capybara with Test::Unit
+
+To use Capybara with Test::Unit, include the DSL (<tt>include Capybara</tt> up
+until version 0.4.x, <tt>include Capybara::DSL</tt> for newer versions) in
+whatever test class you are using.  For example, if your classes derive from
+<tt>ActionDispatch::IntegrationTest</tt>, use
+
+    class ActionDispatch::IntegrationTest
+      include Capybara::DSL
+    end
+
 == Using Capybara with Ruby on Rails
 
-You can use the built-in Rails support to easily get Capybara running with
-Rails:
+If you are using the Rails framework, add this line to automatically configure
+Capybara to test against your Rails application:
 
     require 'capybara/rails'
 
