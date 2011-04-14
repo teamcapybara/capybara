@@ -149,6 +149,10 @@ whatever test class you are using.  For example, if your classes derive from
       include Capybara::DSL
     end
 
+Test::Unit does not support selecting the driver through test metadata, but you
+can switch the driver for specific classes using the <tt>setup</tt> and
+<tt>teardown</tt> methods.  See the section "Selecting the Driver".
+
 == Using Capybara with Ruby on Rails
 
 If you are using the Rails framework, add this line to automatically configure
@@ -183,8 +187,8 @@ tests that require a JavaScript-capable driver using <tt>:js => true</tt> or
 <tt>:selenium</tt> driver.  You can change this by setting
 <tt>Capybara.javascript_driver</tt>.
 
-You can also change the driver temporarily (typically in the Before and After
-blocks):
+You can also change the driver temporarily (typically in the Before/setup and
+After/teardown blocks):
 
     Capybara.current_driver = :culerity  # temporarily select different driver
     ... tests ...
