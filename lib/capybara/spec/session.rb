@@ -9,13 +9,7 @@ shared_examples_for "session" do
   end
 
   after do
-    @session.reset!
-  end
-
-  describe '#app' do
-    it "should remember the application" do
-      @session.app.should == TestApp
-    end
+    @session.reset_session!
   end
 
   describe '#visit' do
@@ -51,13 +45,13 @@ shared_examples_for "session" do
     end
   end
 
-  describe '#reset!' do
+  describe '#reset_session!' do
     it "removes cookies" do
       @session.visit('/set_cookie')
       @session.visit('/get_cookie')
       @session.body.should include('test_cookie')
 
-      @session.reset!
+      @session.reset_session!
       @session.visit('/get_cookie')
       @session.body.should_not include('test_cookie')
     end
@@ -66,7 +60,7 @@ shared_examples_for "session" do
       @session.visit('http://capybara-testapp.heroku.com')
       @session.current_host.should == 'http://capybara-testapp.heroku.com'
 
-      @session.reset!
+      @session.reset_session!
       @session.current_host.should be_nil
     end
 
@@ -74,7 +68,7 @@ shared_examples_for "session" do
       @session.visit('/with_html')
       @session.current_path.should == '/with_html'
 
-      @session.reset!
+      @session.reset_session!
       @session.current_path.should be_nil
     end
 
@@ -83,7 +77,7 @@ shared_examples_for "session" do
       @session.body.should include('This is a test')
       @session.find('.//h1').text.should include('This is a test')
 
-      @session.reset!
+      @session.reset_session!
       @session.body.should_not include('This is a test')
       @session.should have_no_selector('.//h1')
     end

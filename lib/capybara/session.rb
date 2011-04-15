@@ -41,7 +41,7 @@ module Capybara
       :body, :html, :current_url, :current_host, :evaluate_script, :source,
       :visit, :wait_until, :within, :within_fieldset, :within_table,
       :within_frame, :within_window, :current_path, :save_page,
-      :save_and_open_page, :reset!, :app
+      :save_and_open_page, :reset_session!
     ]
     DSL_METHODS = NODE_METHODS + SESSION_METHODS
 
@@ -70,6 +70,7 @@ module Capybara
       driver.reset!
     end
     alias_method :cleanup!, :reset!
+    alias_method :reset_session!, :reset!
 
     ##
     #
