@@ -91,6 +91,10 @@ by adding the following line (typically to your <tt>spec_helper.rb</tt> file):
 You can now use it in your examples:
 
     describe "the signup process", :type => :request do
+      before :each do
+        User.make(:email => 'user@example.com', :password => 'caplin')
+      end
+    
       it "signs me in" do
         within("#session") do
           fill_in 'Login', :with => 'user@example.com'
@@ -103,12 +107,13 @@ You can now use it in your examples:
 Capybara is only included for examples with <tt>:type => :request</tt> (or
 <tt>:acceptance</tt> for compatibility).
 
-If you use the <tt>rspec-rails</tt> gem, <tt>:type => :request</tt>
-is automatically set on all files under <tt>spec/requests</tt> (and,
-synonymously, <tt>spec/integration</tt> and <tt>spec/acceptance</tt>), so
-that's a good directory to place your Capybara specs in.  <tt>rspec-rails</tt>
-will also automatically include Capybara in <tt>:controller</tt> and
-<tt>:mailer</tt> examples.
+If you use the <tt>rspec-rails</tt> gem, <tt>:type => :request</tt> is
+automatically set on all files under <tt>spec/requests</tt>. Essentially, these
+are Capybara-enhanced Rails request specs, so it's a good idea to place your
+Capybara specs here because within request specs you gain a few additional
+features, such as the ability to refer to named route helpers. If you do not
+need these, then you may simply use <tt>spec/acceptance</tt> and you will still
+get access to Capybara methods.
 
 RSpec's metadata feature can be used to switch to a different driver. Use
 <tt>:js => true</tt> to switch to the javascript driver, or provide a
@@ -121,12 +126,12 @@ RSpec's metadata feature can be used to switch to a different driver. Use
 
 Capybara also comes with a built in DSL for creating descriptive acceptance tests:
 
-    feature "signing up" do
+    feature "Signing up" do
       background do
         User.make(:email => 'user@example.com', :password => 'caplin')
       end
 
-      scenario "signing in with correct credentials" do
+      scenario "Signing in with correct credentials" do
         within("#session") do
           fill_in 'Login', :with => 'user@example.com'
           fill_in 'Password', :with => 'caplin'
@@ -134,6 +139,12 @@ Capybara also comes with a built in DSL for creating descriptive acceptance test
         click_link 'Sign in'
       end
     end
+
+Essentially, this is just a shortcut for making a request spec, where
+<tt>feature</tt> is a shortcut for <tt>describe ..., :type => :request</tt>,
+<tt>background</tt> is an alias for <tt>before :each</tt>, and <tt>scenario</tt>
+is an alias for <tt>it</tt>/<tt>example</tt>. Again, you are encouraged to place
+these within <tt>spec/requests</tt> rather than <tt>spec/acceptance</tt>.
 
 Note that Capybara's built in RSpec support only works with RSpec 2.0 or later.
 You'll need to roll your own for earlier versions of RSpec.
