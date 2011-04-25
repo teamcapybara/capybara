@@ -14,6 +14,8 @@ Release date:
 * Added Session#text [Jonas Nicklas and Scott Cytacki]
 * Added Session#html as an alias for Session#body [Jo Liss]
 * Added Session#current_host method [Jonas Nicklas]
+* Buttons can now be clicked by title [Javier Martin]
+* :headers option for RackTest driver to set custom HTTP headers [Jonas Nicklas]
 
 ### Removed
 
@@ -40,6 +42,7 @@ Release date:
 * Rack::Test driver honours maxlength on input fields [Guilherme Carvalho]
 * Rack::Test now works as expected with domains and subdomains [Jonas Nicklas]
 * Session is reset more thoroughly between tests. [Jonas Nicklas]
+* Raise error when uploading non-existant file [Jonas Nicklas]
 
 # Version 0.4.1
 
