@@ -621,14 +621,14 @@ an API to tweak those drivers with whatever settings you want, or to add your ow
 drivers. This is how to switch the selenium driver to use chrome:
 
     Capybara.register_driver :selenium do |app|
-      Capybara::Driver::Selenium.new(app, :browser => :chrome)
+      Capybara::Selenium::Driver.new(app, :browser => :chrome)
     end
 
 However, it's also possible to give this a different name, so tests can switch
 between using different browsers effortlessly:
 
     Capybara.register_driver :selenium_chrome do |app|
-      Capybara::Driver::Selenium.new(app, :browser => :chrome)
+      Capybara::Selenium::Driver.new(app, :browser => :chrome)
     end
 
 Whatever is returned from the block should conform to the API described by
