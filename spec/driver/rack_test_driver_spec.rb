@@ -81,4 +81,26 @@ describe Capybara::RackTest::Driver do
       lambda { @driver.request }.should raise_error
     end
   end
+
+  describe ':headers option' do
+    it 'should always set headers' do
+      @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
+      @driver.visit('/get_header')
+      @driver.body.should include('foobar')
+    end
+
+    it 'should keep headers on link clicks' do
+      @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
+      @driver.visit('/header_links')
+      @driver.find('.//a').first.click
+      @driver.body.should include('foobar')
+    end
+
+    it 'should keep headers on form submit' do
+      @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
+      @driver.visit('/header_links')
+      @driver.find('.//input').first.click
+      @driver.body.should include('foobar')
+    end
+  end
 end

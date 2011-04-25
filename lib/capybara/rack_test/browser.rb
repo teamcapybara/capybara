@@ -1,11 +1,12 @@
 class Capybara::RackTest::Browser
   include ::Rack::Test::Methods
 
-  attr_reader :app
+  attr_reader :app, :options
   attr_accessor :current_host
 
-  def initialize(app)
+  def initialize(app, options={})
     @app = app
+    @options = options
   end
 
   def visit(path, attributes = {})
@@ -107,6 +108,7 @@ protected
     rescue Rack::Test::Error
       # no request yet
     end
+    env.merge!(options[:headers]) if options[:headers]
     env
   end
 

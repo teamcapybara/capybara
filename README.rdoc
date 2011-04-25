@@ -94,7 +94,7 @@ You can now use it in your examples:
       before :each do
         User.make(:email => 'user@example.com', :password => 'caplin')
       end
-    
+
       it "signs me in" do
         within("#session") do
           fill_in 'Login', :with => 'user@example.com'
@@ -207,6 +207,27 @@ After/teardown blocks):
 
 Note that switching the driver creates a new session, so you may not be able to
 switch in the middle of a test.
+
+=== RackTest
+
+RackTest is Capybara's default driver. It is written in pure Ruby and does not
+have any support for executing JavaScript. Since the RackTest driver works
+directly agains the Rack interface, it does not need any server to be started,
+it can work directly work against any Rack app. This means that if your
+application is not a Rack application (Rails, Sinatra and most other Ruby
+frameworks are Rack applications) then you cannot use this driver. You cannot
+use the RackTest driver to test a remote application.
+{capybara-mechanize}[https://github.com/jeroenvandijk/capybara-mechanize]
+intends to provide a similar driver which works against remote servers, it is a
+separate project.
+
+RackTest can be configured with a set of headers like this:
+
+    Capybara.register_driver :rack_test do |app|
+      Capybara::RackTest::Driver.new(app, :browser => :chrome)
+    end
+
+See the section on adding and configuring drivers.
 
 === Selenium
 

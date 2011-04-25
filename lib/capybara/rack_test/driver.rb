@@ -5,15 +5,16 @@ require 'nokogiri'
 require 'cgi'
 
 class Capybara::RackTest::Driver < Capybara::Driver::Base
-  attr_reader :app
+  attr_reader :app, :options
 
-  def initialize(app)
+  def initialize(app, options={})
     raise ArgumentError, "rack-test requires a rack application, but none was given" unless app
     @app = app
+    @options = options
   end
 
   def browser
-    @browser ||= Capybara::RackTest::Browser.new(app)
+    @browser ||= Capybara::RackTest::Browser.new(app, options)
   end
 
   def response
