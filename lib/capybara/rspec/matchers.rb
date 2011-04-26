@@ -27,6 +27,10 @@ module Capybara
         "expected #{selector_name} not to return anything"
       end
 
+      def description
+        "has #{selector_name}"
+      end
+
       def selector_name
         name = "#{normalized.name} #{normalized.locator.inspect}"
         name << " with text #{normalized.options[:text].inspect}" if normalized.options[:text]
@@ -80,6 +84,10 @@ module Capybara
 
       def failure_message_for_should_not
         "expected #{selector_name} not to return anything"
+      end
+
+      def description
+        "has #{selector_name}"
       end
 
       def selector_name
