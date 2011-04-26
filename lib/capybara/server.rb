@@ -12,7 +12,7 @@ module Capybara
 
       def call(env)
         if env["PATH_INFO"] == "/__identify__"
-          [200, {}, @app.object_id.to_s]
+          [200, {}, [@app.object_id.to_s]]
         else
           @app.call(env)
         end
