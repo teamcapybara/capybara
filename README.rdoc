@@ -411,6 +411,9 @@ method. Optionally you can specify which kind of selector to use.
       fill_in 'Name', :with => 'Jimmy'
     end
 
+Note that <tt>within</tt> will scope the actions to the _first_ (not _any_)
+element that matches the selector.
+
 There are special methods for restricting the scope to a specific fieldset,
 identified by either an id or the text of the fieldet's legend tag, and to a
 specific table, identified by either id or text of the table's caption tag.
