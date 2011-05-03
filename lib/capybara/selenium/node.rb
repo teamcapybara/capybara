@@ -4,20 +4,16 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def [](name)
-    if name == :value
-      value
-    else
-      native.attribute(name.to_s)
-    end
+    native.attribute(name.to_s)
   rescue Selenium::WebDriver::Error::WebDriverError
     nil
   end
 
   def value
     if tag_name == "select" and self[:multiple] and not self[:multiple] == "false"
-      native.find_elements(:xpath, ".//option").select { |n| n.selected? }.map { |n| n.value || n.text }
+      native.find_elements(:xpath, ".//option").select { |n| n.selected? }.map { |n| n[:value] || n.text }
     else
-      native.value
+      native[:value]
     end
   end
 
