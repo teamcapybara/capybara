@@ -88,6 +88,8 @@ protected
       object.dup.force_encoding(Encoding::ASCII_8BIT)
     elsif object.respond_to?(:each_pair) #Hash
       {}.tap { |x| object.each_pair {|k,v| x[to_binary(k)] = to_binary(v) } }
+    elsif object.class == Rack::Test::UploadedFile # also responds to each, but doesn't need to be mapped
+      object
     elsif object.respond_to?(:each) #Array
       object.map{|x| to_binary(x)}
     else
