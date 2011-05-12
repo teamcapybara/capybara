@@ -175,8 +175,8 @@ module Capybara
           options[:text] = Regexp.escape(text) unless text.kind_of?(Regexp)
         end
 
-        if !options.has_key?(:visible)
-          options[:visible] = Capybara.ignore_hidden_elements
+        if !options.has_key?(:visible) && Capybara.ignore_hidden_elements
+          options[:visible] = true
         end
 
         if selected = options[:selected]
