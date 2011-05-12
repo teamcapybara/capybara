@@ -189,6 +189,7 @@ module Capybara
       def matches_options(node, options)
         return false if options[:text]      and not node.text.match(options[:text])
         return false if options[:visible]   and not node.visible?
+        return false if options[:hidden]    and node.visible?
         return false if options[:with]      and not node.value == options[:with]
         return false if options[:checked]   and not node.checked?
         return false if options[:unchecked] and node.checked?
