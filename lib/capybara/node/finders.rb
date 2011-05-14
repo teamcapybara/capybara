@@ -175,8 +175,8 @@ module Capybara
           options[:text] = Regexp.escape(text) unless text.kind_of?(Regexp)
         end
 
-        if !options.has_key?(:visible)
-          options[:visible] = Capybara.ignore_hidden_elements
+        if !options.has_key?(:visible) && Capybara.ignore_hidden_elements
+          options[:visible] = true
         end
 
         if selected = options[:selected]
@@ -187,12 +187,13 @@ module Capybara
       end
 
       def matches_options(node, options)
-        return false if options[:text]      and not node.text.match(options[:text])
-        return false if options[:visible]   and not node.visible?
-        return false if options[:with]      and not node.value == options[:with]
-        return false if options[:checked]   and not node.checked?
-        return false if options[:unchecked] and node.checked?
-        return false if options[:selected]  and not has_selected_options?(node, options[:selected])
+        return false if options[:text]         and not node.text.match(options[:text])
+        return false if options.key?(:visible) and not node.visible? == options[:visible]
+        return false if options.key?(:hidden)  and node.visible? == options[:hidden]
+        return false if options[:with]         and not node.value == options[:with]
+        return false if options[:checked]      and not node.checked?
+        return false if options[:unchecked]    and node.checked?
+        return false if options[:selected]     and not has_selected_options?(node, options[:selected])
         true
       end
 
