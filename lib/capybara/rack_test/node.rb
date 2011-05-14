@@ -57,7 +57,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   end
 
   def tag_name
-    native.node_name
+    native.node_name.downcase
   end
 
   def visible?
