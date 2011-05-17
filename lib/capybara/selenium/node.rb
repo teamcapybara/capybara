@@ -50,7 +50,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def tag_name
-    native.tag_name
+    native.tag_name.downcase
   end
 
   def visible?
