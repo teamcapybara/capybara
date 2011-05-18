@@ -25,6 +25,14 @@ shared_examples_for "session with javascript support" do
         @session.find(:css, '#with_focus_event').trigger(:focus)
         @session.should have_css('#focus_event_triggered')
       end
+
+      it "should allow sending keypresses" do
+        pending "cannot figure out how to do this with rack-test" if @session.mode == :rack_test
+        @session.visit('/with_js')
+        element = @session.find(:css, '#with_focus_event')
+        element.send_keys([:shift, 'flying'], ' ', 'monkeys')
+        element.value.should == 'FLYING monkeys'
+      end
     end
 
     describe '#body' do

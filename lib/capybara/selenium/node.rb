@@ -30,6 +30,10 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     end
   end
 
+  def send_keys(*keys)
+    resynchronize { native.send_keys(*keys) }
+  end
+
   def select_option
     resynchronize { native.select }
   end
