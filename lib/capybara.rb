@@ -83,7 +83,7 @@ module Capybara
     #     within(:row, 3) { page.should have_content('$100.000') }
     #
     # It might be convenient to specify that the selector is automatically chosen for certain
-    # values. This way you don't have to explicitely specify that you are looking for a row, or
+    # values. This way you don't have to explicitly specify that you are looking for a row, or
     # an id. Let's say we want Capybara to treat any Symbols sent into methods like find to be
     # treated as though they were element ids. We could achieve this like so:
     #
