@@ -81,6 +81,10 @@ class Capybara::RackTest::Browser
 
 protected
 
+  def build_rack_mock_session
+    Rack::MockSession.new(app, current_host)
+  end
+
   def to_binary(object)
     return object unless Kernel.const_defined?(:Encoding)
 
