@@ -12,6 +12,14 @@ shared_examples_for "click_button" do
       end
     end
 
+    context "with a form that has a relative url as an action" do
+      it "should post to the correct url" do
+        @session.click_button('Relative Action')
+        @session.current_path.should == '/form/relative'
+        extract_results(@session)['relative'].should == 'Relative Action'
+      end
+    end
+
     context "with value given on a submit button" do
       context "on a form with HTML5 fields" do
         before do
@@ -284,4 +292,5 @@ shared_examples_for "click_button" do
       @session.body.should include('Postback')
     end
   end
+
 end
