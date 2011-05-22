@@ -47,7 +47,7 @@ class TestApp < Sinatra::Base
     '<pre id="results">' + params[:form].to_yaml + '</pre>'
   end
 
-  post '/form/relative' do
+  post '/relative' do
     '<pre id="results">' + params[:form].to_yaml + '</pre>'
   end
 
