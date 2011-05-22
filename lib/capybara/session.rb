@@ -41,7 +41,7 @@ module Capybara
       :body, :html, :current_url, :current_host, :evaluate_script, :source,
       :visit, :wait_until, :within, :within_fieldset, :within_table,
       :within_frame, :within_window, :current_path, :save_page,
-      :save_and_open_page, :reset_session!
+      :save_and_open_page, :reset_session!, :cookies, :cookie_named
     ]
     DSL_METHODS = NODE_METHODS + SESSION_METHODS
 
@@ -135,6 +135,25 @@ module Capybara
       driver.current_url
     end
 
+    ##
+    # Get all cookies
+    #
+    # @return [Array<Hash>] list of cookies
+    #
+    def cookies    
+      driver.cookies
+    end
+    
+    ##
+    # Get the cookie with the given name
+    #
+    # @param [String] name the name of the cookie
+    # @return [Hash, nil] the cookie, or nil if it wasn't found.
+    #
+    def cookie_named(name)    
+      driver.cookie_named(name)
+    end
+    
     ##
     #
     # Navigate to the given URL. The URL can either be a relative URL or an absolute URL

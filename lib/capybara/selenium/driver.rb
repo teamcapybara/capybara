@@ -43,6 +43,14 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.current_url
   end
 
+  def cookies
+    browser.manage.all_cookies
+  end
+
+  def cookie_named(name)
+    browser.manage.cookie_named(name)
+  end
+
   def find(selector)
     browser.find_elements(:xpath, selector).map { |node| Capybara::Selenium::Node.new(self, node) }
   end
@@ -95,9 +103,9 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.window_handles.each do |handle|
       browser.switch_to.window handle
       if( selector == browser.execute_script("return window.name") ||
-          browser.title.include?(selector) ||
-          browser.current_url.include?(selector) ||
-          (selector == handle) )
+         browser.title.include?(selector) ||
+         browser.current_url.include?(selector) ||
+         (selector == handle) )
         browser.switch_to.window original_handle
         return handle
       end
@@ -110,7 +118,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.switch_to.window(handle, &blk)
   end
 
-private
+  private
 
   def load_wait_for_ajax_support
     browser.execute_script <<-JS

@@ -281,6 +281,16 @@ shared_examples_for "driver with cookies support" do
       @driver.body.should_not include('test_cookie')
     end
   end
+  it "should make cookie data available through cookies" do
+      @driver.visit('/set_cookie')
+      @driver.cookies.find {|c| c[:name] == 'capybara'}[:value].should == 'test_cookie'
+      @driver.reset!
+  end
+  it "should make a specfic cookie available through cookie_named" do
+      @driver.visit('/set_cookie')
+      @driver.cookie_named('capybara')[:value].should == 'test_cookie'
+      @driver.reset!
+  end
 end
 
 shared_examples_for "driver with infinite redirect detection" do

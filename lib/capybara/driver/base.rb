@@ -43,6 +43,14 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError
   end
 
+  def cookies
+    raise Capybara::NotSupportedByDriverError
+  end
+
+  def cookie_named(name)
+    raise Capybara::NotSupportedByDriverError
+  end
+
   def wait?
     false
   end
