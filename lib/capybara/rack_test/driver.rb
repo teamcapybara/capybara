@@ -48,7 +48,8 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
         :value => cookie.instance_variable_get(:@value),
         :path => cookie.instance_variable_get(:@options)['path'],
         :domain => cookie.instance_variable_get(:@options)['domain'],
-        :expires => cookie.instance_variable_get(:@options)['expires']
+        :expires => cookie.instance_variable_get(:@options)['expires'],
+        :secure => cookie.instance_variable_get(:@options)['secure'] || false
       }
     end
   end
