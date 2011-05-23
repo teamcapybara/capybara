@@ -13,8 +13,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def browser
     unless @browser
       @browser = Selenium::WebDriver.for(options[:browser], options.reject { |key,val| SPECIAL_OPTIONS.include?(key) })
+
+      main = Process.pid
       at_exit do
-        @browser.quit
+        quit if Process.pid == main
       end
     end
     @browser
@@ -108,6 +110,12 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def within_window(selector, &blk)
     handle = find_window( selector )
     browser.switch_to.window(handle, &blk)
+  end
+
+  def quit
+    @browser.quit
+  rescue Errno::ECONNREFUSED
+    # Browser must have already gone
   end
 
 private
