@@ -42,17 +42,15 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
   end
 
   def cookies
-    cookies = []
-    browser.current_session.instance_variable_get(:@rack_mock_session).cookie_jar.instance_variable_get(:@cookies).each do |rack_cookie|
-      cookie = {}
-      cookie[:name] = rack_cookie.instance_variable_get(:@name)
-      cookie[:value] = rack_cookie.instance_variable_get(:@value)
-      cookie[:path] = rack_cookie.instance_variable_get(:@options)["path"]
-      cookie[:domain] = rack_cookie.instance_variable_get(:@options)["domain"]
-      cookie[:expires] = rack_cookie.instance_variable_get(:@options)["expires"]
-      cookies.push cookie
+    browser.current_session.instance_variable_get(:@rack_mock_session).cookie_jar.instance_variable_get(:@cookies).map do | cookie |
+      {
+        :name => cookie.instance_variable_get(:@name),
+        :value => cookie.instance_variable_get(:@value),
+        :path => cookie.instance_variable_get(:@options)['path'],
+        :domain => cookie.instance_variable_get(:@options)['domain'],
+        :expires => cookie.instance_variable_get(:@options)['expires']
+      }
     end
-    cookies
   end
 
   def cookie_named(name)
