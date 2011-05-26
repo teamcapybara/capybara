@@ -80,4 +80,38 @@ describe Capybara::RackTest::Driver do
       @driver.body.should include('foobar')
     end
   end
+
+  describe "manual cookie setting" do
+    before do
+      # Use different driver instance in order to not interfere with the other tests
+      @driver = Capybara::Session.new(:rack_test, TestApp).driver
+    end
+
+    it "should allow a cookie to be manually set" do
+      @driver.browser.set_cookie 'capybara=test_cookie'
+
+      @driver.visit('/get_cookie')
+      @driver.body.should include('test_cookie')
+    end
+
+    describe "cookies with a custom Capybara.app_host" do
+      before { Capybara.app_host = 'http://foo.com' }
+      after  { Capybara.app_host = nil              }
+
+      it "should allow a cookie to be manually set" do
+        @driver.browser.set_cookie 'capybara=test_cookie'
+
+        @driver.visit('/get_cookie')
+        @driver.body.should include('test_cookie')
+      end
+
+      it "should allow a cookie to be manually set with a different current host" do
+        @driver.browser.current_host = 'http://foobar.com'
+        @driver.browser.set_cookie 'capybara=test_cookie'
+
+        @driver.visit('http://foobar.com/get_cookie')
+        @driver.body.should include('test_cookie')
+      end
+    end
+  end
 end
