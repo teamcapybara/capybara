@@ -35,13 +35,20 @@ class Capybara::RackTest::Browser
     new_uri = URI.parse(path)
     current_uri = URI.parse(current_url)
 
-    path = request_path + path if path.start_with?('?')
-    path = current_host + path if path.start_with?('/')
-
     if new_uri.host
       @current_host = new_uri.scheme + '://' + new_uri.host
     end
-
+    
+    if new_uri.relative?
+      path = request_path + path if path.start_with?('?')
+      
+      unless path.start_with?('/')
+        folders = request_path.split('/')
+        path = (folders[0, folders.size - 1] << path).join('/')
+      end
+      path = current_host + path
+    end
+    
     reset_cache!
     send(method, path, attributes, env)
     follow_redirects!
