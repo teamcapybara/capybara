@@ -47,6 +47,10 @@ class TestApp < Sinatra::Base
     '<pre id="results">' + params[:form].to_yaml + '</pre>'
   end
 
+  post '/relative' do
+    '<pre id="results">' + params[:form].to_yaml + '</pre>'
+  end
+
   get '/favicon.ico' do
     nil
   end
