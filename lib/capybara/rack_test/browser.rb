@@ -89,7 +89,8 @@ class Capybara::RackTest::Browser
 protected
 
   def build_rack_mock_session
-    Rack::MockSession.new(app, current_host)
+    reset_host! unless current_host
+    Rack::MockSession.new(app, URI.parse(current_host).host)
   end
 
   def request_path
