@@ -58,5 +58,17 @@ shared_examples_for "current_host" do
       @session.body.should include('Current host is http://capybara2.elabs.se')
       @session.current_host.should == 'http://capybara2.elabs.se'
     end
+    it "is affected by the current protocol" do
+      @session.visit('https://capybara-testapp.heroku.com/host_links')
+      @session.click_button('Relative Host')
+      @session.body.should include('Current host is https://capybara-testapp.heroku.com')
+      @session.current_host.should == 'https://capybara-testapp.heroku.com'
+    end
+    it "is affected by the protocol of the latest redirect" do
+      @session.visit('http://capybara-testapp.heroku.com/host_links_over_ssl')
+      @session.click_button('Relative Host')
+      @session.body.should include('Current host is https://capybara-testapp.heroku.com')
+      @session.current_host.should == 'https://capybara-testapp.heroku.com'
+    end
   end
 end

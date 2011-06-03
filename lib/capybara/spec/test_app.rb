@@ -67,6 +67,10 @@ class TestApp < Sinatra::Base
     redirect back
   end
 
+  get '/host_links_over_ssl' do
+    redirect "https://#{request.host}/host_links"
+  end
+
   get '/slow_response' do
     sleep 2
     'Finally!'
