@@ -15,6 +15,10 @@ module Selenium
       def dismiss_alert
         bridge.dismissAlert
       end
+      
+      def set_js_alert_text(text)
+        bridge.setAlertValue(text)
+      end
     end
   end
 end
