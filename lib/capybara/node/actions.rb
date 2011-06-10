@@ -149,10 +149,30 @@ module Capybara
       #
       #     page.attach_file(locator, '/path/to/file.png')
       #
+      # You can optionally provide a block to populate the file to be uploaded.
+      # In this case a tempfile will be created with the provided content.
+      #
+      #     page.attach_file(locator) do
+      #       %{
+      #       things:
+      #         - name: Thing 1
+      #         - name: Thing 2
+      #       }
+      #     end
+      #
       # @param [String] locator       Which field to attach the file to
       # @param [String] path          The path of the file that will be attached
+      # @param [Block]  content       Content for attached file
       #
-      def attach_file(locator, path)
+      def attach_file(locator, path=nil, &block)
+
+        if block_given?
+          file = Tempfile.new('capybara-attach_file-#{locator.paramaterize}')
+          file.open.write(yield)
+          file.close
+          path = file.path
+        end
+
         raise Capybara::FileNotFound, "cannot attach file, #{path} does not exist" unless File.exist?(path.to_s)
         msg = "cannot attach file, no file field with id, name, or label '#{locator}' found"
         find(:xpath, XPath::HTML.file_field(locator), :message => msg).set(path)
