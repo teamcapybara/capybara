@@ -167,7 +167,7 @@ module Capybara
       def attach_file(locator, path=nil, &block)
 
         if block_given?
-          file = Tempfile.new('capybara-attach_file-#{locator.paramaterize}')
+          file = Tempfile.new('capybara-attach_file-#{locator.parameterize}')
           file.open.write(yield)
           file.close
           path = file.path
