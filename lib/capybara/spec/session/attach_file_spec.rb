@@ -56,6 +56,27 @@ shared_examples_for "attach_file" do
         @session.click_button('Upload Multiple')
         @session.body.should include(File.read(@test_file_path))
       end
+
+      context "when supplied a block" do
+        it "should upload tempfile with the supplied content" do
+          content = "double super awesome"
+          @session.attach_file("Document") { content }
+          @session.click_button('Upload')
+          @session.body.should include(content)
+        end
+
+        it "should send content type text/plain when specifying a plaintext extension" do
+          @session.attach_file('Document', '.txt') { 'a text file' }
+          @session.click_button 'Upload'
+          @session.body.should include('text/plain')
+        end
+
+        it "should send content type image/jpeg when specifying an image extension" do
+          @session.attach_file('Document', '.jpg') { 'not actually a jepg' }
+          @session.click_button 'Upload'
+          @session.body.should include('image/jpeg')
+        end
+      end
     end
 
     context "with a locator that doesn't exist" do

@@ -164,13 +164,21 @@ module Capybara
       # @param [String] path          The path of the file that will be attached
       # @param [Block]  content       Content for attached file
       #
-      def attach_file(locator, path=nil, &block)
+      #  [0] = locator
+      #  [1] = path unless block_given
+      #  [1] = extension if block_given
+      #  [2+] = passed to tempfile
+      def attach_file(*args, &block)
+        locator = args.shift
 
         if block_given?
-          file = Tempfile.new('capybara-attach_file-#{locator.parameterize}')
+          ext = args.shift.to_s
+          file = Tempfile.new(["capybara-attach_file", ext], *args)
           file.open.write(yield)
           file.close
           path = file.path
+        else
+          path = args.shift
         end
 
         raise Capybara::FileNotFound, "cannot attach file, #{path} does not exist" unless File.exist?(path.to_s)
