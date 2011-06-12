@@ -150,7 +150,7 @@ module Capybara
       #     page.attach_file(locator, '/path/to/file.png')
       #
       # You can optionally provide a block to populate the file to be uploaded.
-      # In this case a tempfile will be created with the provided content.
+      # In this case a tempfile will be created with the result of the block.
       #
       #     page.attach_file(locator) do
       #       %{
@@ -160,14 +160,23 @@ module Capybara
       #       }
       #     end
       #
+      # You can also pass a file extension, and additional arguments for
+      # Tempfile (which in turn passes extra arguments to File)
+      #
+      #     page.attach_file(locator, '.yml', :encoding => 'utf-8') do
+      #       %{
+      #       things:
+      #         - name: Thing 1
+      #         - name: Thing 2
+      #       }
+      #     end
+      #
       # @param [String] locator       Which field to attach the file to
       # @param [String] path          The path of the file that will be attached
-      # @param [Block]  content       Content for attached file
       #
-      #  [0] = locator
-      #  [1] = path unless block_given
-      #  [1] = extension if block_given
-      #  [2+] = passed to tempfile
+      # @param [String] extension     File extension
+      # @param args                   Additional argumetns to be passed directly to Tempfile (and thus, File)
+      # @param [Block]  content       Content for attached file
       def attach_file(*args, &block)
         locator = args.shift
 
