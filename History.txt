@@ -1,6 +1,6 @@
 # Version 1.0.0
 
-Release date:
+Release date: 2011-06-14
 
 ### Added
 
