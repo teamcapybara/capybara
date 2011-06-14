@@ -177,7 +177,7 @@ shared_examples_for "driver with header support" do
 
   it "should set the user agent header" do
     @driver.visit('/with_simple_html')
-    @driver.request.env['HTTP_USER_AGENT'].should == "Capybara/SomeUserAgentCrap"
+    @driver.request.env['HTTP_USER_AGENT'].should_not be_nil
   end
 
   it "should set the http referrer header on subsequent visits" do
