@@ -43,6 +43,12 @@ Release date:
 * Rack::Test now works as expected with domains and subdomains [Jonas Nicklas]
 * Session is reset more thoroughly between tests. [Jonas Nicklas]
 * Raise error when uploading non-existant file [Jonas Nicklas]
+* Rack reponse body should respond to #each [Piotr Sarnacki]
+* Deprecation warnings with selenium webdriver 0.2.0 [Aaron Gibraltar]
+* Selenium Chrome no longer YELLS tagname [Carl Jackson & David W. Frank]
+* Capybara no longer strips encoding before sending to Rack [Jonas Nicklas]
+* Improve handling of relative URLs [John Barton]
+* Readd and fix build_rack_mock_session [Jonas Nicklas, Jon Leighton]
 
 # Version 0.4.1
 
