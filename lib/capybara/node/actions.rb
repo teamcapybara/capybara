@@ -149,50 +149,55 @@ module Capybara
       #
       #     page.attach_file(locator, '/path/to/file.png')
       #
-      # You can optionally provide a block to populate the file to be uploaded.
-      # In this case a tempfile will be created with the result of the block.
+      # @param [String] locator       Which field to attach the file to
+      # @param [String] path          The path of the file that will be attached
       #
-      #     page.attach_file(locator) do
-      #       %{
+      def attach_file(locator, path)
+        raise Capybara::FileNotFound, "cannot attach file, #{path} does not exist" unless File.exist?(path.to_s)
+        msg = "cannot attach file, no file field with id, name, or label '#{locator}' found"
+        find(:xpath, XPath::HTML.file_field(locator), :message => msg).set(path)
+      end
+
+      ##
+      #
+      # Create a tempfile with the supplied content and attach it to the
+      # specified file field on the page.
+      #
+      #     page.attach_file_containing(locator, %{
       #       things:
       #         - name: Thing 1
       #         - name: Thing 2
-      #       }
-      #     end
+      #     }
       #
       # You can also pass a file extension, and additional arguments for
       # Tempfile (which in turn passes extra arguments to File)
       #
-      #     page.attach_file(locator, '.yml', :encoding => 'utf-8') do
-      #       %{
+      #     page.attach_file_containing(locator, '.yml', :encoding => 'utf-8', %{
       #       things:
       #         - name: Thing 1
       #         - name: Thing 2
       #       }
-      #     end
+      #
+      # The first argument is always the locator, the last argument is always
+      # the content for the file.
       #
       # @param [String] locator       Which field to attach the file to
-      # @param [String] path          The path of the file that will be attached
-      #
-      # @param [String] extension     File extension
-      # @param args                   Additional argumetns to be passed directly to Tempfile (and thus, File)
-      # @param [Block]  content       Content for attached file
-      def attach_file(*args, &block)
+      # @param [String] extension     Extension to give the tempfile, determines file type.
+      # @param *args                  Extra arguments to pass to Tempfile or
+      #                               File.  See Tempfile documetnation for more information.
+      # @param [String] content       Content for the attached file.
+      def attach_file_containing(*args)
         locator = args.shift
+        content = args.pop
+        extension = args.shift.to_s
 
-        if block_given?
-          ext = args.shift.to_s
-          file = Tempfile.new(["capybara-attach_file", ext], *args)
-          file.open.write(yield)
-          file.close
-          path = file.path
-        else
-          path = args.shift
-        end
+        file = Tempfile.new(["capybara-attach_file", extension], *args)
+        file.open.write(content)
+        file.close
 
-        raise Capybara::FileNotFound, "cannot attach file, #{path} does not exist" unless File.exist?(path.to_s)
+        raise Capybara::FileNotFound, "cannot attach file, #{file.path} does not exist" unless File.exist?(file.path.to_s)
         msg = "cannot attach file, no file field with id, name, or label '#{locator}' found"
-        find(:xpath, XPath::HTML.file_field(locator), :message => msg).set(path)
+        find(:xpath, XPath::HTML.file_field(locator), :message => msg).set(file.path)
       end
     end
   end
