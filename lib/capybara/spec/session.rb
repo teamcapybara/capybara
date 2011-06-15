@@ -86,7 +86,6 @@ shared_examples_for "session" do
   it_should_behave_like "all"
   it_should_behave_like "first"
   it_should_behave_like "attach_file"
-  it_should_behave_like "attach_file_containing"
   it_should_behave_like "check"
   it_should_behave_like "choose"
   it_should_behave_like "click_link_or_button"

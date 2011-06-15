@@ -57,6 +57,29 @@ shared_examples_for "attach_file" do
         @session.body.should include(File.read(@test_file_path))
       end
 
+      context "when providing file content" do
+
+        it "should supply a tempfile path with the provided content" do
+          content = "double super awesome"
+          @session.attach_file("Document", :contents => content)
+          @session.click_button('Upload')
+          @session.body.should include(content)
+        end
+
+        it "should send content type text/plain when specifying a plaintext extension" do
+          @session.attach_file('Document', :extension => '.txt', :contents => 'a text file')
+          @session.click_button 'Upload'
+          @session.body.should include('text/plain')
+        end
+
+        it "should send content type image/jpeg when specifying an image extension" do
+          @session.attach_file('Document', :extension => '.jpg', :contents => 'not actually a jpg')
+          @session.click_button 'Upload'
+          @session.body.should include('image/jpeg')
+        end
+
+      end
+
     end
 
     context "with a locator that doesn't exist" do
