@@ -181,7 +181,7 @@ module Capybara
       # @return [Boolean]             Whether it exists
       #
       def has_content?(content)
-        has_xpath?(XPath::HTML.content(content).where(:"count(#{XPath.child[XPath.current.n.contains(content)].to_xpath})=0"))
+        has_xpath?(XPath::HTML.content(content).where(~XPath.child[XPath.current.n.contains(content)]))
       end
 
       ##
@@ -193,7 +193,7 @@ module Capybara
       # @return [Boolean]             Whether it exists
       #
       def has_no_content?(content)
-        has_no_xpath?(XPath::HTML.content(content).where(:"count(#{XPath.child[XPath.current.n.contains(content)].to_xpath})=0") )
+        has_no_xpath?(XPath::HTML.content(content).where(~XPath.child[XPath.current.n.contains(content)]))
       end
 
       ##
