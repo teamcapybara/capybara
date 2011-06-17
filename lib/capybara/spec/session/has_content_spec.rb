@@ -52,6 +52,16 @@ shared_examples_for "has_content" do
       @session.visit('/with-quotes')
       @session.should have_content(%q{"you can't do that."})
     end
+    
+    context "with visible filter" do
+      after { Capybara.ignore_hidden_elements = false }
+      
+      it "should be false if the given content is on the page but not visible" do
+        Capybara.ignore_hidden_elements = true
+        @session.visit('/with_html')
+        @session.should_not have_content('Inside element with hidden ancestor')
+      end
+    end
   end
 
   describe '#has_no_content?' do
@@ -74,7 +84,7 @@ shared_examples_for "has_content" do
       @session.within("//a[@title='awesome title']") do
         @session.should have_no_content('monkey')
       end
-    end
+    end  
 
     it "should ignore tags" do
       @session.visit('/with_html')
@@ -101,6 +111,16 @@ shared_examples_for "has_content" do
     it 'should handle mixed single and double quotes in the content' do
       @session.visit('/with-quotes')
       @session.should_not have_no_content(%q{"you can't do that."})
+    end
+    
+    context "with visible filter" do
+      after { Capybara.ignore_hidden_elements = false }
+      
+      it "should be true if the given content is on the page but not visible" do
+        Capybara.ignore_hidden_elements = true
+        @session.visit('/with_html')
+        @session.should have_no_content('Inside element with hidden ancestor')
+      end
     end
   end
 end
