@@ -174,7 +174,7 @@ module Capybara
         if params.class == Hash
           file = Tempfile.new([params.fetch(:prefix, 'capybara-attach_file'), params.fetch(:extension, '')], params[:options])
           file.open.write(params.fetch(:contents))
-          file.close
+          file.rewind
           path = file.path
         else
           path = params
