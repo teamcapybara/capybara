@@ -166,6 +166,22 @@ shared_examples_for "driver with resynchronization support" do
 
       after { @driver.options[:resynchronization_timeout] = 10 }
     end
+    
+    context "with no synchronization delay" do
+      it "should miss the start of the ajax request when do delay" do
+        @driver.options[:resynchronization_delay]=0
+        @driver.find('//input[@id="fire_delayed_ajax_request"]').first.click
+        @driver.find('//p[@id="ajax_request_done"]').should be_empty
+      end
+      
+      it "should wait for ajax requsts to finish when delay is long enough to see the start" do
+        @driver.options[:resynchronization_delay]=0.5
+        @driver.find('//input[@id="fire_delayed_ajax_request"]').first.click
+        @driver.find('//p[@id="ajax_request_done"]').should_not be_empty
+      end
+      
+      after { @driver.options[:resynchronization_delay]=0 }
+    end
   end
 end
 
