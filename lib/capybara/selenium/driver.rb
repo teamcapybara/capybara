@@ -4,9 +4,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   DEFAULT_OPTIONS = {
     :resynchronize => true,
     :resynchronization_timeout => 10,
+    :resynchronization_delay=>0,
     :browser => :firefox
   }
-  SPECIAL_OPTIONS = [:browser, :resynchronize, :resynchronization_timeout]
+  SPECIAL_OPTIONS = [:browser, :resynchronize, :resynchronization_timeout, :resynchronization_delay]
 
   attr_reader :app, :rack_server, :options
 
@@ -55,6 +56,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     if options[:resynchronize]
       load_wait_for_ajax_support
       yield
+      sleep(options[:resynchronization_delay])
       Capybara.timeout(options[:resynchronization_timeout], self, "failed to resynchronize, ajax request timed out") do
         evaluate_script("!window.capybaraRequestsOutstanding")
       end
