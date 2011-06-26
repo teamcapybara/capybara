@@ -19,12 +19,26 @@ module Capybara
         if normalized.failure_message
           normalized.failure_message.call(@actual, normalized)
         else
-          "expected #{selector_name} to return something"
+          message = "expected #{selector_name} "
+          if normalized.options.has_key?(:text)
+            @args.last.delete(:text)
+            message << %(but instead got "#{@actual.first(*@args).text}")
+          else
+            message << "to return something"
+          end
+          message
         end
       end
 
       def failure_message_for_should_not
-        "expected #{selector_name} not to return anything"
+        message = "expected #{selector_name} "
+        if normalized.options.has_key?(:text)
+          @args.last.delete(:text)
+          message << %(not to be present with text "#{@actual.first(*@args).text}")
+        else
+          message << "not to return anything"
+        end
+        message
       end
 
       def description
