@@ -209,10 +209,10 @@ describe Capybara::RSpecMatchers do
           end.to raise_error(%r(expected xpath "//h1\[@id='doesnotexist'\]" to return something))
         end
 
-        it "includes text in error message" do
+        it "includes text in error message and the actual text" do
           expect do
             page.should have_selector("//h1", :text => 'wrong text')
-          end.to raise_error(%r(expected xpath "//h1" with text "wrong text" to return something))
+          end.to raise_error(%r(expected xpath "//h1" with text "wrong text" but instead got "This is a test"))
         end
 
         it "fails with the selector's failure_message if set" do
