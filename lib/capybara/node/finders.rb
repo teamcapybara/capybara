@@ -15,7 +15,7 @@ module Capybara
       # +find+ takes the same options as +all+.
       #
       #     page.find('#foo').find('.bar')
-      #     page.find(:xpath, '//div[contains("bar")]')
+      #     page.find(:xpath, '//div[contains(., "bar")]')
       #     page.find('li', :text => 'Quox').click_link('Delete')
       #
       # @param (see Capybara::Node::Finders#all)
