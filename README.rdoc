@@ -485,10 +485,17 @@ equivalent, and you should *always* use the latter!
     page.should_not have_xpath('a')
     page.should have_no_xpath('a')
 
-The former would incorrectly wait for the content to appear, since the
-asynchronous process has not yet removed the element from the page, it would
+Imagine we have an asynchronous process that removes the a from the page.
+The former will wait for the content to appear, and exit immediately since the
+asynchronous process has not yet removed the element from the page. It would
 therefore fail, even though the code might be working correctly. The latter
 correctly waits for the element to disappear from the page.
+
+If you are sure you have no asynchronous processes that can affect your particular element,
+you can turn off this behaviour for has_xpath?, has_css? and has_selector? ( and their negative counterparts)
+
+  page.should have_no_xpath('a', :wait => false)
+  
 
 == Using the DSL in unsupported testing frameworks
 

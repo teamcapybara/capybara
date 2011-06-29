@@ -17,6 +17,12 @@ module Capybara
       #
       # This will check if the expression occurs exactly 4 times.
       #
+      # By default, in javascript drivers, it will wait for the selector to appear up until the capybara timeout 
+      # (in case we need to wait for javascript to complete). 
+      # If you do not want this behaviour you can prevent it by using the :wait option
+      #
+      #     page.has_selector?('p#foo', :wait => false)
+      #
       # It also accepts all options that {Capybara::Node::Finders#all} accepts,
       # such as :text and :visible.
       #
@@ -34,24 +40,27 @@ module Capybara
       #
       def has_selector?(*args)
         options = if args.last.is_a?(Hash) then args.last else {} end
-        wait_conditionally_until do
-          results = all(*args)
-
-          case
-          when results.empty?
-            false
-          when options[:between]
-            options[:between] === results.size
-          when options[:count]
-            options[:count].to_i == results.size
-          when options[:maximum]
-            options[:maximum].to_i >= results.size
-          when options[:minimum]
-            options[:minimum].to_i <= results.size
-          else
-            results.size > 0
-          end
+          
+        selector_present = Proc.new do
+           results = all(*args)
+              
+               case
+               when results.empty?
+                 false
+               when options[:between]
+                 options[:between] === results.size
+               when options[:count]
+                 options[:count].to_i == results.size
+               when options[:maximum]
+                 options[:maximum].to_i >= results.size
+               when options[:minimum]
+                 options[:minimum].to_i <= results.size
+               else
+                 results.size > 0
+               end
         end
+        return selector_present.call if options[:wait] == false     
+        wait_conditionally_until(&selector_present)
       rescue Capybara::TimeoutError
         return false
       end
@@ -66,24 +75,27 @@ module Capybara
       #
       def has_no_selector?(*args)
         options = if args.last.is_a?(Hash) then args.last else {} end
-        wait_conditionally_until do
-          results = all(*args)
+          
+        selector_not_present = Proc.new do
+           results = all(*args)
 
-          case
-          when results.empty?
-            true
-          when options[:between]
-            not(options[:between] === results.size)
-          when options[:count]
-            not(options[:count].to_i == results.size)
-          when options[:maximum]
-            not(options[:maximum].to_i >= results.size)
-          when options[:minimum]
-            not(options[:minimum].to_i <= results.size)
-          else
-            results.empty?
-          end
-        end
+            case
+            when results.empty?
+              true
+            when options[:between]
+              not(options[:between] === results.size)
+            when options[:count]
+              not(options[:count].to_i == results.size)
+            when options[:maximum]
+              not(options[:maximum].to_i >= results.size)
+            when options[:minimum]
+              not(options[:minimum].to_i <= results.size)
+            else
+              results.empty?
+            end
+        end  
+        return selector_not_present.call if options[:wait] == false      
+        wait_conditionally_until(&selector_not_present)
       rescue Capybara::TimeoutError
         return false
       end
@@ -100,6 +112,12 @@ module Capybara
       #     page.has_xpath?('.//p[@id="foo"]', :count => 4)
       #
       # This will check if the expression occurs exactly 4 times.
+      #
+      # By default, in javascript drivers, it will wait for the selector to appear up until the capybara timeout 
+      # (in case we need to wait for javascript to complete). 
+      # If you do not want this behaviour you can prevent it by using the :wait option
+      #
+      #     page.has_xpath?('.//li', :wait => false)
       #
       # It also accepts all options that {Capybara::Node::Finders#all} accepts,
       # such as :text and :visible.
@@ -145,6 +163,12 @@ module Capybara
       #     page.has_css?('p#foo', :count => 4)
       #
       # This will check if the selector occurs exactly 4 times.
+      #
+      # By default, in javascript drivers, it will wait for the selector to appear up until the capybara timeout 
+      # (in case we need to wait for javascript to complete). 
+      # If you do not want this behaviour you can prevent it by using the :wait option
+      #
+      #     page.has_xpath?('p#foo', :wait => false)
       #
       # It also accepts all options that {Capybara::Node::Finders#all} accepts,
       # such as :text and :visible.

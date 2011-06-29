@@ -160,35 +160,87 @@ shared_examples_for "session with javascript support" do
     end
 
     describe '#has_xpath?' do
-      it "should wait for content to appear" do
+      it "should wait for content to appear by default" do
         @session.visit('/with_js')
         @session.click_link('Click me')
         @session.should have_xpath("//input[@type='submit' and @value='New Here']")
       end
+      
+      it "should not wait for content to appear if asked not to" do
+        @session.visit('/with_js')
+        @session.click_link('Click me')
+        @session.should_not have_xpath("//input[@type='submit' and @value='New Here']", :wait => false)
+      end
+      
+      it "should wait for content to appear if asked to" do
+        @session.visit('/with_js')
+        @session.click_link('Click me')
+        @session.should have_xpath("//input[@type='submit' and @value='New Here']", :wait => true)
+      end
+      
     end
 
     describe '#has_no_xpath?' do
-      it "should wait for content to disappear" do
+      it "should wait for content to disappear by default" do
         @session.visit('/with_js')
         @session.click_link('Click me')
         @session.should have_no_xpath("//p[@id='change']")
       end
+      
+      it "should not wait for content to disappear if asked not to" do
+        @session.visit('/with_js')
+        @session.click_link('Click me')
+        @session.should_not have_no_xpath("//p[@id='change']", :wait => false)
+      end
+      
+      it "should wait for content to disappear if asked to" do
+        @session.visit('/with_js')
+        @session.click_link('Click me')
+        @session.should have_no_xpath("//p[@id='change']", :wait => true)
+      end
+      
     end
 
     describe '#has_css?' do
-      it "should wait for content to appear" do
+      it "should wait for content to appear by default" do
         @session.visit('/with_js')
         @session.click_link('Click me')
         @session.should have_css("input[type='submit'][value='New Here']")
       end
+      
+      it "should not wait for content to appear if asked not to" do
+        @session.visit('/with_js')
+        @session.click_link('Click me')
+        @session.should_not have_css("input[type='submit'][value='New Here']", :wait => false)
+      end
+      
+      it "should wait for content to appear by default if asked to" do
+        @session.visit('/with_js')
+        @session.click_link('Click me')
+        @session.should have_css("input[type='submit'][value='New Here']", :wait => true)
+      end
+      
     end
 
-    describe '#has_no_xpath?' do
-      it "should wait for content to disappear" do
+    describe '#has_no_css?' do
+      it "should wait for content to disappear by default" do
         @session.visit('/with_js')
         @session.click_link('Click me')
         @session.should have_no_css("p#change")
       end
+      
+      it "should not wait for content to disappear if asked not to" do
+        @session.visit('/with_js')
+        @session.click_link('Click me')
+        @session.should_not have_no_css("p#change", :wait => false)
+      end
+      
+      it "should wait for content to disappear if asked to" do
+        @session.visit('/with_js')
+        @session.click_link('Click me')
+        @session.should have_no_css("p#change", :wait => true)
+      end
+      
     end
 
     describe '#has_content?' do
