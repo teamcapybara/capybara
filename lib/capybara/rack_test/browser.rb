@@ -16,6 +16,10 @@ class Capybara::RackTest::Browser
 
   def submit(method, path, attributes)
     path = request_path if not path or path.empty?
+    current_uri = URI.parse(current_url)
+    if current_uri.scheme
+      @current_host = current_uri.scheme + '://' + current_uri.host
+    end
     process(method, path, attributes)
   end
 

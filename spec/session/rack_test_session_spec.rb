@@ -40,5 +40,25 @@ describe Capybara::Session do
     it_should_behave_like "session without javascript support"
     it_should_behave_like "session with headers support"
     it_should_behave_like "session with status code support"
+
+    describe "session #current_host" do
+      after do
+        Capybara.app_host = nil
+      end
+      it "is affected by the current protocol" do
+        @session.visit('https://capybara-testapp.heroku.com/host_links')
+        @session.click_button('Relative Host')
+        @session.body.should include('Current host is https://capybara-testapp.heroku.com')
+        @session.current_host.should == 'https://capybara-testapp.heroku.com'
+      end
+
+      it "is affected by the protocol of the latest redirect" do
+        @session.visit('http://capybara-testapp.heroku.com/host_links_over_ssl')
+        @session.click_button('Relative Host')
+        @session.body.should include('Current host is https://capybara-testapp.heroku.com')
+        @session.current_host.should == 'https://capybara-testapp.heroku.com'
+      end
+    end
+
   end
 end
