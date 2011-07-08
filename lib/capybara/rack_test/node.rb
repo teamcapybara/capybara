@@ -23,7 +23,10 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
         native.remove_attribute('checked')
       end
     elsif tag_name == 'input'
-      if (type == 'text' || type == 'password') && self[:maxlength]
+      if (type == 'text' || type == 'password') && self[:maxlength] &&
+        !self[:maxlength].empty?
+        # Browser behavior for maxlength="0" is inconsistent, so we stick with
+        # Firefox, allowing no input
         value = value[0...self[:maxlength].to_i]
       end
       native['value'] = value.to_s
