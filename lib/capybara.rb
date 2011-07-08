@@ -225,6 +225,12 @@ module Capybara
     autoload :Node,    'capybara/selenium/node'
     autoload :Driver,  'capybara/selenium/driver'
   end
+  
+  module Mechanize
+    autoload :Driver,  'capybara/mechanize/driver'
+    autoload :Node,    'capybara/mechanize/node'
+  end
+  
 end
 
 Capybara.configure do |config|
@@ -244,4 +250,8 @@ end
 
 Capybara.register_driver :selenium do |app|
   Capybara::Selenium::Driver.new(app)
+end
+
+Capybara.register_driver :mechanize do |app|
+  Capybara::Mechanize::Driver.new(app)
 end

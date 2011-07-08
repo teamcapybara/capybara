@@ -25,6 +25,7 @@ alias :running :lambda
 Capybara.default_wait_time = 0 # less timeout so tests run faster
 
 module TestSessions
-  RackTest = Capybara::Session.new(:rack_test, TestApp)
-  Selenium = Capybara::Session.new(:selenium, TestApp)
+  RackTest  = Capybara::Session.new(:rack_test, TestApp)
+  Selenium  = Capybara::Session.new(:selenium, TestApp)
+  Mechanize = Capybara::Session.new(:mechanize, TestApp)
 end
