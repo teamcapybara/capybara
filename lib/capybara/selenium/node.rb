@@ -46,7 +46,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def drag_to(element)
-    resynchronize { native.drag_and_drop_on(element.native) }
+    resynchronize { driver.browser.action.drag_and_drop(native, element.native).perform }
   end
 
   def tag_name
