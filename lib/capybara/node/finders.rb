@@ -33,6 +33,7 @@ module Capybara
           normalized = Capybara::Selector.normalize(*args)
           message = options[:message] || "Unable to find #{normalized.name} #{normalized.locator.inspect}"
           message = normalized.failure_message.call(self, normalized) if normalized.failure_message
+          message += " -- your page.body may be blank" if 'Unable to find xpath "/html"' == message
           raise Capybara::ElementNotFound, message
         end
         return node
