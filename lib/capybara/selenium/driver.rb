@@ -2,7 +2,7 @@ require 'selenium-webdriver'
 
 class Capybara::Selenium::Driver < Capybara::Driver::Base
   DEFAULT_OPTIONS = {
-    :resynchronize => true,
+    :resynchronize => false,
     :resynchronization_timeout => 10,
     :browser => :firefox
   }
