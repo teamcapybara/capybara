@@ -71,6 +71,24 @@ module Capybara
 
       ##
       #
+      # Send keys to the element
+      #
+      # @param [String, Symbol, Array]
+      #
+      # Examples:
+      #
+      #     element.send_keys "foo"                     #=> value: 'foo'
+      #     element.send_keys "tet", :arrow_left, "s"   #=> value: 'test'
+      #     element.send_keys [:control, 'a'], :space   #=> value: ' '
+      #
+      # See the keycodes gem for symbol to keycode mappings
+      #
+      def send_keys(*keys)
+        base.send_keys(*keys)
+      end
+
+      ##
+      #
       # Select this node if is an option element inside a select tag
       #
       def select_option

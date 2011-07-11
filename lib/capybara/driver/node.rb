@@ -36,6 +36,10 @@ module Capybara
         raise NotImplementedError
       end
 
+      def send_keys(*keys)
+        raise NotImplementedError
+      end
+
       def drag_to(element)
         raise NotImplementedError
       end
