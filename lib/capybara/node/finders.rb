@@ -120,10 +120,10 @@ module Capybara
       def all(*args)
         options = extract_normalized_options(args)
 
-        Capybara::Selector.normalize(*args).xpaths.
-          map    { |path| find_in_base(path) }.flatten.
-          select { |node| matches_options(node, options) }.
-          map    { |node| convert_element(node) }
+        selector = Capybara::Selector.normalize(*args)
+        selector.xpaths.
+          map    { |path| find_in_base(selector, path) }.flatten.
+          select { |node| matches_options(node, options) }
       end
 
       ##
@@ -143,10 +143,11 @@ module Capybara
         options = extract_normalized_options(args)
         found_elements = []
 
-        Capybara::Selector.normalize(*args).xpaths.each do |path|
-          find_in_base(path).each do |node|
+        selector = Capybara::Selector.normalize(*args)
+        selector.xpaths.each do |path|
+          find_in_base(selector, path).each do |node|
             if matches_options(node, options)
-              found_elements << convert_element(node)
+              found_elements << node
               return found_elements.last if not Capybara.prefer_visible_elements or node.visible?
             end
           end
@@ -156,12 +157,10 @@ module Capybara
 
     protected
 
-      def find_in_base(xpath)
-        base.find(xpath)
-      end
-
-      def convert_element(element)
-        Capybara::Node::Element.new(session, element)
+      def find_in_base(selector, xpath)
+        base.find(xpath).map do |node|
+          Capybara::Node::Element.new(session, node, self, selector)
+        end
       end
 
       def wait_conditionally_until
@@ -197,7 +196,7 @@ module Capybara
       end
 
       def has_selected_options?(node, expected)
-        actual = node.find('.//option').select { |option| option.selected? }.map { |option| option.text }
+        actual = node.all(:xpath, './/option').select { |option| option.selected? }.map { |option| option.text }
         (expected - actual).empty?
       end
     end

@@ -22,7 +22,7 @@ module Capybara
     #     session.has_css?('#foobar')               # from Capybara::Node::Matchers
     #
     class Base
-      attr_reader :session, :base
+      attr_reader :session, :base, :parent
 
       include Capybara::Node::Finders
       include Capybara::Node::Actions
@@ -31,6 +31,10 @@ module Capybara
       def initialize(session, base)
         @session = session
         @base = base
+      end
+
+      def reload
+        self
       end
 
     protected

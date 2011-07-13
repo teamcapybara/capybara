@@ -2,7 +2,7 @@ require 'selenium-webdriver'
 
 class Capybara::Selenium::Driver < Capybara::Driver::Base
   DEFAULT_OPTIONS = {
-    :resynchronize => false,
+    :resynchronize => true,
     :resynchronization_timeout => 10,
     :browser => :firefox
   }
@@ -116,6 +116,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     @browser.quit
   rescue Errno::ECONNREFUSED
     # Browser must have already gone
+  end
+
+  def invalid_element_errors
+    [Selenium::WebDriver::Error::ObsoleteElementError]
   end
 
 private

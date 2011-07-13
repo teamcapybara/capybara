@@ -22,12 +22,18 @@ module Capybara
     #
     class Element < Base
 
+      def initialize(session, base, parent=nil, selector)
+        super(session, base)
+        @parent = parent
+        @selector = selector
+      end
+
       ##
       #
       # @return [Object]    The native element from the driver, this allows access to driver specific methods
       #
       def native
-        base.native
+        carefully { base.native }
       end
 
       ##
@@ -35,7 +41,7 @@ module Capybara
       # @return [String]    The text of the element
       #
       def text
-        base.text
+        carefully { base.text }
       end
 
       ##
@@ -48,7 +54,7 @@ module Capybara
       # @return [String]               The value of the attribute
       #
       def [](attribute)
-        base[attribute]
+        carefully { base[attribute] }
       end
 
       ##
@@ -56,7 +62,7 @@ module Capybara
       # @return [String]    The value of the form element
       #
       def value
-        base.value
+        carefully { base.value }
       end
 
       ##
@@ -66,7 +72,7 @@ module Capybara
       # @param [String] value    The new value
       #
       def set(value)
-        base.set(value)
+        carefully { base.set(value) }
       end
 
       ##
@@ -74,7 +80,7 @@ module Capybara
       # Select this node if is an option element inside a select tag
       #
       def select_option
-        base.select_option
+        carefully { base.select_option }
       end
 
       ##
@@ -82,7 +88,7 @@ module Capybara
       # Unselect this node if is an option element inside a multiple select tag
       #
       def unselect_option
-        base.unselect_option
+        carefully { base.unselect_option }
       end
 
       ##
@@ -90,7 +96,7 @@ module Capybara
       # Click the Element
       #
       def click
-        base.click
+        carefully { base.click }
       end
 
       ##
@@ -98,7 +104,7 @@ module Capybara
       # @return [String]      The tag name of the element
       #
       def tag_name
-        base.tag_name
+        carefully { base.tag_name }
       end
 
       ##
@@ -109,7 +115,7 @@ module Capybara
       # @return [Boolean]     Whether the element is visible
       #
       def visible?
-        base.visible?
+        carefully { base.visible? }
       end
 
       ##
@@ -119,7 +125,7 @@ module Capybara
       # @return [Boolean]     Whether the element is checked
       #
       def checked?
-        base.checked?
+        carefully { base.checked? }
       end
 
       ##
@@ -129,7 +135,7 @@ module Capybara
       # @return [Boolean]     Whether the element is selected
       #
       def selected?
-        base.selected?
+        carefully { base.selected? }
       end
 
       ##
@@ -139,7 +145,7 @@ module Capybara
       # @return [String]      An XPath expression
       #
       def path
-        base.path
+        carefully { base.path }
       end
 
       ##
@@ -150,7 +156,7 @@ module Capybara
       # @param [String] event       The name of the event to trigger
       #
       def trigger(event)
-        base.trigger(event)
+        carefully { base.trigger(event) }
       end
 
       ##
@@ -164,7 +170,13 @@ module Capybara
       # @param [Capybara::Element] node     The element to drag to
       #
       def drag_to(node)
-        base.drag_to(node.base)
+        carefully { base.drag_to(node.base) }
+      end
+
+      def reload
+        reloaded = parent.reload.first(@selector.name, @selector.locator, @selector.options)
+        @base = reloaded.base if reloaded
+        self
       end
 
       def inspect
@@ -173,6 +185,19 @@ module Capybara
         %(#<Capybara::Element tag="#{tag_name}">)
       end
 
+      def carefully(seconds=Capybara.default_wait_time)
+        start_time = Time.now
+
+        begin
+          yield
+        rescue => e
+          raise e unless driver.respond_to?(:invalid_element_errors) and driver.invalid_element_errors.include?(e.class)
+          raise e if (Time.now - start_time) >= seconds
+          sleep(0.05)
+          reload
+          retry
+        end
+      end
     end
   end
 end
