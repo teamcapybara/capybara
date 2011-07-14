@@ -22,7 +22,7 @@ module Capybara
     #
     class Element < Base
 
-      def initialize(session, base, parent=nil, selector)
+      def initialize(session, base, parent, selector)
         super(session, base)
         @parent = parent
         @selector = selector
