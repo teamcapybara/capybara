@@ -173,6 +173,18 @@ module Capybara
         carefully { base.drag_to(node.base) }
       end
 
+      def find(*args)
+        carefully { super }
+      end
+
+      def first(*args)
+        carefully { super }
+      end
+
+      def all(*args)
+        carefully { super }
+      end
+
       def reload
         reloaded = parent.reload.first(@selector.name, @selector.locator, @selector.options)
         @base = reloaded.base if reloaded
