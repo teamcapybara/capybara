@@ -37,6 +37,7 @@ module Capybara
     # [default_wait_time = Integer]       The number of seconds to wait for asynchronous processes to finish (Default: 2)
     # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: false)
     # [prefer_visible_elements = Boolean] Whether to prefer visible elements over hidden elements (Default: true)
+    # [reset_session_after_each = Boolean] Whether to clear the session after each rspec test (Default: true)
     #
     # === DSL Options
     #
