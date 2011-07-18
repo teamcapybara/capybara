@@ -35,7 +35,7 @@ describe Capybara do
         <html>
       HTML
 
-      Launchy::Browser.stub(:run)
+      Launchy.stub(:open)
     end
 
     def default_file_expectations
