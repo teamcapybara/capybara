@@ -55,7 +55,7 @@ class Capybara::RackTest::Browser
   end
 
   def current_url
-    last_request.url
+    URI.join(@current_host, URI.parse(last_request.url).path).to_s
   rescue Rack::Test::Error
     ""
   end
