@@ -295,6 +295,10 @@ module Capybara
       RUBY
     end
 
+    def inspect
+      %(#<Capybara::Session>)
+    end
+
   private
 
     def current_node
