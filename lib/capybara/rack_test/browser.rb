@@ -28,7 +28,11 @@ class Capybara::RackTest::Browser
     5.times do
       if last_response.redirect?
         new_uri = URI.parse(last_response.original_headers['Location'])
-        @current_host = new_uri.scheme + '://' + new_uri.host
+
+        if new_uri.host
+          @current_host = new_uri.scheme + '://' + new_uri.host
+        end
+
         follow_redirect!
       end
     end
