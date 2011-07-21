@@ -26,7 +26,13 @@ class Capybara::RackTest::Browser
 
   def follow_redirects!
     5.times do
-      follow_redirect! if last_response.redirect?
+      if last_response.redirect?
+        redirect_location = URI.parse(last_response.location)
+        if redirect_location.host
+          @current_host = redirect_location.scheme + '://' + redirect_location.host
+        end
+        follow_redirect!
+      end
     end
     raise Capybara::InfiniteRedirectError, "redirected more than 5 times, check for infinite redirects." if last_response.redirect?
   end
