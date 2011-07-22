@@ -229,6 +229,7 @@ module Capybara
   module Mechanize
     autoload :Driver,  'capybara/mechanize/driver'
     autoload :Node,    'capybara/mechanize/node'
+    autoload :Form,    'capybara/mechanize/form'
   end
   
 end

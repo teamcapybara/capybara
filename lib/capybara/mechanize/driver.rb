@@ -53,33 +53,12 @@ class Capybara::Mechanize::Driver < Capybara::Driver::Base
     end
   end
   
-  def submit(form_node, button_node)    
-    # Remove diabled nodes as this is what we expect but its not what
-    # mechanize does.
-    form_node.search('*[disabled=disabled]').remove
-    
-    form   = Mechanize::Form.new(form_node, browser)
+  def submit(form_node, button_node)
+    form   = Capybara::Mechanize::Form.new(form_node, browser)
     button = Mechanize::Form::Button.new(button_node)
-    
-    # Ensure that the uploads are properly configured.
-    if form.enctype.downcase =~ /^multipart\/form-data/
-      form.file_uploads.each do |upload|
-        file_path = upload.node["value"]
-        upload.file_name = file_path if !file_path.nil? && file_path != ''
-      end
-    else
-      form.file_uploads.each do |upload|
-        file_path = upload.node["value"]
-        
-        if !file_path.nil? && file_path != ''        
-          new_field = Mechanize::Form::Field.new(upload.node, File.basename(file_path))
-          form.fields << new_field
-        end
-      end
-    end
-    
+
     form.action = form.action || self.current_url
-    
+
     browser.submit(form, button)
   end
       
