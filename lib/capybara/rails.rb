@@ -4,7 +4,9 @@ require 'capybara/dsl'
 Capybara.app = Rack::Builder.new do
   map "/" do
     if Rails.version.to_f >= 3.0
-      run Rails.application  
+      app = Rails.application
+      app.config.action_dispatch.show_exceptions = true
+      run app
     else # Rails 2
       use Rails::Rack::Static
       run ActionController::Dispatcher.new
