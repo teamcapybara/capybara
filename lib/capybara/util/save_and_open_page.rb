@@ -23,6 +23,7 @@ module Capybara
 
     def open_in_browser(path) # :nodoc
       require "launchy"
+      path = "file://#{path}" unless path.index(/(file|ftp|http|https):\/\//) == 0
       Launchy.open(path)
     rescue LoadError
       warn "Sorry, you need to install launchy (`gem install launchy`) and " <<
