@@ -5,6 +5,12 @@ module Capybara
     # Provides timeout similar to standard library Timeout, but avoids threads
     #
     def timeout(seconds = 1, driver = nil, error_message = nil, &block)
+      if defined?(Timecop)
+        if Timecop.top_stack_item && Timecop.top_stack_item.mock_type == :freeze
+          raise RuntimeError, "Capybara.timeout cannot work with Timecop.freeze. Use Timecop.travel instead."
+        end
+      end
+
       start_time = Time.now
 
       result = nil
