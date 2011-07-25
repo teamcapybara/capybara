@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe Capybara::Session do
-  context 'with rack test driver' do
+  context 'with Mechanize driver' do
     before do
       @session = TestSessions::Mechanize
     end
 
     describe '#driver' do
-      it "should be a rack test driver" do
+      it "should be a Mechanize driver" do
         @session.driver.should be_an_instance_of(Capybara::Mechanize::Driver)
       end
     end

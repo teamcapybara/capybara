@@ -1,14 +1,14 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe Capybara::RackTest::Driver do
+describe Capybara::Mechanize::Driver do
   before do
     @driver = TestSessions::Mechanize.driver
   end
 
   it "should throw an error when no rack app is given" do
     running do
-      Capybara::RackTest::Driver.new(nil)
+      Capybara::Mechanize::Driver.new(nil)
     end.should raise_error(ArgumentError)
   end
 
