@@ -70,6 +70,12 @@ shared_examples_for "fill_in" do
       extract_results(@session)['phone'].should == '+1 555 7022'
     end
 
+    it "should fill in a text field with integer" do
+      @session.fill_in('Zipcode', :with => 52071350)
+      @session.click_button('awesome')
+      extract_results(@session)['zipcode'].should == '52071'
+    end
+
     it "should fill in a text field respecting its maxlength attribute" do
       @session.fill_in('Zipcode', :with => '52071350')
       @session.click_button('awesome')
@@ -93,17 +99,17 @@ shared_examples_for "fill_in" do
       @session.click_button('awesome')
       extract_results(@session)['password'].should == 'supasikrit'
     end
-    
+
     it "should prefer exact matches over partial matches" do
       @session.fill_in('Name', :with => 'Ford Prefect')
       @session.click_button('awesome')
       extract_results(@session)['name'].should == 'Ford Prefect'
     end
-    
+
     it "should throw an exception if a hash containing 'with' is not provided" do
       lambda{@session.fill_in 'Name', 'ignu'}.should raise_error
     end
-    
+
     context "with ignore_hidden_fields" do
       before { Capybara.ignore_hidden_elements = true }
       after  { Capybara.ignore_hidden_elements = false }
