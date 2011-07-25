@@ -99,17 +99,15 @@ class Capybara::Mechanize::Driver < Capybara::Driver::Base
   def make_absolute_url(path)
     return path unless URI.parse(path).relative?
 
-    path = "/#{ request_path }#{ path }" if is_query_string?(path)
+    path = "#{ request_path }#{ path }" if is_query_string?(path)
 
     if current_page? && current_page_is_external?
-       new_uri      = current_page.uri.clone
-       new_uri.path = path
-       new_uri.to_s
-     else
-       url(path)
-     end
+      current_page.uri.merge(path).to_s
+    else
+      url(path)
+    end
   end
-
+  
   def is_query_string?(path)
     path.start_with?('?')
   end
