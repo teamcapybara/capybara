@@ -14,6 +14,9 @@ RSpec.configure do |config|
   end
 end
 
+# Required here instead of in rspec_spec to avoid RSpec deprecation warning
+require 'capybara/rspec'
+
 require 'capybara/spec/driver'
 require 'capybara/spec/session'
 
