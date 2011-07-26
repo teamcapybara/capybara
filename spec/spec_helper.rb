@@ -14,6 +14,7 @@ RSpec.configure do |config|
   end
 end
 
+require 'capybara/rspec'
 require 'capybara/spec/driver'
 require 'capybara/spec/session'
 
