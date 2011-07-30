@@ -108,6 +108,7 @@ module Capybara
       # @param [Hash{:from => String}]    The id, name or label of the select box
       #
       def select(value, options={})
+        value = value.to_s
         if options.has_key?(:from)
           no_select_msg = "cannot select option, no select box with id, name, or label '#{options[:from]}' found"
           no_option_msg = "cannot select option, no option with text '#{value}' in select box '#{options[:from]}'"

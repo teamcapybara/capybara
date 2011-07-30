@@ -32,7 +32,7 @@
     <label for="form_last_name">Last Name</label>
     <input type="text" name="form[last_name]" value="Smith" id="form_last_name"/>
   </p>
-  
+
   <p>
     <label for="form_name_explanation">Explanation of Name</label>
     <textarea name="form[name_explanation]" id="form_name_explanation"></textarea>
@@ -47,7 +47,7 @@
     <label for="form_schmooo">Schmooo</label>
     <input type="schmooo" name="form[schmooo]" value="This is Schmooo!" id="form_schmooo"/>
   </p>
-  
+
   <p>
     <label>Street<br/>
       <input type="text" maxlength="" name="form[street]" value="Sesame street 66"/>
@@ -74,7 +74,7 @@
     <label for="form_image">Image</label>
     <input type="file" name="form[image]" id="form_image"/>
   </p>
-  
+
   <p>
     <input type="hidden" name="form[token]" value="12345" id="form_token"/>
   </p>
@@ -134,6 +134,15 @@
   </p>
 
   <p>
+    <label for="form_age">Age</label>
+    <select name="form[age]" id="form_age">
+      <option>20</option>
+      <option>21</option>
+      <option>42</option>
+    </select>
+  </p>
+
+  <p>
     <input type="checkbox" value="dog" name="form[pets][]" id="form_pets_dog" checked="checked"/>
     <label for="form_pets_dog">Dog</label>
     <input type="checkbox" value="cat" name="form[pets][]" id="form_pets_cat"/>
@@ -163,7 +172,7 @@
       <option selected="selected" value="thermal">Long Johns</option>
     </select>
   </p>
- 
+
   <p>
     <span>First address<span>
     <label for='address1_street'>Street</label>
@@ -185,7 +194,7 @@
     <input type="text" name="form[addresses][][street]" value="" id="address2_street">
 
     <label for='address2_city'>City</label>
-    <input type="text" name="form[addresses][][city]" value="" id="address2_city"> 
+    <input type="text" name="form[addresses][][city]" value="" id="address2_city">
 
     <label for='address2_country'>Country</label>
     <select name="form[addresses][][country]" id="address2_country">
@@ -288,7 +297,7 @@
     <label for="form_document">Document</label>
     <input type="file" name="form[document]" id="form_document"/>
   </p>
- 
+
   <p>
     <input type="submit" value="Upload"/>
   <p>
@@ -337,7 +346,7 @@
     <label for="html5_color">Html5 Color</label>
     <input type="color" name="form[html5_color]" value="#FFFFFF" id="html5_color"/>
   </p>
-  
+
   <p>
     <input type="submit" name="form[html5_submit]" value="html5_submit"/>
   </p>
