@@ -36,13 +36,8 @@ class Capybara::Mechanize::Driver < Capybara::Driver::Base
     end
   end
 
-  def submit(form_node, button_node)
-    form   = Capybara::Mechanize::Form.new(form_node, browser)
-    button = Mechanize::Form::Button.new(button_node)
-
-    form.action = form.action || self.current_url
-
-    browser.submit(form, button)
+  def submit(form)
+    browser.submit(form)
   end
 
   def current_url

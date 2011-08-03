@@ -5,7 +5,7 @@ class Capybara::Mechanize::Node < Capybara::RackTest::Node
       driver.follow(method, self[:href].to_s)
     elsif (tag_name == 'input' and %w(submit image).include?(type)) or
         ((tag_name == 'button') and type.nil? or type == "submit")
-      driver.submit(form, self)
+      Capybara::Mechanize::Form.new(driver, form).submit(self)
     end
   end  
 end
