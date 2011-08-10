@@ -46,7 +46,12 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def find(selector)
-    browser.find_elements(:xpath, selector).map { |node| Capybara::Selenium::Node.new(self, node) }
+    begin
+      find_elements(selector)
+    rescue Selenium::WebDriver::Error::UnhandledError
+      sleep 1
+      find_elements(selector)
+    end
   end
 
   def wait?; true; end
@@ -151,6 +156,10 @@ private
 
   def url(path)
     rack_server.url(path)
+  end
+
+  def find_elements(selector)
+    browser.find_elements(:xpath, selector).map { |node| Capybara::Selenium::Node.new(self, node) }
   end
 
 end
