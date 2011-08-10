@@ -45,6 +45,12 @@ shared_examples_for "current_host" do
       @session.current_host.should == 'http://capybara2.elabs.se'
     end
 
+    it "is affected by a redirect to another host" do
+      @session.visit('http://capybara-testapp.heroku.com/redirect_to_other')
+      @session.body.should include('Current host is http://capybara2.elabs.se')
+      @session.current_host.should == 'http://capybara2.elabs.se'
+    end
+
     it "is unaffected by posting through a relative form" do
       @session.visit('http://capybara-testapp.heroku.com/host_links')
       @session.click_button('Relative Host')

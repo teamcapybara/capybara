@@ -52,6 +52,8 @@ class Capybara::RackTest::Browser
     reset_cache!
     send(method, path, attributes, env)
     follow_redirects!
+    current_uri = URI.parse(current_url)
+    @current_host = current_uri.scheme + '://' + current_uri.host
   end
 
   def current_url
