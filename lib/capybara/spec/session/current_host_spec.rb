@@ -58,5 +58,11 @@ shared_examples_for "current_host" do
       @session.body.should include('Current host is http://capybara2.elabs.se')
       @session.current_host.should == 'http://capybara2.elabs.se'
     end
+
+    it "is affected by following a redirect" do
+      @session.visit('http://capybara-testapp.heroku.com/redirect_secure')
+      @session.body.should include('Current host is https://capybara-testapp.heroku.com')
+      @session.current_host.should == 'https://capybara-testapp.heroku.com'
+    end
   end
 end
