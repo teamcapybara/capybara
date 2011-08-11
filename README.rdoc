@@ -282,6 +282,21 @@ Ruby 1.8.7 at this time.
 Note: Envjs does not support transactional fixtures; see the section
 "Transactional Fixtures" below.
 
+=== Capybara-webkit
+
+The {capybara-webkit drive}[https://github.com/thoughtbot/capybara-webkit] is for true headless
+testing. It uses WebKitQt to start a rendering engine process. It can execute JavaScript as well. 
+It is significantly faster than drivers like Selenium since it does not load an entire browser.
+
+You can install it with:
+
+  gem install capybara-webkit
+
+And you can use it by:
+
+  Capybara.javascript_driver = :webkit
+
+
 == The DSL
 
 Capybara's DSL (domain-specific language) is inspired by Webrat. While
