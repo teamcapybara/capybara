@@ -67,6 +67,10 @@ class TestApp < Sinatra::Base
     redirect back
   end
 
+  get '/redirect_secure' do
+    redirect "https://#{request.host}/host"
+  end
+
   get '/slow_response' do
     sleep 2
     'Finally!'
