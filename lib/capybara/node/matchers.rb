@@ -34,7 +34,7 @@ module Capybara
       #
       def has_selector?(*args)
         options = if args.last.is_a?(Hash) then args.last else {} end
-        wait_conditionally_until do
+        wait_until do
           results = all(*args)
 
           case
@@ -50,9 +50,9 @@ module Capybara
             options[:minimum].to_i <= results.size
           else
             results.size > 0
-          end
+          end or raise ExpectationNotMet
         end
-      rescue Capybara::TimeoutError
+      rescue Capybara::ExpectationNotMet
         return false
       end
 
@@ -66,7 +66,7 @@ module Capybara
       #
       def has_no_selector?(*args)
         options = if args.last.is_a?(Hash) then args.last else {} end
-        wait_conditionally_until do
+        wait_until do
           results = all(*args)
 
           case
@@ -82,9 +82,9 @@ module Capybara
             not(options[:minimum].to_i <= results.size)
           else
             results.empty?
-          end
+          end or raise ExpectationNotMet
         end
-      rescue Capybara::TimeoutError
+      rescue Capybara::ExpectationNotMet
         return false
       end
 
