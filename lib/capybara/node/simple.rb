@@ -124,8 +124,8 @@ module Capybara
         native.xpath(xpath).map { |node| self.class.new(node) }
       end
 
-      def wait?
-        false
+      def wait_until
+        yield # simple nodes don't need to wait
       end
     end
   end
