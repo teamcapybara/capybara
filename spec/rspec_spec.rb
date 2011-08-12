@@ -14,9 +14,28 @@ describe 'capybara/rspec', :type => :request do
       page.body.should include('Cookie set to test_cookie')
     end
 
-    it "...then it is not availbable in the next" do
+    it "...then it is not available in the next" do
       visit('/get_cookie')
       page.body.should_not include('test_cookie')
+    end
+  end
+
+  context "resetting session disabled" do
+    before(:all) do
+      Capybara.reset_session_after_each = false
+    end
+    after(:all) do
+      Capybara.reset_session_after_each = true
+    end
+
+    it "sets a cookie in one example..." do
+      visit('/set_cookie')
+      page.body.should include('Cookie set to test_cookie')
+    end
+
+    it "...then it is available in the next" do
+      visit('/get_cookie')
+      page.body.should include('test_cookie')
     end
   end
 

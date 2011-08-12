@@ -13,7 +13,7 @@ RSpec.configure do |config|
   # might not actually be used in all examples where it's included.
   config.after do
     if self.class.include?(Capybara::DSL)
-      Capybara.reset_sessions!
+      Capybara.reset_sessions! if Capybara.reset_session_after_each
       Capybara.use_default_driver
     end
   end
