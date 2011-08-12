@@ -33,7 +33,7 @@ module Capybara
       # @return [Object]    The native element from the driver, this allows access to driver specific methods
       #
       def native
-        carefully { base.native }
+        wait_until { base.native }
       end
 
       ##
@@ -41,7 +41,7 @@ module Capybara
       # @return [String]    The text of the element
       #
       def text
-        carefully { base.text }
+        wait_until { base.text }
       end
 
       ##
@@ -54,7 +54,7 @@ module Capybara
       # @return [String]               The value of the attribute
       #
       def [](attribute)
-        carefully { base[attribute] }
+        wait_until { base[attribute] }
       end
 
       ##
@@ -62,7 +62,7 @@ module Capybara
       # @return [String]    The value of the form element
       #
       def value
-        carefully { base.value }
+        wait_until { base.value }
       end
 
       ##
@@ -72,7 +72,7 @@ module Capybara
       # @param [String] value    The new value
       #
       def set(value)
-        carefully { base.set(value) }
+        wait_until { base.set(value) }
       end
 
       ##
@@ -80,7 +80,7 @@ module Capybara
       # Select this node if is an option element inside a select tag
       #
       def select_option
-        carefully { base.select_option }
+        wait_until { base.select_option }
       end
 
       ##
@@ -88,7 +88,7 @@ module Capybara
       # Unselect this node if is an option element inside a multiple select tag
       #
       def unselect_option
-        carefully { base.unselect_option }
+        wait_until { base.unselect_option }
       end
 
       ##
@@ -96,7 +96,7 @@ module Capybara
       # Click the Element
       #
       def click
-        carefully { base.click }
+        wait_until { base.click }
       end
 
       ##
@@ -104,7 +104,7 @@ module Capybara
       # @return [String]      The tag name of the element
       #
       def tag_name
-        carefully { base.tag_name }
+        wait_until { base.tag_name }
       end
 
       ##
@@ -115,7 +115,7 @@ module Capybara
       # @return [Boolean]     Whether the element is visible
       #
       def visible?
-        carefully { base.visible? }
+        wait_until { base.visible? }
       end
 
       ##
@@ -125,7 +125,7 @@ module Capybara
       # @return [Boolean]     Whether the element is checked
       #
       def checked?
-        carefully { base.checked? }
+        wait_until { base.checked? }
       end
 
       ##
@@ -135,7 +135,7 @@ module Capybara
       # @return [Boolean]     Whether the element is selected
       #
       def selected?
-        carefully { base.selected? }
+        wait_until { base.selected? }
       end
 
       ##
@@ -145,7 +145,7 @@ module Capybara
       # @return [String]      An XPath expression
       #
       def path
-        carefully { base.path }
+        wait_until { base.path }
       end
 
       ##
@@ -156,7 +156,7 @@ module Capybara
       # @param [String] event       The name of the event to trigger
       #
       def trigger(event)
-        carefully { base.trigger(event) }
+        wait_until { base.trigger(event) }
       end
 
       ##
@@ -170,19 +170,19 @@ module Capybara
       # @param [Capybara::Element] node     The element to drag to
       #
       def drag_to(node)
-        carefully { base.drag_to(node.base) }
+        wait_until { base.drag_to(node.base) }
       end
 
       def find(*args)
-        carefully { super }
+        wait_until { super }
       end
 
       def first(*args)
-        carefully { super }
+        wait_until { super }
       end
 
       def all(*args)
-        carefully { super }
+        wait_until { super }
       end
 
       def reload
@@ -195,20 +195,6 @@ module Capybara
         %(#<Capybara::Element tag="#{tag_name}" path="#{path}">)
       rescue NotSupportedByDriverError
         %(#<Capybara::Element tag="#{tag_name}">)
-      end
-
-      def carefully(seconds=Capybara.default_wait_time)
-        start_time = Time.now
-
-        begin
-          yield
-        rescue => e
-          raise e unless driver.respond_to?(:invalid_element_errors) and driver.invalid_element_errors.include?(e.class)
-          raise e if (Time.now - start_time) >= seconds
-          sleep(0.05)
-          reload
-          retry
-        end
       end
     end
   end

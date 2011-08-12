@@ -38,6 +38,14 @@ shared_examples_for "session with javascript support" do
           node.reload.text.should == 'RELOADED'
           node.text.should == 'RELOADED'
         end
+
+        it "should not automatically reload" do
+          @session.visit('/with_js')
+          node = @session.find(:css, '#reload-me')
+          @session.click_link('Reload!')
+          sleep(0.3)
+          running { node.text.should == 'RELOADED' }.should raise_error
+        end
         after { Capybara.automatic_reload = true }
       end
 
@@ -56,6 +64,14 @@ shared_examples_for "session with javascript support" do
           @session.click_link('Reload!')
           sleep(0.3)
           node.text.should == 'RELOADED'
+        end
+
+        it "should reload a node automatically when using find" do
+          @session.visit('/with_js')
+          node = @session.find(:css, '#reload-me')
+          @session.click_link('Reload!')
+          sleep(0.3)
+          node.find(:css, 'a').text.should == 'RELOADED'
         end
       end
     end

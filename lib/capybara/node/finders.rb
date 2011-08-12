@@ -24,18 +24,7 @@ module Capybara
       # @raise  [Capybara::ElementNotFound]   If the element can't be found before time expires
       #
       def find(*args)
-        begin
-          node = wait_conditionally_until { first(*args) }
-        rescue TimeoutError
-        end
-        unless node
-          options = extract_normalized_options(args)
-          normalized = Capybara::Selector.normalize(*args)
-          message = options[:message] || "Unable to find #{normalized.name} #{normalized.locator.inspect}"
-          message = normalized.failure_message.call(self, normalized) if normalized.failure_message
-          raise Capybara::ElementNotFound, message
-        end
-        return node
+        wait_until { first(*args) or raise_find_error(*args) }
       end
 
       ##
@@ -157,14 +146,18 @@ module Capybara
 
     protected
 
+      def raise_find_error(*args)
+        options = extract_normalized_options(args)
+        normalized = Capybara::Selector.normalize(*args)
+        message = options[:message] || "Unable to find #{normalized.name} #{normalized.locator.inspect}"
+        message = normalized.failure_message.call(self, normalized) if normalized.failure_message
+        raise Capybara::ElementNotFound, message
+      end
+
       def find_in_base(selector, xpath)
         base.find(xpath).map do |node|
           Capybara::Node::Element.new(session, node, self, selector)
         end
-      end
-
-      def wait_conditionally_until
-        if wait? then session.wait_until { yield } else yield end
       end
 
       def extract_normalized_options(args)
