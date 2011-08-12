@@ -1,6 +1,16 @@
+# Version 1.0.1
+
+Release date: 2011-08-12
+
+### Fixed
+
+* Dependend on selenium-webdriver ~>2.0 and fix deprecations [Thomas Walpole, Jo Liss]
+* Depend on Launch 2.0 [Jeremy Hinegardner]
+* Rack-Test ignores fill in on fields with maxlength=""
+
 # Version 1.0.0
 
-Release date:
+Release date: 2011-06-14
 
 ### Added
 
