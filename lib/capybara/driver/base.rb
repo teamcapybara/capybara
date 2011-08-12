@@ -43,6 +43,10 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError
   end
 
+  def invalid_element_errors
+    []
+  end
+
   def wait?
     false
   end

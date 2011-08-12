@@ -22,7 +22,7 @@ module Capybara
     #     session.has_css?('#foobar')               # from Capybara::Node::Matchers
     #
     class Base
-      attr_reader :session, :base
+      attr_reader :session, :base, :parent
 
       include Capybara::Node::Finders
       include Capybara::Node::Actions
@@ -33,7 +33,26 @@ module Capybara
         @base = base
       end
 
+      def reload
+        self
+      end
+
     protected
+
+      def wait_until(seconds=Capybara.default_wait_time)
+        start_time = Time.now
+
+        begin
+          yield
+        rescue => e
+          raise e unless wait?
+          raise e unless (driver.respond_to?(:invalid_element_errors) and driver.invalid_element_errors.include?(e.class)) or e.is_a?(Capybara::ElementNotFound)
+          raise e if (Time.now - start_time) >= seconds
+          sleep(0.05)
+          reload if Capybara.automatic_reload
+          retry
+        end
+      end
 
       def wait?
         driver.wait?

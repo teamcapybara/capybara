@@ -118,6 +118,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     # Browser must have already gone
   end
 
+  def invalid_element_errors
+    [Selenium::WebDriver::Error::ObsoleteElementError]
+  end
+
 private
 
   def load_wait_for_ajax_support

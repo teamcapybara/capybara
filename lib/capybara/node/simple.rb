@@ -120,12 +120,8 @@ module Capybara
 
     protected
 
-      def find_in_base(xpath)
+      def find_in_base(selector, xpath)
         native.xpath(xpath).map { |node| self.class.new(node) }
-      end
-
-      def convert_element(element)
-        element
       end
 
       def wait?

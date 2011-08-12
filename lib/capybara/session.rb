@@ -284,7 +284,7 @@ module Capybara
     end
 
     def document
-      Capybara::Node::Document.new(self, driver)
+      @document ||= Capybara::Node::Document.new(self, driver)
     end
 
     NODE_METHODS.each do |method|

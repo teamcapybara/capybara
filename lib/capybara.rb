@@ -16,7 +16,7 @@ module Capybara
     attr_accessor :asset_root, :app_host, :run_server, :default_host
     attr_accessor :server_port, :server_boot_timeout
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements, :prefer_visible_elements
-    attr_accessor :save_and_open_page_path
+    attr_accessor :save_and_open_page_path, :automatic_reload
 
     ##
     #
@@ -236,6 +236,7 @@ Capybara.configure do |config|
   config.ignore_hidden_elements = false
   config.prefer_visible_elements = true
   config.default_host = "http://www.example.com"
+  config.automatic_reload = true
 end
 
 Capybara.register_driver :rack_test do |app|

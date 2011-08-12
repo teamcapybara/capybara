@@ -32,6 +32,12 @@ shared_examples_for "find" do
       it "should scope CSS selectors" do
         @session.find(:css, '#second').should have_no_css('h1')
       end
+
+      it "should have a reference to its parent if there is one" do
+        @node = @session.find(:css, '#first')
+        @node.parent.should == @node.session.document
+        @node.find('a').parent.should == @node
+      end
     end
 
     context "with css selectors" do
