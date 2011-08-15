@@ -18,7 +18,7 @@ shared_examples_for "session with javascript support" do
       end
     end
 
-    describe 'Node#reload', :focus => true do
+    describe 'Node#reload' do
       context "without automatic reload" do
         before { Capybara.automatic_reload = false }
         it "should reload the current context of the node" do
