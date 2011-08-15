@@ -49,6 +49,7 @@ module Capybara
           raise e unless (driver.respond_to?(:invalid_element_errors) and driver.invalid_element_errors.include?(e.class)) or e.is_a?(Capybara::ElementNotFound)
           raise e if (Time.now - start_time) >= seconds
           sleep(0.05)
+          raise Capybara::FrozenInTime, "time appears to be frozen, Capybara does not work with libraries which freeze time, consider using time travelling instead" if Time.now == start_time
           reload if Capybara.automatic_reload
           retry
         end
