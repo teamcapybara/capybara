@@ -55,6 +55,9 @@ class Capybara::RackTest::Browser
         path = (folders[0, folders.size - 1] << path).join('/')
       end
       path = current_host + path
+      path_uri = URI.parse(path)
+      path_uri.scheme = current_uri.scheme
+      path = path_uri.to_s
     end
 
     reset_cache!
