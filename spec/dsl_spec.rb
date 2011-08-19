@@ -76,6 +76,17 @@ describe Capybara::DSL do
       Capybara.current_driver.should == Capybara.default_driver
     end
 
+    it 'should return the driver to what it was previously' do
+      Capybara.current_driver = :selenium
+      Capybara.using_driver(:culerity) do
+        Capybara.using_driver(:rack_test) do
+          Capybara.current_driver.should == :rack_test
+        end
+        Capybara.current_driver.should == :culerity
+      end
+      Capybara.current_driver.should == :selenium
+    end
+
     it 'should yield the passed block' do
       called = false
       Capybara.using_driver(:selenium) { called = true }
