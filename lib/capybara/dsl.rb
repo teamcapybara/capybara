@@ -49,10 +49,11 @@ module Capybara
     # Yield a block using a specific driver
     #
     def using_driver(driver)
+      previous_driver = Capybara.current_driver
       Capybara.current_driver = driver
       yield
     ensure
-      Capybara.use_default_driver
+      @current_driver = previous_driver
     end
 
     ##
