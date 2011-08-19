@@ -68,12 +68,20 @@ describe Capybara::DSL do
       driver.should == :selenium
     end
 
-    it 'should reset the driver using Capybara.use_default_driver, even if an exception occurs' do
+    it 'should return the driver to default if it has not been changed' do
+      Capybara.using_driver(:selenium) do
+        Capybara.current_driver.should == :selenium
+      end
+      Capybara.current_driver.should == Capybara.default_driver
+    end
+
+    it 'should reset the driver even if an exception occurs' do
+      driver_before_block = Capybara.current_driver
       begin
         Capybara.using_driver(:selenium) { raise "ohnoes!" }
       rescue Exception
       end
-      Capybara.current_driver.should == Capybara.default_driver
+      Capybara.current_driver.should == driver_before_block
     end
 
     it 'should return the driver to what it was previously' do
