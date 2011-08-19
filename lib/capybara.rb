@@ -38,6 +38,8 @@ module Capybara
     # [default_wait_time = Integer]       The number of seconds to wait for asynchronous processes to finish (Default: 2)
     # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: false)
     # [prefer_visible_elements = Boolean] Whether to prefer visible elements over hidden elements (Default: true)
+    # [automatic_reload = Boolean]        Whether to automatically reload elements as Capybara is waiting (Default: true)
+    # [save_and_open_page_path = String]  Where to put pages saved through save_and_open_page (Default: Dir.pwd)
     #
     # === DSL Options
     #
