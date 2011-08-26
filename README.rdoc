@@ -485,7 +485,7 @@ When issuing instructions to the DSL such as:
 
 If clicking on the *foo* link causes triggers an asynchronous process, such as
 an Ajax request, which, when complete will add the *bar* link to the page,
-clicking on the *bar* link would be expeced to fail, since that link doesn't
+clicking on the *bar* link would be expected to fail, since that link doesn't
 exist yet. However Capybara is smart enought to retry finding the link for a
 brief period of time before giving up and throwing an error. The same is true of
 the next line, which looks for the content *baz* on the page; it will retry
