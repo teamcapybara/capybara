@@ -27,9 +27,10 @@ shared_examples_for "click_link_or_button" do
     context "with a locator that doesn't exist" do
       it "should raise an error" do
         @session.visit('/with_html')
+        msg = "no link or button 'does not exist' found"
         running do
           @session.click_link_or_button('does not exist')
-        end.should raise_error(Capybara::ElementNotFound)
+        end.should raise_error(Capybara::ElementNotFound, msg)
       end
     end
   end

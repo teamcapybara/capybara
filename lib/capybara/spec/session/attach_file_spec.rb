@@ -60,7 +60,10 @@ shared_examples_for "attach_file" do
 
     context "with a locator that doesn't exist" do
       it "should raise an error" do
-        running { @session.attach_file('does not exist', @test_file_path) }.should raise_error(Capybara::ElementNotFound)
+        msg = "cannot attach file, no file field with id, name, or label 'does not exist' found"
+        running do
+          @session.attach_file('does not exist', @test_file_path)
+        end.should raise_error(Capybara::ElementNotFound, msg)
       end
     end
 
