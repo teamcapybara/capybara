@@ -89,23 +89,23 @@ shared_examples_for "within" do
       end
 
       it "should raise an error if the scope is not found on the page" do
-        running {
+        running do
           @session.within("//div[@id='doesnotexist']") do
           end
-        }.should raise_error(Capybara::ElementNotFound)
+        end.should raise_error(Capybara::ElementNotFound)
       end
 
       it "should restore the scope when an error is raised" do
-        running {
+        running do
           @session.within("//div[@id='for_bar']") do
-            running {
-              running {
+            running do
+              running do
                 @session.within(".//div[@id='doesnotexist']") do
                 end
-              }.should raise_error(Capybara::ElementNotFound)
-            }.should_not change { @session.has_xpath?(".//div[@id='another_foo']") }.from(false)
+              end.should raise_error(Capybara::ElementNotFound)
+            end.should_not change { @session.has_xpath?(".//div[@id='another_foo']") }.from(false)
           end
-        }.should_not change { @session.has_xpath?(".//div[@id='another_foo']") }.from(true)
+        end.should_not change { @session.has_xpath?(".//div[@id='another_foo']") }.from(true)
       end
     end
 
