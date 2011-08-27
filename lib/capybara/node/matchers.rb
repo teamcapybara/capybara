@@ -157,7 +157,7 @@ module Capybara
       # @return [Boolean]                         If the selector exists
       #
       def has_css?(path, options={})
-        has_xpath?(XPath.css(path), options)
+        has_selector?(:css, path, options)
       end
 
       ##
@@ -169,7 +169,7 @@ module Capybara
       # @return [Boolean]
       #
       def has_no_css?(path, options={})
-        has_no_xpath?(XPath.css(path), options)
+        has_no_selector?(:css, path, options)
       end
 
       ##
@@ -181,7 +181,7 @@ module Capybara
       # @return [Boolean]             Whether it exists
       #
       def has_content?(content)
-        has_xpath?(XPath::HTML.content(content))
+        has_selector?(:content, content)
       end
 
       ##
@@ -193,7 +193,7 @@ module Capybara
       # @return [Boolean]             Whether it exists
       #
       def has_no_content?(content)
-        has_no_xpath?(XPath::HTML.content(content))
+        has_no_selector?(:content, content)
       end
 
       ##
@@ -207,7 +207,7 @@ module Capybara
       # @return [Boolean]                 Whether it exists
       #
       def has_link?(locator, options={})
-        has_xpath?(XPath::HTML.link(locator, options))
+        has_selector?(:link, locator, options)
       end
 
       ##
@@ -219,7 +219,7 @@ module Capybara
       # @return [Boolean]            Whether it doesn't exist
       #
       def has_no_link?(locator, options={})
-        has_no_xpath?(XPath::HTML.link(locator, options))
+        has_no_selector?(:link, locator, options)
       end
 
       ##
@@ -231,7 +231,7 @@ module Capybara
       # @return [Boolean]            Whether it exists
       #
       def has_button?(locator)
-        has_xpath?(XPath::HTML.button(locator))
+        has_selector?(:button, locator)
       end
 
       ##
@@ -243,7 +243,7 @@ module Capybara
       # @return [Boolean]            Whether it doesn't exist
       #
       def has_no_button?(locator)
-        has_no_xpath?(XPath::HTML.button(locator))
+        has_no_selector?(:button, locator)
       end
 
       ##
@@ -262,8 +262,7 @@ module Capybara
       # @return [Boolean]                 Whether it exists
       #
       def has_field?(locator, options={})
-        options, with = split_options(options, :with)
-        has_xpath?(XPath::HTML.field(locator, options), with)
+        has_selector?(:field, locator, options)
       end
 
       ##
@@ -276,8 +275,7 @@ module Capybara
       # @return [Boolean]                 Whether it doesn't exist
       #
       def has_no_field?(locator, options={})
-        options, with = split_options(options, :with)
-        has_no_xpath?(XPath::HTML.field(locator, options), with)
+        has_no_selector?(:field, locator, options)
       end
 
       ##
@@ -290,7 +288,7 @@ module Capybara
       # @return [Boolean]                 Whether it exists
       #
       def has_checked_field?(locator)
-        has_xpath?(XPath::HTML.field(locator), :checked => true)
+        has_selector?(:field, locator, :checked => true)
       end
 
       ##
@@ -303,7 +301,7 @@ module Capybara
       # @return [Boolean]                 Whether it doesn't exists
       #
       def has_no_checked_field?(locator)
-        has_no_xpath?(XPath::HTML.field(locator), :checked => true)
+        has_no_selector?(:field, locator, :checked => true)
       end
 
       ##
@@ -316,7 +314,7 @@ module Capybara
       # @return [Boolean]                 Whether it exists
       #
       def has_unchecked_field?(locator)
-        has_xpath?(XPath::HTML.field(locator), :unchecked => true)
+        has_selector?(:field, locator, :unchecked => true)
       end
 
       ##
@@ -329,7 +327,7 @@ module Capybara
       # @return [Boolean]                 Whether it doesn't exists
       #
       def has_no_unchecked_field?(locator)
-        has_no_xpath?(XPath::HTML.field(locator), :unchecked => true)
+        has_no_selector?(:field, locator, :unchecked => true)
       end
 
       ##
@@ -356,8 +354,7 @@ module Capybara
       # @return [Boolean]                            Whether it exists
       #
       def has_select?(locator, options={})
-        options, selected = split_options(options, :selected)
-        has_xpath?(XPath::HTML.select(locator, options), selected)
+        has_selector?(:select, locator, options)
       end
 
       ##
@@ -369,8 +366,7 @@ module Capybara
       # @return [Boolean]     Whether it doesn't exist
       #
       def has_no_select?(locator, options={})
-        options, selected = split_options(options, :selected)
-        has_no_xpath?(XPath::HTML.select(locator, options), selected)
+        has_no_selector?(:select, locator, options)
       end
 
       ##
@@ -391,7 +387,7 @@ module Capybara
       # @return [Boolean]                              Whether it exist
       #
       def has_table?(locator, options={})
-        has_xpath?(XPath::HTML.table(locator, options))
+        has_selector?(:table, locator, options)
       end
 
       ##
@@ -403,15 +399,9 @@ module Capybara
       # @return [Boolean]       Whether it doesn't exist
       #
       def has_no_table?(locator, options={})
-        has_no_xpath?(XPath::HTML.table(locator, options))
+        has_no_selector?(:table, locator, options)
       end
 
-      protected
-
-      def split_options(options, key)
-        options = options.dup
-        [options, if options.has_key?(key) then {key => options.delete(key)} else {} end]
-      end
     end
   end
 end
