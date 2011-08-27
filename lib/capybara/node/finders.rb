@@ -109,7 +109,7 @@ module Capybara
       # @return [Array[Capybara::Element]]           The found elements
       #
       def all(*args)
-        options = extract_normalized_options(args)
+        args, options = extract_normalized_options(args)
 
         selector = Capybara::Selector.normalize(*args)
         selector.xpaths.
@@ -132,7 +132,7 @@ module Capybara
       # @return [Capybara::Element]                  The found element or nil
       #
       def first(*args)
-        options = extract_normalized_options(args)
+        args, options  = extract_normalized_options(args)
         found_elements = []
 
         selector = Capybara::Selector.normalize(*args)
@@ -150,10 +150,11 @@ module Capybara
     protected
 
       def raise_find_error(*args)
-        options = extract_normalized_options(args)
-        normalized = Capybara::Selector.normalize(*args)
-        message = options[:message] || "Unable to find #{normalized.name} #{normalized.locator.inspect}"
-        message = normalized.failure_message.call(self, normalized) if normalized.failure_message
+        args, options = extract_normalized_options(args)
+        normalized    = Capybara::Selector.normalize(*args)
+        message       = options[:message] || "Unable to find #{normalized.name} #{normalized.locator.inspect}"
+        message       = normalized.failure_message.call(self, normalized) if normalized.failure_message
+
         raise Capybara::ElementNotFound, message
       end
 
@@ -178,7 +179,7 @@ module Capybara
           options[:selected] = [selected].flatten
         end
 
-        options
+        [args.push(options), options]
       end
 
       def matches_options(node, options)
