@@ -100,6 +100,10 @@ Capybara.add_selector(:field) do
   xpath { |locator, options| XPath::HTML.field(locator) }
 end
 
+Capybara.add_selector(:fieldset) do
+  xpath { |locator, options| XPath::HTML.fieldset(locator) }
+end
+
 Capybara.add_selector(:link_or_button) do
   xpath { |locator, options| XPath::HTML.link_or_button(locator) }
   failure_message { |node, selector| "no link or button '#{selector.locator}' found" }
