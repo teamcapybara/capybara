@@ -63,7 +63,7 @@ shared_examples_for "select" do
 
     context "with a locator that doesn't exist" do
       it "should raise an error" do
-        msg = "cannot select option, no select box with id, name, or label 'does not exist' found"
+        msg = "no select box with id, name, or label 'does not exist' found"
         running do
           @session.select('foo', :from => 'does not exist')
         end.should raise_error(Capybara::ElementNotFound, msg)
@@ -72,7 +72,7 @@ shared_examples_for "select" do
 
     context "with an option that doesn't exist" do
       it "should raise an error" do
-        msg = "cannot select option, no option with text 'Does not Exist' in select box 'form_locale'"
+        msg = "no option with text 'Does not Exist' in the select box"
         running do
           @session.select('Does not Exist', :from => 'form_locale')
         end.should raise_error(Capybara::ElementNotFound, msg)

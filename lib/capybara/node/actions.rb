@@ -10,8 +10,7 @@ module Capybara
       # @param [String] locator      Text, id or value of link or button
       #
       def click_link_or_button(locator)
-        msg = "no link or button '#{locator}' found"
-        find(:xpath, XPath::HTML.link_or_button(locator), :message => msg).click
+        find(:link_or_button, locator).click
       end
       alias_method :click_on, :click_link_or_button
 
@@ -23,8 +22,7 @@ module Capybara
       # @param [String] locator      Text, id or text of link
       #
       def click_link(locator)
-        msg = "no link with title, id or text '#{locator}' found"
-        find(:xpath, XPath::HTML.link(locator), :message => msg).click
+        find(:link, locator).click
       end
 
       ##
@@ -34,8 +32,7 @@ module Capybara
       # @param [String] locator      Text, id or value of button
       #
       def click_button(locator)
-        msg = "no button with value or id or text '#{locator}' found"
-        find(:xpath, XPath::HTML.button(locator), :message => msg).click
+        find(:button, locator).click
       end
 
       ##
@@ -49,9 +46,8 @@ module Capybara
       # @param [Hash{:with => String}]    The value to fill in
       #
       def fill_in(locator, options={})
-        msg = "cannot fill in, no text field, text area or password field with id, name, or label '#{locator}' found"
         raise "Must pass a hash containing 'with'" if not options.is_a?(Hash) or not options.has_key?(:with)
-        find(:xpath, XPath::HTML.fillable_field(locator), :message => msg).set(options[:with])
+        find(:fillable_field, locator).set(options[:with])
       end
 
       ##
@@ -64,8 +60,7 @@ module Capybara
       # @param [String] locator           Which radio button to choose
       #
       def choose(locator)
-        msg = "cannot choose field, no radio button with id, name, or label '#{locator}' found"
-        find(:xpath, XPath::HTML.radio_button(locator), :message => msg).set(true)
+        find(:radio_button, locator).set(true)
       end
 
       ##
@@ -78,8 +73,7 @@ module Capybara
       # @param [String] locator           Which check box to check
       #
       def check(locator)
-        msg = "cannot check field, no checkbox with id, name, or label '#{locator}' found"
-        find(:xpath, XPath::HTML.checkbox(locator), :message => msg).set(true)
+        find(:checkbox, locator).set(true)
       end
 
       ##
@@ -92,8 +86,7 @@ module Capybara
       # @param [String] locator           Which check box to uncheck
       #
       def uncheck(locator)
-        msg = "cannot uncheck field, no checkbox with id, name, or label '#{locator}' found"
-        find(:xpath, XPath::HTML.checkbox(locator), :message => msg).set(false)
+        find(:checkbox, locator).set(false)
       end
 
       ##
@@ -109,13 +102,9 @@ module Capybara
       #
       def select(value, options={})
         if options.has_key?(:from)
-          no_select_msg = "cannot select option, no select box with id, name, or label '#{options[:from]}' found"
-          no_option_msg = "cannot select option, no option with text '#{value}' in select box '#{options[:from]}'"
-          select = find(:xpath, XPath::HTML.select(options[:from]), :message => no_select_msg)
-          select.find(:xpath, XPath::HTML.option(value), :message => no_option_msg).select_option
+          find(:select, options[:from]).find(:option, value).select_option
         else
-          no_option_msg = "cannot select option, no option with text '#{value}'"
-          find(:xpath, XPath::HTML.option(value), :message => no_option_msg).select_option
+          find(:option, value).select_option
         end
       end
 
@@ -132,13 +121,9 @@ module Capybara
       #
       def unselect(value, options={})
         if options.has_key?(:from)
-          no_select_msg = "cannot unselect option, no select box with id, name, or label '#{options[:from]}' found"
-          no_option_msg = "cannot unselect option, no option with text '#{value}' in select box '#{options[:from]}'"
-          select = find(:xpath, XPath::HTML.select(options[:from]), :message => no_select_msg)
-          select.find(:xpath, XPath::HTML.option(value), :message => no_option_msg).unselect_option
+          find(:select, options[:from]).find(:option, value).unselect_option
         else
-          no_option_msg = "cannot unselect option, no option with text '#{value}'"
-          find(:xpath, XPath::HTML.option(value), :message => no_option_msg).unselect_option
+          find(:option, value).unselect_option
         end
       end
 
@@ -154,8 +139,7 @@ module Capybara
       #
       def attach_file(locator, path)
         raise Capybara::FileNotFound, "cannot attach file, #{path} does not exist" unless File.exist?(path.to_s)
-        msg = "cannot attach file, no file field with id, name, or label '#{locator}' found"
-        find(:xpath, XPath::HTML.file_field(locator), :message => msg).set(path)
+        find(:file_field, locator).set(path)
       end
     end
   end

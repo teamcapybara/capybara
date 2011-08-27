@@ -58,7 +58,7 @@ shared_examples_for "check" do
 
     context "with a locator that doesn't exist" do
       it "should raise an error" do
-        msg = "cannot check field, no checkbox with id, name, or label 'does not exist' found"
+        msg = "no checkbox with id, name, or label 'does not exist' found"
         running do
           @session.check('does not exist')
         end.should raise_error(Capybara::ElementNotFound, msg)

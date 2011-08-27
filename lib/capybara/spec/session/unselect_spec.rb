@@ -48,7 +48,7 @@ shared_examples_for "unselect" do
 
     context "with a locator that doesn't exist" do
       it "should raise an error" do
-        msg = "cannot unselect option, no select box with id, name, or label 'does not exist' found"
+        msg = "no select box with id, name, or label 'does not exist' found"
         running do
           @session.unselect('foo', :from => 'does not exist')
         end.should raise_error(Capybara::ElementNotFound, msg)
@@ -57,7 +57,7 @@ shared_examples_for "unselect" do
 
     context "with an option that doesn't exist" do
       it "should raise an error" do
-        msg = "cannot unselect option, no option with text 'Does not Exist' in select box 'form_underwear'"
+        msg = "no option with text 'Does not Exist' in the select box"
         running do
           @session.unselect('Does not Exist', :from => 'form_underwear')
         end.should raise_error(Capybara::ElementNotFound, msg)
