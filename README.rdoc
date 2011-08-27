@@ -36,7 +36,7 @@ create a topic branch for every separate change you make.
 Capybara uses bundler in development. To set up a development environment, simply do:
 
     git submodule update --init
-    gem install bundler --pre
+    gem install bundler
     bundle install
 
 == Using Capybara with Cucumber
