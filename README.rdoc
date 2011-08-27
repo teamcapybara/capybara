@@ -8,7 +8,7 @@ Capybara aims to simplify the process of integration testing Rack applications,
 such as Rails, Sinatra or Merb. Capybara simulates how a real user would
 interact with a web application. It is agnostic about the driver running your
 tests and currently comes with Rack::Test and Selenium support built in.
-HtmlUnit and env.js are supported through external gems.
+HtmlUnit, WebKit and env.js are supported through external gems.
 
 A complete reference is available at
 {at rubydoc.info}[http://rubydoc.info/github/jnicklas/capybara/master].
