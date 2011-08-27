@@ -35,7 +35,7 @@ module Capybara
       # @return [Capybara::Element]   The found element
       #
       def find_field(locator)
-        find(:xpath, XPath::HTML.field(locator))
+        find(:field, locator)
       end
       alias_method :field_labeled, :find_field
 
@@ -47,7 +47,7 @@ module Capybara
       # @return [Capybara::Element]   The found element
       #
       def find_link(locator)
-        find(:xpath, XPath::HTML.link(locator))
+        find(:link, locator)
       end
 
       ##
@@ -58,7 +58,7 @@ module Capybara
       # @return [Capybara::Element]   The found element
       #
       def find_button(locator)
-        find(:xpath, XPath::HTML.button(locator))
+        find(:button, locator)
       end
 
       ##
@@ -69,7 +69,7 @@ module Capybara
       # @return [Capybara::Element]   The found element
       #
       def find_by_id(id)
-        find(:css, "##{id}")
+        find(:id, id)
       end
 
       ##
