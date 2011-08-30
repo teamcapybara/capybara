@@ -12,3 +12,4 @@ capybara-*.html
 doc
 .bundle
 Gemfile.lock
+chromedriver.log
