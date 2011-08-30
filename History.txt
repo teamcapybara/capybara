@@ -1,3 +1,28 @@
+# Version 1.1.0
+
+Release date:
+
+### Fixed
+
+* Sensible inspect for Capybara::Session [Jo Liss]
+* Fix headers and host on redirect [Matt Colyer, Jonas Nicklas, Kim Burgestrand]
+* using_driver now restores the old driver instead of reverting to the default [Carol Nichols]
+* Errors when following links relative to the root path under rack-test [Jonas Nicklas, Kim Burgestrand]
+* Make sure exit codes are propagated properly [Edgar Beigarts]
+
+### Changed
+
+* resynchronization is off by default under Selenium
+
+### Added
+
+* Elements are automatically reloaded (including parents) during wait [Jonas Nicklas]
+* Rescue driver specific element errors, such as the dreaded ObsoleteElementError and retry [Jonas Nicklas]
+* Raise an error if something has frozen time [Jonas Nicklas]
+* Allow within to take a node instead of a selector [Peter Williams]
+* Using wait_time_time to change wait time for a block of code [Jonas Nicklas, Kim Burgestrand]
+* Option for rack-test driver to disable data-method hack [Jonas Nicklas, Kim Burgestrand]
+
 # Version 1.0.1
 
 Release date: 2011-08-12
