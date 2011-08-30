@@ -94,6 +94,30 @@ describe Capybara::DSL do
     end
   end
 
+  describe '#using_wait_time' do
+    it "should switch the wait time and switch it back" do
+      in_block = nil
+      Capybara.using_wait_time 6 do
+        in_block = Capybara.default_wait_time
+      end
+      in_block.should == 6
+      Capybara.default_wait_time.should == 0
+    end
+
+    it "should ensure wait time is reset" do
+      expect do
+        Capybara.using_wait_time 6 do
+          raise "hell"
+        end
+      end.to raise_error
+      Capybara.default_wait_time.should == 0
+    end
+
+    after do
+      Capybara.default_wait_time = 0
+    end
+  end
+
   describe '#app' do
     it "should be changeable" do
       Capybara.app = "foobar"
@@ -214,6 +238,15 @@ describe Capybara::DSL do
       Capybara.should_receive(:using_session).with(:name)
       foo = klass.new
       foo.using_session(:name)
+    end
+
+    it "should provide a 'using_wait_time' shortcut" do
+      klass = Class.new do
+        include Capybara::DSL
+      end
+      Capybara.should_receive(:using_wait_time).with(6)
+      foo = klass.new
+      foo.using_wait_time(6)
     end
   end
 
