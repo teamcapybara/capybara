@@ -90,6 +90,10 @@ class TestApp < Sinatra::Base
     env['HTTP_FOO']
   end
 
+  get '/get_header_via_redirect' do
+    redirect '/get_header'
+  end
+
   get '/:view' do |view|
     erb view.to_sym
   end

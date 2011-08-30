@@ -12,29 +12,24 @@ class Capybara::RackTest::Browser
   def visit(path, attributes = {})
     reset_host!
     process(:get, path, attributes)
+    follow_redirects!
   end
 
   def submit(method, path, attributes)
     path = request_path if not path or path.empty?
     process(method, path, attributes)
+    follow_redirects!
   end
 
   def follow(method, path, attributes = {})
     return if path.gsub(/^#{request_path}/, '').start_with?('#')
     process(method, path, attributes)
+    follow_redirects!
   end
 
   def follow_redirects!
     5.times do
-      if last_response.redirect?
-        new_uri = URI.parse(last_response.original_headers['Location'])
-
-        if new_uri.host
-          @current_host = new_uri.scheme + '://' + new_uri.host
-        end
-
-        follow_redirect!
-      end
+      process(:get, last_response["Location"]) if last_response.redirect?
     end
     raise Capybara::InfiniteRedirectError, "redirected more than 5 times, check for infinite redirects." if last_response.redirect?
   end
@@ -59,7 +54,6 @@ class Capybara::RackTest::Browser
 
     reset_cache!
     send(method, path, attributes, env)
-    follow_redirects!
   end
 
   def current_url
