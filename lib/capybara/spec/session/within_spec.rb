@@ -38,6 +38,17 @@ shared_examples_for "within" do
       end
     end
 
+    context "with Node rather than selector" do
+      it "should click links in the given scope" do
+        node_of_interest = @session.find(:css, "ul li[contains('With Simple HTML')]")
+
+        @session.within(node_of_interest) do 
+          @session.click_link('Go')
+        end
+        @session.body.should include('Bar')
+      end
+    end
+
     context "with the default selector set to CSS" do
       before { Capybara.default_selector = :css }
       it "should use CSS" do
