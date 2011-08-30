@@ -7,7 +7,7 @@ class TestApp < Sinatra::Base
   set :static, true
 
   get '/' do
-    'Hello world!'
+    'Hello world! <a href="with_html">Relative</a>'
   end
 
   get '/foo' do

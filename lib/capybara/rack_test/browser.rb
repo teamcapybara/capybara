@@ -43,11 +43,10 @@ class Capybara::RackTest::Browser
     end
 
     if new_uri.relative?
-      path = request_path + path if path.start_with?('?')
-
-      unless path.start_with?('/')
-        folders = request_path.split('/')
-        path = (folders[0, folders.size - 1] << path).join('/')
+      if path.start_with?('?')
+        path = request_path + path
+      elsif not path.start_with?('/')
+        path = request_path.sub(%r(/[^/]*$), '/') + path
       end
       path = current_host + path
     end

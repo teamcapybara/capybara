@@ -70,6 +70,12 @@ shared_examples_for "click_link" do
       end
     end
 
+    it "should follow relative links" do
+      @session.visit('/')
+      @session.click_link('Relative')
+      @session.body.should include('This is a test')
+    end
+
     it "should follow redirects" do
       @session.click_link('Redirect')
       @session.body.should include('You landed')
