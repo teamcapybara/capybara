@@ -14,7 +14,7 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
   end
 
   def browser
-    @browser ||= Capybara::RackTest::Browser.new(app, options)
+    @browser ||= Capybara::RackTest::Browser.new(self)
   end
 
   def response

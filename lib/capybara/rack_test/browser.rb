@@ -1,12 +1,19 @@
 class Capybara::RackTest::Browser
   include ::Rack::Test::Methods
 
-  attr_reader :app, :options
+  attr_reader :driver
   attr_accessor :current_host
 
-  def initialize(app, options={})
-    @app = app
-    @options = options
+  def initialize(driver)
+    @driver = driver
+  end
+
+  def app
+    driver.app
+  end
+
+  def options
+    driver.options
   end
 
   def visit(path, attributes = {})

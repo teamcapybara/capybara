@@ -63,6 +63,10 @@ class TestApp < Sinatra::Base
     "The requested object was deleted"
   end
 
+  get "/delete" do
+    "Not deleted"
+  end
+
   get '/redirect_back' do
     redirect back
   end
