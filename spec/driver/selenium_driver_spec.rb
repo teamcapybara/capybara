@@ -26,4 +26,25 @@ describe Capybara::Selenium::Driver do
       browser.quit
     end
   end
+
+  describe "exit codes" do
+    before do
+      @current_dir = Dir.getwd
+      Dir.chdir(File.join(File.dirname(__FILE__), '..', '..'))
+    end
+
+    after do
+      Dir.chdir(@current_dir)
+    end
+
+    it "should have return code 1 when running selenium_driver_rspec_failure.rb" do
+      `rspec spec/fixtures/selenium_driver_rspec_failure.rb`
+      $?.exitstatus.should be 1
+    end
+
+    it "should have return code 0 when running selenium_driver_rspec_success.rb" do
+      `rspec spec/fixtures/selenium_driver_rspec_success.rb`
+      $?.exitstatus.should be 0
+    end
+  end
 end
