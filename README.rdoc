@@ -240,10 +240,9 @@ At the moment, Capybara supports {Selenium 2.0
 *not* Selenium RC. Provided Firefox is installed, everything is set up for you,
 and you should be able to start using Selenium right away.
 
-By default Capybara tries to synchronize Ajax requests, so it will wait for
-Ajax requests to finish after you've interacted with the page. You can switch
-off this behaviour by setting the driver option <tt>:resynchronize</tt> to
-<tt>false</tt>. See the section on configuring drivers.
+Capybara can wait for Ajax requests to finish after you've interacted with the
+page. To enable this behaviour, set the <tt>:resynchronize</tt> driver option
+to <tt>true</tt>. See the section on Asynchronous JavaScript for details.
 
 Note: Selenium does not support transactional fixtures; see the section
 "Transactional Fixtures" below.
@@ -474,7 +473,8 @@ and {solution 3}[http://pastie.org/1745020]) for details.
 
 When working with asynchronous JavaScript, you might come across situations
 where you are attempting to interact with an element which is not yet present
-on the page. Capybara automatically deals with this by waiting for elements
+on the page. When the <tt>:resynchronize</tt> driver option is set to
+<tt>true</tt>, Capybara automatically deals with this by waiting for elements
 to appear on the page.
 
 When issuing instructions to the DSL such as:
