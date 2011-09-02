@@ -240,9 +240,11 @@ At the moment, Capybara supports {Selenium 2.0
 *not* Selenium RC. Provided Firefox is installed, everything is set up for you,
 and you should be able to start using Selenium right away.
 
-Capybara can wait for Ajax requests to finish after you've interacted with the
-page. To enable this behaviour, set the <tt>:resynchronize</tt> driver option
-to <tt>true</tt>. See the section on Asynchronous JavaScript for details.
+Capybara can block and wait for Ajax requests to finish after you've interacted
+with the page. To enable this behaviour, set the <tt>:resynchronize</tt> driver
+option to <tt>true</tt>. This should normally not be necessary, since
+Capybara's automatic reloading should take care of any asynchronicity problems.
+See the section on Asynchronous JavaScript for details.
 
 Note: Selenium does not support transactional fixtures; see the section
 "Transactional Fixtures" below.
@@ -284,7 +286,7 @@ Note: Envjs does not support transactional fixtures; see the section
 === Capybara-webkit
 
 The {capybara-webkit drive}[https://github.com/thoughtbot/capybara-webkit] is for true headless
-testing. It uses WebKitQt to start a rendering engine process. It can execute JavaScript as well. 
+testing. It uses WebKitQt to start a rendering engine process. It can execute JavaScript as well.
 It is significantly faster than drivers like Selenium since it does not load an entire browser.
 
 You can install it with:
@@ -473,8 +475,7 @@ and {solution 3}[http://pastie.org/1745020]) for details.
 
 When working with asynchronous JavaScript, you might come across situations
 where you are attempting to interact with an element which is not yet present
-on the page. When the <tt>:resynchronize</tt> driver option is set to
-<tt>true</tt>, Capybara automatically deals with this by waiting for elements
+on the page. Capybara automatically deals with this by waiting for elements
 to appear on the page.
 
 When issuing instructions to the DSL such as:
@@ -483,7 +484,7 @@ When issuing instructions to the DSL such as:
     click_link('bar')
     page.should have_content('baz')
 
-If clicking on the *foo* link causes triggers an asynchronous process, such as
+If clicking on the *foo* link triggers an asynchronous process, such as
 an Ajax request, which, when complete will add the *bar* link to the page,
 clicking on the *bar* link would be expected to fail, since that link doesn't
 exist yet. However Capybara is smart enought to retry finding the link for a
@@ -504,6 +505,18 @@ The former would incorrectly wait for the content to appear, since the
 asynchronous process has not yet removed the element from the page, it would
 therefore fail, even though the code might be working correctly. The latter
 correctly waits for the element to disappear from the page.
+
+Capybara's waiting behaviour is quite advanced, and can deal with situations
+such as the following line of code:
+
+    find('#sidebar').find('h1').should have_content('Something')
+
+Even if JavaScript causes <tt>#sidebar</tt> to disappear off the page, Capybara
+will automatically reload it and any elements it contains. So if an AJAX
+request causes the contents of <tt>#sidebar</tt> to change, which would update
+the text of the <tt>h1</tt> to "Something", and this happened, this test would
+pass. If you do not want this behaviour, you can set
+<tt>Capybara.automatic_reload</tt> to <tt>false</tt>.
 
 == Using the DSL in unsupported testing frameworks
 
