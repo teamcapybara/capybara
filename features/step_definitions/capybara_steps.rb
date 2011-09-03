@@ -22,3 +22,7 @@ Then /^the failing exception should be nice$/ do
   @error_message.should =~ %r(expected css \"h1#doesnotexist\" to return)
 end
 
+Then /^debug mode should be (\w+)$/ do |debug_mode|
+  debug_mode = (debug_mode == 'true')
+  Capybara.debug.should == debug_mode
+end

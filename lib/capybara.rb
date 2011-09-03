@@ -18,7 +18,7 @@ module Capybara
     attr_accessor :asset_root, :app_host, :run_server, :default_host
     attr_accessor :server_port, :server_boot_timeout
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements, :prefer_visible_elements
-    attr_accessor :save_and_open_page_path, :automatic_reload
+    attr_accessor :save_and_open_page_path, :automatic_reload, :debug
 
     ##
     #
@@ -40,6 +40,7 @@ module Capybara
     # [prefer_visible_elements = Boolean] Whether to prefer visible elements over hidden elements (Default: true)
     # [automatic_reload = Boolean]        Whether to automatically reload elements as Capybara is waiting (Default: true)
     # [save_and_open_page_path = String]  Where to put pages saved through save_and_open_page (Default: Dir.pwd)
+    # [debug = Boolean]                   Whether to run in debug mode (Default: false)
     #
     # === DSL Options
     #
@@ -241,6 +242,7 @@ Capybara.configure do |config|
   config.prefer_visible_elements = true
   config.default_host = "http://www.example.com"
   config.automatic_reload = true
+  config.debug = false
 end
 
 Capybara.register_driver :rack_test do |app|

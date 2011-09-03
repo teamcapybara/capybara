@@ -10,6 +10,15 @@ After do
   Capybara.reset_sessions!
 end
 
+Before '@debug' do
+  @original_debug = Capybara.debug
+  Capybara.debug = true
+end
+
+After '@debug' do
+  Capybara.debug = @original_debug
+end
+
 Before '@javascript' do
   Capybara.current_driver = Capybara.javascript_driver
 end
