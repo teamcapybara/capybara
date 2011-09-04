@@ -20,7 +20,6 @@ describe Capybara::Session do
 
     describe '#click_link' do
       it "should use data-method if available" do
-        @session.driver.options[:respect_data_method] = true
         @session.visit "/with_html"
         @session.click_link "A link with data-method"
         @session.body.should include('The requested object was deleted')

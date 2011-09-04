@@ -5,12 +5,15 @@ require 'nokogiri'
 require 'cgi'
 
 class Capybara::RackTest::Driver < Capybara::Driver::Base
+  DEFAULT_OPTIONS = {
+    :respect_data_method => true
+  }
   attr_reader :app, :options
 
   def initialize(app, options={})
     raise ArgumentError, "rack-test requires a rack application, but none was given" unless app
     @app = app
-    @options = options
+    @options = DEFAULT_OPTIONS.merge(options)
   end
 
   def browser
