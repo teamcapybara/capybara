@@ -12,6 +12,13 @@ shared_examples_for "within" do
         @session.body.should include('Bar')
       end
 
+      it "should assert content in the given scope" do
+        @session.within(:css, "#for_foo") do
+          @session.should_not have_content('First Name')
+        end
+        @session.should have_content('First Name')
+      end
+
       it "should accept additional options" do
         @session.within(:css, "ul li", :text => 'With Simple HTML') do
           @session.click_link('Go')
