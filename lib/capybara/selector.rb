@@ -84,7 +84,7 @@ module Capybara
 end
 
 Capybara.add_selector(:xpath) do
-  xpath { |xpath, options| xpath }
+  xpath { |xpath| xpath }
 end
 
 Capybara.add_selector(:css) do
@@ -92,20 +92,20 @@ Capybara.add_selector(:css) do
 end
 
 Capybara.add_selector(:id) do
-  xpath { |id, options| XPath.descendant[XPath.attr(:id) == id.to_s] }
+  xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
   match { |value| value.is_a?(Symbol) }
 end
 
 Capybara.add_selector(:field) do
-  xpath { |locator, options| XPath::HTML.field(locator) }
+  xpath { |locator| XPath::HTML.field(locator) }
 end
 
 Capybara.add_selector(:fieldset) do
-  xpath { |locator, options| XPath::HTML.fieldset(locator) }
+  xpath { |locator| XPath::HTML.fieldset(locator) }
 end
 
 Capybara.add_selector(:link_or_button) do
-  xpath { |locator, options| XPath::HTML.link_or_button(locator) }
+  xpath { |locator| XPath::HTML.link_or_button(locator) }
   failure_message { |node, selector| "no link or button '#{selector.locator}' found" }
 end
 
@@ -115,7 +115,7 @@ Capybara.add_selector(:link) do
 end
 
 Capybara.add_selector(:button) do
-  xpath { |locator, options| XPath::HTML.button(locator) }
+  xpath { |locator| XPath::HTML.button(locator) }
   failure_message { |node, selector| "no button with value or id or text '#{selector.locator}' found" }
 end
 
@@ -140,7 +140,7 @@ Capybara.add_selector(:select) do
 end
 
 Capybara.add_selector(:option) do
-  xpath { |locator, options| XPath::HTML.option(locator) }
+  xpath { |locator| XPath::HTML.option(locator) }
   failure_message do |node, selector|
     "no option with text '#{selector.locator}'".tap do |message|
       message << " in the select box" if node.tag_name == 'select'
@@ -154,7 +154,7 @@ Capybara.add_selector(:file_field) do
 end
 
 Capybara.add_selector(:content) do
-  xpath { |content, options| XPath::HTML.content(content) }
+  xpath { |content| XPath::HTML.content(content) }
 end
 
 Capybara.add_selector(:table) do
