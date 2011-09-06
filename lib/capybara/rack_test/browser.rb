@@ -42,8 +42,10 @@ class Capybara::RackTest::Browser
   end
 
   def process(method, path, attributes = {})
+    path = URI.encode(path)
+
     new_uri = URI.parse(path)
-    current_uri = URI.parse(current_url)
+    current_uri = URI.parse(URI.encode(current_url))  
 
     if new_uri.host
       @current_host = new_uri.scheme + '://' + new_uri.host
