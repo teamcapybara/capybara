@@ -107,12 +107,12 @@ module Capybara
       # @return [Capybara::Element]                       The found elements
       #
       def all(*args)
-        args, options = extract_normalized_options(args)
+        args, property_options = extract_property_options(args)
 
         selector = Capybara::Selector.normalize(*args)
         selector.xpaths.
           map    { |path| find_in_base(selector, path) }.flatten.
-          select { |node| selector.filter(node) }
+          select { |node| filter_by_properties(node, property_options) }
       end
 
       ##
@@ -129,13 +129,13 @@ module Capybara
       # @return Capybara::Element                         The found element
       #
       def first(*args)
-        args, options  = extract_normalized_options(args)
+        args, property_options  = extract_property_options(args)
         found_elements = []
 
         selector = Capybara::Selector.normalize(*args)
         selector.xpaths.each do |path|
           find_in_base(selector, path).each do |node|
-            if selector.filter(node)
+            if filter_by_properties(node, property_options)
               found_elements << node
               return found_elements.last if not Capybara.prefer_visible_elements or node.visible?
             end
@@ -147,10 +147,10 @@ module Capybara
     protected
 
       def raise_find_error(*args)
-        args, options = extract_normalized_options(args)
-        normalized    = Capybara::Selector.normalize(*args)
-        message       = options[:message] || "Unable to find #{normalized.name} #{normalized.locator.inspect}"
-        message       = normalized.failure_message.call(self, normalized) if normalized.failure_message
+        args, property_options = extract_property_options(args)
+        normalized             = Capybara::Selector.normalize(*args)
+        message                = args.last[:message] || "Unable to find #{normalized.name} #{normalized.locator.inspect}"
+        message                = normalized.failure_message.call(self, normalized) if normalized.failure_message
 
         raise Capybara::ElementNotFound, message
       end
@@ -161,24 +161,44 @@ module Capybara
         end
       end
 
-      def extract_normalized_options(args)
-        options = if args.last.is_a?(Hash) then args.pop.dup else {} end
-
-        if text = options[:text]
-          options[:text] = Regexp.escape(text) unless text.kind_of?(Regexp)
+      def extract_property_options(args)
+        xpath_options    = if args.last.is_a?(Hash) then args.pop.dup else {} end
+        property_options = [:text, :visible, :with, :checked, :unchecked, :selected].inject({}) do |opts, key|
+          opts[key] = xpath_options.delete(key) if xpath_options.has_key?(key)
+          opts
         end
 
-        if !options.has_key?(:visible)
-          options[:visible] = Capybara.ignore_hidden_elements
+        if text = property_options[:text]
+          property_options[:text] = Regexp.escape(text) unless text.kind_of?(Regexp)
         end
 
-        if selected = options[:selected]
-          options[:selected] = [selected].flatten
+        if !property_options.has_key?(:visible)
+          property_options[:visible] = Capybara.ignore_hidden_elements
         end
 
-        [args.push(options), options]
+        if selected = property_options[:selected]
+          property_options[:selected] = [selected].flatten
+        end
+
+        [args.push(xpath_options), property_options]
       end
 
+      def filter_by_properties(node, property_options)
+        return false if property_options[:text]      and not node.text.match(property_options[:text])
+        return false if property_options[:visible]   and not node.visible?
+        return false if property_options[:with]      and not node.value == property_options[:with]
+        return false if property_options[:checked]   and not node.checked?
+        return false if property_options[:unchecked] and node.checked?
+        return false if property_options[:selected]  and not has_selected_options?(node, property_options[:selected])
+        true
+      end
+
+      private
+
+      def has_selected_options?(node, expected)
+        actual = node.all(:xpath, './/option').select { |option| option.selected? }.map { |option| option.text }
+        (expected - actual).empty?
+      end
     end
   end
 end
