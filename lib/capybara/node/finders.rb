@@ -114,7 +114,7 @@ module Capybara
         selector = Capybara::Selector.normalize(*args)
         selector.xpaths.
           map    { |path| find_in_base(selector, path) }.flatten.
-          select { |node| matches_options(node, options) }
+          select { |node| selector.filter(node) }
       end
 
       ##
@@ -138,7 +138,7 @@ module Capybara
         selector = Capybara::Selector.normalize(*args)
         selector.xpaths.each do |path|
           find_in_base(selector, path).each do |node|
-            if matches_options(node, options)
+            if selector.filter(node)
               found_elements << node
               return found_elements.last if not Capybara.prefer_visible_elements or node.visible?
             end
@@ -182,20 +182,6 @@ module Capybara
         [args.push(options), options]
       end
 
-      def matches_options(node, options)
-        return false if options[:text]      and not node.text.match(options[:text])
-        return false if options[:visible]   and not node.visible?
-        return false if options[:with]      and not node.value == options[:with]
-        return false if options[:checked]   and not node.checked?
-        return false if options[:unchecked] and node.checked?
-        return false if options[:selected]  and not has_selected_options?(node, options[:selected])
-        true
-      end
-
-      def has_selected_options?(node, expected)
-        actual = node.all(:xpath, './/option').select { |option| option.selected? }.map { |option| option.text }
-        (expected - actual).empty?
-      end
     end
   end
 end
