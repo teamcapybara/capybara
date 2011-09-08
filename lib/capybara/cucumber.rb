@@ -3,8 +3,9 @@ require 'capybara/dsl'
 
 World(Capybara)
 
-After do
+Before do
   Capybara.reset_sessions!
+  Capybara.use_default_driver
 end
 
 Before('@javascript') do
@@ -25,8 +26,4 @@ end
 
 Before('@rack_test') do
   Capybara.current_driver = :rack_test
-end
-
-After do
-  Capybara.use_default_driver
 end
