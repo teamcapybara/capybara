@@ -28,6 +28,7 @@ On OSX you may have to install libffi, you can install it via MacPorts with:
 * Source hosted at {GitHub}[http://github.com/jnicklas/capybara].
 * Please direct questions, discussion or problems to the {mailing list}[http://groups.google.com/group/ruby-capybara].
 * If you found a reproducible bug, open a {GitHub Issue}[http://github.com/jnicklas/capybara/issues] to submit a bug report.
+* Please do not contact any of the maintainers directly, unless you have found a security related issue.
 
 Pull requests are very welcome (and even better than bug reports)! Make sure
 your patches are well tested, Capybara is a testing tool after all. Please
