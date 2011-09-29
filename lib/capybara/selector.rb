@@ -88,7 +88,7 @@ Capybara.add_selector(:xpath) do
 end
 
 Capybara.add_selector(:css) do
-  xpath { |css| XPath.css(css) }
+  css { |css| css }
 end
 
 Capybara.add_selector(:id) do
