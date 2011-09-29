@@ -55,6 +55,14 @@ module Capybara
       @xpath
     end
 
+    # Same as xpath, but wrap in XPath.css().
+    def css(&block)
+      if block
+        @xpath = xpath { |*args| XPath.css(block.call(*args)) }
+      end
+      @xpath
+    end
+
     def match(&block)
       @match = block if block
       @match
