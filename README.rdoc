@@ -65,7 +65,7 @@ Now you can use it in your steps:
       click_link 'Sign in'
     end
 
-Capybara sets up some {tags}[http://wiki.github.com/aslakhellesoy/cucumber/tags]
+Capybara sets up some {tags}[https://github.com/cucumber/cucumber/wiki/tags]
 for you to use in Cucumber. Often you'll want to run only some scenarios with a
 driver that supports JavaScript, Capybara makes this easy: simply tag the
 scenario (or feature) with <tt>@javascript</tt>:
