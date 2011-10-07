@@ -294,9 +294,23 @@ You can install it with:
 
   gem install capybara-webkit
 
-And you can use it by:
+And if you are using Cucumber, you can use it by:
 
   Capybara.javascript_driver = :webkit
+
+Otherwise (if you are using Test::Unit, for example):
+
+  Capybara.default_driver = :webkit
+
+You will also need to require the database_cleaner gem, and most likely the following monkey patch
+to ensure that your fixtures are accessible to the requests coming from capybara-webkit once they've
+been loaded into the db:
+
+Thread.main[:activerecord_connection] = ActiveRecord::Base.retrieve_connection
+
+def (ActiveRecord::Base).connection
+  Thread.main[:activerecord_connection]
+end
 
 
 == The DSL
