@@ -54,14 +54,15 @@ module Capybara
     def rewrite_assets_from_asset_pipeline(response_html)
       asset_prefix = ::Rails.application.config.assets.prefix
       public_asset_path = File.join(::Rails.public_path, asset_prefix)
-      manifest = File.join(public_asset_path, "manifest.yml")
+      manifest = File.join(::Rails.application.config.assets.manifest, "manifest.yml")
       unless Dir.exists?(public_asset_path) && File.exists?(manifest)
         raise "You must first run `rake assets:precompile`"
       end
-      assets    = YAML::load(File.open(manifest))
+      assets = YAML::load(File.open(manifest))
       assets.each do |name, asset_name|
         response_html.gsub!(name, asset_name)
       end
+
       return response_html
     end
   end
