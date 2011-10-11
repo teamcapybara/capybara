@@ -12,7 +12,7 @@ end
 def self.feature(*args, &block)
   options = if args.last.is_a?(Hash) then args.pop else {} end
   options[:capybara_feature] = true
-  options[:type] = :request
+  options[:type] = :acceptance
   options[:caller] ||= caller
   args.push(options)
 
