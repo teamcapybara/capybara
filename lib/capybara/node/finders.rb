@@ -104,7 +104,7 @@ module Capybara
       # @param [Hash{Symbol => Object}] options           Additional options
       # @option options [String, Regexp] text             Only find elements which contain this text or match this regexp
       # @option options [Boolean] visible                 Only find elements that are visible on the page
-      # @return [Capybara::Element]                       The found elements
+      # @return [Array[Capybara::Element]]                       The found elements
       #
       def all(*args)
         options = extract_normalized_options(args)
@@ -126,7 +126,7 @@ module Capybara
       # @param [:css, :xpath, String] kind_or_locator     Either the kind of selector or the selector itself
       # @param [String] locator                           The selector
       # @param [Hash{Symbol => Object}] options           Additional options; see {all}
-      # @return Capybara::Element                         The found element
+      # @return [Capybara::Element]                       The found element
       #
       def first(*args)
         options = extract_normalized_options(args)
