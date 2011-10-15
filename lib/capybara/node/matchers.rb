@@ -198,6 +198,42 @@ module Capybara
 
       ##
       #
+      # Checks if the page or current node has the given text content,
+      # ignoring any HTML tags and normalizing whitespace. 
+      #
+      # Unlike has_content this only matches text displayed on the page
+      # and specifically excludes text contained within script nodes.
+      #
+      # @param [String] content       The text to check for
+      # @return [Boolean]             Whether it exists
+      #
+      def has_text?(content)
+        literal = XPath::Expression::StringLiteral.new(content).to_xpath
+        expression = "./descendant-or-self::*[text()[contains(normalize-space(.), #{literal})] and not(ancestor-or-self::script)]"
+        
+        has_xpath?(expression)
+      end
+
+      ##
+      #
+      # Checks if the page or current node does not have the given text
+      # content, ignoring any HTML tags and normalizing whitespace.
+      #
+      # Unlike has_content this only matches text displayed on the page
+      # and specifically excludes text contained within script nodes.
+      #
+      # @param [String] content       The text to check for
+      # @return [Boolean]             Whether it exists
+      #
+      def has_no_text?(content)
+        literal = XPath::Expression::StringLiteral.new(content).to_xpath
+        expression = "./descendant-or-self::*[text()[contains(normalize-space(.), #{literal})] and not(ancestor-or-self::script)]"
+        
+        has_no_xpath?(expression)
+      end
+
+      ##
+      #
       # Checks if the page or current node has a link with the given
       # text or id.
       #
