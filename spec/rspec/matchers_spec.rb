@@ -312,6 +312,78 @@ describe Capybara::RSpecMatchers do
     end
   end
 
+  describe "have_text matcher" do
+    it "gives proper description" do
+      have_text('Text').description.should == "has text \"Text\""
+    end
+
+    context "on a string" do
+      context "with should" do
+        it "passes if has_text? returns true" do
+          "<h1>Text</h1>".should have_text('Text')
+        end
+
+        it "fails if has_text? returns false" do
+          expect do
+            "<h1>Text</h1>".should have_text('No such Text')
+          end.to raise_error(/expected there to be text "No such Text" in "Text"/)
+        end
+      end
+
+      context "with should_not" do
+        it "passes if has_no_text? returns true" do
+          "<h1>Text</h1>".should_not have_text('No such Text')
+        end
+
+        it "fails if has_no_text? returns false" do
+          expect do
+            "<h1>Text</h1>".should_not have_text('Text')
+          end.to raise_error(/expected text "Text" not to return anything/)
+        end
+      end
+    end
+
+    context "on a page or node" do
+      before do
+        visit('/with_html')
+      end
+
+      context "with should" do
+        it "passes if has_text? returns true" do
+          page.should have_text('This is a test')
+        end
+
+        it "fails if has_text? returns false" do
+          expect do
+            page.should have_text('No such Text')
+          end.to raise_error(/expected there to be text "No such Text" in "(.*)This is a test(.*)"/)
+        end
+
+        context "with default selector CSS" do
+          before { Capybara.default_selector = :css }
+          it "fails if has_text? returns false" do
+            expect do
+              page.should have_text('No such Text')
+            end.to raise_error(/expected there to be text "No such Text" in "(.*)This is a test(.*)"/)
+          end
+          after { Capybara.default_selector = :xpath }
+        end
+      end
+
+      context "with should_not" do
+        it "passes if has_no_text? returns true" do
+          page.should_not have_text('No such Text')
+        end
+
+        it "fails if has_no_text? returns false" do
+          expect do
+            page.should_not have_text('This is a test')
+          end.to raise_error(/expected text "This is a test" not to return anything/)
+        end
+      end
+    end
+  end
+
   describe "have_link matcher" do
     let(:html) { '<a href="#">Just a link</a>' }
 

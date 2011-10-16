@@ -201,17 +201,21 @@ module Capybara
       # Checks if the page or current node has the given text content,
       # ignoring any HTML tags and normalizing whitespace. 
       #
-      # Unlike has_content this only matches text displayed on the page
-      # and specifically excludes text contained within script nodes.
+      # Unlike has_content this only matches displayable text and specifically
+      # excludes text contained within non-display nodes such as script or head tags.
       #
       # @param [String] content       The text to check for
       # @return [Boolean]             Whether it exists
       #
       def has_text?(content)
-        literal = XPath::Expression::StringLiteral.new(content).to_xpath
-        expression = "./descendant-or-self::*[text()[contains(normalize-space(.), #{literal})] and not(ancestor-or-self::script)]"
+        normalized_content = normalize_whitespace(content)
         
-        has_xpath?(expression)
+        wait_until do
+          normalize_whitespace(text).include?(normalized_content) or
+          raise ExpectationNotMet
+        end
+      rescue Capybara::ExpectationNotMet
+        return false
       end
 
       ##
@@ -219,17 +223,21 @@ module Capybara
       # Checks if the page or current node does not have the given text
       # content, ignoring any HTML tags and normalizing whitespace.
       #
-      # Unlike has_content this only matches text displayed on the page
-      # and specifically excludes text contained within script nodes.
+      # Unlike has_content this only matches displayable text and specifically
+      # excludes text contained within non-display nodes such as script or head tags.
       #
       # @param [String] content       The text to check for
       # @return [Boolean]             Whether it exists
       #
       def has_no_text?(content)
-        literal = XPath::Expression::StringLiteral.new(content).to_xpath
-        expression = "./descendant-or-self::*[text()[contains(normalize-space(.), #{literal})] and not(ancestor-or-self::script)]"
+        normalized_content = normalize_whitespace(content)
         
-        has_no_xpath?(expression)
+        wait_until do
+          !normalize_whitespace(text).include?(normalized_content) or
+          raise ExpectationNotMet
+        end
+      rescue Capybara::ExpectationNotMet
+        return false
       end
 
       ##
@@ -447,6 +455,19 @@ module Capybara
       def split_options(options, key)
         options = options.dup
         [options, if options.has_key?(key) then {key => options.delete(key)} else {} end]
+      end
+
+      ##
+      #
+      # Normalizes whitespace space by stripping leading and trailing
+      # whitespace and replacing sequences of whitespace characters
+      # with a single space.
+      #
+      # @param [String] text     Text to normalize
+      # @return [String]         Normalized text
+      #
+      def normalize_whitespace(text)
+        text.gsub(/\s+/, ' ').strip
       end
     end
   end
