@@ -181,7 +181,7 @@ module Capybara
       # @return [Boolean]             Whether it exists
       #
       def has_content?(content)
-        has_xpath?(XPath::HTML.content(content.gsub("\n", "")))
+        has_xpath?(XPath::HTML.content(content.gsub(/\s+/, " ").strip))
       end
 
       ##
