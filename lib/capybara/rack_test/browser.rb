@@ -81,7 +81,11 @@ class Capybara::RackTest::Browser
   end
 
   def dom
-    @dom ||= Nokogiri::HTML(source)
+    if headers['Content-Type'] && headers['Content-Type'] =~ /xml/
+      @dom ||= Nokogiri::XML(source)
+    else
+      @dom ||= Nokogiri::HTML(source)
+    end
   end
 
   def find(selector)
@@ -92,6 +96,10 @@ class Capybara::RackTest::Browser
     last_response.body
   rescue Rack::Test::Error
     nil
+  end
+
+  def headers
+    last_response.headers || {}
   end
 
 protected
