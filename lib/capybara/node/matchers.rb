@@ -181,7 +181,7 @@ module Capybara
       # @return [Boolean]             Whether it exists
       #
       def has_content?(content)
-        has_xpath?(XPath::HTML.content(content.gsub(/\s+/, " ").strip))
+        has_xpath?(XPath::HTML.content(normalize_whitespace(content)))
       end
 
       ##
@@ -193,7 +193,7 @@ module Capybara
       # @return [Boolean]             Whether it exists
       #
       def has_no_content?(content)
-        has_no_xpath?(XPath::HTML.content(content))
+        has_no_xpath?(XPath::HTML.content(normalize_whitespace(content)))
       end
 
       ##
@@ -411,6 +411,12 @@ module Capybara
       def split_options(options, key)
         options = options.dup
         [options, if options.has_key?(key) then {key => options.delete(key)} else {} end]
+      end
+      
+      private
+      
+      def normalize_whitespace(text)
+        text.gsub(/\s+/, " ").strip
       end
     end
   end
