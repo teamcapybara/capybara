@@ -86,4 +86,16 @@ describe Capybara::RackTest::Driver do
       @driver.body.should include('foobar')
     end
   end
+
+  describe 'content' do
+    it 'should parse HTML as HTML' do
+      @driver.visit('/foo')
+      @driver.body.should match %r{^<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">\n<html><body>}
+    end
+
+    it 'should parse XML as XML' do
+      @driver.visit('/foo.xml')
+      @driver.body.should match %r{^<\?xml version="1.0"\?>\n<world>}
+    end
+  end
 end

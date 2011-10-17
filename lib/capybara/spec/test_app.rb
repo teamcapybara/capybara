@@ -14,6 +14,12 @@ class TestApp < Sinatra::Base
     'Another World'
   end
 
+  get '/foo.xml' do
+    headers "Content-Type" => 'text/xml'
+    '<world>Another</world>'
+  end
+
+
   get '/redirect' do
     redirect '/redirect_again'
   end
