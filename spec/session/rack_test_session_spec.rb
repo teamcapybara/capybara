@@ -32,6 +32,12 @@ describe Capybara::Session do
         @session.body.should include('Not deleted')
       end
 
+      it "should use data-method if available even if it's capitalized" do
+        @session.visit "/with_html"
+        @session.click_link "A link with data-method capitalized"
+        @session.body.should include('The requested object was deleted')
+      end
+
       after do
         @session.driver.options[:respect_data_method] = true
       end
