@@ -71,8 +71,7 @@ module Capybara
         end
       end
     rescue TimeoutError
-      puts "Rack application timed out during boot"
-      exit
+      raise "Rack application timed out during boot"
     else
       self
     end
