@@ -60,6 +60,10 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     end
   end
 
+  def submit_form
+    Capybara::RackTest::Form.new(driver, form).submit({})
+  end
+
   def tag_name
     native.node_name
   end

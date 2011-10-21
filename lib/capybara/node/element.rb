@@ -101,6 +101,14 @@ module Capybara
 
       ##
       #
+      # Submit the Element
+      #
+      def submit_form
+        wait_until { base.submit_form }
+      end
+
+      ##
+      #
       # @return [String]      The tag name of the element
       #
       def tag_name

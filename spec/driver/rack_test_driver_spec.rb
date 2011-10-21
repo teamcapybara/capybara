@@ -80,6 +80,13 @@ describe Capybara::RackTest::Driver do
       @driver.body.should include('foobar')
     end
 
+    it 'should keep headers on form submit' do
+      @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
+      @driver.visit('/form')
+      @driver.find('//input[@id="form_middle_name"]')[0].submit_form
+      @driver.body.should include('middle_name: Darren')
+    end
+
     it 'should keep headers on redirects' do
       @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       @driver.visit('/get_header_via_redirect')
