@@ -35,4 +35,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency("yard", [">= 0.5.8"])
   s.add_development_dependency("fuubar", [">= 0.0.1"])
   s.add_development_dependency("cucumber", [">= 0.10"])
+  s.add_development_dependency("rake")
 end
