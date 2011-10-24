@@ -286,8 +286,8 @@ Note: Envjs does not support transactional fixtures; see the section
 
 === Capybara-webkit
 
-The {capybara-webkit drive}[https://github.com/thoughtbot/capybara-webkit] is for true headless
-testing. It uses WebKitQt to start a rendering engine process. It can execute JavaScript as well.
+The {capybara-webkit driver}[https://github.com/thoughtbot/capybara-webkit] is for true headless
+testing. It uses QtWebKit to start a rendering engine process. It can execute JavaScript as well.
 It is significantly faster than drivers like Selenium since it does not load an entire browser.
 
 You can install it with:
