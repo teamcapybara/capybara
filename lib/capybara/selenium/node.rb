@@ -1,6 +1,9 @@
 class Capybara::Selenium::Node < Capybara::Driver::Node
   def text
     native.text
+  rescue Selenium::WebDriver::Error::UnhandledError => ex
+    return '' if ex.to_s =~ /nsIDOMSVGLocatable.getBBox/i
+    raise
   end
 
   def [](name)
