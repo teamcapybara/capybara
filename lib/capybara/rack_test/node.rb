@@ -1,6 +1,16 @@
 class Capybara::RackTest::Node < Capybara::Driver::Node
   def text
-    native.text
+    if !visible?
+      ''
+    elsif native.text?
+      native.text
+    elsif native.element?
+      native.children.map do |child|
+        Capybara::RackTest::Node.new(driver, child).text
+      end.join
+    else
+      ''
+    end
   end
 
   def [](name)

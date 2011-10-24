@@ -63,6 +63,11 @@ shared_examples_for 'has_text' do
       @session.should_not have_text('a javascript comment')
       @session.should_not have_text('aVar')
     end
+
+    it "should be false if the given text is on the page but not visible" do
+      @session.visit('/with_html')
+      @session.should_not have_text('Inside element with hidden ancestor')
+    end
   end
 
   describe '#has_no_text?' do
@@ -123,6 +128,11 @@ shared_examples_for 'has_text' do
       @session.visit('/with_js')
       @session.should have_no_text('a javascript comment')
       @session.should have_no_text('aVar')
+    end
+
+    it "should be true if the given text is on the page but not visible" do
+      @session.visit('/with_html')
+      @session.should have_no_text('Inside element with hidden ancestor')
     end
   end
 end
