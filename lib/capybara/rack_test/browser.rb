@@ -111,7 +111,7 @@ protected
     env = {}
     begin
       env["HTTP_REFERER"] = last_request.url
-      env["HTTP_USER_AGENT"] = "Capybara-RackTest/1.0"
+      env["HTTP_USER_AGENT"] = "Capybara-RackTest/#{Capybara::VERSION}"
     rescue Rack::Test::Error
       # no request yet
     end
