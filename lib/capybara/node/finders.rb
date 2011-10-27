@@ -15,7 +15,7 @@ module Capybara
       # +find+ takes the same options as +all+.
       #
       #     page.find('#foo').find('.bar')
-      #     page.find(:xpath, '//div[contains("bar")]')
+      #     page.find(:xpath, '//div[contains(., "bar")]')
       #     page.find('li', :text => 'Quox').click_link('Delete')
       #
       # @param (see Capybara::Node::Finders#all)
@@ -24,18 +24,7 @@ module Capybara
       # @raise  [Capybara::ElementNotFound]   If the element can't be found before time expires
       #
       def find(*args)
-        begin
-          node = wait_conditionally_until { first(*args) }
-        rescue TimeoutError
-        end
-        unless node
-          options = extract_normalized_options(args)
-          normalized = Capybara::Selector.normalize(*args)
-          message = options[:message] || "Unable to find #{normalized.name} #{normalized.locator.inspect}"
-          message = normalized.failure_message.call(self, normalized) if normalized.failure_message
-          raise Capybara::ElementNotFound, message
-        end
-        return node
+        wait_until { first(*args) or raise_find_error(*args) }
       end
 
       ##
@@ -115,15 +104,15 @@ module Capybara
       # @param [Hash{Symbol => Object}] options           Additional options
       # @option options [String, Regexp] text             Only find elements which contain this text or match this regexp
       # @option options [Boolean] visible                 Only find elements that are visible on the page
-      # @return [Capybara::Element]                       The found elements
+      # @return [Array[Capybara::Element]]                       The found elements
       #
       def all(*args)
         options = extract_normalized_options(args)
 
-        Capybara::Selector.normalize(*args).xpaths.
-          map    { |path| find_in_base(path) }.flatten.
-          select { |node| matches_options(node, options) }.
-          map    { |node| convert_element(node) }
+        selector = Capybara::Selector.normalize(*args)
+        selector.xpaths.
+          map    { |path| find_in_base(selector, path) }.flatten.
+          select { |node| matches_options(node, options) }
       end
 
       ##
@@ -137,16 +126,17 @@ module Capybara
       # @param [:css, :xpath, String] kind_or_locator     Either the kind of selector or the selector itself
       # @param [String] locator                           The selector
       # @param [Hash{Symbol => Object}] options           Additional options; see {all}
-      # @return Capybara::Element                         The found element
+      # @return [Capybara::Element]                       The found element
       #
       def first(*args)
         options = extract_normalized_options(args)
         found_elements = []
 
-        Capybara::Selector.normalize(*args).xpaths.each do |path|
-          find_in_base(path).each do |node|
+        selector = Capybara::Selector.normalize(*args)
+        selector.xpaths.each do |path|
+          find_in_base(selector, path).each do |node|
             if matches_options(node, options)
-              found_elements << convert_element(node)
+              found_elements << node
               return found_elements.last if not Capybara.prefer_visible_elements or node.visible?
             end
           end
@@ -156,16 +146,18 @@ module Capybara
 
     protected
 
-      def find_in_base(xpath)
-        base.find(xpath)
+      def raise_find_error(*args)
+        options = extract_normalized_options(args)
+        normalized = Capybara::Selector.normalize(*args)
+        message = options[:message] || "Unable to find #{normalized.name} #{normalized.locator.inspect}"
+        message = normalized.failure_message.call(self, normalized) if normalized.failure_message
+        raise Capybara::ElementNotFound, message
       end
 
-      def convert_element(element)
-        Capybara::Node::Element.new(session, element)
-      end
-
-      def wait_conditionally_until
-        if wait? then session.wait_until { yield } else yield end
+      def find_in_base(selector, xpath)
+        base.find(xpath).map do |node|
+          Capybara::Node::Element.new(session, node, self, selector)
+        end
       end
 
       def extract_normalized_options(args)
@@ -197,7 +189,7 @@ module Capybara
       end
 
       def has_selected_options?(node, expected)
-        actual = node.find('.//option').select { |option| option.selected? }.map { |option| option.text }
+        actual = node.all(:xpath, './/option').select { |option| option.selected? }.map { |option| option.text }
         (expected - actual).empty?
       end
     end

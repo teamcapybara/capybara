@@ -31,14 +31,14 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def select_option
-    resynchronize { native.select }
+    resynchronize { native.click } unless selected?
   end
 
   def unselect_option
     if select_node['multiple'] != 'multiple' and select_node['multiple'] != 'true'
       raise Capybara::UnselectNotAllowed, "Cannot unselect option from single select box."
     end
-    resynchronize { native.toggle } if selected?
+    resynchronize { native.click } if selected?
   end
 
   def click
@@ -46,7 +46,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def drag_to(element)
-    resynchronize { native.drag_and_drop_on(element.native) }
+    resynchronize { driver.browser.action.drag_and_drop(native, element.native).perform }
   end
 
   def tag_name

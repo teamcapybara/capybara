@@ -18,6 +18,64 @@ shared_examples_for "session with javascript support" do
       end
     end
 
+    describe 'Node#reload' do
+      context "without automatic reload" do
+        before { Capybara.automatic_reload = false }
+        it "should reload the current context of the node" do
+          @session.visit('/with_js')
+          node = @session.find(:css, '#reload-me')
+          @session.click_link('Reload!')
+          sleep(0.3)
+          node.reload.text.should == 'RELOADED'
+          node.text.should == 'RELOADED'
+        end
+
+        it "should reload a parent node" do
+          @session.visit('/with_js')
+          node = @session.find(:css, '#reload-me').find(:css, 'em')
+          @session.click_link('Reload!')
+          sleep(0.3)
+          node.reload.text.should == 'RELOADED'
+          node.text.should == 'RELOADED'
+        end
+
+        it "should not automatically reload" do
+          @session.visit('/with_js')
+          node = @session.find(:css, '#reload-me')
+          @session.click_link('Reload!')
+          sleep(0.3)
+          running { node.text.should == 'RELOADED' }.should raise_error
+        end
+        after { Capybara.automatic_reload = true }
+      end
+
+      context "with automatic reload" do
+        it "should reload the current context of the node automatically" do
+          @session.visit('/with_js')
+          node = @session.find(:css, '#reload-me')
+          @session.click_link('Reload!')
+          sleep(0.3)
+          node.text.should == 'RELOADED'
+        end
+
+        it "should reload a parent node automatically" do
+          @session.visit('/with_js')
+          node = @session.find(:css, '#reload-me').find(:css, 'em')
+          @session.click_link('Reload!')
+          sleep(0.3)
+          node.text.should == 'RELOADED'
+        end
+
+        it "should reload a node automatically when using find" do
+          @session.visit('/with_js')
+          node = @session.find(:css, '#reload-me')
+          @session.click_link('Reload!')
+          sleep(0.3)
+          node.find(:css, 'a').text.should == 'RELOADED'
+        end
+      end
+    end
+
     describe '#find' do
       it "should allow triggering of custom JS events" do
         pending "cannot figure out how to do this with selenium" if @session.mode == :selenium
@@ -64,6 +122,15 @@ shared_examples_for "session with javascript support" do
         @session.visit('/with_js')
         @session.click_link('Click me')
         @session.find(:css, "a#has-been-clicked").text.should include('Has been clicked')
+      end
+
+      context "with frozen time" do
+        it "raises an error suggesting that Capybara is stuck in time" do
+          @session.visit('/with_js')
+          now = Time.now
+          Time.stub(:now).and_return(now)
+          expect { @session.find('//isnotthere') }.to raise_error(Capybara::FrozenInTime)
+        end
       end
     end
 

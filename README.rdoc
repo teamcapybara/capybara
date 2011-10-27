@@ -8,7 +8,7 @@ Capybara aims to simplify the process of integration testing Rack applications,
 such as Rails, Sinatra or Merb. Capybara simulates how a real user would
 interact with a web application. It is agnostic about the driver running your
 tests and currently comes with Rack::Test and Selenium support built in.
-HtmlUnit and env.js are supported through external gems.
+HtmlUnit, WebKit and env.js are supported through external gems.
 
 A complete reference is available at
 {at rubydoc.info}[http://rubydoc.info/github/jnicklas/capybara/master].
@@ -28,6 +28,7 @@ On OSX you may have to install libffi, you can install it via MacPorts with:
 * Source hosted at {GitHub}[http://github.com/jnicklas/capybara].
 * Please direct questions, discussion or problems to the {mailing list}[http://groups.google.com/group/ruby-capybara].
 * If you found a reproducible bug, open a {GitHub Issue}[http://github.com/jnicklas/capybara/issues] to submit a bug report.
+* Please do not contact any of the maintainers directly, unless you have found a security related issue.
 
 Pull requests are very welcome (and even better than bug reports)! Make sure
 your patches are well tested, Capybara is a testing tool after all. Please
@@ -36,7 +37,7 @@ create a topic branch for every separate change you make.
 Capybara uses bundler in development. To set up a development environment, simply do:
 
     git submodule update --init
-    gem install bundler --pre
+    gem install bundler
     bundle install
 
 == Using Capybara with Cucumber
@@ -64,7 +65,7 @@ Now you can use it in your steps:
       click_link 'Sign in'
     end
 
-Capybara sets up some {tags}[http://wiki.github.com/aslakhellesoy/cucumber/tags]
+Capybara sets up some {tags}[https://github.com/cucumber/cucumber/wiki/tags]
 for you to use in Cucumber. Often you'll want to run only some scenarios with a
 driver that supports JavaScript, Capybara makes this easy: simply tag the
 scenario (or feature) with <tt>@javascript</tt>:
@@ -216,7 +217,7 @@ switch in the middle of a test.
 
 RackTest is Capybara's default driver. It is written in pure Ruby and does not
 have any support for executing JavaScript. Since the RackTest driver works
-directly agains the Rack interface, it does not need any server to be started,
+directly against the Rack interface, it does not need any server to be started,
 it can work directly work against any Rack app. This means that if your
 application is not a Rack application (Rails, Sinatra and most other Ruby
 frameworks are Rack applications) then you cannot use this driver. You cannot
@@ -240,10 +241,11 @@ At the moment, Capybara supports {Selenium 2.0
 *not* Selenium RC. Provided Firefox is installed, everything is set up for you,
 and you should be able to start using Selenium right away.
 
-By default Capybara tries to synchronize Ajax requests, so it will wait for
-Ajax requests to finish after you've interacted with the page. You can switch
-off this behaviour by setting the driver option <tt>:resynchronize</tt> to
-<tt>false</tt>. See the section on configuring drivers.
+Capybara can block and wait for Ajax requests to finish after you've interacted
+with the page. To enable this behaviour, set the <tt>:resynchronize</tt> driver
+option to <tt>true</tt>. This should normally not be necessary, since
+Capybara's automatic reloading should take care of any asynchronicity problems.
+See the section on Asynchronous JavaScript for details.
 
 Note: Selenium does not support transactional fixtures; see the section
 "Transactional Fixtures" below.
@@ -281,6 +283,21 @@ Ruby 1.8.7 at this time.
 
 Note: Envjs does not support transactional fixtures; see the section
 "Transactional Fixtures" below.
+
+=== Capybara-webkit
+
+The {capybara-webkit drive}[https://github.com/thoughtbot/capybara-webkit] is for true headless
+testing. It uses WebKitQt to start a rendering engine process. It can execute JavaScript as well.
+It is significantly faster than drivers like Selenium since it does not load an entire browser.
+
+You can install it with:
+
+  gem install capybara-webkit
+
+And you can use it by:
+
+  Capybara.javascript_driver = :webkit
+
 
 == The DSL
 
@@ -468,9 +485,9 @@ When issuing instructions to the DSL such as:
     click_link('bar')
     page.should have_content('baz')
 
-If clicking on the *foo* link causes triggers an asynchronous process, such as
+If clicking on the *foo* link triggers an asynchronous process, such as
 an Ajax request, which, when complete will add the *bar* link to the page,
-clicking on the *bar* link would be expeced to fail, since that link doesn't
+clicking on the *bar* link would be expected to fail, since that link doesn't
 exist yet. However Capybara is smart enought to retry finding the link for a
 brief period of time before giving up and throwing an error. The same is true of
 the next line, which looks for the content *baz* on the page; it will retry
@@ -482,13 +499,30 @@ is (the default is 2 seconds):
 Be aware that because of this behaviour, the following two statements are *not*
 equivalent, and you should *always* use the latter!
 
+    !page.has_xpath?('a')
+    page.has_no_xpath?('a')
+
+The former would immediately fail because the content has not yet been removed.
+Only the latter would wait for the asynchronous process to remove the content
+from the page.
+
+Capybara's Rspec matchers, however, are smart enough to handle either form.
+The two following statements are functionally equivalent:
+
     page.should_not have_xpath('a')
     page.should have_no_xpath('a')
 
-The former would incorrectly wait for the content to appear, since the
-asynchronous process has not yet removed the element from the page, it would
-therefore fail, even though the code might be working correctly. The latter
-correctly waits for the element to disappear from the page.
+Capybara's waiting behaviour is quite advanced, and can deal with situations
+such as the following line of code:
+
+    find('#sidebar').find('h1').should have_content('Something')
+
+Even if JavaScript causes <tt>#sidebar</tt> to disappear off the page, Capybara
+will automatically reload it and any elements it contains. So if an AJAX
+request causes the contents of <tt>#sidebar</tt> to change, which would update
+the text of the <tt>h1</tt> to "Something", and this happened, this test would
+pass. If you do not want this behaviour, you can set
+<tt>Capybara.automatic_reload</tt> to <tt>false</tt>.
 
 == Using the DSL in unsupported testing frameworks
 

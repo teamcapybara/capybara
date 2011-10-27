@@ -4,7 +4,9 @@ require 'xpath'
 module Capybara
   class CapybaraError < StandardError; end
   class DriverNotFoundError < CapybaraError; end
+  class FrozenInTime < CapybaraError; end
   class ElementNotFound < CapybaraError; end
+  class ExpectationNotMet < ElementNotFound; end
   class FileNotFound < CapybaraError; end
   class UnselectNotAllowed < CapybaraError; end
   class NotSupportedByDriverError < CapybaraError; end
@@ -16,7 +18,7 @@ module Capybara
     attr_accessor :asset_root, :app_host, :run_server, :default_host
     attr_accessor :server_port, :server_boot_timeout
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements, :prefer_visible_elements
-    attr_accessor :save_and_open_page_path
+    attr_accessor :save_and_open_page_path, :automatic_reload
 
     ##
     #
@@ -36,6 +38,8 @@ module Capybara
     # [default_wait_time = Integer]       The number of seconds to wait for asynchronous processes to finish (Default: 2)
     # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: false)
     # [prefer_visible_elements = Boolean] Whether to prefer visible elements over hidden elements (Default: true)
+    # [automatic_reload = Boolean]        Whether to automatically reload elements as Capybara is waiting (Default: true)
+    # [save_and_open_page_path = String]  Where to put pages saved through save_and_open_page (Default: Dir.pwd)
     #
     # === DSL Options
     #
@@ -236,6 +240,7 @@ Capybara.configure do |config|
   config.ignore_hidden_elements = false
   config.prefer_visible_elements = true
   config.default_host = "http://www.example.com"
+  config.automatic_reload = true
 end
 
 Capybara.register_driver :rack_test do |app|

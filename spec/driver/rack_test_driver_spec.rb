@@ -79,5 +79,11 @@ describe Capybara::RackTest::Driver do
       @driver.find('.//input').first.click
       @driver.body.should include('foobar')
     end
+
+    it 'should keep headers on redirects' do
+      @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
+      @driver.visit('/get_header_via_redirect')
+      @driver.body.should include('foobar')
+    end
   end
 end

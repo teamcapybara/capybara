@@ -1,32 +1,42 @@
 class Capybara::RackTest::Browser
   include ::Rack::Test::Methods
 
-  attr_reader :app, :options
+  attr_reader :driver
   attr_accessor :current_host
 
-  def initialize(app, options={})
-    @app = app
-    @options = options
+  def initialize(driver)
+    @driver = driver
+  end
+
+  def app
+    driver.app
+  end
+
+  def options
+    driver.options
   end
 
   def visit(path, attributes = {})
     reset_host!
     process(:get, path, attributes)
+    follow_redirects!
   end
 
   def submit(method, path, attributes)
     path = request_path if not path or path.empty?
     process(method, path, attributes)
+    follow_redirects!
   end
 
   def follow(method, path, attributes = {})
     return if path.gsub(/^#{request_path}/, '').start_with?('#')
     process(method, path, attributes)
+    follow_redirects!
   end
 
   def follow_redirects!
     5.times do
-      follow_redirect! if last_response.redirect?
+      process(:get, last_response["Location"]) if last_response.redirect?
     end
     raise Capybara::InfiniteRedirectError, "redirected more than 5 times, check for infinite redirects." if last_response.redirect?
   end
@@ -38,20 +48,18 @@ class Capybara::RackTest::Browser
     if new_uri.host
       @current_host = new_uri.scheme + '://' + new_uri.host
     end
-    
+
     if new_uri.relative?
-      path = request_path + path if path.start_with?('?')
-      
-      unless path.start_with?('/')
-        folders = request_path.split('/')
-        path = (folders[0, folders.size - 1] << path).join('/')
+      if path.start_with?('?')
+        path = request_path + path
+      elsif not path.start_with?('/')
+        path = request_path.sub(%r(/[^/]*$), '/') + path
       end
       path = current_host + path
     end
-    
+
     reset_cache!
     send(method, path, attributes, env)
-    follow_redirects!
   end
 
   def current_url

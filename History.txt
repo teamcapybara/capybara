@@ -1,6 +1,41 @@
+# Version 1.1.0
+
+Release date: 2011-09-02
+
+### Fixed
+
+* Sensible inspect for Capybara::Session [Jo Liss]
+* Fix headers and host on redirect [Matt Colyer, Jonas Nicklas, Kim Burgestrand]
+* using_driver now restores the old driver instead of reverting to the default [Carol Nichols]
+* Errors when following links relative to the root path under rack-test [Jonas Nicklas, Kim Burgestrand]
+* Make sure exit codes are propagated properly [Edgar Beigarts]
+
+### Changed
+
+* resynchronization is off by default under Selenium
+
+### Added
+
+* Elements are automatically reloaded (including parents) during wait [Jonas Nicklas]
+* Rescue driver specific element errors, such as the dreaded ObsoleteElementError and retry [Jonas Nicklas]
+* Raise an error if something has frozen time [Jonas Nicklas]
+* Allow within to take a node instead of a selector [Peter Williams]
+* Using wait_time_time to change wait time for a block of code [Jonas Nicklas, Kim Burgestrand]
+* Option for rack-test driver to disable data-method hack [Jonas Nicklas, Kim Burgestrand]
+
+# Version 1.0.1
+
+Release date: 2011-08-12
+
+### Fixed
+
+* Dependend on selenium-webdriver ~>2.0 and fix deprecations [Thomas Walpole, Jo Liss]
+* Depend on Launch 2.0 [Jeremy Hinegardner]
+* Rack-Test ignores fill in on fields with maxlength=""
+
 # Version 1.0.0
 
-Release date:
+Release date: 2011-06-14
 
 ### Added
 
@@ -43,6 +78,12 @@ Release date:
 * Rack::Test now works as expected with domains and subdomains [Jonas Nicklas]
 * Session is reset more thoroughly between tests. [Jonas Nicklas]
 * Raise error when uploading non-existant file [Jonas Nicklas]
+* Rack reponse body should respond to #each [Piotr Sarnacki]
+* Deprecation warnings with selenium webdriver 0.2.0 [Aaron Gibraltar]
+* Selenium Chrome no longer YELLS tagname [Carl Jackson & David W. Frank]
+* Capybara no longer strips encoding before sending to Rack [Jonas Nicklas]
+* Improve handling of relative URLs [John Barton]
+* Readd and fix build_rack_mock_session [Jonas Nicklas, Jon Leighton]
 
 # Version 0.4.1
 

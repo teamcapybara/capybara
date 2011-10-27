@@ -7,7 +7,7 @@ class TestApp < Sinatra::Base
   set :static, true
 
   get '/' do
-    'Hello world!'
+    'Hello world! <a href="with_html">Relative</a>'
   end
 
   get '/foo' do
@@ -63,8 +63,16 @@ class TestApp < Sinatra::Base
     "The requested object was deleted"
   end
 
+  get "/delete" do
+    "Not deleted"
+  end
+
   get '/redirect_back' do
     redirect back
+  end
+
+  get '/redirect_secure' do
+    redirect "https://#{request.host}/host"
   end
 
   get '/slow_response' do
@@ -84,6 +92,10 @@ class TestApp < Sinatra::Base
 
   get '/get_header' do
     env['HTTP_FOO']
+  end
+
+  get '/get_header_via_redirect' do
+    redirect '/get_header'
   end
 
   get '/:view' do |view|

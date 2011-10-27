@@ -173,11 +173,20 @@ module Capybara
     #       fill_in('Street', :with => '12 Main Street')
     #     end
     #
-    # @param (see Capybara::Node::Finders#all)
+    # @overload within(*find_args)
+    #   @param (see Capybara::Node::Finders#all)
+    #
+    # @overload within(a_node)
+    #   @param [Capybara::Node::Base] a_node   The node in whose scope the block should be evaluated
+    #
     # @raise  [Capybara::ElementNotFound]   If the scope can't be found before time expires
     #
     def within(*args)
-      new_scope = find(*args)
+      new_scope = if args.size == 1 && Capybara::Node::Base === args.first
+                    args.first
+                  else
+                    find(*args)
+                  end
       begin
         scopes.push(new_scope)
         yield
@@ -284,7 +293,7 @@ module Capybara
     end
 
     def document
-      Capybara::Node::Document.new(self, driver)
+      @document ||= Capybara::Node::Document.new(self, driver)
     end
 
     NODE_METHODS.each do |method|
@@ -293,6 +302,10 @@ module Capybara
           current_node.send(:#{method}, *args, &block)
         end
       RUBY
+    end
+
+    def inspect
+      %(#<Capybara::Session>)
     end
 
   private

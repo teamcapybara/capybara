@@ -49,10 +49,23 @@ module Capybara
     # Yield a block using a specific driver
     #
     def using_driver(driver)
+      previous_driver = Capybara.current_driver
       Capybara.current_driver = driver
       yield
     ensure
-      Capybara.use_default_driver
+      @current_driver = previous_driver
+    end
+
+    ##
+    #
+    # Yield a block using a specific wait time
+    #
+    def using_wait_time(seconds)
+      previous_wait_time = Capybara.default_wait_time
+      Capybara.default_wait_time = seconds
+      yield
+    ensure
+      Capybara.default_wait_time = previous_wait_time
     end
 
     ##
@@ -112,6 +125,15 @@ module Capybara
     #
     def using_session(name, &block)
       Capybara.using_session(name, &block)
+    end
+
+    ##
+    #
+    # Shortcut to working in a different session. This is useful when Capybara is included
+    # in a class or module.
+    #
+    def using_wait_time(seconds, &block)
+      Capybara.using_wait_time(seconds, &block)
     end
 
     ##
