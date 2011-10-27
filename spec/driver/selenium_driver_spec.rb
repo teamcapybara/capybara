@@ -13,6 +13,7 @@ describe Capybara::Selenium::Driver do
   it_should_behave_like "driver with support for window switching"
   it_should_behave_like "driver without status code support"
   it_should_behave_like "driver with cookies support"
+  it_should_behave_like "driver with contenteditable support"
 
   unless Config::CONFIG['host_os'] =~ /mswin|mingw/
     it "should not interfere with forking child processes" do

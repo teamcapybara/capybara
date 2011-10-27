@@ -32,6 +32,8 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
       native['value'] = value.to_s
     elsif tag_name == "textarea"
       native.content = value.to_s
+    elsif native['contenteditable'] == 'true'
+      native.content = value
     end
   end
 
