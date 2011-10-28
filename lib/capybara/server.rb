@@ -32,7 +32,7 @@ module Capybara
     end
 
     def host
-      "127.0.0.1"
+      Capybara.server_host || "127.0.0.1"
     end
 
     def url(path)
