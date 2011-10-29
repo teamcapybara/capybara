@@ -59,7 +59,7 @@ class Capybara::RackTest::Browser
     end
 
     reset_cache!
-    send(method, path, attributes, env)
+    send(method.downcase, path, attributes, env)
   end
 
   def current_url
