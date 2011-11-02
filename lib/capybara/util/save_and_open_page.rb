@@ -23,7 +23,7 @@ module Capybara
 
     def open_in_browser(path) # :nodoc
       require "launchy"
-      Launchy.open(path)
+      Launchy.open("file://" + path)
     rescue LoadError
       warn "Sorry, you need to install launchy (`gem install launchy`) and " <<
         "make sure it's available to open pages with `save_and_open_page`."
@@ -33,7 +33,7 @@ module Capybara
       root = Capybara.asset_root
       return response_html unless root
       directories = Dir.new(root).entries.select { |name|
-        (root+name).directory? and not name.to_s =~ /^\./
+        File::directory?(File::join(root, name)) and not name.to_s =~ /^\./
       }
       if not directories.empty?
         response_html.gsub!(/("|')\/(#{directories.join('|')})/, '\1' + root.to_s + '/\2')
