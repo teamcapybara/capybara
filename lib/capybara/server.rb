@@ -32,7 +32,7 @@ module Capybara
     end
 
     def host
-      "127.0.0.1"
+      Capybara.server_host || "127.0.0.1"
     end
 
     def url(path)
@@ -71,8 +71,7 @@ module Capybara
         end
       end
     rescue TimeoutError
-      puts "Rack application timed out during boot"
-      exit
+      raise "Rack application timed out during boot"
     else
       self
     end

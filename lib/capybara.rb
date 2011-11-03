@@ -16,7 +16,7 @@ module Capybara
 
   class << self
     attr_accessor :asset_root, :app_host, :run_server, :default_host
-    attr_accessor :server_port, :server_boot_timeout
+    attr_accessor :server_host, :server_port, :server_boot_timeout
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements, :prefer_visible_elements
     attr_accessor :save_and_open_page_path, :automatic_reload
 
