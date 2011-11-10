@@ -454,7 +454,7 @@ with Test::Unit or RSpec, you may have to use the
 {database_cleaner}[https://github.com/bmabey/database_cleaner] gem.  See {this
 explanation}[https://groups.google.com/d/msg/ruby-capybara/JI6JrirL9gM/R6YiXj4gi_UJ]
 (and code for {solution
-2}[http://opinionated-programmer.com/2011/02/capybara-and-selenium-with-rspec-and-rails-3/#comment-220]
+2}[http://opinionatedprogrammer.com/2011/02/capybara-and-selenium-with-rspec-and-rails-3/#comment-220]
 and {solution 3}[http://pastie.org/1745020]) for details.
 
 == Asynchronous JavaScript (Ajax and friends)
