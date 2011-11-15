@@ -30,8 +30,9 @@ shared_examples_for "has_content" do
     it "should ignore extra whitespace and newlines" do
       @session.visit('/with_html')
       @session.should have_content('text with whitespace')
+      @session.should have_content(%|text with\n whitespace|)
     end
-
+    
     it "should be false if the given content is not on the page" do
       @session.visit('/with_html')
       @session.should_not have_content('xxxxyzzz')

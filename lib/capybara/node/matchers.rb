@@ -181,7 +181,7 @@ module Capybara
       # @return [Boolean]             Whether it exists
       #
       def has_content?(content)
-        has_xpath?(XPath::HTML.content(content))
+        has_xpath?(XPath::HTML.content(normalize_whitespace(content)))
       end
 
       ##
@@ -193,13 +193,13 @@ module Capybara
       # @return [Boolean]             Whether it exists
       #
       def has_no_content?(content)
-        has_no_xpath?(XPath::HTML.content(content))
+        has_no_xpath?(XPath::HTML.content(normalize_whitespace(content)))
       end
 
       ##
       #
       # Checks if the page or current node has the given text content,
-      # ignoring any HTML tags and normalizing whitespace. 
+      # ignoring any HTML tags and normalizing whitespace.
       #
       # Unlike has_content this only matches displayable text and specifically
       # excludes text contained within non-display nodes such as script or head tags.
@@ -209,7 +209,7 @@ module Capybara
       #
       def has_text?(content)
         normalized_content = normalize_whitespace(content)
-        
+
         wait_until do
           normalize_whitespace(text).include?(normalized_content) or
           raise ExpectationNotMet
@@ -231,7 +231,7 @@ module Capybara
       #
       def has_no_text?(content)
         normalized_content = normalize_whitespace(content)
-        
+
         wait_until do
           !normalize_whitespace(text).include?(normalized_content) or
           raise ExpectationNotMet
@@ -450,7 +450,7 @@ module Capybara
         has_no_xpath?(XPath::HTML.table(locator, options))
       end
 
-      protected
+    protected
 
       def split_options(options, key)
         options = options.dup
