@@ -6,8 +6,9 @@ require 'capybara/rspec/matchers'
 World(Capybara::DSL)
 World(Capybara::RSpecMatchers)
 
-After do
+Before do
   Capybara.reset_sessions!
+  Capybara.use_default_driver
 end
 
 Before '@javascript' do
@@ -21,8 +22,4 @@ Before do |scenario|
       Capybara.current_driver = driver_name
     end
   end
-end
-
-After do
-  Capybara.use_default_driver
 end
