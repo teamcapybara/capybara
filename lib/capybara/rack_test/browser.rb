@@ -92,7 +92,7 @@ class Capybara::RackTest::Browser
   def source
     last_response.body
   rescue Rack::Test::Error
-    nil
+    ""
   end
 
 protected
