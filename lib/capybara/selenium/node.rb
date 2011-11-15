@@ -22,6 +22,10 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       click
     elsif tag_name == 'input' and type == 'checkbox'
       click if value ^ native.attribute('checked').to_s.eql?("true")
+    elsif tag_name == 'input' and type == 'file'
+      resynchronize do
+        native.send_keys(value.to_s)
+      end
     elsif tag_name == 'textarea' or tag_name == 'input'
       resynchronize do
         native.clear
