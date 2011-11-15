@@ -352,6 +352,7 @@ certain elements, and working with and manipulating those elements.
     page.has_xpath?('//table/tr')
     page.has_css?('table tr.foo')
     page.has_content?('foo')
+    page.has_text?('foo')
 
 You can use these with RSpec's magic matchers:
 
@@ -361,8 +362,14 @@ You can use these with RSpec's magic matchers:
 
     page.should have_xpath('//table/tr')
     page.should have_css('table tr.foo')
-    page.should have_content('foo')
-    page.should have_no_content('foo')
+    page.should have_text('foo')
+    page.should have_no_text('foo')
+
+Note that there are 2 matchers for checking content/text. <tt>page.has_text?('foo')</tt>
+will check only for text that is displayable, whereas <tt>page.has_content?('foo')</tt> will
+check for the content within any nodes (including the head section and within script tags).
+Most of the time you'll want the behaviour of <tt>page.has_text?('foo')</tt>, so go with that 
+unless you have a specific reason to use <tt>page.has_content?('foo')</tt> instead.
 
 Note that <tt>page.should have_no_xpath</tt> is preferred over
 <tt>page.should_not have_xpath</tt>. Read the section on asynchronous JavaScript
@@ -468,7 +475,7 @@ When issuing instructions to the DSL such as:
 
     click_link('foo')
     click_link('bar')
-    page.should have_content('baz')
+    page.should have_text('baz')
 
 If clicking on the *foo* link triggers an asynchronous process, such as
 an Ajax request, which, when complete will add the *bar* link to the page,
@@ -500,7 +507,7 @@ The two following statements are functionally equivalent:
 Capybara's waiting behaviour is quite advanced, and can deal with situations
 such as the following line of code:
 
-    find('#sidebar').find('h1').should have_content('Something')
+    find('#sidebar').find('h1').should have_text('Something')
 
 Even if JavaScript causes <tt>#sidebar</tt> to disappear off the page, Capybara
 will automatically reload it and any elements it contains. So if an AJAX

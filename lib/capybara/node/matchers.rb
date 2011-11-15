@@ -198,6 +198,50 @@ module Capybara
 
       ##
       #
+      # Checks if the page or current node has the given text content,
+      # ignoring any HTML tags and normalizing whitespace. 
+      #
+      # Unlike has_content this only matches displayable text and specifically
+      # excludes text contained within non-display nodes such as script or head tags.
+      #
+      # @param [String] content       The text to check for
+      # @return [Boolean]             Whether it exists
+      #
+      def has_text?(content)
+        normalized_content = normalize_whitespace(content)
+        
+        wait_until do
+          normalize_whitespace(text).include?(normalized_content) or
+          raise ExpectationNotMet
+        end
+      rescue Capybara::ExpectationNotMet
+        return false
+      end
+
+      ##
+      #
+      # Checks if the page or current node does not have the given text
+      # content, ignoring any HTML tags and normalizing whitespace.
+      #
+      # Unlike has_content this only matches displayable text and specifically
+      # excludes text contained within non-display nodes such as script or head tags.
+      #
+      # @param [String] content       The text to check for
+      # @return [Boolean]             Whether it exists
+      #
+      def has_no_text?(content)
+        normalized_content = normalize_whitespace(content)
+        
+        wait_until do
+          !normalize_whitespace(text).include?(normalized_content) or
+          raise ExpectationNotMet
+        end
+      rescue Capybara::ExpectationNotMet
+        return false
+      end
+
+      ##
+      #
       # Checks if the page or current node has a link with the given
       # text or id.
       #
@@ -411,6 +455,19 @@ module Capybara
       def split_options(options, key)
         options = options.dup
         [options, if options.has_key?(key) then {key => options.delete(key)} else {} end]
+      end
+
+      ##
+      #
+      # Normalizes whitespace space by stripping leading and trailing
+      # whitespace and replacing sequences of whitespace characters
+      # with a single space.
+      #
+      # @param [String] text     Text to normalize
+      # @return [String]         Normalized text
+      #
+      def normalize_whitespace(text)
+        text.gsub(/\s+/, ' ').strip
       end
     end
   end

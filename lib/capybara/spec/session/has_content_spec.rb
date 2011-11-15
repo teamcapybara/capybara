@@ -52,6 +52,22 @@ shared_examples_for "has_content" do
       @session.visit('/with-quotes')
       @session.should have_content(%q{"you can't do that."})
     end
+
+    it 'should be true if content is in the title tag in the head' do
+      @session.visit('/with_js')
+      @session.should have_content('with_js')
+    end
+
+    it 'should be true if content is inside a script tag in the body' do
+      @session.visit('/with_js')
+      @session.should have_content('a javascript comment')
+      @session.should have_content('aVar')
+    end
+
+    it "should be true if the given content is on the page but not visible" do
+      @session.visit('/with_html')
+      @session.should have_content('Inside element with hidden ancestor')
+    end
   end
 
   describe '#has_no_content?' do
@@ -101,6 +117,22 @@ shared_examples_for "has_content" do
     it 'should handle mixed single and double quotes in the content' do
       @session.visit('/with-quotes')
       @session.should_not have_no_content(%q{"you can't do that."})
+    end
+
+    it 'should be false if content is in the title tag in the head' do
+      @session.visit('/with_js')
+      @session.should_not have_no_content('with_js')
+    end
+
+    it 'should be false if content is inside a script tag in the body' do
+      @session.visit('/with_js')
+      @session.should_not have_no_content('a javascript comment')
+      @session.should_not have_no_content('aVar')
+    end
+
+    it "should be false if the given content is on the page but not visible" do
+      @session.visit('/with_html')
+      @session.should_not have_no_content('Inside element with hidden ancestor')
     end
   end
 end

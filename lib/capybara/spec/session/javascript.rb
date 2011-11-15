@@ -274,6 +274,21 @@ shared_examples_for "session with javascript support" do
       end
     end
 
+    describe '#has_text?' do
+      it "should wait for text to appear" do
+        @session.visit('/with_js')
+        @session.click_link('Click me')
+        @session.should have_text("Has been clicked")
+      end
+    end
+
+    describe '#has_no_text?' do
+      it "should wait for text to disappear" do
+        @session.visit('/with_js')
+        @session.click_link('Click me')
+        @session.should have_no_text("I changed it")
+      end
+    end
   end
 end
 
