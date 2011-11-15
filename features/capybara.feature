@@ -31,3 +31,12 @@ Feature: Capybara's cucumber integration
     When I visit the root page
     And I use a matcher that fails
     Then the failing exception should be nice
+
+  @debug
+  Scenario: debug tag
+    When I visit the root page
+    Then debug mode should be true
+
+  Scenario: default debug mode
+    When I visit the root page
+    Then debug mode should be false
