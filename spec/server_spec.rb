@@ -17,6 +17,16 @@ describe Capybara::Server do
     end.should_not raise_error
   end
 
+  it "should bind to the specified host" do
+    Capybara.server_host = '0.0.0.0'
+
+    app = proc { |env| [200, {}, "Hello Server!"]}
+    server = Capybara::Server.new(app).boot
+    server.host.should == '0.0.0.0'
+
+    Capybara.server_host = nil
+  end
+
   it "should use specified port" do
     Capybara.server_port = 22789
 

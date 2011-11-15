@@ -100,7 +100,6 @@ shared_examples_for "session" do
   it_should_behave_like "has_content"
   it_should_behave_like "has_text"
   it_should_behave_like "has_css"
-  it_should_behave_like "has_css"
   it_should_behave_like "has_selector"
   it_should_behave_like "has_xpath"
   it_should_behave_like "has_link"
