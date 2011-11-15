@@ -174,6 +174,16 @@ shared_examples_for "driver with header support" do
     @driver.visit('/with_simple_html')
     @driver.response_headers['Content-Type'].should =~ /text\/html/
   end
+
+  it "should set the user agent header" do
+    @driver.visit('/with_simple_html')
+    @driver.request.env['HTTP_USER_AGENT'].should_not be_nil
+  end
+
+  it "should set the http referrer header on subsequent visits" do
+    @driver.visit('/with_simple_html')
+    @driver.request.env['HTTP_REFERER'].should == "http://www.example.com/with_simple_html"
+  end
 end
 
 shared_examples_for "driver with status code support" do
