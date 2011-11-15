@@ -85,5 +85,10 @@ describe Capybara do
       string.find('//h1').should be_visible
       string.find('//input').should_not be_visible
     end
+
+    it "allows getting the parent of an element" do
+      string.find('//h1').parent[:id].should == 'content'
+    end
+
   end
 end

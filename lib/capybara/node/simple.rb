@@ -118,6 +118,16 @@ module Capybara
         native[:selected]
       end
 
+      ##
+      #
+      # The parent of the node
+      #
+      # @return [Capybara::Node::Simple]   The parent element
+      #
+      def parent
+        Capybara::Node::Simple.new(native.parent)
+      end
+
     protected
 
       def find_in_base(selector, xpath)
