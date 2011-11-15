@@ -37,7 +37,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
         !self[:maxlength].empty?
         # Browser behavior for maxlength="0" is inconsistent, so we stick with
         # Firefox, allowing no input
-        value = value[0...self[:maxlength].to_i]
+        value = value.to_s[0...self[:maxlength].to_i]
       end
       native['value'] = value.to_s
     elsif tag_name == "textarea"

@@ -13,6 +13,11 @@ shared_examples_for "select" do
       @session.find_field('Title').value.should == 'Miss'
     end
 
+    it "should return value of the selected option with integer value" do
+      @session.select(42, :from => 'Age')
+      @session.find_field('Age').value.should == '42'
+    end
+
     it "should return the value attribute rather than content if present" do
       @session.find_field('Locale').value.should == 'en'
     end
@@ -96,7 +101,7 @@ shared_examples_for "select" do
         @session.click_button('awesome')
         extract_results(@session)['languages'].should include('Ruby', 'Javascript')
       end
-      
+
       it "should remain selected if already selected" do
         @session.select("Ruby",       :from => 'Language')
         @session.select("Javascript", :from => 'Language')
@@ -104,7 +109,7 @@ shared_examples_for "select" do
         @session.click_button('awesome')
         extract_results(@session)['languages'].should include('Ruby', 'Javascript')
       end
-      
+
       it "should return value attribute rather than content if present" do
         @session.find_field('Underwear').value.should include('thermal')
       end
