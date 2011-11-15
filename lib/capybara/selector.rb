@@ -55,6 +55,14 @@ module Capybara
       @xpath
     end
 
+    # Same as xpath, but wrap in XPath.css().
+    def css(&block)
+      if block
+        @xpath = xpath { |*args| XPath.css(block.call(*args)) }
+      end
+      @xpath
+    end
+
     def match(&block)
       @match = block if block
       @match
@@ -80,7 +88,7 @@ Capybara.add_selector(:xpath) do
 end
 
 Capybara.add_selector(:css) do
-  xpath { |css| XPath.css(css) }
+  css { |css| css }
 end
 
 Capybara.add_selector(:id) do
