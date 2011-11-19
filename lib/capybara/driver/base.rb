@@ -48,7 +48,7 @@ class Capybara::Driver::Base
   end
 
   def wait?
-    false
+    true
   end
 
   def wait_until(*args)
