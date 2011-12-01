@@ -77,6 +77,8 @@ module Capybara
       def failure_message_for_should
         if failure_message
           failure_message.call(actual, self)
+        elsif(@options[:count])
+          "expected #{selector_name} to be returned #{@options[:count]} times"
         else
           "expected #{selector_name} to return something"
         end

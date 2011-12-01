@@ -32,7 +32,7 @@ describe Capybara::RSpecMatchers do
         it "fails if matched node count does not equal expected count" do
           expect do
             "<h1>Text</h1>".should have_css('h1', :count => 2)
-          end.to raise_error(/expected css "h1" to return something/)
+          end.to raise_error(/expected css "h1" to be returned 2 times/)
         end
       end
 
