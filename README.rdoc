@@ -157,9 +157,8 @@ You'll need to roll your own for earlier versions of RSpec.
 
 == Using Capybara with Test::Unit
 
-To use Capybara with Test::Unit, include the DSL (<tt>include Capybara</tt> up
-until version 0.4.x, <tt>include Capybara::DSL</tt> for newer versions) in
-whatever test class you are using.  For example, if your classes derive from
+To use Capybara with Test::Unit, include <tt>Capybara::DSL</tt> in whatever
+test class you are using. For example, if your classes derive from
 <tt>ActionDispatch::IntegrationTest</tt>, use
 
     class ActionDispatch::IntegrationTest
