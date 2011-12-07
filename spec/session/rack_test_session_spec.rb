@@ -52,6 +52,13 @@ describe Capybara::Session do
         end
       end
     end
+    
+    describe '#redirect_url' do
+      it "should report the external URL redirected to" do
+        @session.visit('/external_redirect')
+        @session.redirect_url.should == "http://www.google.com/"
+      end
+    end
 
     it_should_behave_like "session"
     it_should_behave_like "session without javascript support"

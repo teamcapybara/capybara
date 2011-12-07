@@ -6,7 +6,8 @@ require 'cgi'
 
 class Capybara::RackTest::Driver < Capybara::Driver::Base
   DEFAULT_OPTIONS = {
-    :respect_data_method => true
+    :respect_data_method        => true,
+    :follow_external_redirects  => false
   }
   attr_reader :app, :options
 

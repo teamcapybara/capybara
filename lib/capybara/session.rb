@@ -135,6 +135,14 @@ module Capybara
     def current_url
       driver.current_url
     end
+    
+    ##
+    #
+    # @return [String] Fully qualified URL of the external location being redirected to
+    #
+    def redirect_url
+      response_headers['Location']
+    end
 
     ##
     #
