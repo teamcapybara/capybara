@@ -74,6 +74,10 @@ class TestApp < Sinatra::Base
   get '/redirect_secure' do
     redirect "https://#{request.host}/host"
   end
+  
+  get '/external_redirect' do
+    redirect "http://www.google.com/"
+  end
 
   get '/slow_response' do
     sleep 2

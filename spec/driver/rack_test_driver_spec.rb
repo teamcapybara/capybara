@@ -31,6 +31,13 @@ describe Capybara::RackTest::Driver do
   it_should_behave_like "driver with cookies support"
   it_should_behave_like "driver with infinite redirect detection"
 
+  describe '#visit' do
+    it 'should not follow redirects to an external URL' do
+      @driver.visit('/external_redirect')
+      @driver.response_headers["Location"].should == 'http://www.google.com/'
+    end
+  end
+
   describe '#reset!' do
     it { @driver.visit('/foo'); lambda { @driver.reset! }.should change(@driver, :current_url).to('') }
 
@@ -84,6 +91,14 @@ describe Capybara::RackTest::Driver do
       @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       @driver.visit('/get_header_via_redirect')
       @driver.body.should include('foobar')
+    end
+  end
+
+  describe ':external_redirects option' do
+    it 'should allow external redirects to be followed' do
+      @driver = Capybara::RackTest::Driver.new(TestApp, :follow_external_redirects => true)
+      @driver.visit('/external_redirect')
+      @driver.current_url.should == 'http://www.google.com/'
     end
   end
 end

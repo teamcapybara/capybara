@@ -36,9 +36,11 @@ class Capybara::RackTest::Browser
 
   def follow_redirects!
     5.times do
-      process(:get, last_response["Location"]) if last_response.redirect?
+      if last_response.redirect? && follow_redirect?
+        process(:get, last_response["Location"])
+      end
     end
-    raise Capybara::InfiniteRedirectError, "redirected more than 5 times, check for infinite redirects." if last_response.redirect?
+    raise Capybara::InfiniteRedirectError, "redirected more than 5 times, check for infinite redirects." if last_response.redirect? && follow_redirect?
   end
 
   def process(method, path, attributes = {})
@@ -117,6 +119,11 @@ protected
     end
     env.merge!(options[:headers]) if options[:headers]
     env
+  end
+  
+  def follow_redirect?
+    redirect_host = URI.parse(last_response["Location"]).host
+    !redirect_host || (redirect_host == URI.parse(@current_host).host) || options[:follow_external_redirects]
   end
 
 end
