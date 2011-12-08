@@ -22,10 +22,11 @@ module Capybara
   protected
 
     def open_in_browser(path) # :nodoc
-      require "launchy"
+      require "launchy" # could raise LoadError
+      raise LoadError unless Launchy::Version::MAJOR >= 2
       Launchy.open(path)
     rescue LoadError
-      warn "Sorry, you need to install launchy (`gem install launchy`) and " <<
+      warn "Sorry, you need to install launchy >=2.0.0 (`gem install launchy`) and " <<
         "make sure it's available to open pages with `save_and_open_page`."
     end
 
