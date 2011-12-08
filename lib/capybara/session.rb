@@ -257,7 +257,7 @@ module Capybara
     ##
     #
     # Execute the given script, not returning a result. This is useful for scripts that return
-    # complex objects, such as jQuery statements. +execute_script+ should always be used over
+    # complex objects, such as jQuery statements. +execute_script+ should be used over
     # +evaluate_script+ whenever possible.
     #
     # @param [String] script   A string of JavaScript to execute

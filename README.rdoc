@@ -116,9 +116,9 @@ use the Capybara helpers <i>and</i> you have access to things like named route
 helpers in your tests (so you are able to say, for instance, <tt>visit
 edit_user_path(user)</tt>, instead of <tt>visit "/users/#{user.id}/edit"</tt>,
 if you prefer that sort of thing). A good place to put these specs is
-<tt>spec/requests</tt>, as <tt>rspec-rails</tt> will automatically tag them with
-<tt>:type => :request</tt>. (In fact, <tt>spec/integration</tt> and
-<tt>spec/acceptance</tt> will work just as well.)
+<tt>spec/requests</tt> (or synonymously <tt>spec/integration</tt>), as
+<tt>rspec-rails</tt> will automatically tag them with <tt>:type =>
+:request</tt>.
 
 <tt>rspec-rails</tt> will also automatically include Capybara in <tt>:controller</tt> and <tt>:mailer</tt> example groups.
 
@@ -529,8 +529,7 @@ pass. If you do not want this behaviour, you can set
 
 == Using the DSL in unsupported testing frameworks
 
-You can mix the DSL into any context by including +Capybara::DSL+:
-
+You can mix the DSL into any context by including <tt>Capybara::DSL</tt>:
 
     require 'capybara'
     require 'capybara/dsl'
