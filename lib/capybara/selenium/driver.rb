@@ -66,12 +66,12 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     end
   end
 
-  def execute_script(script)
-    browser.execute_script script
+  def execute_script(script, *args)
+    browser.execute_script(script, *args)
   end
 
-  def evaluate_script(script)
-    browser.execute_script "return #{script}"
+  def evaluate_script(script, *args)
+    browser.execute_script("return #{script}", *args)
   end
 
   def reset!

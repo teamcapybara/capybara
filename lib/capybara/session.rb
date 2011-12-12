@@ -261,9 +261,10 @@ module Capybara
     # +evaluate_script+ whenever possible.
     #
     # @param [String] script   A string of JavaScript to execute
+    # @param [Array]  *args    An optional array of parameters for the JavaScript string
     #
-    def execute_script(script)
-      driver.execute_script(script)
+    def execute_script(script, *args)
+      driver.execute_script(script, *args)
     end
 
     ##
@@ -273,10 +274,11 @@ module Capybara
     # be a better alternative.
     #
     # @param  [String] script   A string of JavaScript to evaluate
+    # @param  [Array]  *args    An optional array of parameters for the JavaScript string
     # @return [Object]          The result of the evaluated JavaScript (may be driver specific)
     #
-    def evaluate_script(script)
-      driver.evaluate_script(script)
+    def evaluate_script(script, *args)
+      driver.evaluate_script(script, *args)
     end
 
     ##
