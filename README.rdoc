@@ -292,7 +292,7 @@ You can install it with:
 
 And you can use it by:
 
-  Capybara.javascript_driver = :webkit
+  Capybara.default_driver = :webkit
 
 
 == The DSL
