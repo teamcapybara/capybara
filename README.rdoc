@@ -266,8 +266,7 @@ Note: Selenium does not support transactional fixtures; see the section
 There are three different drivers, maintained as external gems, that you can
 use to drive {HtmlUnit}[http://htmlunit.sourceforge.net/]:
 
-* {Akephalos}[https://github.com/bernerdschaefer/akephalos] might be the best
-  HtmlUnit driver right now.
+* {Akephalos}[https://github.com/bernerdschaefer/akephalos]
 
 * {Celerity}[https://github.com/sobrinho/capybara-celerity] only runs on JRuby,
   so you'll need to install the celerity gem under JRuby: <tt>jruby -S gem
