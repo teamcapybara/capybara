@@ -8,7 +8,7 @@ Capybara aims to simplify the process of integration testing Rack applications,
 such as Rails, Sinatra or Merb. Capybara simulates how a real user would
 interact with a web application. It is agnostic about the driver running your
 tests and currently comes with Rack::Test and Selenium support built in.
-HtmlUnit, WebKit and env.js are supported through external gems.
+WebKit is supported through external gem.
 
 A complete reference is available at
 {at rubydoc.info}[http://rubydoc.info/github/jnicklas/capybara/master].
@@ -78,10 +78,10 @@ scenario (or feature) with <tt>@javascript</tt>:
 
 You can change which driver Capybara uses for JavaScript:
 
-    Capybara.javascript_driver = :culerity
+    Capybara.javascript_driver = :webkit
 
-There are also explicit <tt>@selenium</tt>, <tt>@culerity</tt> and
-<tt>@rack_test</tt> tags set up for you.
+There are also explicit <tt>@selenium</tt> and <tt>@rack_test</tt>
+tags set up for you.
 
 == Using Capybara with RSpec
 
@@ -128,7 +128,7 @@ RSpec's metadata feature can be used to switch to a different driver. Use
 
     describe 'some stuff which requires js', :js => true do
       it 'will use the default js driver'
-      it 'will switch to one specific driver', :driver => :celerity
+      it 'will switch to one specific driver', :driver => :webkit
     end
 
 Finally, Capybara also comes with a built in DSL for creating descriptive acceptance tests:
@@ -217,7 +217,7 @@ tests that require a JavaScript-capable driver using <tt>:js => true</tt> or
 You can also change the driver temporarily (typically in the Before/setup and
 After/teardown blocks):
 
-    Capybara.current_driver = :culerity  # temporarily select different driver
+    Capybara.current_driver = :webkit  # temporarily select different driver
     ... tests ...
     Capybara.use_default_driver  # switch back to default driver
 
@@ -259,24 +259,6 @@ Capybara's automatic reloading should take care of any asynchronicity problems.
 See the section on Asynchronous JavaScript for details.
 
 Note: Selenium does not support transactional fixtures; see the section
-"Transactional Fixtures" below.
-
-=== HtmlUnit
-
-There are three different drivers, maintained as external gems, that you can
-use to drive {HtmlUnit}[http://htmlunit.sourceforge.net/]:
-
-* {Akephalos}[https://github.com/bernerdschaefer/akephalos]
-
-* {Celerity}[https://github.com/sobrinho/capybara-celerity] only runs on JRuby,
-  so you'll need to install the celerity gem under JRuby: <tt>jruby -S gem
-  install celerity</tt>
-
-* {Culerity}[https://github.com/sobrinho/capybara-culerity]: Install celerity
-  as noted above, and make sure that JRuby is in your path. Note that Culerity
-  does not seem to be working under Ruby 1.9 at the moment.
-
-Note: HtmlUnit does not support transactional fixtures; see the section
 "Transactional Fixtures" below.
 
 === Capybara-webkit
@@ -533,7 +515,7 @@ You can mix the DSL into any context by including <tt>Capybara::DSL</tt>:
     require 'capybara'
     require 'capybara/dsl'
 
-    Capybara.default_driver = :culerity
+    Capybara.default_driver = :webkit
 
     module MyModule
       include Capybara::DSL
@@ -578,7 +560,7 @@ manually.
 
     require 'capybara'
 
-    session = Capybara::Session.new(:culerity, my_rack_app)
+    session = Capybara::Session.new(:webkit, my_rack_app)
     session.within("//form[@id='session']") do
       session.fill_in 'Login', :with => 'user@example.com'
       session.fill_in 'Password', :with => 'password'
