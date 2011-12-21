@@ -106,21 +106,11 @@ You can now write your specs like so:
       end
     end
 
-Capybara is only included in example groups tagged with
-<tt>:type => :request</tt> (or <tt>:acceptance</tt> for compatibility with Steak).
+If you are using Rails, put your Capybara specs in <tt>spec/requests</tt> or
+<tt>spec/integration</tt>.
 
-If you are testing a Rails app and using the <tt>rspec-rails</tt> gem, these
-<tt>:request</tt> example groups may look familiar to you. That's because they
-are RSpec versions of Rails integration tests. So, in this case essentially what you are getting are Capybara-enhanced request specs. This means that you can
-use the Capybara helpers <i>and</i> you have access to things like named route
-helpers in your tests (so you are able to say, for instance, <tt>visit
-edit_user_path(user)</tt>, instead of <tt>visit "/users/#{user.id}/edit"</tt>,
-if you prefer that sort of thing). A good place to put these specs is
-<tt>spec/requests</tt> (or synonymously <tt>spec/integration</tt>), as
-<tt>rspec-rails</tt> will automatically tag them with <tt>:type =>
-:request</tt>.
-
-<tt>rspec-rails</tt> will also automatically include Capybara in <tt>:controller</tt> and <tt>:mailer</tt> example groups.
+If you are not using Rails, tag all the example groups in which you want to use
+Capybara with <tt>:type => :request</tt>.
 
 RSpec's metadata feature can be used to switch to a different driver. Use
 <tt>:js => true</tt> to switch to the javascript driver, or provide a
