@@ -149,14 +149,42 @@ module Capybara
       #
       #     page.attach_file(locator, '/path/to/file.png')
       #
-      # @param [String] locator       Which field to attach the file to
-      # @param [String] path          The path of the file that will be attached
+      # Optionally, create a temporary file and upload it's contents.
       #
-      def attach_file(locator, path)
+      #     page.attach_file(locator, :content => "This is the file content.")
+      #
+      # You can also specify some optional parameters to be passed to Tempfile
+      #
+      #     page.attach_file(locator, :extension => ".txt", :content => "This is the file content.")
+      #     page.attach_file(locator, :extension => ".txt", :content => "This is the file content.", :options => [:encoding => 'ascii-8bit'])
+      #
+      # @param [String] locator       Which field to attach the file to
+      # @param [String] params        The path of the file that will be attached
+      #
+      # @param [Hash] params
+      # @option params [String] :contents  The file contents
+      # @option params [String] :prefix    A prefix for the tempfile filename.
+      #                                    Useful if you need to verify a confirmation
+      #                                    message containing the filename.
+      # @option params [String] :extension The tempfile extension, used to determine mimetype.
+      # @option params [String] :options   An array of options to be passed directly to Tempfile.new,
+      #                                    which in turn will pass extra parameters to File.new/IO.new.
+      #
+      def attach_file(locator, params)
+        if params.class == Hash
+          file = Tempfile.new([params.fetch(:prefix, 'capybara-attach_file'), params.fetch(:extension, '')], params[:options])
+          file.open.write(params.fetch(:contents))
+          file.rewind
+          path = file.path
+        else
+          path = params
+        end
+
         raise Capybara::FileNotFound, "cannot attach file, #{path} does not exist" unless File.exist?(path.to_s)
         msg = "cannot attach file, no file field with id, name, or label '#{locator}' found"
         find(:xpath, XPath::HTML.file_field(locator), :message => msg).set(path)
       end
+
     end
   end
 end
