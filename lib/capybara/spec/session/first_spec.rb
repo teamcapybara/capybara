@@ -51,10 +51,8 @@ shared_examples_for "first" do
         @session.first(:css, "a#invisible").should be_nil
       end
 
-      it "should include invisible nodes if false given" do
-        Capybara.ignore_hidden_elements = true
+      it "should only find invisible nodes if false given" do
         @session.first(:css, "a#invisible", :visible => false).should_not be_nil
-        @session.first(:css, "a#invisible").should be_nil
       end
     end
 

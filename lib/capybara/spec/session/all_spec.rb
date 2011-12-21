@@ -58,8 +58,7 @@ shared_examples_for "all" do
       end
 
       it "should only find invisible nodes" do
-        Capybara.ignore_hidden_elements = true
-        @session.all("//a[@title='awesome title']", :visible => false).should have(2).elements
+        @session.all("//a[@title='awesome title']", :visible => false).should have(1).elements
       end
     end
 
