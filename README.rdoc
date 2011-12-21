@@ -21,20 +21,6 @@ If you are not using Rails, set Capybara.app to your rack app:
 
     Capybara.app = MyRackApp
 
-== Development
-
-If you found a _reproducible_ bug, open a {GitHub
-Issue}[http://github.com/jnicklas/capybara/issues] to submit a bug report.
-
-Even better, send a pull request! Make sure all changes are well tested,
-Capybara is a testing tool after all. Topic branches are good.
-
-To set up a development environment, simply do:
-
-    git submodule update --init
-    gem install bundler
-    bundle install
-
 == Using Capybara with Cucumber
 
 The <tt>cucumber-rails</tt> gem comes with Capybara support built-in. If you
@@ -641,6 +627,20 @@ additional info about how the underlying driver can be configured.
   and <tt>posts_url</tt>. If testing an absolute URL in an Action Mailer email,
   set <tt>default_url_options</tt> to match the Rails default of
   <tt>www.example.com</tt>.
+
+== Development
+
+If you found a _reproducible_ bug, open a {GitHub
+Issue}[http://github.com/jnicklas/capybara/issues] to submit a bug report.
+
+Even better, send a pull request! Make sure all changes are well tested,
+Capybara is a testing tool after all. Topic branches are good.
+
+To set up a development environment, simply do:
+
+    git submodule update --init
+    gem install bundler
+    bundle install
 
 == License:
 
