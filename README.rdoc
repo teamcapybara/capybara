@@ -1,41 +1,35 @@
 = Capybara
 
-* http://github.com/jnicklas/capybara
+Capybara helps you test Rails and Rack applications by simulating how a real
+user would interact with your app. It is agnostic about the driver running your
+tests and comes with Rack::Test and Selenium support built in. WebKit is
+supported through an external gem.
 
-== Description:
+<b>Need help?</b> Ask on the mailing list: http://groups.google.com/group/ruby-capybara
 
-Capybara aims to simplify the process of integration testing Rack applications,
-such as Rails, Sinatra or Merb. Capybara simulates how a real user would
-interact with a web application. It is agnostic about the driver running your
-tests and currently comes with Rack::Test and Selenium support built in.
-WebKit is supported through external gem.
+== Setup
 
-A complete reference is available at
-{at rubydoc.info}[http://rubydoc.info/github/jnicklas/capybara/master].
-
-== Install:
-
-Install as a gem:
+To install, type
 
     sudo gem install capybara
 
-On OSX you may have to install libffi, you can install it via MacPorts with:
+If you are using Rails, add this line to your test helper file:
 
-    sudo port install libffi
+    require 'capybara/rails'
 
-== Development:
+If you are not using Rails, set Capybara.app to your rack app:
 
-* Source hosted at {GitHub}[http://github.com/jnicklas/capybara].
-* Please direct questions, discussion or problems to the {mailing list}[http://groups.google.com/group/ruby-capybara].
-  Please do not open an issue on GitHub if you have a question.
-* If you found a reproducible bug, open a {GitHub Issue}[http://github.com/jnicklas/capybara/issues] to submit a bug report.
-* Please do not contact any of the maintainers directly, unless you have found a security related issue.
+    Capybara.app = MyRackApp
 
-Pull requests are very welcome (and even better than bug reports)! Make sure
-your patches are well tested, Capybara is a testing tool after all. Please
-create a topic branch for every separate change you make.
+== Development
 
-Capybara uses bundler in development. To set up a development environment, simply do:
+If you found a _reproducible_ bug, open a {GitHub
+Issue}[http://github.com/jnicklas/capybara/issues] to submit a bug report.
+
+Even better, send a pull request! Make sure all changes are well tested,
+Capybara is a testing tool after all. Topic branches are good.
+
+To set up a development environment, simply do:
 
     git submodule update --init
     gem install bundler
@@ -43,20 +37,13 @@ Capybara uses bundler in development. To set up a development environment, simpl
 
 == Using Capybara with Cucumber
 
-Capybara is built to work nicely with Cucumber. Support for Capybara is built into
-cucumber-rails. In your Rails app, just run:
-
-    rails generate cucumber:install --capybara
-
-And everything should be set up and ready to go.
-
-If you want to use Capybara with Cucumber outside Rails (for example with Merb
-or Sinatra), you'll need to require Capybara and set the Rack app manually:
+The <tt>cucumber-rails</tt> gem comes with Capybara support built-in. If you
+are not using Rails, manually load the <tt>capybara/cucumber</tt> module:
 
     require 'capybara/cucumber'
     Capybara.app = MyRackApp
 
-Now you can use it in your steps:
+You can use the Capybara DSL in your steps, like so:
 
     When /I sign in/ do
       within("#session") do
@@ -66,29 +53,29 @@ Now you can use it in your steps:
       click_link 'Sign in'
     end
 
-Capybara sets up some {tags}[https://github.com/cucumber/cucumber/wiki/tags]
-for you to use in Cucumber. Often you'll want to run only some scenarios with a
-driver that supports JavaScript, Capybara makes this easy: simply tag the
-scenario (or feature) with <tt>@javascript</tt>:
+You can switch to the <tt>Capybara.javascript_driver</tt> (<tt>:selenium</tt>
+by default) by tagging scenarios (or features) with <tt>@javascript</tt>:
 
     @javascript
     Scenario: do something Ajaxy
       When I click the Ajax link
       ...
 
-You can change which driver Capybara uses for JavaScript:
-
-    Capybara.javascript_driver = :webkit
-
 There are also explicit <tt>@selenium</tt> and <tt>@rack_test</tt>
 tags set up for you.
 
 == Using Capybara with RSpec
 
-If you prefer RSpec to using Cucumber, you can use the built in RSpec support
-by adding the following line (typically to your <tt>spec_helper.rb</tt> file):
+Load RSpec 2.x support by adding the following line (typically to your
+<tt>spec_helper.rb</tt> file):
 
     require 'capybara/rspec'
+
+If you are using Rails, put your Capybara specs in <tt>spec/requests</tt> or
+<tt>spec/integration</tt>.
+
+If you are not using Rails, tag all the example groups in which you want to use
+Capybara with <tt>:type => :request</tt>.
 
 You can now write your specs like so:
 
@@ -106,15 +93,9 @@ You can now write your specs like so:
       end
     end
 
-If you are using Rails, put your Capybara specs in <tt>spec/requests</tt> or
-<tt>spec/integration</tt>.
-
-If you are not using Rails, tag all the example groups in which you want to use
-Capybara with <tt>:type => :request</tt>.
-
-RSpec's metadata feature can be used to switch to a different driver. Use
-<tt>:js => true</tt> to switch to the javascript driver, or provide a
-<tt>:driver</tt> option to switch to one specific driver. For example:
+Use <tt>:js => true</tt> to switch to the <tt>Capybara.javascript_driver</tt>
+(<tt>:selenium</tt> by default), or provide a <tt>:driver</tt> option to switch
+to one specific driver. For example:
 
     describe 'some stuff which requires js', :js => true do
       it 'will use the default js driver'
@@ -137,13 +118,9 @@ Finally, Capybara also comes with a built in DSL for creating descriptive accept
       end
     end
 
-This is, in fact, just a shortcut for making a request spec, where
-<tt>feature</tt> is an alias for <tt>describe ..., :type => :request</tt>,
-<tt>background</tt> is an alias for <tt>before</tt>, and <tt>scenario</tt>
-is an alias for <tt>it</tt>/<tt>specify</tt>.
-
-Note that Capybara's built in RSpec support only works with RSpec 2.0 or later.
-You'll need to roll your own for earlier versions of RSpec.
+<tt>feature</tt> is in fact just an alias for <tt>describe ..., :type =>
+:request</tt>, <tt>background</tt> is an alias for <tt>before</tt>, and
+<tt>scenario</tt> for <tt>it</tt>.
 
 == Using Capybara with Test::Unit
 
@@ -169,20 +146,6 @@ The capybara_minitest_spec gem ({Github}[https://github.com/ordinaryzelig/capyba
 expectations for Capybara. For example:
 
     page.must_have_content('Important!')
-
-== Using Capybara with Ruby on Rails
-
-If you are using the Rails framework, add this line to automatically configure
-Capybara to test against your Rails application:
-
-    require 'capybara/rails'
-
-== Using Capybara with Rack
-
-If you're using Capybara with a non-Rails Rack application, set
-<tt>Capybara.app</tt> to your application class:
-
-    Capybara.app = MyRackApp
 
 == Drivers
 
@@ -265,14 +228,13 @@ And you can use it by:
 
   Capybara.javascript_driver = :webkit
 
-
 == The DSL
 
-Capybara's DSL (domain-specific language) is inspired by Webrat. While
-backwards compatibility is retained in a lot of cases, there are certain
-important differences.  Unlike in Webrat, all searches in Capybara are *case
-sensitive*. This is because Capybara heavily uses XPath, which doesn't support
-case insensitivity.
+A complete reference is available at
+{at rubydoc.info}[http://rubydoc.info/github/jnicklas/capybara/master].
+
+Note: All searches in Capybara are <b>case sensitive</b>. This is because
+Capybara heavily uses XPath, which doesn't support case insensitivity.
 
 === Navigating
 
