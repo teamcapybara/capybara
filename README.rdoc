@@ -282,7 +282,6 @@ certain elements, and working with and manipulating those elements.
     page.has_xpath?('//table/tr')
     page.has_css?('table tr.foo')
     page.has_content?('foo')
-    page.has_text?('foo')
 
 You can use these with RSpec's magic matchers:
 
