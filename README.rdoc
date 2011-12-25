@@ -5,7 +5,8 @@ user would interact with your app. It is agnostic about the driver running your
 tests and comes with Rack::Test and Selenium support built in. WebKit is
 supported through an external gem.
 
-<b>Need help?</b> Ask on the mailing list: http://groups.google.com/group/ruby-capybara
+<b>Need help?</b> Ask on the mailing list (please do not open an issue on
+GitHub): http://groups.google.com/group/ruby-capybara
 
 == Setup
 
