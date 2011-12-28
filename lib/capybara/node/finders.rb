@@ -99,12 +99,14 @@ module Capybara
       #     page.all('a', :text => 'Home')
       #     page.all('#menu li', :visible => true)
       #
-      # @param [:css, :xpath, String] kind_or_locator     Either the kind of selector or the selector itself
-      # @param [String] locator                           The selector
-      # @param [Hash{Symbol => Object}] options           Additional options
-      # @option options [String, Regexp] text             Only find elements which contain this text or match this regexp
-      # @option options [Boolean] visible                 Only find elements that are visible on the page
-      # @return [Array[Capybara::Element]]                       The found elements
+      # @overload all([kind], locator, options)
+      #   @param [:css, :xpath] kind                 The type of selector
+      #   @param [String] locator                    The selector
+      #   @option options [String, Regexp] text      Only find elements which contain this text or match this regexp
+      #   @option options [Boolean] visible          Only find elements that are visible on the page. Setting this to false
+      #                                              (the default, unless Capybara.ignore_hidden_elements = true), finds
+      #                                              invisible _and_ visible elements.
+      # @return [Array[Capybara::Element]]           The found elements
       #
       def all(*args)
         options = extract_normalized_options(args)
@@ -123,10 +125,11 @@ module Capybara
       # When only the first matching element is needed, this method can
       # be faster than all(*args).first.
       #
-      # @param [:css, :xpath, String] kind_or_locator     Either the kind of selector or the selector itself
-      # @param [String] locator                           The selector
-      # @param [Hash{Symbol => Object}] options           Additional options; see {all}
-      # @return [Capybara::Element]                       The found element
+      # @overload first([kind], locator, options)
+      #   @param [:css, :xpath] kind                 The type of selector
+      #   @param [String] locator                    The selector
+      #   @param [Hash] options                      Additional options; see {all}
+      # @return [Capybara::Element]                  The found element or nil
       #
       def first(*args)
         options = extract_normalized_options(args)
