@@ -70,7 +70,7 @@ module Capybara
 
     ##
     #
-    # The current Capybara::Session base on what is set as Capybara.app and Capybara.current_driver
+    # The current Capybara::Session based on what is set as Capybara.app and Capybara.current_driver
     #
     # @return [Capybara::Session]     The currently used session
     #
@@ -120,8 +120,7 @@ module Capybara
 
     ##
     #
-    # Shortcut to working in a different session. This is useful when Capybara is included
-    # in a class or module.
+    # Shortcut to working in a different session.
     #
     def using_session(name, &block)
       Capybara.using_session(name, &block)
@@ -129,8 +128,7 @@ module Capybara
 
     ##
     #
-    # Shortcut to working in a different session. This is useful when Capybara is included
-    # in a class or module.
+    # Shortcut to using a different wait time.
     #
     def using_wait_time(seconds, &block)
       Capybara.using_wait_time(seconds, &block)
@@ -138,8 +136,7 @@ module Capybara
 
     ##
     #
-    # Shortcut to accessing the current session. This is useful when Capybara is included in a
-    # class or module.
+    # Shortcut to accessing the current session.
     #
     #     class MyClass
     #       include Capybara::DSL
