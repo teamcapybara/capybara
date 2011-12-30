@@ -1,7 +1,6 @@
 require 'timeout'
 require 'nokogiri'
 require 'xpath'
-require 'capybara/dsl'
 
 module Capybara
   class CapybaraError < StandardError; end
@@ -21,6 +20,8 @@ module Capybara
     attr_accessor :server_host, :server_port, :server_boot_timeout
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements, :prefer_visible_elements
     attr_accessor :save_and_open_page_path, :automatic_reload
+    attr_writer :default_driver, :current_driver, :javascript_driver, :session_name
+    attr_accessor :app
 
     ##
     #
@@ -183,11 +184,121 @@ module Capybara
       end
     end
 
+    ##
+    #
+    # @return [Symbol]    The name of the driver to use by default
+    #
+    def default_driver
+      @default_driver || :rack_test
+    end
+
+    ##
+    #
+    # @return [Symbol]    The name of the driver currently in use
+    #
+    def current_driver
+      @current_driver || default_driver
+    end
+    alias_method :mode, :current_driver
+
+    ##
+    #
+    # @return [Symbol]    The name of the driver used when JavaScript is needed
+    #
+    def javascript_driver
+      @javascript_driver || :selenium
+    end
+
+    ##
+    #
+    # Use the default driver as the current driver
+    #
+    def use_default_driver
+      @current_driver = nil
+    end
+
+    ##
+    #
+    # Yield a block using a specific driver
+    #
+    def using_driver(driver)
+      previous_driver = Capybara.current_driver
+      Capybara.current_driver = driver
+      yield
+    ensure
+      @current_driver = previous_driver
+    end
+
+    ##
+    #
+    # Yield a block using a specific wait time
+    #
+    def using_wait_time(seconds)
+      previous_wait_time = Capybara.default_wait_time
+      Capybara.default_wait_time = seconds
+      yield
+    ensure
+      Capybara.default_wait_time = previous_wait_time
+    end
+
+    ##
+    #
+    # The current Capybara::Session based on what is set as Capybara.app and Capybara.current_driver
+    #
+    # @return [Capybara::Session]     The currently used session
+    #
+    def current_session
+      session_pool["#{current_driver}:#{session_name}:#{app.object_id}"] ||= Capybara::Session.new(current_driver, app)
+    end
+
+    ##
+    #
+    # Reset sessions, cleaning out the pool of sessions. This will remove any session information such
+    # as cookies.
+    #
+    def reset_sessions!
+      session_pool.each { |mode, session| session.reset! }
+    end
+    alias_method :reset!, :reset_sessions!
+
+    ##
+    #
+    # The current session name.
+    #
+    # @return [Symbol]    The name of the currently used session.
+    #
+    def session_name
+      @session_name ||= :default
+    end
+
+    ##
+    #
+    # Yield a block using a specific session name.
+    #
+    def using_session(name)
+      self.session_name = name
+      yield
+    ensure
+      self.session_name = :default
+    end
+
+    def included(base)
+      base.send(:include, Capybara::DSL)
+      warn "`include Capybara` is deprecated. Please use `include Capybara::DSL` instead."
+    end
+
     def deprecate(method, alternate_method)
       warn "DEPRECATED: ##{method} is deprecated, please use ##{alternate_method} instead"
     end
+
+  private
+
+    def session_pool
+      @session_pool ||= {}
+    end
   end
 
+  autoload :DSL,        'capybara/dsl'
   autoload :Server,     'capybara/server'
   autoload :Session,    'capybara/session'
   autoload :Selector,   'capybara/selector'
