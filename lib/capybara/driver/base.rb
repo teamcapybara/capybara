@@ -19,11 +19,11 @@ class Capybara::Driver::Base
     raise NotImplementedError
   end
 
-  def execute_script(script)
+  def execute_script(script, *args)
     raise Capybara::NotSupportedByDriverError
   end
 
-  def evaluate_script(script)
+  def evaluate_script(script, *args)
     raise Capybara::NotSupportedByDriverError
   end
 
