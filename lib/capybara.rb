@@ -1,6 +1,8 @@
 require 'timeout'
 require 'nokogiri'
 require 'xpath'
+require 'capybara/dsl'
+
 module Capybara
   class CapybaraError < StandardError; end
   class DriverNotFoundError < CapybaraError; end
