@@ -1,7 +1,5 @@
 module Capybara
   class Selector
-    PROPERTY_OPTION_KEYS = [:text, :visible, :with, :checked, :unchecked, :selected]
-
     attr_reader :name, :custom_filters
 
     class Normalized
