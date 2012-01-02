@@ -8,7 +8,7 @@ module Capybara
       def failure_message; selector.failure_message; end
       def name; selector.name; end
 
-      def filter(node)
+      def matches_filters?(node)
         return false if options[:text]      and not node.text.match(options[:text])
         return false if options[:visible]   and not node.visible?
         selector.custom_filters.each do |name, block|

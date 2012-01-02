@@ -114,7 +114,7 @@ module Capybara
         selector = Capybara::Selector.normalize(*args)
         selector.xpaths.
           map    { |path| find_in_base(selector, path) }.flatten.
-          select { |node| selector.filter(node) }
+          select { |node| selector.matches_filters?(node) }
       end
 
       ##
@@ -138,7 +138,7 @@ module Capybara
         selector = Capybara::Selector.normalize(*args)
         selector.xpaths.each do |path|
           find_in_base(selector, path).each do |node|
-            if selector.filter(node)
+            if selector.matches_filters?(node)
               found_elements << node
               return found_elements.last if not Capybara.prefer_visible_elements or node.visible?
             end
