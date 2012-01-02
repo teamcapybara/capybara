@@ -302,6 +302,7 @@ module Capybara
   autoload :Server,     'capybara/server'
   autoload :Session,    'capybara/session'
   autoload :Selector,   'capybara/selector'
+  autoload :Query,      'capybara/query'
   autoload :VERSION,    'capybara/version'
 
   module Node
