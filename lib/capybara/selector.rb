@@ -5,7 +5,13 @@ module Capybara
     class Normalized
       attr_accessor :selector, :locator, :options, :xpaths
 
-      def failure_message; selector.failure_message; end
+      def failure_message(node)
+        message = selector.failure_message.call(node, self) if selector.failure_message
+        message ||= options[:message]
+        message ||= "Unable to find #{name} #{locator.inspect}"
+        message
+      end
+
       def name; selector.name; end
 
       def matches_filters?(node)
@@ -31,9 +37,27 @@ module Capybara
         all.delete(name.to_sym)
       end
 
+      def extract_normalized_options(args)
+        options = if args.last.is_a?(Hash) then args.pop.dup else {} end
+
+        if text = options[:text]
+          options[:text] = Regexp.escape(text) unless text.kind_of?(Regexp)
+        end
+
+        if !options.has_key?(:visible)
+          options[:visible] = Capybara.ignore_hidden_elements
+        end
+
+        if selected = options[:selected]
+          options[:selected] = [selected].flatten
+        end
+
+        options
+      end
+
       def normalize(*args)
         normalized = Normalized.new
-        normalized.options = if args.last.is_a?(Hash) then args.pop else {} end
+        normalized.options = extract_normalized_options(args)
 
         if args[1]
           normalized.selector = all[args[0]]

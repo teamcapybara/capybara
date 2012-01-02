@@ -109,8 +109,6 @@ module Capybara
       # @return [Array[Capybara::Element]]           The found elements
       #
       def all(*args)
-        args, options = extract_normalized_options(args)
-
         selector = Capybara::Selector.normalize(*args)
         selector.xpaths.
           map    { |path| find_in_base(selector, path) }.flatten.
@@ -140,12 +138,8 @@ module Capybara
     protected
 
       def raise_find_error(*args)
-        args, options = extract_normalized_options(args)
         normalized    = Capybara::Selector.normalize(*args)
-        message       = options[:message] || "Unable to find #{normalized.name} #{normalized.locator.inspect}"
-        message       = normalized.failure_message.call(self, normalized) if normalized.failure_message
-
-        raise Capybara::ElementNotFound, message
+        raise Capybara::ElementNotFound, normalized.failure_message(self)
       end
 
       def find_in_base(selector, xpath)
@@ -154,23 +148,6 @@ module Capybara
         end
       end
 
-      def extract_normalized_options(args)
-        options = if args.last.is_a?(Hash) then args.pop.dup else {} end
-
-        if text = options[:text]
-          options[:text] = Regexp.escape(text) unless text.kind_of?(Regexp)
-        end
-
-        if !options.has_key?(:visible)
-          options[:visible] = Capybara.ignore_hidden_elements
-        end
-
-        if selected = options[:selected]
-          options[:selected] = [selected].flatten
-        end
-
-        [args.push(options), options]
-      end
 
     end
   end
