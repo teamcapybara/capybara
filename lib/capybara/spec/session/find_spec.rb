@@ -107,6 +107,25 @@ shared_examples_for "find" do
       end
     end
 
+    context "with custom selector with custom filter", :focus => true do
+      before do
+        Capybara.add_selector(:monkey) do
+          xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
+          filter(:name) { |node, name| node.text == name }
+        end
+      end
+
+      it "should find elements that match the filter" do
+        @session.find(:monkey, '1', :name => 'Monkey John').text.should == 'Monkey John'
+        @session.find(:monkey, '2', :name => 'Monkey Paul').text.should == 'Monkey Paul'
+      end
+
+      it "should not find elements that don't match the filter" do
+        expect { @session.find(:monkey, '2', :name => 'Monkey John') }.to raise_error(Capybara::ElementNotFound)
+        expect { @session.find(:monkey, '1', :name => 'Monkey Paul') }.to raise_error(Capybara::ElementNotFound)
+      end
+    end
+
     context "with css as default selector" do
       before { Capybara.default_selector = :css }
       it "should find the first element using the given locator" do

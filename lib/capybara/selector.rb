@@ -2,7 +2,7 @@ module Capybara
   class Selector
     PROPERTY_OPTION_KEYS = [:text, :visible, :with, :checked, :unchecked, :selected]
 
-    attr_reader :name
+    attr_reader :name, :custom_filters
 
     class Normalized
       attr_accessor :selector, :locator, :options, :xpath_options, :property_options, :xpaths
@@ -17,6 +17,9 @@ module Capybara
         return false if property_options[:checked]   and not node.checked?
         return false if property_options[:unchecked] and node.checked?
         return false if property_options[:selected]  and not has_selected_options?(node, property_options[:selected])
+        selector.custom_filters.each do |name, block|
+          return false if options.has_key?(name) and not block.call(node, options[name])
+        end
         true
       end
 
@@ -79,6 +82,7 @@ module Capybara
 
     def initialize(name, &block)
       @name = name
+      @custom_filters = {}
       instance_eval(&block)
     end
 
@@ -111,6 +115,10 @@ module Capybara
 
     def match?(locator)
       @match and @match.call(locator)
+    end
+
+    def filter(name, &block)
+      @custom_filters[name] = block
     end
   end
 end
