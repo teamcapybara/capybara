@@ -111,22 +111,69 @@ Finally, Capybara also comes with a built in DSL for creating descriptive accept
 
 == Using Capybara with Test::Unit
 
-To use Capybara with Test::Unit, include <tt>Capybara::DSL</tt> in whatever
-test class you are using. For example, if your classes derive from
-<tt>ActionDispatch::IntegrationTest</tt>, use
+* If you are using Rails, add <tt>database_cleaner</tt> to your Gemfile:
 
-    class ActionDispatch::IntegrationTest
-      include Capybara::DSL
+      group :test do
+        gem 'database_cleaner'
+      end
+
+  Then add the following code in your <tt>test_helper.rb</tt> file to make
+  Capybara available in all test cases deriving from
+  <tt>ActionDispatch::IntegrationTest</tt>:
+
+      # Transactional fixtures do not work with Selenium tests, because Capybara
+      # uses a separate server thread, which the transactions would be hidden
+      # from. We hence use DatabaseCleaner to truncate our test database.
+      DatabaseCleaner.strategy = :truncation
+
+      class ActionDispatch::IntegrationTest
+        # Make the Capybara DSL available in all integration tests
+        include Capybara::DSL
+
+        # Stop ActiveRecord from wrapping tests in transactions
+        self.use_transactional_fixtures = false
+
+        teardown do
+          # Truncate the database
+          DatabaseCleaner.clean
+          # Forget the (simulated) browser state
+          Capybara.reset_sessions!
+          # Revert Capybara.current_driver to Capybara.default_driver
+          Capybara.use_default_driver
+        end
+      end
+
+* If you are not using Rails, define a base class for your Capybara tests like
+  so:
+
+      class CapybaraTestCase < Test::Unit::TestCase
+        include Capybara::DSL
+
+        def teardown
+          Capybara.reset_sessions!
+          Capybara.use_default_driver
+        end
+      end
+
+  Remember to call <tt>super</tt> in any subclasses that override
+  <tt>teardown</tt>.
+
+To switch the driver, set <tt>Capybara.current_driver</tt>. For instance,
+
+    class BlogTest < ActionDispatch::IntegrationTest
+      setup do
+        Capybara.current_driver = Capybara.javascript_driver # :selenium by default
+      end
+
+      test 'shows blog posts'
+        # ... this test is run with Selenium ...
+      end
     end
-
-Test::Unit does not support selecting the driver through test metadata, but you
-can switch the driver for specific classes using the <tt>setup</tt> and
-<tt>teardown</tt> methods.  See the section "Selecting the Driver".
 
 == Using Capybara with MiniTest::Spec
 
-Include Capybara::DSL like in Test::Unit. Be sure to include it in the proper class,
-which could be something other than ActionDispatch::IntegrationTest.
+Set up your base class as with Test::Unit. (On Rails, the right base class
+could be something other than ActionDispatch::IntegrationTest.)
 
 The capybara_minitest_spec gem ({Github}[https://github.com/ordinaryzelig/capybara_minitest_spec],
 {rubygems.org}[https://rubygems.org/gems/capybara_minitest_spec]) provides MiniTest::Spec
