@@ -69,7 +69,7 @@ module Capybara
       def split_options(options)
         xpath_options = options.dup
         property_options = PROPERTY_OPTION_KEYS.inject({}) do |opts, key|
-          opts[key] = xpath_options.delete(key) if xpath_options[key]
+          opts[key] = xpath_options.delete(key) if xpath_options.has_key?(key)
           opts
         end
 

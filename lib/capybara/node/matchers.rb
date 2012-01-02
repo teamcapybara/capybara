@@ -427,7 +427,6 @@ module Capybara
       # and the text needs to match exactly.
       #
       # @param [String] locator                        The id or caption of a table
-      # @option options [Array[Array[String]]] :rows   A set of rows the table should contain
       # @return [Boolean]                              Whether it exist
       #
       def has_table?(locator, options={})
@@ -445,6 +444,8 @@ module Capybara
       def has_no_table?(locator, options={})
         has_no_selector?(:table, locator, options)
       end
+
+    private
 
       ##
       #
