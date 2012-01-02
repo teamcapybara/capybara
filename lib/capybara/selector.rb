@@ -5,18 +5,18 @@ module Capybara
     attr_reader :name, :custom_filters
 
     class Normalized
-      attr_accessor :selector, :locator, :options, :xpath_options, :property_options, :xpaths
+      attr_accessor :selector, :locator, :options, :xpaths
 
       def failure_message; selector.failure_message; end
       def name; selector.name; end
 
       def filter(node)
-        return false if property_options[:text]      and not node.text.match(property_options[:text])
-        return false if property_options[:visible]   and not node.visible?
-        return false if property_options[:with]      and not node.value == property_options[:with]
-        return false if property_options[:checked]   and not node.checked?
-        return false if property_options[:unchecked] and node.checked?
-        return false if property_options[:selected]  and not has_selected_options?(node, property_options[:selected])
+        return false if options[:text]      and not node.text.match(options[:text])
+        return false if options[:visible]   and not node.visible?
+        return false if options[:with]      and not node.value == options[:with]
+        return false if options[:checked]   and not node.checked?
+        return false if options[:unchecked] and node.checked?
+        return false if options[:selected]  and not has_selected_options?(node, options[:selected])
         selector.custom_filters.each do |name, block|
           return false if options.has_key?(name) and not block.call(node, options[name])
         end
@@ -47,7 +47,6 @@ module Capybara
       def normalize(*args)
         normalized = Normalized.new
         normalized.options = if args.last.is_a?(Hash) then args.pop else {} end
-        normalized.xpath_options, normalized.property_options = split_options(normalized.options)
 
         if args[1]
           normalized.selector = all[args[0]]
@@ -58,25 +57,13 @@ module Capybara
         end
         normalized.selector ||= all[Capybara.default_selector]
 
-        xpath = normalized.selector.call(normalized.locator, normalized.xpath_options)
+        xpath = normalized.selector.call(normalized.locator)
         if xpath.respond_to?(:to_xpaths)
           normalized.xpaths = xpath.to_xpaths
         else
           normalized.xpaths = [xpath.to_s].flatten
         end
         normalized
-      end
-
-      private
-
-      def split_options(options)
-        xpath_options = options.dup
-        property_options = PROPERTY_OPTION_KEYS.inject({}) do |opts, key|
-          opts[key] = xpath_options.delete(key) if xpath_options.has_key?(key)
-          opts
-        end
-
-        [ xpath_options, property_options ]
       end
     end
 
@@ -152,6 +139,7 @@ end
 Capybara.add_selector(:link) do
   xpath { |locator, xpath_options| XPath::HTML.link(locator, xpath_options) }
   failure_message { |node, selector| "no link with title, id or text '#{selector.locator}' found" }
+  filter(:href) { |node, href| node[:href] == href }
 end
 
 Capybara.add_selector(:button) do
@@ -177,6 +165,7 @@ end
 Capybara.add_selector(:select) do
   xpath { |locator, xpath_options| XPath::HTML.select(locator, xpath_options) }
   failure_message { |node, selector| "no select box with id, name, or label '#{selector.locator}' found" }
+  filter(:options) { |node, options| options.all? { |option| node.first(:option, option) } }
 end
 
 Capybara.add_selector(:option) do
