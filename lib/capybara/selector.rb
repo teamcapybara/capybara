@@ -5,6 +5,32 @@ module Capybara
     class Normalized
       attr_accessor :selector, :locator, :options, :xpaths
 
+      def initialize(*args)
+        @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
+        if text = options[:text]
+          @options[:text] = Regexp.escape(text) unless text.kind_of?(Regexp)
+        end
+        unless options.has_key?(:visible)
+          @options[:visible] = Capybara.ignore_hidden_elements
+        end
+
+        if args[1]
+          @selector = Selector.all[args[0]]
+          @locator = args[1]
+        else
+          @selector = Selector.all.values.find { |s| s.match?(args[0]) }
+          @locator = args[0]
+        end
+        @selector ||= Selector.all[Capybara.default_selector]
+
+        xpath = @selector.call(@locator)
+        if xpath.respond_to?(:to_xpaths)
+          @xpaths = xpath.to_xpaths
+        else
+          @xpaths = [xpath.to_s].flatten
+        end
+      end
+
       def failure_message(node)
         message = selector.failure_message.call(node, self) if selector.failure_message
         message ||= options[:message]
@@ -37,44 +63,8 @@ module Capybara
         all.delete(name.to_sym)
       end
 
-      def extract_normalized_options(args)
-        options = if args.last.is_a?(Hash) then args.pop.dup else {} end
-
-        if text = options[:text]
-          options[:text] = Regexp.escape(text) unless text.kind_of?(Regexp)
-        end
-
-        if !options.has_key?(:visible)
-          options[:visible] = Capybara.ignore_hidden_elements
-        end
-
-        if selected = options[:selected]
-          options[:selected] = [selected].flatten
-        end
-
-        options
-      end
-
       def normalize(*args)
-        normalized = Normalized.new
-        normalized.options = extract_normalized_options(args)
-
-        if args[1]
-          normalized.selector = all[args[0]]
-          normalized.locator = args[1]
-        else
-          normalized.selector = all.values.find { |s| s.match?(args[0]) }
-          normalized.locator = args[0]
-        end
-        normalized.selector ||= all[Capybara.default_selector]
-
-        xpath = normalized.selector.call(normalized.locator)
-        if xpath.respond_to?(:to_xpaths)
-          normalized.xpaths = xpath.to_xpaths
-        else
-          normalized.xpaths = [xpath.to_s].flatten
-        end
-        normalized
+        Normalized.new(*args)
       end
     end
 
@@ -186,7 +176,7 @@ Capybara.add_selector(:select) do
   filter(:options) { |node, options| options.all? { |option| node.first(:option, option) } }
   filter(:selected) do |node, selected|
     actual = node.all(:xpath, './/option').select { |option| option.selected? }.map { |option| option.text }
-    (selected - actual).empty?
+    ([selected].flatten - actual).empty?
   end
 end
 
