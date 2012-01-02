@@ -28,14 +28,24 @@ module Capybara
       end
     end
 
-    def failure_message(node)
+    def failure_message(type, node)
       message = selector.failure_message.call(node, self) if selector.failure_message
       message ||= options[:message]
-      message ||= "Unable to find #{name} #{locator.inspect}"
+      if type == :assert
+        message ||= "expected #{description} to return something"
+      else
+        message ||= "Unable to find #{description}"
+      end
       message
     end
 
     def name; selector.name; end
+
+    def description
+      @description = "#{name} #{locator.inspect}"
+      @description << " with text #{options[:text].inspect}" if options[:text]
+      @description
+    end
 
     def matches_filters?(node)
       return false if options[:text]      and not node.text.match(options[:text])

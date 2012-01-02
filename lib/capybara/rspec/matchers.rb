@@ -16,25 +16,15 @@ module Capybara
       end
 
       def failure_message_for_should
-        if normalized.failure_message
-          normalized.failure_message.call(@actual, normalized)
-        else
-          "expected #{selector_name} to return something"
-        end
+        query.failure_message(:assert, @actual)
       end
 
       def failure_message_for_should_not
-        "expected #{selector_name} not to return anything"
+        "expected #{query.description} not to return anything"
       end
 
       def description
-        "has #{selector_name}"
-      end
-
-      def selector_name
-        name = "#{normalized.name} #{normalized.locator.inspect}"
-        name << " with text #{normalized.options[:text].inspect}" if normalized.options[:text]
-        name
+        "has #{query.description}"
       end
 
       def wrap(actual)
@@ -45,8 +35,8 @@ module Capybara
         end
       end
 
-      def normalized
-        @normalized ||= Capybara::Selector.normalize(*@args)
+      def query
+        @query ||= Capybara::Query.new(*@args)
       end
     end
 
@@ -124,7 +114,7 @@ module Capybara
         %(expected there to be content #{matcher.locator.inspect} in #{page.text.inspect})
       end
     end
-    
+
     def have_text(text)
       HaveMatcher.new(:text, text.to_s) do |page, matcher|
         %(expected there to be text #{matcher.locator.inspect} in #{page.text.inspect})

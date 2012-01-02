@@ -139,7 +139,7 @@ module Capybara
 
       def raise_find_error(*args)
         query = Capybara::Query.new(*args)
-        raise Capybara::ElementNotFound, query.failure_message(self)
+        raise Capybara::ElementNotFound, query.failure_message(:find, self)
       end
 
       def find_in_base(query, xpath)
