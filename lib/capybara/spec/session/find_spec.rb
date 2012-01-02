@@ -107,7 +107,7 @@ shared_examples_for "find" do
       end
     end
 
-    context "with custom selector with custom filter", :focus => true do
+    context "with custom selector with custom filter" do
       before do
         Capybara.add_selector(:monkey) do
           xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }

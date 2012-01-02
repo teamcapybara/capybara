@@ -14,18 +14,10 @@ module Capybara
         return false if options[:with]      and not node.value == options[:with]
         return false if options[:checked]   and not node.checked?
         return false if options[:unchecked] and node.checked?
-        return false if options[:selected]  and not has_selected_options?(node, options[:selected])
         selector.custom_filters.each do |name, block|
           return false if options.has_key?(name) and not block.call(node, options[name])
         end
         true
-      end
-
-      private
-
-      def has_selected_options?(node, expected)
-        actual = node.all(:xpath, './/option').select { |option| option.selected? }.map { |option| option.text }
-        (expected - actual).empty?
       end
     end
 
@@ -164,6 +156,10 @@ Capybara.add_selector(:select) do
   xpath { |locator, xpath_options| XPath::HTML.select(locator, xpath_options) }
   failure_message { |node, selector| "no select box with id, name, or label '#{selector.locator}' found" }
   filter(:options) { |node, options| options.all? { |option| node.first(:option, option) } }
+  filter(:selected) do |node, selected|
+    actual = node.all(:xpath, './/option').select { |option| option.selected? }.map { |option| option.text }
+    (selected - actual).empty?
+  end
 end
 
 Capybara.add_selector(:option) do
