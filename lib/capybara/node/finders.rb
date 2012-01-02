@@ -122,9 +122,6 @@ module Capybara
       # Find the first element on the page matching the given selector
       # and options, or nil if no element matches.
       #
-      # When only the first matching element is needed, this method can
-      # be faster than all(*args).first.
-      #
       # @overload first([kind], locator, options)
       #   @param [:css, :xpath] kind                 The type of selector
       #   @param [String] locator                    The selector
@@ -132,19 +129,12 @@ module Capybara
       # @return [Capybara::Element]                  The found element or nil
       #
       def first(*args)
-        args, options  = extract_normalized_options(args)
-        found_elements = []
-
-        selector = Capybara::Selector.normalize(*args)
-        selector.xpaths.each do |path|
-          find_in_base(selector, path).each do |node|
-            if selector.matches_filters?(node)
-              found_elements << node
-              return found_elements.last if not Capybara.prefer_visible_elements or node.visible?
-            end
-          end
+        results = all(*args)
+        if Capybara.prefer_visible_elements
+          results.find(&:visible?) or results.first
+        else
+          results.first
         end
-        found_elements.first
       end
 
     protected
