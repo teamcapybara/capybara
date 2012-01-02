@@ -11,7 +11,6 @@ module Capybara
       def filter(node)
         return false if options[:text]      and not node.text.match(options[:text])
         return false if options[:visible]   and not node.visible?
-        return false if options[:with]      and not node.value == options[:with]
         selector.custom_filters.each do |name, block|
           return false if options.has_key?(name) and not block.call(node, options[name])
         end
@@ -115,6 +114,7 @@ Capybara.add_selector(:field) do
   xpath { |locator| XPath::HTML.field(locator) }
   filter(:checked) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked) { |node, value| (value ^ node.checked?) }
+  filter(:with) { |node, with| node.value == with }
 end
 
 Capybara.add_selector(:fieldset) do
