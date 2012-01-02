@@ -12,8 +12,6 @@ module Capybara
         return false if options[:text]      and not node.text.match(options[:text])
         return false if options[:visible]   and not node.visible?
         return false if options[:with]      and not node.value == options[:with]
-        return false if options[:checked]   and not node.checked?
-        return false if options[:unchecked] and node.checked?
         selector.custom_filters.each do |name, block|
           return false if options.has_key?(name) and not block.call(node, options[name])
         end
@@ -115,6 +113,8 @@ end
 
 Capybara.add_selector(:field) do
   xpath { |locator| XPath::HTML.field(locator) }
+  filter(:checked) { |node, value| not(value ^ node.checked?) }
+  filter(:unchecked) { |node, value| (value ^ node.checked?) }
 end
 
 Capybara.add_selector(:fieldset) do
@@ -145,11 +145,15 @@ end
 Capybara.add_selector(:radio_button) do
   xpath { |locator, xpath_options| XPath::HTML.radio_button(locator, xpath_options) }
   failure_message { |node, selector| "no radio button with id, name, or label '#{selector.locator}' found" }
+  filter(:checked) { |node, value| not(value ^ node.checked?) }
+  filter(:unchecked) { |node, value| (value ^ node.checked?) }
 end
 
 Capybara.add_selector(:checkbox) do
   xpath { |locator, xpath_options| XPath::HTML.checkbox(locator, xpath_options) }
   failure_message { |node, selector| "no checkbox with id, name, or label '#{selector.locator}' found" }
+  filter(:checked) { |node, value| not(value ^ node.checked?) }
+  filter(:unchecked) { |node, value| (value ^ node.checked?) }
 end
 
 Capybara.add_selector(:select) do
