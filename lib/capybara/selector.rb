@@ -90,11 +90,10 @@ Capybara.add_selector(:link_or_button) do
 end
 
 Capybara.add_selector(:link) do
-  xpath { |locator, xpath_options| XPath::HTML.link(locator, xpath_options) }
+  xpath { |locator| XPath::HTML.link(locator) }
   failure_message { |node, selector| "no link with title, id or text '#{selector.locator}' found" }
   filter(:href) do |node, href|
-    attribute = XPath.attr(:href).equals(href)
-    node.first(:xpath, "self::a[#{attribute}]")
+    node.first(:xpath, XPath.axis(:self)[XPath.attr(:href).equals(href)])
   end
 end
 
@@ -104,26 +103,26 @@ Capybara.add_selector(:button) do
 end
 
 Capybara.add_selector(:fillable_field) do
-  xpath { |locator, xpath_options| XPath::HTML.fillable_field(locator, xpath_options) }
+  xpath { |locator| XPath::HTML.fillable_field(locator) }
   failure_message { |node, selector| "no text field, text area or password field with id, name, or label '#{selector.locator}' found" }
 end
 
 Capybara.add_selector(:radio_button) do
-  xpath { |locator, xpath_options| XPath::HTML.radio_button(locator, xpath_options) }
+  xpath { |locator| XPath::HTML.radio_button(locator) }
   failure_message { |node, selector| "no radio button with id, name, or label '#{selector.locator}' found" }
   filter(:checked) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked) { |node, value| (value ^ node.checked?) }
 end
 
 Capybara.add_selector(:checkbox) do
-  xpath { |locator, xpath_options| XPath::HTML.checkbox(locator, xpath_options) }
+  xpath { |locator| XPath::HTML.checkbox(locator) }
   failure_message { |node, selector| "no checkbox with id, name, or label '#{selector.locator}' found" }
   filter(:checked) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked) { |node, value| (value ^ node.checked?) }
 end
 
 Capybara.add_selector(:select) do
-  xpath { |locator, xpath_options| XPath::HTML.select(locator, xpath_options) }
+  xpath { |locator| XPath::HTML.select(locator) }
   failure_message { |node, selector| "no select box with id, name, or label '#{selector.locator}' found" }
   filter(:options) { |node, options| options.all? { |option| node.first(:option, option) } }
   filter(:selected) do |node, selected|
@@ -142,7 +141,7 @@ Capybara.add_selector(:option) do
 end
 
 Capybara.add_selector(:file_field) do
-  xpath { |locator, xpath_options| XPath::HTML.file_field(locator, xpath_options) }
+  xpath { |locator| XPath::HTML.file_field(locator) }
   failure_message { |node, selector| "no file field with id, name, or label '#{selector.locator}' found" }
 end
 
@@ -151,5 +150,5 @@ Capybara.add_selector(:content) do
 end
 
 Capybara.add_selector(:table) do
-  xpath { |locator, xpath_options| XPath::HTML.table(locator, xpath_options) }
+  xpath { |locator| XPath::HTML.table(locator) }
 end
