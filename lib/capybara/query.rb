@@ -4,9 +4,6 @@ module Capybara
 
     def initialize(*args)
       @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
-      if text = options[:text]
-        @options[:text] = Regexp.escape(text) unless text.kind_of?(Regexp)
-      end
       unless options.has_key?(:visible)
         @options[:visible] = Capybara.ignore_hidden_elements
       end
@@ -52,8 +49,11 @@ module Capybara
     end
 
     def matches_filters?(node)
-      return false if options[:text]      and not node.text.match(options[:text])
-      return false if options[:visible]   and not node.visible?
+      if options[:text]
+        regexp = options[:text].is_a?(Regexp) ? options[:text] : Regexp.escape(options[:text])
+        return false if not node.text.match(regexp)
+      end
+      return false if options[:visible] and not node.visible?
       selector.custom_filters.each do |name, block|
         return false if options.has_key?(name) and not block.call(node, options[name])
       end

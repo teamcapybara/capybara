@@ -6,7 +6,7 @@ describe Capybara do
       Capybara.string <<-STRING
         <div id="page">
           <div id="content">
-            <h1 data="fantastic">Awesome</h1>
+            <h1 data="fantastic">Totally awesome</h1>
             <p>Yes it is</p>
           </div>
 
@@ -51,7 +51,7 @@ describe Capybara do
     end
 
     it "allows using matchers with text option" do
-      string.should have_css('h1', :text => 'Awesome')
+      string.should have_css('h1', :text => 'Totally awesome')
       string.should_not have_css('h1', :text => 'Not so awesome')
     end
 
@@ -61,7 +61,7 @@ describe Capybara do
     end
 
     it "allows finding elements and extracting text from them" do
-      string.find('//h1').text.should == 'Awesome'
+      string.find('//h1').text.should == 'Totally awesome'
     end
 
     it "allows finding elements and extracting attributes from them" do
