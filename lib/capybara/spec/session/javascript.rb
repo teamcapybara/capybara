@@ -78,10 +78,13 @@ shared_examples_for "session with javascript support" do
 
     describe '#find' do
       it "should allow triggering of custom JS events" do
-        pending "cannot figure out how to do this with selenium" if @session.mode == :selenium
-        @session.visit('/with_js')
-        @session.find(:css, '#with_focus_event').trigger(:focus)
-        @session.should have_css('#focus_event_triggered')
+        # Not supported by Selenium without resorting to JavaScript execution
+        # http://code.google.com/p/selenium/wiki/FrequentlyAskedQuestions#Q:_How_can_I_trigger_arbitrary_events_on_the_page?
+        unless @session.mode == :selenium
+          @session.visit('/with_js')
+          @session.find(:css, '#with_focus_event').trigger(:focus)
+          @session.should have_css('#focus_event_triggered')
+        end
       end
     end
 
@@ -95,10 +98,13 @@ shared_examples_for "session with javascript support" do
 
     describe '#source' do
       it "should return the original, unmodified source of the page" do
-        pending "cannot figure out how to do this with selenium" if @session.mode == :selenium
-        @session.visit('/with_js')
-        @session.source.should include('This is text')
-        @session.source.should_not include('I changed it')
+        # Not supported by Selenium. See for example
+        # http://stackoverflow.com/questions/6050805
+        unless @session.mode == :selenium
+          @session.visit('/with_js')
+          @session.source.should include('This is text')
+          @session.source.should_not include('I changed it')
+        end
       end
     end
 
