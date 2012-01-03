@@ -92,7 +92,10 @@ end
 Capybara.add_selector(:link) do
   xpath { |locator, xpath_options| XPath::HTML.link(locator, xpath_options) }
   failure_message { |node, selector| "no link with title, id or text '#{selector.locator}' found" }
-  filter(:href) { |node, href| node[:href] == href }
+  filter(:href) do |node, href|
+    attribute = XPath.attr(:href).equals(href)
+    node.first(:xpath, "self::a[#{attribute}]")
+  end
 end
 
 Capybara.add_selector(:button) do
