@@ -71,29 +71,4 @@ describe Capybara::Server do
     @server1a.port.should == @server1b.port
     @server2a.port.should == @server2b.port
   end
-
-  it "should wait specified time for the app to boot" do
-    pending 'this test does not work: https://groups.google.com/d/msg/ruby-capybara/QrSKTbjh5rY/egvcVFYiWZMJ'
-
-    @slow_app = proc { |env| sleep(1); [200, {}, "Hello Slow Server!"] }
-
-    Capybara.server_boot_timeout = 1.5
-    @server = Capybara::Server.new(@slow_app).boot
-
-    @res = Net::HTTP.start(@server.host, @server.port) { |http| http.get('/') }
-    @res.body.should include('Hello Slow Server')
-  end
-
-  it "should raise an exception if boot timeout is exceeded" do
-    pending 'this test does not work: https://groups.google.com/d/msg/ruby-capybara/QrSKTbjh5rY/egvcVFYiWZMJ'
-
-    @slow_app = proc { |env| sleep(1); [200, {}, "Hello Slow Server!"] }
-
-    Capybara.server_boot_timeout = 0.5
-    server = Capybara::Server.new(@slow_app)
-    server.stub(:exit).and_return(:timeout)
-    server.stub(:puts)
-    server.boot.should == :timeout
-  end
-
 end
