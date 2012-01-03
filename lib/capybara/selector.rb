@@ -46,8 +46,8 @@ module Capybara
       @failure_message
     end
 
-    def call(locator, xpath_options={})
-      @xpath.call(locator, xpath_options)
+    def call(locator)
+      @xpath.call(locator)
     end
 
     def match?(locator)
