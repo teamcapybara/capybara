@@ -245,8 +245,9 @@ option to <tt>true</tt>. This should normally not be necessary, since
 Capybara's automatic reloading should take care of any asynchronicity problems.
 See the section on Asynchronous JavaScript for details.
 
-Note: Selenium does not support transactional fixtures; see the section
-"Transactional Fixtures" below.
+Note: Drivers which run the server in a different thread may not work share the
+same transaction as your tests, causing data not to be shared between your test
+and test server, see "Transactions and database setup" below.
 
 === Capybara-webkit
 
@@ -346,7 +347,7 @@ You can use these with RSpec's magic matchers:
 Note that there are 2 matchers for checking content/text. <tt>page.has_text?('foo')</tt>
 will check only for text that is displayable, whereas <tt>page.has_content?('foo')</tt> will
 check for the content within any nodes (including the head section and within script tags).
-Most of the time you'll want the behaviour of <tt>page.has_text?('foo')</tt>, so go with that 
+Most of the time you'll want the behaviour of <tt>page.has_text?('foo')</tt>, so go with that
 unless you have a specific reason to use <tt>page.has_content?('foo')</tt> instead.
 
 Note that <tt>page.should have_no_xpath</tt> is preferred over
@@ -431,16 +432,36 @@ look at it:
 
     save_and_open_page
 
-== Transactional fixtures
+== Transactions and database setup
 
-Transactional fixtures only work in the default Rack::Test driver, but not for
-other drivers like Selenium.  Cucumber takes care of this automatically, but
-with Test::Unit or RSpec, you may have to use the
-{database_cleaner}[https://github.com/bmabey/database_cleaner] gem.  See {this
-explanation}[https://groups.google.com/d/msg/ruby-capybara/JI6JrirL9gM/R6YiXj4gi_UJ]
-(and code for {solution
-2}[http://opinionatedprogrammer.com/2011/02/capybara-and-selenium-with-rspec-and-rails-3/#comment-220]
-and {solution 3}[http://pastie.org/1745020]) for details.
+Some Capybara drivers need to run against an actual HTTP server. Capybara takes
+care of this and starts one for you in the same process as your test, but on
+another thread. Selenium is one of those drivers, whereas RackTest is not.
+
+If you are using an SQL database, it is common to run every test in a
+transaction, which is rolled back at the end of the test, rspec-rails does this
+by default out of the box for example. Since transactions are usually not
+shared across threads, this will cause data you have put into the database in
+your test code to be invisible to Capybara.
+
+Cucumber handles this by using truncation instead of transactions, i.e. they
+empty out the entire database after each test. You can get the same behaviour
+by using a gem such as {database_cleaner}[https://github.com/bmabey/database_cleaner].
+
+It is also possible to force your ORM to use the same transaction for all
+threads.  This may have thread safety implications and could cause strange
+failures, so use caution with this approach. It can be implemented in
+ActiveRecord through the following monkey patch:
+
+    class ActiveRecord::Base
+      mattr_accessor :shared_connection
+      @@shared_connection = nil
+
+      def self.connection
+        @@shared_connection || retrieve_connection
+      end
+    end
+    ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
 
 == Asynchronous JavaScript (Ajax and friends)
 
