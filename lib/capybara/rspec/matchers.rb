@@ -20,7 +20,7 @@ module Capybara
       end
 
       def failure_message_for_should_not
-        "expected #{query.description} not to return anything"
+        query.negative_failure_message(:assert, @actual)
       end
 
       def description

@@ -39,6 +39,10 @@ module Capybara
       message
     end
 
+    def negative_failure_message(type, node)
+      "expected #{description} not to return anything"
+    end
+
     def name; selector.name; end
 
     def description
