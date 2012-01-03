@@ -20,8 +20,12 @@ describe Capybara::Selenium::Driver do
       browser = Capybara::Selenium::Driver.new(TestApp).browser
 
       # Fork an unrelated child process. This should not run the code in the at_exit hook.
-      pid = fork { "child" }
-      Process.wait2(pid)[1].exitstatus.should == 0
+      begin
+        pid = fork { "child" }
+        Process.wait2(pid)[1].exitstatus.should == 0
+      rescue NotImplementedError
+        # Fork unsupported (e.g. on JRuby)
+      end
 
       browser.quit
     end
