@@ -177,30 +177,6 @@ module Capybara
       # Checks if the page or current node has the given text content,
       # ignoring any HTML tags and normalizing whitespace.
       #
-      # @param [String] content       The text to check for
-      # @return [Boolean]             Whether it exists
-      #
-      def has_content?(content)
-        has_selector?(:content, normalize_whitespace(content))
-      end
-
-      ##
-      #
-      # Checks if the page or current node does not have the given text
-      # content, ignoring any HTML tags and normalizing whitespace.
-      #
-      # @param [String] content       The text to check for
-      # @return [Boolean]             Whether it exists
-      #
-      def has_no_content?(content)
-        has_no_selector?(:content, normalize_whitespace(content))
-      end
-
-      ##
-      #
-      # Checks if the page or current node has the given text content,
-      # ignoring any HTML tags and normalizing whitespace.
-      #
       # Unlike has_content this only matches displayable text and specifically
       # excludes text contained within non-display nodes such as script or head tags.
       #
@@ -217,6 +193,7 @@ module Capybara
       rescue Capybara::ExpectationNotMet
         return false
       end
+      alias_method :has_content?, :has_text?
 
       ##
       #
@@ -239,6 +216,7 @@ module Capybara
       rescue Capybara::ExpectationNotMet
         return false
       end
+      alias_method :has_no_content?, :has_no_text?
 
       ##
       #
