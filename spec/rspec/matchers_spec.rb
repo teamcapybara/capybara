@@ -211,8 +211,8 @@ describe Capybara::RSpecMatchers do
 
         it "includes text in error message" do
           expect do
-            page.should have_selector("//h1", :text => 'wrong text')
-          end.to raise_error(%r(expected xpath "//h1" with text "wrong text" to return something))
+            page.should have_selector("//h1", :text => 'wrongtext')
+          end.to raise_error(%r(expected xpath "//h1" with text "wrongtext" to return something))
         end
 
         it "fails with the selector's failure_message if set" do
