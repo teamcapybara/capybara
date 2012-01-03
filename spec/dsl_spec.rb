@@ -1,9 +1,7 @@
 require 'spec_helper'
-
 require 'capybara/dsl'
 
 describe Capybara::DSL do
-
   before do
     Capybara.app = TestApp
   end
@@ -257,5 +255,4 @@ describe Capybara::DSL do
       foo.using_wait_time(6)
     end
   end
-
 end

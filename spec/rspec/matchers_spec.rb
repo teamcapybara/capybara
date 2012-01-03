@@ -2,11 +2,13 @@ require 'spec_helper'
 require 'capybara/dsl'
 require 'capybara/rspec/matchers'
 
-Capybara.app = TestApp
-
 describe Capybara::RSpecMatchers do
   include Capybara::DSL
   include Capybara::RSpecMatchers
+
+  before :each do
+    Capybara.app = TestApp
+  end
 
   describe "have_css matcher" do
     it "gives proper description" do
@@ -564,4 +566,3 @@ describe Capybara::RSpecMatchers do
     end
   end
 end
-

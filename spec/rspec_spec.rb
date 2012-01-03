@@ -1,8 +1,10 @@
 require 'spec_helper'
 
-Capybara.app = TestApp
-
 describe 'capybara/rspec', :type => :request do
+  before :each do
+    Capybara.app = TestApp
+  end
+
   it "should include Capybara in rspec" do
     visit('/foo')
     page.body.should include('Another World')
@@ -41,12 +43,14 @@ end
 
 describe 'capybara/rspec', :type => :other do
   it "should not include Capybara" do
+    Capybara.app = TestApp
     expect { visit('/') }.to raise_error(NoMethodError)
   end
 end
 
 feature "Feature DSL" do
   scenario "is pulled in" do
+    Capybara.app = TestApp
     visit('/foo')
     page.body.should include('Another World')
   end
