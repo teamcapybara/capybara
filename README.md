@@ -376,9 +376,11 @@ page.has_no_selector?(:content)
 
 page.has_xpath?('//table/tr')
 page.has_css?('table tr.foo')
-page.has_content?('foo')
-page.has_text?('foo')
+page.has_text?('foo')  # synonymously: page.has_content?('foo')
 ```
+
+**Note:** The negative forms like `has_no_selector?` are different from `not
+has_selector?`. Read the section on asynchronous JavaScript for an explanation.
 
 You can use these with RSpec's magic matchers:
 
@@ -390,17 +392,7 @@ page.should have_no_selector(:content)
 page.should have_xpath('//table/tr')
 page.should have_css('table tr.foo')
 page.should have_text('foo')
-page.should have_no_text('foo')
 ```
-
-**Note** that there are 2 matchers for checking content/text. `page.has_text?('foo')`
-will check only for text that is displayable, whereas `page.has_content?('foo')` will
-check for the content within any nodes (including the head section and within script tags).
-Most of the time you'll want the behaviour of `page.has_text?('foo')`, so go with that
-unless you have a specific reason to use `page.has_content?('foo')` instead.
-
-**Note**: `page.should have_no_xpath` is preferred over `page.should_not have_xpath`.
-Read the section on asynchronous JavaScript for an explanation.
 
 If all else fails, you can also use the
 <tt>[page.html](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#html-instance_method)</tt>
