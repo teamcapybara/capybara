@@ -1,15 +1,85 @@
 shared_examples_for "current_url" do  
-  describe '#current_url' do
-    it "should return the current url" do
-      @session.visit('/form')
-      @session.current_url.should =~ %r(http://[^/]+/form)
-    end
+  before :all do
+    @servers = 2.times.map { Capybara::Server.new(TestApp.clone).boot }
+    # sanity check
+    @servers[0].port.should_not == @servers[1].port
+    @servers.map { |s| s.port }.should_not include 80
   end
 
-  describe '#current_path' do
-    it 'should show the correct location' do
-      @session.visit('/foo')
-      @session.current_path.should == '/foo'
+  def bases
+    @servers.map { |s| "http://#{s.host}:#{s.port}" }
+  end
+
+  describe '#current_url, #current_path, #current_host' do
+    def should_be_on server_index, path="/host", scheme="http"
+      # Check that we are on /host on the given server
+      s = @servers[server_index]
+      @session.current_url.should == "#{scheme}://#{s.host}:#{s.port}#{path}"
+      @session.current_host.should == "#{scheme}://#{s.host}" # no port
+      @session.current_path.should == path
+      if path == '/host'
+        # Server should agree with us
+        @session.body.should include("Current host is #{scheme}://#{s.host}:#{s.port}")
+      end
+    end
+
+    def visit_host_links
+      @session.visit("#{bases[0]}/host_links?absolute_host=#{bases[1]}")
+    end
+
+    it "is affected by visiting a page directly" do
+      @session.visit("#{bases[0]}/host")
+      should_be_on 0
+    end
+
+    it "returns to the app host when visiting a relative url" do
+      Capybara.app_host = bases[1]
+      @session.visit("#{bases[0]}/host")
+      should_be_on 0
+      @session.visit('/host')
+      should_be_on 1
+      Capybara.app_host = nil
+    end
+
+    it "is affected by setting Capybara.app_host" do
+      Capybara.app_host = bases[0]
+      @session.visit("/host")
+      should_be_on 0
+      Capybara.app_host = bases[1]
+      @session.visit("/host")
+      should_be_on 1
+      Capybara.app_host = nil
+    end
+
+    it "is unaffected by following a relative link" do
+      pending 'reverts to port 80'
+      visit_host_links
+      @session.click_link("Relative Host")
+      should_be_on 0
+    end
+
+    it "is affected by following an absolute link" do
+      visit_host_links
+      @session.click_link("Absolute Host")
+      should_be_on 1
+    end
+
+    it "is unaffected by posting through a relative form" do
+      pending 'reverts to port 80'
+      visit_host_links
+      @session.click_button("Relative Host")
+      should_be_on 0
+    end
+
+    it "is affected by posting through an absolute form" do
+      visit_host_links
+      @session.click_button("Absolute Host")
+      should_be_on 1
+    end
+
+    it "is affected by following a redirect" do
+      @session.visit("#{bases[0]}/redirect")
+      should_be_on 0, "/landed"
     end
   end
 end

@@ -23,7 +23,7 @@ class TestApp < Sinatra::Base
   end
 
   get '/host' do
-    "Current host is #{request.scheme}://#{request.host}"
+    "Current host is #{request.scheme}://#{request.host}:#{request.port}"
   end
 
   get '/redirect/:times/times' do
@@ -72,7 +72,7 @@ class TestApp < Sinatra::Base
   end
 
   get '/redirect_secure' do
-    redirect "https://#{request.host}/host"
+    redirect "https://#{request.host}:#{request.port}/host"
   end
 
   get '/slow_response' do

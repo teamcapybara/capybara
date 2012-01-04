@@ -1,12 +1,12 @@
 <p>
   <a href="/host">Relative Host</a>
-  <a href="http://capybara2.elabs.se/host">Absolute Host</a>
+  <a href="<%= params[:absolute_host] %>/host">Absolute Host</a>
 </p>
 
 <form action="/host">
   <p><input type="submit" value="Relative Host"/></p>
 </form>
 
-<form action="http://capybara2.elabs.se/host">
+<form action="<%= params[:absolute_host] %>/host">
   <p><input type="submit" value="Absolute Host"/></p>
 </form>
