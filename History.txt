@@ -1,3 +1,23 @@
+# master
+
+### Fixed
+
+* Test suite now passes on Ruby 1.8 [Jo Liss]
+* #565: `require 'capybara/dsl'` is no longer necessary [Jo Liss]
+
+### Added
+
+* #481 XPath ... [Adam McCrea, Jonas Nicklas]
+* has_text, has_content ... [Jonas Nicklas]
+* Add Capybara.server_host option (default: 127.0.0.1) [David Balatero]
+
+### Changed
+
+* #394: #body now returns the unmodified source (like #source), not the current
+  state of the DOM (like #html) [Jonas Nicklas]
+* Element#text on RackTest now only returns visible text, as with Selenium
+  [Mark Dodwell]
+
 # Version 1.1.2
 
 Release date: 2011-11-15
