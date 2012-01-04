@@ -2,14 +2,11 @@ require 'spec_helper'
 require 'capybara/dsl'
 
 describe Capybara::DSL do
-  before do
-    Capybara.app = TestApp
-  end
-
   after do
     Capybara.session_name = nil
     Capybara.default_driver = nil
     Capybara.use_default_driver
+    Capybara.app = TestApp
   end
 
   describe '#default_driver' do

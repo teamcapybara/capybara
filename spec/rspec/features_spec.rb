@@ -7,7 +7,6 @@ end
 
 feature "Capybara's feature DSL" do
   background do
-    Capybara.app = TestApp
     @in_background = true
   end
 

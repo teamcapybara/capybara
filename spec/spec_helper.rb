@@ -22,6 +22,7 @@ require 'capybara/spec/session'
 
 alias :running :lambda
 
+Capybara.app = TestApp
 Capybara.default_wait_time = 0 # less timeout so tests run faster
 
 module TestSessions

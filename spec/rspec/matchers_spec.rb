@@ -6,10 +6,6 @@ describe Capybara::RSpecMatchers do
   include Capybara::DSL
   include Capybara::RSpecMatchers
 
-  before :each do
-    Capybara.app = TestApp
-  end
-
   describe "have_css matcher" do
     it "gives proper description" do
       have_css('h1').description.should == "has css \"h1\""
