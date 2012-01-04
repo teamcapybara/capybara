@@ -4,6 +4,7 @@
 
 * Test suite now passes on Ruby 1.8 [Jo Liss]
 * #565: `require 'capybara/dsl'` is no longer necessary [Jo Liss]
+* Rack::Test now respects ports when changing hosts [Jo Liss]
 
 ### Added
 

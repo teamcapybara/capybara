@@ -52,7 +52,6 @@ shared_examples_for "current_url" do
     end
 
     it "is unaffected by following a relative link" do
-      pending 'reverts to port 80'
       visit_host_links
       @session.click_link("Relative Host")
       should_be_on 0
@@ -65,7 +64,6 @@ shared_examples_for "current_url" do
     end
 
     it "is unaffected by posting through a relative form" do
-      pending 'reverts to port 80'
       visit_host_links
       @session.click_button("Relative Host")
       should_be_on 0
