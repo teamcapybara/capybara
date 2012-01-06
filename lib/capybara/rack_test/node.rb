@@ -1,16 +1,6 @@
 class Capybara::RackTest::Node < Capybara::Driver::Node
   def text
-    if !visible?
-      ''
-    elsif native.text?
-      native.text
-    elsif native.element?
-      native.children.map do |child|
-        Capybara::RackTest::Node.new(driver, child).text
-      end.join
-    else
-      ''
-    end
+    unnormalized_text.strip.gsub(/\s+/, ' ')
   end
 
   def [](name)
@@ -92,6 +82,22 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
 
   def find(locator)
     native.xpath(locator).map { |n| self.class.new(driver, n) }
+  end
+
+protected
+
+  def unnormalized_text
+    if !visible?
+      ''
+    elsif native.text?
+      native.text
+    elsif native.element?
+      native.children.map do |child|
+        Capybara::RackTest::Node.new(driver, child).unnormalized_text
+      end.join
+    else
+      ''
+    end
   end
 
 private
