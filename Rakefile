@@ -9,7 +9,7 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 end
 
 YARD::Rake::YardocTask.new do |t|
-  t.files   = ['lib/**/*.rb', 'README.rdoc']
+  t.files   = ['lib/**/*.rb']
   #t.options = ['--any', '--extra', '--opts'] # optional
 end
 

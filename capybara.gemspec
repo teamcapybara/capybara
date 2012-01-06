@@ -13,11 +13,9 @@ Gem::Specification.new do |s|
   s.email = ["jonas.nicklas@gmail.com"]
   s.description = "Capybara is an integration testing tool for rack based web applications. It simulates how a user would interact with a website"
 
-  s.files = Dir.glob("{lib,spec}/**/*") + %w(README.rdoc History.txt)
-  s.extra_rdoc_files = ["README.rdoc"]
+  s.files = Dir.glob("{lib,spec}/**/*") + %w(README.md History.txt License.txt)
 
   s.homepage = "http://github.com/jnicklas/capybara"
-  s.rdoc_options = ["--main", "README.rdoc"]
   s.require_paths = ["lib"]
   s.rubygems_version = "1.3.6"
   s.summary = "Capybara aims to simplify the process of integration testing Rack applications, such as Rails, Sinatra or Merb"
