@@ -24,7 +24,18 @@ module Capybara
       # @raise  [Capybara::ElementNotFound]   If the element can't be found before time expires
       #
       def find(*args)
-        wait_until { first(*args) or raise_find_error(*args) }
+        wait_until {
+          nodes = all(*args)
+          # Guard against duplicate nodes returned by all. (Need to write a
+          # spec to reproduce and fix this.)
+          nodes.uniq! { |n| n.native }
+          if nodes.length > 1 && Capybara.prefer_visible_elements
+            # If there are multiple matches, try pruning invisible nodes.
+            nodes.select! { |n| n.visible? }
+          end
+          raise_find_error(*args) unless nodes.length == 1
+          nodes[0]
+        }
       end
 
       ##
