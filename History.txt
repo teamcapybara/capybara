@@ -8,7 +8,7 @@
 
 ### Added
 
-* #481 XPath ... [Adam McCrea, Jonas Nicklas]
+* #481 XPath ... and new selectors ... [Adam McCrea, Jonas Nicklas]
 * has_text, has_content ... [Jonas Nicklas]
 * Add Capybara.server_host option (default: 127.0.0.1) [David Balatero]
 
