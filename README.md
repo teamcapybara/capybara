@@ -248,7 +248,7 @@ switch in the middle of a test.
 RackTest is Capybara's default driver. It is written in pure Ruby and does not
 have any support for executing JavaScript. Since the RackTest driver works
 directly against the Rack interface, it does not need any server to be started,
-it can work directly work against any Rack app. This means that if your
+it can work directly against any Rack app. This means that if your
 application is not a Rack application (Rails, Sinatra and most other Ruby
 frameworks are Rack applications) then you cannot use this driver. You cannot
 use the RackTest driver to test a remote application.
