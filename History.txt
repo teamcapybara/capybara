@@ -16,8 +16,8 @@
 
 * #394: #body now returns the unmodified source (like #source), not the current
   state of the DOM (like #html) [Jonas Nicklas]
-* Element#text on RackTest now only returns visible text, as with Selenium
-  [Mark Dodwell]
+* Element#text on RackTest now only returns visible text and normalizes
+  (strips) whitespace, as with Selenium [Mark Dodwell, Jo Liss]
 
 # Version 1.1.2
 
