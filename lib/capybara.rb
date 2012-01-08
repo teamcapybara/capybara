@@ -299,6 +299,8 @@ module Capybara
   end
 
   self.default_driver = nil
+  self.current_driver = nil
+
   autoload :DSL,        'capybara/dsl'
   autoload :Server,     'capybara/server'
   autoload :Session,    'capybara/session'
