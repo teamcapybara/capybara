@@ -394,14 +394,6 @@ page.should have_css('table tr.foo')
 page.should have_text('foo')
 ```
 
-If all else fails, you can also use the
-<tt>[page.html](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#html-instance_method)</tt>
-method to test against the raw HTML:
-
-```ruby
-page.html.should match /<span>.../i
-```
-
 ### Finding
 
 _Full reference: [Capybara::Node::Finders](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Finders)_
@@ -486,6 +478,16 @@ look at it:
 ```ruby
 save_and_open_page
 ```
+
+You can also retrieve the current state of the DOM as a string using
+<tt>[page.html](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#html-instance_method)</tt>.
+
+```ruby
+print page.html
+```
+
+This is mostly useful for debugging. You should avoid testing against the
+contents of `page.html` and use the more expressive finder methods instead.
 
 ## Transactions and database setup
 
