@@ -79,7 +79,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     if @browser
       begin
         @browser.manage.delete_all_cookies
-      rescue Selenium::WebDriver::Error::UnhandledError => e
+      rescue Selenium::WebDriver::Error::UnhandledError
         # delete_all_cookies fails when we've previously gone
         # to about:blank, so we rescue this error and do nothing
         # instead.
