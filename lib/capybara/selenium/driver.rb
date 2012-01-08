@@ -27,6 +27,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def initialize(app, options={})
     @app = app
+    @browser = nil
+    @exit_status = nil
     @options = DEFAULT_OPTIONS.merge(options)
     @rack_server = Capybara::Server.new(@app)
     @rack_server.boot if Capybara.run_server
@@ -79,7 +81,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     if @browser
       begin
         @browser.manage.delete_all_cookies
-      rescue Selenium::WebDriver::Error::UnhandledError => e
+      rescue Selenium::WebDriver::Error::UnhandledError
         # delete_all_cookies fails when we've previously gone
         # to about:blank, so we rescue this error and do nothing
         # instead.
