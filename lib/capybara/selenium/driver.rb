@@ -27,6 +27,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def initialize(app, options={})
     @app = app
+    @browser = nil
     @options = DEFAULT_OPTIONS.merge(options)
     @rack_server = Capybara::Server.new(@app)
     @rack_server.boot if Capybara.run_server
