@@ -20,6 +20,7 @@ module Capybara
     def initialize(name, &block)
       @name = name
       @custom_filters = {}
+      @match = nil
       instance_eval(&block)
     end
 
