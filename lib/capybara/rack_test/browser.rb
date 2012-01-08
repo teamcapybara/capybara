@@ -114,12 +114,17 @@ protected
   def env
     env = {}
     begin
-      env["HTTP_REFERER"] = last_request.url
+      if last_response.redirect?
+        env["HTTP_REFERER"] = last_request.env["HTTP_REFERER"]
+      else
+        env["HTTP_REFERER"] = last_request.url
+      end
     rescue Rack::Test::Error
       # no request yet
     end
     env.merge!(options[:headers]) if options[:headers]
     env
   end
+
 
 end

@@ -86,4 +86,14 @@ describe Capybara::RackTest::Driver do
       @driver.body.should include('foobar')
     end
   end
+
+  describe "keeping referer on redirect" do
+    it "should not update HTTP_REFERER on redirects" do
+      @driver.visit('/referer_base')
+      @driver.visit('/redirect_and_keep_referer')
+      @driver.body.should include('Check referer')
+      @driver.request.referer.should =~ /referer_base/
+    end
+
+  end
 end
