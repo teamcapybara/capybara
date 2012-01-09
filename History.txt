@@ -19,6 +19,11 @@
 * Element#text on RackTest now only returns visible text and normalizes
   (strips) whitespace, as with Selenium [Mark Dodwell, Jo Liss]
 
+### Removed
+
+* #589: Capybara.server_boot_timeout has been removed in favor of a higher
+  (60-second) hard-coded timeout [Jo Liss]
+
 # Version 1.1.2
 
 Release date: 2011-11-15
