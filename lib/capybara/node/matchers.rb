@@ -1,6 +1,7 @@
 module Capybara
   module Node
     module Matchers
+      ValidKeys = [:between, :count, :maximum, :minimum]
 
       ##
       #
@@ -34,6 +35,7 @@ module Capybara
       #
       def has_selector?(*args)
         options = if args.last.is_a?(Hash) then args.last else {} end
+        assert_valid_options(options)
         wait_until do
           results = all(*args)
 
@@ -66,6 +68,7 @@ module Capybara
       #
       def has_no_selector?(*args)
         options = if args.last.is_a?(Hash) then args.last else {} end
+        assert_valid_options(options)
         wait_until do
           results = all(*args)
 
@@ -437,6 +440,19 @@ module Capybara
       def normalize_whitespace(text)
         text.gsub(/\s+/, ' ').strip
       end
+
+      ##
+      #
+      # Raise ArgumentError unless all keys are supported by
+      # has_selector?, Capybara::Selector, or Capybara::Query
+      #
+      def assert_valid_options(options)
+        valid_keys = ValidKeys + Capybara::Query::ValidKeys + Capybara::Selector::ValidKeys
+        options.keys.each do |key|
+          raise(ArgumentError, "Unknown key: #{key}") unless valid_keys.include?(key)
+        end
+      end
+
     end
   end
 end

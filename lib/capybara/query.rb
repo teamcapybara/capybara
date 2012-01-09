@@ -1,5 +1,6 @@
 module Capybara
   class Query
+    ValidKeys = [:message, :text, :visible]
     attr_accessor :selector, :locator, :options, :xpaths
 
     def initialize(*args)

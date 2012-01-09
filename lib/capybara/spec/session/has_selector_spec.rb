@@ -61,6 +61,14 @@ shared_examples_for "has_selector" do
         @session.should_not have_selector("//p//a", :text => /Red$/)
       end
     end
+
+    context "with invalid input" do
+      it "should raise ArgumentError when using invalid options" do
+        lambda{
+          @session.should have_selector("//p//a", :contents=>"Redirect")
+        }.should raise_error(ArgumentError, "Unknown key: contents")
+      end
+    end
   end
 
   describe '#has_no_selector?' do
@@ -123,6 +131,14 @@ shared_examples_for "has_selector" do
       it "should discard all matches where the given regexp is matched" do
         @session.should_not have_no_selector("//p//a", :text => /re[dab]i/i, :count => 1)
         @session.should have_no_selector("//p//a", :text => /Red$/)
+      end
+    end
+
+    context "with invalid input" do
+      it "should raise ArgumentError when using invalid options" do
+        lambda{
+          @session.should have_no_selector("//p//a", :contents=>"Redirect")
+        }.should raise_error(ArgumentError, "Unknown key: contents")
       end
     end
   end
