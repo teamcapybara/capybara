@@ -24,6 +24,18 @@ class TestApp < Sinatra::Base
     redirect '/landed'
   end
 
+  get '/referer_base' do
+    'Referer base: <a href="redirect_and_keep_referer">Link that will redirect</a>'
+  end
+
+  get '/redirect_and_keep_referer' do
+    redirect '/get_referer'
+  end
+
+  get '/get_referer' do
+    'Got referer: ' + request.referer
+  end
+
   get '/host' do
     "Current host is #{request.scheme}://#{request.host}:#{request.port}"
   end
