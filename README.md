@@ -391,7 +391,7 @@ page.should have_no_selector(:content)
 
 page.should have_xpath('//table/tr')
 page.should have_css('table tr.foo')
-page.should have_context('foo')
+page.should have_content('foo')
 ```
 
 ### Finding
