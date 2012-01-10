@@ -30,6 +30,7 @@ describe Capybara::RackTest::Driver do
   it_should_behave_like "driver with status code support"
   it_should_behave_like "driver with cookies support"
   it_should_behave_like "driver with infinite redirect detection"
+  it_should_behave_like "driver with referer support"
 
   describe '#reset!' do
     it { @driver.visit('/foo'); lambda { @driver.reset! }.should change(@driver, :current_url).to('') }
@@ -85,15 +86,5 @@ describe Capybara::RackTest::Driver do
       @driver.visit('/get_header_via_redirect')
       @driver.body.should include('foobar')
     end
-  end
-
-  describe "keeping referer on redirect" do
-    it "should not update HTTP_REFERER on redirects" do
-      @driver.visit('/referer_base')
-      @driver.visit('/redirect_and_keep_referer')
-      @driver.body.should include('Check referer')
-      @driver.request.referer.should =~ /referer_base/
-    end
-
   end
 end

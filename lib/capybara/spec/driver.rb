@@ -295,3 +295,11 @@ shared_examples_for "driver with infinite redirect detection" do
     end.should raise_error(Capybara::InfiniteRedirectError)
   end
 end
+
+shared_examples_for "driver with referer support" do
+  it "should preserve the original referer URL when following a redirect" do
+    @driver.visit('/referer_base')
+    @driver.find('//a[@href="redirect_and_keep_referer"]').first.click
+    @driver.body.should include('referer_base')
+  end
+end
