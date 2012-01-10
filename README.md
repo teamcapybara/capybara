@@ -376,7 +376,7 @@ page.has_no_selector?(:content)
 
 page.has_xpath?('//table/tr')
 page.has_css?('table tr.foo')
-page.has_text?('foo')  # synonymously: page.has_content?('foo')
+page.has_content?('foo')
 ```
 
 **Note:** The negative forms like `has_no_selector?` are different from `not
@@ -391,7 +391,7 @@ page.should have_no_selector(:content)
 
 page.should have_xpath('//table/tr')
 page.should have_css('table tr.foo')
-page.should have_text('foo')
+page.should have_context('foo')
 ```
 
 ### Finding
@@ -534,7 +534,7 @@ When issuing instructions to the DSL such as:
 ```ruby
 click_link('foo')
 click_link('bar')
-page.should have_text('baz')
+page.should have_content('baz')
 ```
 
 If clicking on the *foo* link triggers an asynchronous process, such as
@@ -574,7 +574,7 @@ Capybara's waiting behaviour is quite advanced, and can deal with situations
 such as the following line of code:
 
 ```ruby
-find('#sidebar').find('h1').should have_text('Something')
+find('#sidebar').find('h1').should have_content('Something')
 ```
 
 Even if JavaScript causes `#sidebar` to disappear off the page, Capybara
