@@ -25,15 +25,15 @@ class TestApp < Sinatra::Base
   end
 
   get '/referer_base' do
-    'Referer base: <a href="redirect_and_keep_referer">Link that will redirect</a>'
+    '<a href="/get_referer">direct link</a>; <a href="/redirect_to_get_referer">link via redirect</a>'
   end
 
-  get '/redirect_and_keep_referer' do
+  get '/redirect_to_get_referer' do
     redirect '/get_referer'
   end
 
   get '/get_referer' do
-    'Got referer: ' + request.referer
+    request.referer.nil? ? "No referer" : "Got referer: #{request.referer}"
   end
 
   get '/host' do

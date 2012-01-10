@@ -297,9 +297,33 @@ shared_examples_for "driver with infinite redirect detection" do
 end
 
 shared_examples_for "driver with referer support" do
+  before :each do
+    @driver.reset!
+  end
+
+  it "should send no referer when visiting a page" do
+    @driver.visit '/get_referer'
+    @driver.body.should include 'No referer'
+  end
+
+  it "should send no referer when visiting a second page" do
+    if @driver.is_a? Capybara::RackTest::Driver
+      pending 'Rack::Test sends referer on subsequent visit'
+    end
+    @driver.visit '/get_referer'
+    @driver.visit '/get_referer'
+    @driver.body.should include 'No referer'
+  end
+
+  it "should send a referer when following a link" do
+    @driver.visit '/referer_base'
+    @driver.find('//a[@href="/get_referer"]').first.click
+    @driver.body.should include '/referer_base'
+  end
+
   it "should preserve the original referer URL when following a redirect" do
     @driver.visit('/referer_base')
-    @driver.find('//a[@href="redirect_and_keep_referer"]').first.click
-    @driver.body.should include('referer_base')
+    @driver.find('//a[@href="/redirect_to_get_referer"]').first.click
+    @driver.body.should include('/referer_base')
   end
 end
