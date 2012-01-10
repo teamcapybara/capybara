@@ -6,6 +6,8 @@ class TestApp < Sinatra::Base
   set :root, File.dirname(__FILE__)
   set :static, true
 
+  # Also check lib/capybara/spec/views/*.erb for pages not listed here
+
   get '/' do
     'Hello world! <a href="with_html">Relative</a>'
   end
