@@ -5,10 +5,12 @@
 * Test suite now passes on Ruby 1.8 [Jo Liss]
 * #565: `require 'capybara/dsl'` is no longer necessary [Jo Liss]
 * Rack::Test now respects ports when changing hosts [Jo Liss]
+* #603: Rack::Test now preserves the original referer URL when following a
+  redirect [Rob van Dijk]
 
 ### Added
 
-* #481 XPath ... and new selectors ... [Adam McCrea, Jonas Nicklas]
+* #481: XPath ... and new selectors ... [Adam McCrea, Jonas Nicklas]
 * has_text, has_content ... [Jonas Nicklas]
 * Add Capybara.server_host option (default: 127.0.0.1) [David Balatero]
 
