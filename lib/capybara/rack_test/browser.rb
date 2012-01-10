@@ -46,10 +46,8 @@ class Capybara::RackTest::Browser
     method.downcase! unless method.is_a? Symbol
 
     if new_uri.host
-      @current_host = new_uri.scheme + '://' + new_uri.host
-      if new_uri.port != 80
-        @current_host << ":#{new_uri.port}"
-      end
+      @current_host = "#{new_uri.scheme}://#{new_uri.host}"
+      @current_host << ":#{new_uri.port}" if new_uri.port != new_uri.default_port
     end
 
     if new_uri.relative?
