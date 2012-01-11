@@ -143,6 +143,23 @@ describe Capybara do
         it "should rewrite relative paths to absolute local paths" do
           test_with_directories([ 'javascripts', 'images' ])
         end
+
+        context "asset_server contains a URL and path" do
+          it "should rewrite relative paths to FQ URLs and/or absolute local paths" do
+
+            mock_asset_root_with(['javascripts', 'images'])
+            asset_server = "http://assets.com/"
+            Capybara.should_receive(:asset_servers).and_return(asset_server => ['javascripts'])
+            @temp_file.should_receive(:write) do |html|
+              html.should_not =~ %r{["']/?javascripts}
+              html.should_not =~ %r{["']/?images}
+              html.should_not =~ %r{#{@asset_root_dir}/javascripts}
+                html.should =~ %r{#{asset_server}/javascripts}
+                html.should =~ %r{#{@asset_root_dir}/images}
+            end
+            Capybara.save_page @html, 'page.html'
+          end
+        end
       end
 
       context "asset_root path contains no directories" do
