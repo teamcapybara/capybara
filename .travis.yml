@@ -5,8 +5,7 @@ rvm:
  - ruby-head
  - ree
  - jruby
- - rbx
- - rbx-2.0
+ - rbx-18mode
 before_script:
  - 'sh -e /etc/init.d/xvfb start'
 before_install:
