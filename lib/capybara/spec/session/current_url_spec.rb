@@ -14,7 +14,7 @@ shared_examples_for "current_url" do
     def should_be_on server_index, path="/host", scheme="http"
       # Check that we are on /host on the given server
       s = @servers[server_index]
-      @session.current_url.should == "#{scheme}://#{s.host}:#{s.port}#{path}"
+      @session.current_url.chomp('?').should == "#{scheme}://#{s.host}:#{s.port}#{path}"
       @session.current_host.should == "#{scheme}://#{s.host}" # no port
       @session.current_path.should == path
       if path == '/host'

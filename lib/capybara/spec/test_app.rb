@@ -40,10 +40,6 @@ class TestApp < Sinatra::Base
     "Current host is #{request.scheme}://#{request.host}:#{request.port}"
   end
 
-  post '/host' do
-    "Current host is #{request.scheme}://#{request.host}:#{request.port}"
-  end
-
   get '/redirect/:times/times' do
     times = params[:times].to_i
     if times.zero?
