@@ -88,22 +88,24 @@ shared_examples_for "session with javascript support" do
       end
     end
 
-    describe '#body' do
+    describe '#html' do
       it "should return the current state of the page" do
         @session.visit('/with_js')
-        @session.body.should include('I changed it')
-        @session.body.should_not include('This is text')
+        @session.html.should include('I changed it')
+        @session.html.should_not include('This is text')
       end
     end
 
-    describe '#source' do
-      it "should return the original, unmodified source of the page" do
-        # Not supported by Selenium. See for example
-        # http://stackoverflow.com/questions/6050805
-        unless @session.mode == :selenium
-          @session.visit('/with_js')
-          @session.source.should include('This is text')
-          @session.source.should_not include('I changed it')
+    [:body, :source].each do |method|
+      describe "##{method}" do
+        it "should return the original, unmodified source of the page" do
+          # Not supported by Selenium. See for example
+          # http://stackoverflow.com/questions/6050805
+          unless @session.mode == :selenium
+            @session.visit('/with_js')
+            @session.send(method).should include('This is text')
+            @session.send(method).should_not include('I changed it')
+          end
         end
       end
     end
