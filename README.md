@@ -1,7 +1,5 @@
 # Capybara
 
-[![Build Status](https://secure.travis-ci.org/jnicklas/capybara.png)](http://travis-ci.org/jnicklas/capybara)
-
 Capybara helps you test Rails and Rack applications by simulating how a real
 user would interact with your app. It is agnostic about the driver running your
 tests and comes with Rack::Test and Selenium support built in. WebKit is
