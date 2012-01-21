@@ -584,6 +584,27 @@ the text of the `h1` to "Something", and this happened, this test would
 pass. If you do not want this behaviour, you can set
 `Capybara.automatic_reload` to `false`.
 
+## HTTPS
+
+If your application uses HTTPS then you must specify the `https://` scheme
+in the URL passed to `visit()`, otherwise Capybara will treat it as a regular
+`http://` request. The default host name in Capybara tests is
+`www.example.com`.
+
+    # access /foo with http scheme
+    visit('/foo')
+    # access /foo with https scheme
+    visit('https://www.example.com/foo')
+
+If your application is HTTPS-only then specifying `https://www.example.com/`
+for every `visit` call is tedious. You can make Capybara access HTTPS
+by default by setting `Capybara.app_host` to an HTTPS URL:
+
+    Capybara.app_host = 'https://www.example.com'
+    
+    # access /foo with https scheme
+    visit('/foo')
+
 ## Using the DSL in unsupported testing frameworks
 
 You can mix the DSL into any context by including <tt>Capybara::DSL</tt>:
