@@ -76,7 +76,7 @@ Capybara.add_selector(:css) do
 end
 
 Capybara.add_selector(:id) do
-  xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
+  xpath { |id| XPath.descendant[XPath.attr(:id) == id] }
   match { |value| value.is_a?(Symbol) }
 end
 
