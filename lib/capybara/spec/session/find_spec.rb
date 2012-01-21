@@ -43,14 +43,18 @@ shared_examples_for "find" do
     context "with css selectors" do
       it "should find the first element using the given locator" do
         @session.find(:css, 'h1').text.should == 'This is a test'
+        @session.find(:css, :h1).text.should == 'This is a test'
         @session.find(:css, "input[id='test_field']")[:value].should == 'monkey'
+        @session.find(:css, :"input[id='test_field']")[:value].should == 'monkey'
       end
     end
 
     context "with id selectors" do
       it "should find the first element using the given locator" do
         @session.find(:id, 'john_monkey').text.should == 'Monkey John'
+        @session.find(:id, :john_monkey).text.should == 'Monkey John'
         @session.find(:id, 'red').text.should == 'Redirect'
+        @session.find(:id, :red).text.should == 'Redirect'
         @session.find(:red).text.should == 'Redirect'
       end
     end
