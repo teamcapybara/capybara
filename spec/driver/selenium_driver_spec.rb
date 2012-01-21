@@ -15,7 +15,7 @@ describe Capybara::Selenium::Driver do
   it_should_behave_like "driver with cookies support"
   it_should_behave_like "driver with referer support"
 
-  unless Config::CONFIG['host_os'] =~ /mswin|mingw/
+  unless RbConfig::CONFIG['host_os'] =~ /mswin|mingw/
     it "should not interfere with forking child processes" do
       # Launch a browser, which registers the at_exit hook
       browser = Capybara::Selenium::Driver.new(TestApp).browser
