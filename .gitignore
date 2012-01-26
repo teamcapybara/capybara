@@ -11,5 +11,5 @@ capybara-*.html
 .yardoc
 doc
 .bundle
-Gemfile.lock
+Gemfile*.lock
 chromedriver.log

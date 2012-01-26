@@ -6,6 +6,9 @@ rvm:
  - ree
  - jruby
  - rbx-18mode
+gemfile:
+ - Gemfile
+ - gemfiles/Gemfile.base-versions
 before_script:
  - 'sh -e /etc/init.d/xvfb start'
 before_install:
