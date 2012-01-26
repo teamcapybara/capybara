@@ -1,17 +1,17 @@
 rvm:
- - 1.8.7
- - 1.9.2
- - 1.9.3
- - ruby-head
- - ree
- - jruby
- - rbx-18mode
+  - 1.8.7
+  - 1.9.2
+  - 1.9.3
+  - ruby-head
+  - ree
+  - jruby
+  - rbx-18mode
 gemfile:
- - Gemfile
- - gemfiles/Gemfile.base-versions
+  - Gemfile
+  - gemfiles/Gemfile.base-versions
 before_script:
- - 'sh -e /etc/init.d/xvfb start'
+  - 'sh -e /etc/init.d/xvfb start'
 before_install:
- - 'git submodule update --init'
+  - 'git submodule update --init'
 env:
   - DISPLAY=':99.0'
