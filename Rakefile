@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'rspec/core/rake_task'
+require 'cucumber/rake/task'
 require 'yard'
 
 desc "Run all examples"
@@ -13,4 +14,8 @@ YARD::Rake::YardocTask.new do |t|
   #t.options = ['--any', '--extra', '--opts'] # optional
 end
 
-task :default => :spec
+Cucumber::Rake::Task.new(:cucumber) do |task|
+  task.cucumber_opts = ['--format=progress', 'features']
+end
+
+task :default => [:spec, :cucumber]
