@@ -2,7 +2,7 @@ module Capybara
   class Query
     attr_accessor :selector, :locator, :options, :xpath
 
-    def initialize(*args)
+    def initialize(node, *args)
       @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
       unless options.has_key?(:visible)
         @options[:visible] = Capybara.ignore_hidden_elements

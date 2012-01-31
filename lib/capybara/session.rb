@@ -36,7 +36,7 @@ module Capybara
       :has_no_button?, :has_field?, :has_no_field?, :has_checked_field?,
       :has_unchecked_field?, :has_no_table?, :has_table?, :unselect,
       :has_select?, :has_no_select?, :has_selector?, :has_no_selector?,
-      :click_on, :has_no_checked_field?, :has_no_unchecked_field?
+      :click_on, :has_no_checked_field?, :has_no_unchecked_field?, :query
     ]
     SESSION_METHODS = [
       :body, :html, :current_url, :current_host, :evaluate_script, :source,

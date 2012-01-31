@@ -36,7 +36,7 @@ module Capybara
       end
 
       def query
-        @query ||= Capybara::Query.new(*@args)
+        @query ||= @actual.query(*@args)
       end
     end
 

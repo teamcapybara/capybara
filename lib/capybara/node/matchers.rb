@@ -36,7 +36,7 @@ module Capybara
         options = if args.last.is_a?(Hash) then args.last else {} end
         wait_until do
           results = all(*args)
-          Query.new(*args).matches_count?(results) or raise Capybara::ExpectationNotMet
+          query(*args).matches_count?(results) or raise Capybara::ExpectationNotMet
           results
         end
       rescue Capybara::ExpectationNotMet
@@ -55,7 +55,7 @@ module Capybara
         options = if args.last.is_a?(Hash) then args.last else {} end
         wait_until do
           results = all(*args)
-          Query.new(*args).matches_count?(results) and raise Capybara::ExpectationNotMet
+          query(*args).matches_count?(results) and raise Capybara::ExpectationNotMet
           results
         end
       rescue Capybara::ExpectationNotMet
