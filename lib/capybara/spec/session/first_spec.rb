@@ -58,38 +58,6 @@ shared_examples_for "first" do
       end
     end
 
-    context "with prefer visible elements" do
-      it "should find invisible elements if no visible element exists" do
-        @session.first(:css, 'a#invisible')[:id].should == 'invisible'
-      end
-
-      it "should prefer visible elements over invisible elements" do
-        @session.first(:css, 'a.visibility')[:id].should == 'visible'
-      end
-
-      it "should return the first invisible element if no visible elements exist" do
-        @session.first(:css, 'a.hidden')[:id].should == 'first_invisble'
-      end
-
-      it "find visible links normally" do
-        @session.first(:css, 'a#visible')[:id].should == 'visible'
-      end
-    end
-
-    context "without prefer visible elements" do
-      before { Capybara.prefer_visible_elements = false }
-
-      it "should find invisible elements if no visible element exists" do
-        @session.first(:css, 'a#invisible')[:id].should == 'invisible'
-      end
-
-      it "should not prefer visible elements over invisible elements" do
-        @session.first(:css, 'a.visibility')[:id].should == 'invisible'
-      end
-
-      after { Capybara.prefer_visible_elements = true }
-    end
-
     context "within a scope" do
       before do
         @session.visit('/with_scope')

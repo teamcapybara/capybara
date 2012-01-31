@@ -131,12 +131,7 @@ module Capybara
       # @return [Capybara::Element]                  The found element or nil
       #
       def first(*args)
-        results = all(*args)
-        if Capybara.prefer_visible_elements
-          results.find(&:visible?) or results.first
-        else
-          results.first
-        end
+        all(*args).first
       end
 
     protected
