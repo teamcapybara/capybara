@@ -17,12 +17,7 @@ module Capybara
       end
       @selector ||= Selector.all[Capybara.default_selector]
 
-      xpath = @selector.call(@locator)
-      if xpath.respond_to?(:to_xpaths)
-        @xpath = xpath.to_xpath(:fuzzy)
-      else
-        @xpath = xpath.to_s
-      end
+      @xpath = @selector.call(@locator).to_s
     end
 
     def failure_message(type, node)
