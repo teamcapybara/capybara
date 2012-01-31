@@ -1,6 +1,6 @@
 module Capybara
   class Query
-    attr_accessor :selector, :locator, :options, :xpaths
+    attr_accessor :selector, :locator, :options, :xpath
 
     def initialize(*args)
       @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
@@ -19,14 +19,10 @@ module Capybara
 
       xpath = @selector.call(@locator)
       if xpath.respond_to?(:to_xpaths)
-        @xpaths = [xpath.to_xpath(:fuzzy)]
+        @xpath = xpath.to_xpath(:fuzzy)
       else
-        @xpaths = [xpath.to_s]
+        @xpath = xpath.to_s
       end
-    end
-
-    def xpath
-      xpaths.first
     end
 
     def failure_message(type, node)
