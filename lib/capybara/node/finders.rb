@@ -114,9 +114,8 @@ module Capybara
       #
       def all(*args)
         query = Capybara::Query.new(*args)
-        query.xpaths.
-          map    { |path| find_in_base(query, path) }.flatten.
-          select { |node| query.matches_filters?(node) }
+
+        find_in_base(query, query.xpath).select { |node| query.matches_filters?(node) }
       end
 
       ##

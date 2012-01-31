@@ -25,6 +25,10 @@ module Capybara
       end
     end
 
+    def xpath
+      xpaths.first
+    end
+
     def failure_message(type, node)
       message = selector.failure_message.call(node, self) if selector.failure_message
       message ||= options[:message]
