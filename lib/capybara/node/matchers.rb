@@ -36,21 +36,8 @@ module Capybara
         options = if args.last.is_a?(Hash) then args.last else {} end
         wait_until do
           results = all(*args)
-
-          case
-          when results.empty?
-            false
-          when options[:between]
-            options[:between] === results.size
-          when options[:count]
-            options[:count].to_i == results.size
-          when options[:maximum]
-            options[:maximum].to_i >= results.size
-          when options[:minimum]
-            options[:minimum].to_i <= results.size
-          else
-            results.size > 0
-          end or raise ExpectationNotMet
+          Query.new(*args).matches_count?(results) or raise Capybara::ExpectationNotMet
+          results
         end
       rescue Capybara::ExpectationNotMet
         return false
@@ -68,21 +55,8 @@ module Capybara
         options = if args.last.is_a?(Hash) then args.last else {} end
         wait_until do
           results = all(*args)
-
-          case
-          when results.empty?
-            true
-          when options[:between]
-            not(options[:between] === results.size)
-          when options[:count]
-            not(options[:count].to_i == results.size)
-          when options[:maximum]
-            not(options[:maximum].to_i >= results.size)
-          when options[:minimum]
-            not(options[:minimum].to_i <= results.size)
-          else
-            results.empty?
-          end or raise ExpectationNotMet
+          Query.new(*args).matches_count?(results) and raise Capybara::ExpectationNotMet
+          results
         end
       rescue Capybara::ExpectationNotMet
         return false

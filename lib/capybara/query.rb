@@ -59,5 +59,22 @@ module Capybara
       end
       true
     end
+
+    def matches_count?(nodes)
+      case
+      when nodes.empty?
+        false
+      when options[:between]
+        options[:between] === nodes.size
+      when options[:count]
+        options[:count].to_i == nodes.size
+      when options[:maximum]
+        options[:maximum].to_i >= nodes.size
+      when options[:minimum]
+        options[:minimum].to_i <= nodes.size
+      else
+        nodes.size > 0
+      end
+    end
   end
 end
