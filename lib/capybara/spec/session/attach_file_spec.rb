@@ -24,30 +24,30 @@ shared_examples_for "attach_file" do
     context "with multipart form" do
       it "should set a file path by id" do
         @session.attach_file "form_document", @test_file_path
-        @session.click_button('Upload')
+        @session.click_button('Upload Single')
         @session.body.should include(File.read(@test_file_path))
       end
 
       it "should set a file path by label" do
-        @session.attach_file "Document", @test_file_path
-        @session.click_button('Upload')
+        @session.attach_file "Single Document", @test_file_path
+        @session.click_button('Upload Single')
         @session.body.should include(File.read(@test_file_path))
       end
 
       it "should not break if no file is submitted" do
-        @session.click_button('Upload')
+        @session.click_button('Upload Single')
         @session.body.should include('No file uploaded')
       end
 
       it "should send content type text/plain when uploading a text file" do
-        @session.attach_file "Document", @test_file_path
-        @session.click_button 'Upload'
+        @session.attach_file "Single Document", @test_file_path
+        @session.click_button 'Upload Single'
         @session.body.should include('text/plain')
       end
 
       it "should send content type image/jpeg when uploading an image" do
-        @session.attach_file "Document", @test_jpg_file_path
-        @session.click_button 'Upload'
+        @session.attach_file "Single Document", @test_jpg_file_path
+        @session.click_button 'Upload Single'
         @session.body.should include('image/jpeg')
       end
 

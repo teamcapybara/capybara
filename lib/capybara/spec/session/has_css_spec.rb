@@ -1,4 +1,4 @@
-shared_examples_for "has_css" do  
+shared_examples_for "has_css" do
   describe '#has_css?' do
     before do
       @session.visit('/with_html')

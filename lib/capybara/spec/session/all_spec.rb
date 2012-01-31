@@ -51,15 +51,15 @@ shared_examples_for "all" do
     context "with visible filter" do
       after { Capybara.ignore_hidden_elements = false }
       it "should only find visible nodes" do
-        @session.all("//a[@title='awesome title']").should have(2).elements
-        @session.all("//a[@title='awesome title']", :visible => true).should have(1).elements
+        @session.all(:css, "a.simple").should have(2).elements
+        @session.all(:css, "a.simple", :visible => true).should have(1).elements
         Capybara.ignore_hidden_elements = true
-        @session.all("//a[@title='awesome title']").should have(1).elements
+        @session.all(:css, "a.simple").should have(1).elements
       end
 
       it "should only find invisible nodes" do
         Capybara.ignore_hidden_elements = true
-        @session.all("//a[@title='awesome title']", :visible => false).should have(2).elements
+        @session.all(:css, "a.simple", :visible => false).should have(2).elements
       end
     end
 

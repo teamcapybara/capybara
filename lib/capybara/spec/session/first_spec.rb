@@ -15,8 +15,8 @@ shared_examples_for "first" do
 
     it "should accept an XPath instance" do
       @session.visit('/form')
-      @xpath = XPath::HTML.fillable_field('Name')
-      @session.first(@xpath).value.should == 'John Smith'
+      @xpath = XPath::HTML.fillable_field('First Name')
+      @session.first(@xpath).value.should == 'John'
     end
 
     context "with css selectors" do

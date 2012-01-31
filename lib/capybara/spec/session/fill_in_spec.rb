@@ -17,21 +17,15 @@ shared_examples_for "fill_in" do
     end
 
     it "should fill in a text field by label without for" do
-      @session.fill_in('Street', :with => 'Avenue Q')
+      @session.fill_in('First Name', :with => 'Harry')
       @session.click_button('awesome')
-      extract_results(@session)['street'].should == 'Avenue Q'
+      extract_results(@session)['first_name'].should == 'Harry'
     end
 
     it "should fill in a url field by label without for" do
       @session.fill_in('Html5 Url', :with => 'http://www.avenueq.com')
       @session.click_button('html5_submit')
       extract_results(@session)['html5_url'].should == 'http://www.avenueq.com'
-    end
-
-    it "should favour exact label matches over partial matches" do
-      @session.fill_in('Name', :with => 'Harry Jones')
-      @session.click_button('awesome')
-      extract_results(@session)['name'].should == 'Harry Jones'
     end
 
     it "should fill in a textarea by id" do
@@ -93,17 +87,11 @@ shared_examples_for "fill_in" do
       @session.click_button('awesome')
       extract_results(@session)['password'].should == 'supasikrit'
     end
-    
-    it "should prefer exact matches over partial matches" do
-      @session.fill_in('Name', :with => 'Ford Prefect')
-      @session.click_button('awesome')
-      extract_results(@session)['name'].should == 'Ford Prefect'
-    end
-    
+
     it "should throw an exception if a hash containing 'with' is not provided" do
       lambda{@session.fill_in 'Name', 'ignu'}.should raise_error
     end
-    
+
     context "with ignore_hidden_fields" do
       before { Capybara.ignore_hidden_elements = true }
       after  { Capybara.ignore_hidden_elements = false }

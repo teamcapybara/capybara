@@ -1,5 +1,5 @@
 shared_examples_for "find" do
-  describe '#find' do
+  describe '#find', :focus => true do
     before do
       @session.visit('/with_html')
     end
@@ -15,7 +15,11 @@ shared_examples_for "find" do
 
     it "should find the first element using the given locator and options" do
       @session.find('//a', :text => 'Redirect')[:id].should == 'red'
-      @session.find(:css, 'a', :text => 'A link')[:title].should == 'twas a fine link'
+      @session.find(:css, 'a', :text => 'A link came first')[:title].should == 'twas a fine link'
+    end
+
+    it "should raise an error if there are multiple matches" do
+      expect { @session.find('//a') }.to raise_error(Capybara::ElementNotFound)
     end
 
     describe 'the returned node' do
@@ -36,7 +40,7 @@ shared_examples_for "find" do
       it "should have a reference to its parent if there is one" do
         @node = @session.find(:css, '#first')
         @node.parent.should == @node.session.document
-        @node.find('a').parent.should == @node
+        @node.find(:css, '#foo').parent.should == @node
       end
     end
 
@@ -147,10 +151,10 @@ shared_examples_for "find" do
       end.should raise_error(Capybara::ElementNotFound, "Unable to find xpath \"//div[@id=\\\"nosuchthing\\\"]\"")
     end
 
-    it "should accept an XPath instance and respect the order of paths" do
+    it "should accept an XPath instance" do
       @session.visit('/form')
-      @xpath = XPath::HTML.fillable_field('Name')
-      @session.find(@xpath).value.should == 'John Smith'
+      @xpath = XPath::HTML.fillable_field('First Name')
+      @session.find(@xpath).value.should == 'John'
     end
 
     context "within a scope" do
@@ -158,9 +162,9 @@ shared_examples_for "find" do
         @session.visit('/with_scope')
       end
 
-      it "should find the first element using the given locator" do
+      it "should find the an element using the given locator" do
         @session.within(:xpath, "//div[@id='for_bar']") do
-          @session.find('.//li').text.should =~ /With Simple HTML/
+          @session.find('.//li[1]').text.should =~ /With Simple HTML/
         end
       end
     end

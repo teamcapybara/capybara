@@ -30,15 +30,9 @@ shared_examples_for "select" do
     end
 
     it "should select an option without giving a select box" do
-      @session.select("Mr")
+      @session.select("Swedish")
       @session.click_button('awesome')
-      extract_results(@session)['title'].should == 'Mr'
-    end
-
-    it "should favour exact matches to option labels" do
-      @session.select("Mr", :from => 'Title')
-      @session.click_button('awesome')
-      extract_results(@session)['title'].should == 'Mr'
+      extract_results(@session)['locale'].should == 'sv'
     end
 
     it "should escape quotes" do
@@ -102,7 +96,7 @@ shared_examples_for "select" do
         @session.click_button('awesome')
         extract_results(@session)['languages'].should include('Ruby', 'Javascript')
       end
-      
+
       it "should remain selected if already selected" do
         @session.select("Ruby",       :from => 'Language')
         @session.select("Javascript", :from => 'Language')
@@ -110,7 +104,7 @@ shared_examples_for "select" do
         @session.click_button('awesome')
         extract_results(@session)['languages'].should include('Ruby', 'Javascript')
       end
-      
+
       it "should return value attribute rather than content if present" do
         @session.find_field('Underwear').value.should include('thermal')
       end

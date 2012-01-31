@@ -21,11 +21,6 @@ shared_examples_for "click_link" do
         @session.click_link('abo')
         @session.body.should include('Bar')
       end
-
-      it "should prefer exact matches over partial matches" do
-        @session.click_link('A link')
-        @session.body.should include('Bar')
-      end
     end
 
     context "with title given" do
@@ -38,11 +33,6 @@ shared_examples_for "click_link" do
         @session.click_link('some tit')
         @session.body.should include('Bar')
       end
-
-      it "should prefer exact matches over partial matches" do
-        @session.click_link('a fine link')
-        @session.body.should include('Bar')
-      end
     end
 
     context "with alternative text given to a contained image" do
@@ -53,11 +43,6 @@ shared_examples_for "click_link" do
 
       it "should take user to the linked page" do
         @session.click_link('some imag')
-        @session.body.should include('Bar')
-      end
-
-      it "should prefer exact matches over partial matches" do
-        @session.click_link('fine image')
         @session.body.should include('Bar')
       end
     end
@@ -94,7 +79,7 @@ shared_examples_for "click_link" do
 
     it "should do nothing on anchor links" do
       @session.fill_in("test_field", :with => 'blah')
-      @session.click_link('Anchor')
+      @session.click_link('Normal Anchor')
       @session.find_field("test_field").value.should == 'blah'
       @session.click_link('Blank Anchor')
       @session.find_field("test_field").value.should == 'blah'

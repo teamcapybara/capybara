@@ -8,28 +8,28 @@ shared_examples_for "unselect" do
       it "should unselect an option from a select box by id" do
         @session.unselect('Commando', :from => 'form_underwear')
         @session.click_button('awesome')
-        extract_results(@session)['underwear'].should include('Briefs', 'Boxer Briefs')
+        extract_results(@session)['underwear'].should include('Briefs', 'Boxerbriefs')
         extract_results(@session)['underwear'].should_not include('Commando')
       end
 
       it "should unselect an option without a select box" do
         @session.unselect('Commando')
         @session.click_button('awesome')
-        extract_results(@session)['underwear'].should include('Briefs', 'Boxer Briefs')
+        extract_results(@session)['underwear'].should include('Briefs', 'Boxerbriefs')
         extract_results(@session)['underwear'].should_not include('Commando')
       end
 
       it "should unselect an option from a select box by label" do
         @session.unselect('Commando', :from => 'Underwear')
         @session.click_button('awesome')
-        extract_results(@session)['underwear'].should include('Briefs', 'Boxer Briefs')
+        extract_results(@session)['underwear'].should include('Briefs', 'Boxerbriefs')
         extract_results(@session)['underwear'].should_not include('Commando')
       end
 
       it "should favour exact matches to option labels" do
         @session.unselect("Briefs", :from => 'Underwear')
         @session.click_button('awesome')
-        extract_results(@session)['underwear'].should include('Commando', 'Boxer Briefs')
+        extract_results(@session)['underwear'].should include('Commando', 'Boxerbriefs')
         extract_results(@session)['underwear'].should_not include('Briefs')
       end
 

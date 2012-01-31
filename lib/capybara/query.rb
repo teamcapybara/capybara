@@ -19,9 +19,9 @@ module Capybara
 
       xpath = @selector.call(@locator)
       if xpath.respond_to?(:to_xpaths)
-        @xpaths = xpath.to_xpaths
+        @xpaths = [xpath.to_xpath(:fuzzy)]
       else
-        @xpaths = [xpath.to_s].flatten
+        @xpaths = [xpath.to_s]
       end
     end
 
