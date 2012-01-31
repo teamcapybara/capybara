@@ -114,7 +114,6 @@ module Capybara
       #
       def all(*args)
         query = Capybara::Query.new(*args)
-
         find_in_base(query).select { |node| query.matches_filters?(node) }
       end
 
@@ -145,8 +144,6 @@ module Capybara
           Capybara::Node::Element.new(session, node, self, query)
         end
       end
-
-
     end
   end
 end
