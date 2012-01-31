@@ -137,7 +137,9 @@ Capybara.add_selector(:option) do
   xpath { |locator| XPath::HTML.option(locator) }
   failure_message do |node, selector|
     "no option with text '#{selector.locator}'".tap do |message|
-      message << " in the select box" if node.tag_name == 'select'
+      if node.is_a?(Capybara::Node::Element) and node.tag_name == 'select'
+        message << " in the select box"
+      end
     end
   end
 end
