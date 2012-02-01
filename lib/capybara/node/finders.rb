@@ -27,7 +27,7 @@ module Capybara
         query = query(*args)
         synchronize do
           results = resolve(query)
-          raise_find_error(query) unless results.length == 1
+          query.raise_error!(:find, results) unless results.length == 1
           results.first
         end
       end
@@ -142,12 +142,6 @@ module Capybara
             Capybara::Node::Element.new(session, node, self, query)
           end.select { |node| query.matches_filters?(node) }
         end
-      end
-
-    protected
-
-      def raise_find_error(query)
-        raise Capybara::ElementNotFound, query.failure_message(:find, self)
       end
     end
   end

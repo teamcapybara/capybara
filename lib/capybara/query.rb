@@ -1,8 +1,9 @@
 module Capybara
   class Query
-    attr_accessor :selector, :locator, :options, :xpath
+    attr_accessor :node, :selector, :locator, :options, :xpath
 
     def initialize(node, *args)
+      @node = node
       @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
       unless options.has_key?(:visible)
         @options[:visible] = Capybara.ignore_hidden_elements
@@ -20,7 +21,7 @@ module Capybara
       @xpath = @selector.call(@locator).to_s
     end
 
-    def failure_message(type, node)
+    def failure_message(type)
       message = selector.failure_message.call(node, self) if selector.failure_message
       message ||= options[:message]
       if type == :assert
@@ -31,7 +32,7 @@ module Capybara
       message
     end
 
-    def negative_failure_message(type, node)
+    def negative_failure_message(type)
       "expected #{description} not to return anything"
     end
 
@@ -53,6 +54,10 @@ module Capybara
         return false if options.has_key?(name) and not block.call(node, options[name])
       end
       true
+    end
+
+    def raise_error!(type, results)
+      raise Capybara::ElementNotFound, failure_message(type)
     end
 
     def matches_count?(nodes)
