@@ -7,6 +7,8 @@
 * Rack::Test now respects ports when changing hosts [Jo Liss]
 * #603: Rack::Test now preserves the original referer URL when following a
   redirect [Rob van Dijk]
+* Rack::Test now does not send a referer when calling `visit` multiple times
+  [Jo Liss]
 
 ### Added
 

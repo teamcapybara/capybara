@@ -18,30 +18,28 @@ class Capybara::RackTest::Browser
 
   def visit(path, attributes = {})
     reset_host!
-    process(:get, path, attributes)
-    follow_redirects!
+    process_and_follow_redirects(:get, path, attributes)
   end
 
   def submit(method, path, attributes)
     path = request_path if not path or path.empty?
-    process(method, path, attributes)
-    follow_redirects!
+    process_and_follow_redirects(method, path, attributes, {'HTTP_REFERER' => current_url})
   end
 
   def follow(method, path, attributes = {})
     return if path.gsub(/^#{request_path}/, '').start_with?('#')
-    process(method, path, attributes)
-    follow_redirects!
+    process_and_follow_redirects(method, path, attributes, {'HTTP_REFERER' => current_url})
   end
 
-  def follow_redirects!
+  def process_and_follow_redirects(method, path, attributes = {}, env = {})
+    process(method, path, attributes, env)
     5.times do
-      process(:get, last_response["Location"]) if last_response.redirect?
+      process(:get, last_response["Location"], {}, env) if last_response.redirect?
     end
     raise Capybara::InfiniteRedirectError, "redirected more than 5 times, check for infinite redirects." if last_response.redirect?
   end
 
-  def process(method, path, attributes = {})
+  def process(method, path, attributes = {}, env = {})
     new_uri = URI.parse(path)
     method.downcase! unless method.is_a? Symbol
 
@@ -60,7 +58,7 @@ class Capybara::RackTest::Browser
     end
 
     reset_cache!
-    send(method, path, attributes, env)
+    send(method, path, attributes, env.merge(options[:headers] || {}))
   end
 
   def current_url
@@ -107,20 +105,4 @@ protected
   rescue Rack::Test::Error
     ""
   end
-
-  def env
-    env = {}
-    begin
-      if last_response.redirect?
-        env["HTTP_REFERER"] = last_request.env["HTTP_REFERER"]
-      else
-        env["HTTP_REFERER"] = last_request.url
-      end
-    rescue Rack::Test::Error
-      # no request yet
-    end
-    env.merge!(options[:headers]) if options[:headers]
-    env
-  end
-
 end
