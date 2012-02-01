@@ -33,13 +33,12 @@ module Capybara
         @base = base
       end
 
+      # overridden in subclasses, e.g. Capybara::Node::Element
       def reload
         self
       end
 
-    protected
-
-      def wait_until(seconds=Capybara.default_wait_time)
+      def synchronize(seconds=Capybara.default_wait_time)
         retries = (seconds.to_f / 0.05).round
 
         begin
@@ -54,6 +53,8 @@ module Capybara
           retry
         end
       end
+
+    protected
 
       def driver
         session.driver

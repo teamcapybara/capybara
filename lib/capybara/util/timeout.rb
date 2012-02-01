@@ -17,8 +17,6 @@ module Capybara
           raise TimeoutError, error_message || "timed out"
         end
 
-        driver && driver.wait_until(delay)
-
         sleep(0.05)
       end
     end

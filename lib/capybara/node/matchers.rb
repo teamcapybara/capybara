@@ -34,7 +34,7 @@ module Capybara
       #
       def has_selector?(*args)
         options = if args.last.is_a?(Hash) then args.last else {} end
-        wait_until do
+        synchronize do
           results = all(*args)
           query(*args).matches_count?(results) or raise Capybara::ExpectationNotMet
           results
@@ -53,7 +53,7 @@ module Capybara
       #
       def has_no_selector?(*args)
         options = if args.last.is_a?(Hash) then args.last else {} end
-        wait_until do
+        synchronize do
           results = all(*args)
           query(*args).matches_count?(results) and raise Capybara::ExpectationNotMet
           results
@@ -160,7 +160,7 @@ module Capybara
       def has_text?(content)
         normalized_content = normalize_whitespace(content)
 
-        wait_until do
+        synchronize do
           normalize_whitespace(text).include?(normalized_content) or
           raise ExpectationNotMet
         end
@@ -183,7 +183,7 @@ module Capybara
       def has_no_text?(content)
         normalized_content = normalize_whitespace(content)
 
-        wait_until do
+        synchronize do
           !normalize_whitespace(text).include?(normalized_content) or
           raise ExpectationNotMet
         end

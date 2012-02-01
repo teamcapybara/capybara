@@ -40,7 +40,7 @@ module Capybara
     ]
     SESSION_METHODS = [
       :body, :html, :current_url, :current_host, :evaluate_script, :source,
-      :visit, :wait_until, :within, :within_fieldset, :within_table,
+      :visit, :within, :within_fieldset, :within_table,
       :within_frame, :within_window, :current_path, :save_page,
       :save_and_open_page, :reset_session!
     ]
@@ -242,16 +242,6 @@ module Capybara
     #
     def within_window(handle, &blk)
       driver.within_window(handle, &blk)
-    end
-
-    ##
-    #
-    # Retry executing the block until a truthy result is returned or the timeout time is exceeded
-    #
-    # @param [Integer] timeout   The amount of seconds to retry executing the given block
-    #
-    def wait_until(timeout = Capybara.default_wait_time)
-      Capybara.timeout(timeout,driver) { yield }
     end
 
     ##

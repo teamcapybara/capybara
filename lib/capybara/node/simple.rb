@@ -118,14 +118,14 @@ module Capybara
         native[:selected]
       end
 
+      def synchronize
+        yield # simple nodes don't need to wait
+      end
+
     protected
 
       def find_in_base(query)
         native.xpath(query.xpath).map { |node| self.class.new(node) }
-      end
-
-      def wait_until
-        yield # simple nodes don't need to wait
       end
     end
   end
