@@ -1,0 +1,264 @@
+@import "compass/reset"
+//@import compass/utilities/general/clearfix.sass
+
+@import "blueprint"
+//$blueprint_grid_columns : 12
+//$blueprint_grid_width : 60px
+//$blueprint-grid-margin : 20px
+
+/* GRID BLUEPRINT
+  *----------------------------------------------------------------------------------------------------*/
+//.wrapper
+  +container
+  .intro
+    +column(5)
+  .menu
+    +column(9)
+  .code
+    +column(7)
+  .install
+    +column(4, true)
+    +prepend(1)
+  .footer
+    +column(12)
+
+/* GRID 960
+  *----------------------------------------------------------------------------------------------------*/
+
+@import partials/_960.sass
+.wrapper
+  +grid-container
+  +clearfix
+  .intro
+    +alpha
+    +grid(5)
+    +grid-suffix(7)
+    +clearfix
+  .menu
+    +alpha
+    +grid(9)
+    +grid-suffix(3)
+    +clearfix
+  .code
+    +alpha
+    +grid(7)
+    +grid-suffix(1)
+  .install
+    +omega
+    +grid(4)
+    +grid-suffix(0)
+    +clearfix
+  .footer
+    +alpha
+    +grid(12)
+
+/* GLOBAL
+  *----------------------------------------------------------------------------------------------------*/
+
+html
+  height: 100%
+
+body
+  background: #f6f3ed url('../images/capybara.jpg') no-repeat scroll top center
+  font-family: "helvetica nue", "helvetica", "arial, sans-serif"
+  color: #000
+  font-size: 16px
+  line-height: 25px
+  height: 100%
+
+h1, h2, h3, h4, h5, h6
+  line-height: 1.5
+  margin-bottom: 20px
+
+p +
+  h2, h3, h4, h5, h6
+    margin-top: 20px
+
+h1
+  font-size: 25px
+
+h2
+  font-size: 28px
+
+h3
+  font-size: 21px
+
+h4
+  font-size: 19px
+
+h5
+  font-size: 17px
+
+h6
+  font-size: 15px
+
+p, pre
+  margin-bottom: 10px
+
+a
+  color: #0bafbc
+  font-weight: bold
+  &:visited
+    color: #942bb3
+  &:hover
+    color: #07929E
+
+\::-moz-selection, selection
+  background: #000
+  color: #fff
+
+h1, h2, h6, .elabs, .mit
+  font-family: "atrament-web-1","atrament-web-2",sans-serif
+
+/* SITE
+ *----------------------------------------------------------------------------------------------------*/
+
+.wrapper
+  padding: 20px 10px
+  min-height: 1000px
+
+h6
+  background: #000
+  color: #fff
+  text-align: center
+  font-size: 22px
+  width: 60px
+  height: 48px
+  padding: 12px 0 0 0
+  margin-bottom: 75px
+  display: block
+  border-radius: 60px
+  -moz-border-radius: 60px
+
+h1
+  font-size: 32px
+  line-height: 94px
+  margin-top: 28px
+  margin-bottom: 28px
+  &:after
+    content: ''
+    background: #000
+    height: 6px
+    width: 100%
+    margin-top: 22px
+    display: block
+    border-radius: 2px
+    -moz-border-radius: 2px
+  strong
+    font-size: 80px
+    color: #592668
+    display: block
+
+.links
+  margin-bottom: 40px
+  overflow: hidden
+  li
+    float: left
+    margin: 0 20px 20px 0
+    &:last-child
+      margin-right: 0
+    a
+      font-size: 15px
+      text-decoration: none
+      color: #000
+      background: #DBD9D3
+      background: #e1d6c3
+      padding: 22px 10px 18px
+      display: block
+      float: left
+      position: relative
+      border-radius: 2px
+      -moz-border-radius: 2px
+      -moz-transition: all 0.1s ease-in-out
+      -webkit-transition: all 0.1s ease-in-out
+      transition: all 0.1s ease-in-out
+      &:after
+        content: ''
+        background: url('../images/external-link-10.png') no-repeat scroll top right
+        width: 10px
+        height: 10px
+        position: absolute
+        top: 4px
+        right: 4px
+        opacity: 0.3
+      &:hover
+        background: #000
+        color: #fff
+
+h2
+  border-bottom: 4px solid #000
+
+.install
+  margin-top: 120px
+
+pre
+  background: #f3eadb
+  border: 1px solid #e1d6c3
+  font-size: 14px
+  padding: 8px 4px 6px
+  margin-bottom: 30px
+  border-radius: 2px
+  -moz-border-radius: 2px
+
+.intro
+  margin: 0 0 40px
+
+.elabs
+  background: url('../images/mit.png') no-repeat scroll top center
+  color: #fff
+  text-align: center
+  font-size: 22px
+  text-decoration: none
+  height: 64px
+  padding: 0
+  margin-top: 50px
+  display: block
+  position: relative
+  &:visited
+    color: #fff
+  &:hover
+    color: #E3E3E3
+  span
+    background: url('../images/elabs-symbol-44.png') no-repeat scroll right 10px
+    height: 44px
+    padding: 20px 56px 0 0
+    display: inline-block
+
+
+.mit
+  background: url('../images/mit.png') no-repeat scroll top center
+  color: #fff
+  text-align: center
+  font-size: 22px
+  height: 44px
+  padding: 20px 0 0 0
+  margin-top: 25px
+  display: block
+  position: relative
+
+/* FOOTER
+ *----------------------------------------------------------------------------------------------------*/
+
+.footer
+  color: #cacccb
+  font-size: 12px
+  border-top: 4px solid #dfdcd9
+  margin: 60px 0 20px 0
+  padding-top: 6px
+  p
+    line-height: 30px
+  a
+    &:link, &:visited
+      color: #cacccb
+
+.elabs-symbol
+  opacity: 0.6
+  background: url('../images/elabs-symbol.png') no-repeat scroll top center
+  float: right
+  width: 26px
+  height: 26px
+  display: block
+  text-indent: -999999px
+  &:hover
+    opacity: 1
+
