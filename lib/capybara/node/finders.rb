@@ -24,9 +24,10 @@ module Capybara
       # @raise  [Capybara::ElementNotFound]   If the element can't be found before time expires
       #
       def find(*args)
+        query = query(*args)
         synchronize do
-          results = all(*args)
-          raise_find_error(*args) unless results.length == 1
+          results = resolve(query)
+          raise_find_error(query) unless results.length == 1
           results.first
         end
       end
@@ -136,15 +137,16 @@ module Capybara
       end
 
       def resolve(query)
-        base.find(query.xpath).map do |node|
-          Capybara::Node::Element.new(session, node, self, query)
-        end.select { |node| query.matches_filters?(node) }
+        synchronize do
+          base.find(query.xpath).map do |node|
+            Capybara::Node::Element.new(session, node, self, query)
+          end.select { |node| query.matches_filters?(node) }
+        end
       end
 
     protected
 
-      def raise_find_error(*args)
-        query = query(*args)
+      def raise_find_error(query)
         raise Capybara::ElementNotFound, query.failure_message(:find, self)
       end
     end
