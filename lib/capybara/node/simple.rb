@@ -122,10 +122,10 @@ module Capybara
         yield # simple nodes don't need to wait
       end
 
-    protected
-
-      def find_in_base(query)
-        native.xpath(query.xpath).map { |node| self.class.new(node) }
+      def resolve(query)
+        native.xpath(query.xpath).map do |node|
+          self.class.new(node)
+        end.select { |node| query.matches_filters?(node) }
       end
     end
   end

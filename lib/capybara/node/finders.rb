@@ -113,8 +113,7 @@ module Capybara
       # @return [Array[Capybara::Element]]           The found elements
       #
       def all(*args)
-        query = query(*args)
-        find_in_base(query).select { |node| query.matches_filters?(node) }
+        resolve(query(*args))
       end
 
       ##
@@ -136,17 +135,17 @@ module Capybara
         Capybara::Query.new(self, *args)
       end
 
+      def resolve(query)
+        base.find(query.xpath).map do |node|
+          Capybara::Node::Element.new(session, node, self, query)
+        end.select { |node| query.matches_filters?(node) }
+      end
+
     protected
 
       def raise_find_error(*args)
         query = query(*args)
         raise Capybara::ElementNotFound, query.failure_message(:find, self)
-      end
-
-      def find_in_base(query)
-        base.find(query.xpath).map do |node|
-          Capybara::Node::Element.new(session, node, self, query)
-        end
       end
     end
   end
