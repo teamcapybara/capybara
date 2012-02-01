@@ -131,15 +131,6 @@ shared_examples_for "session with javascript support" do
         @session.click_link('Click me')
         @session.find(:css, "a#has-been-clicked").text.should include('Has been clicked')
       end
-
-      context "with frozen time" do
-        it "raises an error suggesting that Capybara is stuck in time" do
-          @session.visit('/with_js')
-          now = Time.now
-          Time.stub(:now).and_return(now)
-          expect { @session.find('//isnotthere') }.to raise_error(Capybara::FrozenInTime)
-        end
-      end
     end
 
     describe '#wait_until' do
