@@ -53,9 +53,4 @@ class Capybara::Driver::Base
 
   def reset!
   end
-
-  def has_shortcircuit_timeout?
-    false
-  end
-
 end

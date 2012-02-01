@@ -1,5 +1,3 @@
-require 'capybara/util/timeout'
-
 module Capybara
 
   ##
