@@ -2,11 +2,9 @@ require 'selenium-webdriver'
 
 class Capybara::Selenium::Driver < Capybara::Driver::Base
   DEFAULT_OPTIONS = {
-    :resynchronize => false,
-    :resynchronization_timeout => 10,
     :browser => :firefox
   }
-  SPECIAL_OPTIONS = [:browser, :resynchronize, :resynchronization_timeout]
+  SPECIAL_OPTIONS = [:browser]
 
   attr_reader :app, :rack_server, :options
 
@@ -56,18 +54,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def wait?; true; end
 
-  def resynchronize
-    if options[:resynchronize]
-      load_wait_for_ajax_support
-      yield
-      Capybara.timeout(options[:resynchronization_timeout], self, "failed to resynchronize, ajax request timed out") do
-        evaluate_script("!window.capybaraRequestsOutstanding")
-      end
-    else
-      yield
-    end
-  end
-
   def execute_script(script)
     browser.execute_script script
   end
@@ -79,8 +65,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def reset!
     # Use instance variable directly so we avoid starting the browser just to reset the session
     if @browser
-      begin
-        @browser.manage.delete_all_cookies
+      begin @browser.manage.delete_all_cookies
       rescue Selenium::WebDriver::Error::UnhandledError
         # delete_all_cookies fails when we've previously gone
         # to about:blank, so we rescue this error and do nothing
@@ -128,35 +113,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
 private
-
-  def load_wait_for_ajax_support
-    browser.execute_script <<-JS
-      window.capybaraRequestsOutstanding = 0;
-      (function() { // Overriding XMLHttpRequest
-          var oldXHR = window.XMLHttpRequest;
-
-          function newXHR() {
-              var realXHR = new oldXHR();
-
-              window.capybaraRequestsOutstanding++;
-              realXHR.addEventListener("readystatechange", function() {
-                  if( realXHR.readyState == 4 ) {
-                    setTimeout( function() {
-                      window.capybaraRequestsOutstanding--;
-                      if(window.capybaraRequestsOutstanding < 0) {
-                        window.capybaraRequestsOutstanding = 0;
-                      }
-                    }, 500 );
-                  }
-              }, false);
-
-              return realXHR;
-          }
-
-          window.XMLHttpRequest = newXHR;
-      })();
-    JS
-  end
 
   def url(path)
     rack_server.url(path)
