@@ -25,9 +25,10 @@ module Capybara
       #
       def find(*args)
         query = query(*args)
+        query.find = true
         synchronize do
           results = resolve(query)
-          query.raise_error!(:find, results) unless results.length == 1
+          query.verify!(results)
           results.first
         end
       end

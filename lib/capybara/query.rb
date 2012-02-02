@@ -1,6 +1,6 @@
 module Capybara
   class Query
-    attr_accessor :node, :selector, :locator, :options, :xpath
+    attr_accessor :node, :selector, :locator, :options, :xpath, :find, :negative
 
     def initialize(node, *args)
       @node = node
@@ -21,18 +21,18 @@ module Capybara
       @xpath = @selector.call(@locator).to_s
     end
 
-    def failure_message(type)
+    def failure_message
       message = selector.failure_message.call(node, self) if selector.failure_message
       message ||= options[:message]
-      if type == :assert
-        message ||= "expected #{description} to return something"
-      else
+      if find
         message ||= "Unable to find #{description}"
+      else
+        message ||= "expected #{description} to return something"
       end
       message
     end
 
-    def negative_failure_message(type)
+    def negative_failure_message
       "expected #{description} not to return anything"
     end
 
@@ -56,8 +56,18 @@ module Capybara
       true
     end
 
-    def raise_error!(type, results)
-      raise Capybara::ElementNotFound, failure_message(type)
+    def verify!(results)
+      if find and results.length != 1
+        raise Capybara::ElementNotFound, failure_message
+      end
+    end
+
+    def error(results)
+      if negative
+        negative_failure_message
+      else
+        failure_message
+      end
     end
 
     def matches_count?(nodes)

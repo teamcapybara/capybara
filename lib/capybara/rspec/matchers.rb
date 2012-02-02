@@ -16,11 +16,14 @@ module Capybara
       end
 
       def failure_message_for_should
-        query.failure_message(:assert)
+        results = @actual.resolve(query)
+        query.error(results)
       end
 
       def failure_message_for_should_not
-        query.negative_failure_message(:assert)
+        results = @actual.resolve(query)
+        query.negative = true
+        query.error(results)
       end
 
       def description
