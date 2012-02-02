@@ -1,6 +1,7 @@
 # Capybara
 
 [![Build Status](https://secure.travis-ci.org/jnicklas/capybara.png)](http://travis-ci.org/jnicklas/capybara)
+[![Dependency Status](https://gemnasium.com/jnicklas/capybara.png)](https://gemnasium.com/jnicklas/capybara)
 
 Capybara helps you test Rails and Rack applications by simulating how a real
 user would interact with your app. It is agnostic about the driver running your
