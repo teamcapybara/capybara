@@ -49,7 +49,7 @@ module Capybara
     end
 
     def call(locator)
-      @xpath.call(locator)
+      @xpath.call(normalize_locator(locator))
     end
 
     def match?(locator)
@@ -58,6 +58,11 @@ module Capybara
 
     def filter(name, &block)
       @custom_filters[name] = block
+    end
+
+    private
+    def normalize_locator(locator)
+      locator.is_a?(Symbol) ? locator.to_s : locator
     end
   end
 end
@@ -71,7 +76,7 @@ Capybara.add_selector(:css) do
 end
 
 Capybara.add_selector(:id) do
-  xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
+  xpath { |id| XPath.descendant[XPath.attr(:id) == id] }
   match { |value| value.is_a?(Symbol) }
 end
 

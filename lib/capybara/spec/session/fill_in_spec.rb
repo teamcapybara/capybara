@@ -10,6 +10,12 @@ shared_examples_for "fill_in" do
       extract_results(@session)['first_name'].should == 'Harry'
     end
 
+    it "should fill in a text field by id as symbol" do
+      @session.fill_in(:form_last_name, :with => "Jordan")
+      @session.click_button('awesome')
+      extract_results(@session)['last_name'].should == "Jordan"
+    end
+
     it "should fill in a text field by name" do
       @session.fill_in('form[last_name]', :with => 'Green')
       @session.click_button('awesome')
