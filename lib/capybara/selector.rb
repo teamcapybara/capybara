@@ -1,5 +1,6 @@
 module Capybara
   class Selector
+    ValidKeys = []
     attr_reader :name, :custom_filters
 
 
@@ -57,6 +58,7 @@ module Capybara
     end
 
     def filter(name, &block)
+      ValidKeys.push(name) unless ValidKeys.include?(name)
       @custom_filters[name] = block
     end
   end
