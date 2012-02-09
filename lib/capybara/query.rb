@@ -1,8 +1,9 @@
 module Capybara
   class Query
-    attr_accessor :selector, :locator, :options, :xpaths
+    attr_accessor :node, :selector, :locator, :options, :xpath, :find, :negative
 
-    def initialize(*args)
+    def initialize(node, *args)
+      @node = node
       @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
       unless options.has_key?(:visible)
         @options[:visible] = Capybara.ignore_hidden_elements
@@ -17,26 +18,21 @@ module Capybara
       end
       @selector ||= Selector.all[Capybara.default_selector]
 
-      xpath = @selector.call(@locator)
-      if xpath.respond_to?(:to_xpaths)
-        @xpaths = xpath.to_xpaths
-      else
-        @xpaths = [xpath.to_s].flatten
-      end
+      @xpath = @selector.call(@locator).to_s
     end
 
-    def failure_message(type, node)
+    def failure_message
       message = selector.failure_message.call(node, self) if selector.failure_message
       message ||= options[:message]
-      if type == :assert
-        message ||= "expected #{description} to return something"
-      else
+      if find
         message ||= "Unable to find #{description}"
+      else
+        message ||= "expected #{description} to return something"
       end
       message
     end
 
-    def negative_failure_message(type, node)
+    def negative_failure_message
       "expected #{description} not to return anything"
     end
 
@@ -58,6 +54,37 @@ module Capybara
         return false if options.has_key?(name) and not block.call(node, options[name])
       end
       true
+    end
+
+    def verify!(results)
+      if find and results.length != 1
+        raise Capybara::ElementNotFound, failure_message
+      end
+    end
+
+    def error(results)
+      if negative
+        negative_failure_message
+      else
+        failure_message
+      end
+    end
+
+    def matches_count?(nodes)
+      case
+      when nodes.empty?
+        false
+      when options[:between]
+        options[:between] === nodes.size
+      when options[:count]
+        options[:count].to_i == nodes.size
+      when options[:maximum]
+        options[:maximum].to_i >= nodes.size
+      when options[:minimum]
+        options[:minimum].to_i <= nodes.size
+      else
+        nodes.size > 0
+      end
     end
   end
 end

@@ -6,7 +6,7 @@ shared_examples_for "within" do
 
     context "with CSS selector" do
       it "should click links in the given scope" do
-        @session.within(:css, "ul li[contains('With Simple HTML')]") do
+        @session.within(:css, "#for_bar li[contains('With Simple HTML')]") do
           @session.click_link('Go')
         end
         @session.body.should include('Bar')
@@ -20,7 +20,7 @@ shared_examples_for "within" do
       end
 
       it "should accept additional options" do
-        @session.within(:css, "ul li", :text => 'With Simple HTML') do
+        @session.within(:css, "#for_bar li", :text => 'With Simple HTML') do
           @session.click_link('Go')
         end
         @session.body.should include('Bar')
@@ -29,7 +29,7 @@ shared_examples_for "within" do
 
     context "with XPath selector" do
       it "should click links in the given scope" do
-        @session.within(:xpath, "//li[contains(.,'With Simple HTML')]") do
+        @session.within(:xpath, "//div[@id='for_bar']//li[contains(.,'With Simple HTML')]") do
           @session.click_link('Go')
         end
         @session.body.should include('Bar')
@@ -38,7 +38,7 @@ shared_examples_for "within" do
 
     context "with the default selector" do
       it "should use XPath" do
-        @session.within("//li[contains(., 'With Simple HTML')]") do
+        @session.within("//div[@id='for_bar']//li[contains(.,'With Simple HTML')]") do
           @session.click_link('Go')
         end
         @session.body.should include('Bar')
@@ -47,9 +47,9 @@ shared_examples_for "within" do
 
     context "with Node rather than selector" do
       it "should click links in the given scope" do
-        node_of_interest = @session.find(:css, "ul li[contains('With Simple HTML')]")
+        node_of_interest = @session.find(:css, "#for_bar li[contains('With Simple HTML')]")
 
-        @session.within(node_of_interest) do 
+        @session.within(node_of_interest) do
           @session.click_link('Go')
         end
         @session.body.should include('Bar')
@@ -59,7 +59,7 @@ shared_examples_for "within" do
     context "with the default selector set to CSS" do
       before { Capybara.default_selector = :css }
       it "should use CSS" do
-        @session.within("ul li[contains('With Simple HTML')]") do
+        @session.within("#for_bar li[contains('With Simple HTML')]") do
           @session.click_link('Go')
         end
         @session.body.should include('Bar')
@@ -67,68 +67,57 @@ shared_examples_for "within" do
       after { Capybara.default_selector = :xpath }
     end
 
-    context "with click_link" do
-      it "should click links in the given scope" do
-        @session.within("//li[contains(.,'With Simple HTML')]") do
-          @session.click_link('Go')
+    context "with nested scopes" do
+      it "should respect the inner scope" do
+        @session.within("//div[@id='for_bar']") do
+          @session.within(".//li[contains(.,'Bar')]") do
+            @session.click_link('Go')
+          end
         end
-        @session.body.should include('Bar')
+        @session.body.should include('Another World')
       end
 
-      context "with nested scopes" do
-        it "should respect the inner scope" do
-          @session.within("//div[@id='for_bar']") do
-            @session.within(".//li[contains(.,'Bar')]") do
-              @session.click_link('Go')
-            end
+      it "should respect the outer scope" do
+        @session.within("//div[@id='another_foo']") do
+          @session.within(".//li[contains(.,'With Simple HTML')]") do
+            @session.click_link('Go')
           end
-          @session.body.should include('Another World')
         end
-
-        it "should respect the outer scope" do
-          @session.within("//div[@id='another_foo']") do
-            @session.within(".//li[contains(.,'With Simple HTML')]") do
-              @session.click_link('Go')
-            end
-          end
-          @session.body.should include('Hello world')
-        end
-      end
-
-      it "should raise an error if the scope is not found on the page" do
-        running do
-          @session.within("//div[@id='doesnotexist']") do
-          end
-        end.should raise_error(Capybara::ElementNotFound)
-      end
-
-      it "should restore the scope when an error is raised" do
-        running do
-          @session.within("//div[@id='for_bar']") do
-            running do
-              running do
-                @session.within(".//div[@id='doesnotexist']") do
-                end
-              end.should raise_error(Capybara::ElementNotFound)
-            end.should_not change { @session.has_xpath?(".//div[@id='another_foo']") }.from(false)
-          end
-        end.should_not change { @session.has_xpath?(".//div[@id='another_foo']") }.from(true)
+        @session.body.should include('Hello world')
       end
     end
 
-    context "with forms" do
-      it "should fill in a field and click a button" do
-        @session.within("//li[contains(.,'Bar')]") do
-          @session.click_button('Go')
+    it "should raise an error if the scope is not found on the page" do
+      running do
+        @session.within("//div[@id='doesnotexist']") do
         end
-        extract_results(@session)['first_name'].should == 'Peter'
-        @session.visit('/with_scope')
-        @session.within("//li[contains(.,'Bar')]") do
-          @session.fill_in('First Name', :with => 'Dagobert')
-          @session.click_button('Go')
+      end.should raise_error(Capybara::ElementNotFound)
+    end
+
+    it "should restore the scope when an error is raised" do
+      running do
+        @session.within("//div[@id='for_bar']") do
+          running do
+            running do
+              @session.within(".//div[@id='doesnotexist']") do
+              end
+            end.should raise_error(Capybara::ElementNotFound)
+          end.should_not change { @session.has_xpath?(".//div[@id='another_foo']") }.from(false)
         end
-        extract_results(@session)['first_name'].should == 'Dagobert'
+      end.should_not change { @session.has_xpath?(".//div[@id='another_foo']") }.from(true)
+    end
+
+    it "should fill in a field and click a button" do
+      @session.within("//li[contains(.,'Bar')]") do
+        @session.click_button('Go')
       end
+      extract_results(@session)['first_name'].should == 'Peter'
+      @session.visit('/with_scope')
+      @session.within("//li[contains(.,'Bar')]") do
+        @session.fill_in('First Name', :with => 'Dagobert')
+        @session.click_button('Go')
+      end
+      extract_results(@session)['first_name'].should == 'Dagobert'
     end
   end
 

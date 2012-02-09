@@ -24,7 +24,13 @@ module Capybara
       # @raise  [Capybara::ElementNotFound]   If the element can't be found before time expires
       #
       def find(*args)
-        wait_until { first(*args) or raise_find_error(*args) }
+        query = query(*args)
+        query.find = true
+        synchronize do
+          results = resolve(query)
+          query.verify!(results)
+          results.first
+        end
       end
 
       ##
@@ -109,10 +115,7 @@ module Capybara
       # @return [Array[Capybara::Element]]           The found elements
       #
       def all(*args)
-        query = Capybara::Query.new(*args)
-        query.xpaths.
-          map    { |path| find_in_base(query, path) }.flatten.
-          select { |node| query.matches_filters?(node) }
+        resolve(query(*args))
       end
 
       ##
@@ -127,28 +130,20 @@ module Capybara
       # @return [Capybara::Element]                  The found element or nil
       #
       def first(*args)
-        results = all(*args)
-        if Capybara.prefer_visible_elements
-          results.find(&:visible?) or results.first
-        else
-          results.first
+        all(*args).first
+      end
+
+      def query(*args)
+        Capybara::Query.new(self, *args)
+      end
+
+      def resolve(query)
+        synchronize do
+          base.find(query.xpath).map do |node|
+            Capybara::Node::Element.new(session, node, self, query)
+          end.select { |node| query.matches_filters?(node) }
         end
       end
-
-    protected
-
-      def raise_find_error(*args)
-        query = Capybara::Query.new(*args)
-        raise Capybara::ElementNotFound, query.failure_message(:find, self)
-      end
-
-      def find_in_base(query, xpath)
-        base.find(xpath).map do |node|
-          Capybara::Node::Element.new(session, node, self, query)
-        end
-      end
-
-
     end
   end
 end

@@ -27,7 +27,7 @@ shared_examples_for "click_button" do
         extract_results(@session)['no_action'].should == 'No Action'
       end
     end
-    
+
     context "with value given on a submit button" do
       context "on a form with HTML5 fields" do
         before do
@@ -138,7 +138,7 @@ shared_examples_for "click_button" do
         @session.body.should include('You landed')
       end
     end
-    
+
     context "with title given on a submit button" do
       it "should submit the associated form" do
         @session.click_button('What an Awesome Button')
@@ -204,11 +204,6 @@ shared_examples_for "click_button" do
         @session.click_button('Click')
         extract_results(@session)['first_name'].should == 'John'
       end
-
-      it "should prefer exact matches over partial matches" do
-        @session.click_button('Just an input')
-        extract_results(@session)['button'].should == 'button_second'
-      end
     end
 
    context "with id given on a button defined by <button> tag" do
@@ -235,11 +230,6 @@ shared_examples_for "click_button" do
       it "should work with partial matches" do
         @session.click_button('ck_me')
         extract_results(@session)['first_name'].should == 'John'
-      end
-
-      it "should prefer exact matches over partial matches" do
-        @session.click_button('Just a button')
-        extract_results(@session)['button'].should == 'Just a button'
       end
     end
 
@@ -268,7 +258,7 @@ shared_examples_for "click_button" do
       @results = extract_results(@session)
       @results['no_value'].should_not be_nil
     end
-    
+
     it "should not send image buttons that were not clicked" do
       @session.click_button('Click me!')
       @results = extract_results(@session)

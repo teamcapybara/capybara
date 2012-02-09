@@ -152,7 +152,9 @@ describe Capybara::RSpecMatchers do
 
   describe "have_selector matcher" do
     it "gives proper description" do
-      have_selector('//h1').description.should == "has xpath \"//h1\""
+      matcher = have_selector('//h1')
+      "<h1>Text</h1>".should matcher
+      matcher.description.should == "has xpath \"//h1\""
     end
 
     context "on a string" do

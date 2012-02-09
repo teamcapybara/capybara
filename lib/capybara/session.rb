@@ -1,5 +1,3 @@
-require 'capybara/util/timeout'
-
 module Capybara
 
   ##
@@ -31,16 +29,16 @@ module Capybara
       :click_link_or_button, :click_button, :click_link, :field_labeled,
       :fill_in, :find, :find_button, :find_by_id, :find_field, :find_link,
       :has_content?, :has_text?, :has_css?, :has_no_content?, :has_no_text?,
-      :has_no_css?, :has_no_xpath?,
+      :has_no_css?, :has_no_xpath?, :resolve,
       :has_xpath?, :select, :uncheck, :has_link?, :has_no_link?, :has_button?,
       :has_no_button?, :has_field?, :has_no_field?, :has_checked_field?,
       :has_unchecked_field?, :has_no_table?, :has_table?, :unselect,
       :has_select?, :has_no_select?, :has_selector?, :has_no_selector?,
-      :click_on, :has_no_checked_field?, :has_no_unchecked_field?
+      :click_on, :has_no_checked_field?, :has_no_unchecked_field?, :query
     ]
     SESSION_METHODS = [
       :body, :html, :current_url, :current_host, :evaluate_script, :source,
-      :visit, :wait_until, :within, :within_fieldset, :within_table,
+      :visit, :within, :within_fieldset, :within_table,
       :within_frame, :within_window, :current_path, :save_page,
       :save_and_open_page, :reset_session!
     ]
@@ -242,16 +240,6 @@ module Capybara
     #
     def within_window(handle, &blk)
       driver.within_window(handle, &blk)
-    end
-
-    ##
-    #
-    # Retry executing the block until a truthy result is returned or the timeout time is exceeded
-    #
-    # @param [Integer] timeout   The amount of seconds to retry executing the given block
-    #
-    def wait_until(timeout = Capybara.default_wait_time)
-      Capybara.timeout(timeout,driver) { yield }
     end
 
     ##

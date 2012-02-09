@@ -134,41 +134,6 @@ shared_examples_for "driver with javascript support" do
 
 end
 
-shared_examples_for "driver with resynchronization support" do
-  before { @driver.visit('/with_js') }
-  describe "#find" do
-    context "with synchronization turned on" do
-      before { @driver.options[:resynchronize] = true }
-      it "should wait for all ajax requests to finish" do
-        @driver.find('//input[@id="fire_ajax_request"]').first.click
-        @driver.find('//p[@id="ajax_request_done"]').should_not be_empty
-      end
-    end
-
-    context "with resynchronization turned off" do
-      before { @driver.options[:resynchronize] = false }
-      it "should not wait for ajax requests to finish" do
-        @driver.find('//input[@id="fire_ajax_request"]').first.click
-        @driver.find('//p[@id="ajax_request_done"]').should be_empty
-      end
-    end
-
-    context "with short synchronization timeout" do
-      before { @driver.options[:resynchronize] = true }
-      before { @driver.options[:resynchronization_timeout] = 0.1 }
-
-      it "should raise an error" do
-        expect do
-          @driver.find('//input[@id="fire_ajax_request"]').first.click
-        end.to raise_error(Capybara::TimeoutError, "failed to resynchronize, ajax request timed out")
-      end
-    end
-  end
-
-  after { @driver.options[:resynchronize] = false }
-  after { @driver.options[:resynchronization_timeout] = 10 }
-end
-
 shared_examples_for "driver with header support" do
   it "should make headers available through response_headers" do
     @driver.visit('/with_simple_html')

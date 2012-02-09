@@ -33,20 +33,19 @@ module Capybara
         @base = base
       end
 
+      # overridden in subclasses, e.g. Capybara::Node::Element
       def reload
         self
       end
 
-    protected
-
-      def wait_until(seconds=Capybara.default_wait_time)
+      def synchronize(seconds=Capybara.default_wait_time)
         retries = (seconds.to_f / 0.05).round
 
         begin
           yield
         rescue => e
           raise e unless driver.wait?
-          raise e unless (driver.respond_to?(:invalid_element_errors) and driver.invalid_element_errors.include?(e.class)) or e.is_a?(Capybara::ElementNotFound)
+          raise e unless driver.invalid_element_errors.include?(e.class) or e.is_a?(Capybara::ElementNotFound)
           raise e if retries.zero?
           sleep(0.05)
           reload if Capybara.automatic_reload
@@ -54,6 +53,8 @@ module Capybara
           retry
         end
       end
+
+    protected
 
       def driver
         session.driver

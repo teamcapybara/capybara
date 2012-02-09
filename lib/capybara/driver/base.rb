@@ -51,14 +51,6 @@ class Capybara::Driver::Base
     false
   end
 
-  def wait_until(*args)
-  end
-
   def reset!
   end
-
-  def has_shortcircuit_timeout?
-    false
-  end
-
 end
