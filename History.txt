@@ -18,6 +18,7 @@
 
 ### Changed
 
+* find now raises an error if more than one element was found [Jonas Nicklas]
 * #394: #body now returns the unmodified source (like #source), not the current
   state of the DOM (like #html) [Jonas Nicklas]
 * Element#text on RackTest now only returns visible text and normalizes
@@ -27,6 +28,8 @@
 
 * #589: Capybara.server_boot_timeout has been removed in favor of a higher
   (60-second) hard-coded timeout [Jo Liss]
+* Capybara.prefer_visible_elements has been removed, as it is no longer needed
+  with the changed find semantics [Jonas Nicklas]
 
 # Version 1.1.2
 
