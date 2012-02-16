@@ -26,6 +26,8 @@ module Capybara
       message ||= options[:message]
       if find
         message ||= "Unable to find #{description}"
+      elsif options[:count]
+        message ||= "expected #{description} to be returned #{options[:count]} times"
       else
         message ||= "expected #{description} to return something"
       end
