@@ -36,11 +36,11 @@ module Capybara
         options = if args.last.is_a?(Hash) then args.last else {} end
         synchronize do
           results = all(*args)
-          query(*args).matches_count?(results) or raise Capybara::ExpectationNotMet
-          results
+          raise Capybara::ExpectationNotMet unless query(*args).matches_count?(results)
+          true
         end
       rescue Capybara::ExpectationNotMet
-        return false
+        false
       end
 
       ##
@@ -55,11 +55,11 @@ module Capybara
         options = if args.last.is_a?(Hash) then args.last else {} end
         synchronize do
           results = all(*args)
-          query(*args).matches_count?(results) and raise Capybara::ExpectationNotMet
-          results
+          raise Capybara::ExpectationNotMet if query(*args).matches_count?(results)
+          true
         end
       rescue Capybara::ExpectationNotMet
-        return false
+        false
       end
 
       ##
