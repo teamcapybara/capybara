@@ -80,6 +80,7 @@ Capybara.add_selector(:field) do
   filter(:checked) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked) { |node, value| (value ^ node.checked?) }
   filter(:with) { |node, with| node.value == with }
+  filter(:type) { |node, type| node[:type] == type }
 end
 
 Capybara.add_selector(:fieldset) do
