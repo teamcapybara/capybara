@@ -36,6 +36,20 @@ shared_examples_for "has_field" do
         @session.should_not have_field('First Name', :with => 'John')
       end
     end
+
+    context 'with type' do
+      it "should be true if a field with the given type is on the page" do
+        @session.should have_field('First Name', :type => 'text')
+        @session.should have_field('Html5 Email', :type => 'email')
+        @session.should have_field('Html5 Tel', :type => 'tel')
+      end
+
+      it "should be false if the given field is not on the page" do
+        @session.should_not have_field('First Name', :type => 'email')
+        @session.should_not have_field('Html5 Email', :type => 'tel')
+        @session.should_not have_field('Description', :type => '')
+      end
+    end
   end
 
   describe '#has_no_field' do
@@ -73,6 +87,20 @@ shared_examples_for "has_field" do
       it "should be true after the field has been filled in with a different value" do
         @session.fill_in('First Name', :with => 'Jonas')
         @session.should have_no_field('First Name', :with => 'John')
+      end
+    end
+
+    context 'with type' do
+      it "should be false if a field with the given type is on the page" do
+        @session.should_not have_no_field('First Name', :type => 'text')
+        @session.should_not have_no_field('Html5 Email', :type => 'email')
+        @session.should_not have_no_field('Html5 Tel', :type => 'tel')
+      end
+
+      it "should be true if the given field is not on the page" do
+        @session.should have_no_field('First Name', :type => 'email')
+        @session.should have_no_field('Html5 Email', :type => 'tel')
+        @session.should have_no_field('Description', :type => '')
       end
     end
   end

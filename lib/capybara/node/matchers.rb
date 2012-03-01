@@ -253,8 +253,13 @@ module Capybara
       #
       #     page.has_field?('Name', :with => 'Jonas')
       #
+      # It is also possible to filter by the field type attribute:
+      #
+      #     page.has_field?('Email', :type => 'email')
+      #
       # @param [String] locator           The label, name or id of a field to check for
       # @option options [String] :with    The text content of the field
+      # @option options [String] :type    The type attribute of the field
       # @return [Boolean]                 Whether it exists
       #
       def has_field?(locator, options={})
@@ -268,6 +273,7 @@ module Capybara
       #
       # @param [String] locator           The label, name or id of a field to check for
       # @option options [String] :with    The text content of the field
+      # @option options [String] :type    The type attribute of the field
       # @return [Boolean]                 Whether it doesn't exist
       #
       def has_no_field?(locator, options={})
