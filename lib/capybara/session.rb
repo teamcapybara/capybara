@@ -154,6 +154,10 @@ module Capybara
     #
     def visit(url)
       driver.visit(url)
+      if driver.respond_to?(:rack_server)
+        e = driver.rack_server.last_error
+        raise e if e
+      end
     end
 
     ##

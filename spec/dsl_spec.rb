@@ -252,4 +252,27 @@ describe Capybara::DSL do
       foo.using_wait_time(6)
     end
   end
+
+  describe "error handling" do
+    include Capybara::DSL
+
+    before do
+      Capybara.current_driver = :selenium
+      Capybara.app = proc { |env| raise 'raised!' }
+    end
+
+    it "should re-raise the first leaked application error" do
+      proc { visit('/raise') }.should raise_error(RuntimeError, 'raised!')
+    end
+
+    it "should clear out errors after the visit call" do
+      server = Capybara.current_session.driver.rack_server
+      server.identify.errors << StandardError.new('first')
+      server.identify.errors << StandardError.new('last')
+      # The purpose of this feature is to prevent asset loading errors from
+      # leaking between tests.
+      proc { visit('/raise') }.should raise_error(StandardError, 'first')
+      server.last_error # should not raise 'last'
+    end
+  end
 end
