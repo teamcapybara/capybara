@@ -71,4 +71,12 @@ describe Capybara::Server do
     @server1a.port.should == @server1b.port
     @server2a.port.should == @server2b.port
   end
+
+  it "should catch standard errors that bubble up from the app" do
+    @app = proc { |env| raise 'boom!' }
+
+    @server = Capybara::Server.new(@app).boot
+    Net::HTTP.get(URI "http://#{@server.host}:#{@server.port}/")
+    @server.last_error.message.should == 'boom!'
+  end
 end

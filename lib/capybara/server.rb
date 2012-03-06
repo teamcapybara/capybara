@@ -5,15 +5,22 @@ require 'rack'
 module Capybara
   class Server
     class Identify
-      def initialize(app)
+      attr_reader :errors
+
+      def initialize(app, errors = [])
         @app = app
+        @errors = errors
       end
 
       def call(env)
         if env["PATH_INFO"] == "/__identify__"
           [200, {}, [@app.object_id.to_s]]
         else
-          @app.call(env)
+          begin
+            @app.call(env)
+          rescue => e
+            @errors << e
+          end
         end
       end
     end
@@ -24,7 +31,7 @@ module Capybara
       end
     end
 
-    attr_reader :app, :port
+    attr_reader :app, :port, :identify
 
     def initialize(app)
       @app = app
@@ -60,8 +67,10 @@ module Capybara
           @port = Capybara.server_port || find_available_port
           Capybara::Server.ports[@app.object_id] = @port
 
+          @identify = Identify.new(@app)
+
           Thread.new do
-            Capybara.server.call(Identify.new(@app), @port)
+            Capybara.server.call(@identify, @port)
           end
 
           Timeout.timeout(60) { sleep(0.1) until responsive? }
@@ -71,6 +80,13 @@ module Capybara
       raise "Rack application timed out during boot"
     else
       self
+    end
+
+    def last_error
+      return unless @identify
+      e = @identify.errors.shift
+      @identify.errors.clear
+      e
     end
 
   private
