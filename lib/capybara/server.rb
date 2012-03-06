@@ -28,6 +28,7 @@ module Capybara
 
     def initialize(app)
       @app = app
+      @server_thread = nil # supress warnings
     end
 
     def host
@@ -43,6 +44,8 @@ module Capybara
     end
 
     def responsive?
+      return false if @server_thread && @server_thread.join(0)
+
       res = Net::HTTP.start(host, @port) { |http| http.get('/__identify__') }
 
       if res.is_a?(Net::HTTPSuccess) or res.is_a?(Net::HTTPRedirection)
@@ -60,11 +63,11 @@ module Capybara
           @port = Capybara.server_port || find_available_port
           Capybara::Server.ports[@app.object_id] = @port
 
-          Thread.new do
+          @server_thread = Thread.new do
             Capybara.server.call(Identify.new(@app), @port)
           end
 
-          Timeout.timeout(60) { sleep(0.1) until responsive? }
+          Timeout.timeout(60) { @server_thread.join(0.1) until responsive? }
         end
       end
     rescue TimeoutError
