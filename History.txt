@@ -9,12 +9,14 @@
   redirect [Rob van Dijk]
 * Rack::Test now does not send a referer when calling `visit` multiple times
   [Jo Liss]
+* Exceptions during server boot now propagate to main thread [James Tucker]
 
 ### Added
 
 * #481: XPath ... and new selectors ... [Adam McCrea, Jonas Nicklas]
 * has_text, has_content ... [Jonas Nicklas]
 * Add Capybara.server_host option (default: 127.0.0.1) [David Balatero]
+* Add :type option for page.has_field? [Gonzalo Rodríguez]
 
 ### Changed
 
