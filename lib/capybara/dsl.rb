@@ -37,9 +37,22 @@ module Capybara
       Capybara.current_session
     end
 
+    ##
+    #
+    # If using a driver that runs a rack server, check for errors will raise any
+    # errors that were not handled inside the application.
+    #
+    # @return [NilClass] If no errors were raised
+    def check_for_errors
+      return unless page.driver.respond_to?(:rack_server)
+      e = page.driver.rack_server.last_error
+      raise e if e
+    end
+
     Session::DSL_METHODS.each do |method|
       class_eval <<-RUBY, __FILE__, __LINE__+1
         def #{method}(*args, &block)
+          check_for_errors
           page.#{method}(*args, &block)
         end
       RUBY
