@@ -305,7 +305,7 @@ Capybara.javascript_driver = :webkit
 ## The DSL
 
 *A complete reference is available at
-[at rubydoc.info](http://rubydoc.info/github/jnicklas/capybara/master)*.
+[rubydoc.info](http://rubydoc.info/github/jnicklas/capybara/master)*.
 
 **Note**: All searches in Capybara are *case sensitive*. This is because
 Capybara heavily uses XPath, which doesn't support case insensitivity.
@@ -443,7 +443,7 @@ end
 **Note**: `within` will scope the actions to the _first_ (not _any_) element that matches the selector.
 
 There are special methods for restricting the scope to a specific fieldset,
-identified by either an id or the text of the fieldet's legend tag, and to a
+identified by either an id or the text of the fieldset's legend tag, and to a
 specific table, identified by either id or text of the table's caption tag.
 
 ```ruby
@@ -496,7 +496,7 @@ Some Capybara drivers need to run against an actual HTTP server. Capybara takes
 care of this and starts one for you in the same process as your test, but on
 another thread. Selenium is one of those drivers, whereas RackTest is not.
 
-If you are using an SQL database, it is common to run every test in a
+If you are using a SQL database, it is common to run every test in a
 transaction, which is rolled back at the end of the test, rspec-rails does this
 by default out of the box for example. Since transactions are usually not
 shared across threads, this will cause data you have put into the database in
