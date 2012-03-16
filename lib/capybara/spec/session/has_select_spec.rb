@@ -1,4 +1,4 @@
-shared_examples_for "has_select" do  
+shared_examples_for "has_select" do
   describe '#has_select?' do
     before { @session.visit('/form') }
 
@@ -14,14 +14,14 @@ shared_examples_for "has_select" do
 
     context 'with selected value' do
       it "should be true if a field with the given value is on the page" do
-        @session.should have_select('form_locale', :selected => 'English')  
-        @session.should have_select('Region', :selected => 'Norway')  
+        @session.should have_select('form_locale', :selected => 'English')
+        @session.should have_select('Region', :selected => 'Norway')
         @session.should have_select('Underwear', :selected => ['Briefs', 'Commando'])
       end
 
       it "should be false if the given field is not on the page" do
-        @session.should_not have_select('Locale', :selected => 'Swedish')  
-        @session.should_not have_select('Does not exist', :selected => 'John')  
+        @session.should_not have_select('Locale', :selected => 'Swedish')
+        @session.should_not have_select('Does not exist', :selected => 'John')
         @session.should_not have_select('City', :selected => 'Not there')
         @session.should_not have_select('Underwear', :selected => ['Briefs', 'Nonexistant'])
         @session.should_not have_select('Underwear', :selected => ['Briefs', 'Boxers'])
@@ -56,7 +56,7 @@ shared_examples_for "has_select" do
 
       it "should be false if the given field is not on the page" do
         @session.should_not have_select('Locale', :options => ['Not there'])
-        @session.should_not have_select('Does not exist', :options => ['John'])  
+        @session.should_not have_select('Does not exist', :options => ['John'])
         @session.should_not have_select('City', :options => ['London', 'Made up city'])
       end
     end
@@ -77,14 +77,14 @@ shared_examples_for "has_select" do
 
     context 'with selected value' do
       it "should be false if a field with the given value is on the page" do
-        @session.should_not have_no_select('form_locale', :selected => 'English')  
-        @session.should_not have_no_select('Region', :selected => 'Norway')  
+        @session.should_not have_no_select('form_locale', :selected => 'English')
+        @session.should_not have_no_select('Region', :selected => 'Norway')
         @session.should_not have_no_select('Underwear', :selected => ['Briefs', 'Commando'])
       end
 
       it "should be true if the given field is not on the page" do
-        @session.should have_no_select('Locale', :selected => 'Swedish')  
-        @session.should have_no_select('Does not exist', :selected => 'John')  
+        @session.should have_no_select('Locale', :selected => 'Swedish')
+        @session.should have_no_select('Does not exist', :selected => 'John')
         @session.should have_no_select('City', :selected => 'Not there')
         @session.should have_no_select('Underwear', :selected => ['Briefs', 'Nonexistant'])
         @session.should have_no_select('Underwear', :selected => ['Briefs', 'Boxers'])
@@ -119,11 +119,9 @@ shared_examples_for "has_select" do
 
       it "should be true if the given field is not on the page" do
         @session.should have_no_select('Locale', :options => ['Not there'])
-        @session.should have_no_select('Does not exist', :options => ['John'])  
+        @session.should have_no_select('Does not exist', :options => ['John'])
         @session.should have_no_select('City', :options => ['London', 'Made up city'])
       end
     end
   end
 end
-
-
