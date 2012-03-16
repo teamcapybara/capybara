@@ -1,6 +1,7 @@
 require 'uri'
 require 'net/http'
 require 'rack'
+require 'thin'
 
 module Capybara
   class Server
@@ -67,6 +68,8 @@ module Capybara
             Capybara.server.call(Identify.new(@app), @port)
           end
 
+          @server_thread.abort_on_exception = true
+
           Timeout.timeout(60) { @server_thread.join(0.1) until responsive? }
         end
       end
@@ -85,5 +88,25 @@ module Capybara
       server.close if server
     end
 
+  end
+end
+
+module Capybara
+  module Thin
+    class WhinyBackend < ::Thin::Backends::TcpServer
+      class Connection < ::Thin::Connection
+        def log_error(e = $!)
+          raise e
+        end
+      end
+
+      def initialize(host, port, *args)
+        super(host, port)
+      end
+
+      def connect
+        @signature = EventMachine.start_server(@host, @port, Connection, &method(:initialize_connection))
+      end
+    end
   end
 end
