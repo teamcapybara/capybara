@@ -345,7 +345,7 @@ module Capybara
       #
       #     page.has_select?('Language', :selected => ['English', 'German'])
       #
-      # It's also possible to check if a given set of options exists for
+      # It's also possible to check if the exact set of options exists for
       # this select box:
       #
       #     page.has_select?('Language', :options => ['English', 'German'])

@@ -50,14 +50,15 @@ shared_examples_for "has_select" do
 
     context 'with options' do
       it "should be true if a field with the given options is on the page" do
-        @session.should have_select('form_locale', :options => ['English'])  
-        @session.should have_select('Region', :options => ['Norway', 'Sweden'])  
+        @session.should have_select('Region', :options => ['Norway', 'Sweden', 'Finland'])
       end
 
       it "should be false if the given field is not on the page" do
-        @session.should_not have_select('Locale', :options => ['Not there'])
+        @session.should_not have_select('Locale', :options => ['Swedish'])
         @session.should_not have_select('Does not exist', :options => ['John'])
         @session.should_not have_select('City', :options => ['London', 'Made up city'])
+        @session.should_not have_select('Region', :options => ['Norway', 'Sweden'])
+        @session.should_not have_select('Region', :options => ['Norway', 'Norway', 'Norway'])
       end
     end
   end
@@ -113,14 +114,15 @@ shared_examples_for "has_select" do
 
     context 'with options' do
       it "should be false if a field with the given options is on the page" do
-        @session.should_not have_no_select('form_locale', :options => ['English'])  
-        @session.should_not have_no_select('Region', :options => ['Norway', 'Sweden'])  
+        @session.should_not have_no_select('Region', :options => ['Norway', 'Sweden', 'Finland'])
       end
 
       it "should be true if the given field is not on the page" do
-        @session.should have_no_select('Locale', :options => ['Not there'])
+        @session.should have_no_select('Locale', :options => ['Swedish'])
         @session.should have_no_select('Does not exist', :options => ['John'])
         @session.should have_no_select('City', :options => ['London', 'Made up city'])
+        @session.should have_no_select('Region', :options => ['Norway', 'Sweden'])
+        @session.should have_no_select('Region', :options => ['Norway', 'Norway', 'Norway'])
       end
     end
   end
