@@ -21,7 +21,7 @@ RSpec.configure do |config|
       example.run
       # example is just a Proc, @example is the current RSpec::Core::Example
       e = @example.instance_variable_get('@exception') # usually nil
-      if (e.is_a?(Selenium::WebDriver::Error::UnknownError) &&
+      if (defined?(Selenium::WebDriver::Error::UnknownError) && e.is_a?(Selenium::WebDriver::Error::UnknownError) &&
           e.message == 'docElement is null' && (attempts += 1) < 5)
         @example.instance_variable_set('@exception', nil)
         redo

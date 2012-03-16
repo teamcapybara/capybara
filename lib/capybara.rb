@@ -173,14 +173,10 @@ module Capybara
     # @param [Fixnum] port              The port to run the application on
     #
     def run_default_server(app, port)
-      begin
-        require 'rack/handler/thin'
-        Thin::Logging.silent = true
-        Rack::Handler::Thin.run(app, :Port => port)
-      rescue LoadError
-        require 'rack/handler/webrick'
-        Rack::Handler::WEBrick.run(app, :Port => port, :AccessLog => [], :Logger => WEBrick::Log::new(nil, 0))
-      end
+      require "thin"
+
+      ::Thin::Logging.silent = true
+      ::Thin::Server.start("0.0.0.0", port, app, backend: Capybara::Thin::WhinyBackend)
     end
 
     ##
