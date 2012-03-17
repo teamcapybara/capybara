@@ -4,7 +4,6 @@ rvm:
   - 1.9.3
   - ree
   - jruby
-  - rbx-18mode
 gemfile:
   - Gemfile
   - gemfiles/Gemfile.base-versions
