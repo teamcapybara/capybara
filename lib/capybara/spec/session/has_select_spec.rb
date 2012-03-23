@@ -48,7 +48,7 @@ shared_examples_for "has_select" do
       end
     end
 
-    context 'with options' do
+    context 'with exact options' do
       it "should be true if a field with the given options is on the page" do
         @session.should have_select('Region', :options => ['Norway', 'Sweden', 'Finland'])
         @session.should have_select('Tendency', :options => [])
@@ -60,6 +60,19 @@ shared_examples_for "has_select" do
         @session.should_not have_select('City', :options => ['London', 'Made up city'])
         @session.should_not have_select('Region', :options => ['Norway', 'Sweden'])
         @session.should_not have_select('Region', :options => ['Norway', 'Norway', 'Norway'])
+      end
+    end
+
+    context 'with partial options' do
+      it "should be true if a field with the given partial options is on the page" do
+        @session.should have_select('Region', :with_options => ['Norway', 'Sweden'])
+        @session.should have_select('City', :with_options => ['London'])
+      end
+
+      it "should be false if a field with the given partial options is not on the page" do
+        @session.should_not have_select('Locale', :with_options => ['Uruguayan'])
+        @session.should_not have_select('Does not exist', :with_options => ['John'])
+        @session.should_not have_select('Region', :with_options => ['Norway', 'Sweden', 'Finland', 'Latvia'])
       end
     end
   end
@@ -113,7 +126,7 @@ shared_examples_for "has_select" do
       end
     end
 
-    context 'with options' do
+    context 'with exact options' do
       it "should be false if a field with the given options is on the page" do
         @session.should_not have_no_select('Region', :options => ['Norway', 'Sweden', 'Finland'])
       end
@@ -124,6 +137,19 @@ shared_examples_for "has_select" do
         @session.should have_no_select('City', :options => ['London', 'Made up city'])
         @session.should have_no_select('Region', :options => ['Norway', 'Sweden'])
         @session.should have_no_select('Region', :options => ['Norway', 'Norway', 'Norway'])
+      end
+    end
+
+    context 'with partial options' do
+      it "should be false if a field with the given partial options is on the page" do
+        @session.should_not have_no_select('Region', :with_options => ['Norway', 'Sweden'])
+        @session.should_not have_no_select('City', :with_options => ['London'])
+      end
+
+      it "should be true if a field with the given partial options is not on the page" do
+        @session.should have_no_select('Locale', :with_options => ['Uruguayan'])
+        @session.should have_no_select('Does not exist', :with_options => ['John'])
+        @session.should have_no_select('Region', :with_options => ['Norway', 'Sweden', 'Finland', 'Latvia'])
       end
     end
   end

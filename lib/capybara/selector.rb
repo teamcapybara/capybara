@@ -131,6 +131,7 @@ Capybara.add_selector(:select) do
     actual = node.all(:xpath, './/option').map { |option| option.text }
     options.sort == actual.sort
   end
+  filter(:with_options) { |node, options| options.all? { |option| node.first(:option, option) } }
   filter(:selected) do |node, selected|
     actual = node.all(:xpath, './/option').select { |option| option.selected? }.map { |option| option.text }
     ([selected].flatten - actual).empty?
