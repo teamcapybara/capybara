@@ -51,6 +51,7 @@ shared_examples_for "has_select" do
     context 'with options' do
       it "should be true if a field with the given options is on the page" do
         @session.should have_select('Region', :options => ['Norway', 'Sweden', 'Finland'])
+        @session.should have_select('Tendency', :options => [])
       end
 
       it "should be false if the given field is not on the page" do
