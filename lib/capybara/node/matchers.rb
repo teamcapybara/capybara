@@ -345,13 +345,18 @@ module Capybara
       #
       #     page.has_select?('Language', :selected => ['English', 'German'])
       #
-      # It's also possible to check if a given set of options exists for
+      # It's also possible to check if the exact set of options exists for
       # this select box:
       #
-      #     page.has_select?('Language', :options => ['English', 'German'])
+      #     page.has_select?('Language', :options => ['English', 'German', 'Spanish'])
+      #
+      # You can also check for a partial set of options:
+      #
+      #     page.has_select?('Language', :with_options => ['English', 'German'])
       #
       # @param [String] locator                      The label, name or id of a select box
       # @option options [Array] :options             Options which should be contained in this select box
+      # @option options [Array] :with_options        Partial set of options which should be contained in this select box
       # @option options [String, Array] :selected    Options which should be selected
       # @return [Boolean]                            Whether it exists
       #

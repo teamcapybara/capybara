@@ -127,7 +127,11 @@ end
 Capybara.add_selector(:select) do
   xpath { |locator| XPath::HTML.select(locator) }
   failure_message { |node, selector| "no select box with id, name, or label '#{selector.locator}' found" }
-  filter(:options) { |node, options| options.all? { |option| node.first(:option, option) } }
+  filter(:options) do |node, options|
+    actual = node.all(:xpath, './/option').map { |option| option.text }
+    options.sort == actual.sort
+  end
+  filter(:with_options) { |node, options| options.all? { |option| node.first(:option, option) } }
   filter(:selected) do |node, selected|
     actual = node.all(:xpath, './/option').select { |option| option.selected? }.map { |option| option.text }
     ([selected].flatten - actual).empty?
