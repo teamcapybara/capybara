@@ -16,15 +16,24 @@ shared_examples_for "has_select" do
       it "should be true if a field with the given value is on the page" do
         @session.should have_select('form_locale', :selected => 'English')
         @session.should have_select('Region', :selected => 'Norway')
-        @session.should have_select('Underwear', :selected => ['Briefs', 'Commando'])
+        @session.should have_select('Underwear', :selected => [
+          'Boxerbriefs', 'Briefs', 'Commando', "Frenchman's Pantalons", 'Long Johns'
+        ])
       end
 
       it "should be false if the given field is not on the page" do
         @session.should_not have_select('Locale', :selected => 'Swedish')
         @session.should_not have_select('Does not exist', :selected => 'John')
         @session.should_not have_select('City', :selected => 'Not there')
-        @session.should_not have_select('Underwear', :selected => ['Briefs', 'Nonexistant'])
-        @session.should_not have_select('Underwear', :selected => ['Briefs', 'Boxers'])
+        @session.should_not have_select('Underwear', :selected => [
+          'Boxerbriefs', 'Briefs', 'Commando', "Frenchman's Pantalons", 'Long Johns', 'Nonexistant'
+        ])
+        @session.should_not have_select('Underwear', :selected => [
+          'Boxerbriefs', 'Briefs', 'Boxers', 'Commando', "Frenchman's Pantalons", 'Long Johns'
+        ])
+        @session.should_not have_select('Underwear', :selected => [
+          'Boxerbriefs', 'Briefs','Commando', "Frenchman's Pantalons"
+        ])
       end
 
       it "should be true after the given value is selected" do
@@ -39,12 +48,16 @@ shared_examples_for "has_select" do
 
       it "should be true after the given values are selected" do
         @session.select('Boxers', :from => 'Underwear')
-        @session.should have_select('Underwear', :selected => ['Briefs', 'Boxers', 'Commando'])
+        @session.should have_select('Underwear', :selected => [
+          'Boxerbriefs', 'Briefs', 'Boxers', 'Commando', "Frenchman's Pantalons", 'Long Johns'
+        ])
       end
 
       it "should be false after one of the values is unselected" do
         @session.unselect('Briefs', :from => 'Underwear')
-        @session.should_not have_select('Underwear', :selected => ['Briefs', 'Commando'])
+        @session.should_not have_select('Underwear', :selected => [
+          'Boxerbriefs', 'Briefs', 'Commando', "Frenchman's Pantalons", 'Long Johns'
+        ])
       end
     end
 
@@ -94,15 +107,24 @@ shared_examples_for "has_select" do
       it "should be false if a field with the given value is on the page" do
         @session.should_not have_no_select('form_locale', :selected => 'English')
         @session.should_not have_no_select('Region', :selected => 'Norway')
-        @session.should_not have_no_select('Underwear', :selected => ['Briefs', 'Commando'])
+        @session.should_not have_no_select('Underwear', :selected => [
+          'Boxerbriefs', 'Briefs', 'Commando', "Frenchman's Pantalons", 'Long Johns'
+        ])
       end
 
       it "should be true if the given field is not on the page" do
         @session.should have_no_select('Locale', :selected => 'Swedish')
         @session.should have_no_select('Does not exist', :selected => 'John')
         @session.should have_no_select('City', :selected => 'Not there')
-        @session.should have_no_select('Underwear', :selected => ['Briefs', 'Nonexistant'])
-        @session.should have_no_select('Underwear', :selected => ['Briefs', 'Boxers'])
+        @session.should have_no_select('Underwear', :selected => [
+          'Boxerbriefs', 'Briefs', 'Commando', "Frenchman's Pantalons", 'Long Johns', 'Nonexistant'
+        ])
+        @session.should have_no_select('Underwear', :selected => [
+          'Boxerbriefs', 'Briefs', 'Boxers', 'Commando', "Frenchman's Pantalons", 'Long Johns'
+        ])
+        @session.should have_no_select('Underwear', :selected => [
+          'Boxerbriefs', 'Briefs','Commando', "Frenchman's Pantalons"
+        ])
       end
 
       it "should be false after the given value is selected" do
@@ -117,12 +139,16 @@ shared_examples_for "has_select" do
 
       it "should be false after the given values are selected" do
         @session.select('Boxers', :from => 'Underwear')
-        @session.should_not have_no_select('Underwear', :selected => ['Briefs', 'Boxers', 'Commando'])
+        @session.should_not have_no_select('Underwear', :selected => [
+          'Boxerbriefs', 'Briefs', 'Boxers', 'Commando', "Frenchman's Pantalons", 'Long Johns'
+        ])
       end
 
       it "should be true after one of the values is unselected" do
         @session.unselect('Briefs', :from => 'Underwear')
-        @session.should have_no_select('Underwear', :selected => ['Briefs', 'Commando'])
+        @session.should have_no_select('Underwear', :selected => [
+          'Boxerbriefs', 'Briefs', 'Commando', "Frenchman's Pantalons", 'Long Johns'
+        ])
       end
     end
 
