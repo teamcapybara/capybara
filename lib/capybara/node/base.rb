@@ -28,6 +28,8 @@ module Capybara
       include Capybara::Node::Actions
       include Capybara::Node::Matchers
 
+      RETRY_DELAY = 0.05
+
       def initialize(session, base)
         @session = session
         @base = base
@@ -40,7 +42,7 @@ module Capybara
 
       def synchronize(opts = {})
         seconds = opts[:seconds] || Capybara.default_wait_time
-        retries = (seconds.to_f / 0.05).round
+        retries = (seconds.to_f / RETRY_DELAY).round
 
         begin
           yield
@@ -48,7 +50,7 @@ module Capybara
           raise unless driver.wait?
           raise unless driver.invalid_element_errors.include?(e.class) or e.is_a?(Capybara::ElementNotFound)
           raise if retries.zero?
-          sleep(0.05)
+          sleep(RETRY_DELAY)
           reload if Capybara.automatic_reload
           retries -= 1
           retry
