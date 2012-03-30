@@ -49,15 +49,24 @@ module Capybara
             0
           end
 
-        begin
-          yield
-        rescue => e
-          raise unless driver.invalid_element_errors.include?(e.class) or e.is_a?(Capybara::ElementNotFound)
-          raise if retries.zero?
-          sleep(RETRY_DELAY)
-          reload if Capybara.automatic_reload
-          retries -= 1
-          retry
+        if opts[:retry]
+          while !(result = yield) && !retries.zero?
+            sleep(RETRY_DELAY)
+            reload if Capybara.automatic_reload
+            retries -= 1
+          end
+          result
+        else
+          begin
+            yield
+          rescue => e
+            raise unless driver.invalid_element_errors.include?(e.class) or e.is_a?(Capybara::ElementNotFound)
+            raise if retries.zero?
+            sleep(RETRY_DELAY)
+            reload if Capybara.automatic_reload
+            retries -= 1
+            retry
+          end
         end
       end
 
