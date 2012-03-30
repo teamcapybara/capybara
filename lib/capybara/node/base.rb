@@ -41,13 +41,17 @@ module Capybara
       end
 
       def synchronize(opts = {})
-        seconds = opts[:seconds] || Capybara.default_wait_time
-        retries = (seconds.to_f / RETRY_DELAY).round
+        retries =
+          if driver.wait?
+            seconds = opts[:seconds] || Capybara.default_wait_time
+            (seconds.to_f / RETRY_DELAY).round
+          else
+            0
+          end
 
         begin
           yield
         rescue => e
-          raise unless driver.wait?
           raise unless driver.invalid_element_errors.include?(e.class) or e.is_a?(Capybara::ElementNotFound)
           raise if retries.zero?
           sleep(RETRY_DELAY)
