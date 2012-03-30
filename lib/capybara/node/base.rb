@@ -60,8 +60,7 @@ module Capybara
           begin
             yield
           rescue => e
-            raise unless driver.invalid_element_errors.include?(e.class)
-            raise if retries.zero?
+            raise if !driver.invalid_element_errors.include?(e.class) || retries.zero?
             sleep(RETRY_DELAY)
             reload if Capybara.automatic_reload
             retries -= 1
