@@ -45,9 +45,9 @@ module Capybara
         begin
           yield
         rescue => e
-          raise e unless driver.wait?
-          raise e unless driver.invalid_element_errors.include?(e.class) or e.is_a?(Capybara::ElementNotFound)
-          raise e if retries.zero?
+          raise unless driver.wait?
+          raise unless driver.invalid_element_errors.include?(e.class) or e.is_a?(Capybara::ElementNotFound)
+          raise if retries.zero?
           sleep(0.05)
           reload if Capybara.automatic_reload
           retries -= 1
