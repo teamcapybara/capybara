@@ -33,14 +33,14 @@ module Capybara
       # @return [Boolean]                         If the expression exists
       #
       def has_selector?(*args)
-        options = if args.last.is_a?(Hash) then args.last else {} end
-        synchronize do
+        synchronize(:retry => true) do
           results = all(*args)
-          query(*args).matches_count?(results) or raise Capybara::ExpectationNotMet
-          results
+          if query(*args).matches_count?(results)
+            results
+          else
+            false
+          end
         end
-      rescue Capybara::ExpectationNotMet
-        return false
       end
 
       ##
@@ -52,14 +52,14 @@ module Capybara
       # @return [Boolean]
       #
       def has_no_selector?(*args)
-        options = if args.last.is_a?(Hash) then args.last else {} end
-        synchronize do
+        synchronize(:retry => true) do
           results = all(*args)
-          query(*args).matches_count?(results) and raise Capybara::ExpectationNotMet
-          results
+          if query(*args).matches_count?(results)
+            false
+          else
+            results
+          end
         end
-      rescue Capybara::ExpectationNotMet
-        return false
       end
 
       ##
@@ -160,12 +160,9 @@ module Capybara
       def has_text?(content)
         normalized_content = normalize_whitespace(content)
 
-        synchronize do
-          normalize_whitespace(text).include?(normalized_content) or
-          raise ExpectationNotMet
+        synchronize(:retry => true) do
+          normalize_whitespace(text).include?(normalized_content)
         end
-      rescue Capybara::ExpectationNotMet
-        return false
       end
       alias_method :has_content?, :has_text?
 
@@ -183,12 +180,9 @@ module Capybara
       def has_no_text?(content)
         normalized_content = normalize_whitespace(content)
 
-        synchronize do
-          !normalize_whitespace(text).include?(normalized_content) or
-          raise ExpectationNotMet
+        synchronize(:retry => true) do
+          !normalize_whitespace(text).include?(normalized_content)
         end
-      rescue Capybara::ExpectationNotMet
-        return false
       end
       alias_method :has_no_content?, :has_no_text?
 

@@ -109,7 +109,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def invalid_element_errors
-    [Selenium::WebDriver::Error::ObsoleteElementError, Selenium::WebDriver::Error::UnhandledError]
+    super.concat([Selenium::WebDriver::Error::ObsoleteElementError, Selenium::WebDriver::Error::UnhandledError])
   end
 
 private
