@@ -38,7 +38,8 @@ module Capybara
         self
       end
 
-      def synchronize(seconds=Capybara.default_wait_time)
+      def synchronize(opts = {})
+        seconds = opts[:seconds] || Capybara.default_wait_time
         retries = (seconds.to_f / 0.05).round
 
         begin
