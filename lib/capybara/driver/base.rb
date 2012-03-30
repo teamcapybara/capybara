@@ -44,7 +44,7 @@ class Capybara::Driver::Base
   end
 
   def invalid_element_errors
-    []
+    [Capybara::ElementNotFound]
   end
 
   def wait?
