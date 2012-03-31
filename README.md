@@ -274,12 +274,6 @@ At the moment, Capybara supports [Selenium 2.0
 *not* Selenium RC. Provided Firefox is installed, everything is set up for you,
 and you should be able to start using Selenium right away.
 
-Capybara can block and wait for Ajax requests to finish after you've interacted
-with the page. To enable this behaviour, set the `:resynchronize` driver
-option to `true`. This should normally not be necessary, since
-Capybara's automatic reloading should take care of any asynchronicity problems.
-See the section on Asynchronous JavaScript for details.
-
 **Note**: drivers which run the server in a different thread may not work share the
 same transaction as your tests, causing data not to be shared between your test
 and test server, see "Transactions and database setup" below.
