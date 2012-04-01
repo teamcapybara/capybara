@@ -19,7 +19,7 @@ shared_examples_for "find" do
     end
 
     it "should raise an error if there are multiple matches" do
-      expect { @session.find('//a') }.to raise_error(Capybara::ElementNotFound)
+      expect { @session.find('//a') }.to raise_error(Capybara::MultipleMatchesFound)
     end
 
     describe 'the returned node' do
