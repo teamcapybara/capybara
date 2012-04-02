@@ -74,11 +74,13 @@ module Capybara
             Capybara.server.call(Identify.new(@app, @errors), @port)
           end
 
-          @errors_thread = Thread.new do
-            raise(@errors.pop)
-          end
+          main = Thread.current
 
-          @errors_thread.abort_on_exception = true
+          @errors_thread = Thread.new do
+            if error = @errors.pop
+              main.raise(error)
+            end
+          end
 
           Timeout.timeout(60) { @server_thread.join(0.1) until responsive? }
         end
