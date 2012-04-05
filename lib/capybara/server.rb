@@ -26,8 +26,9 @@ module Capybara
 
     attr_reader :app, :port
 
-    def initialize(app)
+    def initialize(app, port = Capybara.server_port)
       @app = app
+      @init_port = port
       @server_thread = nil # supress warnings
     end
 
@@ -60,7 +61,7 @@ module Capybara
         @port = Capybara::Server.ports[@app.object_id]
 
         if not @port or not responsive?
-          @port = Capybara.server_port || find_available_port
+          @port = @init_port || find_available_port
           Capybara::Server.ports[@app.object_id] = @port
 
           @server_thread = Thread.new do
