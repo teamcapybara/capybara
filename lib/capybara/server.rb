@@ -24,12 +24,16 @@ module Capybara
       end
     end
 
-    attr_reader :app, :port
+    attr_reader :app
 
     def initialize(app, port = nil)
       @app = app
       @init_port = port
       @server_thread = nil # supress warnings
+    end
+
+    def port
+      Capybara::Server.ports[@app.object_id]
     end
 
     def host
@@ -47,7 +51,7 @@ module Capybara
     def responsive?
       return false if @server_thread && @server_thread.join(0)
 
-      res = Net::HTTP.start(host, @port) { |http| http.get('/__identify__') }
+      res = Net::HTTP.start(host, port) { |http| http.get('/__identify__') }
 
       if res.is_a?(Net::HTTPSuccess) or res.is_a?(Net::HTTPRedirection)
         return res.body == @app.object_id.to_s
@@ -58,16 +62,11 @@ module Capybara
 
     def boot
       if @app
-        @port = Capybara::Server.ports[@app.object_id]
-
-        if not @port or not responsive?
-          @port = @init_port || Capybara.server_port || find_available_port
-          Capybara::Server.ports[@app.object_id] = @port
-
+        if not port or not responsive?
+          bind_port
           @server_thread = Thread.new do
-            Capybara.server.call(Identify.new(@app), @port)
+            Capybara.server.call(Identify.new(@app), port)
           end
-
           Timeout.timeout(60) { @server_thread.join(0.1) until responsive? }
         end
       end
@@ -78,6 +77,17 @@ module Capybara
     end
 
   private
+    def bind_port
+      self.port = port_to_bind
+    end
+
+    def port=(port)
+      Capybara::Server.ports[@app.object_id] = port
+    end
+
+    def port_to_bind
+      @init_port || Capybara.server_port || find_available_port
+    end
 
     def find_available_port
       server = TCPServer.new('127.0.0.1', 0)
