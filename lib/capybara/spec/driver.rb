@@ -64,7 +64,11 @@ shared_examples_for 'driver' do
       end
 
       it "should allow retrieval of the value" do
-        @driver.find('//textarea').first.value.should == 'banana'
+        @driver.find('//textarea[@id="normal"]').first.value.should == 'banana'
+      end
+
+      it "should not swallow extra newlines in textarea" do
+        @driver.find('//textarea[@id="additional_newline"]').first.value.should == "\nbanana"
       end
 
       it "should allow assignment of field value" do
