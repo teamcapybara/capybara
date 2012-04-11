@@ -286,7 +286,7 @@ module Capybara
     end
 
     NODE_METHODS.each do |method|
-      class_eval <<-RUBY
+      class_eval <<-RUBY, __FILE__, __LINE__+1
         def #{method}(*args, &block)
           current_node.send(:#{method}, *args, &block)
         end
