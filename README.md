@@ -296,6 +296,14 @@ And you can use it by:
 Capybara.javascript_driver = :webkit
 ```
 
+### Poltergeist
+
+[Poltergeist](https://github.com/jonleighton/poltergeist) is another
+headless driver which integrates Capybara with
+[PhantomJS](http://phantomjs.org/). It is truly headless, so doesn't
+require Xvfb to run on your CI server. It will also detect and report
+any Javascript errors that happen within the page.
+
 ## The DSL
 
 *A complete reference is available at
