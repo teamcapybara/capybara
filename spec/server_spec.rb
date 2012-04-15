@@ -88,4 +88,13 @@ describe Capybara::Server do
       Capybara.server {|app, port| Capybara.run_default_server(app, port)}
     end
   end
+
+  it "should raise exceptions to the main thread" do
+    @app = proc { |env| raise ArgumentError, "boo" }
+    @server = Capybara::Server.new(@app).boot
+
+    proc {
+      Net::HTTP.start(@server.host, @server.port) { |http| http.get('/') }
+    }.should raise_error(ArgumentError, "boo")
+  end
 end

@@ -5,15 +5,20 @@ require 'rack'
 module Capybara
   class Server
     class Identify
-      def initialize(app)
+      def initialize(app, errors)
         @app = app
+        @errors = errors
       end
 
       def call(env)
         if env["PATH_INFO"] == "/__identify__"
           [200, {}, [@app.object_id.to_s]]
         else
-          @app.call(env)
+          begin
+            @app.call(env)
+          rescue => e
+            @errors << e
+          end
         end
       end
     end
@@ -63,8 +68,18 @@ module Capybara
           @port = Capybara.server_port || find_available_port
           Capybara::Server.ports[@app.object_id] = @port
 
+          @errors = Queue.new
+
           @server_thread = Thread.new do
-            Capybara.server.call(Identify.new(@app), @port)
+            Capybara.server.call(Identify.new(@app, @errors), @port)
+          end
+
+          main = Thread.current
+
+          @errors_thread = Thread.new do
+            if error = @errors.pop
+              main.raise(error)
+            end
           end
 
           Timeout.timeout(60) { @server_thread.join(0.1) until responsive? }
