@@ -92,7 +92,7 @@ describe Capybara::Server do
   describe "should generate url with host/post of capybara server" do
     before do
       @app = proc { |env| [200, {}, "Hello Server!"]}
-      @server = Capybara::Server.new(@app1).boot
+      @server = Capybara::Server.new(@app).boot
     end
 
     specify "without app_host" do
