@@ -37,9 +37,17 @@ module Capybara
 
     def url(path)
       if path =~ /^http/
-        path
+        if Capybara.use_own_port
+          a, matched_host, rest =* path.match(/(^https?:\/\/[^\/]*)(.*?)$/)
+          matched_host += ":#{port}" unless matched_host =~ /:.*:/
+          matched_host + rest
+        else
+          path
+        end
       else
-        (Capybara.app_host || "http://#{host}:#{port}") + path.to_s
+        url = (Capybara.app_host || "http://#{host}:#{port}")
+        url += ":#{port}" if Capybara.use_own_port && Capybara.app_host
+        url += path.to_s
       end
     end
 
