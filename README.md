@@ -812,7 +812,6 @@ To set up a development environment, simply do:
 
 ```bash
 git submodule update --init
-gem install bundler
 bundle install
 bundle exec rake  # run the test suite
 ```
