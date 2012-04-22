@@ -36,11 +36,19 @@ module Capybara
     end
 
     def url(path)
-      if path =~ /^http/
+      path_url = if path =~ /^http/
         path
       else
         (Capybara.app_host || "http://#{host}:#{port}") + path.to_s
       end
+      
+      if Capybara.insert_port_into_portless_url
+        uri = URI.parse(path_url)
+        uri.port = port if uri.port == 80
+        path_url = uri.to_s
+      end
+      
+      path_url
     end
 
     def responsive?
