@@ -44,7 +44,7 @@ module Capybara
       
       if Capybara.insert_port_into_portless_url
         uri = URI.parse(path_url)
-        uri.port = port if uri.port == 80
+        uri.port = port if uri.port == uri.default_port
         path_url = uri.to_s
       end
       
