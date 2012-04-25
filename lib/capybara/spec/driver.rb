@@ -189,6 +189,9 @@ shared_examples_for "driver with frame support" do
       end
       @driver.find("//*[@id='divInMainWindow']")[0].text.should eql 'This is the text for divInMainWindow'
     end
+    it "should return the result of executing the block" do
+      @driver.within_frame("frameOne") { "return value" }.should eql "return value"
+    end
   end
 end
 
