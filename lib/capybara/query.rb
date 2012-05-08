@@ -21,10 +21,12 @@ module Capybara
       @xpath = @selector.call(@locator).to_s
     end
 
-    def failure_message
+    def failure_message(multiple_matches = nil)
       message = selector.failure_message.call(node, self) if selector.failure_message
       message ||= options[:message]
-      if find
+      if find and multiple_matches
+        message ||= "#{description} found multiple matches, expected only one"
+      elsif find
         message ||= "Unable to find #{description}"
       else
         message ||= "expected #{description} to return something"
@@ -57,7 +59,9 @@ module Capybara
     end
 
     def verify!(results)
-      if find and results.length != 1
+      if find and results.length > 1
+        raise Capybara::MultipleMatchesFound, failure_message(true)
+      elsif find and results.length != 1
         raise Capybara::ElementNotFound, failure_message
       end
     end

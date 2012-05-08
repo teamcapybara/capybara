@@ -7,6 +7,7 @@ module Capybara
   class DriverNotFoundError < CapybaraError; end
   class FrozenInTime < CapybaraError; end
   class ElementNotFound < CapybaraError; end
+  class MultipleMatchesFound < CapybaraError; end
   class ExpectationNotMet < ElementNotFound; end
   class FileNotFound < CapybaraError; end
   class UnselectNotAllowed < CapybaraError; end
