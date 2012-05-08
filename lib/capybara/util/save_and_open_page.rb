@@ -32,7 +32,13 @@ module Capybara
 
     def rewrite_css_and_image_references(response_html) # :nodoc:
       root = Capybara.asset_root
-      return response_html unless root
+      asset_servers = Capybara.asset_servers
+      return response_html unless (root or asset_servers)
+
+      (asset_servers || {}).each_pair do |asset_server, server_assets|
+        response_html.gsub!(/("|')\/(#{server_assets.join('|')})/, '\1' + asset_server.to_s + '/\2')
+      end
+
       directories = Dir.new(root).entries.select { |name|
         (root+name).directory? and not name.to_s =~ /^\./
       }

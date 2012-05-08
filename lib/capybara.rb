@@ -17,6 +17,7 @@ module Capybara
 
   class << self
     attr_accessor :asset_root, :app_host, :run_server, :default_host
+    attr_accessor :asset_servers
     attr_accessor :server_host, :server_port
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
     attr_accessor :save_and_open_page_path, :automatic_reload
@@ -35,7 +36,10 @@ module Capybara
     # === Configurable options
     #
     # [asset_root = String]               Where static assets are located, used by save_and_open_page
-    # [app_host = String]                 The default host to use when giving a relative URL to visit
+    # [asset_servers = Hash]              Where dynamic assets are hosted -
+    #                                     hash of URL => path prefix
+    # [app_host = String]                 The default host to use when giving a
+    # relative URL to visit
     # [run_server = Boolean]              Whether to start a Rack server for the given Rack app (Default: true)
     # [default_selector = :css/:xpath]    Methods which take a selector use the given type by default (Default: CSS)
     # [default_wait_time = Integer]       The number of seconds to wait for asynchronous processes to finish (Default: 2)
