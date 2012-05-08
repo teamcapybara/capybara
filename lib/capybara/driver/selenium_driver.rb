@@ -4,6 +4,8 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
   class Node < Capybara::Driver::Node
     def text
       native.text
+    rescue Selenium::WebDriver::Error::ObsoleteElementError
+      ''
     end
 
     def [](name)
@@ -61,6 +63,8 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
     def visible?
       displayed = native.displayed?
       displayed and displayed != "false"
+    rescue Selenium::WebDriver::Error::ObsoleteElementError
+      false
     end
 
     def selected?
