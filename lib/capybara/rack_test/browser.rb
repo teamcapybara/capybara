@@ -33,10 +33,10 @@ class Capybara::RackTest::Browser
 
   def process_and_follow_redirects(method, path, attributes = {}, env = {})
     process(method, path, attributes, env)
-    5.times do
+    20.times do
       process(:get, last_response["Location"], {}, env) if last_response.redirect?
     end
-    raise Capybara::InfiniteRedirectError, "redirected more than 5 times, check for infinite redirects." if last_response.redirect?
+    raise Capybara::InfiniteRedirectError, "redirected more than 20 times, check for infinite redirects." if last_response.redirect?
   end
 
   def process(method, path, attributes = {}, env = {})
