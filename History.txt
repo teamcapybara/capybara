@@ -25,6 +25,7 @@
   state of the DOM (like #html) [Jonas Nicklas]
 * Element#text on RackTest now only returns visible text and normalizes
   (strips) whitespace, as with Selenium [Mark Dodwell, Jo Liss]
+* Raise redirect limit to 20 [Nícolas Iensen, Jo Liss]
 
 ### Removed
 

@@ -253,14 +253,14 @@ shared_examples_for "driver with cookies support" do
 end
 
 shared_examples_for "driver with infinite redirect detection" do
-  it "should follow 5 redirects" do
-    @driver.visit('/redirect/5/times')
+  it "should follow 20 redirects" do
+    @driver.visit('/redirect/20/times')
     @driver.body.should include('redirection complete')
   end
 
-  it "should not follow more than 5 redirects" do
+  it "should not follow more than 20 redirects" do
     running do
-      @driver.visit('/redirect/6/times')
+      @driver.visit('/redirect/21/times')
     end.should raise_error(Capybara::InfiniteRedirectError)
   end
 end
