@@ -16,7 +16,7 @@ module Capybara
   class InfiniteRedirectError < TimeoutError; end
 
   class << self
-    attr_accessor :asset_root, :app_host, :run_server, :default_host
+    attr_accessor :asset_root, :app_host, :run_server, :default_host, :redirect_limit
     attr_accessor :server_host, :server_port
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
     attr_accessor :save_and_open_page_path, :automatic_reload
@@ -355,6 +355,7 @@ Capybara.configure do |config|
   config.ignore_hidden_elements = false
   config.default_host = "http://www.example.com"
   config.automatic_reload = true
+  config.redirect_limit = 5
 end
 
 Capybara.register_driver :rack_test do |app|
