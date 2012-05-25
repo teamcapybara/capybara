@@ -20,7 +20,7 @@ module Capybara
     attr_accessor :server_host, :server_port
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
     attr_accessor :save_and_open_page_path, :automatic_reload
-    attr_writer :default_driver, :current_driver, :javascript_driver, :session_name
+    attr_writer :default_driver, :current_driver, :javascript_driver, :session_name, :redirect_limit
     attr_accessor :app
 
     ##
@@ -185,6 +185,14 @@ module Capybara
 
     ##
     #
+    # @return [Integer]   Current redirect limit
+    #
+    def redirect_limit
+      @redirect_limit
+    end
+
+    ##
+    #
     # @return [Symbol]    The name of the driver to use by default
     #
     def default_driver
@@ -299,6 +307,7 @@ module Capybara
 
   self.default_driver = nil
   self.current_driver = nil
+  self.redirect_limit = 5
 
   autoload :DSL,        'capybara/dsl'
   autoload :Server,     'capybara/server'

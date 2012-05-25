@@ -253,15 +253,37 @@ shared_examples_for "driver with cookies support" do
 end
 
 shared_examples_for "driver with infinite redirect detection" do
-  it "should follow 5 redirects" do
-    @driver.visit('/redirect/5/times')
-    @driver.body.should include('redirection complete')
-  end
+  context "with default redirect limit" do
+    let(:default_limit) { Capybara.redirect_limit }
+    it "should follow #{Capybara.redirect_limit} redirects" do
+      @driver.visit("/redirect/#{default_limit}/times")
+      @driver.body.should include('redirection complete')
+    end
 
-  it "should not follow more than 5 redirects" do
-    running do
-      @driver.visit('/redirect/6/times')
-    end.should raise_error(Capybara::InfiniteRedirectError)
+    it "should not follow more than #{Capybara.redirect_limit} redirects" do
+      running do
+        @driver.visit("/redirect/#{default_limit + 1}/times")
+      end.should raise_error(Capybara::InfiniteRedirectError)
+    end
+  end
+  context "with 21 redirect limit" do
+    let(:custom_limit) { 21 }
+    around(:each) do |example|
+      default_limit = Capybara.redirect_limit
+      Capybara.redirect_limit= custom_limit
+      example.run
+      Capybara.redirect_limit= default_limit
+    end
+    it "should follow 21 redirects" do
+      @driver.visit("/redirect/#{custom_limit}/times")
+      @driver.body.should include('redirection complete')
+    end
+
+    it "should not follow more than 21 redirects" do
+      running do
+        @driver.visit("/redirect/#{custom_limit + 1}/times")
+      end.should raise_error(Capybara::InfiniteRedirectError)
+    end
   end
 end
 
