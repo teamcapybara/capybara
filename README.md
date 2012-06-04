@@ -191,7 +191,7 @@ class BlogTest < ActionDispatch::IntegrationTest
     Capybara.current_driver = Capybara.javascript_driver # :selenium by default
   end
 
-  test 'shows blog posts'
+  test 'shows blog posts' do
     # ... this test is run with Selenium ...
   end
 end
