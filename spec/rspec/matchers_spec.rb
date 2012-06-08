@@ -425,7 +425,7 @@ describe Capybara::RSpecMatchers do
     end
 
     it "gives proper description" do
-      have_checked_field('it is checked').description.should == "has checked_field \"it is checked\""
+      have_checked_field('it is checked').description.should == "has field \"it is checked\""
     end
 
     context "with should" do
@@ -436,13 +436,13 @@ describe Capybara::RSpecMatchers do
       it "fails if there is such a field but it is not checked" do
         expect do
           html.should have_checked_field('unchecked field')
-        end.to raise_error(/expected checked_field "unchecked field"/)
+        end.to raise_error(/expected field "unchecked field"/)
       end
 
       it "fails if there is no such field" do
         expect do
           html.should have_checked_field('no such field')
-        end.to raise_error(/expected checked_field "no such field"/)
+        end.to raise_error(/expected field "no such field"/)
       end
     end
 
@@ -450,7 +450,7 @@ describe Capybara::RSpecMatchers do
       it "fails if there is such a field and it is checked" do
         expect do
           html.should_not have_checked_field('it is checked')
-        end.to raise_error(/expected checked_field "it is checked" not to return anything/)
+        end.to raise_error(/expected field "it is checked" not to return anything/)
       end
 
       it "passes if there is such a field but it is not checked" do
@@ -470,7 +470,7 @@ describe Capybara::RSpecMatchers do
     end
 
     it "gives proper description" do
-      have_unchecked_field('unchecked field').description.should == "has unchecked_field \"unchecked field\""
+      have_unchecked_field('unchecked field').description.should == "has field \"unchecked field\""
     end
 
     context "with should" do
@@ -481,13 +481,13 @@ describe Capybara::RSpecMatchers do
       it "fails if there is such a field but it is checked" do
         expect do
           html.should have_unchecked_field('it is checked')
-        end.to raise_error(/expected unchecked_field "it is checked"/)
+        end.to raise_error(/expected field "it is checked"/)
       end
 
       it "fails if there is no such field" do
         expect do
           html.should have_unchecked_field('no such field')
-        end.to raise_error(/expected unchecked_field "no such field"/)
+        end.to raise_error(/expected field "no such field"/)
       end
     end
 
@@ -495,7 +495,7 @@ describe Capybara::RSpecMatchers do
       it "fails if there is such a field and it is not checked" do
         expect do
           html.should_not have_unchecked_field('unchecked field')
-        end.to raise_error(/expected unchecked_field "unchecked field" not to return anything/)
+        end.to raise_error(/expected field "unchecked field" not to return anything/)
       end
 
       it "passes if there is such a field but it is checked" do
@@ -512,7 +512,7 @@ describe Capybara::RSpecMatchers do
     let(:html) { '<label>Select Box<select></select></label>' }
 
     it "gives proper description" do
-      have_select('Select Box').description.should == "has select \"Select Box\""
+      have_select('Select Box').description.should == "has select box \"Select Box\""
     end
 
     it "passes if there is such a select" do
@@ -522,7 +522,7 @@ describe Capybara::RSpecMatchers do
     it "fails if there is no such select" do
       expect do
         html.should have_select('No such Select box')
-      end.to raise_error(/expected select "No such Select box"/)
+      end.to raise_error(/expected select box "No such Select box"/)
     end
   end
 

@@ -92,11 +92,11 @@ module Capybara
     end
 
     def have_xpath(xpath, options={})
-      HaveMatcher.new(:xpath, xpath, options)
+      HaveSelector.new(:xpath, xpath, options)
     end
 
     def have_css(css, options={})
-      HaveMatcher.new(:css, css, options)
+      HaveSelector.new(:css, css, options)
     end
 
     def have_content(text)
@@ -112,31 +112,31 @@ module Capybara
     end
 
     def have_link(locator, options={})
-      HaveMatcher.new(:link, locator, options)
+      HaveSelector.new(:link, locator, options)
     end
 
     def have_button(locator)
-      HaveMatcher.new(:button, locator)
+      HaveSelector.new(:button, locator)
     end
 
     def have_field(locator, options={})
-      HaveMatcher.new(:field, locator, options)
+      HaveSelector.new(:field, locator, options)
     end
 
     def have_checked_field(locator)
-      HaveMatcher.new(:checked_field, locator)
+      HaveSelector.new(:field, locator, :checked => true)
     end
 
     def have_unchecked_field(locator)
-      HaveMatcher.new(:unchecked_field, locator)
+      HaveSelector.new(:field, locator, :unchecked => true)
     end
 
     def have_select(locator, options={})
-      HaveMatcher.new(:select, locator, options)
+      HaveSelector.new(:select, locator, options)
     end
 
     def have_table(locator, options={})
-      HaveMatcher.new(:table, locator, options)
+      HaveSelector.new(:table, locator, options)
     end
   end
 end

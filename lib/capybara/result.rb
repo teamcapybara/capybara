@@ -28,6 +28,8 @@ module Capybara
     def failure_message(find=false)
       if find
         "Unable to find #{@query.description}"
+      elsif @query.options[:count]
+        "expected #{@query.description} to be returned #{@query.options[:count]} times"
       else
         "expected #{@query.description} to return something"
       end

@@ -93,7 +93,6 @@ Capybara.add_selector(:link_or_button) do
 end
 
 Capybara.add_selector(:link) do
-  label "link with title, id or text"
   xpath { |locator| XPath::HTML.link(locator) }
   filter(:href) do |node, href|
     node.first(:xpath, XPath.axis(:self)[XPath.attr(:href).equals(href)])
@@ -101,31 +100,29 @@ Capybara.add_selector(:link) do
 end
 
 Capybara.add_selector(:button) do
-  label "button with value or id or text"
   xpath { |locator| XPath::HTML.button(locator) }
 end
 
 Capybara.add_selector(:fillable_field) do
-  label "text field, text area or password field with id, name, or label"
+  label "field"
   xpath { |locator| XPath::HTML.fillable_field(locator) }
 end
 
 Capybara.add_selector(:radio_button) do
-  label "radio button with id, name, or label"
+  label "radio button"
   xpath { |locator| XPath::HTML.radio_button(locator) }
   filter(:checked) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked) { |node, value| (value ^ node.checked?) }
 end
 
 Capybara.add_selector(:checkbox) do
-  label "checkbox with id, name, or label"
   xpath { |locator| XPath::HTML.checkbox(locator) }
   filter(:checked) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked) { |node, value| (value ^ node.checked?) }
 end
 
 Capybara.add_selector(:select) do
-  label "select box with id, name, or label"
+  label "select box"
   xpath { |locator| XPath::HTML.select(locator) }
   filter(:options) do |node, options|
     actual = node.all(:xpath, './/option').map { |option| option.text }
@@ -139,13 +136,12 @@ Capybara.add_selector(:select) do
 end
 
 Capybara.add_selector(:option) do
-  label "option with text"
   xpath { |locator| XPath::HTML.option(locator) }
 end
 
 Capybara.add_selector(:file_field) do
+  label "file field"
   xpath { |locator| XPath::HTML.file_field(locator) }
-  label "file field with id, name, or label"
 end
 
 Capybara.add_selector(:content) do
