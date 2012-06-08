@@ -246,7 +246,7 @@ shared_examples_for "click_button" do
     end
     context "with a locator that doesn't exist" do
       it "should raise an error" do
-        msg = "no button with value or id or text 'does not exist' found"
+        msg = "Unable to find button with value or id or text \"does not exist\""
         running do
           @session.click_button('does not exist')
         end.should raise_error(Capybara::ElementNotFound, msg)

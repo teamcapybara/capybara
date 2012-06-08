@@ -49,7 +49,7 @@ shared_examples_for "click_link" do
 
     context "with a locator that doesn't exist" do
       it "should raise an error" do
-        msg = "no link with title, id or text 'does not exist' found"
+        msg = "Unable to find link with title, id or text \"does not exist\""
         running do
           @session.click_link('does not exist')
         end.should raise_error(Capybara::ElementNotFound, msg)

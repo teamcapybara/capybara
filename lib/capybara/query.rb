@@ -22,14 +22,11 @@ module Capybara
     end
 
     def failure_message
-      message = selector.failure_message.call(node, self) if selector.failure_message
-      message ||= options[:message]
       if find
-        message ||= "Unable to find #{description}"
+        "Unable to find #{description}"
       else
-        message ||= "expected #{description} to return something"
+        "expected #{description} to return something"
       end
-      message
     end
 
     def negative_failure_message
@@ -37,9 +34,10 @@ module Capybara
     end
 
     def name; selector.name; end
+    def label; selector.label or selector.name; end
 
     def description
-      @description = "#{name} #{locator.inspect}"
+      @description = "#{label} #{locator.inspect}"
       @description << " with text #{options[:text].inspect}" if options[:text]
       @description
     end

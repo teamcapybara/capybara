@@ -96,7 +96,7 @@ shared_examples_for "fill_in" do
       before { Capybara.ignore_hidden_elements = true }
       after  { Capybara.ignore_hidden_elements = false }
       it "should not find a hidden field" do
-        msg = "no text field, text area or password field with id, name, or label 'Super Secret' found"
+        msg = "Unable to find text field, text area or password field with id, name, or label \"Super Secret\""
         running do
           @session.fill_in('Super Secret', :with => '777')
         end.should raise_error(Capybara::ElementNotFound, msg)
@@ -105,7 +105,7 @@ shared_examples_for "fill_in" do
 
     context "with a locator that doesn't exist" do
       it "should raise an error" do
-        msg = "no text field, text area or password field with id, name, or label 'does not exist' found"
+        msg = "Unable to find text field, text area or password field with id, name, or label \"does not exist\""
         running do
           @session.fill_in('does not exist', :with => 'Blah blah')
         end.should raise_error(Capybara::ElementNotFound, msg)
