@@ -30,52 +30,33 @@ module Capybara
       end
     end
 
-    class HaveMatcher
-      attr_reader :name, :locator, :options, :failure_message, :actual
+    class HaveText
+      attr_reader :text
 
-      def initialize(name, locator, options={}, &block)
-        @name = name
-        @locator = locator
-        @options = options
-        @failure_message = block
-      end
-
-      def arguments
-        if options.empty? then [locator] else [locator, options] end
+      def initialize(text)
+        @text = text
       end
 
       def matches?(actual)
         @actual = wrap(actual)
-        @actual.send(:"has_#{name}?", *arguments)
+        @actual.has_text?(text)
       end
 
       def does_not_match?(actual)
         @actual = wrap(actual)
-        @actual.send(:"has_no_#{name}?", *arguments)
+        @actual.has_no_text?(text)
       end
 
       def failure_message_for_should
-        if failure_message
-          failure_message.call(actual, self)
-        elsif(@options[:count])
-          "expected #{selector_name} to be returned #{@options[:count]} times"
-        else
-          "expected #{selector_name} to return something"
-        end
+        "expected there to be text #{text.inspect} in #{@actual.text.inspect}"
       end
 
       def failure_message_for_should_not
-        "expected #{selector_name} not to return anything"
+        "expected there not to be text #{text.inspect} in #{@actual.text.inspect}"
       end
 
       def description
-        "has #{selector_name}"
-      end
-
-      def selector_name
-        selector_name = "#{name} #{locator.inspect}"
-        selector_name << " with text #{options[:text].inspect}" if options[:text]
-        selector_name
+        "has text #{text.inspect}"
       end
 
       def wrap(actual)
@@ -100,15 +81,11 @@ module Capybara
     end
 
     def have_content(text)
-      HaveMatcher.new(:content, text.to_s) do |page, matcher|
-        %(expected there to be content #{matcher.locator.inspect} in #{page.text.inspect})
-      end
+      HaveText.new(text)
     end
 
     def have_text(text)
-      HaveMatcher.new(:text, text.to_s) do |page, matcher|
-        %(expected there to be text #{matcher.locator.inspect} in #{page.text.inspect})
-      end
+      HaveText.new(text)
     end
 
     def have_link(locator, options={})
