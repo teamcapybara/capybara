@@ -6,24 +6,11 @@ module Capybara
       end
 
       def matches?(actual)
-        @actual = wrap(actual)
-        @actual.has_selector?(*@args)
+        wrap(actual).assert_selector!(*@args)
       end
 
       def does_not_match?(actual)
-        @actual = wrap(actual)
-        @actual.has_no_selector?(*@args)
-      end
-
-      def failure_message_for_should
-        results = @actual.resolve(query)
-        query.error(results)
-      end
-
-      def failure_message_for_should_not
-        results = @actual.resolve(query)
-        query.negative = true
-        query.error(results)
+        wrap(actual).assert_no_selector!(*@args)
       end
 
       def description
@@ -39,7 +26,7 @@ module Capybara
       end
 
       def query
-        @query ||= @actual.query(*@args)
+        @query ||= Capybara::Query.new(*@args)
       end
     end
 

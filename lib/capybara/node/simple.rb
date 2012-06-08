@@ -122,10 +122,12 @@ module Capybara
         yield # simple nodes don't need to wait
       end
 
-      def resolve(query)
-        native.xpath(query.xpath).map do |node|
+      def all(*args)
+        query = Capybara::Query.new(*args)
+        elements = native.xpath(query.xpath).map do |node|
           self.class.new(node)
-        end.select { |node| query.matches_filters?(node) }
+        end
+        Capybara::Result.new(elements, query)
       end
     end
   end
