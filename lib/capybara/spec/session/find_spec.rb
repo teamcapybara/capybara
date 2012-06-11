@@ -1,5 +1,5 @@
 shared_examples_for "find" do
-  describe '#find', :focus => true do
+  describe '#find' do
     before do
       @session.visit('/with_html')
     end

@@ -73,6 +73,15 @@ shared_examples_for "session with javascript support" do
           sleep(0.3)
           node.find(:css, 'a').text.should == 'RELOADED'
         end
+
+        it "should not reload nodes which haven't been found" do
+          @session.visit('/with_js')
+          node = @session.all(:css, '#the-list li')[1]
+          @session.click_link('Fetch new list!')
+          sleep(0.3)
+          running { node.text.should == 'Foo' }.should raise_error
+          running { node.text.should == 'Bar' }.should raise_error
+        end
       end
     end
 

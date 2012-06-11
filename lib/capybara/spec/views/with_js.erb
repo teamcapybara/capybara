@@ -6,10 +6,10 @@
     <script src="/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
     <script src="/test.js" type="text/javascript" charset="utf-8"></script>
   </head>
-  
+
   <body id="with_js">
     <h1>FooBar</h1>
-    
+
     <p id="change">This is text</p>
     <div id="drag">
       <p>This is a draggable element.</p>
@@ -17,16 +17,16 @@
     <div id="drop">
       <p>It should be dropped here.</p>
     </div>
-    
+
     <p><a href="#" id="clickable">Click me</a></p>
-    
+
     <p>
       <select id="waiter">
         <option>Foo</option>
         <option>My Waiting Option</option>
       </select>
     </p>
-    
+
     <p>
       <input type="text" name="with_focus_event" value="" id="with_focus_event"/>
     </p>
@@ -42,6 +42,14 @@
     <p>
       <a id="reload-link" href="#">Reload!</a>
       <div id="reload-me"><em>waiting to be reloaded</em></div>
+    </p>
+
+    <p>
+      <a id="reload-list" href="#">Fetch new list!</a>
+      <ul id="the-list">
+        <li>Item 1</li>
+        <li>Item 2</li>
+      </ul>
     </p>
 
     <script type="text/javascript">

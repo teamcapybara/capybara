@@ -122,6 +122,10 @@ module Capybara
         yield # simple nodes don't need to wait
       end
 
+      def allow_reload!
+        # no op
+      end
+
       def all(*args)
         query = Capybara::Query.new(*args)
         elements = native.xpath(query.xpath).map do |node|
