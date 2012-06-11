@@ -42,5 +42,6 @@ module Capybara
     def empty?
       @filtered_elements.empty?
     end
+    def [](key); @filtered_elements[key]; end
   end
 end
