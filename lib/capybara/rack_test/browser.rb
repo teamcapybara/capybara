@@ -3,9 +3,11 @@ class Capybara::RackTest::Browser
 
   attr_reader :driver
   attr_accessor :current_host
+  attr_accessor :follow_redirects
 
   def initialize(driver)
     @driver = driver
+    @follow_redirects = true
   end
 
   def app
@@ -33,6 +35,7 @@ class Capybara::RackTest::Browser
 
   def process_and_follow_redirects(method, path, attributes = {}, env = {})
     process(method, path, attributes, env)
+    return unless follow_redirects
     5.times do
       process(:get, last_response["Location"], {}, env) if last_response.redirect?
     end
