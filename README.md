@@ -210,6 +210,19 @@ expectations for Capybara. For example:
 page.must_have_content('Important!')
 ```
 
+## Using Capybara to test non-Rack web applications
+
+Capybara comes bundled with `selenium-webdriver`. By setting the `Capybara.default_driver` to 
+`:selenium` we can use Capybara for testing our non-Ruby web applications.
+
+```ruby
+require 'capybara/cucumber'
+Capybara.default_driver = :selenium
+Capybara.app_host = 'http://example.com' # base url of the application you are testing
+```
+
+Read on for more information on configuring the Selenium driver and changing the default browser.
+
 ## Drivers
 
 Capybara uses the same DSL to drive a variety of browser and headless drivers.
