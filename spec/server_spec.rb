@@ -88,4 +88,46 @@ describe Capybara::Server do
       Capybara.server {|app, port| Capybara.run_default_server(app, port)}
     end
   end
+
+  describe "should generate url with host/post of capybara server" do
+    before do
+      @app = proc { |env| [200, {}, "Hello Server!"]}
+      @server = Capybara::Server.new(@app).boot
+    end
+
+    specify "without app_host" do
+      Capybara.app_host = nil
+      @server.url("/").should == "http://127.0.0.1:/"
+      @server.stub(:port => 8080)
+      @server.url("/").should == "http://127.0.0.1:8080/"
+    end
+
+    specify "with app_host" do
+      Capybara.app_host = "http://www.example.com"
+      @server.url("/").should == "http://www.example.com/"
+      @server.stub(:port => 8080)
+      @server.url("/").should == "http://www.example.com/"
+    end
+
+    specify "with app_host and use_own_port" do
+      Capybara.app_host = "http://www.example.com"
+      Capybara.use_own_port = true
+      @server.stub(:port => 8080)
+      @server.url("/").should == "http://www.example.com:8080/"
+      @server.url("http://www.example.com").should == "http://www.example.com:8080"
+      @server.url("http://www.example.com/").should == "http://www.example.com:8080/"
+      @server.url("https://www.example.com/something").should == "https://www.example.com:8080/something"
+      @server.url("http://www.example.com:7777/").should == "http://www.example.com:7777/"
+
+      Capybara.app_host = "http://127.0.0.1"
+      @server.url("/").should == "http://127.0.0.1:8080/"
+      @server.url("/something").should == "http://127.0.0.1:8080/something"
+      @server.url("https://127.0.0.1/something").should == "https://127.0.0.1:8080/something"
+    end
+
+    after do
+      Capybara.use_own_port = false
+      Capybara.app_host = nil
+    end
+  end
 end
