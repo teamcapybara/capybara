@@ -13,11 +13,48 @@ shared_examples_for "session" do
   end
 
   describe '#visit' do
-    it "should fetch a response from the driver" do
+    it "should fetch a response from the driver with a relative url" do
       @session.visit('/')
       @session.body.should include('Hello world!')
       @session.visit('/foo')
       @session.body.should include('Another World')
+    end
+    
+    it "should fetch a response from the driver with an absolute url with a port" do
+      # Preparation
+      @session.visit('/')
+      root_uri = URI.parse(@session.current_url)
+      
+      @session.visit("http://#{root_uri.host}:#{root_uri.port}/")
+      @session.body.should include('Hello world!')
+      @session.visit("http://#{root_uri.host}:#{root_uri.port}/foo")
+      @session.body.should include('Another World')
+    end
+    
+    context "when Capybara.always_include_port is true" do
+      
+      let(:root_uri) do
+        @session.visit('/')
+        URI.parse(@session.current_url)
+      end
+      
+      before(:each) do
+        Capybara.always_include_port = true
+      end
+      
+      after(:each) do
+        Capybara.always_include_port = false
+      end
+    
+      it "should fetch a response from the driver with an absolute url without a port" do
+        @session.visit("http://#{root_uri.host}/")
+        URI.parse(@session.current_url).port.should == root_uri.port
+        @session.body.should include('Hello world!')
+
+        @session.visit("http://#{root_uri.host}/foo")
+        URI.parse(@session.current_url).port.should == root_uri.port
+        @session.body.should include('Another World')
+      end
     end
   end
 
