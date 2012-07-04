@@ -23,30 +23,38 @@ shared_examples_for "session" do
     it "should fetch a response from the driver with an absolute url with a port" do
       # Preparation
       @session.visit('/')
-      working_uri = URI.parse(@session.current_url)
+      root_uri = URI.parse(@session.current_url)
       
-      @session.visit("http://#{working_uri.host}:#{working_uri.port}/")
+      @session.visit("http://#{root_uri.host}:#{root_uri.port}/")
       @session.body.should include('Hello world!')
-      @session.visit("http://#{working_uri.host}:#{working_uri.port}/foo")
+      @session.visit("http://#{root_uri.host}:#{root_uri.port}/foo")
       @session.body.should include('Another World')
     end
     
-    it "should fetch a response from the driver with an absolute url without a port when Capybara.always_include_port is true" do
-      # Preparation
-      @session.visit('/')
-      working_uri = URI.parse(@session.current_url)
+    context "when Capybara.always_include_port is true" do
       
-      Capybara.always_include_port = true
+      let(:root_uri) do
+        @session.visit('/')
+        URI.parse(@session.current_url)
+      end
+      
+      before(:each) do
+        Capybara.always_include_port = true
+      end
+      
+      after(:each) do
+        Capybara.always_include_port = false
+      end
+    
+      it "should fetch a response from the driver with an absolute url without a port" do
+        @session.visit("http://#{root_uri.host}/")
+        URI.parse(@session.current_url).port.should == root_uri.port
+        @session.body.should include('Hello world!')
 
-      @session.visit("http://#{working_uri.host}/")
-      URI.parse(@session.current_url).port.should == working_uri.port
-      @session.body.should include('Hello world!')
-
-      @session.visit("http://#{working_uri.host}/foo")
-      URI.parse(@session.current_url).port.should == working_uri.port
-      @session.body.should include('Another World')
-
-      Capybara.always_include_port = false
+        @session.visit("http://#{root_uri.host}/foo")
+        URI.parse(@session.current_url).port.should == root_uri.port
+        @session.body.should include('Another World')
+      end
     end
   end
 
