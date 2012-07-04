@@ -3,8 +3,10 @@ rvm:
   - 1.9.2
   - 1.9.3
   - ree
-  - jruby
+  - jruby-18mode
+  - jruby-19mode
   - rbx-18mode
+  - rbx-19mode
 gemfile:
   - Gemfile
   - gemfiles/Gemfile.base-versions
@@ -14,9 +16,14 @@ matrix:
     - gemfile: gemfiles/Gemfile.base-versions
       rvm: rbx-18mode
     - gemfile: gemfiles/Gemfile.base-versions
-      rvm: jruby
+      rvm: rbx-19mode
+    - gemfile: gemfiles/Gemfile.base-versions
+      rvm: jruby-18mode
+    - gemfile: gemfiles/Gemfile.base-versions
+      rvm: jruby-19mode
+  allow_failures:
+    - gemfile: Gemfile
+      rvm: rbx-19mode
 before_script:
   - sh -e /etc/init.d/xvfb start
   - export DISPLAY=:99.0
-before_install:
-  - 'git submodule update --init'

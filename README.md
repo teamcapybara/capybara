@@ -191,7 +191,7 @@ class BlogTest < ActionDispatch::IntegrationTest
     Capybara.current_driver = Capybara.javascript_driver # :selenium by default
   end
 
-  test 'shows blog posts'
+  test 'shows blog posts' do
     # ... this test is run with Selenium ...
   end
 end
@@ -587,9 +587,10 @@ the text of the `h1` to "Something", and this happened, this test would
 pass. If you do not want this behaviour, you can set
 `Capybara.automatic_reload` to `false`.
 
-## Using the DSL in unsupported testing frameworks
+## Using the DSL elsewhere
 
 You can mix the DSL into any context by including <tt>Capybara::DSL</tt>:
+
 
 ```ruby
 require 'capybara'
@@ -609,6 +610,8 @@ module MyModule
   end
 end
 ```
+
+This enables its use in unsupported testing frameworks, and for general-purpose scripting.
 
 ## Calling remote servers
 

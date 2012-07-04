@@ -33,7 +33,6 @@ module Capybara
       # @return [Boolean]                         If the expression exists
       #
       def has_selector?(*args)
-        options = if args.last.is_a?(Hash) then args.last else {} end
         synchronize do
           results = all(*args)
           query(*args).matches_count?(results) or raise Capybara::ExpectationNotMet
@@ -52,7 +51,6 @@ module Capybara
       # @return [Boolean]
       #
       def has_no_selector?(*args)
-        options = if args.last.is_a?(Hash) then args.last else {} end
         synchronize do
           results = all(*args)
           query(*args).matches_count?(results) and raise Capybara::ExpectationNotMet

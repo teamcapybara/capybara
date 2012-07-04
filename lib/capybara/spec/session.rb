@@ -63,7 +63,7 @@ shared_examples_for "session" do
       # method(:html) == method(:body) because these shared examples get run
       # against the DSL, which uses forwarding methods.  So we test behavior.
       @session.visit('/')
-      @session.body.should include('Hello world!')
+      @session.html.should include('Hello world!')
     end
   end
 
