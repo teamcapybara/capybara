@@ -31,12 +31,12 @@ shared_examples_for "session" do
       @session.body.should include('Another World')
     end
     
-    it "should fetch a response from the driver with an absolute url without a port when Capybara.insert_port_into_portless_url is true" do
+    it "should fetch a response from the driver with an absolute url without a port when Capybara.always_include_port is true" do
       # Preparation
       @session.visit('/')
       working_uri = URI.parse(@session.current_url)
       
-      Capybara.insert_port_into_portless_url = true
+      Capybara.always_include_port = true
 
       @session.visit("http://#{working_uri.host}/")
       URI.parse(@session.current_url).port.should == working_uri.port
@@ -46,7 +46,7 @@ shared_examples_for "session" do
       URI.parse(@session.current_url).port.should == working_uri.port
       @session.body.should include('Another World')
 
-      Capybara.insert_port_into_portless_url = false
+      Capybara.always_include_port = false
     end
   end
 

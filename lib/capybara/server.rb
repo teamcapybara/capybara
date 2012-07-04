@@ -42,7 +42,7 @@ module Capybara
         (Capybara.app_host || "http://#{host}:#{port}") + path.to_s
       end
       
-      if Capybara.insert_port_into_portless_url
+      if Capybara.always_include_port
         uri = URI.parse(path_url)
         uri.port = port if uri.port == uri.default_port
         path_url = uri.to_s
