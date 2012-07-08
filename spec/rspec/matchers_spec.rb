@@ -231,6 +231,10 @@ describe Capybara::RSpecMatchers do
           "<h1>Text</h1>".should have_content('Text')
         end
 
+        it "passes if has_content? returns true using regexp" do
+          "<h1>Text</h1>".should have_content(/ext/)
+        end
+
         it "fails if has_content? returns false" do
           expect do
             "<h1>Text</h1>".should have_content('No such Text')
@@ -241,6 +245,10 @@ describe Capybara::RSpecMatchers do
       context "with should_not" do
         it "passes if has_no_content? returns true" do
           "<h1>Text</h1>".should_not have_content('No such Text')
+        end
+
+        it "passes because escapes any characters that would have special meaning in a regexp" do
+          "<h1>Text</h1>".should_not have_content('.')
         end
 
         it "fails if has_no_content? returns false" do
@@ -259,6 +267,10 @@ describe Capybara::RSpecMatchers do
       context "with should" do
         it "passes if has_content? returns true" do
           page.should have_content('This is a test')
+        end
+
+        it "passes if has_content? returns true using regexp" do
+          page.should have_content(/test/)
         end
 
         it "fails if has_content? returns false" do
@@ -303,6 +315,10 @@ describe Capybara::RSpecMatchers do
           "<h1>Text</h1>".should have_text('Text')
         end
 
+        it "passes if has_text? returns true using regexp" do
+          "<h1>Text</h1>".should have_text(/ext/)
+        end
+
         it "fails if has_text? returns false" do
           expect do
             "<h1>Text</h1>".should have_text('No such Text')
@@ -313,6 +329,10 @@ describe Capybara::RSpecMatchers do
       context "with should_not" do
         it "passes if has_no_text? returns true" do
           "<h1>Text</h1>".should_not have_text('No such Text')
+        end
+
+        it "passes because escapes any characters that would have special meaning in a regexp" do
+          "<h1>Text</h1>".should_not have_text('.')
         end
 
         it "fails if has_no_text? returns false" do
@@ -331,6 +351,10 @@ describe Capybara::RSpecMatchers do
       context "with should" do
         it "passes if has_text? returns true" do
           page.should have_text('This is a test')
+        end
+
+        it "passes if has_text? returns true using regexp" do
+          page.should have_text(/test/)
         end
 
         it "fails if has_text? returns false" do

@@ -68,6 +68,21 @@ shared_examples_for 'has_text' do
       @session.visit('/with_html')
       @session.should_not have_text('Inside element with hidden ancestor')
     end
+
+    it "should be true if the text in the page matches given regexp" do
+      @session.visit('/with_html')
+      @session.should have_text(/Lorem/)
+    end
+
+    it "should be false if the text in the page doesn't match given regexp" do
+      @session.visit('/with_html')
+      @session.should_not have_text(/xxxxyzzz/)
+    end
+
+    it "should escape any characters that would have special meaning in a regexp" do
+      @session.visit('/with_html')
+      @session.should_not have_text('.orem')
+    end
   end
 
   describe '#has_no_text?' do
@@ -133,6 +148,21 @@ shared_examples_for 'has_text' do
     it "should be true if the given text is on the page but not visible" do
       @session.visit('/with_html')
       @session.should have_no_text('Inside element with hidden ancestor')
+    end
+
+    it "should be true if the text in the page doesn't match given regexp" do
+      @session.visit('/with_html')
+      @session.should have_no_text(/xxxxyzzz/)
+    end
+
+    it "should be false if the text in the page  matches given regexp" do
+      @session.visit('/with_html')
+      @session.should_not have_no_text(/Lorem/)
+    end
+
+    it "should escape any characters that would have special meaning in a regexp" do
+      @session.visit('/with_html')
+      @session.should have_no_text('.orem')
     end
   end
 end
