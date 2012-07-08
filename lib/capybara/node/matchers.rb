@@ -159,7 +159,7 @@ module Capybara
         normalized_content = normalize_whitespace(content)
 
         synchronize do
-          normalize_whitespace(text).include?(normalized_content) or
+          normalize_whitespace(text).match(normalized_content) or
           raise ExpectationNotMet
         end
       rescue Capybara::ExpectationNotMet
@@ -182,7 +182,7 @@ module Capybara
         normalized_content = normalize_whitespace(content)
 
         synchronize do
-          !normalize_whitespace(text).include?(normalized_content) or
+          !normalize_whitespace(text).match(normalized_content) or
           raise ExpectationNotMet
         end
       rescue Capybara::ExpectationNotMet
@@ -418,7 +418,7 @@ module Capybara
       # @return [String]         Normalized text
       #
       def normalize_whitespace(text)
-        text.gsub(/\s+/, ' ').strip
+        text.is_a?(Regexp) ? text : text.gsub(/\s+/, ' ').strip
       end
     end
   end

@@ -113,13 +113,13 @@ module Capybara
     end
 
     def have_content(text)
-      HaveMatcher.new(:content, text.to_s) do |page, matcher|
+      HaveMatcher.new(:content, text) do |page, matcher|
         %(expected there to be content #{matcher.locator.inspect} in #{page.text.inspect})
       end
     end
 
     def have_text(text)
-      HaveMatcher.new(:text, text.to_s) do |page, matcher|
+      HaveMatcher.new(:text, text) do |page, matcher|
         %(expected there to be text #{matcher.locator.inspect} in #{page.text.inspect})
       end
     end
