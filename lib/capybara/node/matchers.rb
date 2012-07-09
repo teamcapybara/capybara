@@ -33,13 +33,17 @@ module Capybara
       # @return [Boolean]                         If the expression exists
       #
       def has_selector?(*args)
-        synchronize do
-          results = all(*args)
-          query(*args).matches_count?(results) or raise Capybara::ExpectationNotMet
-          results
-        end
+        assert_selector(*args)
       rescue Capybara::ExpectationNotMet
         return false
+      end
+
+      def assert_selector(*args)
+        synchronize do
+          result = all(*args)
+          result.matches_count? or raise Capybara::ExpectationNotMet, result.failure_message
+        end
+        return true
       end
 
       ##
@@ -51,13 +55,17 @@ module Capybara
       # @return [Boolean]
       #
       def has_no_selector?(*args)
-        synchronize do
-          results = all(*args)
-          query(*args).matches_count?(results) and raise Capybara::ExpectationNotMet
-          results
-        end
+        assert_no_selector(*args)
       rescue Capybara::ExpectationNotMet
         return false
+      end
+
+      def assert_no_selector(*args)
+        synchronize do
+          result = all(*args)
+          result.matches_count? and raise Capybara::ExpectationNotMet, result.negative_failure_message
+        end
+        return true
       end
 
       ##
@@ -162,6 +170,7 @@ module Capybara
           normalize_whitespace(text).include?(normalized_content) or
           raise ExpectationNotMet
         end
+        return true
       rescue Capybara::ExpectationNotMet
         return false
       end
@@ -185,6 +194,7 @@ module Capybara
           !normalize_whitespace(text).include?(normalized_content) or
           raise ExpectationNotMet
         end
+        return true
       rescue Capybara::ExpectationNotMet
         return false
       end

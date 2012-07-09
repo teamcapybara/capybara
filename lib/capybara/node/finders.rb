@@ -24,13 +24,7 @@ module Capybara
       # @raise  [Capybara::ElementNotFound]   If the element can't be found before time expires
       #
       def find(*args)
-        query = query(*args)
-        query.find = true
-        synchronize do
-          results = resolve(query)
-          query.verify!(results)
-          results.first
-        end
+        synchronize { all(*args).find! }.tap(&:allow_reload!)
       end
 
       ##
@@ -115,7 +109,13 @@ module Capybara
       # @return [Array[Capybara::Element]]           The found elements
       #
       def all(*args)
-        resolve(query(*args))
+        query = Capybara::Query.new(*args)
+        elements = synchronize do
+          base.find(query.xpath).map do |node|
+            Capybara::Node::Element.new(session, node, self, query)
+          end
+        end
+        Capybara::Result.new(elements, query)
       end
 
       ##
@@ -131,18 +131,6 @@ module Capybara
       #
       def first(*args)
         all(*args).first
-      end
-
-      def query(*args)
-        Capybara::Query.new(self, *args)
-      end
-
-      def resolve(query)
-        synchronize do
-          base.find(query.xpath).map do |node|
-            Capybara::Node::Element.new(session, node, self, query)
-          end.select { |node| query.matches_filters?(node) }
-        end
       end
     end
   end

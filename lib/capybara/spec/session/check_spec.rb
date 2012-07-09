@@ -4,13 +4,13 @@ shared_examples_for "check" do
     before do
       @session.visit('/form')
     end
-    
+
     describe "'checked' attribute" do
       it "should be true if checked" do
         @session.check("Terms of Use")
         @session.find(:xpath, "//input[@id='form_terms_of_use']")['checked'].should be_true
       end
-      
+
       it "should be false if unchecked" do
         @session.find(:xpath, "//input[@id='form_terms_of_use']")['checked'].should be_false
       end
@@ -58,7 +58,7 @@ shared_examples_for "check" do
 
     context "with a locator that doesn't exist" do
       it "should raise an error" do
-        msg = "no checkbox with id, name, or label 'does not exist' found"
+        msg = "Unable to find checkbox \"does not exist\""
         running do
           @session.check('does not exist')
         end.should raise_error(Capybara::ElementNotFound, msg)

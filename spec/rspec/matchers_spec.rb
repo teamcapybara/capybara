@@ -20,7 +20,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_css? returns false" do
           expect do
             "<h1>Text</h1>".should have_css('h2')
-          end.to raise_error(/expected css "h2" to return something/)
+          end.to raise_error(/expected to find css "h2" but there were no matches/)
         end
 
         it "passes if matched node count equals expected count" do
@@ -30,7 +30,7 @@ describe Capybara::RSpecMatchers do
         it "fails if matched node count does not equal expected count" do
           expect do
             "<h1>Text</h1>".should have_css('h1', :count => 2)
-          end.to raise_error(/expected css "h1" to be returned 2 times/)
+          end.to raise_error(/expected css "h1" to be found 2 times/)
         end
       end
 
@@ -42,7 +42,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_no_css? returns false" do
           expect do
             "<h1>Text</h1>".should_not have_css('h1')
-          end.to raise_error(/expected css "h1" not to return anything/)
+          end.to raise_error(/expected not to find css "h1"/)
         end
 
         it "passes if matched node count does not equal expected count" do
@@ -52,7 +52,7 @@ describe Capybara::RSpecMatchers do
         it "fails if matched node count equals expected count" do
           expect do
             "<h1>Text</h1>".should_not have_css('h1', :count => 1)
-          end.to raise_error(/expected css "h1" not to return anything/)
+          end.to raise_error(/expected not to find css "h1"/)
         end
       end
     end
@@ -70,7 +70,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_css? returns false" do
           expect do
             page.should have_css('h1#doesnotexist')
-          end.to raise_error(/expected css "h1#doesnotexist" to return something/)
+          end.to raise_error(/expected to find css "h1#doesnotexist" but there were no matches/)
         end
       end
 
@@ -82,7 +82,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_no_css? returns false" do
           expect do
             page.should_not have_css('h1')
-          end.to raise_error(/expected css "h1" not to return anything/)
+          end.to raise_error(/expected not to find css "h1"/)
         end
       end
     end
@@ -102,7 +102,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_xpath? returns false" do
           expect do
             "<h1>Text</h1>".should have_xpath('//h2')
-          end.to raise_error(%r(expected xpath "//h2" to return something))
+          end.to raise_error(%r(expected to find xpath "//h2" but there were no matches))
         end
       end
 
@@ -114,7 +114,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_no_xpath? returns false" do
           expect do
             "<h1>Text</h1>".should_not have_xpath('//h1')
-          end.to raise_error(%r(expected xpath "//h1" not to return anything))
+          end.to raise_error(%r(expected not to find xpath "//h1"))
         end
       end
     end
@@ -132,7 +132,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_xpath? returns false" do
           expect do
             page.should have_xpath("//h1[@id='doesnotexist']")
-          end.to raise_error(%r(expected xpath "//h1\[@id='doesnotexist'\]" to return something))
+          end.to raise_error(%r(expected to find xpath "//h1\[@id='doesnotexist'\]" but there were no matches))
         end
       end
 
@@ -144,7 +144,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_no_xpath? returns false" do
           expect do
             page.should_not have_xpath('//h1')
-          end.to raise_error(%r(expected xpath "//h1" not to return anything))
+          end.to raise_error(%r(expected not to find xpath "//h1"))
         end
       end
     end
@@ -166,17 +166,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_selector? returns false" do
           expect do
             "<h1>Text</h1>".should have_selector('//h2')
-          end.to raise_error(%r(expected xpath "//h2" to return something))
-        end
-
-        it "fails with the selector's failure_message if set" do
-          Capybara.add_selector(:monkey) do
-            xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
-            failure_message { |node, selector| node.all(".//*[contains(@id, 'monkey')]").map { |node| node.text }.sort.join(', ') }
-          end
-          expect do
-            '<h1 id="monkey_paul">Monkey John</h1>'.should have_selector(:monkey, 14)
-          end.to raise_error("Monkey John")
+          end.to raise_error(%r(expected to find xpath "//h2" but there were no matches))
         end
       end
 
@@ -188,7 +178,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_no_selector? returns false" do
           expect do
             "<h1>Text</h1>".should_not have_selector(:css, 'h1')
-          end.to raise_error(%r(expected css "h1" not to return anything))
+          end.to raise_error(%r(expected not to find css "h1"))
         end
       end
     end
@@ -206,23 +196,13 @@ describe Capybara::RSpecMatchers do
         it "fails if has_selector? returns false" do
           expect do
             page.should have_selector("//h1[@id='doesnotexist']")
-          end.to raise_error(%r(expected xpath "//h1\[@id='doesnotexist'\]" to return something))
+          end.to raise_error(%r(expected to find xpath "//h1\[@id='doesnotexist'\]" but there were no matches))
         end
 
         it "includes text in error message" do
           expect do
             page.should have_selector("//h1", :text => 'wrong text')
-          end.to raise_error(%r(expected xpath "//h1" with text "wrong text" to return something))
-        end
-
-        it "fails with the selector's failure_message if set" do
-          Capybara.add_selector(:monkey) do
-            xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
-            failure_message { |node, selector| node.all(".//*[contains(@id, 'monkey')]").map { |node| node.text }.sort.join(', ') }
-          end
-          expect do
-            page.should have_selector(:monkey, 14)
-          end.to raise_error("Monkey John, Monkey Paul")
+          end.to raise_error(%r(expected to find xpath "//h1" with text "wrong text" but there were no matches))
         end
       end
 
@@ -234,7 +214,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_no_selector? returns false" do
           expect do
             page.should_not have_selector(:css, 'h1', :text => 'test')
-          end.to raise_error(%r(expected css "h1" with text "test" not to return anything))
+          end.to raise_error(%r(expected not to find css "h1" with text "test"))
         end
       end
     end
@@ -242,7 +222,7 @@ describe Capybara::RSpecMatchers do
 
   describe "have_content matcher" do
     it "gives proper description" do
-      have_content('Text').description.should == "has content \"Text\""
+      have_content('Text').description.should == "has text \"Text\""
     end
 
     context "on a string" do
@@ -254,7 +234,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_content? returns false" do
           expect do
             "<h1>Text</h1>".should have_content('No such Text')
-          end.to raise_error(/expected there to be content "No such Text" in "Text"/)
+          end.to raise_error(/expected there to be text "No such Text" in "Text"/)
         end
       end
 
@@ -266,7 +246,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_no_content? returns false" do
           expect do
             "<h1>Text</h1>".should_not have_content('Text')
-          end.to raise_error(/expected content "Text" not to return anything/)
+          end.to raise_error(/expected there not to be text "Text" in "Text"/)
         end
       end
     end
@@ -284,7 +264,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_content? returns false" do
           expect do
             page.should have_content('No such Text')
-          end.to raise_error(/expected there to be content "No such Text" in "(.*)This is a test(.*)"/)
+          end.to raise_error(/expected there to be text "No such Text" in "(.*)This is a test(.*)"/)
         end
 
         context "with default selector CSS" do
@@ -292,7 +272,7 @@ describe Capybara::RSpecMatchers do
           it "fails if has_content? returns false" do
             expect do
               page.should have_content('No such Text')
-            end.to raise_error(/expected there to be content "No such Text" in "(.*)This is a test(.*)"/)
+            end.to raise_error(/expected there to be text "No such Text" in "(.*)This is a test(.*)"/)
           end
           after { Capybara.default_selector = :xpath }
         end
@@ -306,7 +286,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_no_content? returns false" do
           expect do
             page.should_not have_content('This is a test')
-          end.to raise_error(/expected content "This is a test" not to return anything/)
+          end.to raise_error(/expected there not to be text "This is a test"/)
         end
       end
     end
@@ -338,7 +318,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_no_text? returns false" do
           expect do
             "<h1>Text</h1>".should_not have_text('Text')
-          end.to raise_error(/expected text "Text" not to return anything/)
+          end.to raise_error(/expected there not to be text "Text" in "Text"/)
         end
       end
     end
@@ -378,7 +358,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_no_text? returns false" do
           expect do
             page.should_not have_text('This is a test')
-          end.to raise_error(/expected text "This is a test" not to return anything/)
+          end.to raise_error(/expected there not to be text "This is a test"/)
         end
       end
     end
@@ -398,7 +378,7 @@ describe Capybara::RSpecMatchers do
     it "fails if there is no such button" do
       expect do
         html.should have_link('No such Link')
-      end.to raise_error(/expected link "No such Link"/)
+      end.to raise_error(/expected to find link "No such Link"/)
     end
   end
 
@@ -416,7 +396,7 @@ describe Capybara::RSpecMatchers do
     it "fails if there is no such button" do
       expect do
         html.should have_button('No such Button')
-      end.to raise_error(/expected button "No such Button"/)
+      end.to raise_error(/expected to find button "No such Button"/)
     end
   end
 
@@ -434,7 +414,7 @@ describe Capybara::RSpecMatchers do
     it "fails if there is no such field" do
       expect do
         html.should have_field('No such Field')
-      end.to raise_error(/expected field "No such Field"/)
+      end.to raise_error(/expected to find field "No such Field"/)
     end
   end
 
@@ -445,7 +425,7 @@ describe Capybara::RSpecMatchers do
     end
 
     it "gives proper description" do
-      have_checked_field('it is checked').description.should == "has checked_field \"it is checked\""
+      have_checked_field('it is checked').description.should == "has field \"it is checked\""
     end
 
     context "with should" do
@@ -456,13 +436,13 @@ describe Capybara::RSpecMatchers do
       it "fails if there is such a field but it is not checked" do
         expect do
           html.should have_checked_field('unchecked field')
-        end.to raise_error(/expected checked_field "unchecked field"/)
+        end.to raise_error(/expected to find field "unchecked field"/)
       end
 
       it "fails if there is no such field" do
         expect do
           html.should have_checked_field('no such field')
-        end.to raise_error(/expected checked_field "no such field"/)
+        end.to raise_error(/expected to find field "no such field"/)
       end
     end
 
@@ -470,7 +450,7 @@ describe Capybara::RSpecMatchers do
       it "fails if there is such a field and it is checked" do
         expect do
           html.should_not have_checked_field('it is checked')
-        end.to raise_error(/expected checked_field "it is checked" not to return anything/)
+        end.to raise_error(/expected not to find field "it is checked"/)
       end
 
       it "passes if there is such a field but it is not checked" do
@@ -490,7 +470,7 @@ describe Capybara::RSpecMatchers do
     end
 
     it "gives proper description" do
-      have_unchecked_field('unchecked field').description.should == "has unchecked_field \"unchecked field\""
+      have_unchecked_field('unchecked field').description.should == "has field \"unchecked field\""
     end
 
     context "with should" do
@@ -501,13 +481,13 @@ describe Capybara::RSpecMatchers do
       it "fails if there is such a field but it is checked" do
         expect do
           html.should have_unchecked_field('it is checked')
-        end.to raise_error(/expected unchecked_field "it is checked"/)
+        end.to raise_error(/expected to find field "it is checked"/)
       end
 
       it "fails if there is no such field" do
         expect do
           html.should have_unchecked_field('no such field')
-        end.to raise_error(/expected unchecked_field "no such field"/)
+        end.to raise_error(/expected to find field "no such field"/)
       end
     end
 
@@ -515,7 +495,7 @@ describe Capybara::RSpecMatchers do
       it "fails if there is such a field and it is not checked" do
         expect do
           html.should_not have_unchecked_field('unchecked field')
-        end.to raise_error(/expected unchecked_field "unchecked field" not to return anything/)
+        end.to raise_error(/expected not to find field "unchecked field"/)
       end
 
       it "passes if there is such a field but it is checked" do
@@ -532,7 +512,7 @@ describe Capybara::RSpecMatchers do
     let(:html) { '<label>Select Box<select></select></label>' }
 
     it "gives proper description" do
-      have_select('Select Box').description.should == "has select \"Select Box\""
+      have_select('Select Box').description.should == "has select box \"Select Box\""
     end
 
     it "passes if there is such a select" do
@@ -542,7 +522,7 @@ describe Capybara::RSpecMatchers do
     it "fails if there is no such select" do
       expect do
         html.should have_select('No such Select box')
-      end.to raise_error(/expected select "No such Select box"/)
+      end.to raise_error(/expected to find select box "No such Select box"/)
     end
   end
 
@@ -560,7 +540,7 @@ describe Capybara::RSpecMatchers do
     it "fails if there is no such select" do
       expect do
         html.should have_table('No such Table')
-      end.to raise_error(/expected table "No such Table"/)
+      end.to raise_error(/expected to find table "No such Table"/)
     end
   end
 end

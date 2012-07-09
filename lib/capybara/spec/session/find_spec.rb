@@ -1,5 +1,5 @@
 shared_examples_for "find" do
-  describe '#find', :focus => true do
+  describe '#find' do
     before do
       @session.visit('/with_html')
     end
@@ -19,7 +19,7 @@ shared_examples_for "find" do
     end
 
     it "should raise an error if there are multiple matches" do
-      expect { @session.find('//a') }.to raise_error(Capybara::ElementNotFound)
+      expect { @session.find('//a') }.to raise_error(Capybara::Ambiguous)
     end
 
     describe 'the returned node' do
@@ -89,28 +89,6 @@ shared_examples_for "find" do
       end
     end
 
-    context "with custom selector with failure_message option" do
-      it "should raise an error with the failure message if the element is not found" do
-        Capybara.add_selector(:monkey) do
-          xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
-          failure_message { |node, selector| node.all(".//*[contains(@id, 'monkey')]").map { |node| node.text }.sort.join(', ') }
-        end
-        running do
-          @session.find(:monkey, '14').text.should == 'Monkey Paul'
-        end.should raise_error(Capybara::ElementNotFound, "Monkey John, Monkey Paul")
-      end
-
-      it "should pass the selector as the second argument" do
-        Capybara.add_selector(:monkey) do
-          xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
-          failure_message { |node, selector| selector.name.to_s + ': ' + selector.locator + ' - ' + node.all(".//*[contains(@id, 'monkey')]").map { |node| node.text }.sort.join(', ') }
-        end
-        running do
-          @session.find(:monkey, '14').text.should == 'Monkey Paul'
-        end.should raise_error(Capybara::ElementNotFound, "monkey: 14 - Monkey John, Monkey Paul")
-      end
-    end
-
     context "with custom selector with custom filter" do
       before do
         Capybara.add_selector(:monkey) do
@@ -137,12 +115,6 @@ shared_examples_for "find" do
         @session.find("input[id='test_field']")[:value].should == 'monkey'
       end
       after { Capybara.default_selector = :xpath }
-    end
-
-    it "should raise ElementNotFound with specified fail message if nothing was found" do
-      running do
-        @session.find(:xpath, '//div[@id="nosuchthing"]', :message => 'arghh').should be_nil
-      end.should raise_error(Capybara::ElementNotFound, "arghh")
     end
 
     it "should raise ElementNotFound with a useful default message if nothing was found" do

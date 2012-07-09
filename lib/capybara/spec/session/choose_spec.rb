@@ -19,7 +19,7 @@ shared_examples_for "choose" do
 
     context "with a locator that doesn't exist" do
       it "should raise an error" do
-        msg = "no radio button with id, name, or label 'does not exist' found"
+        msg = "Unable to find radio button \"does not exist\""
         running do
           @session.choose('does not exist')
         end.should raise_error(Capybara::ElementNotFound, msg)
