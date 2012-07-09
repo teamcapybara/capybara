@@ -14,7 +14,7 @@ module Capybara
       end
 
       def description
-        "has #{query.description}"
+        "have #{query.description}"
       end
 
       def wrap(actual)
@@ -56,7 +56,7 @@ module Capybara
       end
 
       def description
-        "has text #{text.inspect}"
+        "have text #{text.inspect}"
       end
 
       def wrap(actual)
