@@ -224,7 +224,7 @@ module Capybara
     # Execute the given block within the given iframe given the id of that iframe. Only works on
     # some drivers (e.g. Selenium)
     #
-    # @param [String] locator    Id of the frame
+    # @param [String] frame_id   Id of the frame
     #
     def within_frame(frame_id)
       driver.within_frame(frame_id) do
@@ -237,7 +237,7 @@ module Capybara
     # Execute the given block within the given window. Only works on
     # some drivers (e.g. Selenium)
     #
-    # @param [String] locator of the window
+    # @param [String] handle of the window
     #
     def within_window(handle, &blk)
       driver.within_window(handle, &blk)
