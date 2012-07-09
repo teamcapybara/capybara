@@ -21,14 +21,20 @@ module Capybara
     end
 
     def find!
-      raise Capybara::ElementNotFound, failure_message(true) if @filtered_elements.count != 1
+      raise find_error if @filtered_elements.count != 1
       @filtered_elements.first
     end
 
-    def failure_message(find=false)
-      if find
-        "Unable to find #{@query.description}"
-      elsif @query.options[:count]
+    def find_error
+      if @filtered_elements.count == 0
+        Capybara::ElementNotFound.new("Unable to find #{@query.description}")
+      elsif @filtered_elements.count > 1
+        Capybara::Ambiguous.new("Ambiguous match, found #{@filtered_elements.count} elements matching #{@query.description}")
+      end
+    end
+
+    def failure_message
+      if @query.options[:count]
         "expected #{@query.description} to be returned #{@query.options[:count]} times"
       else
         "expected #{@query.description} to return something"
