@@ -25,24 +25,28 @@ module Capybara
       @filtered_elements.first
     end
 
+    def size; @filtered_elements.size; end
+    alias_method :length, :size
+    alias_method :count, :size
+
     def find_error
       if @filtered_elements.count == 0
         Capybara::ElementNotFound.new("Unable to find #{@query.description}")
       elsif @filtered_elements.count > 1
-        Capybara::Ambiguous.new("Ambiguous match, found #{@filtered_elements.count} elements matching #{@query.description}")
+        Capybara::Ambiguous.new("Ambiguous match, found #{size} elements matching #{@query.description}")
       end
     end
 
     def failure_message
       if @query.options[:count]
-        "expected #{@query.description} to be returned #{@query.options[:count]} times"
+        "expected #{@query.description} to be returned #{@query.options[:count]} times, was found #{size} times"
       else
-        "expected #{@query.description} to return something"
+        "expected to find #{@query.description} but there were no matches"
       end
     end
 
     def negative_failure_message
-      "expected #{@query.description} not to return anything"
+      "expected not to find #{@query.description}, but there were #{size} matches"
     end
 
     def empty?
