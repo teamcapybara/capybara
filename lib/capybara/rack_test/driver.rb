@@ -72,6 +72,12 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
     @browser = nil
   end
 
+  def without_redirects
+    browser.follow_redirects = false
+    yield
+    browser.follow_redirects = true
+  end
+
   def get(*args, &block); browser.get(*args, &block); end
   def post(*args, &block); browser.post(*args, &block); end
   def put(*args, &block); browser.put(*args, &block); end
