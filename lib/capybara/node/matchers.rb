@@ -33,12 +33,12 @@ module Capybara
       # @return [Boolean]                         If the expression exists
       #
       def has_selector?(*args)
-        assert_selector!(*args)
+        assert_selector(*args)
       rescue Capybara::ExpectationNotMet
         return false
       end
 
-      def assert_selector!(*args)
+      def assert_selector(*args)
         synchronize do
           result = all(*args)
           result.matches_count? or raise Capybara::ExpectationNotMet, result.failure_message
@@ -55,12 +55,12 @@ module Capybara
       # @return [Boolean]
       #
       def has_no_selector?(*args)
-        assert_no_selector!(*args)
+        assert_no_selector(*args)
       rescue Capybara::ExpectationNotMet
         return false
       end
 
-      def assert_no_selector!(*args)
+      def assert_no_selector(*args)
         synchronize do
           result = all(*args)
           result.matches_count? and raise Capybara::ExpectationNotMet, result.negative_failure_message

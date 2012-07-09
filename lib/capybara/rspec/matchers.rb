@@ -6,11 +6,11 @@ module Capybara
       end
 
       def matches?(actual)
-        wrap(actual).assert_selector!(*@args)
+        wrap(actual).assert_selector(*@args)
       end
 
       def does_not_match?(actual)
-        wrap(actual).assert_no_selector!(*@args)
+        wrap(actual).assert_no_selector(*@args)
       end
 
       def description
