@@ -79,6 +79,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     old_window = browser.window_handle
     browser.switch_to.frame(frame_id)
     yield
+  ensure
     browser.switch_to.window old_window
   end
 
