@@ -272,14 +272,14 @@ module Capybara
     #
     # Save a snapshot of the page and open it in a browser for inspection
     #
-    def save_page
+    def save_page(file_name=nil)
       require 'capybara/util/save_and_open_page'
-      Capybara.save_page(body)
+      Capybara.save_page(body, file_name)
     end
 
-    def save_and_open_page
+    def save_and_open_page(file_name=nil)
       require 'capybara/util/save_and_open_page'
-      Capybara.save_and_open_page(body)
+      Capybara.save_and_open_page(body, file_name)
     end
 
     def document
