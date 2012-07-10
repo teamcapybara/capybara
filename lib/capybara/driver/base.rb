@@ -27,6 +27,10 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError
   end
 
+  def save_screenshot(path, options={})
+    raise Capybara::NotSupportedByDriverError
+  end
+
   def response_headers
     raise Capybara::NotSupportedByDriverError
   end

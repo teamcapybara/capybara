@@ -41,7 +41,7 @@ module Capybara
       :body, :html, :current_url, :current_host, :evaluate_script, :source,
       :visit, :within, :within_fieldset, :within_table,
       :within_frame, :within_window, :current_path, :save_page,
-      :save_and_open_page, :reset_session!
+      :save_and_open_page, :save_screenshot, :reset_session!
     ]
     DSL_METHODS = NODE_METHODS + SESSION_METHODS
 
@@ -280,6 +280,16 @@ module Capybara
     def save_and_open_page(file_name=nil)
       require 'capybara/util/save_and_open_page'
       Capybara.save_and_open_page(body, file_name)
+    end
+
+    ##
+    #
+    # Save a screenshot of page
+    #
+    # @param  [String] path    A string of image path
+    # @option [Hash]   options Options for saving screenshot
+    def save_screenshot(path, options={})
+      driver.save_screenshot(path, options)
     end
 
     def document
