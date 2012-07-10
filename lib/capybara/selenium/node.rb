@@ -25,8 +25,17 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     elsif tag_name == 'input' and type == 'file'
       native.send_keys(value.to_s)
     elsif tag_name == 'textarea' or tag_name == 'input'
-      native.clear
-      native.send_keys(value.to_s)
+      # per dw_henry's fix for multiple onchange triggers in the Capybara user group:
+      # https://groups.google.com/forum/?fromgroups#!topic/ruby-capybara/LZ6eu0kuRY0
+      keys = [] 
+
+      # node.clear triggers onchange
+      keys << "\b" * native[:value].size if native[:value] 
+      keys << value.to_s 
+      native.send_keys(keys) 
+
+      # execute onchange script after update is finished if it exists.. 
+      native.bridge.executeScript("$('#{native[:id]}').onchange()") if native[:onchange] 
     end
   end
 
