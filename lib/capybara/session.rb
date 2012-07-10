@@ -67,7 +67,8 @@ module Capybara
     # Reset the session, removing all cookies.
     #
     def reset!
-      driver.reset!
+      driver.reset! if @touched
+      @touched = false
     end
     alias_method :cleanup!, :reset!
     alias_method :reset_session!, :reset!
@@ -154,6 +155,7 @@ module Capybara
     # @param [String] url     The URL to navigate to
     #
     def visit(url)
+      @touched = true
       driver.visit(url)
     end
 
@@ -252,6 +254,7 @@ module Capybara
     # @param [String] script   A string of JavaScript to execute
     #
     def execute_script(script)
+      @touched = true
       driver.execute_script(script)
     end
 
@@ -265,6 +268,7 @@ module Capybara
     # @return [Object]          The result of the evaluated JavaScript (may be driver specific)
     #
     def evaluate_script(script)
+      @touched = true
       driver.evaluate_script(script)
     end
 
@@ -289,6 +293,7 @@ module Capybara
     NODE_METHODS.each do |method|
       class_eval <<-RUBY, __FILE__, __LINE__+1
         def #{method}(*args, &block)
+          @touched = true
           current_node.send(:#{method}, *args, &block)
         end
       RUBY
