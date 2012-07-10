@@ -3,7 +3,7 @@ require 'capybara/rspec'
 
 Capybara.app = TestApp
 
-RSpec.configuration.before(:each, :example_group => {:file_path => __FILE__}) do
+RSpec.configuration.before(:each, :example_group => {:file_path => "./spec/rspec/features_spec.rb"}) do
   @in_filtered_hook = true
 end
 
