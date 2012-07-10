@@ -13,6 +13,7 @@ describe Capybara::Selenium::Driver do
   it_should_behave_like "driver without status code support"
   it_should_behave_like "driver with cookies support"
   it_should_behave_like "driver with referer support"
+  it_should_behave_like "driver with screenshot support"
 
   unless RbConfig::CONFIG['host_os'] =~ /mswin|mingw/
     it "should not interfere with forking child processes" do

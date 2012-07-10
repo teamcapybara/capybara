@@ -324,3 +324,19 @@ shared_examples_for "driver with referer support" do
     @driver.body.should match %r{http://.*/referer_base}
   end
 end
+
+shared_examples_for "driver with screenshot support" do
+  describe '#save_screenshot' do
+    let(:image_path) { File.join(Dir.tmpdir, 'capybara-screenshot.png') }
+
+    before do
+      @driver.visit '/'
+      @driver.save_screenshot image_path
+    end
+
+    it "should generate PNG file" do
+      magic = File.read(image_path, 4)
+      magic.should eq "\x89PNG"
+    end
+  end
+end
