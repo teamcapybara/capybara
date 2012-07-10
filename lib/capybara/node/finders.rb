@@ -65,7 +65,7 @@ module Capybara
       #
       # Find a element on the page, given its id.
       #
-      # @param [String] locator       Which element to find
+      # @param [String] id            Which element to find
       # @return [Capybara::Element]   The found element
       #
       def find_by_id(id)
