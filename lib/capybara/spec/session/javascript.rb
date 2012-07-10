@@ -245,6 +245,20 @@ shared_examples_for "session with javascript support" do
         @session.should have_no_text("I changed it")
       end
     end
+
+    describe "#current_path" do
+     it "is affected by pushState" do
+       @session.visit("/with_js")
+       @session.execute_script("window.history.pushState({}, '', '/pushed')")
+       @session.current_path.should == "/pushed"
+     end
+
+     it "is affected by replaceState" do
+       @session.visit("/with_js")
+       @session.execute_script("window.history.replaceState({}, '', '/replaced')")
+       @session.current_path.should == "/replaced"
+     end
+   end
   end
 end
 
