@@ -62,6 +62,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.execute_script "return #{script}"
   end
 
+  def save_screenshot(path, options={})
+    browser.save_screenshot(path)
+  end
+
   def reset!
     # Use instance variable directly so we avoid starting the browser just to reset the session
     if @browser
