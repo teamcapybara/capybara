@@ -87,4 +87,22 @@ describe Capybara::RackTest::Driver do
       @driver.body.should include('foobar')
     end
   end
+
+  describe ':follow_redirects option' do
+    it "defaults to following redirects" do
+      @driver = Capybara::RackTest::Driver.new(TestApp)
+
+      @driver.visit('/redirect')
+      @driver.response.header['Location'].should be_nil
+      @driver.browser.current_url.should eq "#{@driver.browser.current_host}/landed"
+    end
+
+    it "is possible to not follow redirects" do
+      @driver = Capybara::RackTest::Driver.new(TestApp, :follow_redirects => false)
+
+      @driver.visit('/redirect')
+      @driver.response.header['Location'].should eq "#{@driver.browser.current_host}/redirect_again"
+      @driver.browser.current_url.should eq "#{@driver.browser.current_host}/redirect"
+    end
+  end
 end
