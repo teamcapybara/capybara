@@ -25,8 +25,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     elsif tag_name == 'input' and type == 'file'
       native.send_keys(value.to_s)
     elsif tag_name == 'textarea' or tag_name == 'input'
-      native.clear
-      native.send_keys(value.to_s)
+      native.send_keys(("\b" * native[:value].size) + value.to_s)
     end
   end
 
