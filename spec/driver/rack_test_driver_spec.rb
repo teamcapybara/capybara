@@ -29,7 +29,6 @@ describe Capybara::RackTest::Driver do
   it_should_behave_like "driver with header support"
   it_should_behave_like "driver with status code support"
   it_should_behave_like "driver with cookies support"
-  it_should_behave_like "driver with infinite redirect detection"
   it_should_behave_like "driver with referer support"
 
   describe '#reset!' do
@@ -103,6 +102,42 @@ describe Capybara::RackTest::Driver do
       @driver.visit('/redirect')
       @driver.response.header['Location'].should eq "#{@driver.browser.current_host}/redirect_again"
       @driver.browser.current_url.should eq "#{@driver.browser.current_host}/redirect"
+    end
+  end
+
+  describe ':redirect_limit option' do
+    context "with default redirect limit" do
+      before do
+        @driver = Capybara::RackTest::Driver.new(TestApp)
+      end
+
+      it "should follow 5 redirects" do
+        @driver.visit("/redirect/5/times")
+        @driver.body.should include('redirection complete')
+      end
+
+      it "should not follow more than 6 redirects" do
+        running do
+          @driver.visit("/redirect/6/times")
+        end.should raise_error(Capybara::InfiniteRedirectError)
+      end
+    end
+
+    context "with 21 redirect limit" do
+      before do
+        @driver = Capybara::RackTest::Driver.new(TestApp, :redirect_limit => 21)
+      end
+
+      it "should follow 21 redirects" do
+        @driver.visit("/redirect/21/times")
+        @driver.body.should include('redirection complete')
+      end
+
+      it "should not follow more than 21 redirects" do
+        running do
+          @driver.visit("/redirect/22/times")
+        end.should raise_error(Capybara::InfiniteRedirectError)
+      end
     end
   end
 end

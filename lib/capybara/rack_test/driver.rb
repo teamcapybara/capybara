@@ -7,7 +7,8 @@ require 'cgi'
 class Capybara::RackTest::Driver < Capybara::Driver::Base
   DEFAULT_OPTIONS = {
     :respect_data_method => false,
-    :follow_redirects => true
+    :follow_redirects => true,
+    :redirect_limit => 5
   }
   attr_reader :app, :options
 
@@ -23,6 +24,10 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
 
   def follow_redirects?
     @options[:follow_redirects]
+  end
+
+  def redirect_limit
+    @options[:redirect_limit]
   end
 
   def response
