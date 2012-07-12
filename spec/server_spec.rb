@@ -1,6 +1,14 @@
 require 'spec_helper'
 
 describe Capybara::Server do
+  around(:each) do |example|
+    begin
+      example.run
+    ensure
+      Capybara.server_port = nil
+      Capybara.server_host = nil
+    end
+  end
 
   it "should spool up a rack server" do
     @app = proc { |env| [200, {}, "Hello Server!"]}
@@ -23,8 +31,6 @@ describe Capybara::Server do
     app = proc { |env| [200, {}, "Hello Server!"]}
     server = Capybara::Server.new(app).boot
     server.host.should == '0.0.0.0'
-
-    Capybara.server_host = nil
   end
 
   it "should use specified port" do
@@ -35,9 +41,22 @@ describe Capybara::Server do
 
     @res = Net::HTTP.start(@server.host, 22789) { |http| http.get('/') }
     @res.body.should include('Hello Server')
-
-    Capybara.server_port = nil
   end
+
+  it "should pick up changes to Capybara.server_port between initialization and boot" do
+    Capybara.server_port = 22789
+
+    @app = proc { |env| [200, {}, "Hello Server!"]}
+    server = Capybara::Server.new(@app)
+
+    Capybara.server_port = 22790
+
+    @server = server.boot
+
+    @res = Net::HTTP.start(@server.host, 22790) { |http| http.get('/') }
+    @res.body.should include('Hello Server')
+  end
+
 
   it "should find an available port" do
     @app1 = proc { |env| [200, {}, "Hello Server!"]}
