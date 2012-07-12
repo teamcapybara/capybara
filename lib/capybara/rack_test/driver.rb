@@ -6,7 +6,7 @@ require 'cgi'
 
 class Capybara::RackTest::Driver < Capybara::Driver::Base
   DEFAULT_OPTIONS = {
-    :respect_data_method => true
+    :respect_data_method => false
   }
   attr_reader :app, :options
 
