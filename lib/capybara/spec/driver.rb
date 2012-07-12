@@ -136,6 +136,16 @@ shared_examples_for "driver with javascript support" do
     end
   end
 
+  describe '#set' do
+    describe 'on a textfield' do
+      it 'should only trigger onchange once' do
+        field = @driver.find('//input[@id="with_change_event"]').first
+        field.set('some value')
+        field.value.should == 'some value'
+      end
+    end
+  end
+
 end
 
 shared_examples_for "driver with header support" do
