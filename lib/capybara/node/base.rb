@@ -39,17 +39,17 @@ module Capybara
       end
 
       def synchronize(seconds=Capybara.default_wait_time)
-        retries = (seconds.to_f / 0.05).round
+        start_time = Time.now
 
         begin
           yield
         rescue => e
           raise e unless driver.wait?
           raise e unless driver.invalid_element_errors.include?(e.class) or e.is_a?(Capybara::ElementNotFound)
-          raise e if retries.zero?
+          raise e if (Time.now - start_time) >= seconds
           sleep(0.05)
+          raise Capybara::FrozenInTime, "time appears to be frozen, Capybara does not work with libraries which freeze time, consider using time travelling instead" if Time.now == start_time
           reload if Capybara.automatic_reload
-          retries -= 1
           retry
         end
       end
