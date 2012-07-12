@@ -416,6 +416,10 @@ module Capybara
         has_no_selector?(:table, locator, options)
       end
 
+      def ==(other)
+        native == other.native if other.respond_to?(:native)
+      end
+
     private
 
       ##

@@ -13,6 +13,12 @@ shared_examples_for "find" do
       @session.find("//input[@id='test_field']")[:value].should == 'monkey'
     end
 
+    it "preserve object identity", :focus => true do
+      (@session.find('//h1') == @session.find('//h1')).should be_true
+      (@session.find('//h1') === @session.find('//h1')).should be_true
+      (@session.find('//h1').eql? @session.find('//h1')).should be_false
+    end
+
     it "should find the first element using the given locator and options" do
       @session.find('//a', :text => 'Redirect')[:id].should == 'red'
       @session.find(:css, 'a', :text => 'A link came first')[:title].should == 'twas a fine link'
