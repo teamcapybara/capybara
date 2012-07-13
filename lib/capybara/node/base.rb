@@ -66,8 +66,9 @@ module Capybara
       # passed. If the return value of {Time.now} is stubbed out, Capybara will
       # raise `Capybara::FrozenInTime`.
       #
-      # @param [Integer] seconds      Number of seconds to retry this block
-      # @return [Object]              The result of the given block
+      # @param [Integer] seconds          Number of seconds to retry this block
+      # @return [Object]                  The result of the given block
+      # @raise [Capybara::FrozenInTime]   If the rerurn value of {Time.now} appears stuck
       #
       def synchronize(seconds=Capybara.default_wait_time)
         start_time = Time.now
