@@ -39,6 +39,20 @@ module Capybara
 
       ##
       #
+      # Checks if a given selector is not on the page or current node.
+      # Usage is identical to Capybara::Node::Matchers#has_selector?
+      #
+      # @param (see Capybara::Node::Finders#has_selector?)
+      # @return [Boolean]
+      #
+      def has_no_selector?(*args)
+        assert_no_selector(*args)
+      rescue Capybara::ExpectationNotMet
+        return false
+      end
+
+      ##
+      #
       # Asserts that a given selector is on the page or current node.
       #
       #     page.assert_selector('p#foo')
@@ -72,20 +86,6 @@ module Capybara
           result.matches_count? or raise Capybara::ExpectationNotMet, result.failure_message
         end
         return true
-      end
-
-      ##
-      #
-      # Checks if a given selector is not on the page or current node.
-      # Usage is identical to Capybara::Node::Matchers#has_selector?
-      #
-      # @param (see Capybara::Node::Finders#has_selector?)
-      # @return [Boolean]
-      #
-      def has_no_selector?(*args)
-        assert_no_selector(*args)
-      rescue Capybara::ExpectationNotMet
-        return false
       end
 
       ##
