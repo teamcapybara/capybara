@@ -21,6 +21,10 @@ shared_examples_for "all" do
       @result.should include('Smith', 'John', 'John Smith')
     end
 
+    it "should raise an error when given invalid options" do
+      expect { @session.all('//p', :schmoo => "foo") }.to raise_error(ArgumentError)
+    end
+
     context "with css selectors" do
       it "should find all elements using the given selector" do
         @session.all(:css, 'h1').first.text.should == 'This is a test'

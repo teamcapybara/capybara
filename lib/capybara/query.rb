@@ -2,8 +2,11 @@ module Capybara
   class Query
     attr_accessor :selector, :locator, :options, :xpath, :find, :negative
 
+    VALID_KEYS = [:text, :visible, :between, :count, :maximum, :minimum]
+
     def initialize(*args)
       @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
+
       unless options.has_key?(:visible)
         @options[:visible] = Capybara.ignore_hidden_elements
       end
@@ -18,6 +21,8 @@ module Capybara
       @selector ||= Selector.all[Capybara.default_selector]
 
       @xpath = @selector.call(@locator).to_s
+
+      assert_valid_keys!
     end
 
     def name; selector.name; end
@@ -55,6 +60,18 @@ module Capybara
         options[:minimum].to_i <= count
       else
         count > 0
+      end
+    end
+
+  private
+
+    def assert_valid_keys!
+      valid_keys = VALID_KEYS + @selector.custom_filters.keys
+      invalid_keys = @options.keys - valid_keys
+      unless invalid_keys.empty?
+        invalid_names = invalid_keys.map(&:inspect).join(", ")
+        valid_names = valid_keys.map(&:inspect).join(", ")
+        raise ArgumentError, "invalid keys #{invalid_names}, should be one of #{valid_names}"
       end
     end
   end
