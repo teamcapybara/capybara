@@ -33,10 +33,13 @@ module Capybara
 
     attr_reader :app, :port
 
-    def initialize(app)
+    def initialize(app, port=Capybara.server_port)
       @app = app
       @middleware = Middleware.new(@app)
       @server_thread = nil # supress warnings
+      @port = port
+      @port ||= Capybara::Server.ports[@app.object_id]
+      @port ||= find_available_port
     end
 
     def reset_error!
@@ -64,19 +67,14 @@ module Capybara
     end
 
     def boot
-      if @app
-        @port = Capybara::Server.ports[@app.object_id]
+      unless responsive?
+        Capybara::Server.ports[@app.object_id] = @port
 
-        if not @port or not responsive?
-          @port = Capybara.server_port || find_available_port
-          Capybara::Server.ports[@app.object_id] = @port
-
-          @server_thread = Thread.new do
-            Capybara.server.call(@middleware, @port)
-          end
-
-          Timeout.timeout(60) { @server_thread.join(0.1) until responsive? }
+        @server_thread = Thread.new do
+          Capybara.server.call(@middleware, @port)
         end
+
+        Timeout.timeout(60) { @server_thread.join(0.1) until responsive? }
       end
     rescue TimeoutError
       raise "Rack application timed out during boot"
