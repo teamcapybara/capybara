@@ -65,10 +65,16 @@
 * `within_frame` returns the value of the given block [Alistair Hutchison]
 * Running `Node.set` on text fields will not trigger more than one change event
   [Andrew Kasper]
+* Throw an error when an option is given to a finder method, like `all` or
+  `has_selector?` which Capybara doesn't understand [Jonas Nicklas]
+* Two references to the node now register as equal when comparing them with `==`
+  [Jonas Nicklas]
 
 ### Added
 
 * Much improved error message [Jonas Nicklas]
+* Errors from inside the session for apps running in a server are raised when
+  session is reset [James Tucker, Jonas Nicklas]
 * A ton of new selectors built in out of the box, like `field`, `link`, `button`,
   etc... [Adam McCrea, Jonas Nicklas]
 * `has_text`, `has_content` ... [Jonas Nicklas]
@@ -80,6 +86,9 @@
 * `Capybara.always_include_port` config option always includes the server port in
   URLs when using `visit`. Facilitates testing different domain names`. [Douwe Maan]
 * Redirect limit for RackTest driver is configurable [Josh Lane]
+* Server port can be manually specified during initialization of server.
+  [Jonas Nicklas, John Wilger]
+* `has_content?` and `has_text?` can be given a regular expression [Vasiliy Ermolovich]
 
 # Version 1.1.2
 
