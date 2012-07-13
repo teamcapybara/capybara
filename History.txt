@@ -23,6 +23,8 @@
   `with_options` for the old behaviour. [Gonzalo Rodriguez]
 * The `selected` option to `has_select?` must match all selected options for multiple
   selects. [Gonzalo Rodriguez]
+* Various internals for running driver specs, this should only affect driver authors
+  [Jonas Nicklas]
 
 ### Removed
 
