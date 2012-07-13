@@ -4,7 +4,9 @@ require 'rack'
 
 module Capybara
   class Server
-    class Identify
+    class Middleware
+      attr_accessor :error
+
       def initialize(app)
         @app = app
       end
@@ -13,7 +15,12 @@ module Capybara
         if env["PATH_INFO"] == "/__identify__"
           [200, {}, [@app.object_id.to_s]]
         else
-          @app.call(env)
+          begin
+            @app.call(env)
+          rescue StandardError => e
+            @error = e unless @error
+            raise e
+          end
         end
       end
     end
@@ -28,7 +35,16 @@ module Capybara
 
     def initialize(app)
       @app = app
+      @middleware = Middleware.new(@app)
       @server_thread = nil # supress warnings
+    end
+
+    def reset_error!
+      @middleware.error = nil
+    end
+
+    def error
+      @middleware.error
     end
 
     def host
@@ -56,7 +72,7 @@ module Capybara
           Capybara::Server.ports[@app.object_id] = @port
 
           @server_thread = Thread.new do
-            Capybara.server.call(Identify.new(@app), @port)
+            Capybara.server.call(@middleware, @port)
           end
 
           Timeout.timeout(60) { @server_thread.join(0.1) until responsive? }

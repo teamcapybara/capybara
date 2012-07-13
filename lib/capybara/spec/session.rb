@@ -3,10 +3,31 @@ require 'nokogiri'
 
 Dir[File.dirname(__FILE__)+'/session/*'].each { |group| require group }
 
+module Quietly
+  def silence_stream(stream)
+    old_stream = stream.dup
+    stream.reopen(RbConfig::CONFIG['host_os'] =~ /rmswin|mingw/ ? 'NUL:' : '/dev/null')
+    stream.sync = true
+    yield
+  ensure
+    stream.reopen(old_stream)
+  end
+
+  def quietly
+    silence_stream(STDOUT) do
+      silence_stream(STDERR) do
+        yield
+      end
+    end
+  end
+end
+
 shared_examples_for "session" do
   def extract_results(session)
     YAML.load Nokogiri::HTML(session.body).xpath("//pre[@id='results']").first.text.lstrip
   end
+
+  include Quietly
 
   after do
     @session.reset_session!
@@ -81,6 +102,15 @@ shared_examples_for "session" do
       @session.reset_session!
       @session.body.should_not include('This is a test')
       @session.should have_no_selector('.//h1')
+    end
+
+    it "raises any errors caught inside the server" do
+      expect do
+        quietly { @session.visit("/error") }
+        @session.reset_session!
+      end.to raise_error(TestApp::TestAppError)
+      @session.visit("/")
+      @session.current_path.should == "/"
     end
   end
 

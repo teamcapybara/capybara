@@ -3,8 +3,12 @@ require 'rack'
 require 'yaml'
 
 class TestApp < Sinatra::Base
+  class TestAppError < StandardError; end
+
   set :root, File.dirname(__FILE__)
   set :static, true
+  set :raise_errors, true
+  set :show_exceptions, false
 
   # Also check lib/capybara/spec/views/*.erb for pages not listed here
 
@@ -112,6 +116,10 @@ class TestApp < Sinatra::Base
 
   get '/get_header_via_redirect' do
     redirect '/get_header'
+  end
+
+  get '/error' do
+    raise TestAppError, "some error"
   end
 
   get '/:view' do |view|

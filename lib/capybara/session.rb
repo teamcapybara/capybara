@@ -45,7 +45,7 @@ module Capybara
     ]
     DSL_METHODS = NODE_METHODS + SESSION_METHODS
 
-    attr_reader :mode, :app
+    attr_reader :mode, :app, :server
 
     def initialize(mode, app=nil)
       @mode = mode
@@ -72,6 +72,9 @@ module Capybara
     def reset!
       driver.reset! if @touched
       @touched = false
+      raise @server.error if @server and @server.error
+    ensure
+      @server.reset_error! if @server
     end
     alias_method :cleanup!, :reset!
     alias_method :reset_session!, :reset!
