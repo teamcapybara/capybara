@@ -38,6 +38,37 @@ module Capybara
         self
       end
 
+      ##
+      #
+      # This method is Capybara's primary defence agains asynchonicity
+      # problems. It works by attempting to run a given block of code until it
+      # succeeds. The exact behaviour of this method depends on a number of
+      # factors. Principality there are certain exceptions which, when raised
+      # from the block, instead of bubbling up, are caught, and the block is
+      # re-run.
+      #
+      # Certain drivers, such as RackTest, have no support for aynchronous
+      # processes, these drivers run the block, and any error raised bubbles up
+      # immediately. This allows faster turn around in the case where an
+      # expectation fails.
+      #
+      # Only exceptions that are {Capybara::ElementNotFound} or any subclass
+      # thereof cause the block to be rerun. Drivers may specify additional
+      # exceptions which also cause reruns. This usually occurs when a node is
+      # manipulated which no longer exists on the page. For example, the
+      # Selenium driver specifies
+      # `Selenium::WebDriver::Error::ObsoleteElementError`.
+      #
+      # As long as any of these exceptions are thrown, the block is re-run,
+      # until a certain amount of time passes. The amount of time defaults to
+      # {Capybara.default_wait_time} and can be overriden through the `seconds`
+      # argument. This time comparison the system time to see how much time has
+      # passed. If the return value of {Time.now} is stubbed out, Capybara will
+      # raise `Capybara::FrozenInTime`.
+      #
+      # @param [Integer] seconds      Number of seconds to retry this block
+      # @return [Object]              The result of the given block
+      #
       def synchronize(seconds=Capybara.default_wait_time)
         start_time = Time.now
 
