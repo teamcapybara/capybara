@@ -6,7 +6,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   }
   SPECIAL_OPTIONS = [:browser]
 
-  attr_reader :app, :rack_server, :options
+  attr_reader :app, :options
 
   def browser
     unless @browser
@@ -28,12 +28,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     @browser = nil
     @exit_status = nil
     @options = DEFAULT_OPTIONS.merge(options)
-    @rack_server = Capybara::Server.new(@app)
-    @rack_server.boot if Capybara.run_server
   end
 
   def visit(path)
-    browser.navigate.to(url(path))
+    browser.navigate.to(path)
   end
 
   def source
@@ -53,6 +51,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def wait?; true; end
+  def needs_server?; true; end
 
   def execute_script(script)
     browser.execute_script script
@@ -116,11 +115,4 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def invalid_element_errors
     [Selenium::WebDriver::Error::ObsoleteElementError, Selenium::WebDriver::Error::UnhandledError]
   end
-
-private
-
-  def url(path)
-    rack_server.url(path)
-  end
-
 end

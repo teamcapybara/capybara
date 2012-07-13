@@ -50,6 +50,9 @@ module Capybara
     def initialize(mode, app=nil)
       @mode = mode
       @app = app
+      if Capybara.run_server and driver.needs_server?
+        @server = Capybara::Server.new(@app).tap(&:boot)
+      end
     end
 
     def driver
@@ -156,6 +159,19 @@ module Capybara
     #
     def visit(url)
       @touched = true
+
+      if @server
+        unless url =~ /^http/
+          url = (Capybara.app_host || "http://#{@server.host}:#{@server.port}") + url.to_s
+        end
+
+        if Capybara.always_include_port
+          uri = URI.parse(url)
+          uri.port = @server.port if uri.port == uri.default_port
+          url = uri.to_s
+        end
+      end
+
       driver.visit(url)
     end
 

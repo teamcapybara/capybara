@@ -57,4 +57,8 @@ class Capybara::Driver::Base
 
   def reset!
   end
+
+  def needs_server?
+    false
+  end
 end
