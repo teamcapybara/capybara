@@ -130,6 +130,7 @@ shared_examples_for "session" do
   it_should_behave_like "find_link"
   it_should_behave_like "find_by_id"
   it_should_behave_like "find"
+  it_should_behave_like "assert_selector"
   it_should_behave_like "has_text"
   it_should_behave_like "has_css"
   it_should_behave_like "has_selector"
