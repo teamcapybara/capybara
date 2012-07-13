@@ -177,18 +177,6 @@ module Capybara
         synchronize { base.drag_to(node.base) }
       end
 
-      def find(*args)
-        synchronize { super }
-      end
-
-      def first(*args)
-        synchronize { super }
-      end
-
-      def all(*args)
-        synchronize { super }
-      end
-
       def reload
         if @allow_reload
           reloaded = parent.reload.first(@query.name, @query.locator, @query.options)
