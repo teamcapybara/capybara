@@ -181,6 +181,13 @@ shared_examples_for "session with javascript support" do
         @session.click_link('Click me')
         @session.fill_in('new_field', :with => 'Testing...')
       end
+
+      context 'on a pre-populated textfield with a reformatting onchange' do
+        it 'should only trigger onchange once' do
+          @session.fill_in('with_change_event', :with => 'some value')
+          @session.find(:css, '#with_change_event').value.should == 'some value'
+        end
+      end
     end
 
     describe '#check' do

@@ -13,12 +13,6 @@ shared_examples_for "find" do
       @session.find("//input[@id='test_field']")[:value].should == 'monkey'
     end
 
-    it "preserve object identity", :focus => true do
-      (@session.find('//h1') == @session.find('//h1')).should be_true
-      (@session.find('//h1') === @session.find('//h1')).should be_true
-      (@session.find('//h1').eql? @session.find('//h1')).should be_false
-    end
-
     it "should find the first element using the given locator and options" do
       @session.find('//a', :text => 'Redirect')[:id].should == 'red'
       @session.find(:css, 'a', :text => 'A link came first')[:title].should == 'twas a fine link'
@@ -26,28 +20,6 @@ shared_examples_for "find" do
 
     it "should raise an error if there are multiple matches" do
       expect { @session.find('//a') }.to raise_error(Capybara::Ambiguous)
-    end
-
-    describe 'the returned node' do
-      it "should act like a session object" do
-        @session.visit('/form')
-        @form = @session.find(:css, '#get-form')
-        @form.should have_field('Middle Name')
-        @form.should have_no_field('Languages')
-        @form.fill_in('Middle Name', :with => 'Monkey')
-        @form.click_button('med')
-        extract_results(@session)['middle_name'].should == 'Monkey'
-      end
-
-      it "should scope CSS selectors" do
-        @session.find(:css, '#second').should have_no_css('h1')
-      end
-
-      it "should have a reference to its parent if there is one" do
-        @node = @session.find(:css, '#first')
-        @node.parent.should == @node.session.document
-        @node.find(:css, '#foo').parent.should == @node
-      end
     end
 
     context "with css selectors" do
