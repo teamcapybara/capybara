@@ -38,6 +38,7 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
     browser.last_request
   end
 
+  # Use this method for rspec-rails due conflicts with rails
   def visit(path, attributes = {})
     browser.visit(path, attributes)
   end
@@ -82,7 +83,10 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
     @browser = nil
   end
 
+  # Do not this method for rspec-rails due conflicts with rails
+  #   since Capyabara does not have access to low level details
   def get(*args, &block); browser.get(*args, &block); end
+  
   def post(*args, &block); browser.post(*args, &block); end
   def put(*args, &block); browser.put(*args, &block); end
   def delete(*args, &block); browser.delete(*args, &block); end
