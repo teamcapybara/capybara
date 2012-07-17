@@ -257,8 +257,9 @@ directly with Rack interfaces, it does not require a server to be started.
 However, this means that if your application is not a Rack application (Rails,
 Sinatra and most other Ruby frameworks are Rack applications) then you cannot
 use this driver. Furthermore, you cannot use the RackTest driver to test a
-remote application, or to access remote URLs (e.g., HTTP redirects, external
-APIs, or OAuth services) that your application might interact with.
+remote application, or to access remote URLs (e.g., redirects to external
+sites, external APIs, or OAuth services) that your application might interact
+with.
 
 [capybara-mechanize](https://github.com/jeroenvandijk/capybara-mechanize)
 provides a similar driver that can access remote servers.
