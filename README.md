@@ -32,6 +32,9 @@ If you are not using Rails, set Capybara.app to your rack app:
 Capybara.app = MyRackApp
 ```
 
+If you need to test JavaScript, or if your app interacts with (or is located at)
+a remote URL, you'll need to [use a different driver](#drivers).
+
 ## Using Capybara with Cucumber
 
 The `cucumber-rails` gem comes with Capybara support built-in. If you
@@ -217,10 +220,11 @@ Capybara uses the same DSL to drive a variety of browser and headless drivers.
 
 ### Selecting the Driver
 
-By default, Capybara uses the `:rack_test` driver, which is fast but does not
-support JavaScript.  You can set up a different default driver for your
-features. For example if you'd prefer to run everything in Selenium, you could
-do:
+By default, Capybara uses the `:rack_test` driver, which is fast but limited: it
+does not support JavaScript, nor is it able to access HTTP resources outside of
+your Rack application, such as remote APIs and OAuth services. To get around
+these limitations, you can set up a different default driver for your features.
+For example if you'd prefer to run everything in Selenium, you could do:
 
 ```ruby
 Capybara.default_driver = :selenium
@@ -248,15 +252,16 @@ switch in the middle of a test.
 ### RackTest
 
 RackTest is Capybara's default driver. It is written in pure Ruby and does not
-have any support for executing JavaScript. Since the RackTest driver works
-directly against the Rack interface, it does not need any server to be started,
-it can work directly against any Rack app. This means that if your
-application is not a Rack application (Rails, Sinatra and most other Ruby
-frameworks are Rack applications) then you cannot use this driver. You cannot
-use the RackTest driver to test a remote application.
+have any support for executing JavaScript. Since the RackTest driver interacts
+directly with Rack interfaces, it does not require a server to be started.
+However, this means that if your application is not a Rack application (Rails,
+Sinatra and most other Ruby frameworks are Rack applications) then you cannot
+use this driver. Furthermore, you cannot use the RackTest driver to test a
+remote application, or to access remote URLs (e.g., HTTP redirects, external
+APIs, or OAuth services) that your application might interact with.
+
 [capybara-mechanize](https://github.com/jeroenvandijk/capybara-mechanize)
-intends to provide a similar driver which works against remote servers, it is a
-separate project.
+provides a similar driver that can access remote servers.
 
 RackTest can be configured with a set of headers like this:
 
