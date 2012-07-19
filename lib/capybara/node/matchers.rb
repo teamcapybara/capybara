@@ -472,7 +472,7 @@ module Capybara
       # @return [String]         Normalized text
       #
       def normalize_whitespace(text)
-        text.is_a?(Regexp) ? text : text.gsub(/\s+/, ' ').strip
+        text.is_a?(Regexp) ? text : text.to_s.gsub(/\s+/, ' ').strip
       end
 
       ##
