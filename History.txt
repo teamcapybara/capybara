@@ -1,5 +1,11 @@
 # master
 
+### Fixed
+
+* `has_text` (`has_content`) now accepts non-string arguments, like numbers.
+
+# Version 2.0.0.beta2
+
 ### Changed
 
 * `respect_data_method` default to `false` for the RackTest driver, which means
