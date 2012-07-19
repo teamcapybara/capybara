@@ -83,6 +83,17 @@ shared_examples_for 'has_text' do
       @session.visit('/with_html')
       @session.should_not have_text('.orem')
     end
+
+    it "should accept non-string parameters" do
+      @session.visit('/with_html')
+      @session.should have_text(42)
+    end
+
+    it "should be true when passed nil" do
+      # Historical behavior; no particular reason other than compatibility.
+      @session.visit('/with_html')
+      @session.should have_text(nil)
+    end
   end
 
   describe '#has_no_text?' do
