@@ -1,5 +1,12 @@
 require 'spec_helper'
 
+Capybara::SpecHelper.run_specs TestSessions::RackTest, "RackTest", :skip => [
+  :js,
+  :screenshot,
+  :frames,
+  :windows
+]
+
 describe Capybara::Session do
   context 'with rack test driver' do
     before do
@@ -54,12 +61,6 @@ describe Capybara::Session do
         end
       end
     end
-
-    it_should_behave_like "session"
-    it_should_behave_like "session without javascript support"
-    it_should_behave_like "session without screenshot support"
-    it_should_behave_like "session with headers support"
-    it_should_behave_like "session with status code support"
   end
 end
 

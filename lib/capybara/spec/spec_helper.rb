@@ -1,0 +1,75 @@
+module Capybara
+  module SpecHelper
+    class << self
+      def configure(config)
+        filter = lambda do |requires, metadata|
+          if requires and metadata[:skip]
+            requires.none? do |require|
+              metadata[:skip].include?(require)
+            end
+          else
+            true
+          end
+        end
+        config.filter_run_including :requires => filter
+        config.around do |block|
+          if example.metadata[:requires] and example.metadata[:requires].include?(:js)
+            Capybara.default_wait_time = 1
+            block.run
+            Capybara.default_wait_time = 0
+          else
+            block.run
+          end
+        end
+      end
+
+      def spec(name, options={}, &block)
+        @specs ||= []
+        @specs << [name, options, block]
+      end
+
+      def run_specs(session, name, options={})
+        specs = @specs
+        describe Capybara::Session, name, options do
+          include Capybara::SpecHelper
+          before do
+            @session = session
+          end
+          after do
+            @session.reset_session!
+          end
+          specs.each do |name, options, block|
+            describe name, options do
+              class_eval(&block)
+            end
+          end
+        end
+      end
+    end # class << self
+
+    def silence_stream(stream)
+      old_stream = stream.dup
+      stream.reopen(RbConfig::CONFIG['host_os'] =~ /rmswin|mingw/ ? 'NUL:' : '/dev/null')
+      stream.sync = true
+      yield
+    ensure
+      stream.reopen(old_stream)
+    end
+
+    def quietly
+      silence_stream(STDOUT) do
+        silence_stream(STDERR) do
+          yield
+        end
+      end
+    end
+
+    def extract_results(session)
+      YAML.load Nokogiri::HTML(session.body).xpath("//pre[@id='results']").first.text.lstrip
+    end
+  end
+end
+
+RSpec.configure do |config|
+  Capybara::SpecHelper.configure(config)
+end

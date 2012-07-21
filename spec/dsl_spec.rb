@@ -1,6 +1,17 @@
 require 'spec_helper'
 require 'capybara/dsl'
 
+class TestClass
+  include Capybara::DSL
+end
+
+Capybara::SpecHelper.run_specs TestClass.new, "DSL", :skip => [
+  :js,
+  :screenshot,
+  :frames,
+  :windows
+]
+
 describe Capybara::DSL do
   after do
     Capybara.session_name = nil
@@ -210,10 +221,6 @@ describe Capybara::DSL do
     before do
       @session = Class.new { include Capybara::DSL }.new
     end
-
-    it_should_behave_like "session"
-    it_should_behave_like "session without javascript support"
-    it_should_behave_like "session without screenshot support"
 
     it "should be possible to include it in another class" do
       klass = Class.new do
