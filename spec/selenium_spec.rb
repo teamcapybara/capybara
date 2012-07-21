@@ -1,5 +1,12 @@
 require 'spec_helper'
 
+Capybara::SpecHelper.run_specs TestSessions::Selenium, "selenium", :skip => [
+  :response_headers,
+  :status_code,
+  :source,
+  :trigger
+]
+
 describe Capybara::Session do
   context 'with selenium driver' do
     before do
@@ -17,14 +24,6 @@ describe Capybara::Session do
         @session.mode.should == :selenium
       end
     end
-
-    it_should_behave_like "session"
-    it_should_behave_like "session with javascript support"
-    it_should_behave_like "session with screenshot support"
-    it_should_behave_like "session with frame support"
-    it_should_behave_like "session with window support"
-    it_should_behave_like "session without headers support"
-    it_should_behave_like "session without status code support"
 
     describe "exit codes" do
       before do

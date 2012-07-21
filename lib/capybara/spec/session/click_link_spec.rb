@@ -1,105 +1,109 @@
-shared_examples_for "click_link" do
-  describe '#click_link' do
-    before do
-      @session.visit('/with_html')
+Capybara::SpecHelper.spec '#click_link' do
+  before do
+    @session.visit('/with_html')
+  end
+
+  it "should wait for asynchronous load", :requires => [:js] do
+    @session.visit('/with_js')
+    @session.click_link('Click me')
+    @session.click_link('Has been clicked')
+  end
+
+  context "with id given" do
+    it "should take user to the linked page" do
+      @session.click_link('foo')
+      @session.body.should include('Another World')
     end
+  end
 
-    context "with id given" do
-      it "should take user to the linked page" do
-        @session.click_link('foo')
-        @session.body.should include('Another World')
-      end
-    end
-
-    context "with text given" do
-      it "should take user to the linked page" do
-        @session.click_link('labore')
-        @session.body.should include('Bar')
-      end
-
-      it "should accept partial matches" do
-        @session.click_link('abo')
-        @session.body.should include('Bar')
-      end
-    end
-
-    context "with title given" do
-      it "should take user to the linked page" do
-        @session.click_link('awesome title')
-        @session.body.should include('Bar')
-      end
-
-      it "should accept partial matches" do
-        @session.click_link('some tit')
-        @session.body.should include('Bar')
-      end
-    end
-
-    context "with alternative text given to a contained image" do
-      it "should take user to the linked page" do
-        @session.click_link('awesome image')
-        @session.body.should include('Bar')
-      end
-
-      it "should take user to the linked page" do
-        @session.click_link('some imag')
-        @session.body.should include('Bar')
-      end
-    end
-
-    context "with a locator that doesn't exist" do
-      it "should raise an error" do
-        msg = "Unable to find link \"does not exist\""
-        running do
-          @session.click_link('does not exist')
-        end.should raise_error(Capybara::ElementNotFound, msg)
-      end
-    end
-
-    it "should follow relative links" do
-      @session.visit('/')
-      @session.click_link('Relative')
-      @session.body.should include('This is a test')
-    end
-
-    it "should follow redirects" do
-      @session.click_link('Redirect')
-      @session.body.should include('You landed')
-    end
-
-    it "should follow redirects" do
-      @session.click_link('BackToMyself')
-      @session.body.should include('This is a test')
-    end
-
-    it "should add query string to current URL with naked query string" do
-      @session.click_link('Naked Query String')
-      @session.body.should include('Query String sent')
-    end
-
-    it "should do nothing on anchor links" do
-      @session.fill_in("test_field", :with => 'blah')
-      @session.click_link('Normal Anchor')
-      @session.find_field("test_field").value.should == 'blah'
-      @session.click_link('Blank Anchor')
-      @session.find_field("test_field").value.should == 'blah'
-    end
-
-    it "should do nothing on URL+anchor links for the same page" do
-      @session.fill_in("test_field", :with => 'blah')
-      @session.click_link('Anchor on same page')
-      @session.find_field("test_field").value.should == 'blah'
-    end
-
-    it "should follow link on URL+anchor links for a different page" do
-      @session.click_link('Anchor on different page')
+  context "with text given" do
+    it "should take user to the linked page" do
+      @session.click_link('labore')
       @session.body.should include('Bar')
     end
 
-    it "raise an error with links with no href" do
-      running do
-        @session.click_link('No Href')
-      end.should raise_error(Capybara::ElementNotFound)
+    it "should accept partial matches" do
+      @session.click_link('abo')
+      @session.body.should include('Bar')
     end
+  end
+
+  context "with title given" do
+    it "should take user to the linked page" do
+      @session.click_link('awesome title')
+      @session.body.should include('Bar')
+    end
+
+    it "should accept partial matches" do
+      @session.click_link('some tit')
+      @session.body.should include('Bar')
+    end
+  end
+
+  context "with alternative text given to a contained image" do
+    it "should take user to the linked page" do
+      @session.click_link('awesome image')
+      @session.body.should include('Bar')
+    end
+
+    it "should take user to the linked page" do
+      @session.click_link('some imag')
+      @session.body.should include('Bar')
+    end
+  end
+
+  context "with a locator that doesn't exist" do
+    it "should raise an error" do
+      msg = "Unable to find link \"does not exist\""
+      running do
+        @session.click_link('does not exist')
+      end.should raise_error(Capybara::ElementNotFound, msg)
+    end
+  end
+
+  it "should follow relative links" do
+    @session.visit('/')
+    @session.click_link('Relative')
+    @session.body.should include('This is a test')
+  end
+
+  it "should follow redirects" do
+    @session.click_link('Redirect')
+    @session.body.should include('You landed')
+  end
+
+  it "should follow redirects" do
+    @session.click_link('BackToMyself')
+    @session.body.should include('This is a test')
+  end
+
+  it "should add query string to current URL with naked query string" do
+    @session.click_link('Naked Query String')
+    @session.body.should include('Query String sent')
+  end
+
+  it "should do nothing on anchor links" do
+    @session.fill_in("test_field", :with => 'blah')
+    @session.click_link('Normal Anchor')
+    @session.find_field("test_field").value.should == 'blah'
+    @session.click_link('Blank Anchor')
+    @session.find_field("test_field").value.should == 'blah'
+  end
+
+  it "should do nothing on URL+anchor links for the same page" do
+    @session.fill_in("test_field", :with => 'blah')
+    @session.click_link('Anchor on same page')
+    @session.find_field("test_field").value.should == 'blah'
+  end
+
+  it "should follow link on URL+anchor links for a different page" do
+    @session.click_link('Anchor on different page')
+    @session.body.should include('Bar')
+  end
+
+  it "raise an error with links with no href" do
+    running do
+      @session.click_link('No Href')
+    end.should raise_error(Capybara::ElementNotFound)
   end
 end
