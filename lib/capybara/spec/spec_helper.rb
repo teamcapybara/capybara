@@ -4,14 +4,14 @@ module Capybara
       def configure(config)
         filter = lambda do |requires, metadata|
           if requires and metadata[:skip]
-            requires.none? do |require|
+            requires.any? do |require|
               metadata[:skip].include?(require)
             end
           else
-            true
+            false
           end
         end
-        config.filter_run_including :requires => filter
+        config.filter_run_excluding :requires => filter
         config.around do |block|
           if example.metadata[:requires] and example.metadata[:requires].include?(:js)
             Capybara.default_wait_time = 1
