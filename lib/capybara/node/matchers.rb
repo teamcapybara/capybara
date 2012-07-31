@@ -200,10 +200,8 @@ module Capybara
       # @return [Boolean]             Whether it exists
       #
       def has_text?(content)
-        normalized_content = normalize_whitespace(content)
-
         synchronize do
-          normalize_whitespace(text).match(escape_regexp(normalized_content)) or
+          normalize_whitespace(text).match(to_regexp(content)) or
           raise ExpectationNotMet
         end
         return true
@@ -224,10 +222,8 @@ module Capybara
       # @return [Boolean]             Whether it exists
       #
       def has_no_text?(content)
-        normalized_content = normalize_whitespace(content)
-
         synchronize do
-          !normalize_whitespace(text).match(escape_regexp(normalized_content)) or
+          !normalize_whitespace(text).match(to_regexp(content)) or
           raise ExpectationNotMet
         end
         return true
@@ -472,7 +468,7 @@ module Capybara
       # @return [String]         Normalized text
       #
       def normalize_whitespace(text)
-        text.is_a?(Regexp) ? text : text.to_s.gsub(/\s+/, ' ').strip
+        text.to_s.gsub(/\s+/, ' ').strip
       end
 
       ##
@@ -483,8 +479,8 @@ module Capybara
       # @param [String] text Text to escape
       # @return [String]     Escaped text
       #
-      def escape_regexp(text)
-        text.is_a?(Regexp) ? text : Regexp.escape(text)
+      def to_regexp(text)
+        text.is_a?(Regexp) ? text : Regexp.escape(normalize_whitespace(text))
       end
     end
   end
