@@ -3,6 +3,9 @@
 ### Fixed
 
 * `has_text` (`has_content`) now accepts non-string arguments, like numbers.
+  [Jo Liss]
+* `has_text` and `text` now correctly normalize Unicode whitespace, such as
+  `&nbsp;`. [Jo Liss]
 
 # Version 2.0.0.beta2
 

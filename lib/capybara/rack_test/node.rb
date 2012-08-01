@@ -1,6 +1,6 @@
 class Capybara::RackTest::Node < Capybara::Driver::Node
   def text
-    unnormalized_text.strip.gsub(/\s+/, ' ')
+    Capybara::Helpers.normalize_whitespace(unnormalized_text)
   end
 
   def [](name)

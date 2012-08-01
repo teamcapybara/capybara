@@ -1,6 +1,7 @@
 class Capybara::Selenium::Node < Capybara::Driver::Node
   def text
-    native.text
+    # Selenium doesn't normalize Unicode whitespace.
+    Capybara::Helpers.normalize_whitespace(native.text)
   end
 
   def [](name)

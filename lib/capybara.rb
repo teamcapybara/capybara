@@ -308,6 +308,7 @@ module Capybara
   autoload :Selector,   'capybara/selector'
   autoload :Query,      'capybara/query'
   autoload :Result,     'capybara/result'
+  autoload :Helpers,    'capybara/helpers'
   autoload :VERSION,    'capybara/version'
 
   module Node

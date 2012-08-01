@@ -193,16 +193,17 @@ module Capybara
       # Checks if the page or current node has the given text content,
       # ignoring any HTML tags and normalizing whitespace.
       #
-      # Unlike has_content this only matches displayable text and specifically
-      # excludes text contained within non-display nodes such as script or head tags.
+      # This only matches displayable text and specifically excludes text
+      # contained within non-display nodes such as script or head tags.
       #
       # @param [String] content       The text to check for
       # @return [Boolean]             Whether it exists
       #
       def has_text?(content)
         synchronize do
-          normalize_whitespace(text).match(to_regexp(content)) or
-          raise ExpectationNotMet
+          unless Capybara::Helpers.normalize_whitespace(text).match(Capybara::Helpers.to_regexp(content))
+            raise ExpectationNotMet
+          end
         end
         return true
       rescue Capybara::ExpectationNotMet
@@ -215,16 +216,17 @@ module Capybara
       # Checks if the page or current node does not have the given text
       # content, ignoring any HTML tags and normalizing whitespace.
       #
-      # Unlike has_content this only matches displayable text and specifically
-      # excludes text contained within non-display nodes such as script or head tags.
+      # This only matches displayable text and specifically excludes text
+      # contained within non-display nodes such as script or head tags.
       #
       # @param [String] content       The text to check for
-      # @return [Boolean]             Whether it exists
+      # @return [Boolean]             Whether it doesn't exist
       #
       def has_no_text?(content)
         synchronize do
-          !normalize_whitespace(text).match(to_regexp(content)) or
-          raise ExpectationNotMet
+          if Capybara::Helpers.normalize_whitespace(text).match(Capybara::Helpers.to_regexp(content))
+            raise ExpectationNotMet
+          end
         end
         return true
       rescue Capybara::ExpectationNotMet
@@ -458,30 +460,6 @@ module Capybara
 
     private
 
-      ##
-      #
-      # Normalizes whitespace space by stripping leading and trailing
-      # whitespace and replacing sequences of whitespace characters
-      # with a single space.
-      #
-      # @param [String] text     Text to normalize
-      # @return [String]         Normalized text
-      #
-      def normalize_whitespace(text)
-        text.to_s.gsub(/\s+/, ' ').strip
-      end
-
-      ##
-      #
-      # Escapes any characters that would have special meaning in a regexp
-      # if text is not a regexp
-      #
-      # @param [String] text Text to escape
-      # @return [String]     Escaped text
-      #
-      def to_regexp(text)
-        text.is_a?(Regexp) ? text : Regexp.escape(normalize_whitespace(text))
-      end
     end
   end
 end
