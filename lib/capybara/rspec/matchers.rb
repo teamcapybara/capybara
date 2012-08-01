@@ -48,15 +48,15 @@ module Capybara
       end
 
       def failure_message_for_should
-        "expected there to be text #{text.inspect} in #{@actual.text.inspect}"
+        "expected there to be text #{format(text)} in #{format(@actual.text)}"
       end
 
       def failure_message_for_should_not
-        "expected there not to be text #{text.inspect} in #{@actual.text.inspect}"
+        "expected there not to be text #{format(text)} in #{format(@actual.text)}"
       end
 
       def description
-        "have text #{text.inspect}"
+        "have text #{format(text)}"
       end
 
       def wrap(actual)
@@ -65,6 +65,11 @@ module Capybara
         else
           Capybara.string(actual.to_s)
         end
+      end
+
+      def format(text)
+        text = Capybara::Helpers.normalize_whitespace(text) unless text.is_a? Regexp
+        text.inspect
       end
     end
 

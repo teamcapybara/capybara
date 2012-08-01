@@ -324,6 +324,12 @@ describe Capybara::RSpecMatchers do
             "<h1>Text</h1>".should have_text('No such Text')
           end.to raise_error(/expected there to be text "No such Text" in "Text"/)
         end
+
+        it "casts has_text? argument to string" do
+          expect do
+            "<h1>Text</h1>".should have_text(:cast_me)
+          end.to raise_error(/expected there to be text "cast_me" in "Text"/)
+        end
       end
 
       context "with should_not" do
