@@ -480,14 +480,6 @@ that this may break with more complicated expressions:
 result = page.evaluate_script('4 + 4');
 ```
 
-### Saving screenshot
-
-In drivers which support it, you can save screenshot:
-
-```ruby
-page.save_screenshot('screenshot.png')
-```
-
 ### Debugging
 
 It can be useful to take a snapshot of the page as it currently is and take a
@@ -506,6 +498,12 @@ print page.html
 
 This is mostly useful for debugging. You should avoid testing against the
 contents of `page.html` and use the more expressive finder methods instead.
+
+Finally, in drivers that support it, you can save a screenshot:
+
+```ruby
+page.save_screenshot('screenshot.png')
+```
 
 ## Transactions and database setup
 
