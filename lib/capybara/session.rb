@@ -149,13 +149,21 @@ module Capybara
     #     session.visit('/foo')
     #     session.visit('http://google.com')
     #
-    # For drivers which can run against an external application, such as culerity and selenium
+    # For drivers which can run against an external application, such as the selenium driver
     # giving an absolute URL will navigate to that page. This allows testing applications
-    # running on remote servers. For these drivers, setting Capybara.app_host will make the
+    # running on remote servers. For these drivers, setting {Capybara.app_host} will make the
     # remote server the default. For example:
     #
     #     Capybara.app_host = 'http://google.com'
     #     session.visit('/') # visits the google homepage
+    #
+    # If {Capybara.always_include_port} is set to true and this session is running against
+    # a rack application, then the port that the rack application is running on will automatically
+    # be inserted into the URL. Supposing the app is running on port `4567`, doing something like:
+    #
+    #     visit("http://google.com/test")
+    #
+    # Will actually navigate to `http://google.com:4567/test`.
     #
     # @param [String] url     The URL to navigate to
     #
