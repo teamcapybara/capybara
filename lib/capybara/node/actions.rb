@@ -150,17 +150,12 @@ module Capybara
       #     page.attach_file(locator, '/path/to/file.png')
       #
       # @param [String] locator       Which field to attach the file to
-      # @param [String] path          The path of the file that will be attached, or an array of paths.
+      # @param [String] path          The path of the file that will be attached
       #
       def attach_file(locator, path)
-        path = [path] unless path.respond_to? :each
-        path.each do |p|
-          raise Capybara::FileNotFound, "cannot attach file, #{p} does not exist" unless File.exist?(p.to_s)
-        end
+        raise Capybara::FileNotFound, "cannot attach file, #{path} does not exist" unless File.exist?(path.to_s)
         msg = "cannot attach file, no file field with id, name, or label '#{locator}' found"
-        path.each do |p|
-          find(:xpath, XPath::HTML.file_field(locator), :message => msg).set(p)
-        end
+        find(:xpath, XPath::HTML.file_field(locator), :message => msg).set(path)
       end
     end
   end

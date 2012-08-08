@@ -29,14 +29,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
         # Firefox, allowing no input
         value = value[0...self[:maxlength].to_i]
       end
-      if native[:multiple] && native.key?('value')
-        new_native = native.clone
-        new_native.remove_attribute('value')
-        native.add_next_sibling(new_native)
-        new_native['value'] = value.to_s
-      else
-        native['value'] = value.to_s
-      end
+      native['value'] = value.to_s
     elsif tag_name == "textarea"
       native.content = value.to_s
     end
