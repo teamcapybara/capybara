@@ -22,7 +22,7 @@ module Capybara
     end
 
     def find!
-      raise find_error if @result.count != 1
+      raise find_error if @result.size != 1
       @result.first
     end
 
@@ -31,9 +31,9 @@ module Capybara
     alias_method :count, :size
 
     def find_error
-      if @result.count == 0
+      if @result.size == 0
         Capybara::ElementNotFound.new("Unable to find #{@query.description}")
-      elsif @result.count > 1
+      elsif @result.size > 1
         Capybara::Ambiguous.new("Ambiguous match, found #{size} elements matching #{@query.description}")
       end
     end
