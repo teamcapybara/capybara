@@ -26,17 +26,30 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
           # TO DO identify the click button here (in document order, rather
           # than leaving until the end of the params)
         elsif field['type'] =='file'
+          value = field['value']
+          path_names = value.to_s.empty? ? [] : YAML::load(value.to_s)
           if multipart?
-            file = \
-              if (value = field['value']).to_s.empty?
-                NilUploadedFile.new
+            files = \
+              if path_names.empty?
+                [NilUploadedFile.new]
               else
-                content_type = MIME::Types.type_for(value).first.to_s
-                Rack::Test::UploadedFile.new(value, content_type)
+                if field['multiple']
+                  path_names.map do |path_name|
+                    content_type = MIME::Types.type_for(path_name).first.to_s
+                    Rack::Test::UploadedFile.new(path_name, content_type)
+                  end
+                else
+                  content_type = MIME::Types.type_for(path_names.last).first.to_s
+                  [Rack::Test::UploadedFile.new(path_names.last, content_type)]
+                end
               end
-            merge_param!(params, field['name'].to_s, file)
+            files.each do |file|
+              merge_param!(params, field['name'].to_s, file)
+            end
           else
-            merge_param!(params, field['name'].to_s, File.basename(field['value'].to_s))
+            path_names.each do |path_name|
+              merge_param!(params, field['name'].to_s, File.basename(path_name))
+            end
           end
         else
           merge_param!(params, field['name'].to_s, field['value'].to_s)

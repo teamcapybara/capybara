@@ -127,9 +127,11 @@ class TestApp < Sinatra::Base
 
   post '/upload_multiple' do
     begin
-      buffer = []
-      buffer << "Content-type: #{params[:form][:multiple_documents][0][:type]}"
-      buffer << "File content: #{params[:form][:multiple_documents][0][:tempfile].read}"
+      buffer = ["#{params[:form][:multiple_documents].size}"]
+      params[:form][:multiple_documents].each do |doc|
+        buffer << "Content-type: #{doc[:type]}"
+        buffer << "File content: #{doc[:tempfile].read}"
+      end
       buffer.join(' | ')
     rescue
       'No files uploaded'
