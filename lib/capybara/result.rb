@@ -1,6 +1,9 @@
+require 'forwardable'
+
 module Capybara
   class Result
     include Enumerable
+    extend Forwardable
 
     def initialize(elements, query)
       @elements = elements
@@ -9,13 +12,7 @@ module Capybara
       @query = query
     end
 
-    def each(&block)
-      @result.each(&block)
-    end
-
-    def first
-      @result.first
-    end
+    def_delegators :@result, :each, :[], :at, :size, :count, :length, :first, :last, :empty?
 
     def matches_count?
       @query.matches_count?(@result.size)
@@ -25,10 +22,6 @@ module Capybara
       raise find_error if @result.count != 1
       @result.first
     end
-
-    def size; @result.size; end
-    alias_method :length, :size
-    alias_method :count, :size
 
     def find_error
       if @result.count == 0
@@ -65,11 +58,6 @@ module Capybara
     def negative_failure_message
       "expected not to find #{@query.description}, but there #{declension("was", "were")} #{count} #{declension("match", "matches")}"
     end
-
-    def empty?
-      @result.empty?
-    end
-    def [](key); @result[key]; end
 
   private
 
