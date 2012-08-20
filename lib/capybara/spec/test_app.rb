@@ -107,7 +107,7 @@ class TestApp < Sinatra::Base
   end
 
   post '/upload_empty' do
-    if params[:form][:file].nil?
+    if params[:form].nil? || params[:form][:file].nil?
       'Successfully ignored empty file field.'
     else
       'Something went wrong.'
