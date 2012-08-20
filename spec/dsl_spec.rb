@@ -16,6 +16,7 @@ describe Capybara::DSL do
   after do
     Capybara.session_name = nil
     Capybara.default_driver = nil
+    Capybara.javascript_driver = nil
     Capybara.use_default_driver
     Capybara.app = TestApp
   end
