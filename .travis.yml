@@ -1,0 +1,6 @@
+rvm:
+  - 1.8.7
+  - 1.9.3
+before_script:
+  - sh -e /etc/init.d/xvfb start
+  - export DISPLAY=:99.0
