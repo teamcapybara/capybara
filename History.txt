@@ -86,7 +86,7 @@
   session is reset [James Tucker, Jonas Nicklas]
 * A ton of new selectors built in out of the box, like `field`, `link`, `button`,
   etc... [Adam McCrea, Jonas Nicklas]
-* `has_text`, `has_content` ... [Jonas Nicklas]
+* `has_text?` has been added as an alias for `has_content?` [Jonas Nicklas]
 * Add `Capybara.server_host` option (default: 127.0.0.1) [David Balatero]
 * Add `:type` option for `page.has_field?` [Gonzalo Rodríguez]
 * Custom matchers can now be specified in CSS in addition to XPath [Jonas Nicklas]
