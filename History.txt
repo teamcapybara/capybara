@@ -1,5 +1,10 @@
 # master
 
+### Changed
+
+* `require 'capybara/rails'` will automatically enable `:respect_data_method`
+  on the RackTest driver, so the behavior matches Capybara 1.1.2 [Jo Liss]
+
 ### Fixed
 
 * `has_text` (`has_content`) now accepts non-string arguments, like numbers.
