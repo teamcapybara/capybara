@@ -1,6 +1,7 @@
 Capybara::SpecHelper.spec '#body' do
   it "should return the unmodified page body" do
     @session.visit('/')
+    @session.should have_content('Hello world!') # wait for content to appear if visit is async
     @session.body.should include('Hello world!')
   end
 

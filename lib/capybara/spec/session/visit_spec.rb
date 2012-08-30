@@ -1,9 +1,9 @@
 Capybara::SpecHelper.spec '#visit' do
   it "should fetch a response from the driver with a relative url" do
     @session.visit('/')
-    @session.body.should include('Hello world!')
+    @session.should have_content('Hello world!')
     @session.visit('/foo')
-    @session.body.should include('Another World')
+    @session.should have_content('Another World')
   end
 
   it "should fetch a response from the driver with an absolute url with a port" do
@@ -12,9 +12,9 @@ Capybara::SpecHelper.spec '#visit' do
     root_uri = URI.parse(@session.current_url)
 
     @session.visit("http://#{root_uri.host}:#{root_uri.port}/")
-    @session.body.should include('Hello world!')
+    @session.should have_content('Hello world!')
     @session.visit("http://#{root_uri.host}:#{root_uri.port}/foo")
-    @session.body.should include('Another World')
+    @session.should have_content('Another World')
   end
 
   context "when Capybara.always_include_port is true" do
@@ -35,23 +35,23 @@ Capybara::SpecHelper.spec '#visit' do
     it "should fetch a response from the driver with an absolute url without a port" do
       @session.visit("http://#{root_uri.host}/")
       URI.parse(@session.current_url).port.should == root_uri.port
-      @session.body.should include('Hello world!')
+      @session.should have_content('Hello world!')
 
       @session.visit("http://#{root_uri.host}/foo")
       URI.parse(@session.current_url).port.should == root_uri.port
-      @session.body.should include('Another World')
+      @session.should have_content('Another World')
     end
   end
 
   it "should send no referer when visiting a page" do
     @session.visit '/get_referer'
-    @session.body.should include 'No referer'
+    @session.should have_content 'No referer'
   end
 
   it "should send no referer when visiting a second page" do
     @session.visit '/get_referer'
     @session.visit '/get_referer'
-    @session.body.should include 'No referer'
+    @session.should have_content 'No referer'
   end
 
   it "should send a referer when following a link" do

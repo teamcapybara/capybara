@@ -2,7 +2,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
   it "should click on a link" do
     @session.visit('/with_html')
     @session.click_link_or_button('labore')
-    @session.body.should include('Bar')
+    @session.should have_content('Bar')
   end
 
   it "should click on a button" do

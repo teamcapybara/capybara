@@ -140,7 +140,7 @@ Capybara::SpecHelper.spec '#click_button' do
 
     it "should work with partial matches" do
       @session.click_button('Go')
-      @session.body.should include('You landed')
+      @session.should have_content('You landed')
     end
   end
 
@@ -281,19 +281,19 @@ Capybara::SpecHelper.spec '#click_button' do
   it "should follow redirects" do
     @session.click_button('Go FAR')
     @session.current_url.should match(%r{/landed$})
-    @session.body.should include('You landed')
+    @session.should have_content('You landed')
   end
 
   it "should post pack to the same URL when no action given" do
     @session.visit('/postback')
     @session.click_button('With no action')
-    @session.body.should include('Postback')
+    @session.should have_content('Postback')
   end
 
   it "should post pack to the same URL when blank action given" do
     @session.visit('/postback')
     @session.click_button('With blank action')
-    @session.body.should include('Postback')
+    @session.should have_content('Postback')
   end
 
   it "should encode complex field names, like array[][value]" do

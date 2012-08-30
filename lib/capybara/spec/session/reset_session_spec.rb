@@ -2,7 +2,7 @@ Capybara::SpecHelper.spec '#reset_session!' do
   it "removes cookies" do
     @session.visit('/set_cookie')
     @session.visit('/get_cookie')
-    @session.body.should include('test_cookie')
+    @session.should have_content('test_cookie')
 
     @session.reset_session!
     @session.visit('/get_cookie')
@@ -23,7 +23,7 @@ Capybara::SpecHelper.spec '#reset_session!' do
 
   it "resets page body" do
     @session.visit('/with_html')
-    @session.body.should include('This is a test')
+    @session.should have_content('This is a test')
     @session.find('.//h1').text.should include('This is a test')
 
     @session.reset_session!

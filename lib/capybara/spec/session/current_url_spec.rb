@@ -18,7 +18,7 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
     @session.current_path.should == path
     if path == '/host'
       # Server should agree with us
-      @session.body.should include("Current host is #{scheme}://#{s.host}:#{s.port}")
+      @session.should have_content("Current host is #{scheme}://#{s.host}:#{s.port}")
     end
   end
 

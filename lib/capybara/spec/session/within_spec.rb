@@ -8,7 +8,7 @@ Capybara::SpecHelper.spec '#within' do
       @session.within(:css, "#for_bar li[contains('With Simple HTML')]") do
         @session.click_link('Go')
       end
-      @session.body.should include('Bar')
+      @session.should have_content('Bar')
     end
 
     it "should assert content in the given scope" do
@@ -22,7 +22,7 @@ Capybara::SpecHelper.spec '#within' do
       @session.within(:css, "#for_bar li", :text => 'With Simple HTML') do
         @session.click_link('Go')
       end
-      @session.body.should include('Bar')
+      @session.should have_content('Bar')
     end
   end
 
@@ -31,7 +31,7 @@ Capybara::SpecHelper.spec '#within' do
       @session.within(:xpath, "//div[@id='for_bar']//li[contains(.,'With Simple HTML')]") do
         @session.click_link('Go')
       end
-      @session.body.should include('Bar')
+      @session.should have_content('Bar')
     end
   end
 
@@ -40,7 +40,7 @@ Capybara::SpecHelper.spec '#within' do
       @session.within("//div[@id='for_bar']//li[contains(.,'With Simple HTML')]") do
         @session.click_link('Go')
       end
-      @session.body.should include('Bar')
+      @session.should have_content('Bar')
     end
   end
 
@@ -51,7 +51,7 @@ Capybara::SpecHelper.spec '#within' do
       @session.within(node_of_interest) do
         @session.click_link('Go')
       end
-      @session.body.should include('Bar')
+      @session.should have_content('Bar')
     end
   end
 
@@ -61,7 +61,7 @@ Capybara::SpecHelper.spec '#within' do
       @session.within("#for_bar li[contains('With Simple HTML')]") do
         @session.click_link('Go')
       end
-      @session.body.should include('Bar')
+      @session.should have_content('Bar')
     end
     after { Capybara.default_selector = :xpath }
   end
@@ -73,7 +73,7 @@ Capybara::SpecHelper.spec '#within' do
           @session.click_link('Go')
         end
       end
-      @session.body.should include('Another World')
+      @session.should have_content('Another World')
     end
 
     it "should respect the outer scope" do
@@ -82,7 +82,7 @@ Capybara::SpecHelper.spec '#within' do
           @session.click_link('Go')
         end
       end
-      @session.body.should include('Hello world')
+      @session.should have_content('Hello world')
     end
   end
 
