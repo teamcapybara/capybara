@@ -153,12 +153,11 @@ module Capybara
       # @param [String] path          The path of the file that will be attached, or an array of paths
       #
       def attach_file(locator, path)
-        path = [path] if String === path
-        path.each do |p|
+        (String === path ? [path] : path).each do |p|
           raise Capybara::FileNotFound, "cannot attach file, #{p} does not exist" unless File.exist?(p.to_s)
         end
         msg = "cannot attach file, no file field with id, name, or label '#{locator}' found"
-        find(:xpath, XPath::HTML.file_field(locator), :message => msg).set(path.to_yaml)
+        find(:xpath, XPath::HTML.file_field(locator), :message => msg).set(path)
       end
     end
   end
