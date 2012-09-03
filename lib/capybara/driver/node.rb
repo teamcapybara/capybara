@@ -20,6 +20,7 @@ module Capybara
         raise NotImplementedError
       end
 
+      # @param value String or Array. Array is only allowed if node has 'multiple' attribute
       def set(value)
         raise NotImplementedError
       end
