@@ -60,6 +60,7 @@ shared_examples_for "attach_file" do
       end
 
       it  "should not break when using HTML5 multiple file input uploading multiple files" do
+        pending "Selenium is buggy on this, see http://code.google.com/p/selenium/issues/detail?id=2239" if @session.respond_to?(:mode) && @session.mode == :selenium
         @session.attach_file "Multiple Documents", [@test_file_path, @another_test_file_path]
         @session.click_button('Upload Multiple')
         @session.body.should include(">2 |")#number of files
