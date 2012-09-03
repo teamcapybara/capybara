@@ -153,7 +153,7 @@ module Capybara
       # @param [String] path          The path of the file that will be attached, or an array of paths
       #
       def attach_file(locator, path)
-        path = [path] unless path.respond_to? :each
+        path = [path] if String === path
         path.each do |p|
           raise Capybara::FileNotFound, "cannot attach file, #{p} does not exist" unless File.exist?(p.to_s)
         end
