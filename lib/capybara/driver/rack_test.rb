@@ -4,7 +4,12 @@ require 'mime/types'
 require 'nokogiri'
 require 'cgi'
 
-class Capybara::RackTest::Driver < Capybara::Driver::Base
+
+class Capybara::Driver::RackTest < Capybara::Driver::Base
+  autoload :Node,    'capybara/driver/rack_test/node'
+  autoload :Form,    'capybara/driver/rack_test/form'
+  autoload :Browser, 'capybara/driver/rack_test/browser'
+
   DEFAULT_OPTIONS = {
     :respect_data_method => false,
     :follow_redirects => true,
@@ -19,7 +24,7 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
   end
 
   def browser
-    @browser ||= Capybara::RackTest::Browser.new(self)
+    @browser ||= Capybara::Driver::RackTest::Browser.new(self)
   end
 
   def follow_redirects?

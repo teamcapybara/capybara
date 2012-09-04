@@ -27,5 +27,5 @@ end
 
 # Override default rack_test driver to respect data-method attributes.
 Capybara.register_driver :rack_test do |app|
-  Capybara::RackTest::Driver.new(app, :respect_data_method => true)
+  Capybara::Driver::RackTest.new(app, :respect_data_method => true)
 end

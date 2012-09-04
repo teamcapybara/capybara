@@ -324,31 +324,10 @@ module Capybara
   module Driver
     autoload :Base,     'capybara/driver/base'
     autoload :Node,     'capybara/driver/node'
-
-    class Selenium
-      def initialize(*args)
-        raise "Capybara::Driver::Selenium has been renamed to Capybara::Selenium::Driver"
-      end
-    end
-
-    class RackTest
-      def initialize(*args)
-        raise "Capybara::Driver::RackTest has been renamed to Capybara::RackTest::Driver"
-      end
-    end
+    autoload :RackTest, 'capybara/driver/rack_test'
+    autoload :Selenium, 'capybara/driver/selenium'
   end
 
-  module RackTest
-    autoload :Driver,  'capybara/rack_test/driver'
-    autoload :Node,    'capybara/rack_test/node'
-    autoload :Form,    'capybara/rack_test/form'
-    autoload :Browser, 'capybara/rack_test/browser'
-  end
-
-  module Selenium
-    autoload :Node,    'capybara/selenium/node'
-    autoload :Driver,  'capybara/selenium/driver'
-  end
 end
 
 Capybara.configure do |config|
@@ -363,9 +342,9 @@ Capybara.configure do |config|
 end
 
 Capybara.register_driver :rack_test do |app|
-  Capybara::RackTest::Driver.new(app)
+  Capybara::Driver::RackTest.new(app)
 end
 
 Capybara.register_driver :selenium do |app|
-  Capybara::Selenium::Driver.new(app)
+  Capybara::Driver::Selenium.new(app)
 end

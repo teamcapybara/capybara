@@ -15,7 +15,7 @@ describe Capybara::Session do
 
     describe '#driver' do
       it "should be a selenium driver" do
-        @session.driver.should be_an_instance_of(Capybara::Selenium::Driver)
+        @session.driver.should be_an_instance_of(Capybara::Driver::Selenium)
       end
     end
 
