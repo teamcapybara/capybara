@@ -150,6 +150,8 @@ end
     `ActionDispatch::IntegrationTest`:
 
     ```ruby
+    require 'database_cleaner'
+
     # Transactional fixtures do not work with Selenium tests, because Capybara
     # uses a separate server thread, which the transactions would be hidden
     # from. We hence use DatabaseCleaner to truncate our test database.
