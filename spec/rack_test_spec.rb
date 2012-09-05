@@ -15,7 +15,7 @@ describe Capybara::Session do
 
     describe '#driver' do
       it "should be a rack test driver" do
-        @session.driver.should be_an_instance_of(Capybara::RackTest::Driver)
+        @session.driver.should be_an_instance_of(Capybara::Driver::RackTest)
       end
     end
 
@@ -64,34 +64,34 @@ describe Capybara::Session do
   end
 end
 
-describe Capybara::RackTest::Driver do
+describe Capybara::Driver::RackTest do
   before do
     @driver = TestSessions::RackTest.driver
   end
 
   describe ':headers option' do
     it 'should always set headers' do
-      @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
+      @driver = Capybara::Driver::RackTest.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       @driver.visit('/get_header')
       @driver.body.should include('foobar')
     end
 
     it 'should keep headers on link clicks' do
-      @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
+      @driver = Capybara::Driver::RackTest.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       @driver.visit('/header_links')
       @driver.find('.//a').first.click
       @driver.body.should include('foobar')
     end
 
     it 'should keep headers on form submit' do
-      @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
+      @driver = Capybara::Driver::RackTest.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       @driver.visit('/header_links')
       @driver.find('.//input').first.click
       @driver.body.should include('foobar')
     end
 
     it 'should keep headers on redirects' do
-      @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
+      @driver = Capybara::Driver::RackTest.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       @driver.visit('/get_header_via_redirect')
       @driver.body.should include('foobar')
     end
@@ -99,7 +99,7 @@ describe Capybara::RackTest::Driver do
 
   describe ':follow_redirects option' do
     it "defaults to following redirects" do
-      @driver = Capybara::RackTest::Driver.new(TestApp)
+      @driver = Capybara::Driver::RackTest.new(TestApp)
 
       @driver.visit('/redirect')
       @driver.response.header['Location'].should be_nil
@@ -107,7 +107,7 @@ describe Capybara::RackTest::Driver do
     end
 
     it "is possible to not follow redirects" do
-      @driver = Capybara::RackTest::Driver.new(TestApp, :follow_redirects => false)
+      @driver = Capybara::Driver::RackTest.new(TestApp, :follow_redirects => false)
 
       @driver.visit('/redirect')
       @driver.response.header['Location'].should eq "#{@driver.browser.current_host}/redirect_again"
@@ -118,7 +118,7 @@ describe Capybara::RackTest::Driver do
   describe ':redirect_limit option' do
     context "with default redirect limit" do
       before do
-        @driver = Capybara::RackTest::Driver.new(TestApp)
+        @driver = Capybara::Driver::RackTest.new(TestApp)
       end
 
       it "should follow 5 redirects" do
@@ -135,7 +135,7 @@ describe Capybara::RackTest::Driver do
 
     context "with 21 redirect limit" do
       before do
-        @driver = Capybara::RackTest::Driver.new(TestApp, :redirect_limit => 21)
+        @driver = Capybara::Driver::RackTest.new(TestApp, :redirect_limit => 21)
       end
 
       it "should follow 21 redirects" do

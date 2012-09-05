@@ -268,7 +268,7 @@ RackTest can be configured with a set of headers like this:
 
 ```ruby
 Capybara.register_driver :rack_test do |app|
-  Capybara::RackTest::Driver.new(app, :browser => :chrome)
+  Capybara::Driver::RackTest.new(app, :browser => :chrome)
 end
 ```
 
@@ -773,7 +773,7 @@ drivers. This is how to switch the selenium driver to use chrome:
 
 ```ruby
 Capybara.register_driver :selenium do |app|
-  Capybara::Selenium::Driver.new(app, :browser => :chrome)
+  Capybara::Driver::Selenium.new(app, :browser => :chrome)
 end
 ```
 
@@ -782,7 +782,7 @@ between using different browsers effortlessly:
 
 ```ruby
 Capybara.register_driver :selenium_chrome do |app|
-  Capybara::Selenium::Driver.new(app, :browser => :chrome)
+  Capybara::Driver::Selenium.new(app, :browser => :chrome)
 end
 ```
 

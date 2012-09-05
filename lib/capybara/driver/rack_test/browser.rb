@@ -1,4 +1,4 @@
-class Capybara::RackTest::Browser
+class Capybara::Driver::RackTest::Browser
   include ::Rack::Test::Methods
 
   attr_reader :driver
@@ -86,7 +86,7 @@ class Capybara::RackTest::Browser
   end
 
   def find(selector)
-    dom.xpath(selector).map { |node| Capybara::RackTest::Node.new(self, node) }
+    dom.xpath(selector).map { |node| Capybara::Driver::RackTest::Node.new(self, node) }
   end
 
   def source

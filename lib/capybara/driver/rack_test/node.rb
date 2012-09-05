@@ -1,4 +1,4 @@
-class Capybara::RackTest::Node < Capybara::Driver::Node
+class Capybara::Driver::RackTest::Node < Capybara::Driver::Node
   def text
     Capybara::Helpers.normalize_whitespace(unnormalized_text)
   end
@@ -56,7 +56,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
       driver.follow(method, self[:href].to_s)
     elsif (tag_name == 'input' and %w(submit image).include?(type)) or
         ((tag_name == 'button') and type.nil? or type == "submit")
-      Capybara::RackTest::Form.new(driver, form).submit(self)
+      Capybara::Driver::RackTest::Form.new(driver, form).submit(self)
     end
   end
 
@@ -93,7 +93,7 @@ protected
       native.text
     elsif native.element?
       native.children.map do |child|
-        Capybara::RackTest::Node.new(driver, child).unnormalized_text
+        Capybara::Driver::RackTest::Node.new(driver, child).unnormalized_text
       end.join
     else
       ''

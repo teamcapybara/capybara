@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Capybara::Selenium::Driver do
+describe Capybara::Driver::Selenium do
   it "should exit with a zero exit status" do
-    browser = Capybara::Selenium::Driver.new(TestApp).browser
+    browser = Capybara::Driver::Selenium.new(TestApp).browser
     true.should == true
   end
 end

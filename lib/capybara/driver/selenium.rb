@@ -1,6 +1,9 @@
 require 'selenium-webdriver'
 
-class Capybara::Selenium::Driver < Capybara::Driver::Base
+class Capybara::Driver::Selenium < Capybara::Driver::Base
+  autoload :Node,    'capybara/driver/selenium/node'
+  autoload :Driver,  'capybara/driver/selenium/driver'
+
   DEFAULT_OPTIONS = {
     :browser => :firefox
   }
@@ -47,7 +50,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def find(selector)
-    browser.find_elements(:xpath, selector).map { |node| Capybara::Selenium::Node.new(self, node) }
+    browser.find_elements(:xpath, selector).map { |node| Capybara::Driver::Selenium::Node.new(self, node) }
   end
 
   def wait?; true; end
