@@ -72,6 +72,11 @@ Capybara::SpecHelper.spec '#click_link' do
     @session.should have_content('This is a test')
   end
 
+  it "should follow protocol relative links" do
+    @session.click_link('Protocol')
+    @session.should have_content('Another World')
+  end
+
   it "should follow redirects" do
     @session.click_link('Redirect')
     @session.should have_content('You landed')

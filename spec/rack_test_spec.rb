@@ -103,15 +103,15 @@ describe Capybara::RackTest::Driver do
 
       @driver.visit('/redirect')
       @driver.response.header['Location'].should be_nil
-      @driver.browser.current_url.should eq "#{@driver.browser.current_host}/landed"
+      @driver.browser.current_url.should match %r{/landed$}
     end
 
     it "is possible to not follow redirects" do
       @driver = Capybara::RackTest::Driver.new(TestApp, :follow_redirects => false)
 
       @driver.visit('/redirect')
-      @driver.response.header['Location'].should eq "#{@driver.browser.current_host}/redirect_again"
-      @driver.browser.current_url.should eq "#{@driver.browser.current_host}/redirect"
+      @driver.response.header['Location'].should match %r{/redirect_again$}
+      @driver.browser.current_url.should match %r{/redirect$}
     end
   end
 

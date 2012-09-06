@@ -59,6 +59,9 @@
 
 * Nodes found via `all` are no longer reloaded. This fixes weird quirks where
   nodes would seemingly randomly replace themselves with other nodes [Jonas Nicklas]
+* RackTest allows protocol relative URLs [Jonas Nicklas]
+* Arguments are cast to string where necessary, so that e.g. `click_link(:foo)` works
+  as expected. [Jonas Nicklas]
 * Session is only reset if it has been modified, dramatically improves performance if
   only part of the test suite runs Capybara. [Jonas Nicklas]
 * Test suite now passes on Ruby 1.8 [Jo Liss]

@@ -45,22 +45,18 @@ class Capybara::RackTest::Browser
     new_uri = URI.parse(path)
     method.downcase! unless method.is_a? Symbol
 
-    if new_uri.host
-      @current_host = "#{new_uri.scheme}://#{new_uri.host}"
-      @current_host << ":#{new_uri.port}" if new_uri.port != new_uri.default_port
-    end
+    new_uri.path = request_path if path.start_with?("?")
+    new_uri.path = request_path.sub(%r(/[^/]*$), '/') + new_uri.path unless new_uri.path.start_with?('/')
+    new_uri.scheme ||= @current_scheme
+    new_uri.host ||= @current_host
+    new_uri.port ||= @current_port unless new_uri.default_port == @current_port
 
-    if new_uri.relative?
-      if path.start_with?('?')
-        path = request_path + path
-      elsif not path.start_with?('/')
-        path = request_path.sub(%r(/[^/]*$), '/') + path
-      end
-      path = current_host + path
-    end
+    @current_scheme = new_uri.scheme
+    @current_host = new_uri.host
+    @current_port = new_uri.port
 
     reset_cache!
-    send(method, path, attributes, env.merge(options[:headers] || {}))
+    send(method, new_uri.to_s, attributes, env.merge(options[:headers] || {}))
   end
 
   def current_url
@@ -70,7 +66,10 @@ class Capybara::RackTest::Browser
   end
 
   def reset_host!
-    @current_host = (Capybara.app_host || Capybara.default_host)
+    uri = URI.parse(Capybara.app_host || Capybara.default_host)
+    @current_scheme = uri.scheme
+    @current_host = uri.host
+    @current_port = uri.port
   end
 
   def reset_cache!
