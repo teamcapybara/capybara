@@ -5,6 +5,7 @@ Capybara::SpecHelper.spec '#has_select?' do
     @session.should have_select('Locale')
     @session.should have_select('form_region')
     @session.should have_select('Languages')
+    @session.should have_select(:'Languages')
   end
 
   it "should be false if the field is not on the page" do

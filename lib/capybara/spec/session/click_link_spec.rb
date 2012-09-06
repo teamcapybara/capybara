@@ -9,6 +9,11 @@ Capybara::SpecHelper.spec '#click_link' do
     @session.click_link('Has been clicked')
   end
 
+  it "casts to string" do
+    @session.click_link(:'foo')
+    @session.should have_content('Another World')
+  end
+
   context "with id given" do
     it "should take user to the linked page" do
       @session.click_link('foo')

@@ -8,6 +8,10 @@ Capybara::SpecHelper.spec '#find_link' do
     @session.find_link('labore')[:href].should =~ %r(/with_simple_html$)
   end
 
+  it "casts to string" do
+    @session.find_link(:'foo').text.should == "ullamco"
+  end
+
   it "should raise error if the field doesn't exist" do
     running do
       @session.find_link('Does not exist')

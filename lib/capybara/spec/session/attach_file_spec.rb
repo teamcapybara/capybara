@@ -17,6 +17,12 @@ Capybara::SpecHelper.spec "#attach_file" do
       @session.click_button('awesome')
       extract_results(@session)['image'].should == File.basename(__FILE__)
     end
+
+    it "casts to string" do
+      @session.attach_file :"form_image", __FILE__
+      @session.click_button('awesome')
+      extract_results(@session)['image'].should == File.basename(__FILE__)
+    end
   end
 
   context "with multipart form" do

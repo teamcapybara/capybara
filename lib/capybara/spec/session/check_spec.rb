@@ -60,6 +60,12 @@ Capybara::SpecHelper.spec "#check" do
     extract_results(@session)['pets'].should include('dog', 'cat', 'hamster')
   end
 
+  it "casts to string" do
+    @session.check(:"form_pets_cat")
+    @session.click_button('awesome')
+    extract_results(@session)['pets'].should include('dog', 'cat', 'hamster')
+  end
+
   context "with a locator that doesn't exist" do
     it "should raise an error" do
       msg = "Unable to find checkbox \"does not exist\""

@@ -4,6 +4,7 @@ Capybara::SpecHelper.spec '#has_text?' do
     @session.should have_text('est')
     @session.should have_text('Lorem')
     @session.should have_text('Redirect')
+    @session.should have_text(:'Redirect')
   end
 
   it "should be true if scoped to an element which has the text" do

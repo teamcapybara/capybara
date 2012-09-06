@@ -97,6 +97,12 @@ Capybara::SpecHelper.spec "#fill_in" do
     @session.fill_in('new_field', :with => 'Testing...')
   end
 
+  it "casts to string" do
+    @session.fill_in(:'form_first_name', :with => :'Harry')
+    @session.click_button('awesome')
+    extract_results(@session)['first_name'].should == 'Harry'
+  end
+
   context 'on a pre-populated textfield with a reformatting onchange', :requires => [:js] do
     it 'should only trigger onchange once' do
       @session.visit('/with_js')

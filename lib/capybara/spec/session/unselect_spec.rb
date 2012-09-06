@@ -37,6 +37,13 @@ Capybara::SpecHelper.spec "#unselect" do
       @session.click_button('awesome')
       extract_results(@session)['underwear'].should_not include("Frenchman's Pantalons")
     end
+
+    it "casts to string" do
+      @session.unselect(:"Briefs", :from => :'Underwear')
+      @session.click_button('awesome')
+      extract_results(@session)['underwear'].should include('Commando', 'Boxerbriefs')
+      extract_results(@session)['underwear'].should_not include('Briefs')
+    end
   end
 
   context "with single select" do

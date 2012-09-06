@@ -5,6 +5,7 @@ Capybara::SpecHelper.spec '#has_field' do
     @session.should have_field('Dog')
     @session.should have_field('form_description')
     @session.should have_field('Region')
+    @session.should have_field(:'Region')
   end
 
   it "should be false if the field is not on the page" do

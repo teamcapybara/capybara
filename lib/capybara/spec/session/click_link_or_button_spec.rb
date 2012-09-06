@@ -29,6 +29,12 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
     @session.click_link_or_button('Has been clicked')
   end
 
+  it "casts to string" do
+    @session.visit('/form')
+    @session.click_link_or_button(:'awe123')
+    extract_results(@session)['first_name'].should == 'John'
+  end
+
   context "with a locator that doesn't exist" do
     it "should raise an error" do
       @session.visit('/with_html')

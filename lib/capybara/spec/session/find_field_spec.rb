@@ -9,6 +9,10 @@ Capybara::SpecHelper.spec '#find_field' do
     @session.find_field('Region')[:name].should == 'form[region]'
   end
 
+  it "casts to string" do
+    @session.find_field(:'Dog').value.should == 'dog'
+  end
+
   it "should raise error if the field doesn't exist" do
     running do
       @session.find_field('Does not exist')

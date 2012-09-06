@@ -3,12 +3,16 @@ Capybara::SpecHelper.spec '#find_button' do
     @session.visit('/form')
   end
 
-  it "should find any field" do
+  it "should find any button" do
     @session.find_button('med')[:id].should == "mediocre"
     @session.find_button('crap321').value.should == "crappy"
   end
 
-  it "should raise error if the field doesn't exist" do
+  it "casts to string" do
+    @session.find_button(:'med')[:id].should == "mediocre"
+  end
+
+  it "should raise error if the button doesn't exist" do
     running do
       @session.find_button('Does not exist')
     end.should raise_error(Capybara::ElementNotFound)

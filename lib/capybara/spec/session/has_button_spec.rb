@@ -6,6 +6,7 @@ Capybara::SpecHelper.spec '#has_button?' do
   it "should be true if the given button is on the page" do
     @session.should have_button('med')
     @session.should have_button('crap321')
+    @session.should have_button(:'crap321')
   end
 
   it "should be false if the given button is not on the page" do

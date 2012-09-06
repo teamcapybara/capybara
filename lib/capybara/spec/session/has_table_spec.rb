@@ -6,6 +6,7 @@ Capybara::SpecHelper.spec '#has_table?' do
   it "should be true if the table is on the page" do
     @session.should have_table('Villain')
     @session.should have_table('villain_table')
+    @session.should have_table(:'villain_table')
   end
 
   it "should be false if the table is not on the page" do

@@ -16,4 +16,11 @@ Capybara::SpecHelper.spec "#uncheck" do
     extract_results(@session)['pets'].should include('dog')
     extract_results(@session)['pets'].should_not include('hamster')
   end
+
+  it "casts to string" do
+    @session.uncheck(:"form_pets_hamster")
+    @session.click_button('awesome')
+    extract_results(@session)['pets'].should include('dog')
+    extract_results(@session)['pets'].should_not include('hamster')
+  end
 end

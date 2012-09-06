@@ -9,6 +9,12 @@ Capybara::SpecHelper.spec '#click_button' do
     @session.click_button('New Here')
   end
 
+  it "casts to string" do
+    @session.click_button(:'Relative Action')
+    @session.current_path.should == '/relative'
+    extract_results(@session)['relative'].should == 'Relative Action'
+  end
+
   context "with multiple values with the same name" do
     it "should use the latest given value" do
       @session.check('Terms of Use')

@@ -54,6 +54,11 @@ Capybara::SpecHelper.spec "#select" do
     extract_results(@session)['locale'].should == 'jbo'
   end
 
+  it "casts to string" do
+    @session.select(:"Miss", :from => :'Title')
+    @session.find_field('Title').value.should == 'Miss'
+  end
+
   context "with a locator that doesn't exist" do
     it "should raise an error" do
       msg = "Unable to find select box \"does not exist\""

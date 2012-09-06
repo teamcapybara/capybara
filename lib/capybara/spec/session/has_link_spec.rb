@@ -7,6 +7,7 @@ Capybara::SpecHelper.spec '#has_link?' do
     @session.should have_link('foo')
     @session.should have_link('awesome title')
     @session.should have_link('A link', :href => '/with_simple_html')
+    @session.should have_link(:'A link', :href => :'/with_simple_html')
   end
 
   it "should be false if the given link is not on the page" do
