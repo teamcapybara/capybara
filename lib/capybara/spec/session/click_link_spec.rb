@@ -81,6 +81,11 @@ shared_examples_for "click_link" do
       @session.body.should include('You landed')
     end
 
+    it "should follow protocol relative links" do
+      @session.click_link('Protocol')
+      @session.should have_content('Another World')
+    end
+
     it "should follow redirects" do
       @session.click_link('BackToMyself')
       @session.body.should include('This is a test')
