@@ -40,10 +40,10 @@ module Capybara
 
       ##
       #
-      # This method is Capybara's primary defence agains asynchonicity
+      # This method is Capybara's primary defence agains asynchronicity
       # problems. It works by attempting to run a given block of code until it
       # succeeds. The exact behaviour of this method depends on a number of
-      # factors. Principality there are certain exceptions which, when raised
+      # factors. Basically there are certain exceptions which, when raised
       # from the block, instead of bubbling up, are caught, and the block is
       # re-run.
       #
@@ -62,13 +62,13 @@ module Capybara
       # As long as any of these exceptions are thrown, the block is re-run,
       # until a certain amount of time passes. The amount of time defaults to
       # {Capybara.default_wait_time} and can be overriden through the `seconds`
-      # argument. This time comparison the system time to see how much time has
-      # passed. If the return value of {Time.now} is stubbed out, Capybara will
-      # raise `Capybara::FrozenInTime`.
+      # argument. This time is compared with the system time to see how much
+      # time has passed. If the return value of {Time.now} is stubbed out,
+      # Capybara will raise `Capybara::FrozenInTime`.
       #
       # @param [Integer] seconds          Number of seconds to retry this block
       # @return [Object]                  The result of the given block
-      # @raise [Capybara::FrozenInTime]   If the rerurn value of {Time.now} appears stuck
+      # @raise [Capybara::FrozenInTime]   If the return value of {Time.now} appears stuck
       #
       def synchronize(seconds=Capybara.default_wait_time)
         start_time = Time.now
