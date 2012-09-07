@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'capybara/rspec', :type => :request do
+describe 'capybara/rspec', :type => :feature do
   it "should include Capybara in rspec" do
     visit('/foo')
     page.body.should include('Another World')
