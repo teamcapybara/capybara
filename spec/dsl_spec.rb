@@ -110,13 +110,21 @@ describe Capybara::DSL do
   end
 
   describe '#using_wait_time' do
+    before do
+      @previous_wait_time = Capybara.default_wait_time
+    end
+
+    after do
+      Capybara.default_wait_time = @previous_wait_time
+    end
+
     it "should switch the wait time and switch it back" do
       in_block = nil
       Capybara.using_wait_time 6 do
         in_block = Capybara.default_wait_time
       end
       in_block.should == 6
-      Capybara.default_wait_time.should == 0
+      Capybara.default_wait_time.should == @previous_wait_time
     end
 
     it "should ensure wait time is reset" do
@@ -125,11 +133,7 @@ describe Capybara::DSL do
           raise "hell"
         end
       end.to raise_error
-      Capybara.default_wait_time.should == 0
-    end
-
-    after do
-      Capybara.default_wait_time = 0
+      Capybara.default_wait_time.should == @previous_wait_time
     end
   end
 

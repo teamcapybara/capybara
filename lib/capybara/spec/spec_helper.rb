@@ -12,15 +12,6 @@ module Capybara
           end
         end
         config.filter_run_excluding :requires => filter
-        config.around do |block|
-          if example.metadata[:requires] and example.metadata[:requires].include?(:js)
-            Capybara.default_wait_time = 1
-            block.run
-            Capybara.default_wait_time = 0
-          else
-            block.run
-          end
-        end
       end
 
       def spec(name, options={}, &block)
