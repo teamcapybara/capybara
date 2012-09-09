@@ -338,12 +338,10 @@ module Capybara
     end
 
     NODE_METHODS.each do |method|
-      class_eval <<-RUBY, __FILE__, __LINE__+1
-        def #{method}(*args, &block)
-          @touched = true
-          current_node.send(:#{method}, *args, &block)
-        end
-      RUBY
+      define_method method do |*args, &block|
+        @touched = true
+        current_node.send(method, *args, &block)
+      end
     end
 
     def inspect

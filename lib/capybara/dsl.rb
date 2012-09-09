@@ -47,11 +47,9 @@ module Capybara
     end
 
     Session::DSL_METHODS.each do |method|
-      class_eval <<-RUBY, __FILE__, __LINE__+1
-        def #{method}(*args, &block)
-          page.#{method}(*args, &block)
-        end
-      RUBY
+      define_method method do |*args, &block|
+        page.send method, *args, &block
+      end
     end
   end
 
