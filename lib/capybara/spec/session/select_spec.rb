@@ -77,6 +77,14 @@ Capybara::SpecHelper.spec "#select" do
     end
   end
 
+  context "on a disabled select" do
+    it "should raise an error" do
+      running do
+        @session.select('Should not see me', :from => 'Disabled Select')
+      end.should raise_error(Capybara::ElementNotFound)
+    end
+  end
+
   context "with multiple select" do
     it "should return an empty value" do
       @session.find_field('Language').value.should == []

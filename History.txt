@@ -23,6 +23,8 @@
 * `find` now raises an error if more than one element was found. Since `find` is
   used by most actions, like `click_link` under the surface, this means that all
   actions need to unambiguous in the future. [Jonas Nicklas]
+* All methods which find or manipulate fields or buttons now ignore them when
+  they are disabled. [Jonas Nicklas]
 * `Element#text` on RackTest now only returns visible text and normalizes
   (strips) whitespace, as with Selenium [Mark Dodwell, Jo Liss]
 * `has_content?` now checks the text value returned by `Element#text`, as opposed to

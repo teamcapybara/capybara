@@ -302,6 +302,12 @@ Capybara::SpecHelper.spec '#click_button' do
     @session.should have_content('Postback')
   end
 
+  it "ignores disabled buttons" do
+    expect do
+      @session.click_button('Disabled button')
+    end.to raise_error(Capybara::ElementNotFound)
+  end
+
   it "should encode complex field names, like array[][value]" do
     @session.visit('/form')
     @session.fill_in('address1_city', :with =>'Paris')

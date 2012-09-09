@@ -130,4 +130,12 @@ Capybara::SpecHelper.spec "#fill_in" do
       end.should raise_error(Capybara::ElementNotFound, msg)
     end
   end
+
+  context "on a disabled field" do
+    it "should raise an error" do
+      running do
+        @session.fill_in('Disabled Text Field', :with => 'Blah blah')
+      end.should raise_error(Capybara::ElementNotFound)
+    end
+  end
 end

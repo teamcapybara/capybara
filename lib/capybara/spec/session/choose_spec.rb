@@ -29,4 +29,12 @@ Capybara::SpecHelper.spec "#choose" do
       end.should raise_error(Capybara::ElementNotFound, msg)
     end
   end
+
+  context "with a disabled radio button" do
+    it "should raise an error" do
+      running do
+        @session.choose('Disabled Radio')
+      end.should raise_error(Capybara::ElementNotFound)
+    end
+  end
 end

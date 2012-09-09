@@ -74,4 +74,12 @@ Capybara::SpecHelper.spec "#check" do
       end.should raise_error(Capybara::ElementNotFound, msg)
     end
   end
+
+  context "with a disabled checkbox" do
+    it "should raise an error" do
+      running do
+        @session.check('Disabled Checkbox')
+      end.should raise_error(Capybara::ElementNotFound)
+    end
+  end
 end
