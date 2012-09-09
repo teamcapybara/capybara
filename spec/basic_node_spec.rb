@@ -36,8 +36,8 @@ describe Capybara do
       Capybara.add_selector :lifeform do
         xpath { |name| "//option[contains(.,'#{name}')]" }
       end
-      string.should have_selector(:page)
-      string.should_not have_selector(:'does-not-exist')
+      string.should have_selector(:id, "page")
+      string.should_not have_selector(:id, 'does-not-exist')
       string.should have_selector(:lifeform, "Monkey")
       string.should_not have_selector(:lifeform, "Gorilla")
     end
