@@ -6,14 +6,12 @@ Capybara::SpecHelper.spec '#has_selector?' do
   it "should be true if the given selector is on the page" do
     @session.should have_selector(:xpath, "//p")
     @session.should have_selector(:css, "p a#foo")
-    @session.should have_selector(:foo)
     @session.should have_selector("//p[contains(.,'est')]")
   end
 
   it "should be false if the given selector is not on the page" do
     @session.should_not have_selector(:xpath, "//abbr")
     @session.should_not have_selector(:css, "p a#doesnotexist")
-    @session.should_not have_selector(:doesnotexist)
     @session.should_not have_selector("//p[contains(.,'thisstringisnotonpage')]")
   end
 
@@ -70,14 +68,12 @@ Capybara::SpecHelper.spec '#has_no_selector?' do
   it "should be false if the given selector is on the page" do
     @session.should_not have_no_selector(:xpath, "//p")
     @session.should_not have_no_selector(:css, "p a#foo")
-    @session.should_not have_no_selector(:foo)
     @session.should_not have_no_selector("//p[contains(.,'est')]")
   end
 
   it "should be true if the given selector is not on the page" do
     @session.should have_no_selector(:xpath, "//abbr")
     @session.should have_no_selector(:css, "p a#doesnotexist")
-    @session.should have_no_selector(:doesnotexist)
     @session.should have_no_selector("//p[contains(.,'thisstringisnotonpage')]")
   end
 

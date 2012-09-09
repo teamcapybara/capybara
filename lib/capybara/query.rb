@@ -11,7 +11,7 @@ module Capybara
         @options[:visible] = Capybara.ignore_hidden_elements
       end
 
-      if args[1]
+      if args[0].is_a?(Symbol)
         @selector = Selector.all[args[0]]
         @locator = args[1]
       else

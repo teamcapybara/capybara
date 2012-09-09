@@ -6,14 +6,12 @@ Capybara::SpecHelper.spec '#asser_selector?' do
   it "should be true if the given selector is on the page" do
     @session.assert_selector(:xpath, "//p")
     @session.assert_selector(:css, "p a#foo")
-    @session.assert_selector(:foo)
     @session.assert_selector("//p[contains(.,'est')]")
   end
 
   it "should be false if the given selector is not on the page" do
     expect { @session.assert_selector(:xpath, "//abbr") }.to raise_error(Capybara::ElementNotFound)
     expect { @session.assert_selector(:css, "p a#doesnotexist") }.to raise_error(Capybara::ElementNotFound)
-    expect { @session.assert_selector(:doesnotexist) }.to raise_error(Capybara::ElementNotFound)
     expect { @session.assert_selector("//p[contains(.,'thisstringisnotonpage')]") }.to raise_error(Capybara::ElementNotFound)
   end
 
@@ -70,14 +68,12 @@ Capybara::SpecHelper.spec '#has_no_selector?' do
   it "should be false if the given selector is on the page" do
     expect { @session.assert_no_selector(:xpath, "//p") }.to raise_error(Capybara::ElementNotFound)
     expect { @session.assert_no_selector(:css, "p a#foo") }.to raise_error(Capybara::ElementNotFound)
-    expect { @session.assert_no_selector(:foo) }.to raise_error(Capybara::ElementNotFound)
     expect { @session.assert_no_selector("//p[contains(.,'est')]") }.to raise_error(Capybara::ElementNotFound)
   end
 
   it "should be true if the given selector is not on the page" do
     @session.assert_no_selector(:xpath, "//abbr")
     @session.assert_no_selector(:css, "p a#doesnotexist")
-    @session.assert_no_selector(:doesnotexist)
     @session.assert_no_selector("//p[contains(.,'thisstringisnotonpage')]")
   end
 
