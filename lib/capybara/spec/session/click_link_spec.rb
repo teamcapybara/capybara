@@ -40,7 +40,7 @@ Capybara::SpecHelper.spec '#click_link' do
     end
 
     it "should accept partial matches" do
-      @session.click_link('some tit')
+      @session.click_link('some titl')
       @session.should have_content('Bar')
     end
   end
@@ -51,7 +51,7 @@ Capybara::SpecHelper.spec '#click_link' do
       @session.should have_content('Bar')
     end
 
-    it "should take user to the linked page" do
+    it "should accept partial matches" do
       @session.click_link('some imag')
       @session.should have_content('Bar')
     end
