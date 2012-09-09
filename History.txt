@@ -25,6 +25,8 @@
   actions need to unambiguous in the future. [Jonas Nicklas]
 * All methods which find or manipulate fields or buttons now ignore them when
   they are disabled. [Jonas Nicklas]
+* Can no longer find elements by id via `find(:foo)`, use `find("#foo")` or
+  `find_by_id("foo")` instead. [Jonas Nicklas]
 * `Element#text` on RackTest now only returns visible text and normalizes
   (strips) whitespace, as with Selenium [Mark Dodwell, Jo Liss]
 * `has_content?` now checks the text value returned by `Element#text`, as opposed to
