@@ -5,6 +5,10 @@
 * `require 'capybara/rails'` will automatically enable `:respect_data_method`
   on the RackTest driver, so the behavior matches Capybara 1.1.2 [Jo Liss]
 * Dropped official support for Ruby 1.8.x. [Jonas Nicklas]
+* All methods which find or manipulate fields or buttons now ignore them when
+  they are disabled. [Jonas Nicklas]
+* Can no longer find elements by id via `find(:foo)`, use `find("#foo")` or
+  `find_by_id("foo")` instead. [Jonas Nicklas]
 
 ### Fixed
 
@@ -12,6 +16,9 @@
   [Jo Liss]
 * `has_text` and `text` now correctly normalize Unicode whitespace, such as
   `&nbsp;`. [Jo Liss]
+* RackTest allows protocol relative URLs [Jonas Nicklas]
+* Arguments are cast to string where necessary, so that e.g. `click_link(:foo)` works
+  as expected. [Jonas Nicklas]
 
 # Version 2.0.0.beta2
 
@@ -23,10 +30,6 @@
 * `find` now raises an error if more than one element was found. Since `find` is
   used by most actions, like `click_link` under the surface, this means that all
   actions need to unambiguous in the future. [Jonas Nicklas]
-* All methods which find or manipulate fields or buttons now ignore them when
-  they are disabled. [Jonas Nicklas]
-* Can no longer find elements by id via `find(:foo)`, use `find("#foo")` or
-  `find_by_id("foo")` instead. [Jonas Nicklas]
 * `Element#text` on RackTest now only returns visible text and normalizes
   (strips) whitespace, as with Selenium [Mark Dodwell, Jo Liss]
 * `has_content?` now checks the text value returned by `Element#text`, as opposed to
@@ -63,9 +66,6 @@
 
 * Nodes found via `all` are no longer reloaded. This fixes weird quirks where
   nodes would seemingly randomly replace themselves with other nodes [Jonas Nicklas]
-* RackTest allows protocol relative URLs [Jonas Nicklas]
-* Arguments are cast to string where necessary, so that e.g. `click_link(:foo)` works
-  as expected. [Jonas Nicklas]
 * Session is only reset if it has been modified, dramatically improves performance if
   only part of the test suite runs Capybara. [Jonas Nicklas]
 * Test suite now passes on Ruby 1.8 [Jo Liss]
