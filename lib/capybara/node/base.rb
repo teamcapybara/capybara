@@ -77,7 +77,7 @@ module Capybara
           yield
         rescue => e
           raise e unless driver.wait?
-          raise e unless driver.invalid_element_errors.include?(e.class) or e.is_a?(Capybara::ElementNotFound)
+          raise e unless driver.invalid_element_errors.include?(e.class) || e.is_a?(Capybara::ElementNotFound)
           raise e if (Time.now - start_time) >= seconds
           sleep(0.05)
           raise Capybara::FrozenInTime, "time appears to be frozen, Capybara does not work with libraries which freeze time, consider using time travelling instead" if Time.now == start_time
