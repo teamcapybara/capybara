@@ -76,7 +76,7 @@ class Capybara::RackTest::Browser
     @dom = nil
   end
 
-  def body
+  def html
     dom.to_xml
   end
 

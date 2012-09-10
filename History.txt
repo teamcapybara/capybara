@@ -9,6 +9,8 @@
   they are disabled. [Jonas Nicklas]
 * Can no longer find elements by id via `find(:foo)`, use `find("#foo")` or
   `find_by_id("foo")` instead. [Jonas Nicklas]
+* Rename `Driver#body` to `Driver#html` (relevant only for driver authors) [Jo
+  Liss]
 
 ### Fixed
 

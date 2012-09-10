@@ -15,7 +15,7 @@ class Capybara::Driver::Base
     raise NotImplementedError
   end
 
-  def body
+  def html
     raise NotImplementedError
   end
 

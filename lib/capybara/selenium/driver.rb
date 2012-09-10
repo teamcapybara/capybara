@@ -38,7 +38,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.page_source
   end
 
-  def body
+  def html
     browser.page_source
   end
 
