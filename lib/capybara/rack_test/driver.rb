@@ -66,8 +66,8 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
     browser.find(selector)
   end
 
-  def body
-    browser.body
+  def html
+    browser.html
   end
 
   def source
