@@ -30,21 +30,21 @@ describe Capybara::Session do
         @session.driver.options[:respect_data_method] = true
         @session.visit "/with_html"
         @session.click_link "A link with data-method"
-        @session.body.should include('The requested object was deleted')
+        @session.html.should include('The requested object was deleted')
       end
 
       it "should not use data-method if option is false" do
         @session.driver.options[:respect_data_method] = false
         @session.visit "/with_html"
         @session.click_link "A link with data-method"
-        @session.body.should include('Not deleted')
+        @session.html.should include('Not deleted')
       end
 
       it "should use data-method if available even if it's capitalized" do
         @session.driver.options[:respect_data_method] = true
         @session.visit "/with_html"
         @session.click_link "A link with capitalized data-method"
-        @session.body.should include('The requested object was deleted')
+        @session.html.should include('The requested object was deleted')
       end
 
       after do
@@ -57,7 +57,7 @@ describe Capybara::Session do
         it "should submit an empty form-data section if no file is submitted" do
           @session.visit("/form")
           @session.click_button("Upload Empty")
-          @session.body.should include('Successfully ignored empty file field.')
+          @session.html.should include('Successfully ignored empty file field.')
         end
       end
     end
@@ -73,27 +73,27 @@ describe Capybara::RackTest::Driver do
     it 'should always set headers' do
       @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       @driver.visit('/get_header')
-      @driver.body.should include('foobar')
+      @driver.html.should include('foobar')
     end
 
     it 'should keep headers on link clicks' do
       @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       @driver.visit('/header_links')
       @driver.find('.//a').first.click
-      @driver.body.should include('foobar')
+      @driver.html.should include('foobar')
     end
 
     it 'should keep headers on form submit' do
       @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       @driver.visit('/header_links')
       @driver.find('.//input').first.click
-      @driver.body.should include('foobar')
+      @driver.html.should include('foobar')
     end
 
     it 'should keep headers on redirects' do
       @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       @driver.visit('/get_header_via_redirect')
-      @driver.body.should include('foobar')
+      @driver.html.should include('foobar')
     end
   end
 
@@ -123,7 +123,7 @@ describe Capybara::RackTest::Driver do
 
       it "should follow 5 redirects" do
         @driver.visit("/redirect/5/times")
-        @driver.body.should include('redirection complete')
+        @driver.html.should include('redirection complete')
       end
 
       it "should not follow more than 6 redirects" do
@@ -140,7 +140,7 @@ describe Capybara::RackTest::Driver do
 
       it "should follow 21 redirects" do
         @driver.visit("/redirect/21/times")
-        @driver.body.should include('redirection complete')
+        @driver.html.should include('redirection complete')
       end
 
       it "should not follow more than 21 redirects" do
