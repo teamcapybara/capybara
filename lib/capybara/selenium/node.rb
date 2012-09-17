@@ -19,12 +19,16 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def set(value)
+    if (Array === value) && !self[:multiple]
+      raise ArgumentError.new "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"
+    end
     if tag_name == 'input' and type == 'radio'
       click
     elsif tag_name == 'input' and type == 'checkbox'
       click if value ^ native.attribute('checked').to_s.eql?("true")
     elsif tag_name == 'input' and type == 'file'
-      native.send_keys(value.to_s)
+      path_names = value.to_s.empty? ? [] : value
+      native.send_keys(*path_names)
     elsif tag_name == 'textarea' or tag_name == 'input'
       native.send_keys(("\b" * native[:value].size) + value.to_s)
     end
