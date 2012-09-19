@@ -5,7 +5,8 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def [](name)
-    native.attribute(name.to_s)
+    @attrs = {}
+    @attrs[name] ||= native.attribute(name.to_s)
   rescue Selenium::WebDriver::Error::WebDriverError
     nil
   end
@@ -50,7 +51,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def tag_name
-    native.tag_name.downcase
+    @tag_name ||= native.tag_name.downcase
   end
 
   def visible?
