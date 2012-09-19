@@ -5,7 +5,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def [](name)
-    @attrs = {}
+    @attrs ||= {}
     @attrs[name] ||= native.attribute(name.to_s)
   rescue Selenium::WebDriver::Error::WebDriverError
     nil
