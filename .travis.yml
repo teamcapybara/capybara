@@ -27,7 +27,3 @@ matrix:
 before_script:
   - sh -e /etc/init.d/xvfb start
   - export DISPLAY=:99.0
-branches:
-  only:
-    - master
-    - 1.1_stable
