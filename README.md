@@ -818,12 +818,6 @@ additional info about how the underlying driver can be configured.
 
 ## Development
 
-If you found a _reproducible_ bug, open a [GitHub
-Issue](http://github.com/jnicklas/capybara/issues) to submit a bug report.
-
-Even better, send a pull request! Make sure all changes are well tested,
-Capybara is a testing tool after all. Topic branches are good.
-
 To set up a development environment, simply do:
 
 ```bash
@@ -831,3 +825,7 @@ git submodule update --init
 bundle install
 bundle exec rake  # run the test suite
 ```
+
+See
+[CONTRIBUTING.md](https://github.com/jnicklas/capybara/blob/master/CONTRIBUTING.md)
+for how to send issues and pull requests.
