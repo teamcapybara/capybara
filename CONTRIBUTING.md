@@ -16,6 +16,12 @@ more likely that there is an error in your code, and not a bug in Capybara. For
 our own sanity we are merciless in closing issues where we feel that you
 haven't shown that the issue really is within Capybara.
 
+Please try to answer the following questions in your issue:
+
+- What did you do?
+- What did you expect to happen?
+- What happened instead?
+
 If you have identified a bug you can file it at the [issue tracker][tracker].
 It would be very helpful if you could include a way to replicate the bug.
 Ideally a failing test would be perfect, but even a simple script demonstrating
@@ -34,24 +40,24 @@ Capybara is a testing framework, as such, the requirements for patches are a
 bit tougher than for normal libraries. If you want your patches to be accepted,
 please follow the following guidelines:
 
-- *Add tests!* Your patch won't be accepted if it doesn't have tests.
+- **Add tests!** Your patch won't be accepted if it doesn't have tests.
 
-- *Document any change in behaviour*. Make sure the README and any other
+- **Document any change in behaviour**. Make sure the README and any other
   relevant documentation are kept up-to-date.
 
-- *Consider our release cycle*. We try to follow semver. Randomly breaking
+- **Consider our release cycle**. We try to follow semver. Randomly breaking
   public APIs is not an option.
 
-- *Create topic branches*. Don't ask us to pull from your master branch.
+- **Create topic branches**. Don't ask us to pull from your master branch.
 
-- *One pull request per feature*. If you want to do more than one thing, send
+- **One pull request per feature**. If you want to do more than one thing, send
   multiple pull requests.
 
-- *Send coherent history*. Make sure each individual commit in your pull
+- **Send coherent history**. Make sure each individual commit in your pull
   request is meaningful. If you had to make multiple intermediate commits while
   developing, please squash them before sending them to us.
 
-- *Follow coding conventions*. The standard Ruby stuff, two spaces indent,
+- **Follow coding conventions**. The standard Ruby stuff, two spaces indent,
   don't omit parens unless you have a good reason.
 
 Thank you so much for contributing!
