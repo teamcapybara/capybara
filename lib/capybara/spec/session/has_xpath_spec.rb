@@ -38,6 +38,7 @@ Capybara::SpecHelper.spec '#has_xpath?' do
       @session.should have_xpath("//p", :count => 3)
       @session.should have_xpath("//p//a[@id='foo']", :count => 1)
       @session.should have_xpath("//p[contains(.,'est')]", :count => 1)
+      @session.should have_xpath("//p//a[@id='doesnotexist']", :count => 0)
     end
 
     it "should be false if the content is on the page the given number of times" do

@@ -48,6 +48,7 @@ Capybara::SpecHelper.spec '#has_css?' do
     it "should be true if the content is on the page the given number of times" do
       @session.should have_css("p", :count => 3)
       @session.should have_css("p a#foo", :count => 1)
+      @session.should have_css("p a.doesnotexist", :count => 0)
     end
 
     it "should be false if the content occurs a different number of times than the given" do
