@@ -48,8 +48,6 @@ module Capybara
 
     def matches_count?(count)
       case
-      when count.zero?
-        false
       when options[:between]
         options[:between] === count
       when options[:count]

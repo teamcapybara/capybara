@@ -31,21 +31,18 @@ Capybara::SpecHelper.spec '#has_css?' do
     it "should be true if the content occurs within the range given" do
       @session.should have_css("p", :between => 1..4)
       @session.should have_css("p a#foo", :between => 1..3)
+      @session.should have_css("p a.doesnotexist", :between => 0..8)
     end
 
     it "should be false if the content occurs more or fewer times than range" do
       @session.should_not have_css("p", :between => 6..11 )
       @session.should_not have_css("p a#foo", :between => 4..7)
-    end
-
-    it "should be false if the content isn't on the page at all" do
-      @session.should_not have_css("abbr", :between => 1..8)
       @session.should_not have_css("p a.doesnotexist", :between => 3..8)
     end
   end
 
   context "with count" do
-    it "should be true if the content is on the page the given number of times" do
+    it "should be true if the content occurs the given number of times" do
       @session.should have_css("p", :count => 3)
       @session.should have_css("p a#foo", :count => 1)
       @session.should have_css("p a.doesnotexist", :count => 0)
@@ -54,10 +51,6 @@ Capybara::SpecHelper.spec '#has_css?' do
     it "should be false if the content occurs a different number of times than the given" do
       @session.should_not have_css("p", :count => 6)
       @session.should_not have_css("p a#foo", :count => 2)
-    end
-
-    it "should be false if the content isn't on the page at all" do
-      @session.should_not have_css("abbr", :count => 2)
       @session.should_not have_css("p a.doesnotexist", :count => 1)
     end
 
@@ -71,17 +64,14 @@ Capybara::SpecHelper.spec '#has_css?' do
     it "should be true when content occurs same or fewer times than given" do
       @session.should have_css("h2.head", :maximum => 5) # edge case
       @session.should have_css("h2", :maximum => 10)
+      @session.should have_css("p a.doesnotexist", :maximum => 1)
+      @session.should have_css("p a.doesnotexist", :maximum => 0)
     end
 
     it "should be false when content occurs more times than given" do
       @session.should_not have_css("h2.head", :maximum => 4) # edge case
       @session.should_not have_css("h2", :maximum => 6)
       @session.should_not have_css("p", :maximum => 1)
-    end
-
-    it "should be false if the content isn't on the page at all" do
-      @session.should_not have_css("abbr", :maximum => 2)
-      @session.should_not have_css("p a.doesnotexist", :maximum => 1)
     end
 
     it "should coerce maximum to an integer" do
@@ -94,17 +84,14 @@ Capybara::SpecHelper.spec '#has_css?' do
     it "should be true when content occurs same or more times than given" do
       @session.should have_css("h2.head", :minimum => 5) # edge case
       @session.should have_css("h2", :minimum => 3)
+      @session.should have_css("p a.doesnotexist", :minimum => 0)
     end
 
     it "should be false when content occurs fewer times than given" do
       @session.should_not have_css("h2.head", :minimum => 6) # edge case
       @session.should_not have_css("h2", :minimum => 8)
       @session.should_not have_css("p", :minimum => 10)
-    end
-
-    it "should be false if the content isn't on the page at all" do
-      @session.should_not have_css("abbr", :minimum => 2)
-      @session.should_not have_css("p a.doesnotexist", :minimum => 7)
+      @session.should_not have_css("p a.doesnotexist", :minimum => 1)
     end
 
     it "should coerce minimum to an integer" do
@@ -159,15 +146,12 @@ Capybara::SpecHelper.spec '#has_no_css?' do
     it "should be false if the content occurs within the range given" do
       @session.should_not have_no_css("p", :between => 1..4)
       @session.should_not have_no_css("p a#foo", :between => 1..3)
+      @session.should_not have_no_css("p a.doesnotexist", :between => 0..2)
     end
 
     it "should be true if the content occurs more or fewer times than range" do
       @session.should have_no_css("p", :between => 6..11 )
       @session.should have_no_css("p a#foo", :between => 4..7)
-    end
-
-    it "should be true if the content isn't on the page at all" do
-      @session.should have_no_css("abbr", :between => 1..8)
       @session.should have_no_css("p a.doesnotexist", :between => 3..8)
     end
   end
@@ -176,15 +160,12 @@ Capybara::SpecHelper.spec '#has_no_css?' do
     it "should be false if the content is on the page the given number of times" do
       @session.should_not have_no_css("p", :count => 3)
       @session.should_not have_no_css("p a#foo", :count => 1)
+      @session.should_not have_no_css("p a.doesnotexist", :count => 0)
     end
 
     it "should be true if the content is on the page the given number of times" do
       @session.should have_no_css("p", :count => 6)
       @session.should have_no_css("p a#foo", :count => 2)
-    end
-
-    it "should be true if the content isn't on the page at all" do
-      @session.should have_no_css("abbr", :count => 2)
       @session.should have_no_css("p a.doesnotexist", :count => 1)
     end
 
@@ -198,17 +179,13 @@ Capybara::SpecHelper.spec '#has_no_css?' do
     it "should be false when content occurs same or fewer times than given" do
       @session.should_not have_no_css("h2.head", :maximum => 5) # edge case
       @session.should_not have_no_css("h2", :maximum => 10)
+      @session.should_not have_no_css("p a.doesnotexist", :maximum => 0)
     end
 
     it "should be true when content occurs more times than given" do
       @session.should have_no_css("h2.head", :maximum => 4) # edge case
       @session.should have_no_css("h2", :maximum => 6)
       @session.should have_no_css("p", :maximum => 1)
-    end
-
-    it "should be true if the content isn't on the page at all" do
-      @session.should have_no_css("abbr", :maximum => 5)
-      @session.should have_no_css("p a.doesnotexist", :maximum => 10)
     end
 
     it "should coerce maximum to an integer" do
@@ -221,17 +198,14 @@ Capybara::SpecHelper.spec '#has_no_css?' do
     it "should be false when content occurs same or more times than given" do
       @session.should_not have_no_css("h2.head", :minimum => 5) # edge case
       @session.should_not have_no_css("h2", :minimum => 3)
+      @session.should_not have_no_css("p a.doesnotexist", :minimum => 0)
     end
 
     it "should be true when content occurs fewer times than given" do
       @session.should have_no_css("h2.head", :minimum => 6) # edge case
       @session.should have_no_css("h2", :minimum => 8)
       @session.should have_no_css("p", :minimum => 15)
-    end
-
-    it "should be true if the content isn't on the page at all" do
-      @session.should have_no_css("abbr", :minimum => 5)
-      @session.should have_no_css("p a.doesnotexist", :minimum => 10)
+      @session.should have_no_css("p a.doesnotexist", :minimum => 1)
     end
 
     it "should coerce minimum to an integer" do
