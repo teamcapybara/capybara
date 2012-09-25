@@ -50,7 +50,7 @@ Capybara::SpecHelper.spec '#has_css?' do
       @session.should have_css("p a#foo", :count => 1)
     end
 
-    it "should be false if the content occurs the given number of times" do
+    it "should be false if the content occurs a different number of times than the given" do
       @session.should_not have_css("p", :count => 6)
       @session.should_not have_css("p a#foo", :count => 2)
     end
@@ -217,8 +217,8 @@ Capybara::SpecHelper.spec '#has_no_css?' do
   end
 
   context "with minimum" do
-    it "should be false when content occurs more times than given" do
-      @session.should_not have_no_css("h2.head", :minimum => 4) # edge case
+    it "should be false when content occurs same or more times than given" do
+      @session.should_not have_no_css("h2.head", :minimum => 5) # edge case
       @session.should_not have_no_css("h2", :minimum => 3)
     end
 
