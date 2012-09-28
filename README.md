@@ -12,6 +12,12 @@ supported through an external gem.
 **Need help?** Ask on the mailing list (please do not open an issue on
 GitHub): http://groups.google.com/group/ruby-capybara
 
+## Features
+* Includes methods for finding fields by label
+* Integrates with a number of Ruby libraries
+* Automatically handles asynchronous behaviour, no need for "wait" and "sleep" littering your tests
+* Runs against multiple backends, including headless drivers like Poltergeist and capybara-webkit, also RackTest and capybara-mechanize
+
 ## Setup
 
 To install, type
