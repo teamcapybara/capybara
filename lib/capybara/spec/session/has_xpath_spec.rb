@@ -34,20 +34,17 @@ Capybara::SpecHelper.spec '#has_xpath?' do
   end
 
   context "with count" do
-    it "should be true if the content is on the page the given number of times" do
+    it "should be true if the content occurs the given number of times" do
       @session.should have_xpath("//p", :count => 3)
       @session.should have_xpath("//p//a[@id='foo']", :count => 1)
       @session.should have_xpath("//p[contains(.,'est')]", :count => 1)
+      @session.should have_xpath("//p//a[@id='doesnotexist']", :count => 0)
     end
 
-    it "should be false if the content is on the page the given number of times" do
+    it "should be false if the content occurs a different number of times than the given" do
       @session.should_not have_xpath("//p", :count => 6)
       @session.should_not have_xpath("//p//a[@id='foo']", :count => 2)
       @session.should_not have_xpath("//p[contains(.,'est')]", :count => 5)
-    end
-
-    it "should be false if the content isn't on the page at all" do
-      @session.should_not have_xpath("//abbr", :count => 2)
       @session.should_not have_xpath("//p//a[@id='doesnotexist']", :count => 1)
     end
   end
@@ -101,20 +98,17 @@ Capybara::SpecHelper.spec '#has_no_xpath?' do
   end
 
   context "with count" do
-    it "should be false if the content is on the page the given number of times" do
+    it "should be false if the content occurs the given number of times" do
       @session.should_not have_no_xpath("//p", :count => 3)
       @session.should_not have_no_xpath("//p//a[@id='foo']", :count => 1)
       @session.should_not have_no_xpath("//p[contains(.,'est')]", :count => 1)
+      @session.should_not have_no_xpath("//p//a[@id='doesnotexist']", :count => 0)
     end
 
-    it "should be true if the content is on the page the wrong number of times" do
+    it "should be true if the content occurs a different number of times than the given" do
       @session.should have_no_xpath("//p", :count => 6)
       @session.should have_no_xpath("//p//a[@id='foo']", :count => 2)
       @session.should have_no_xpath("//p[contains(.,'est')]", :count => 5)
-    end
-
-    it "should be true if the content isn't on the page at all" do
-      @session.should have_no_xpath("//abbr", :count => 2)
       @session.should have_no_xpath("//p//a[@id='doesnotexist']", :count => 1)
     end
   end
