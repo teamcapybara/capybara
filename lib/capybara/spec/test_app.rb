@@ -13,7 +13,16 @@ class TestApp < Sinatra::Base
   # Also check lib/capybara/spec/views/*.erb for pages not listed here
 
   get '/' do
-    'Hello world! <a href="with_html">Relative</a>'
+    <<END_OF_BODY
+Hello world! <a href="with_html">Relative</a>
+<pre>
+Some
+  Preformatted
+  
+  Text
+is indented
+</pre>
+END_OF_BODY
   end
 
   get '/foo' do

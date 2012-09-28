@@ -6,6 +6,12 @@ Feature: Capybara's cucumber integration
   Scenario: hello world
     When I visit the root page
     Then I should see "Hello world!"
+    Then I should see:
+      """
+        Preformatted
+        
+        Text
+      """
 
   @javascript
   Scenario: javascript tag
