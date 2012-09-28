@@ -32,6 +32,11 @@ Capybara::SpecHelper.spec '#has_text?' do
     @session.should have_text('text with whitespace')
   end
 
+  it "should ignore whitespace and newlines in the search string" do
+    @session.visit('/with_html')
+    @session.should have_text("text     with \n\n whitespace")
+  end
+
   it "should be false if the given text is not on the page" do
     @session.visit('/with_html')
     @session.should_not have_text('xxxxyzzz')
