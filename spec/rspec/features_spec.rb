@@ -36,6 +36,20 @@ feature "Capybara's feature DSL" do
   end
 end
 
+feature "given and given! aliases to let and let!" do
+  given(:value) { :available }
+  given!(:value_in_background) { :available }
+
+  background do
+    value_in_background.should be(:available)
+  end
+
+  scenario "given and given! work as intended" do
+    value.should be(:available)
+    value_in_background.should be(:available)
+  end
+end
+
 feature "Capybara's feature DSL with driver", :driver => :culerity do
   scenario "switches driver" do
     Capybara.current_driver.should == :culerity
