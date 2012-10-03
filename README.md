@@ -19,7 +19,7 @@ GitHub): http://groups.google.com/group/ruby-capybara
 - **Switch the backend** your tests run against from fast headless mode
   to an actual browser with no changes to your tests.
 - **Powerful synchronization** features mean you never have to manually wait
-  for aynchronous processes to complete.
+  for asynchronous processes to complete.
 
 ## Setup
 
