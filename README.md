@@ -138,11 +138,22 @@ feature "Signing up" do
     end
     click_link 'Sign in'
   end
+
+  given(:other_user) { User.make(:email => 'other@example.com', :password => 'rous') }
+  
+  scenario "Signing in as another user" do
+    within("#session") do
+      fill_in 'Login', :with => other_user.email
+      fill_in 'Password', :with => other_user.password
+    end
+    click_link 'Sign in'
+  end
+
 end
 ```
 
 `feature` is in fact just an alias for `describe ..., :type => :request`,
-`background` is an alias for `before`, and `scenario` for `it`.
+`background` is an alias for `before`, `scenario` for `it`, and `given`/`given!` aliases for `let`/`let!`, respectively.
 
 ## Using Capybara with Test::Unit
 
