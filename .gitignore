@@ -13,3 +13,4 @@ doc
 .bundle
 Gemfile.lock
 chromedriver.log
+bundler_stubs
