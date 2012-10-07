@@ -118,6 +118,10 @@ module Capybara
         native[:selected]
       end
 
+      def allow_reload!
+        # no op
+      end
+
     protected
 
       def find_in_base(selector, xpath)

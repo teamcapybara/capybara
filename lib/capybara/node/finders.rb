@@ -24,7 +24,7 @@ module Capybara
       # @raise  [Capybara::ElementNotFound]   If the element can't be found before time expires
       #
       def find(*args)
-        wait_until { first(*args) or raise_find_error(*args) }
+        wait_until { first(*args) or raise_find_error(*args) }.tap(&:allow_reload!)
       end
 
       ##
