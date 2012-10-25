@@ -50,6 +50,11 @@ feature "given and given! aliases to let and let!" do
   end
 end
 
+feature "if xscenario aliases to pending then" do
+  xscenario "this test should be pending" do
+  end
+end
+
 feature "Capybara's feature DSL with driver", :driver => :culerity do
   scenario "switches driver" do
     Capybara.current_driver.should == :culerity

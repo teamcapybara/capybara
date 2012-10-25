@@ -4,6 +4,7 @@ module Capybara
       base.instance_eval do
         alias :background :before
         alias :scenario :it
+        alias :xscenario :pending
         alias :given :let
         alias :given! :let!
       end
