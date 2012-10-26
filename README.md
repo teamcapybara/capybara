@@ -148,17 +148,11 @@ feature "Signing up" do
     end
     click_link 'Sign in'
   end
-
-  xscenario "Signing out" do
-    # this test is pending
-  end
-
 end
 ```
 
 `feature` is in fact just an alias for `describe ..., :type => :request`,
 `background` is an alias for `before`, `scenario` for `it`, and `given`/`given!` aliases for `let`/`let!`, respectively.
-`xscenario` is an alias for `pending`, allowing you to temporarily disable a test.
 
 ## Using Capybara with Test::Unit
 

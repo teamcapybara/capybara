@@ -51,7 +51,7 @@ feature "given and given! aliases to let and let!" do
 end
 
 feature "if xscenario aliases to pending then" do
-  xscenario "this test should be pending" do
+  xscenario "this test should be 'temporarily disabled with xscenario'" do
   end
 end
 
