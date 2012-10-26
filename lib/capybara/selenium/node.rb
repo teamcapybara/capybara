@@ -5,8 +5,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def [](name)
-    @attrs ||= {}
-    @attrs[name] ||= native.attribute(name.to_s)
+    native.attribute(name.to_s)
   rescue Selenium::WebDriver::Error::WebDriverError
     nil
   end
@@ -20,6 +19,8 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def set(value)
+    tag_name = self.tag_name
+    type = self[:type]
     if (Array === value) && !self[:multiple]
       raise ArgumentError.new "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"
     end
@@ -55,7 +56,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def tag_name
-    @tag_name ||= native.tag_name.downcase
+    native.tag_name.downcase
   end
 
   def visible?
@@ -80,9 +81,4 @@ private
   def select_node
     find('./ancestor::select').first
   end
-
-  def type
-    self[:type]
-  end
-
 end
