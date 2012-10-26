@@ -12,6 +12,10 @@
 * Rename `Driver#body` to `Driver#html` (relevant only for driver authors) [Jo
   Liss]
 
+### Added
+
+* Multiple files can be uploaded with `attach_file` [Jarl Friis]
+
 ### Fixed
 
 * `has_text` (`has_content`) now accepts non-string arguments, like numbers.
@@ -21,6 +25,7 @@
 * RackTest allows protocol relative URLs [Jonas Nicklas]
 * Arguments are cast to string where necessary, so that e.g. `click_link(:foo)` works
   as expected. [Jonas Nicklas]
+* `:count => 0` now works as expected [Jarl Friis]
 
 # Version 2.0.0.beta2
 
