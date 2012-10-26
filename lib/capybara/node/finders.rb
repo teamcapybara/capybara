@@ -52,7 +52,7 @@ module Capybara
 
       ##
       #
-      # Find a button on the page. The link can be found by its id, name or value.
+      # Find a button on the page. The button can be found by its id, name or value.
       #
       # @param [String] locator       Which button to find
       # @return [Capybara::Element]   The found element
