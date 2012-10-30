@@ -122,6 +122,10 @@ module Capybara
         # no op
       end
 
+      def without_wait
+        yield
+      end
+
     protected
 
       def find_in_base(selector, xpath)

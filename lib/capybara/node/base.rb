@@ -37,6 +37,14 @@ module Capybara
         self
       end
 
+      def without_wait
+        orig = @wait_disabled
+        @wait_disabled = true
+        yield
+      ensure
+        @wait_disabled = orig
+      end
+
     protected
 
       def wait_until(seconds=Capybara.default_wait_time)
@@ -45,6 +53,7 @@ module Capybara
         begin
           yield
         rescue => e
+          raise e if @wait_disabled
           raise e unless driver.wait?
           raise e unless (driver.respond_to?(:invalid_element_errors) and driver.invalid_element_errors.include?(e.class)) or e.is_a?(Capybara::ElementNotFound)
           raise e if (Time.now - start_time) >= seconds
