@@ -126,6 +126,10 @@ module Capybara
         # no op
       end
 
+      def unsynchronized
+        yield # simple nodes don't need to wait
+      end
+
       def all(*args)
         query = Capybara::Query.new(*args)
         elements = native.xpath(query.xpath).map do |node|
