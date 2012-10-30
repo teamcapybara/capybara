@@ -107,9 +107,9 @@ module Capybara
       # @return [Capybara::Element]                       The found elements
       #
       def all(*args)
+        selector = Capybara::Selector.normalize(*args)
         options = extract_normalized_options(args)
 
-        selector = Capybara::Selector.normalize(*args)
         selector.xpaths.
           map    { |path| find_in_base(selector, path) }.flatten.
           select { |node| matches_options(node, options) }
@@ -129,10 +129,10 @@ module Capybara
       # @return Capybara::Element                         The found element
       #
       def first(*args)
+        selector = Capybara::Selector.normalize(*args)
         options = extract_normalized_options(args)
         found_elements = []
 
-        selector = Capybara::Selector.normalize(*args)
         selector.xpaths.each do |path|
           find_in_base(selector, path).each do |node|
             if matches_options(node, options)
