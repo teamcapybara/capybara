@@ -7,12 +7,6 @@ require 'rspec'
 require 'capybara'
 
 RSpec.configure do |config|
-  config.before do
-    Capybara.configure do |config|
-      config.default_selector = :xpath
-    end
-  end
-
   # Workaround for http://code.google.com/p/selenium/issues/detail?id=3147:
   # Rerun the example if we hit a transient "docElement is null" error
   config.around(:each) do |example|
@@ -32,13 +26,9 @@ end
 
 # Required here instead of in rspec_spec to avoid RSpec deprecation warning
 require 'capybara/rspec'
-
 require 'capybara/spec/session'
 
 alias :running :lambda
-
-Capybara.app = TestApp
-Capybara.default_wait_time = 1 # less timeout so tests run faster
 
 module TestSessions
   RackTest = Capybara::Session.new(:rack_test, TestApp)

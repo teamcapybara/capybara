@@ -1,4 +1,4 @@
-Capybara::SpecHelper.spec '#asser_selector?' do
+Capybara::SpecHelper.spec '#assert_selector' do
   before do
     @session.visit('/with_html')
   end
@@ -60,7 +60,7 @@ Capybara::SpecHelper.spec '#asser_selector?' do
   end
 end
 
-Capybara::SpecHelper.spec '#has_no_selector?' do
+Capybara::SpecHelper.spec '#assert_no_selector' do
   before do
     @session.visit('/with_html')
   end

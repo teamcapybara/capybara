@@ -12,6 +12,21 @@ module Capybara
           end
         end
         config.filter_run_excluding :requires => filter
+        config.before do
+          Capybara.app = TestApp
+
+          Capybara.configure do |config|
+            config.default_selector = :xpath
+          end
+
+          # set up a fast wait time so that most tests are faster
+          # but, if we require JS, increase it a bit.
+          if example.metadata[:requires] and example.metadata[:requires].include?(:js)
+            Capybara.default_wait_time = 1
+          else
+            Capybara.default_wait_time = 0
+          end
+        end
       end
 
       def spec(name, options={}, &block)
