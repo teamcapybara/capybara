@@ -136,8 +136,8 @@ Capybara::SpecHelper.spec "node" do
         node = @session.find(:css, '#reload-me')
         @session.click_link('Reload!')
         sleep(0.3)
-        node.reload.text.should == 'RELOADED'
-        node.text.should == 'RELOADED'
+        node.reload.text.should == 'has been reloaded'
+        node.text.should == 'has been reloaded'
       end
 
       it "should reload a parent node" do
@@ -145,8 +145,8 @@ Capybara::SpecHelper.spec "node" do
         node = @session.find(:css, '#reload-me').find(:css, 'em')
         @session.click_link('Reload!')
         sleep(0.3)
-        node.reload.text.should == 'RELOADED'
-        node.text.should == 'RELOADED'
+        node.reload.text.should == 'has been reloaded'
+        node.text.should == 'has been reloaded'
       end
 
       it "should not automatically reload" do
@@ -154,7 +154,7 @@ Capybara::SpecHelper.spec "node" do
         node = @session.find(:css, '#reload-me')
         @session.click_link('Reload!')
         sleep(0.3)
-        running { node.text.should == 'RELOADED' }.should raise_error
+        running { node.text.should == 'has been reloaded' }.should raise_error
       end
       after { Capybara.automatic_reload = true }
     end
@@ -165,7 +165,7 @@ Capybara::SpecHelper.spec "node" do
         node = @session.find(:css, '#reload-me')
         @session.click_link('Reload!')
         sleep(0.3)
-        node.text.should == 'RELOADED'
+        node.text.should == 'has been reloaded'
       end
 
       it "should reload a parent node automatically" do
@@ -173,7 +173,7 @@ Capybara::SpecHelper.spec "node" do
         node = @session.find(:css, '#reload-me').find(:css, 'em')
         @session.click_link('Reload!')
         sleep(0.3)
-        node.text.should == 'RELOADED'
+        node.text.should == 'has been reloaded'
       end
 
       it "should reload a node automatically when using find" do
@@ -181,7 +181,7 @@ Capybara::SpecHelper.spec "node" do
         node = @session.find(:css, '#reload-me')
         @session.click_link('Reload!')
         sleep(0.3)
-        node.find(:css, 'a').text.should == 'RELOADED'
+        node.find(:css, 'a').text.should == 'has been reloaded'
       end
 
       it "should not reload nodes which haven't been found" do
@@ -191,6 +191,14 @@ Capybara::SpecHelper.spec "node" do
         sleep(0.3)
         running { node.text.should == 'Foo' }.should raise_error
         running { node.text.should == 'Bar' }.should raise_error
+      end
+
+      it "should reload nodes with options" do
+        @session.visit('/with_js')
+        node = @session.find(:css, 'em', :text => "reloaded")
+        @session.click_link('Reload!')
+        sleep(1)
+        node.text.should == 'has been reloaded'
       end
     end
   end
