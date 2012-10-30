@@ -76,6 +76,7 @@ module Capybara
         begin
           yield
         rescue => e
+          raise e if @unsynchronized
           raise e unless driver.wait?
           raise e unless driver.invalid_element_errors.include?(e.class) || e.is_a?(Capybara::ElementNotFound)
           raise e if (Time.now - start_time) >= seconds
@@ -84,6 +85,24 @@ module Capybara
           reload if Capybara.automatic_reload
           retry
         end
+      end
+
+      ##
+      #
+      # Within the given block, prevent synchronize from having any effect.
+      #
+      # This is an internal method which should not be called unless you are
+      # absolutely sure of what you're doing.
+      #
+      # @api private
+      # @return [Object]                  The result of the given block
+      #
+      def unsynchronized
+        orig = @unsynchronized
+        @unsynchronized = true
+        yield
+      ensure
+        @unsynchronized = orig
       end
 
     protected
