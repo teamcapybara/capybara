@@ -1,5 +1,9 @@
 require 'spec_helper'
 
+module TestSessions
+  RackTest = Capybara::Session.new(:rack_test, TestApp)
+end
+
 Capybara::SpecHelper.run_specs TestSessions::RackTest, "RackTest", :skip => [
   :js,
   :screenshot,

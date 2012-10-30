@@ -1,5 +1,9 @@
 require 'spec_helper'
 
+module TestSessions
+  Selenium = Capybara::Session.new(:selenium, TestApp)
+end
+
 Capybara::SpecHelper.run_specs TestSessions::Selenium, "selenium", :skip => [
   :response_headers,
   :status_code,
