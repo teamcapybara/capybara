@@ -22,10 +22,10 @@ module Capybara
     #
     class Element < Base
 
-      def initialize(session, base, parent, query)
+      def initialize(session, base, parent, selector)
         super(session, base)
         @parent = parent
-        @query = query
+        @selector = selector
       end
 
       def allow_reload!
@@ -191,7 +191,7 @@ module Capybara
 
       def reload
         if @allow_reload
-          reloaded = parent.reload.first(@query.name, @query.locator, @query.options)
+          reloaded = parent.reload.first(@selector.name, @selector.locator, @selector.options)
           @base = reloaded.base if reloaded
         end
         self
