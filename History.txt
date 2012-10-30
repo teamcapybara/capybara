@@ -26,6 +26,7 @@
 * Arguments are cast to string where necessary, so that e.g. `click_link(:foo)` works
   as expected. [Jonas Nicklas]
 * `:count => 0` now works as expected [Jarl Friis]
+* Fixed race conditions on negative assertions when removing nodes [Jonas Nicklas]
 
 # Version 2.0.0.beta2
 
