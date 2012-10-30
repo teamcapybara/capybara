@@ -148,7 +148,6 @@ feature "Signing up" do
     end
     click_link 'Sign in'
   end
-
 end
 ```
 

@@ -4,6 +4,7 @@ module Capybara
       base.instance_eval do
         alias :background :before
         alias :scenario :it
+        alias_example_to :xscenario, :pending => "temporarily disabled with xscenario"
         alias :given :let
         alias :given! :let!
       end
