@@ -13,8 +13,8 @@ Capybara::SpecHelper.spec '#find_button' do
   end
 
   it "should raise error if the button doesn't exist" do
-    running do
+    expect do
       @session.find_button('Does not exist')
-    end.should raise_error(Capybara::ElementNotFound)
+    end.to raise_error(Capybara::ElementNotFound)
   end
 end

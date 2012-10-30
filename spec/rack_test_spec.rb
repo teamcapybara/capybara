@@ -127,9 +127,9 @@ describe Capybara::RackTest::Driver do
       end
 
       it "should not follow more than 6 redirects" do
-        running do
+        expect do
           @driver.visit("/redirect/6/times")
-        end.should raise_error(Capybara::InfiniteRedirectError)
+        end.to raise_error(Capybara::InfiniteRedirectError)
       end
     end
 
@@ -144,9 +144,9 @@ describe Capybara::RackTest::Driver do
       end
 
       it "should not follow more than 21 redirects" do
-        running do
+        expect do
           @driver.visit("/redirect/22/times")
-        end.should raise_error(Capybara::InfiniteRedirectError)
+        end.to raise_error(Capybara::InfiniteRedirectError)
       end
     end
   end

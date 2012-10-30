@@ -13,8 +13,8 @@ Capybara::SpecHelper.spec '#find_link' do
   end
 
   it "should raise error if the field doesn't exist" do
-    running do
+    expect do
       @session.find_link('Does not exist')
-    end.should raise_error(Capybara::ElementNotFound)
+    end.to raise_error(Capybara::ElementNotFound)
   end
 end

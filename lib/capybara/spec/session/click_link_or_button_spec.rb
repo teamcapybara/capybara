@@ -39,9 +39,9 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
     it "should raise an error" do
       @session.visit('/with_html')
       msg = "Unable to find link or button \"does not exist\""
-      running do
+      expect do
         @session.click_link_or_button('does not exist')
-      end.should raise_error(Capybara::ElementNotFound, msg)
+      end.to raise_error(Capybara::ElementNotFound, msg)
     end
   end
 end

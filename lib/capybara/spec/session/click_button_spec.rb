@@ -258,9 +258,9 @@ Capybara::SpecHelper.spec '#click_button' do
   context "with a locator that doesn't exist" do
     it "should raise an error" do
       msg = "Unable to find button \"does not exist\""
-      running do
+      expect do
         @session.click_button('does not exist')
-      end.should raise_error(Capybara::ElementNotFound, msg)
+      end.to raise_error(Capybara::ElementNotFound, msg)
     end
   end
 

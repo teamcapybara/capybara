@@ -87,23 +87,23 @@ Capybara::SpecHelper.spec '#within' do
   end
 
   it "should raise an error if the scope is not found on the page" do
-    running do
+    expect do
       @session.within("//div[@id='doesnotexist']") do
       end
-    end.should raise_error(Capybara::ElementNotFound)
+    end.to raise_error(Capybara::ElementNotFound)
   end
 
   it "should restore the scope when an error is raised" do
-    running do
+    expect do
       @session.within("//div[@id='for_bar']") do
-        running do
-          running do
+        expect do
+          expect do
             @session.within(".//div[@id='doesnotexist']") do
             end
-          end.should raise_error(Capybara::ElementNotFound)
-        end.should_not change { @session.has_xpath?(".//div[@id='another_foo']") }.from(false)
+          end.to raise_error(Capybara::ElementNotFound)
+        end.to_not change { @session.has_xpath?(".//div[@id='another_foo']") }.from(false)
       end
-    end.should_not change { @session.has_xpath?(".//div[@id='another_foo']") }.from(true)
+    end.to_not change { @session.has_xpath?(".//div[@id='another_foo']") }.from(true)
   end
 
   it "should fill in a field and click a button" do

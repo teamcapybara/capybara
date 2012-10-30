@@ -62,26 +62,26 @@ Capybara::SpecHelper.spec "#select" do
   context "with a locator that doesn't exist" do
     it "should raise an error" do
       msg = "Unable to find select box \"does not exist\""
-      running do
+      expect do
         @session.select('foo', :from => 'does not exist')
-      end.should raise_error(Capybara::ElementNotFound, msg)
+      end.to raise_error(Capybara::ElementNotFound, msg)
     end
   end
 
   context "with an option that doesn't exist" do
     it "should raise an error" do
       msg = "Unable to find option \"Does not Exist\""
-      running do
+      expect do
         @session.select('Does not Exist', :from => 'form_locale')
-      end.should raise_error(Capybara::ElementNotFound, msg)
+      end.to raise_error(Capybara::ElementNotFound, msg)
     end
   end
 
   context "on a disabled select" do
     it "should raise an error" do
-      running do
+      expect do
         @session.select('Should not see me', :from => 'Disabled Select')
-      end.should raise_error(Capybara::ElementNotFound)
+      end.to raise_error(Capybara::ElementNotFound)
     end
   end
 

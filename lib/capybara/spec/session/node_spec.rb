@@ -154,7 +154,7 @@ Capybara::SpecHelper.spec "node" do
         node = @session.find(:css, '#reload-me')
         @session.click_link('Reload!')
         sleep(0.3)
-        running { node.text.should == 'has been reloaded' }.should raise_error
+        expect { node.text.to == 'has been reloaded' }.to raise_error
       end
       after { Capybara.automatic_reload = true }
     end
@@ -189,8 +189,8 @@ Capybara::SpecHelper.spec "node" do
         node = @session.all(:css, '#the-list li')[1]
         @session.click_link('Fetch new list!')
         sleep(0.3)
-        running { node.text.should == 'Foo' }.should raise_error
-        running { node.text.should == 'Bar' }.should raise_error
+        expect { node.text.to == 'Foo' }.to raise_error
+        expect { node.text.to == 'Bar' }.to raise_error
       end
 
       it "should reload nodes with options" do

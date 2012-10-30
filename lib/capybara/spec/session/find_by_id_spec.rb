@@ -13,8 +13,8 @@ Capybara::SpecHelper.spec '#find_by_id' do
   end
 
   it "should raise error if no element with id is found" do
-    running do
+    expect do
       @session.find_by_id('nothing_with_this_id')
-    end.should raise_error(Capybara::ElementNotFound)
+    end.to raise_error(Capybara::ElementNotFound)
   end
 end

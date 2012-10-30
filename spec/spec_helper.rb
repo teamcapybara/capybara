@@ -26,8 +26,6 @@ end
 
 require 'capybara/spec/spec_helper'
 
-alias :running :lambda
-
 module TestSessions
   RackTest = Capybara::Session.new(:rack_test, TestApp)
   Selenium = Capybara::Session.new(:selenium, TestApp)

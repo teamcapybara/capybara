@@ -102,9 +102,9 @@ Capybara::SpecHelper.spec '#find' do
   end
 
   it "should raise ElementNotFound with a useful default message if nothing was found" do
-    running do
-      @session.find(:xpath, '//div[@id="nosuchthing"]').should be_nil
-    end.should raise_error(Capybara::ElementNotFound, "Unable to find xpath \"//div[@id=\\\"nosuchthing\\\"]\"")
+    expect do
+      @session.find(:xpath, '//div[@id="nosuchthing"]').to be_nil
+    end.to raise_error(Capybara::ElementNotFound, "Unable to find xpath \"//div[@id=\\\"nosuchthing\\\"]\"")
   end
 
   it "should accept an XPath instance" do

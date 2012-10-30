@@ -12,9 +12,9 @@ describe Capybara::Server do
   end
 
   it "should do nothing when no server given" do
-    running do
+    expect do
       @server = Capybara::Server.new(nil).boot
-    end.should_not raise_error
+    end.not_to raise_error
   end
 
   it "should bind to the specified host" do

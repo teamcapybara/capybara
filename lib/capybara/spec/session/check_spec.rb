@@ -69,17 +69,17 @@ Capybara::SpecHelper.spec "#check" do
   context "with a locator that doesn't exist" do
     it "should raise an error" do
       msg = "Unable to find checkbox \"does not exist\""
-      running do
+      expect do
         @session.check('does not exist')
-      end.should raise_error(Capybara::ElementNotFound, msg)
+      end.to raise_error(Capybara::ElementNotFound, msg)
     end
   end
 
   context "with a disabled checkbox" do
     it "should raise an error" do
-      running do
+      expect do
         @session.check('Disabled Checkbox')
-      end.should raise_error(Capybara::ElementNotFound)
+      end.to raise_error(Capybara::ElementNotFound)
     end
   end
 end

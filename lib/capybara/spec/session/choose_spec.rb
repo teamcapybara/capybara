@@ -24,17 +24,17 @@ Capybara::SpecHelper.spec "#choose" do
   context "with a locator that doesn't exist" do
     it "should raise an error" do
       msg = "Unable to find radio button \"does not exist\""
-      running do
+      expect do
         @session.choose('does not exist')
-      end.should raise_error(Capybara::ElementNotFound, msg)
+      end.to raise_error(Capybara::ElementNotFound, msg)
     end
   end
 
   context "with a disabled radio button" do
     it "should raise an error" do
-      running do
+      expect do
         @session.choose('Disabled Radio')
-      end.should raise_error(Capybara::ElementNotFound)
+      end.to raise_error(Capybara::ElementNotFound)
     end
   end
 end

@@ -47,9 +47,9 @@ end
 describe Capybara::Session do
   context 'with non-existant driver' do
     it "should raise an error" do
-      running {
+      expect {
         Capybara::Session.new(:quox, TestApp).driver
-      }.should raise_error(Capybara::DriverNotFoundError)
+      }.to raise_error(Capybara::DriverNotFoundError)
     end
   end
 end

@@ -60,9 +60,9 @@ Capybara::SpecHelper.spec '#click_link' do
   context "with a locator that doesn't exist" do
     it "should raise an error" do
       msg = "Unable to find link \"does not exist\""
-      running do
+      expect do
         @session.click_link('does not exist')
-      end.should raise_error(Capybara::ElementNotFound, msg)
+      end.to raise_error(Capybara::ElementNotFound, msg)
     end
   end
 
@@ -112,8 +112,8 @@ Capybara::SpecHelper.spec '#click_link' do
   end
 
   it "raise an error with links with no href" do
-    running do
+    expect do
       @session.click_link('No Href')
-    end.should raise_error(Capybara::ElementNotFound)
+    end.to raise_error(Capybara::ElementNotFound)
   end
 end

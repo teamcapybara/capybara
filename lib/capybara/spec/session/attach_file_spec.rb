@@ -12,7 +12,7 @@ Capybara::SpecHelper.spec "#attach_file" do
       @session.click_button('awesome')
       extract_results(@session)['image'].should == File.basename(__FILE__)
     end
-      
+
     it "should set a file path by label" do
       @session.attach_file "Image", __FILE__
       @session.click_button('awesome')
@@ -55,14 +55,14 @@ Capybara::SpecHelper.spec "#attach_file" do
       @session.click_button 'Upload Single'
       @session.should have_content('image/jpeg')
     end
-    
+
     it "should not break when using HTML5 multiple file input" do
       @session.attach_file "Multiple Documents", @test_file_path
       @session.click_button('Upload Multiple')
       @session.body.should include("1 | ")#number of files
       @session.should have_content(File.read(@test_file_path))
     end
-    
+
     it  "should not break when using HTML5 multiple file input uploading multiple files" do
       pending "Selenium is buggy on this, see http://code.google.com/p/selenium/issues/detail?id=2239" if @session.respond_to?(:mode) && @session.mode == :selenium
       @session.attach_file "Multiple Documents", [@test_file_path, @another_test_file_path]
@@ -76,15 +76,15 @@ Capybara::SpecHelper.spec "#attach_file" do
   context "with a locator that doesn't exist" do
     it "should raise an error" do
       msg = "Unable to find file field \"does not exist\""
-      running do
+      expect do
         @session.attach_file('does not exist', @test_file_path)
-      end.should raise_error(Capybara::ElementNotFound, msg)
+      end.to raise_error(Capybara::ElementNotFound, msg)
     end
   end
 
   context "with a path that doesn't exist" do
     it "should raise an error" do
-      running { @session.attach_file('Image', '/no_such_file.png') }.should raise_error(Capybara::FileNotFound)
+      expect { @session.attach_file('Image', '/no_such_file.png') }.to raise_error(Capybara::FileNotFound)
     end
   end
 end

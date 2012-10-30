@@ -48,25 +48,25 @@ Capybara::SpecHelper.spec "#unselect" do
 
   context "with single select" do
     it "should raise an error" do
-      running { @session.unselect("English", :from => 'form_locale') }.should raise_error(Capybara::UnselectNotAllowed)
+      expect { @session.unselect("English", :from => 'form_locale') }.to raise_error(Capybara::UnselectNotAllowed)
     end
   end
 
   context "with a locator that doesn't exist" do
     it "should raise an error" do
       msg = "Unable to find select box \"does not exist\""
-      running do
+      expect do
         @session.unselect('foo', :from => 'does not exist')
-      end.should raise_error(Capybara::ElementNotFound, msg)
+      end.to raise_error(Capybara::ElementNotFound, msg)
     end
   end
 
   context "with an option that doesn't exist" do
     it "should raise an error" do
       msg = "Unable to find option \"Does not Exist\""
-      running do
+      expect do
         @session.unselect('Does not Exist', :from => 'form_underwear')
-      end.should raise_error(Capybara::ElementNotFound, msg)
+      end.to raise_error(Capybara::ElementNotFound, msg)
     end
   end
 end

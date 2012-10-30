@@ -14,15 +14,15 @@ Capybara::SpecHelper.spec '#find_field' do
   end
 
   it "should raise error if the field doesn't exist" do
-    running do
+    expect do
       @session.find_field('Does not exist')
-    end.should raise_error(Capybara::ElementNotFound)
+    end.to raise_error(Capybara::ElementNotFound)
   end
 
   it "should be aliased as 'field_labeled' for webrat compatibility" do
     @session.field_labeled('Dog').value.should == 'dog'
-    running do
+    expect do
       @session.field_labeled('Does not exist')
-    end.should raise_error(Capybara::ElementNotFound)
+    end.to raise_error(Capybara::ElementNotFound)
   end
 end
