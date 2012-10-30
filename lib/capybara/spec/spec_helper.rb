@@ -1,3 +1,8 @@
+require 'capybara/rspec' # Required here instead of in rspec_spec to avoid RSpec deprecation warning
+require 'capybara/spec/test_app'
+require 'capybara/spec/spec_helper'
+require 'nokogiri'
+
 module Capybara
   module SpecHelper
     class << self
@@ -79,3 +84,5 @@ end
 RSpec.configure do |config|
   Capybara::SpecHelper.configure(config)
 end
+
+Dir[File.dirname(__FILE__)+'/session/*'].each { |group| require group }
