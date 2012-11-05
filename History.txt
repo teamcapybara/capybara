@@ -1,43 +1,21 @@
-# master
+# Version 2.0.0
+
+Release date: 2012-11-05
 
 ### Changed
 
-* `require 'capybara/rails'` will automatically enable `:respect_data_method`
-  on the RackTest driver, so the behavior matches Capybara 1.1.2 [Jo Liss]
 * Dropped official support for Ruby 1.8.x. [Jonas Nicklas]
+* `respect_data_method` default to `false` for the RackTest driver in non-rails
+  applications. That means that Capybara no longer picks up `data-method="post"`
+  et. al. from links by default when you haven't required capybara/rails
+  [Jonas Nicklas]
+* `find` now raises an error if more than one element was found. Since `find` is
+  used by most actions, like `click_link` under the surface, this means that all
+  actions need to unambiguous in the future. [Jonas Nicklas]
 * All methods which find or manipulate fields or buttons now ignore them when
   they are disabled. [Jonas Nicklas]
 * Can no longer find elements by id via `find(:foo)`, use `find("#foo")` or
   `find_by_id("foo")` instead. [Jonas Nicklas]
-* Rename `Driver#body` to `Driver#html` (relevant only for driver authors) [Jo
-  Liss]
-
-### Added
-
-* Multiple files can be uploaded with `attach_file` [Jarl Friis]
-
-### Fixed
-
-* `has_text` (`has_content`) now accepts non-string arguments, like numbers.
-  [Jo Liss]
-* `has_text` and `text` now correctly normalize Unicode whitespace, such as
-  `&nbsp;`. [Jo Liss]
-* RackTest allows protocol relative URLs [Jonas Nicklas]
-* Arguments are cast to string where necessary, so that e.g. `click_link(:foo)` works
-  as expected. [Jonas Nicklas]
-* `:count => 0` now works as expected [Jarl Friis]
-* Fixed race conditions on negative assertions when removing nodes [Jonas Nicklas]
-
-# Version 2.0.0.beta2
-
-### Changed
-
-* `respect_data_method` default to `false` for the RackTest driver, which means
-  that Capybara no longer picks up `:method => :post` et. al. from links in Rails
-  by default. [Jonas Nicklas]
-* `find` now raises an error if more than one element was found. Since `find` is
-  used by most actions, like `click_link` under the surface, this means that all
-  actions need to unambiguous in the future. [Jonas Nicklas]
 * `Element#text` on RackTest now only returns visible text and normalizes
   (strips) whitespace, as with Selenium [Mark Dodwell, Jo Liss]
 * `has_content?` now checks the text value returned by `Element#text`, as opposed to
@@ -55,6 +33,8 @@
   selects. [Gonzalo Rodriguez]
 * Various internals for running driver specs, this should only affect driver authors
   [Jonas Nicklas]
+* Rename `Driver#body` to `Driver#html` (relevant only for driver authors) [Jo
+  Liss]
 
 ### Removed
 
@@ -69,6 +49,27 @@
 * The `:resynchronize` option has been removed from the Selenium driver [Jonas Nicklas]
 * The `rows` option to `has_table?` has been removed without replacement.
   [Jonas Nicklas]
+
+### Added
+
+* Much improved error message [Jonas Nicklas]
+* Errors from inside the session for apps running in a server are raised when
+  session is reset [James Tucker, Jonas Nicklas]
+* A ton of new selectors built in out of the box, like `field`, `link`, `button`,
+  etc... [Adam McCrea, Jonas Nicklas]
+* `has_text?` has been added as an alias for `has_content?` [Jonas Nicklas]
+* Add `Capybara.server_host` option (default: 127.0.0.1) [David Balatero]
+* Add `:type` option for `page.has_field?` [Gonzalo Rodríguez]
+* Custom matchers can now be specified in CSS in addition to XPath [Jonas Nicklas]
+* `Node#synchronize` method to rerun a block of code if certain errors are raised
+  [Jonas Nicklas]
+* `Capybara.always_include_port` config option always includes the server port in
+  URLs when using `visit`. Facilitates testing different domain names`. [Douwe Maan]
+* Redirect limit for RackTest driver is configurable [Josh Lane]
+* Server port can be manually specified during initialization of server.
+  [Jonas Nicklas, John Wilger]
+* `has_content?` and `has_text?` can be given a regular expression [Vasiliy Ermolovich]
+* Multiple files can be uploaded with `attach_file` [Jarl Friis]
 
 ### Fixed
 
@@ -99,26 +100,15 @@
   `has_selector?` which Capybara doesn't understand [Jonas Nicklas]
 * Two references to the node now register as equal when comparing them with `==`
   [Jonas Nicklas]
-
-### Added
-
-* Much improved error message [Jonas Nicklas]
-* Errors from inside the session for apps running in a server are raised when
-  session is reset [James Tucker, Jonas Nicklas]
-* A ton of new selectors built in out of the box, like `field`, `link`, `button`,
-  etc... [Adam McCrea, Jonas Nicklas]
-* `has_text?` has been added as an alias for `has_content?` [Jonas Nicklas]
-* Add `Capybara.server_host` option (default: 127.0.0.1) [David Balatero]
-* Add `:type` option for `page.has_field?` [Gonzalo Rodríguez]
-* Custom matchers can now be specified in CSS in addition to XPath [Jonas Nicklas]
-* `Node#synchronize` method to rerun a block of code if certain errors are raised
-  [Jonas Nicklas]
-* `Capybara.always_include_port` config option always includes the server port in
-  URLs when using `visit`. Facilitates testing different domain names`. [Douwe Maan]
-* Redirect limit for RackTest driver is configurable [Josh Lane]
-* Server port can be manually specified during initialization of server.
-  [Jonas Nicklas, John Wilger]
-* `has_content?` and `has_text?` can be given a regular expression [Vasiliy Ermolovich]
+* `has_text` (`has_content`) now accepts non-string arguments, like numbers.
+  [Jo Liss]
+* `has_text` and `text` now correctly normalize Unicode whitespace, such as
+  `&nbsp;`. [Jo Liss]
+* RackTest allows protocol relative URLs [Jonas Nicklas]
+* Arguments are cast to string where necessary, so that e.g. `click_link(:foo)` works
+  as expected. [Jonas Nicklas]
+* `:count => 0` now works as expected [Jarl Friis]
+* Fixed race conditions on negative assertions when removing nodes [Jonas Nicklas]
 
 # Version 1.1.2
 
