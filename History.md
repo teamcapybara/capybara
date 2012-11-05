@@ -110,6 +110,24 @@ Release date: 2012-11-05
 * `:count => 0` now works as expected [Jarl Friis]
 * Fixed race conditions on negative assertions when removing nodes [Jonas Nicklas]
 
+# Version 1.1.3
+
+Release date: 2012-10-30
+
+### Fixed:
+
+* RackTest driver ignores leading newline in textareas, this is consistent with
+  the spec and how browsers behave. [Vitalii Khustochka]
+* Nodes found via `all` and `first` are never reloaded. This fixes issues where
+  a node would sometimes magically turn into a completely different node.
+  [Jonas Nicklas]
+* Fix race conditions on negative assertions. This fixes issues where removing
+  an element and asserting on its non existence could cause
+  StaleElementReferenceError and similar to be thrown. [Jonas Nicklas]
+* Options are no longer lost when reloading elements. This fixes issues where
+  reloading an element would cause a non-matching element to be found, because
+  options to `find` were ignored. [Jonas Nicklas]
+
 # Version 1.1.2
 
 Release date: 2011-11-15
