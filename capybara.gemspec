@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
 
   s.homepage = "http://github.com/jnicklas/capybara"
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.3.6"
+  s.rubygems_version = "1.3.6.paperless"
   s.summary = "Capybara aims to simplify the process of integration testing Rack applications, such as Rails, Sinatra or Merb"
 
   s.add_runtime_dependency("nokogiri", [">= 1.3.3"])
