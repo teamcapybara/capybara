@@ -113,6 +113,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def invalid_element_errors
-    [Selenium::WebDriver::Error::StaleElementReferenceError, Selenium::WebDriver::Error::UnhandledError]
+    [Selenium::WebDriver::Error::StaleElementReferenceError, Selenium::WebDriver::Error::UnhandledError, Selenium::WebDriver::Error::ElementNotVisibleError]
   end
 end
