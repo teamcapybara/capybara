@@ -88,16 +88,15 @@ Load RSpec 2.x support by adding the following line (typically to your
 require 'capybara/rspec'
 ```
 
-If you are using Rails, put your Capybara specs in `spec/requests` or
-`spec/integration`.
+If you are using Rails, put your Capybara specs in `spec/features`.
 
 If you are not using Rails, tag all the example groups in which you want to use
-Capybara with `:type => :request`.
+Capybara with `:type => :feature`.
 
 You can now write your specs like so:
 
 ```ruby
-describe "the signup process", :type => :request do
+describe "the signup process", :type => :feature do
   before :each do
     User.make(:email => 'user@example.com', :password => 'caplin')
   end
@@ -140,7 +139,7 @@ feature "Signing up" do
   end
 
   given(:other_user) { User.make(:email => 'other@example.com', :password => 'rous') }
-  
+
   scenario "Signing in as another user" do
     within("#session") do
       fill_in 'Login', :with => other_user.email
@@ -151,8 +150,9 @@ feature "Signing up" do
 end
 ```
 
-`feature` is in fact just an alias for `describe ..., :type => :request`,
-`background` is an alias for `before`, `scenario` for `it`, and `given`/`given!` aliases for `let`/`let!`, respectively.
+`feature` is in fact just an alias for `describe ..., :type => :feature`,
+`background` is an alias for `before`, `scenario` for `it`, and
+`given`/`given!` aliases for `let`/`let!`, respectively.
 
 ## Using Capybara with Test::Unit
 
