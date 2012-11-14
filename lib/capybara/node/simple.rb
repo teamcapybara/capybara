@@ -95,6 +95,7 @@ module Capybara
       # @return [Boolean]     Whether the element is visible
       #
       def visible?
+        return true if native.node_name == 'title'
         native.xpath("./ancestor-or-self::*[contains(@style, 'display:none') or contains(@style, 'display: none') or name()='script' or name()='head']").size == 0
       end
 
