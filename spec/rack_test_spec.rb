@@ -8,7 +8,8 @@ Capybara::SpecHelper.run_specs TestSessions::RackTest, "RackTest", :skip => [
   :js,
   :screenshot,
   :frames,
-  :windows
+  :windows,
+  :server
 ]
 
 describe Capybara::Session do

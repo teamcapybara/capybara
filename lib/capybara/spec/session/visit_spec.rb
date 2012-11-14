@@ -43,6 +43,21 @@ Capybara::SpecHelper.spec '#visit' do
     end
   end
 
+  context "without a server", :requires => [:server] do
+    it "should respect `app_host`" do
+      serverless_session = Capybara::Session.new(@session.mode, nil)
+      Capybara.app_host = "http://#{@session.server.host}:#{@session.server.port}"
+      serverless_session.visit("/foo")
+      serverless_session.should have_content("Another World")
+    end
+
+    it "should visit a fully qualified URL" do
+      serverless_session = Capybara::Session.new(@session.mode, nil)
+      serverless_session.visit("http://#{@session.server.host}:#{@session.server.port}/foo")
+      serverless_session.should have_content("Another World")
+    end
+  end
+
   it "should send no referer when visiting a page" do
     @session.visit '/get_referer'
     @session.should have_content 'No referer'

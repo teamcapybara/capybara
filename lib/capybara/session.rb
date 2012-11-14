@@ -170,10 +170,12 @@ module Capybara
     def visit(url)
       @touched = true
 
+      if url !~ /^http/ and Capybara.app_host
+        url = Capybara.app_host + url.to_s
+      end
+
       if @server
-        unless url =~ /^http/
-          url = (Capybara.app_host || "http://#{@server.host}:#{@server.port}") + url.to_s
-        end
+        url = "http://#{@server.host}:#{@server.port}" + url.to_s unless url =~ /^http/
 
         if Capybara.always_include_port
           uri = URI.parse(url)
