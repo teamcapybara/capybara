@@ -1,3 +1,11 @@
+# master
+
+### Changed
+
+* Move the RackTest driver override with the `:respect_data_method` option
+  enabled from capybara/rspec to capybara/rails, so that it is enabled in
+  Rails projects that don't use RSpec. [Carlos Antonio da Silva]
+
 # Version 2.0.0
 
 Release date: 2012-11-05
