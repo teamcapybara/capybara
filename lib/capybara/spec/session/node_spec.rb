@@ -65,6 +65,12 @@ Capybara::SpecHelper.spec "node" do
       @session.first('//input').set('gorilla')
       @session.first('//input').value.should == 'gorilla'
     end
+
+    it "should fill the field even if the caret was not at the end", :requires => [:js] do
+      @session.execute_script("var el = document.getElementById('test_field'); el.focus(); el.setSelectionRange(0, 0);")
+      @session.first('//input').set('')
+      @session.first('//input').value.should == ''
+    end
   end
 
   describe "#tag_name" do
