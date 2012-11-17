@@ -72,7 +72,7 @@ module Capybara
     end
 
     def extract_results(session)
-      YAML.load Nokogiri::HTML(session.body).xpath("//pre[@id='results']").first.text.lstrip
+      YAML.load Nokogiri::HTML(session.html).xpath("//pre[@id='results']").first.text.lstrip
     end
   end
 end
