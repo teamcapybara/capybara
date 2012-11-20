@@ -5,6 +5,10 @@
 * Move the RackTest driver override with the `:respect_data_method` option
   enabled from capybara/rspec to capybara/rails, so that it is enabled in
   Rails projects that don't use RSpec. [Carlos Antonio da Silva]
+### Fixed
+
+* Visiting relative URLs when `app_host` is set and no server is running works
+  as expected. [Jonas Nicklas]
 
 # Version 2.0.0
 
