@@ -70,10 +70,6 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
     browser.html
   end
 
-  def source
-    browser.source
-  end
-
   def dom
     browser.dom
   end
