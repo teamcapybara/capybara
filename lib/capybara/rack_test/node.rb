@@ -97,6 +97,10 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     native.xpath(locator).map { |n| self.class.new(driver, n) }
   end
 
+  def ==(other)
+    native == other.native
+  end
+
 protected
 
   def unnormalized_text

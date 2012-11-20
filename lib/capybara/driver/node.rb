@@ -70,6 +70,10 @@ module Capybara
       rescue NotSupportedByDriverError
         %(#<#{self.class} tag="#{tag_name}">)
       end
+
+      def ==(other)
+        raise NotSupportedByDriverError
+      end
     end
   end
 end

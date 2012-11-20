@@ -451,11 +451,7 @@ module Capybara
       end
 
       def ==(other)
-        if other.respond_to?(:native)
-          self.eql?(other) or native == other.native
-        else
-          self.eql?(other)
-        end
+        self.eql?(other) or base == other.base
       end
 
     private
