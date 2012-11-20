@@ -7,7 +7,6 @@ end
 Capybara::SpecHelper.run_specs TestSessions::Selenium, "selenium", :skip => [
   :response_headers,
   :status_code,
-  :source,
   :trigger
 ]
 

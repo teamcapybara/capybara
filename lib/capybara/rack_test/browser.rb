@@ -76,19 +76,15 @@ class Capybara::RackTest::Browser
     @dom = nil
   end
 
-  def html
-    dom.to_xml
-  end
-
   def dom
-    @dom ||= Nokogiri::HTML(source)
+    @dom ||= Nokogiri::HTML(html)
   end
 
   def find(selector)
     dom.xpath(selector).map { |node| Capybara::RackTest::Node.new(self, node) }
   end
 
-  def source
+  def html
     last_response.body
   rescue Rack::Test::Error
     ""
