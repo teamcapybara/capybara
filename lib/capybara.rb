@@ -3,18 +3,18 @@ require 'nokogiri'
 require 'xpath'
 
 module Capybara
-  class CapybaraError < StandardError; end
-  class DriverNotFoundError < CapybaraError; end
-  class FrozenInTime < CapybaraError; end
-  class ElementNotFound < CapybaraError; end
-  class Ambiguous < ElementNotFound; end
-  class ExpectationNotMet < ElementNotFound; end
-  class FileNotFound < CapybaraError; end
-  class UnselectNotAllowed < CapybaraError; end
-  class NotSupportedByDriverError < CapybaraError; end
-  class TimeoutError < CapybaraError; end
-  class LocateHiddenElementError < CapybaraError; end
-  class InfiniteRedirectError < TimeoutError; end
+  CapybaraError             = Class.new(StandardError)
+  DriverNotFoundError       = Class.new(CapybaraError)
+  FrozenInTime              = Class.new(CapybaraError)
+  ElementNotFound           = Class.new(CapybaraError)
+  Ambiguous                 = Class.new(ElementNotFound)
+  ExpectationNotMet         = Class.new(ElementNotFound)
+  FileNotFound              = Class.new(CapybaraError)
+  UnselectNotAllowed        = Class.new(CapybaraError)
+  NotSupportedByDriverError = Class.new(CapybaraError)
+  TimeoutError              = Class.new(CapybaraError)
+  LocateHiddenElementError  = Class.new(CapybaraError)
+  InfiniteRedirectError     = Class.new(TimeoutError)
 
   class << self
     attr_accessor :asset_root, :app_host, :run_server, :default_host, :always_include_port
