@@ -75,6 +75,10 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     native.find_elements(:xpath, locator).map { |n| self.class.new(driver, n) }
   end
 
+  def ==(other)
+    native == other.native
+  end
+
 private
 
   # a reference to the select node if this is an option node
