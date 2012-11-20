@@ -5,10 +5,14 @@
 * Move the RackTest driver override with the `:respect_data_method` option
   enabled from capybara/rspec to capybara/rails, so that it is enabled in
   Rails projects that don't use RSpec. [Carlos Antonio da Silva]
+
 ### Fixed
 
 * Visiting relative URLs when `app_host` is set and no server is running works
   as expected. [Jonas Nicklas]
+* `fill_in` works properly under Selenium again when the caret is not at the
+  end of the field before the method is called. [Douwe Maan, Jonas Nicklas, Jari
+  Bakken]
 
 # Version 2.0.0
 
