@@ -34,10 +34,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.navigate.to(path)
   end
 
-  def source
-    browser.page_source
-  end
-
   def html
     browser.page_source
   end

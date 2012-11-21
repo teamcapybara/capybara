@@ -105,15 +105,8 @@ module Capybara
     def html
       driver.html
     end
-
-    ##
-    #
-    # @return [String] HTML source of the document, before being modified by JavaScript.
-    #
-    def source
-      driver.source
-    end
-    alias_method :body, :source
+    alias_method :body, :html
+    alias_method :source, :html
 
     ##
     #

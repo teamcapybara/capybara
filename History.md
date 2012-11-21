@@ -5,6 +5,10 @@
 * Move the RackTest driver override with the `:respect_data_method` option
   enabled from capybara/rspec to capybara/rails, so that it is enabled in
   Rails projects that don't use RSpec. [Carlos Antonio da Silva]
+* Source is now an alias for `body`. RackTest no longer returns modifications
+  to `body`. This basically codifies the behaviour which we've had for a while
+  anyway, and should have minimal impact for end users. It is important to
+  driver authors though. [Jonas Nicklas]
 
 ### Fixed
 
