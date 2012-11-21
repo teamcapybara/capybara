@@ -42,6 +42,13 @@ module Capybara
           before do
             @session = session
           end
+          around do |example|
+            begin
+              example.run
+            ensure
+              Capybara.app_host = nil
+            end
+          end
           after do
             @session.reset_session!
           end
