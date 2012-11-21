@@ -6,7 +6,7 @@ Capybara::SpecHelper.spec '#reset_session!' do
 
     @session.reset_session!
     @session.visit('/get_cookie')
-    @session.body.should_not include('test_cookie')
+    @session.html.should_not include('test_cookie')
   end
 
   it "resets current url, host, path" do
@@ -27,7 +27,7 @@ Capybara::SpecHelper.spec '#reset_session!' do
     @session.find('.//h1').text.should include('This is a test')
 
     @session.reset_session!
-    @session.body.should_not include('This is a test')
+    @session.html.should_not include('This is a test')
     @session.should have_no_selector('.//h1')
   end
 
