@@ -17,6 +17,7 @@
 * `fill_in` works properly under Selenium again when the caret is not at the
   end of the field before the method is called. [Douwe Maan, Jonas Nicklas, Jari
   Bakken]
+* `attach_file` can once again be given a Pathname [Jake Goulding]
 
 # Version 2.0.0
 
