@@ -21,6 +21,7 @@ module Capybara
         config.filter_run_excluding :requires => filter
         config.before do
           Capybara.app = TestApp
+          Capybara.app_host = nil
 
           Capybara.configure do |config|
             config.default_selector = :xpath
