@@ -114,6 +114,10 @@ Capybara::SpecHelper.spec "node" do
       (@session.find('//h1') === @session.find('//h1')).should be_true
       (@session.find('//h1').eql? @session.find('//h1')).should be_false
     end
+
+    it "returns false for unrelated object" do
+      (@session.find('//h1') == "Not Capybara::Node::Base").should be_false
+    end
   end
 
   describe "#trigger", :requires => [:js, :trigger] do

@@ -573,14 +573,4 @@ describe Capybara::RSpecMatchers do
       end.to raise_error(/expected to find table "No such Table"/)
     end
   end
-
-  describe "==" do
-    before do
-      visit('/with_html')
-    end
-
-    it "returns false for unrelated object" do
-      page.find("html").should_not == "Not Capybara::Node::Base"
-    end
-  end
 end
