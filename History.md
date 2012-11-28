@@ -132,6 +132,14 @@ Release date: 2012-11-05
 * `:count => 0` now works as expected [Jarl Friis]
 * Fixed race conditions on negative assertions when removing nodes [Jonas Nicklas]
 
+# Version 1.1.4
+
+Release date: 2012-11-28
+
+### Fixed
+
+* Fix more race conditions on negative assertions. [Jonas Nicklas]
+
 # Version 1.1.3
 
 Release date: 2012-10-30
