@@ -112,7 +112,7 @@ module Capybara
 
         selector.xpaths.
           map    { |path| find_in_base(selector, path) }.flatten.
-          select { |node| matches_options(node, options) }
+          select { |node| node.without_wait { matches_options(node, options) } }
       end
 
       ##
@@ -135,9 +135,11 @@ module Capybara
 
         selector.xpaths.each do |path|
           find_in_base(selector, path).each do |node|
-            if matches_options(node, options)
-              found_elements << node
-              return found_elements.last if not Capybara.prefer_visible_elements or node.visible?
+            node.without_wait do
+              if matches_options(node, options)
+                found_elements << node
+                return found_elements.last if not Capybara.prefer_visible_elements or node.visible?
+              end
             end
           end
         end
@@ -179,15 +181,13 @@ module Capybara
       end
 
       def matches_options(node, options)
-        node.without_wait do
-          return false if options[:text]      and not node.text.match(options[:text])
-          return false if options[:visible]   and not node.visible?
-          return false if options[:with]      and not node.value == options[:with]
-          return false if options[:checked]   and not node.checked?
-          return false if options[:unchecked] and node.checked?
-          return false if options[:selected]  and not has_selected_options?(node, options[:selected])
-          true
-        end
+        return false if options[:text]      and not node.text.match(options[:text])
+        return false if options[:visible]   and not node.visible?
+        return false if options[:with]      and not node.value == options[:with]
+        return false if options[:checked]   and not node.checked?
+        return false if options[:unchecked] and node.checked?
+        return false if options[:selected]  and not has_selected_options?(node, options[:selected])
+        true
       end
 
       def has_selected_options?(node, expected)
