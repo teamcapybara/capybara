@@ -76,8 +76,4 @@ module Capybara
   end
 end
 
-RSpec.configure do |config|
-  Capybara::SpecHelper.configure(config)
-end
-
 Dir[File.dirname(__FILE__)+'/session/*'].each { |group| require group }
