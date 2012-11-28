@@ -9,24 +9,25 @@ module Capybara
   module SpecHelper
     class << self
       def configure(config)
-        filter = lambda do |requires, metadata|
-          if requires and metadata[:skip]
-            requires.any? do |require|
-              metadata[:skip].include?(require)
-            end
-          else
-            false
-          end
-        end
-        config.filter_run_excluding :requires => filter
-        config.before do
-          Capybara.app = TestApp
+        config.filter_run_excluding :requires => method(:filter).to_proc
+        config.before { Capybara::SpecHelper.reset! }
+        config.after { Capybara::SpecHelper.reset! }
+      end
 
-          Capybara.configure do |config|
-            config.default_selector = :xpath
-          end
+      def reset!
+        Capybara.app = TestApp
+        Capybara.app_host = nil
+        Capybara.default_selector = :xpath
+        Capybara.default_wait_time = 1
+      end
 
-          Capybara.default_wait_time = 1
+      def filter(requires, metadata)
+        if requires and metadata[:skip]
+          requires.any? do |require|
+            metadata[:skip].include?(require)
+          end
+        else
+          false
         end
       end
 
@@ -75,10 +76,6 @@ module Capybara
       YAML.load Nokogiri::HTML(session.body).xpath("//pre[@id='results']").first.text.lstrip
     end
   end
-end
-
-RSpec.configure do |config|
-  Capybara::SpecHelper.configure(config)
 end
 
 Dir[File.dirname(__FILE__)+'/session/*'].each { |group| require group }
