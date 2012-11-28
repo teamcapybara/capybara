@@ -9,7 +9,7 @@ module Capybara
   module SpecHelper
     class << self
       def configure(config)
-        filter = lambda do |requires, metadata|
+        filter = Proc.new do |requires, metadata|
           if requires and metadata[:skip]
             requires.any? do |require|
               metadata[:skip].include?(require)
@@ -19,16 +19,14 @@ module Capybara
           end
         end
         config.filter_run_excluding :requires => filter
-        config.before do
+        reset = Proc.new do
           Capybara.app = TestApp
           Capybara.app_host = nil
-
-          Capybara.configure do |config|
-            config.default_selector = :xpath
-          end
-
+          Capybara.default_selector = :xpath
           Capybara.default_wait_time = 1
         end
+        config.before(:each, &reset)
+        config.after(:each, &reset)
       end
 
       def spec(name, options={}, &block)
