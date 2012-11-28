@@ -827,7 +827,7 @@ additional info about how the underlying driver can be configured.
   since Capybara's Ajax timing uses the system time, resulting in Capybara
   never timing out and just hanging when a failure occurs. It's still possible to
   use gems which allow you to travel in time, rather than freeze time.
-  One such gem is [Timecop](http://github.com/jtrupiano/timecop).
+  One such gem is [Timecop](http://github.com/travisjeffery/timecop).
 
 * When using Rack::Test, beware if attempting to visit absolute URLs. For
   example, a session might not be shared between visits to `posts_path`
