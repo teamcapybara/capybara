@@ -451,7 +451,7 @@ module Capybara
       end
 
       def ==(other)
-        self.eql?(other) or base == other.base
+        self.eql?(other) or (other.respond_to?(:base) and base == other.base)
       end
 
     private
