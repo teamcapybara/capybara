@@ -31,6 +31,7 @@ module Capybara
       def initialize(session, base)
         @session = session
         @base = base
+        @unsynchronized = false
       end
 
       # overridden in subclasses, e.g. Capybara::Node::Element
