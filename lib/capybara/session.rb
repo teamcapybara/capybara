@@ -51,7 +51,10 @@ module Capybara
       @app = app
       if Capybara.run_server and @app and driver.needs_server?
         @server = Capybara::Server.new(@app).boot
+      else
+        @server = nil
       end
+      @touched = false
     end
 
     def driver
