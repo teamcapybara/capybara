@@ -93,6 +93,10 @@ module Capybara
       HaveText.new(text)
     end
 
+    def have_title(locator)
+      HaveSelector.new(:title, locator)
+    end
+
     def have_link(locator, options={})
       HaveSelector.new(:link, locator, options)
     end

@@ -151,3 +151,7 @@ end
 Capybara.add_selector(:table) do
   xpath { |locator| XPath::HTML.table(locator) }
 end
+
+Capybara.add_selector(:title) do
+  xpath { |locator| XPath.descendant(:title)[XPath.string.n.contains(locator)] }
+end

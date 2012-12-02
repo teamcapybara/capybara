@@ -51,6 +51,17 @@ module Capybara
 
       ##
       #
+      # Find a title on the page. The title can be found by its text.
+      #
+      # @param [String] locator       Which title to find
+      # @return [Capybara::Element]   The found element
+      #
+      def find_title(locator)
+        find(:title, locator)
+      end
+
+      ##
+      #
       # Find a button on the page. The button can be found by its id, name or value.
       #
       # @param [String] locator       Which button to find
