@@ -54,6 +54,7 @@ module Capybara
       else
         @server = nil
       end
+      @touched = false
     end
 
     def driver
