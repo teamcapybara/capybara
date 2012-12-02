@@ -46,8 +46,8 @@ module Capybara
           after do
             @session.reset_session!
           end
-          specs.each do |name, options, block|
-            describe name, options do
+          specs.each do |spec_name, spec_options, block|
+            describe spec_name, spec_options do
               class_eval(&block)
             end
           end
