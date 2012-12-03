@@ -94,7 +94,7 @@ protected
 
   def build_rack_mock_session
     reset_host! unless current_host
-    Rack::MockSession.new(app, URI.parse(current_host).host)
+    Rack::MockSession.new(app, current_host)
   end
 
   def request_path
