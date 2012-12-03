@@ -1,3 +1,13 @@
+# master
+
+### Fixed
+
+* Suppress several warnings [Kouhei Sutou]
+* Fix default host becoming nil [Brian Cardarella]
+* Fix regression in 2.0.1 which caused node comparisons with non node objects
+  to throw an exception [Kouhei Sotou]
+* A few changes to the specs, only relevant to driver authors [Jonas Nicklas]
+
 # Version 2.0.1
 
 Release date: 2012-12-21
