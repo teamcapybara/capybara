@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 module Capybara
   module Helpers
     class << self
