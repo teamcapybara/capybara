@@ -103,6 +103,18 @@ Capybara::SpecHelper.spec "#fill_in" do
     extract_results(@session)['first_name'].should == 'Harry'
   end
 
+  it 'should allow me to change the contents of a contenteditable element', :requires => [:js], :contenteditable => true do
+    @session.visit('/with_js')
+    @session.fill_in('existing_content_editable', :with => 'WYSIWYG')
+    @session.find(:css,'#existing_content_editable').text.should == 'WYSIWYG'
+  end
+
+  it 'should allow me to set the contents of a contenteditable element', :requires => [:js], :contenteditable => true do
+    @session.visit('/with_js')
+    @session.fill_in('blank_content_editable', :with => 'WYSIWYG')
+    @session.find(:css,'#blank_content_editable').text.should == 'WYSIWYG'
+  end
+
   context 'on a pre-populated textfield with a reformatting onchange', :requires => [:js] do
     it 'should only trigger onchange once' do
       @session.visit('/with_js')
