@@ -1,3 +1,4 @@
+#coding: US-ASCII
 Capybara::SpecHelper.spec "#save_screenshot" do
   let(:image_path) { File.join(Dir.tmpdir, 'capybara-screenshot.png') }
 
