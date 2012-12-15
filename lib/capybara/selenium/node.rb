@@ -40,6 +40,15 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       #script can change a readonly element which user input cannot, so dont execute if readonly
       driver.browser.execute_script "arguments[0].value = ''", native unless self[:readonly]
       native.send_keys(value.to_s)
+    elsif native.attribute('isContentEditable')
+      #ensure we are focused on the element
+      script = <<-JS
+        var range = document.createRange();
+        range.selectNodeContents(arguments[0]);
+        window.getSelection().addRange(range);
+      JS
+      driver.browser.execute_script script, native
+      native.send_keys(value.to_s)
     end
   end
 
@@ -61,7 +70,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def hover
     driver.browser.action.move_to(native).perform
   end
-  
+
   def drag_to(element)
     driver.browser.action.drag_and_drop(native, element.native).perform
   end
@@ -89,11 +98,11 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def find_xpath(locator)
     native.find_elements(:xpath, locator).map { |n| self.class.new(driver, n) }
   end
-  
+
   def find_css(locator)
     native.find_elements(:css, locator).map { |n| self.class.new(driver, n) }
   end
-  
+
   def ==(other)
     native == other.native
   end
