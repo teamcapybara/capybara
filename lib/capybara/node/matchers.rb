@@ -421,15 +421,9 @@ module Capybara
       ##
       #
       # Checks if the page or current node has a table with the given id
-      # or caption.
+      # or caption:
       #
-      # If the options :rows is given, it will check that the table contains
-      # the rows and columns given:
-      #
-      #    page.has_table?('People', :rows => [['Jonas', '24'], ['Peter', '32']])
-      #
-      # Note that this option is quite strict, the order needs to be correct
-      # and the text needs to match exactly.
+      #    page.has_table?('People')
       #
       # @param [String] locator                        The id or caption of a table
       # @return [Boolean]                              Whether it exist
