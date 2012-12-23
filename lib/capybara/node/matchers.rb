@@ -193,15 +193,27 @@ module Capybara
       # Checks if the page or current node has the given text content,
       # ignoring any HTML tags and normalizing whitespace.
       #
+      # By default it will check if the text occurs at least once,
+      # but a different number can be specified.
+      #
+      #     page.has_text?('lorem ipsum', :between => (2..4))
+      #
+      # This will check if the text occurs from 2 to 4 times.
+      #
       # This only matches displayable text and specifically excludes text
       # contained within non-display nodes such as script or head tags.
       #
-      # @param [String] content       The text to check for
-      # @return [Boolean]             Whether it exists
+      # @param [String] content                    The text to check for
+      # @param options                             a customizable set of options
+      # @option options [Integer] :count (nil)     Number of times the text should occur
+      # @option options [Integer] :minimum (nil)   Minimum number of times the text should occur
+      # @option options [Integer] :maximum (nil)   Maximum number of times the text should occur
+      # @option options [Range] :between (nil)     Ra
+      # @return [Boolean]                          Whether it exists
       #
-      def has_text?(content)
+      def has_text?(content, options={})
         synchronize do
-          unless Capybara::Helpers.normalize_whitespace(text).match(Capybara::Helpers.to_regexp(content))
+          unless found_text(content, options)
             raise ExpectationNotMet
           end
         end
@@ -222,9 +234,9 @@ module Capybara
       # @param [String] content       The text to check for
       # @return [Boolean]             Whether it doesn't exist
       #
-      def has_no_text?(content)
+      def has_no_text?(content, options={})
         synchronize do
-          if Capybara::Helpers.normalize_whitespace(text).match(Capybara::Helpers.to_regexp(content))
+          if found_text(content, options)
             raise ExpectationNotMet
           end
         end
@@ -449,7 +461,22 @@ module Capybara
       end
 
     private
-
+    
+    def found_text(content, options={})
+      count = Capybara::Helpers.normalize_whitespace(text).scan(Capybara::Helpers.to_regexp(content)).size
+      case
+      when options[:between]
+        options[:between].include?(count)
+      when options[:count]
+        options[:count] == count
+      when options[:maximum]
+        options[:maximum] >= count
+      when options[:minimum]
+        options[:minimum] <= count
+      else
+        count > 0
+      end      
     end
+    
   end
 end
