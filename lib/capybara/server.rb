@@ -76,7 +76,7 @@ module Capybara
 
         Timeout.timeout(60) { @server_thread.join(0.1) until responsive? }
       end
-    rescue TimeoutError
+    rescue Timeout::Error
       raise "Rack application timed out during boot"
     else
       self
