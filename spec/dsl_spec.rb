@@ -229,41 +229,25 @@ describe Capybara::DSL do
     end
 
     it "should be possible to include it in another class" do
-      klass = Class.new do
-        include Capybara::DSL
-      end
-      foo = klass.new
-      foo.visit('/with_html')
-      foo.click_link('ullamco')
-      foo.body.should include('Another World')
+      @session.visit('/with_html')
+      @session.click_link('ullamco')
+      @session.body.should include('Another World')
     end
 
     it "should provide a 'page' shortcut for more expressive tests" do
-      klass = Class.new do
-        include Capybara::DSL
-      end
-      foo = klass.new
-      foo.page.visit('/with_html')
-      foo.page.click_link('ullamco')
-      foo.page.body.should include('Another World')
+      @session.page.visit('/with_html')
+      @session.page.click_link('ullamco')
+      @session.page.body.should include('Another World')
     end
 
     it "should provide an 'using_session' shortcut" do
-      klass = Class.new do
-        include Capybara::DSL
-      end
       Capybara.should_receive(:using_session).with(:name)
-      foo = klass.new
-      foo.using_session(:name)
+      @session.using_session(:name)
     end
 
     it "should provide a 'using_wait_time' shortcut" do
-      klass = Class.new do
-        include Capybara::DSL
-      end
       Capybara.should_receive(:using_wait_time).with(6)
-      foo = klass.new
-      foo.using_wait_time(6)
+      @session.using_wait_time(6)
     end
   end
 end
