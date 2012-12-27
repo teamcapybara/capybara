@@ -5,7 +5,7 @@ module Capybara
       ##
       #
       # Find an {Capybara::Element} based on the given arguments. +find+ will raise an error if the element
-      # is not found. The error message can be customized through the +:message+ option.
+      # is not found.
       #
       # If the driver is capable of executing JavaScript, +find+ will wait for a set amount of time
       # and continuously retry finding the element until either the element is found or the time
@@ -19,18 +19,11 @@ module Capybara
       #     page.find('li', :text => 'Quox').click_link('Delete')
       #
       # @param (see Capybara::Node::Finders#all)
-      # @option options [String] :message     An error message in case the element can't be found
       # @return [Capybara::Element]           The found element
       # @raise  [Capybara::ElementNotFound]   If the element can't be found before time expires
       #
       def find(*args)
-        query = query(*args)
-        query.find = true
-        synchronize do
-          results = resolve(query)
-          query.verify!(results)
-          results.first
-        end
+        synchronize { all(*args).find! }.tap(&:allow_reload!)
       end
 
       ##
@@ -58,7 +51,7 @@ module Capybara
 
       ##
       #
-      # Find a button on the page. The link can be found by its id, name or value.
+      # Find a button on the page. The button can be found by its id, name or value.
       #
       # @param [String] locator       Which button to find
       # @return [Capybara::Element]   The found element
@@ -71,7 +64,7 @@ module Capybara
       #
       # Find a element on the page, given its id.
       #
-      # @param [String] locator       Which element to find
+      # @param [String] id            Which element to find
       # @return [Capybara::Element]   The found element
       #
       def find_by_id(id)
@@ -115,7 +108,13 @@ module Capybara
       # @return [Array[Capybara::Element]]           The found elements
       #
       def all(*args)
-        resolve(query(*args))
+        query = Capybara::Query.new(*args)
+        elements = synchronize do
+          base.find(query.xpath).map do |node|
+            Capybara::Node::Element.new(session, node, self, query)
+          end
+        end
+        Capybara::Result.new(elements, query)
       end
 
       ##
@@ -131,18 +130,6 @@ module Capybara
       #
       def first(*args)
         all(*args).first
-      end
-
-      def query(*args)
-        Capybara::Query.new(self, *args)
-      end
-
-      def resolve(query)
-        synchronize do
-          base.find(query.xpath).map do |node|
-            Capybara::Node::Element.new(session, node, self, query)
-          end.select { |node| query.matches_filters?(node) }
-        end
       end
     end
   end

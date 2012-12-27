@@ -7,6 +7,7 @@ module Capybara
   class DriverNotFoundError < CapybaraError; end
   class FrozenInTime < CapybaraError; end
   class ElementNotFound < CapybaraError; end
+  class Ambiguous < ElementNotFound; end
   class ExpectationNotMet < ElementNotFound; end
   class FileNotFound < CapybaraError; end
   class UnselectNotAllowed < CapybaraError; end
@@ -306,6 +307,8 @@ module Capybara
   autoload :Session,    'capybara/session'
   autoload :Selector,   'capybara/selector'
   autoload :Query,      'capybara/query'
+  autoload :Result,     'capybara/result'
+  autoload :Helpers,    'capybara/helpers'
   autoload :VERSION,    'capybara/version'
 
   module Node

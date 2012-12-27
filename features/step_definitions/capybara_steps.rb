@@ -19,6 +19,6 @@ When /^I use a matcher that fails$/ do
 end
 
 Then /^the failing exception should be nice$/ do
-  @error_message.should =~ %r(expected css \"h1#doesnotexist\" to return)
+  @error_message.should =~ %r(expected to find css \"h1#doesnotexist\")
 end
 

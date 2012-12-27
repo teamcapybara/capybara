@@ -31,6 +31,7 @@ module Capybara
       def initialize(session, base)
         @session = session
         @base = base
+        @unsynchronized = false
       end
 
       # overridden in subclasses, e.g. Capybara::Node::Element
@@ -38,20 +39,71 @@ module Capybara
         self
       end
 
+      ##
+      #
+      # This method is Capybara's primary defence agains asynchronicity
+      # problems. It works by attempting to run a given block of code until it
+      # succeeds. The exact behaviour of this method depends on a number of
+      # factors. Basically there are certain exceptions which, when raised
+      # from the block, instead of bubbling up, are caught, and the block is
+      # re-run.
+      #
+      # Certain drivers, such as RackTest, have no support for aynchronous
+      # processes, these drivers run the block, and any error raised bubbles up
+      # immediately. This allows faster turn around in the case where an
+      # expectation fails.
+      #
+      # Only exceptions that are {Capybara::ElementNotFound} or any subclass
+      # thereof cause the block to be rerun. Drivers may specify additional
+      # exceptions which also cause reruns. This usually occurs when a node is
+      # manipulated which no longer exists on the page. For example, the
+      # Selenium driver specifies
+      # `Selenium::WebDriver::Error::ObsoleteElementError`.
+      #
+      # As long as any of these exceptions are thrown, the block is re-run,
+      # until a certain amount of time passes. The amount of time defaults to
+      # {Capybara.default_wait_time} and can be overriden through the `seconds`
+      # argument. This time is compared with the system time to see how much
+      # time has passed. If the return value of {Time.now} is stubbed out,
+      # Capybara will raise `Capybara::FrozenInTime`.
+      #
+      # @param [Integer] seconds          Number of seconds to retry this block
+      # @return [Object]                  The result of the given block
+      # @raise [Capybara::FrozenInTime]   If the return value of {Time.now} appears stuck
+      #
       def synchronize(seconds=Capybara.default_wait_time)
-        retries = (seconds.to_f / 0.05).round
+        start_time = Time.now
 
         begin
           yield
         rescue => e
+          raise e if @unsynchronized
           raise e unless driver.wait?
-          raise e unless driver.invalid_element_errors.include?(e.class) or e.is_a?(Capybara::ElementNotFound)
-          raise e if retries.zero?
+          raise e unless driver.invalid_element_errors.include?(e.class) || e.is_a?(Capybara::ElementNotFound)
+          raise e if (Time.now - start_time) >= seconds
           sleep(0.05)
+          raise Capybara::FrozenInTime, "time appears to be frozen, Capybara does not work with libraries which freeze time, consider using time travelling instead" if Time.now == start_time
           reload if Capybara.automatic_reload
-          retries -= 1
           retry
         end
+      end
+
+      ##
+      #
+      # Within the given block, prevent synchronize from having any effect.
+      #
+      # This is an internal method which should not be called unless you are
+      # absolutely sure of what you're doing.
+      #
+      # @api private
+      # @return [Object]                  The result of the given block
+      #
+      def unsynchronized
+        orig = @unsynchronized
+        @unsynchronized = true
+        yield
+      ensure
+        @unsynchronized = orig
       end
 
     protected

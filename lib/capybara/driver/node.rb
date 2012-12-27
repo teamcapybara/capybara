@@ -20,6 +20,7 @@ module Capybara
         raise NotImplementedError
       end
 
+      # @param value String or Array. Array is only allowed if node has 'multiple' attribute
       def set(value)
         raise NotImplementedError
       end
@@ -68,6 +69,10 @@ module Capybara
         %(#<#{self.class} tag="#{tag_name}" path="#{path}">)
       rescue NotSupportedByDriverError
         %(#<#{self.class} tag="#{tag_name}">)
+      end
+
+      def ==(other)
+        raise NotSupportedByDriverError
       end
     end
   end

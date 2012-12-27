@@ -2,14 +2,24 @@
 
 [![Build Status](https://secure.travis-ci.org/jnicklas/capybara.png)](http://travis-ci.org/jnicklas/capybara)
 [![Dependency Status](https://gemnasium.com/jnicklas/capybara.png)](https://gemnasium.com/jnicklas/capybara)
+[![Code Quality](https://codeclimate.com/badge.png)](https://codeclimate.com/github/jnicklas/capybara)
 
-Capybara helps you test Rails and Rack applications by simulating how a real
-user would interact with your app. It is agnostic about the driver running your
-tests and comes with Rack::Test and Selenium support built in. WebKit is
-supported through an external gem.
+Capybara helps you test web applications by simulating how a real user would
+interact with your app. It is agnostic about the driver running your tests and
+comes with Rack::Test and Selenium support built in. WebKit is supported
+through an external gem.
 
 **Need help?** Ask on the mailing list (please do not open an issue on
 GitHub): http://groups.google.com/group/ruby-capybara
+
+## Key benefits
+
+- **No setup** necessary for Rails and Rack application. Works out of the box.
+- **Intuitive API** which mimics the language an actual user would use.
+- **Switch the backend** your tests run against from fast headless mode
+  to an actual browser with no changes to your tests.
+- **Powerful synchronization** features mean you never have to manually wait
+  for asynchronous processes to complete.
 
 ## Setup
 
@@ -30,6 +40,9 @@ If you are not using Rails, set Capybara.app to your rack app:
 ```ruby
 Capybara.app = MyRackApp
 ```
+
+If you need to test JavaScript, or if your app interacts with (or is located at)
+a remote URL, you'll need to [use a different driver](#drivers).
 
 ## Using Capybara with Cucumber
 
@@ -75,16 +88,15 @@ Load RSpec 2.x support by adding the following line (typically to your
 require 'capybara/rspec'
 ```
 
-If you are using Rails, put your Capybara specs in `spec/requests` or
-`spec/integration`.
+If you are using Rails, put your Capybara specs in `spec/features`.
 
 If you are not using Rails, tag all the example groups in which you want to use
-Capybara with `:type => :request`.
+Capybara with `:type => :feature`.
 
 You can now write your specs like so:
 
 ```ruby
-describe "the signup process", :type => :request do
+describe "the signup process", :type => :feature do
   before :each do
     User.make(:email => 'user@example.com', :password => 'caplin')
   end
@@ -125,11 +137,22 @@ feature "Signing up" do
     end
     click_link 'Sign in'
   end
+
+  given(:other_user) { User.make(:email => 'other@example.com', :password => 'rous') }
+
+  scenario "Signing in as another user" do
+    within("#session") do
+      fill_in 'Login', :with => other_user.email
+      fill_in 'Password', :with => other_user.password
+    end
+    click_link 'Sign in'
+  end
 end
 ```
 
-`feature` is in fact just an alias for `describe ..., :type => :request`,
-`background` is an alias for `before`, and `scenario` for `it`.
+`feature` is in fact just an alias for `describe ..., :type => :feature`,
+`background` is an alias for `before`, `scenario` for `it`, and
+`given`/`given!` aliases for `let`/`let!`, respectively.
 
 ## Using Capybara with Test::Unit
 
@@ -216,10 +239,11 @@ Capybara uses the same DSL to drive a variety of browser and headless drivers.
 
 ### Selecting the Driver
 
-By default, Capybara uses the `:rack_test` driver, which is fast but does not
-support JavaScript.  You can set up a different default driver for your
-features. For example if you'd prefer to run everything in Selenium, you could
-do:
+By default, Capybara uses the `:rack_test` driver, which is fast but limited: it
+does not support JavaScript, nor is it able to access HTTP resources outside of
+your Rack application, such as remote APIs and OAuth services. To get around
+these limitations, you can set up a different default driver for your features.
+For example if you'd prefer to run everything in Selenium, you could do:
 
 ```ruby
 Capybara.default_driver = :selenium
@@ -247,15 +271,17 @@ switch in the middle of a test.
 ### RackTest
 
 RackTest is Capybara's default driver. It is written in pure Ruby and does not
-have any support for executing JavaScript. Since the RackTest driver works
-directly against the Rack interface, it does not need any server to be started,
-it can work directly against any Rack app. This means that if your
-application is not a Rack application (Rails, Sinatra and most other Ruby
-frameworks are Rack applications) then you cannot use this driver. You cannot
-use the RackTest driver to test a remote application.
+have any support for executing JavaScript. Since the RackTest driver interacts
+directly with Rack interfaces, it does not require a server to be started.
+However, this means that if your application is not a Rack application (Rails,
+Sinatra and most other Ruby frameworks are Rack applications) then you cannot
+use this driver. Furthermore, you cannot use the RackTest driver to test a
+remote application, or to access remote URLs (e.g., redirects to external
+sites, external APIs, or OAuth services) that your application might interact
+with.
+
 [capybara-mechanize](https://github.com/jeroenvandijk/capybara-mechanize)
-intends to provide a similar driver which works against remote servers, it is a
-separate project.
+provides a similar driver that can access remote servers.
 
 RackTest can be configured with a set of headers like this:
 
@@ -491,6 +517,12 @@ print page.html
 
 This is mostly useful for debugging. You should avoid testing against the
 contents of `page.html` and use the more expressive finder methods instead.
+
+Finally, in drivers that support it, you can save a screenshot:
+
+```ruby
+page.save_screenshot('screenshot.png')
+```
 
 ## Transactions and database setup
 
@@ -795,7 +827,7 @@ additional info about how the underlying driver can be configured.
   since Capybara's Ajax timing uses the system time, resulting in Capybara
   never timing out and just hanging when a failure occurs. It's still possible to
   use gems which allow you to travel in time, rather than freeze time.
-  One such gem is [Timecop](http://github.com/jtrupiano/timecop).
+  One such gem is [Timecop](http://github.com/travisjeffery/timecop).
 
 * When using Rack::Test, beware if attempting to visit absolute URLs. For
   example, a session might not be shared between visits to `posts_path`
@@ -805,12 +837,6 @@ additional info about how the underlying driver can be configured.
 
 ## Development
 
-If you found a _reproducible_ bug, open a [GitHub
-Issue](http://github.com/jnicklas/capybara/issues) to submit a bug report.
-
-Even better, send a pull request! Make sure all changes are well tested,
-Capybara is a testing tool after all. Topic branches are good.
-
 To set up a development environment, simply do:
 
 ```bash
@@ -818,3 +844,7 @@ git submodule update --init
 bundle install
 bundle exec rake  # run the test suite
 ```
+
+See
+[CONTRIBUTING.md](https://github.com/jnicklas/capybara/blob/master/CONTRIBUTING.md)
+for how to send issues and pull requests.

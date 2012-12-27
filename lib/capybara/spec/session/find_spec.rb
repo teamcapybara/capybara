@@ -1,171 +1,126 @@
-shared_examples_for "find" do
-  describe '#find', :focus => true do
-    before do
-      @session.visit('/with_html')
-    end
+Capybara::SpecHelper.spec '#find' do
+  before do
+    @session.visit('/with_html')
+  end
 
-    after do
-      Capybara::Selector.remove(:monkey)
-    end
+  after do
+    Capybara::Selector.remove(:monkey)
+  end
 
+  it "should find the first element using the given locator" do
+    @session.find('//h1').text.should == 'This is a test'
+    @session.find("//input[@id='test_field']")[:value].should == 'monkey'
+  end
+
+  it "should find the first element using the given locator and options" do
+    @session.find('//a', :text => 'Redirect')[:id].should == 'red'
+    @session.find(:css, 'a', :text => 'A link came first')[:title].should == 'twas a fine link'
+  end
+
+  it "should raise an error if there are multiple matches" do
+    expect { @session.find('//a') }.to raise_error(Capybara::Ambiguous)
+  end
+
+  it "should wait for asynchronous load", :requires => [:js] do
+    @session.visit('/with_js')
+    @session.click_link('Click me')
+    @session.find(:css, "a#has-been-clicked").text.should include('Has been clicked')
+  end
+
+  context "with frozen time", :requires => [:js] do
+    it "raises an error suggesting that Capybara is stuck in time" do
+      @session.visit('/with_js')
+      now = Time.now
+      Time.stub(:now).and_return(now)
+      expect { @session.find('//isnotthere') }.to raise_error(Capybara::FrozenInTime)
+    end
+  end
+
+  context "with css selectors" do
     it "should find the first element using the given locator" do
+      @session.find(:css, 'h1').text.should == 'This is a test'
+      @session.find(:css, "input[id='test_field']")[:value].should == 'monkey'
+    end
+  end
+
+  context "with xpath selectors" do
+    it "should find the first element using the given locator" do
+      @session.find(:xpath, '//h1').text.should == 'This is a test'
+      @session.find(:xpath, "//input[@id='test_field']")[:value].should == 'monkey'
+    end
+  end
+
+  context "with custom selector" do
+    it "should use the custom selector" do
+      Capybara.add_selector(:monkey) do
+        xpath { |name| ".//*[@id='#{name}_monkey']" }
+      end
+      @session.find(:monkey, 'john').text.should == 'Monkey John'
+      @session.find(:monkey, 'paul').text.should == 'Monkey Paul'
+    end
+  end
+
+  context "with custom selector with :for option" do
+    it "should use the selector when it matches the :for option" do
+      Capybara.add_selector(:monkey) do
+        xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
+        match { |value| value.is_a?(Fixnum) }
+      end
+      @session.find(:monkey, '2').text.should == 'Monkey Paul'
+      @session.find(1).text.should == 'Monkey John'
+      @session.find(2).text.should == 'Monkey Paul'
       @session.find('//h1').text.should == 'This is a test'
-      @session.find("//input[@id='test_field']")[:value].should == 'monkey'
     end
+  end
 
-    it "should find the first element using the given locator and options" do
-      @session.find('//a', :text => 'Redirect')[:id].should == 'red'
-      @session.find(:css, 'a', :text => 'A link came first')[:title].should == 'twas a fine link'
-    end
-
-    it "should raise an error if there are multiple matches" do
-      expect { @session.find('//a') }.to raise_error(Capybara::ElementNotFound)
-    end
-
-    describe 'the returned node' do
-      it "should act like a session object" do
-        @session.visit('/form')
-        @form = @session.find(:css, '#get-form')
-        @form.should have_field('Middle Name')
-        @form.should have_no_field('Languages')
-        @form.fill_in('Middle Name', :with => 'Monkey')
-        @form.click_button('med')
-        extract_results(@session)['middle_name'].should == 'Monkey'
-      end
-
-      it "should scope CSS selectors" do
-        @session.find(:css, '#second').should have_no_css('h1')
-      end
-
-      it "should have a reference to its parent if there is one" do
-        @node = @session.find(:css, '#first')
-        @node.parent.should == @node.session.document
-        @node.find(:css, '#foo').parent.should == @node
+  context "with custom selector with custom filter" do
+    before do
+      Capybara.add_selector(:monkey) do
+        xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
+        filter(:name) { |node, name| node.text == name }
       end
     end
 
-    context "with css selectors" do
-      it "should find the first element using the given locator" do
-        @session.find(:css, 'h1').text.should == 'This is a test'
-        @session.find(:css, "input[id='test_field']")[:value].should == 'monkey'
-      end
+    it "should find elements that match the filter" do
+      @session.find(:monkey, '1', :name => 'Monkey John').text.should == 'Monkey John'
+      @session.find(:monkey, '2', :name => 'Monkey Paul').text.should == 'Monkey Paul'
     end
 
-    context "with id selectors" do
-      it "should find the first element using the given locator" do
-        @session.find(:id, 'john_monkey').text.should == 'Monkey John'
-        @session.find(:id, 'red').text.should == 'Redirect'
-        @session.find(:red).text.should == 'Redirect'
-      end
+    it "should not find elements that don't match the filter" do
+      expect { @session.find(:monkey, '2', :name => 'Monkey John') }.to raise_error(Capybara::ElementNotFound)
+      expect { @session.find(:monkey, '1', :name => 'Monkey Paul') }.to raise_error(Capybara::ElementNotFound)
+    end
+  end
+
+  context "with css as default selector" do
+    before { Capybara.default_selector = :css }
+    it "should find the first element using the given locator" do
+      @session.find('h1').text.should == 'This is a test'
+      @session.find("input[id='test_field']")[:value].should == 'monkey'
+    end
+    after { Capybara.default_selector = :xpath }
+  end
+
+  it "should raise ElementNotFound with a useful default message if nothing was found" do
+    expect do
+      @session.find(:xpath, '//div[@id="nosuchthing"]').to be_nil
+    end.to raise_error(Capybara::ElementNotFound, "Unable to find xpath \"//div[@id=\\\"nosuchthing\\\"]\"")
+  end
+
+  it "should accept an XPath instance" do
+    @session.visit('/form')
+    @xpath = XPath::HTML.fillable_field('First Name')
+    @session.find(@xpath).value.should == 'John'
+  end
+
+  context "within a scope" do
+    before do
+      @session.visit('/with_scope')
     end
 
-    context "with xpath selectors" do
-      it "should find the first element using the given locator" do
-        @session.find(:xpath, '//h1').text.should == 'This is a test'
-        @session.find(:xpath, "//input[@id='test_field']")[:value].should == 'monkey'
-      end
-    end
-
-    context "with custom selector" do
-      it "should use the custom selector" do
-        Capybara.add_selector(:monkey) do
-          xpath { |name| ".//*[@id='#{name}_monkey']" }
-        end
-        @session.find(:monkey, 'john').text.should == 'Monkey John'
-        @session.find(:monkey, 'paul').text.should == 'Monkey Paul'
-      end
-    end
-
-    context "with custom selector with :for option" do
-      it "should use the selector when it matches the :for option" do
-        Capybara.add_selector(:monkey) do
-          xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
-          match { |value| value.is_a?(Fixnum) }
-        end
-        @session.find(:monkey, '2').text.should == 'Monkey Paul'
-        @session.find(1).text.should == 'Monkey John'
-        @session.find(2).text.should == 'Monkey Paul'
-        @session.find('//h1').text.should == 'This is a test'
-      end
-    end
-
-    context "with custom selector with failure_message option" do
-      it "should raise an error with the failure message if the element is not found" do
-        Capybara.add_selector(:monkey) do
-          xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
-          failure_message { |node, selector| node.all(".//*[contains(@id, 'monkey')]").map { |node| node.text }.sort.join(', ') }
-        end
-        running do
-          @session.find(:monkey, '14').text.should == 'Monkey Paul'
-        end.should raise_error(Capybara::ElementNotFound, "Monkey John, Monkey Paul")
-      end
-
-      it "should pass the selector as the second argument" do
-        Capybara.add_selector(:monkey) do
-          xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
-          failure_message { |node, selector| selector.name.to_s + ': ' + selector.locator + ' - ' + node.all(".//*[contains(@id, 'monkey')]").map { |node| node.text }.sort.join(', ') }
-        end
-        running do
-          @session.find(:monkey, '14').text.should == 'Monkey Paul'
-        end.should raise_error(Capybara::ElementNotFound, "monkey: 14 - Monkey John, Monkey Paul")
-      end
-    end
-
-    context "with custom selector with custom filter" do
-      before do
-        Capybara.add_selector(:monkey) do
-          xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
-          filter(:name) { |node, name| node.text == name }
-        end
-      end
-
-      it "should find elements that match the filter" do
-        @session.find(:monkey, '1', :name => 'Monkey John').text.should == 'Monkey John'
-        @session.find(:monkey, '2', :name => 'Monkey Paul').text.should == 'Monkey Paul'
-      end
-
-      it "should not find elements that don't match the filter" do
-        expect { @session.find(:monkey, '2', :name => 'Monkey John') }.to raise_error(Capybara::ElementNotFound)
-        expect { @session.find(:monkey, '1', :name => 'Monkey Paul') }.to raise_error(Capybara::ElementNotFound)
-      end
-    end
-
-    context "with css as default selector" do
-      before { Capybara.default_selector = :css }
-      it "should find the first element using the given locator" do
-        @session.find('h1').text.should == 'This is a test'
-        @session.find("input[id='test_field']")[:value].should == 'monkey'
-      end
-      after { Capybara.default_selector = :xpath }
-    end
-
-    it "should raise ElementNotFound with specified fail message if nothing was found" do
-      running do
-        @session.find(:xpath, '//div[@id="nosuchthing"]', :message => 'arghh').should be_nil
-      end.should raise_error(Capybara::ElementNotFound, "arghh")
-    end
-
-    it "should raise ElementNotFound with a useful default message if nothing was found" do
-      running do
-        @session.find(:xpath, '//div[@id="nosuchthing"]').should be_nil
-      end.should raise_error(Capybara::ElementNotFound, "Unable to find xpath \"//div[@id=\\\"nosuchthing\\\"]\"")
-    end
-
-    it "should accept an XPath instance" do
-      @session.visit('/form')
-      @xpath = XPath::HTML.fillable_field('First Name')
-      @session.find(@xpath).value.should == 'John'
-    end
-
-    context "within a scope" do
-      before do
-        @session.visit('/with_scope')
-      end
-
-      it "should find the an element using the given locator" do
-        @session.within(:xpath, "//div[@id='for_bar']") do
-          @session.find('.//li[1]').text.should =~ /With Simple HTML/
-        end
+    it "should find the an element using the given locator" do
+      @session.within(:xpath, "//div[@id='for_bar']") do
+        @session.find('.//li[1]').text.should =~ /With Simple HTML/
       end
     end
   end

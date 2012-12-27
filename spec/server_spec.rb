@@ -12,9 +12,9 @@ describe Capybara::Server do
   end
 
   it "should do nothing when no server given" do
-    running do
+    expect do
       @server = Capybara::Server.new(nil).boot
-    end.should_not raise_error
+    end.not_to raise_error
   end
 
   it "should bind to the specified host" do
@@ -34,6 +34,16 @@ describe Capybara::Server do
     @server = Capybara::Server.new(@app).boot
 
     @res = Net::HTTP.start(@server.host, 22789) { |http| http.get('/') }
+    @res.body.should include('Hello Server')
+
+    Capybara.server_port = nil
+  end
+
+  it "should use given port" do
+    @app = proc { |env| [200, {}, "Hello Server!"]}
+    @server = Capybara::Server.new(@app, 22790).boot
+
+    @res = Net::HTTP.start(@server.host, 22790) { |http| http.get('/') }
     @res.body.should include('Hello Server')
 
     Capybara.server_port = nil

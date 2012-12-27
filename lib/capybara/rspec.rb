@@ -5,10 +5,8 @@ require 'capybara/rspec/matchers'
 require 'capybara/rspec/features'
 
 RSpec.configure do |config|
-  config.include Capybara::DSL, :type => :request
-  config.include Capybara::DSL, :type => :acceptance
-  config.include Capybara::RSpecMatchers, :type => :request
-  config.include Capybara::RSpecMatchers, :type => :acceptance
+  config.include Capybara::DSL, :type => :feature
+  config.include Capybara::RSpecMatchers, :type => :feature
   # The before and after blocks must run instantaneously, because Capybara
   # might not actually be used in all examples where it's included.
   config.after do

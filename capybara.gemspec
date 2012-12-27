@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.email = ["jonas.nicklas@gmail.com"]
   s.description = "Capybara is an integration testing tool for rack based web applications. It simulates how a user would interact with a website"
 
-  s.files = Dir.glob("{lib,spec}/**/*") + %w(README.md History.txt License.txt)
+  s.files = Dir.glob("{lib,spec}/**/*") + %w(README.md History.md License.txt)
 
   s.homepage = "http://github.com/jnicklas/capybara"
   s.require_paths = ["lib"]
@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency("selenium-webdriver", ["~> 2.0"])
   s.add_runtime_dependency("rack", [">= 1.0.0"])
   s.add_runtime_dependency("rack-test", [">= 0.5.4"])
-  s.add_runtime_dependency("xpath", ["~> 0.1.4"])
+  s.add_runtime_dependency("xpath", ["~> 1.0.0"])
 
   s.add_development_dependency("sinatra", [">= 0.9.4"])
   s.add_development_dependency("rspec", [">= 2.2.0"])

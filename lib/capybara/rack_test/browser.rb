@@ -33,32 +33,30 @@ class Capybara::RackTest::Browser
 
   def process_and_follow_redirects(method, path, attributes = {}, env = {})
     process(method, path, attributes, env)
-    5.times do
-      process(:get, last_response["Location"], {}, env) if last_response.redirect?
+    if driver.follow_redirects?
+      driver.redirect_limit.times do
+        process(:get, last_response["Location"], {}, env) if last_response.redirect?
+      end
+      raise Capybara::InfiniteRedirectError, "redirected more than #{driver.redirect_limit} times, check for infinite redirects." if last_response.redirect?
     end
-    raise Capybara::InfiniteRedirectError, "redirected more than 5 times, check for infinite redirects." if last_response.redirect?
   end
 
   def process(method, path, attributes = {}, env = {})
     new_uri = URI.parse(path)
     method.downcase! unless method.is_a? Symbol
 
-    if new_uri.host
-      @current_host = "#{new_uri.scheme}://#{new_uri.host}"
-      @current_host << ":#{new_uri.port}" if new_uri.port != new_uri.default_port
-    end
+    new_uri.path = request_path if path.start_with?("?")
+    new_uri.path = request_path.sub(%r(/[^/]*$), '/') + new_uri.path unless new_uri.path.start_with?('/')
+    new_uri.scheme ||= @current_scheme
+    new_uri.host ||= @current_host
+    new_uri.port ||= @current_port unless new_uri.default_port == @current_port
 
-    if new_uri.relative?
-      if path.start_with?('?')
-        path = request_path + path
-      elsif not path.start_with?('/')
-        path = request_path.sub(%r(/[^/]*$), '/') + path
-      end
-      path = current_host + path
-    end
+    @current_scheme = new_uri.scheme
+    @current_host = new_uri.host
+    @current_port = new_uri.port
 
     reset_cache!
-    send(method, path, attributes, env.merge(options[:headers] || {}))
+    send(method, new_uri.to_s, attributes, env.merge(options[:headers] || {}))
   end
 
   def current_url
@@ -68,26 +66,25 @@ class Capybara::RackTest::Browser
   end
 
   def reset_host!
-    @current_host = (Capybara.app_host || Capybara.default_host)
+    uri = URI.parse(Capybara.app_host || Capybara.default_host)
+    @current_scheme = uri.scheme
+    @current_host = uri.host
+    @current_port = uri.port
   end
 
   def reset_cache!
     @dom = nil
   end
 
-  def body
-    dom.to_xml
-  end
-
   def dom
-    @dom ||= Nokogiri::HTML(source)
+    @dom ||= Nokogiri::HTML(html)
   end
 
   def find(selector)
     dom.xpath(selector).map { |node| Capybara::RackTest::Node.new(self, node) }
   end
 
-  def source
+  def html
     last_response.body
   rescue Rack::Test::Error
     ""
@@ -97,7 +94,7 @@ protected
 
   def build_rack_mock_session
     reset_host! unless current_host
-    Rack::MockSession.new(app, URI.parse(current_host).host)
+    Rack::MockSession.new(app, current_host)
   end
 
   def request_path

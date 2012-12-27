@@ -1,6 +1,7 @@
 class Capybara::Selenium::Node < Capybara::Driver::Node
   def text
-    native.text
+    # Selenium doesn't normalize Unicode whitespace.
+    Capybara::Helpers.normalize_whitespace(native.text)
   end
 
   def [](name)
@@ -18,14 +19,20 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def set(value)
+    tag_name = self.tag_name
+    type = self[:type]
+    if (Array === value) && !self[:multiple]
+      raise ArgumentError.new "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"
+    end
     if tag_name == 'input' and type == 'radio'
       click
     elsif tag_name == 'input' and type == 'checkbox'
       click if value ^ native.attribute('checked').to_s.eql?("true")
     elsif tag_name == 'input' and type == 'file'
-      native.send_keys(value.to_s)
+      path_names = value.to_s.empty? ? [] : value
+      native.send_keys(*path_names)
     elsif tag_name == 'textarea' or tag_name == 'input'
-      native.clear
+      driver.browser.execute_script "arguments[0].value = ''", native
       native.send_keys(value.to_s)
     end
   end
@@ -69,15 +76,14 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     native.find_elements(:xpath, locator).map { |n| self.class.new(driver, n) }
   end
 
+  def ==(other)
+    native == other.native
+  end
+
 private
 
   # a reference to the select node if this is an option node
   def select_node
     find('./ancestor::select').first
   end
-
-  def type
-    self[:type]
-  end
-
 end

@@ -21,6 +21,7 @@ module Capybara
       @name = name
       @custom_filters = {}
       @match = nil
+      @label = nil
       @failure_message = nil
       instance_eval(&block)
     end
@@ -43,9 +44,9 @@ module Capybara
       @match
     end
 
-    def failure_message(&block)
-      @failure_message = block if block
-      @failure_message
+    def label(label=nil)
+      @label = label if label
+      @label
     end
 
     def call(locator)
@@ -72,7 +73,6 @@ end
 
 Capybara.add_selector(:id) do
   xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
-  match { |value| value.is_a?(Symbol) }
 end
 
 Capybara.add_selector(:field) do
@@ -88,45 +88,42 @@ Capybara.add_selector(:fieldset) do
 end
 
 Capybara.add_selector(:link_or_button) do
+  label "link or button"
   xpath { |locator| XPath::HTML.link_or_button(locator) }
-  failure_message { |node, selector| "no link or button '#{selector.locator}' found" }
 end
 
 Capybara.add_selector(:link) do
   xpath { |locator| XPath::HTML.link(locator) }
-  failure_message { |node, selector| "no link with title, id or text '#{selector.locator}' found" }
   filter(:href) do |node, href|
-    node.first(:xpath, XPath.axis(:self)[XPath.attr(:href).equals(href)])
+    node.first(:xpath, XPath.axis(:self)[XPath.attr(:href).equals(href.to_s)])
   end
 end
 
 Capybara.add_selector(:button) do
   xpath { |locator| XPath::HTML.button(locator) }
-  failure_message { |node, selector| "no button with value or id or text '#{selector.locator}' found" }
 end
 
 Capybara.add_selector(:fillable_field) do
+  label "field"
   xpath { |locator| XPath::HTML.fillable_field(locator) }
-  failure_message { |node, selector| "no text field, text area or password field with id, name, or label '#{selector.locator}' found" }
 end
 
 Capybara.add_selector(:radio_button) do
+  label "radio button"
   xpath { |locator| XPath::HTML.radio_button(locator) }
-  failure_message { |node, selector| "no radio button with id, name, or label '#{selector.locator}' found" }
   filter(:checked) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked) { |node, value| (value ^ node.checked?) }
 end
 
 Capybara.add_selector(:checkbox) do
   xpath { |locator| XPath::HTML.checkbox(locator) }
-  failure_message { |node, selector| "no checkbox with id, name, or label '#{selector.locator}' found" }
   filter(:checked) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked) { |node, value| (value ^ node.checked?) }
 end
 
 Capybara.add_selector(:select) do
+  label "select box"
   xpath { |locator| XPath::HTML.select(locator) }
-  failure_message { |node, selector| "no select box with id, name, or label '#{selector.locator}' found" }
   filter(:options) do |node, options|
     actual = node.all(:xpath, './/option').map { |option| option.text }
     options.sort == actual.sort
@@ -140,18 +137,11 @@ end
 
 Capybara.add_selector(:option) do
   xpath { |locator| XPath::HTML.option(locator) }
-  failure_message do |node, selector|
-    "no option with text '#{selector.locator}'".tap do |message|
-      if node.is_a?(Capybara::Node::Element) and node.tag_name == 'select'
-        message << " in the select box"
-      end
-    end
-  end
 end
 
 Capybara.add_selector(:file_field) do
+  label "file field"
   xpath { |locator| XPath::HTML.file_field(locator) }
-  failure_message { |node, selector| "no file field with id, name, or label '#{selector.locator}' found" }
 end
 
 Capybara.add_selector(:content) do

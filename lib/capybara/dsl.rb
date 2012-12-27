@@ -2,6 +2,15 @@ require 'capybara'
 
 module Capybara
   module DSL
+    def self.included(base)
+      warn "including Capybara::DSL in the global scope is not recommended!" if base == Object
+      super
+    end
+
+    def self.extended(base)
+      warn "extending the main object with Capybara::DSL is not recommended!" if base == TOPLEVEL_BINDING.eval("self")
+      super
+    end
 
     ##
     #
@@ -38,11 +47,9 @@ module Capybara
     end
 
     Session::DSL_METHODS.each do |method|
-      class_eval <<-RUBY, __FILE__, __LINE__+1
-        def #{method}(*args, &block)
-          page.#{method}(*args, &block)
-        end
-      RUBY
+      define_method method do |*args, &block|
+        page.send method, *args, &block
+      end
     end
   end
 

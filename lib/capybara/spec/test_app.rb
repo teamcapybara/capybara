@@ -3,8 +3,12 @@ require 'rack'
 require 'yaml'
 
 class TestApp < Sinatra::Base
+  class TestAppError < StandardError; end
+
   set :root, File.dirname(__FILE__)
   set :static, true
+  set :raise_errors, true
+  set :show_exceptions, false
 
   # Also check lib/capybara/spec/views/*.erb for pages not listed here
 
@@ -114,6 +118,10 @@ class TestApp < Sinatra::Base
     redirect '/get_header'
   end
 
+  get '/error' do
+    raise TestAppError, "some error"
+  end
+
   get '/:view' do |view|
     erb view.to_sym
   end
@@ -143,9 +151,11 @@ class TestApp < Sinatra::Base
 
   post '/upload_multiple' do
     begin
-      buffer = []
-      buffer << "Content-type: #{params[:form][:multiple_documents][0][:type]}"
-      buffer << "File content: #{params[:form][:multiple_documents][0][:tempfile].read}"
+      buffer = ["#{params[:form][:multiple_documents].size}"]
+      params[:form][:multiple_documents].each do |doc|
+        buffer << "Content-type: #{doc[:type]}"
+        buffer << "File content: #{doc[:tempfile].read}"
+      end
       buffer.join(' | ')
     rescue
       'No files uploaded'

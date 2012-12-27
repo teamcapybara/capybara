@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'capybara/rspec'
 
-RSpec.configuration.before(:each, :example_group => {:file_path => __FILE__}) do
+RSpec.configuration.before(:each, :example_group => {:file_path => "./spec/rspec/features_spec.rb"}) do
   @in_filtered_hook = true
 end
 
@@ -33,6 +33,25 @@ feature "Capybara's feature DSL" do
 
   scenario "doesn't pollute the Object namespace" do
     Object.new.respond_to?(:feature, true).should be_false
+  end
+end
+
+feature "given and given! aliases to let and let!" do
+  given(:value) { :available }
+  given!(:value_in_background) { :available }
+
+  background do
+    value_in_background.should be(:available)
+  end
+
+  scenario "given and given! work as intended" do
+    value.should be(:available)
+    value_in_background.should be(:available)
+  end
+end
+
+feature "if xscenario aliases to pending then" do
+  xscenario "this test should be 'temporarily disabled with xscenario'" do
   end
 end
 
