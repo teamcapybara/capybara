@@ -63,28 +63,21 @@ module Capybara
       # As long as any of these exceptions are thrown, the block is re-run,
       # until a certain amount of time passes. The amount of time defaults to
       # {Capybara.default_wait_time} and can be overriden through the `seconds`
-      # argument. This time is compared with the system time to see how much
-      # time has passed. If the return value of {Time.now} is stubbed out,
-      # Capybara will raise `Capybara::FrozenInTime`.
+      # argument.
       #
       # @param [Integer] seconds          Number of seconds to retry this block
       # @return [Object]                  The result of the given block
-      # @raise [Capybara::FrozenInTime]   If the return value of {Time.now} appears stuck
       #
-      def synchronize(seconds=Capybara.default_wait_time)
-        start_time = Time.now
+      def synchronize(seconds = Capybara.default_wait_time)
+        # If this element is unsynchronized, or if the driver does not support
+        # waiting, immediately yield to the block. No exceptions will be
+        # rescued, nothing will be retried.
+        return(yield) if @unsynchronized or not driver.wait?
 
-        begin
+        WaitHelper.new(driver, seconds).until do |attempt|
+          # If this isn't the first attempt, reload the element (if enabled).
+          reload if Capybara.automatic_reload and attempt > 1
           yield
-        rescue => e
-          raise e if @unsynchronized
-          raise e unless driver.wait?
-          raise e unless driver.invalid_element_errors.include?(e.class) || e.is_a?(Capybara::ElementNotFound)
-          raise e if (Time.now - start_time) >= seconds
-          sleep(0.05)
-          raise Capybara::FrozenInTime, "time appears to be frozen, Capybara does not work with libraries which freeze time, consider using time travelling instead" if Time.now == start_time
-          reload if Capybara.automatic_reload
-          retry
         end
       end
 
@@ -111,6 +104,92 @@ module Capybara
       def driver
         session.driver
       end
+
+      # A wrapper class for the Wait gem.
+      class WaitHelper
+        extend Forwardable
+        def_delegators :wait, :until
+
+        def initialize(driver, seconds)
+          raise ArgumentError unless seconds > 0
+
+          @driver = driver
+          @seconds = seconds
+        end
+
+      private
+
+        # Creates a new (or returns an existing) configured instance of the
+        # Wait gem.
+        def wait
+          @wait ||= Wait.new(
+            :timeout  => timeout,
+            :attempts => attempts,
+            :delayer  => delayer,
+            :rescue   => exceptions,
+            :tester   => PassiveTester,
+            :logger   => logger
+          )
+        end
+
+        # Amount of time to timeout a block. Defaults to +5+ seconds.
+        def timeout
+          Capybara.synchronize_timeout || 5
+        end
+
+        # Estimates the the number of attempts based upon the given number of
+        # seconds to wait.
+        def attempts
+          (@seconds / delay).ceil
+        end
+
+        # Amount of time to wait in between attempts. Defaults to +0.5+
+        # seconds.
+        def delay
+          Capybara.synchronize_delay || 0.5
+        end
+
+        # A delay strategy object that sleeps at regular intervals.
+        def delayer
+          Wait::RegularDelayer.new(delay)
+        end
+
+        # Creates a new (or returns an existing) Ruby logger. Recommendation:
+        # use the same log file as WebDriver to see the interplay between the
+        # two processes.
+        def logger
+          return unless log_pathname
+
+          if @logger.nil?
+            io = log_pathname.open("a")
+            io.sync = true
+            @logger = Logger.new(io)
+            @logger.level = Logger::DEBUG
+          end
+
+          @logger
+        end
+
+        # Exceptions to rescue. Always includes Capybara::ElementNotFound,
+        # delegates to the driver for others.
+        def exceptions
+          [Capybara::ElementNotFound, *@driver.invalid_element_errors]
+        end
+
+        def log_pathname
+          Capybara.synchronize_log_pathname
+        end
+
+        # A Wait strategy object to test results.
+        class PassiveTester < Wait::TruthyTester
+          # No action needs to be taken based upon the result, even if +nil+
+          # or +false+ (it's only if exceptions are raised that the flow is
+          # changed).
+          def valid?
+            true
+          end
+        end # PassiveTester
+      end # WaitHelper
     end
   end
 end
