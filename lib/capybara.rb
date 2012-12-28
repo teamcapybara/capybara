@@ -1,6 +1,7 @@
 require 'timeout'
 require 'nokogiri'
 require 'xpath'
+require "wait"
 
 module Capybara
   class CapybaraError < StandardError; end
@@ -23,6 +24,11 @@ module Capybara
     attr_accessor :save_and_open_page_path, :automatic_reload
     attr_writer :default_driver, :current_driver, :javascript_driver, :session_name
     attr_accessor :app
+
+    # Optional configuration for element synchronization.
+    attr_accessor :synchronize_delay,       # Amount of time to wait in between attempts.
+                  :synchronize_timeout,     # Amount of time to timeout a block.
+                  :synchronize_log_pathname # Pathname to write a synchronization log.
 
     ##
     #
