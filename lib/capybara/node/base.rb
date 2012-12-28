@@ -132,9 +132,9 @@ module Capybara
           )
         end
 
-        # Amount of time to timeout a block. Defaults to +5+ seconds.
+        # Amount of time to timeout a block. Defaults to +30+ seconds.
         def timeout
-          Capybara.synchronize_timeout || 5
+          Capybara.synchronize_timeout || 30
         end
 
         # Estimates the the number of attempts based upon the given number of
