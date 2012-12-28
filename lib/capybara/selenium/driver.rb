@@ -102,10 +102,17 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.switch_to.window(handle, &blk)
   end
 
+  # Quits the browser. Stores a boolean value +@quit+ to make the method
+  # idempotent. In other words, if the browser is quit *before* the +at_exit+
+  # hook, there are no negative effects from calling the method during the
+  # +at_exit+ hook.
   def quit
+    return unless @browser and not @quit
+
     @browser.quit
+    @quit = true
   rescue Errno::ECONNREFUSED
-    # Browser must have already gone
+    # Ignore this error. The browser may have already quit on its own.
   end
 
   def invalid_element_errors
