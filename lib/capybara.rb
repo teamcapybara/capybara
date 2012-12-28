@@ -24,6 +24,9 @@ module Capybara
     attr_writer :default_driver, :current_driver, :javascript_driver, :session_name
     attr_accessor :app
 
+    # Option to globally disable whitespace normalization.
+    attr_accessor :disable_whitespace_normalization
+
     ##
     #
     # Configure Capybara to suit your needs.
