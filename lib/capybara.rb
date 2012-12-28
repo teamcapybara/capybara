@@ -1,6 +1,7 @@
 require 'timeout'
 require 'nokogiri'
 require 'xpath'
+require "wait"
 
 module Capybara
   class CapybaraError < StandardError; end
