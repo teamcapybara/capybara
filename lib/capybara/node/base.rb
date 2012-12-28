@@ -154,9 +154,7 @@ module Capybara
           Wait::RegularDelayer.new(delay)
         end
 
-        # Creates a new (or returns an existing) Ruby logger. Recommendation:
-        # use the same log file as WebDriver to see the interplay between the
-        # two processes.
+        # Creates a new (or returns an existing) Ruby logger.
         def logger
           return unless log_pathname
 
