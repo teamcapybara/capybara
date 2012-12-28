@@ -30,6 +30,9 @@ module Capybara
                   :synchronize_timeout,     # Amount of time to timeout a block.
                   :synchronize_log_pathname # Pathname to write a synchronization log.
 
+    # Option to globally disable whitespace normalization.
+    attr_accessor :disable_whitespace_normalization
+
     ##
     #
     # Configure Capybara to suit your needs.

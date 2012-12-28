@@ -13,6 +13,8 @@ module Capybara
       # @return [String]         Normalized text
       #
       def normalize_whitespace(text)
+        return text if Capybara.disable_whitespace_normalization
+
         # http://en.wikipedia.org/wiki/Whitespace_character#Unicode
         # We should have a better reference.
         # See also http://stackoverflow.com/a/11758133/525872
