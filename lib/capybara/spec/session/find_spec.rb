@@ -27,15 +27,6 @@ Capybara::SpecHelper.spec '#find' do
     @session.find(:css, "a#has-been-clicked").text.should include('Has been clicked')
   end
 
-  context "with frozen time", :requires => [:js] do
-    it "raises an error suggesting that Capybara is stuck in time" do
-      @session.visit('/with_js')
-      now = Time.now
-      Time.stub(:now).and_return(now)
-      expect { @session.find('//isnotthere') }.to raise_error(Capybara::FrozenInTime)
-    end
-  end
-
   context "with css selectors" do
     it "should find the first element using the given locator" do
       @session.find(:css, 'h1').text.should == 'This is a test'
