@@ -1,15 +1,14 @@
 module Capybara
   class Selector
-    attr_reader :name, :custom_filters
-
+    attr_reader :name
 
     class << self
       def all
-        @selectors ||= {}
+        @all ||= {}
       end
 
       def add(name, &block)
-        all[name.to_sym] = Capybara::Selector.new(name.to_sym, &block)
+        all[name.to_sym] = new(name.to_sym, &block)
       end
 
       def remove(name)
@@ -58,7 +57,11 @@ module Capybara
     end
 
     def filter(name, &block)
-      @custom_filters[name] = block
+      @custom_filters[name] = Filter.new(name, &block)
+    end
+
+    def filters
+      Capybara::Filter.all.merge(@custom_filters)
     end
   end
 end
@@ -77,10 +80,18 @@ end
 
 Capybara.add_selector(:field) do
   xpath { |locator| XPath::HTML.field(locator) }
-  filter(:checked) { |node, value| not(value ^ node.checked?) }
-  filter(:unchecked) { |node, value| (value ^ node.checked?) }
-  filter(:with) { |node, with| node.value == with }
-  filter(:type) { |node, type| node[:type] == type }
+  filter(:checked) do
+    match { |node, value| not(value ^ node.checked?) }
+  end
+  filter(:unchecked) do
+    match { |node, value| (value ^ node.checked?) }
+  end
+  filter(:with) do
+    match { |node, with| node.value == with }
+  end
+  filter(:type) do
+    match { |node, type| node[:type] == type }
+  end
 end
 
 Capybara.add_selector(:fieldset) do
@@ -94,8 +105,10 @@ end
 
 Capybara.add_selector(:link) do
   xpath { |locator| XPath::HTML.link(locator) }
-  filter(:href) do |node, href|
-    node.first(:xpath, XPath.axis(:self)[XPath.attr(:href).equals(href.to_s)])
+  filter(:href) do
+    match do |node, href|
+      node.first(:xpath, XPath.axis(:self)[XPath.attr(:href).equals(href.to_s)])
+    end
   end
 end
 
@@ -111,27 +124,41 @@ end
 Capybara.add_selector(:radio_button) do
   label "radio button"
   xpath { |locator| XPath::HTML.radio_button(locator) }
-  filter(:checked) { |node, value| not(value ^ node.checked?) }
-  filter(:unchecked) { |node, value| (value ^ node.checked?) }
+  filter(:checked) do
+    match { |node, value| not(value ^ node.checked?) }
+  end
+  filter(:unchecked) do
+    match { |node, value| (value ^ node.checked?) }
+  end
 end
 
 Capybara.add_selector(:checkbox) do
   xpath { |locator| XPath::HTML.checkbox(locator) }
-  filter(:checked) { |node, value| not(value ^ node.checked?) }
-  filter(:unchecked) { |node, value| (value ^ node.checked?) }
+  filter(:checked) do
+    match { |node, value| not(value ^ node.checked?) }
+  end
+  filter(:unchecked) do
+    match { |node, value| (value ^ node.checked?) }
+  end
 end
 
 Capybara.add_selector(:select) do
   label "select box"
   xpath { |locator| XPath::HTML.select(locator) }
-  filter(:options) do |node, options|
-    actual = node.all(:xpath, './/option').map { |option| option.text }
-    options.sort == actual.sort
+  filter(:options) do
+    match do |node, options|
+      actual = node.all(:xpath, './/option').map { |option| option.text }
+      options.sort == actual.sort
+    end
   end
-  filter(:with_options) { |node, options| options.all? { |option| node.first(:option, option) } }
-  filter(:selected) do |node, selected|
-    actual = node.all(:xpath, './/option').select { |option| option.selected? }.map { |option| option.text }
-    [selected].flatten.sort == actual.sort
+  filter(:with_options) do
+    match { |node, options| options.all? { |option| node.first(:option, option) } }
+  end
+  filter(:selected) do
+    match do |node, selected|
+      actual = node.all(:xpath, './/option').select { |option| option.selected? }.map { |option| option.text }
+      [selected].flatten.sort == actual.sort
+    end
   end
 end
 

@@ -2,7 +2,7 @@ module Capybara
   class Query
     attr_accessor :selector, :locator, :options, :xpath, :find, :negative
 
-    VALID_KEYS = [:text, :visible, :between, :count, :maximum, :minimum]
+    VALID_KEYS = [:between, :count, :maximum, :minimum]
 
     def initialize(*args)
       @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
@@ -36,13 +36,8 @@ module Capybara
 
     def matches_filters?(node)
       node.unsynchronized do
-        if options[:text]
-          regexp = options[:text].is_a?(Regexp) ? options[:text] : Regexp.escape(options[:text])
-          return false if not node.text.match(regexp)
-        end
-        return false if options[:visible] and not node.visible?
-        selector.custom_filters.each do |name, block|
-          return false if options.has_key?(name) and not block.call(node, options[name])
+        selector.filters.each do |name, filter|
+          return false if options.has_key?(name) and not filter.match?(node, options[name])
         end
         true
       end
@@ -66,7 +61,7 @@ module Capybara
   private
 
     def assert_valid_keys!
-      valid_keys = VALID_KEYS + @selector.custom_filters.keys
+      valid_keys = VALID_KEYS + @selector.filters.keys
       invalid_keys = @options.keys - valid_keys
       unless invalid_keys.empty?
         invalid_names = invalid_keys.map(&:inspect).join(", ")

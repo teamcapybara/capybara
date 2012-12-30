@@ -113,6 +113,10 @@ module Capybara
       Capybara::Selector.add(name, &block)
     end
 
+    def add_filter(name, &block)
+      Capybara::Filter.add(name, &block)
+    end
+
     def drivers
       @drivers ||= {}
     end
@@ -306,6 +310,7 @@ module Capybara
   autoload :Server,     'capybara/server'
   autoload :Session,    'capybara/session'
   autoload :Selector,   'capybara/selector'
+  autoload :Filter,     'capybara/filter'
   autoload :Query,      'capybara/query'
   autoload :Result,     'capybara/result'
   autoload :Helpers,    'capybara/helpers'

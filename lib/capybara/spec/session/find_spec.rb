@@ -77,7 +77,9 @@ Capybara::SpecHelper.spec '#find' do
     before do
       Capybara.add_selector(:monkey) do
         xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
-        filter(:name) { |node, name| node.text == name }
+        filter(:name) do
+          match { |node, name| node.text == name }
+        end
       end
     end
 
