@@ -60,11 +60,11 @@ Capybara::SpecHelper.spec '#find' do
     end
   end
 
-  context "with custom selector with :for option" do
-    it "should use the selector when it matches the :for option" do
+  context "with custom selector with select option" do
+    it "should use the selector when it matches the select option" do
       Capybara.add_selector(:monkey) do
         xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
-        match { |value| value.is_a?(Fixnum) }
+        select { |value| value.is_a?(Fixnum) }
       end
       @session.find(:monkey, '2').text.should == 'Monkey Paul'
       @session.find(1).text.should == 'Monkey John'

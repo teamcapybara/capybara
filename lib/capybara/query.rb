@@ -15,7 +15,7 @@ module Capybara
         @selector = Selector.all[args[0]]
         @locator = args[1]
       else
-        @selector = Selector.all.values.find { |s| s.match?(args[0]) }
+        @selector = Selector.all.values.find { |s| s.select?(args[0]) }
         @locator = args[0]
       end
       @selector ||= Selector.all[Capybara.default_selector]

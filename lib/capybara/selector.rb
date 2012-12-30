@@ -38,6 +38,11 @@ module Capybara
       @xpath
     end
 
+    def select(&block)
+      @select = block if block
+      @select
+    end
+
     def match(&block)
       @match = block if block
       @match
@@ -54,6 +59,10 @@ module Capybara
 
     def match?(locator)
       @match and @match.call(locator)
+    end
+
+    def select?(locator)
+      @select and @select.call(locator)
     end
 
     def filter(name, &block)
