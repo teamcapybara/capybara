@@ -26,6 +26,15 @@ module Capybara
       @match
     end
 
+    def compile(&block)
+      @compile = block if block
+      @compile
+    end
+
+    def run_compile(xpath, value)
+      @compile and XPath.instance_exec(xpath, value, &@compile)
+    end
+
     def match?(node, value)
       @match and @match.call(node, value)
     end

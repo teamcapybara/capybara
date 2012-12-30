@@ -53,7 +53,10 @@ Capybara::SpecHelper.spec '#find' do
   context "with custom selector" do
     it "should use the custom selector" do
       Capybara.add_selector(:monkey) do
-        xpath { |name| ".//*[@id='#{name}_monkey']" }
+        xpath { descendant }
+        default_filter do
+          compile { |xpath, value| xpath[attr(:id) == "#{value}_monkey"] }
+        end
       end
       @session.find(:monkey, 'john').text.should == 'Monkey John'
       @session.find(:monkey, 'paul').text.should == 'Monkey Paul'
@@ -63,7 +66,10 @@ Capybara::SpecHelper.spec '#find' do
   context "with custom selector with select option" do
     it "should use the selector when it matches the select option" do
       Capybara.add_selector(:monkey) do
-        xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
+        xpath { descendant[attr(:id).contains('monkey')] }
+        default_filter do
+          compile { |xpath, value| xpath[value.to_i] }
+        end
         select { |value| value.is_a?(Fixnum) }
       end
       @session.find(:monkey, '2').text.should == 'Monkey Paul'
@@ -76,7 +82,10 @@ Capybara::SpecHelper.spec '#find' do
   context "with custom selector with custom filter" do
     before do
       Capybara.add_selector(:monkey) do
-        xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
+        xpath { descendant[attr(:id).contains('monkey')] }
+        default_filter do
+          compile { |xpath, value| xpath[value.to_i] }
+        end
         filter(:name) do
           match { |node, name| node.text == name }
         end

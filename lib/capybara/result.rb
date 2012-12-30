@@ -5,10 +5,9 @@ module Capybara
     include Enumerable
     extend Forwardable
 
-    def initialize(elements, query)
-      @elements = elements
-      @result = elements.select { |node| query.matches_filters?(node) }
-      @rest = @elements - @result
+    def initialize(result, query)
+      @result = result
+      @rest = []
       @query = query
     end
 

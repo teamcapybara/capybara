@@ -26,7 +26,7 @@ module Capybara
     end
 
     def xpath(&block)
-      @xpath = block if block
+      @xpath = XPath.instance_eval(&block) if block
       @xpath
     end
 
@@ -43,22 +43,14 @@ module Capybara
       @select
     end
 
-    def match(&block)
-      @match = block if block
-      @match
+    def default_filter(&block)
+      @default_filter = Filter.new(:default, &block) if block
+      @default_filter
     end
 
     def label(label=nil)
       @label = label if label
       @label
-    end
-
-    def call(locator)
-      @xpath.call(locator)
-    end
-
-    def match?(locator)
-      @match and @match.call(locator)
     end
 
     def select?(locator)
@@ -77,18 +69,51 @@ end
 
 Capybara.add_selector(:xpath) do
   xpath { |xpath| xpath }
+  default_filter do
+    compile do |_, value|
+      if value.is_a?(XPath::Expression)
+        value
+      else
+        XPath::Expression.new(:literal, XPath::Literal.new(value.to_s))
+      end
+    end
+  end
 end
 
 Capybara.add_selector(:css) do
-  css { |css| css }
+  default_filter do
+    compile do |_, value|
+      css(value)
+    end
+  end
 end
 
 Capybara.add_selector(:id) do
-  xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
+  default_filter do
+    compile do |_, value|
+      descendant[attr(:id) == value.to_s]
+    end
+  end
 end
 
 Capybara.add_selector(:field) do
-  xpath { |locator| XPath::HTML.field(locator) }
+  default_filter do
+    compile { |xpath, locator| XPath::HTML.field(locator) }
+  end
+  filter(:label) do
+    match do |node, value|
+      node.document.first(xpath: "ancestors::label", text: value) or
+      node.document.first(for: node[:id], text: value)
+    end
+    compile do |xpath, value|
+      xpath[attr(:id).equals(anywhere(:label)[string.n.contains(value)].attr(:for))] +
+      descendant(:label)[string.n.contains(value)].descendant(xpath)
+    end
+  end
+  filter(:disabled) do
+    match   { |node, value| value ^ node.disabled? }
+    compile { |xpath, value| if value then xpath[attr(:disabled)] else xpath[~attr(:disabled)] end }
+  end
   filter(:checked) do
     match { |node, value| not(value ^ node.checked?) }
   end
@@ -104,16 +129,24 @@ Capybara.add_selector(:field) do
 end
 
 Capybara.add_selector(:fieldset) do
-  xpath { |locator| XPath::HTML.fieldset(locator) }
+  xpath { descendant(:fieldset) }
+  default_filter do
+    compile { |xpath, locator| XPath::HTML.fieldset(locator) }
+  end
 end
 
 Capybara.add_selector(:link_or_button) do
   label "link or button"
-  xpath { |locator| XPath::HTML.link_or_button(locator) }
+  default_filter do
+    compile { |xpath, locator| XPath::HTML.link_or_button(locator) }
+  end
 end
 
 Capybara.add_selector(:link) do
-  xpath { |locator| XPath::HTML.link(locator) }
+  xpath { descendant(:a)[attr(:href)] }
+  default_filter do
+    compile { |xpath, locator| XPath::HTML.link(locator) }
+  end
   filter(:href) do
     match do |node, href|
       node.first(:xpath, XPath.axis(:self)[XPath.attr(:href).equals(href.to_s)])
@@ -122,17 +155,23 @@ Capybara.add_selector(:link) do
 end
 
 Capybara.add_selector(:button) do
-  xpath { |locator| XPath::HTML.button(locator) }
+  default_filter do
+    compile { |xpath, locator| XPath::HTML.button(locator) }
+  end
 end
 
 Capybara.add_selector(:fillable_field) do
   label "field"
-  xpath { |locator| XPath::HTML.fillable_field(locator) }
+  default_filter do
+    compile { |xpath, locator| XPath::HTML.fillable_field(locator) }
+  end
 end
 
 Capybara.add_selector(:radio_button) do
   label "radio button"
-  xpath { |locator| XPath::HTML.radio_button(locator) }
+  default_filter do
+    compile { |xpath, locator| XPath::HTML.radio_button(locator) }
+  end
   filter(:checked) do
     match { |node, value| not(value ^ node.checked?) }
   end
@@ -142,7 +181,9 @@ Capybara.add_selector(:radio_button) do
 end
 
 Capybara.add_selector(:checkbox) do
-  xpath { |locator| XPath::HTML.checkbox(locator) }
+  default_filter do
+    compile { |xpath, locator| XPath::HTML.checkbox(locator) }
+  end
   filter(:checked) do
     match { |node, value| not(value ^ node.checked?) }
   end
@@ -153,7 +194,9 @@ end
 
 Capybara.add_selector(:select) do
   label "select box"
-  xpath { |locator| XPath::HTML.select(locator) }
+  default_filter do
+    compile { |xpath, locator| XPath::HTML.select(locator) }
+  end
   filter(:options) do
     match do |node, options|
       actual = node.all(:xpath, './/option').map { |option| option.text }
@@ -172,18 +215,20 @@ Capybara.add_selector(:select) do
 end
 
 Capybara.add_selector(:option) do
-  xpath { |locator| XPath::HTML.option(locator) }
+  default_filter do
+    compile { |xpath, locator| XPath::HTML.option(locator) }
+  end
 end
 
 Capybara.add_selector(:file_field) do
   label "file field"
-  xpath { |locator| XPath::HTML.file_field(locator) }
-end
-
-Capybara.add_selector(:content) do
-  xpath { |content| XPath::HTML.content(content) }
+  default_filter do
+    compile { |xpath, locator| XPath::HTML.file_field(locator) }
+  end
 end
 
 Capybara.add_selector(:table) do
-  xpath { |locator| XPath::HTML.table(locator) }
+  default_filter do
+    compile { |xpath, locator| XPath::HTML.table(locator) }
+  end
 end

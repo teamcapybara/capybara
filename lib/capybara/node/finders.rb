@@ -108,13 +108,7 @@ module Capybara
       # @return [Array[Capybara::Element]]           The found elements
       #
       def all(*args)
-        query = Capybara::Query.new(*args)
-        elements = synchronize do
-          base.find(query.xpath).map do |node|
-            Capybara::Node::Element.new(session, node, self, query)
-          end
-        end
-        Capybara::Result.new(elements, query)
+        Capybara::Query.new(*args).resolve!(self)
       end
 
       ##

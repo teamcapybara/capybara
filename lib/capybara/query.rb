@@ -1,6 +1,6 @@
 module Capybara
   class Query
-    attr_accessor :selector, :locator, :options, :xpath, :find, :negative
+    attr_accessor :selector, :locator, :options, :find, :negative
 
     VALID_KEYS = [:between, :count, :maximum, :minimum]
 
@@ -20,8 +20,6 @@ module Capybara
       end
       @selector ||= Selector.all[Capybara.default_selector]
 
-      @xpath = @selector.call(@locator).to_s
-
       assert_valid_keys!
     end
 
@@ -34,13 +32,41 @@ module Capybara
       @description
     end
 
+    def compileable_filters
+      selector.filters.values.select(&:compile)
+    end
+
+    def other_filters
+      selector.filters.values - compileable_filters
+    end
+
+    def xpath
+      base = selector.default_filter.run_compile(selector.xpath, @locator)
+      compileable_filters.inject(base) do |xpath, filter|
+        if options.has_key?(filter.name)
+          filter.run_compile(xpath, options[filter.name])
+        else
+          xpath
+        end
+      end
+    end
+
+    def resolve!(parent)
+      elements = parent.synchronize do
+        parent.base.find(xpath.to_s).map do |node|
+          matches_filters? Capybara::Node::Element.new(parent.session, node, parent, self)
+        end
+      end
+      Capybara::Result.new(elements.compact, self)
+    end
+
     def matches_filters?(node)
       node.unsynchronized do
-        selector.filters.each do |name, filter|
-          return false if options.has_key?(name) and not filter.match?(node, options[name])
+        other_filters.each do |filter|
+          return nil if options.has_key?(filter.name) and not filter.match?(node, options[filter.name])
         end
-        true
       end
+      node
     end
 
     def matches_count?(count)
