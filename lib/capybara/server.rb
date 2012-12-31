@@ -36,7 +36,6 @@ module Capybara
     def initialize(app, port=Capybara.server_port)
       @app = app
       @middleware = Middleware.new(@app)
-      @server_thread = nil # supress warnings
       @port = port
       @port ||= Capybara::Server.ports[@app.object_id]
       @port ||= find_available_port
@@ -55,8 +54,6 @@ module Capybara
     end
 
     def responsive?
-      return false if @server_thread && @server_thread.join(0)
-
       res = Net::HTTP.start(host, @port) { |http| http.get('/__identify__') }
 
       if res.is_a?(Net::HTTPSuccess) or res.is_a?(Net::HTTPRedirection)
@@ -70,11 +67,11 @@ module Capybara
       unless responsive?
         Capybara::Server.ports[@app.object_id] = @port
 
-        @server_thread = Thread.new do
+        server_thread = Thread.new do
           Capybara.server.call(@middleware, @port)
         end
 
-        Timeout.timeout(60) { @server_thread.join(0.1) until responsive? }
+        Timeout.timeout(60) { server_thread.join(0.1) until responsive? }
       end
     rescue Timeout::Error
       raise "Rack application timed out during boot"
