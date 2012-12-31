@@ -12,7 +12,6 @@ module Capybara
   class FileNotFound < CapybaraError; end
   class UnselectNotAllowed < CapybaraError; end
   class NotSupportedByDriverError < CapybaraError; end
-  class LocateHiddenElementError < CapybaraError; end
   class InfiniteRedirectError < CapybaraError; end
 
   class << self
