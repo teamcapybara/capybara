@@ -13,10 +13,7 @@ module Capybara
       # @return [String]         Normalized text
       #
       def normalize_whitespace(text)
-        # http://en.wikipedia.org/wiki/Whitespace_character#Unicode
-        # We should have a better reference.
-        # See also http://stackoverflow.com/a/11758133/525872
-        text.to_s.gsub(/[\s\u0085\u00a0\u1680\u180e\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]+/, ' ').strip
+        text.to_s.gsub(/[[:space:]]+/, ' ').strip
       end
 
       ##
