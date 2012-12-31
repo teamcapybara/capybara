@@ -1,4 +1,11 @@
-# master
+# Version 2.0.2
+
+Release date: 2012-12-31
+
+### Changed
+
+* Capybara no longer uses thin as a server if it is available, due to thread
+  safety issues. Now Capybara always defaults to WEBrick. [Jonas Nicklas]
 
 ### Fixed
 
@@ -7,6 +14,9 @@
 * Fix regression in 2.0.1 which caused node comparisons with non node objects
   to throw an exception [Kouhei Sotou]
 * A few changes to the specs, only relevant to driver authors [Jonas Nicklas]
+* Encoding error under JRuby [Piotr Krawiec]
+* Ruby 2 encoding fix [Murahashi Sanemat Kenichi]
+* Catch correct exception on server timeout [Jonathan del Strother]
 
 # Version 2.0.1
 
