@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
   s.name = "capybara"
   s.rubyforge_project = "capybara"
   s.version = Capybara::VERSION
+  s.required_ruby_version = ">= 1.9.0"
 
   s.authors = ["Jonas Nicklas"]
   s.email = ["jonas.nicklas@gmail.com"]
