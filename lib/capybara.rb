@@ -88,19 +88,11 @@ module Capybara
     #     page.find('table#myTable').has_selector?(:row, 3)
     #     within(:row, 3) { page.should have_content('$100.000') }
     #
-    # It might be convenient to specify that the selector is automatically chosen for certain
-    # values. This way you don't have to explicitly specify that you are looking for a row, or
-    # an id. Let's say we want Capybara to treat any Symbols sent into methods like find to be
-    # treated as though they were element ids. We could achieve this like so:
+    # Here is another example:
     #
     #     Capybara.add_selector(:id) do
     #       xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
-    #       match { |value| value.is_a?(Symbol) }
     #     end
-    #
-    # Now we can retrieve elements by id like this:
-    #
-    #     find(:post_123)
     #
     # Note that this particular selector already ships with Capybara.
     #
