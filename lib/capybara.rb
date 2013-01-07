@@ -116,7 +116,7 @@ module Capybara
     #       Rack::Handler::Mongrel.run(app, :Port => port)
     #     end
     #
-    # By default, Capybara will try to run thin, falling back to webrick.
+    # By default, Capybara will try to run webrick.
     #
     # @yield [app, port]                      This block recieves a rack app and port and should run a Rack handler
     #
