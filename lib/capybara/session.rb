@@ -243,13 +243,16 @@ module Capybara
 
     ##
     #
-    # Execute the given block within the given iframe given the id of that iframe. Only works on
-    # some drivers (e.g. Selenium)
+    # Execute the given block within the given iframe using given frame name or index.
+    # May be supported by not all drivers. Drivers that support it, may provide additional options.
     #
-    # @param [String] frame_id   Id of the frame
+    # @overload within_frame(index)
+    #   @param [Integer] index         index of a frame
+    # @overload within_frame(name)
+    #   @param [String] name           name of a frame
     #
-    def within_frame(frame_id)
-      driver.within_frame(frame_id) do
+    def within_frame(frame_handle)
+      driver.within_frame(frame_handle) do
         yield
       end
     end

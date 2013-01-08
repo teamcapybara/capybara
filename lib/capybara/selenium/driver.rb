@@ -74,9 +74,21 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     end
   end
 
-  def within_frame(frame_id)
+  ##
+  #
+  # Webdriver supports frame name, id, index(zero-based) or {Capybara::Element} to find iframe
+  #
+  # @overload within_frame(index)
+  #   @param [Integer] index                 index of a frame
+  # @overload within_frame(name_or_id)
+  #   @param [String] name_or_id             name or id of a frame
+  # @overload within_frame(element)
+  #   @param [Capybara::Node::Base] a_node   frame element
+  #
+  def within_frame(frame_handle)
+    frame_handle = frame_handle.native if frame_handle.is_a?(Capybara::Node::Base)
     old_window = browser.window_handle
-    browser.switch_to.frame(frame_id)
+    browser.switch_to.frame(frame_handle)
     yield
   ensure
     browser.switch_to.window old_window
