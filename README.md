@@ -26,7 +26,7 @@ GitHub): http://groups.google.com/group/ruby-capybara
 To install, type
 
 ```bash
-sudo gem install capybara
+gem install capybara
 ```
 
 If you are using Rails, add this line to your test helper file:
