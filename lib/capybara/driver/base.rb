@@ -35,7 +35,7 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError
   end
 
-  def within_frame(frame_id)
+  def within_frame(frame_handle)
     raise Capybara::NotSupportedByDriverError
   end
 
