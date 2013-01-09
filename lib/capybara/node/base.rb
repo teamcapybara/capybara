@@ -74,7 +74,8 @@ module Capybara
         # rescued, nothing will be retried.
         return(yield) if @unsynchronized or not driver.wait?
 
-        WaitHelper.new(driver, seconds).until do |attempt|
+        wait = WaitFactory.new(driver, seconds).build
+        wait.until do |attempt|
           # If this isn't the first attempt, reload the element (if enabled).
           reload if Capybara.automatic_reload and attempt > 1
           yield
@@ -105,32 +106,29 @@ module Capybara
         session.driver
       end
 
-      # A wrapper class for the Wait gem.
-      class WaitHelper
-        extend Forwardable
-        def_delegators :wait, :until
-
+      # A factory class for the Wait gem.
+      class WaitFactory
         def initialize(driver, seconds)
           raise ArgumentError unless seconds > 0
 
-          @driver = driver
+          @driver  = driver
           @seconds = seconds
         end
 
-      private
-
         # Creates a new (or returns an existing) configured instance of the
         # Wait gem.
-        def wait
+        def build
           @wait ||= Wait.new(
             :timeout  => timeout,
             :attempts => attempts,
-            :delayer  => delayer,
+            :delay    => delay,
             :rescue   => exceptions,
-            :tester   => PassiveTester,
-            :logger   => logger
+            :tester   => Wait::PassiveTester,
+            :logger   => SynchronizeLogger
           )
         end
+
+      private
 
         # Amount of time to timeout a block. Defaults to +30+ seconds.
         def timeout
@@ -149,45 +147,46 @@ module Capybara
           Capybara.synchronize_delay || 0.5
         end
 
-        # A delay strategy object that sleeps at regular intervals.
-        def delayer
-          Wait::RegularDelayer.new(delay)
-        end
-
-        # Creates a new (or returns an existing) Ruby logger.
-        def logger
-          return unless log_pathname
-
-          if @logger.nil?
-            io = log_pathname.open("a")
-            io.sync = true
-            @logger = Logger.new(io)
-            @logger.level = Logger::DEBUG
-          end
-
-          @logger
-        end
-
         # Exceptions to rescue. Always includes Capybara::ElementNotFound,
         # delegates to the driver for others.
         def exceptions
           [Capybara::ElementNotFound, *@driver.invalid_element_errors]
         end
 
-        def log_pathname
-          Capybara.synchronize_log_pathname
-        end
-
-        # A Wait strategy object to test results.
-        class PassiveTester < Wait::TruthyTester
-          # No action needs to be taken based upon the result, even if +nil+
-          # or +false+ (it's only if exceptions are raised that the flow is
-          # changed).
-          def valid?
-            true
+        # A Ruby logger that saves to disk when a +synchronize_log_pathname+
+        # is specified. Otherwise, only warnings are output to the console.
+        class SynchronizeLogger < Wait::DebugLogger
+          def initialize
+            @logger           = Logger.new(io)
+            @logger.level     = level
+            @logger.formatter = formatter
           end
-        end # PassiveTester
-      end # WaitHelper
+
+          def io
+            return(STDOUT) if console?
+
+            if @io.nil?
+              @io = pathname.open("a")
+              @io.sync = true
+            end
+
+            @io
+          end
+
+          # Returns +true+ if log output ought to go to the console.
+          def console?
+            pathname.nil?
+          end
+
+          def pathname
+            Capybara.synchronize_log_pathname
+          end
+
+          def level
+            console? ? Logger::WARN : Logger::DEBUG
+          end
+        end # SynchronizeLogger
+      end # WaitFactory
     end
   end
 end

@@ -82,8 +82,7 @@ module Capybara
       unless responsive?
         Capybara::Server.ports[@app.object_id] = @port
 
-        wait = Wait.new(:delayer => Wait::RegularDelayer.new(0.25), :attempts => 50)
-
+        wait = Wait.new(:delay => 5, :attempts => 3)
         if fork?
           initialize_server
           wait.until { responsive? }
