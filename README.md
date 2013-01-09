@@ -401,7 +401,6 @@ certain elements, and working with and manipulating those elements.
 ```ruby
 page.has_selector?('table tr')
 page.has_selector?(:xpath, '//table/tr')
-page.has_no_selector?(:content)
 
 page.has_xpath?('//table/tr')
 page.has_css?('table tr.foo')
@@ -416,7 +415,6 @@ You can use these with RSpec's magic matchers:
 ```ruby
 page.should have_selector('table tr')
 page.should have_selector(:xpath, '//table/tr')
-page.should have_no_selector(:content)
 
 page.should have_xpath('//table/tr')
 page.should have_css('table tr.foo')
