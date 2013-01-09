@@ -144,10 +144,6 @@ Capybara.add_selector(:file_field) do
   xpath { |locator| XPath::HTML.file_field(locator) }
 end
 
-Capybara.add_selector(:content) do
-  xpath { |content| XPath::HTML.content(content) }
-end
-
 Capybara.add_selector(:table) do
   xpath { |locator| XPath::HTML.table(locator) }
 end
