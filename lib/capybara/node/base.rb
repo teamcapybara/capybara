@@ -123,8 +123,8 @@ module Capybara
             :attempts => attempts,
             :delay    => delay,
             :rescue   => exceptions,
-            :tester   => Wait::PassiveTester,
-            :logger   => SynchronizeLogger
+            :tester   => Wait::PassiveTester.new,
+            :logger   => SynchronizeLogger.new
           )
         end
 
