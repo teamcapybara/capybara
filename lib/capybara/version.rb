@@ -1,3 +1,3 @@
 module Capybara
-  VERSION = '2.0.1.3.paperless'
+  VERSION = '2.0.1.4.paperless'
 end
