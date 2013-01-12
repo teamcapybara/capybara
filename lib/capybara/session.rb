@@ -275,10 +275,12 @@ module Capybara
     # +evaluate_script+ whenever possible.
     #
     # @param [String] script   A string of JavaScript to execute
+    # @param [Capybara::Node::Element, Integer, Float, Boolean, NilClass, String, Array] *args Arguments will be available in the given script in the 'arguments' pseudo-array.    
     #
-    def execute_script(script)
+    def execute_script(script, *args)
       @touched = true
-      driver.execute_script(script)
+      args.map! { |e| e.kind_of?(Capybara::Node::Element) ? e.native : e }
+      driver.execute_script(script, *args)
     end
 
     ##
@@ -288,11 +290,13 @@ module Capybara
     # be a better alternative.
     #
     # @param  [String] script   A string of JavaScript to evaluate
+    # @param [Capybara::Node::Element,Integer, Float, Boolean, NilClass, String, Array] *args Arguments will be available in the given script in the 'arguments' pseudo-array.
     # @return [Object]          The result of the evaluated JavaScript (may be driver specific)
     #
-    def evaluate_script(script)
+    def evaluate_script(script, *args)
       @touched = true
-      driver.evaluate_script(script)
+      args.map! { |e| e.kind_of?(Capybara::Node::Element) ? e.native : e }
+      driver.evaluate_script(script, *args)
     end
 
     ##

@@ -49,12 +49,13 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def wait?; true; end
   def needs_server?; true; end
 
-  def execute_script(script)
-    browser.execute_script script
+  def execute_script(script, *args)
+    ret = browser.execute_script(script, *args)
+    cast_returned_by_script(ret)
   end
 
-  def evaluate_script(script)
-    browser.execute_script "return #{script}"
+  def evaluate_script(script, *args)
+    execute_script("return #{script}", *args)
   end
 
   def save_screenshot(path, options={})
@@ -122,5 +123,26 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def invalid_element_errors
     [Selenium::WebDriver::Error::StaleElementReferenceError, Selenium::WebDriver::Error::UnhandledError, Selenium::WebDriver::Error::ElementNotVisibleError]
+  end
+
+  private
+  def cast_returned_by_script(obj)
+    case obj
+    when Selenium::WebDriver::Element
+      cast_native(obj)
+    when Array
+      obj.map { |e| wrap_elements_in(e) }
+    when Hash
+      obj.each { |k,v| obj[k] = wrap_elements_in(v) }
+      obj
+    else
+      obj
+    end
+  end
+
+  def cast_native(element)
+    # Don't know how to return proper Capybara::Node::Element
+    # Capybara::Selenium::Node provides access to native, so it's better than no casting at all
+    Capybara::Selenium::Node.new(self, element)
   end
 end

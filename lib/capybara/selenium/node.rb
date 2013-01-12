@@ -32,7 +32,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       path_names = value.to_s.empty? ? [] : value
       native.send_keys(*path_names)
     elsif tag_name == 'textarea' or tag_name == 'input'
-      driver.browser.execute_script "arguments[0].value = ''", native
+      driver.execute_script("arguments[0].value = ''", native)
       native.send_keys(value.to_s)
     end
   end
