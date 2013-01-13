@@ -63,7 +63,7 @@ Capybara::SpecHelper.spec '#click_button' do
       end
 
       it "should serialise and submit color fields" do
-        @results['html5_color'].should == '#FFFFFF'
+        @results['html5_color'].upcase.should == '#FFFFFF'
       end
     end
 
