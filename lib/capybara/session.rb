@@ -49,11 +49,7 @@ module Capybara
     def initialize(mode, app=nil)
       @mode = mode
       @app = app
-      if Capybara.run_server and @app and driver.needs_server?
-        @server = Capybara::Server.new(@app).boot
-      else
-        @server = nil
-      end
+      @server = (Capybara.run_server and @app and driver.needs_server?) ? Capybara::Server.new(@app).boot : nil
       @touched = false
     end
 
