@@ -1,6 +1,23 @@
 require 'forwardable'
 
 module Capybara
+
+  ##
+  # A {Capybara::Result} represents a collection of {Capybara::Element} on the page. It is possible to interact with this
+  # collection similar to an Array because it implements Enumerable and offers the following Array methods through delegation:
+  #
+  # * []
+  # * each()
+  # * at()
+  # * size()
+  # * count()
+  # * length()
+  # * first()
+  # * last()
+  # * empty?()
+  #
+  # @see Capybara::Element
+  #
   class Result
     include Enumerable
     extend Forwardable
