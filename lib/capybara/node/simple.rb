@@ -110,6 +110,15 @@ module Capybara
 
       ##
       #
+      # Whether or not the element is disabled.
+      #
+      # @return [Boolean]     Whether the element is disabled
+      def disabled?
+        native[:disabled]
+      end
+
+      ##
+      #
       # Whether or not the element is selected.
       #
       # @return [Boolean]     Whether the element is selected

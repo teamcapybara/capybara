@@ -10,6 +10,11 @@ describe Capybara do
             <p>Yes it is</p>
           </div>
 
+          <form>
+            <input type="text" name="bleh" disabled="disabled"/>
+            <input type="text" name="meh"/>
+          </form>
+
           <div id="footer" style="display: none">
             <p>c2010</p>
             <p>Jonas Nicklas</p>
@@ -77,13 +82,18 @@ describe Capybara do
     end
 
     it "allows finding elements and extracting the path" do
-      string.find('//input').value.should == 'bar'
+      string.find('//div/input').value.should == 'bar'
       string.find('//select').value.should == 'Capybara'
     end
 
     it "allows finding elements and checking if they are visible" do
       string.find('//h1').should be_visible
-      string.find('//input').should_not be_visible
+      string.find('//div/input').should_not be_visible
+    end
+
+    it "allows finding elements and checking if they are disabled" do
+      string.find('//form/input[@name="bleh"]').should be_disabled
+      string.find('//form/input[@name="meh"]').should_not be_disabled
     end
   end
 end
