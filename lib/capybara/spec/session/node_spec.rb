@@ -81,6 +81,15 @@ Capybara::SpecHelper.spec "node" do
     end
   end
 
+  describe "#disabled?" do
+    it "should extract disabled node" do
+      @session.visit('/form')
+      @session.find('//input[@id="customer_name"]').should be_disabled
+      @session.find('//input[@id="customer_age"]').should be_disabled
+      @session.find('//input[@id="customer_email"]').should_not be_disabled
+    end
+  end
+
   describe "#visible?" do
     it "should extract node visibility" do
       @session.first('//a').should be_visible

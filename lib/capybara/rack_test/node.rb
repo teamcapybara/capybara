@@ -68,6 +68,10 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     string_node.selected?
   end
 
+  def disabled?
+    string_node.disabled?
+  end
+
   def path
     native.path
   end
