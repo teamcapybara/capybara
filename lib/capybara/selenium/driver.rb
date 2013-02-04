@@ -4,13 +4,19 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   DEFAULT_OPTIONS = {
     :browser => :firefox
   }
+  DEFAULT_BROWSER_OPTIONS = {
+    :firefox => { 
+      :profile=> Selenium::WebDriver::Firefox::Profile.new.tap { |pr|  pr["focusmanager.testmode"] = true } 
+    }
+  }
   SPECIAL_OPTIONS = [:browser]
 
   attr_reader :app, :options
 
   def browser
     unless @browser
-      @browser = Selenium::WebDriver.for(options[:browser], options.reject { |key,val| SPECIAL_OPTIONS.include?(key) })
+      browser_options=DEFAULT_BROWSER_OPTIONS[options[:browser]].merge(options)
+      @browser = Selenium::WebDriver.for(options[:browser], browser_options.reject { |key,val| SPECIAL_OPTIONS.include?(key) })
 
       main = Process.pid
       at_exit do
