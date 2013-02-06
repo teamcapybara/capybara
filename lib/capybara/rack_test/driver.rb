@@ -73,6 +73,10 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
   def dom
     browser.dom
   end
+  
+  def title
+    browser.title
+  end
 
   def reset!
     @browser = nil

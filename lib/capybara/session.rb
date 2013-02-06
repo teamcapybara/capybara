@@ -37,7 +37,7 @@ module Capybara
       :has_no_unchecked_field?, :query, :assert_selector, :assert_no_selector
     ]
     SESSION_METHODS = [
-      :body, :html, :current_url, :current_host, :evaluate_script, :source,
+      :body, :html, :current_url, :current_host, :evaluate_script, :source, :title,
       :visit, :within, :within_fieldset, :within_table, :within_frame,
       :within_window, :current_path, :save_page, :save_and_open_page,
       :save_screenshot, :reset_session!, :response_headers, :status_code
@@ -135,6 +135,14 @@ module Capybara
     #
     def current_url
       driver.current_url
+    end
+    
+    ##
+    #
+    # @return [String] Title of the current page
+    #
+    def title
+      driver.title
     end
 
     ##
