@@ -112,7 +112,11 @@ private
   end
 
   def form
-    native.ancestors('form').first
+    if native[:form]
+      native.xpath("//form[@id='#{native[:form]}']").first
+    else
+      native.ancestors('form').first
+    end
   end
 
   def set_radio(value)

@@ -137,7 +137,7 @@ Capybara::SpecHelper.spec '#click_button' do
       end
     end
   end
-
+  
   context "with id given on a submit button" do
     it "should submit the associated form" do
       @session.click_button('awe123')
@@ -161,7 +161,40 @@ Capybara::SpecHelper.spec '#click_button' do
       extract_results(@session)['first_name'].should == 'John'
     end
   end
+  
+  context "with submit button outside the form defined by <button> tag" do
+    before do
+      @session.click_button('outside_button')
+      @results = extract_results(@session)
+    end
+    
+    it "should submit the associated form" do
+      @results['first_name'].should == 'John'
+    end
+    
+    it "should submit the button that was clicked, but not other buttons" do
+      @results['outside_button'].should == 'outside_button'
+      @results['crappy'].should be_nil
+    end
+  end
 
+  context "with submit button outside the form defined by <input type='submit'> tag" do
+    before do
+      @session.click_button('outside_submit')
+      @results = extract_results(@session)
+    end
+    
+    it "should submit the associated form" do
+      @results['first_name'].should == 'John'
+    end
+    
+    it "should submit the button that was clicked, but not other buttons" do
+      @results['outside_submit'].should == 'outside_submit'
+      @results['crappy'].should be_nil
+    end
+  end
+
+  
   context "with alt given on an image button" do
     it "should submit the associated form" do
       @session.click_button('oh hai thar')
