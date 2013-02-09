@@ -43,4 +43,25 @@ Capybara::SpecHelper.spec '#save_page' do
     filename = path.split("/").last
     result.should == filename
   end
+
+  context "asset_host contains a string" do
+    before { Capybara.asset_host = "http://example.com" }
+    after { Capybara.asset_host = nil }
+
+    it "prepends base tag with value from asset_host to the head" do
+      @session.visit("/with_js")
+      path = @session.save_page
+
+      result = File.read(path)
+      result.should include("<head><base href='http://example.com' />")
+    end
+
+    it "doesn't prepend base tag to pages which already have it" do
+      @session.visit("/with_base_tag")
+      path = @session.save_page
+
+      result = File.read(path)
+      result.should_not include("http://example.com")
+    end
+  end
 end
