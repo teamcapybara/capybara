@@ -22,7 +22,7 @@ describe Capybara do
 
           <section>
             <div class="subsection"></div>
-          </div>
+          </section>
         </div>
       STRING
     end
