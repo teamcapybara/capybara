@@ -52,12 +52,12 @@ Capybara::SpecHelper.spec "#all" do
   end
 
   context "with visible filter" do
-    after { Capybara.ignore_hidden_elements = false }
+    after { Capybara.ignore_hidden_elements = true }
     it "should only find visible nodes" do
+      @session.all(:css, "a.simple").should have(1).elements
+      Capybara.ignore_hidden_elements = false
       @session.all(:css, "a.simple").should have(2).elements
       @session.all(:css, "a.simple", :visible => true).should have(1).elements
-      Capybara.ignore_hidden_elements = true
-      @session.all(:css, "a.simple").should have(1).elements
     end
 
     it "should only find invisible nodes" do

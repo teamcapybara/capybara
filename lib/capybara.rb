@@ -341,7 +341,7 @@ Capybara.configure do |config|
   config.server {|app, port| Capybara.run_default_server(app, port)}
   config.default_selector = :css
   config.default_wait_time = 2
-  config.ignore_hidden_elements = false
+  config.ignore_hidden_elements = true
   config.default_host = "http://www.example.com"
   config.automatic_reload = true
 end
