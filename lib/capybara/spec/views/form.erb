@@ -1,6 +1,6 @@
 <h1>Form</h1>
 
-<form id="the_form" action="/form" method="post">
+<form action="/form" method="post">
 
   <p>
     <label for="form_title">Title</label>
@@ -256,8 +256,21 @@
     <input type="button" disabled value="Disabled button"/>
   </p>
 </form>
-<input type="submit" name="form[outside_submit]" value="outside_submit" form="the_form"/>
-<button type="submit" name="form[outside_button]" value="outside_button" form="the_form">Outside!</button>
+
+<form id="form1" action="/form" method="post">
+  <input type="text" name="form[which_form]" value="form1" id="form_which_form"/>
+  <input type="submit" name="form[unused]" value="unused"/>
+</form>
+
+<form id="form2" action="/form" method="post">
+  <input type="text" name="form[which_form]" value="form2" id="form_which_form"/>
+  <input type="submit" name="form[unused]" value="unused"/>
+  <button type="submit" name="form[other_form_button]" value="other_form_button" form="form1">Form1</button>
+</form>
+
+<input type="submit" name="form[outside_submit]" value="outside_submit" form="form1"/>
+<button type="submit" name="form[outside_button]" value="outside_button" form="form2">Outside!</button>
+
 
 <form id="get-form" action="/form/get?foo=bar" method="get">
   <p>

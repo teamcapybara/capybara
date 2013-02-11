@@ -169,12 +169,12 @@ Capybara::SpecHelper.spec '#click_button' do
     end
     
     it "should submit the associated form" do
-      @results['first_name'].should == 'John'
+      @results['which_form'].should == 'form2'
     end
     
     it "should submit the button that was clicked, but not other buttons" do
       @results['outside_button'].should == 'outside_button'
-      @results['crappy'].should be_nil
+      @results['unused'].should be_nil
     end
   end
 
@@ -185,15 +185,21 @@ Capybara::SpecHelper.spec '#click_button' do
     end
     
     it "should submit the associated form" do
-      @results['first_name'].should == 'John'
+      @results['which_form'].should == 'form1'
     end
     
     it "should submit the button that was clicked, but not other buttons" do
       @results['outside_submit'].should == 'outside_submit'
-      @results['crappy'].should be_nil
+      @results['unused'].should be_nil
     end
   end
-
+ 
+  context "with submit button for form1 located within form2" do
+    it "should submit the form associated with the button" do
+      @session.click_button('other_form_button')
+      extract_results(@session)['which_form'].should == "form1"
+    end
+  end
   
   context "with alt given on an image button" do
     it "should submit the associated form" do
