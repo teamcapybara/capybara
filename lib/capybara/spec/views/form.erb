@@ -257,9 +257,12 @@
   </p>
 </form>
 
+<input type="text" name="form[outside_input]" value="outside_input" form="form1"/>
+
 <form id="form1" action="/form" method="post">
   <input type="text" name="form[which_form]" value="form1" id="form_which_form"/>
-  <input type="submit" name="form[unused]" value="unused"/>
+  <input type="text" name="form[for_form2]" value="for_form2" form="form2"/>
+  <input type="submit" name="form[submit_form1]" value="submit_form1" id="submit_form1"/>
 </form>
 
 <form id="form2" action="/form" method="post">
@@ -267,6 +270,13 @@
   <input type="submit" name="form[unused]" value="unused"/>
   <button type="submit" name="form[other_form_button]" value="other_form_button" form="form1">Form1</button>
 </form>
+
+<textarea name="form[outside_textarea]" form="form1">Some text here</textarea>
+<select name="form[outside_select]" form="form1">
+  <option>Lisp</option>
+  <option selected="selected">Ruby</option>
+  <option>Php</option>
+</select>
 
 <input type="submit" name="form[outside_submit]" value="outside_submit" form="form1"/>
 <button type="submit" name="form[outside_button]" value="outside_button" form="form2">Outside!</button>

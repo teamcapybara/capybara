@@ -162,6 +162,30 @@ Capybara::SpecHelper.spec '#click_button' do
     end
   end
   
+  context "with fields associated with the form using the form attribute" do
+    before do
+      @session.click_button('submit_form1')
+      @results = extract_results(@session)
+    end
+    
+    it "should serialize and submit text fields" do
+      @results['outside_input'].should == 'outside_input'
+    end
+    
+    it "should serialize text areas" do
+      @results['outside_textarea'].should == 'Some text here'
+    end
+
+    it "should serialize select tags" do
+      @results['outside_select'].should == 'Ruby'
+    end
+         
+    it "should not serliaze fields associated with a different form" do
+      @results['for_form2'].should be_nil
+    end
+  end
+  
+  
   context "with submit button outside the form defined by <button> tag" do
     before do
       @session.click_button('outside_button')
@@ -190,7 +214,7 @@ Capybara::SpecHelper.spec '#click_button' do
     
     it "should submit the button that was clicked, but not other buttons" do
       @results['outside_submit'].should == 'outside_submit'
-      @results['unused'].should be_nil
+      @results['submit_form1'].should be_nil
     end
   end
  
