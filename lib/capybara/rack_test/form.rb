@@ -16,9 +16,15 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
 
   def params(button)
     params = {}
-    element_query="((.//input|.//select|.//textarea)[not(@form)])"
-    element_query+="|((//input|//select|//textarea)[@form='#{native[:id]}'])" if native[:id]
-    native.xpath("(#{element_query})[not(@disabled)]").map do |field|
+
+    form_element_types=[:input, :select, :textarea]
+    form_elements_xpath=XPath.generate do |x| 
+      xpath=x.descendant(*form_element_types).where(~x.attr(:form))
+      xpath=xpath.union(x.anywhere(*form_element_types).where(x.attr(:form) == native[:id])) if native[:id]
+      xpath.where(~x.attr(:disabled))
+    end.to_s
+    
+    native.xpath(form_elements_xpath).map do |field|
       case field.name
       when 'input'
         if %w(radio checkbox).include? field['type']
