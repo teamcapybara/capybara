@@ -144,6 +144,16 @@ module Capybara
 
       ##
       #
+      # Whether or not the element is disabled.
+      #
+      # @return [Boolean]     Whether the element is disabled
+      #
+      def disabled?
+        synchronize { base.disabled? }
+      end
+
+      ##
+      #
       # An XPath expression describing where on the page the element can be found
       #
       # @return [String]      An XPath expression

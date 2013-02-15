@@ -70,6 +70,10 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     selected and selected != "false"
   end
 
+  def disabled?
+    !native.enabled?
+  end
+
   alias :checked? :selected?
 
   def find(locator)
