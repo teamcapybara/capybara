@@ -15,3 +15,4 @@ Gemfile*.lock
 chromedriver.log
 bundler_stubs
 bin
+gem-private_key.pem
