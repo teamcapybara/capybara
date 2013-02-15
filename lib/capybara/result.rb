@@ -35,19 +35,6 @@ module Capybara
       @query.matches_count?(@result.size)
     end
 
-    def find!
-      raise find_error if @result.size != 1
-      @result.first
-    end
-
-    def find_error
-      if @result.size == 0
-        Capybara::ElementNotFound.new("Unable to find #{@query.description}")
-      elsif @result.size > 1
-        Capybara::Ambiguous.new("Ambiguous match, found #{size} elements matching #{@query.description}")
-      end
-    end
-
     def failure_message
       message = if @query.options[:count]
         "expected #{@query.description} to be found #{@query.options[:count]} #{declension("time", "times", @query.options[:count])}"

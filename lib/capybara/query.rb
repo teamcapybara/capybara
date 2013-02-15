@@ -2,13 +2,21 @@ module Capybara
   class Query
     attr_accessor :selector, :locator, :options, :xpath, :find, :negative
 
-    VALID_KEYS = [:text, :visible, :between, :count, :maximum, :minimum]
+    VALID_KEYS = [:text, :visible, :between, :count, :maximum, :minimum, :exact, :match]
 
     def initialize(*args)
       @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
 
       unless options.has_key?(:visible)
         @options[:visible] = Capybara.ignore_hidden_elements
+      end
+
+      unless options.has_key?(:exact)
+        @options[:exact] = Capybara.exact
+      end
+
+      unless options.has_key?(:match)
+        @options[:match] = Capybara.match
       end
 
       if args[0].is_a?(Symbol)
@@ -20,8 +28,7 @@ module Capybara
       end
       @selector ||= Selector.all[Capybara.default_selector]
 
-      @xpath = @selector.call(@locator).to_s
-
+      @xpath = @selector.call(@locator)
       assert_valid_keys!
     end
 
@@ -60,6 +67,24 @@ module Capybara
         options[:minimum].to_i <= count
       else
         count > 0
+      end
+    end
+
+    def exact
+      @options[:exact]
+    end
+
+    def match
+      @options[:match]
+    end
+
+    def xpath(exact=nil)
+      exact = @options[:exact] if exact == nil
+
+      if @xpath.respond_to?(:to_xpath) and exact
+        @xpath.to_xpath(:exact)
+      else
+        @xpath.to_s
       end
     end
 

@@ -16,7 +16,7 @@ module Capybara
 
   class << self
     attr_accessor :asset_root, :app_host, :run_server, :default_host, :always_include_port
-    attr_accessor :server_host, :server_port
+    attr_accessor :server_host, :server_port, :exact, :match
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
     attr_accessor :save_and_open_page_path, :automatic_reload
     attr_writer :default_driver, :current_driver, :javascript_driver, :session_name
@@ -344,6 +344,8 @@ Capybara.configure do |config|
   config.ignore_hidden_elements = true
   config.default_host = "http://www.example.com"
   config.automatic_reload = true
+  config.match = :smart
+  config.exact = false
 end
 
 Capybara.register_driver :rack_test do |app|

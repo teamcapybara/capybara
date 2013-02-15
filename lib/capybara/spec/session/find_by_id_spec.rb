@@ -5,7 +5,6 @@ Capybara::SpecHelper.spec '#find_by_id' do
 
   it "should find any element by id" do
     @session.find_by_id('red').tag_name.should == 'a'
-    @session.find_by_id('hidden_via_ancestor').tag_name.should == 'div'
   end
 
   it "casts to string" do

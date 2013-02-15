@@ -23,7 +23,22 @@ module Capybara
       # @raise  [Capybara::ElementNotFound]   If the element can't be found before time expires
       #
       def find(*args)
-        synchronize { all(*args).find! }.tap(&:allow_reload!)
+        synchronize do
+          query = Capybara::Query.new(*args)
+          if query.match == :smart or query.match == :prefer_exact
+            result = resolve_query(query, true)
+            result = resolve_query(query, false) if result.size == 0 and not query.exact
+          else
+            result = resolve_query(query)
+          end
+          if query.match == :one or query.match == :smart and result.size > 1
+            raise Capybara::Ambiguous.new("Ambiguous match, found #{result.size} elements matching #{query.description}")
+          end
+          if result.size == 0
+            raise Capybara::ElementNotFound.new("Unable to find #{query.description}")
+          end
+          result.first
+        end.tap(&:allow_reload!)
       end
 
       ##
@@ -108,13 +123,7 @@ module Capybara
       # @return [Capybara::Result]                   A collection of found elements
       #
       def all(*args)
-        query = Capybara::Query.new(*args)
-        elements = synchronize do
-          base.find(query.xpath).map do |node|
-            Capybara::Node::Element.new(session, node, self, query)
-          end
-        end
-        Capybara::Result.new(elements, query)
+        resolve_query(Capybara::Query.new(*args))
       end
 
       ##
@@ -130,6 +139,17 @@ module Capybara
       #
       def first(*args)
         all(*args).first
+      end
+
+    private
+
+      def resolve_query(query, exact=nil)
+        elements = synchronize do
+          base.find(query.xpath(exact)).map do |node|
+            Capybara::Node::Element.new(session, node, self, query)
+          end
+        end
+        Capybara::Result.new(elements, query)
       end
     end
   end
