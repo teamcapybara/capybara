@@ -13,7 +13,7 @@ module Capybara
       # By default it will check if the expression occurs at least once,
       # but a different number can be specified.
       #
-      #     page.has_selector?('p#foo', :count => 4)
+      #     page.has_selector?('p.foo', :count => 4)
       #
       # This will check if the expression occurs exactly 4 times.
       #
