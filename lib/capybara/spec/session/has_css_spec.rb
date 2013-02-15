@@ -70,7 +70,7 @@ Capybara::SpecHelper.spec '#has_css?' do
 
     it "should be false when content occurs more times than given" do
       @session.should_not have_css("h2.head", :maximum => 4) # edge case
-      @session.should_not have_css("h2", :maximum => 6)
+      @session.should_not have_css("h2", :maximum => 3)
       @session.should_not have_css("p", :maximum => 1)
     end
 
@@ -184,7 +184,7 @@ Capybara::SpecHelper.spec '#has_no_css?' do
 
     it "should be true when content occurs more times than given" do
       @session.should have_no_css("h2.head", :maximum => 4) # edge case
-      @session.should have_no_css("h2", :maximum => 6)
+      @session.should have_no_css("h2", :maximum => 3)
       @session.should have_no_css("p", :maximum => 1)
     end
 
