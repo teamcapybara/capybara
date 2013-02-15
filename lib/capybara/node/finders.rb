@@ -105,7 +105,7 @@ module Capybara
       #   @option options [Boolean] visible          Only find elements that are visible on the page. Setting this to false
       #                                              (the default, unless Capybara.ignore_hidden_elements = true), finds
       #                                              invisible _and_ visible elements.
-      # @return [Array[Capybara::Element]]           The found elements
+      # @return [Capybara::Result]                   A collection of found elements
       #
       def all(*args)
         query = Capybara::Query.new(*args)
