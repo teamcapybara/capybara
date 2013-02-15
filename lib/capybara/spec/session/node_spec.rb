@@ -83,6 +83,7 @@ Capybara::SpecHelper.spec "node" do
 
   describe "#visible?" do
     it "should extract node visibility" do
+      Capybara.ignore_hidden_elements = false
       @session.first('//a').should be_visible
 
       @session.find('//div[@id="hidden"]').should_not be_visible

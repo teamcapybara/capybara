@@ -48,21 +48,22 @@ Capybara::SpecHelper.spec "#all" do
       @session.all('h1').first.text.should == 'This is a test'
       @session.all("input[id='test_field']").first[:value].should == 'monkey'
     end
-    after { Capybara.default_selector = :xpath }
   end
 
   context "with visible filter" do
-    after { Capybara.ignore_hidden_elements = true }
-    it "should only find visible nodes" do
-      @session.all(:css, "a.simple").should have(1).elements
-      Capybara.ignore_hidden_elements = false
-      @session.all(:css, "a.simple").should have(2).elements
+    it "should only find visible nodes when true" do
       @session.all(:css, "a.simple", :visible => true).should have(1).elements
     end
 
-    it "should only find invisible nodes" do
-      Capybara.ignore_hidden_elements = true
+    it "should find nodes regardless of whether they are invisible when false" do
       @session.all(:css, "a.simple", :visible => false).should have(2).elements
+    end
+
+    it "should default to Capybara.ignore_hidden_elements" do
+      Capybara.ignore_hidden_elements = true
+      @session.all(:css, "a.simple").should have(1).elements
+      Capybara.ignore_hidden_elements = false
+      @session.all(:css, "a.simple").should have(2).elements
     end
   end
 
