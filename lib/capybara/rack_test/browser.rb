@@ -89,6 +89,10 @@ class Capybara::RackTest::Browser
   rescue Rack::Test::Error
     ""
   end
+  
+  def title
+    dom.xpath("//title").text
+  end
 
 protected
 

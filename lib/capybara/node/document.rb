@@ -20,6 +20,10 @@ module Capybara
       def text
         find(:xpath, '/html').text
       end
+      
+      def title
+        session.driver.title
+      end
     end
   end
 end
