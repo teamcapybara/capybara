@@ -20,6 +20,7 @@ module Capybara
         Capybara.default_selector = :xpath
         Capybara.default_wait_time = 1
         Capybara.exact = false
+        Capybara.match = :smart
       end
 
       def filter(requires, metadata)
