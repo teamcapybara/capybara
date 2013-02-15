@@ -38,6 +38,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.page_source
   end
 
+  def title
+    browser.title
+  end
+  
   def current_url
     browser.current_url
   end
