@@ -2,7 +2,7 @@ module Capybara
   class Query
     attr_accessor :selector, :locator, :options, :xpath, :find, :negative
 
-    VALID_KEYS = [:text, :visible, :between, :count, :maximum, :minimum]
+    VALID_KEYS = [:text, :visible, :between, :count, :maximum, :minimum, :exact]
 
     def initialize(*args)
       @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
@@ -20,7 +20,13 @@ module Capybara
       end
       @selector ||= Selector.all[Capybara.default_selector]
 
-      @xpath = @selector.call(@locator).to_s
+      @xpath = @selector.call(@locator)
+      if @xpath.respond_to?(:to_xpath) and @options[:exact]
+        @xpath = @xpath.to_xpath(:exact)
+      else
+        @xpath = @xpath.to_s
+      end
+
 
       assert_valid_keys!
     end

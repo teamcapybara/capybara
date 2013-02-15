@@ -113,6 +113,24 @@ Capybara::SpecHelper.spec '#find' do
     @session.find(@xpath).value.should == 'John'
   end
 
+  context "with :exact option" do
+    it "matches exactly when true" do
+      @session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("test_field")], :exact => true).value.should == "monkey"
+      expect do
+        @session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("est_fiel")], :exact => true)
+      end.to raise_error(Capybara::ElementNotFound)
+    end
+
+    it "matches loosely when false" do
+      @session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("test_field")], :exact => false).value.should == "monkey"
+      @session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("est_fiel")], :exact => false).value.should == "monkey"
+    end
+
+    it "defaults to `Capybara.exact`" do
+
+    end
+  end
+
   context "within a scope" do
     before do
       @session.visit('/with_scope')
