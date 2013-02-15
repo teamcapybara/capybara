@@ -11,6 +11,10 @@ module Capybara
         @options[:visible] = Capybara.ignore_hidden_elements
       end
 
+      unless options.has_key?(:exact)
+        @options[:exact] = Capybara.exact
+      end
+
       if args[0].is_a?(Symbol)
         @selector = Selector.all[args[0]]
         @locator = args[1]
@@ -26,7 +30,6 @@ module Capybara
       else
         @xpath = @xpath.to_s
       end
-
 
       assert_valid_keys!
     end

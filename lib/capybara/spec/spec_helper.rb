@@ -19,6 +19,7 @@ module Capybara
         Capybara.app_host = nil
         Capybara.default_selector = :xpath
         Capybara.default_wait_time = 1
+        Capybara.exact = false
       end
 
       def filter(requires, metadata)

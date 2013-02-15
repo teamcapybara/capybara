@@ -127,7 +127,12 @@ Capybara::SpecHelper.spec '#find' do
     end
 
     it "defaults to `Capybara.exact`" do
-
+      Capybara.exact = true
+      expect do
+        @session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("est_fiel")])
+      end.to raise_error(Capybara::ElementNotFound)
+      Capybara.exact = false
+      @session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("est_fiel")])
     end
   end
 
