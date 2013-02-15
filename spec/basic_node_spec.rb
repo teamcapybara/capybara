@@ -10,7 +10,7 @@ describe Capybara do
             <p>Yes it is</p>
           </div>
 
-          <div id="footer" style="display: none">
+          <div id="footer">
             <p>c2010</p>
             <p>Jonas Nicklas</p>
             <input type="text" name="foo" value="bar"/>
@@ -18,6 +18,10 @@ describe Capybara do
               <option>Monkey</option>
               <option selected="selected">Capybara</option>
             </select>
+          </div>
+
+          <div id="hidden" style="display: none">
+            <p id="secret">Secret</p>
           </div>
 
           <section>
@@ -56,8 +60,8 @@ describe Capybara do
     end
 
     it "allows finding only visible nodes" do
-      string.all('//p', :text => 'c2010', :visible => true).should be_empty
-      string.all('//p', :text => 'c2010', :visible => false).should have(1).element
+      string.all(:css, '#secret', :visible => true).should be_empty
+      string.all(:css, '#secret', :visible => false).should have(1).element
     end
 
     it "allows finding elements and extracting text from them" do
@@ -83,7 +87,7 @@ describe Capybara do
 
     it "allows finding elements and checking if they are visible" do
       string.find('//h1').should be_visible
-      string.find('//input').should_not be_visible
+      string.find(:css, "#secret", :visible => false).should_not be_visible
     end
   end
 end
