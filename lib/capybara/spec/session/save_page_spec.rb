@@ -56,6 +56,15 @@ Capybara::SpecHelper.spec '#save_page' do
       result.should include("<head><base href='http://example.com' />")
     end
 
+    it "doesn't prepend base tag to pages when asset_host is nil" do
+      Capybara.asset_host = nil
+      @session.visit("/with_js")
+      path = @session.save_page
+
+      result = File.read(path)
+      result.should_not include("http://example.com")
+    end
+
     it "doesn't prepend base tag to pages which already have it" do
       @session.visit("/with_base_tag")
       path = @session.save_page
