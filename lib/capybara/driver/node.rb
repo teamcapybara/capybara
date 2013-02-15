@@ -57,6 +57,10 @@ module Capybara
         raise NotImplementedError
       end
 
+      def disabled?
+        raise NotImplementedError
+      end
+
       def path
         raise NotSupportedByDriverError
       end
