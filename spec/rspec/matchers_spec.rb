@@ -330,6 +330,24 @@ describe Capybara::RSpecMatchers do
             "<h1>Text</h1>".should have_text(:cast_me)
           end.to raise_error(/expected there to be text "cast_me" in "Text"/)
         end
+        
+        it "passes if matched text count equals expected count" do
+          "<h1>Lorem ipsum</h1><p>Lorem ipsum</p>".should have_text('Lorem ipsum', count: 2)
+        end
+
+        it "passes if range includes matched text count" do
+          "<h1>Lorem ipsum</h1><p>Lorem ipsum</p>".should have_text('Lorem ipsum', range: (2...4))
+        end
+        
+        it "fails if range does not include matched text count" do
+          "<h1>Lorem ipsum</h1>".should have_text('Lorem ipsum', range: (2...4))
+        end.to raise_error(/expected text "Lorem ipsum" to be found from 2 to 3 times/)
+        
+        it "fails if matched text count does not equal expected count" do
+          expect do
+            "<h1>Lorem ipsum</h1>".should have_text('Lorem ipsum', count: 2)
+          end.to raise_error(/expected text "Lorem ipsum" to be found 2 times/)
+        end
       end
 
       context "with should_not" do
