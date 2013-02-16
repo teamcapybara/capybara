@@ -16,7 +16,7 @@ module Capybara
 
   class << self
     attr_accessor :asset_root, :app_host, :run_server, :default_host, :always_include_port
-    attr_accessor :server_host, :server_port, :exact, :match
+    attr_accessor :server_host, :server_port, :exact, :match, :exact_options
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
     attr_accessor :save_and_open_page_path, :automatic_reload
     attr_writer :default_driver, :current_driver, :javascript_driver, :session_name

@@ -28,6 +28,11 @@ module Capybara
       end
       @selector ||= Selector.all[Capybara.default_selector]
 
+      # for compatibility with Capybara 2.0
+      if Capybara.exact_options and @selector == Selector.all[:option]
+        @options[:exact] = true
+      end
+
       @xpath = @selector.call(@locator)
       assert_valid_keys!
     end

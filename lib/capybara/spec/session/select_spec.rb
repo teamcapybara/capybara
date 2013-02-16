@@ -12,6 +12,29 @@ Capybara::SpecHelper.spec "#select" do
     @session.find_field('Title').value.should == 'Miss'
   end
 
+  it "should allow selecting options where there are inexact matches" do
+    @session.select("Mr", :from => 'Title')
+    @session.find_field('Title').value.should == 'Mr'
+  end
+
+  it "should allow selecting options where they are the only inexact match" do
+    @session.select("Mis", :from => 'Title')
+    @session.find_field('Title').value.should == 'Miss'
+  end
+
+  it "should not allow selecting options where they are the only inexact match if `Capybara.exact_options = true`" do
+    Capybara.exact_options = true
+    expect do
+      @session.select("Mis", :from => 'Title')
+    end.to raise_error(Capybara::ElementNotFound)
+  end
+
+  it "should not allow selecting an option if the match is ambiguous" do
+    expect do
+      @session.select("M", :from => 'Title')
+    end.to raise_error(Capybara::Ambiguous)
+  end
+
   it "should return the value attribute rather than content if present" do
     @session.find_field('Locale').value.should == 'en'
   end
