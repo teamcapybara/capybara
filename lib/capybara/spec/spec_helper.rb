@@ -22,6 +22,7 @@ module Capybara
         Capybara.ignore_hidden_elements = true
         Capybara.exact = false
         Capybara.exact_options = false
+        Capybara.raise_server_errors = true
         Capybara.match = :smart
       end
 

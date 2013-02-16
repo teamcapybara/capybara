@@ -75,7 +75,7 @@ module Capybara
     def reset!
       driver.reset! if @touched
       @touched = false
-      raise @server.error if @server and @server.error
+      raise @server.error if Capybara.raise_server_errors and @server and @server.error
     ensure
       @server.reset_error! if @server
     end

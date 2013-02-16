@@ -31,11 +31,19 @@ Capybara::SpecHelper.spec '#reset_session!' do
     @session.should have_no_selector('.//h1')
   end
 
-  it "raises any errors caught inside the server" do
+  it "raises any errors caught inside the server", :requires => [:server] do
+    quietly { @session.visit("/error") }
     expect do
-      quietly { @session.visit("/error") }
       @session.reset_session!
     end.to raise_error(TestApp::TestAppError)
+    @session.visit("/")
+    @session.current_path.should == "/"
+  end
+
+  it "ignores server errors when `Capybara.raise_server_errors = false`", :requires => [:server] do
+    Capybara.raise_server_errors = false
+    quietly { @session.visit("/error") }
+    @session.reset_session!
     @session.visit("/")
     @session.current_path.should == "/"
   end
