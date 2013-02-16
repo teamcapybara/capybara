@@ -236,6 +236,28 @@ module Capybara
 
       ##
       #
+      # Checks if the page has a title with the given text.
+      #
+      # @param [String] locator           The text of a title to check for
+      # @return [Boolean]                 Whether it exists
+      #
+      def has_title?(locator)
+        has_selector?(:title, locator)
+      end
+
+      ##
+      #
+      # Checks if the page has no title with the given text.
+      #
+      # @param (see Capybara::Node::Finders#has_title?)
+      # @return [Boolean]            Whether it doesn't exist
+      #
+      def has_no_title?(locator)
+        has_no_selector?(:title, locator)
+      end
+
+      ##
+      #
       # Checks if the page or current node has a link with the given
       # text or id.
       #
