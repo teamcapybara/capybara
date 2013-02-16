@@ -139,6 +139,18 @@ module Capybara
         yield # simple nodes don't need to wait
       end
 
+      def title
+        native.xpath("//title").first.text
+      end
+
+      def has_title?(content)
+        title.match(Capybara::Helpers.to_regexp(content))
+      end
+
+      def has_no_title?(content)
+        not has_title?(content)
+      end
+
     private
 
       def resolve_query(query, exact=nil)

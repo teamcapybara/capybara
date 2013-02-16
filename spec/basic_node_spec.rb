@@ -4,35 +4,42 @@ describe Capybara do
   describe '.string' do
     let :string do
       Capybara.string <<-STRING
-        <div id="page">
-          <div id="content">
-            <h1 data="fantastic">Totally awesome</h1>
-            <p>Yes it is</p>
-          </div>
+        <html>
+          <head>
+            <title>simple_node</title>
+          </head>
+          <body>
+            <div id="page">
+              <div id="content">
+                <h1 data="fantastic">Totally awesome</h1>
+                <p>Yes it is</p>
+              </div>
 
-          <form>
-            <input type="text" name="bleh" disabled="disabled"/>
-            <input type="text" name="meh"/>
-          </form>
+              <form>
+                <input type="text" name="bleh" disabled="disabled"/>
+                <input type="text" name="meh"/>
+              </form>
 
-          <div id="footer">
-            <p>c2010</p>
-            <p>Jonas Nicklas</p>
-            <input type="text" name="foo" value="bar"/>
-            <select name="animal">
-              <option>Monkey</option>
-              <option selected="selected">Capybara</option>
-            </select>
-          </div>
+              <div id="footer">
+                <p>c2010</p>
+                <p>Jonas Nicklas</p>
+                <input type="text" name="foo" value="bar"/>
+                <select name="animal">
+                  <option>Monkey</option>
+                  <option selected="selected">Capybara</option>
+                </select>
+              </div>
 
-          <div id="hidden" style="display: none">
-            <p id="secret">Secret</p>
-          </div>
+              <div id="hidden" style="display: none">
+                <p id="secret">Secret</p>
+              </div>
 
-          <section>
-            <div class="subsection"></div>
-          </section>
-        </div>
+              <section>
+                <div class="subsection"></div>
+              </section>
+            </div>
+          </body>
+        </html>
       STRING
     end
 
@@ -98,6 +105,36 @@ describe Capybara do
     it "allows finding elements and checking if they are disabled" do
       string.find('//form/input[@name="bleh"]').should be_disabled
       string.find('//form/input[@name="meh"]').should_not be_disabled
+    end
+
+    describe "#title" do
+      it "returns the page title" do
+        string.title.should == "simple_node"
+      end
+    end
+
+    describe "#has_title?" do
+      it "returns whether the page has the given title" do
+        string.has_title?('simple_node').should be_true
+        string.has_title?('monkey').should be_false
+      end
+
+      it "allows regexp matches" do
+        string.has_title?(/s[a-z]+_node/).should be_true
+        string.has_title?(/monkey/).should be_false
+      end
+    end
+
+    describe '#has_no_title?' do
+      it "returns whether the page does not have the given title" do
+        string.has_no_title?('simple_node').should be_false
+        string.has_no_title?('monkey').should be_true
+      end
+
+      it "allows regexp matches" do
+        string.has_no_title?(/s[a-z]+_node/).should be_false
+        string.has_no_title?(/monkey/).should be_true
+      end
     end
   end
 end
