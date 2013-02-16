@@ -6,8 +6,11 @@ require 'capybara/rspec/matchers'
 World(Capybara::DSL)
 World(Capybara::RSpecMatchers)
 
-Before do
+After do
   Capybara.reset_sessions!
+end
+
+Before do
   Capybara.use_default_driver
 end
 
