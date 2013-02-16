@@ -37,10 +37,11 @@ module Capybara
       :has_no_unchecked_field?, :query, :assert_selector, :assert_no_selector
     ]
     SESSION_METHODS = [
-      :body, :html, :current_url, :current_host, :evaluate_script, :source, :title,
+      :body, :html, :current_url, :current_host, :evaluate_script, :source,
       :visit, :within, :within_fieldset, :within_table, :within_frame,
       :within_window, :current_path, :save_page, :save_and_open_page,
-      :save_screenshot, :reset_session!, :response_headers, :status_code
+      :save_screenshot, :reset_session!, :response_headers, :status_code,
+      :title, :has_title?, :has_no_title?
     ]
     DSL_METHODS = NODE_METHODS + SESSION_METHODS
 
@@ -136,7 +137,7 @@ module Capybara
     def current_url
       driver.current_url
     end
-    
+
     ##
     #
     # @return [String] Title of the current page
@@ -355,6 +356,28 @@ module Capybara
 
     def inspect
       %(#<Capybara::Session>)
+    end
+
+    def has_title?(content)
+      document.synchronize do
+        unless title.match(Capybara::Helpers.to_regexp(content))
+          raise ExpectationNotMet
+        end
+      end
+      return true
+    rescue Capybara::ExpectationNotMet
+      return false
+    end
+
+    def has_no_title?(content)
+      document.synchronize do
+        if title.match(Capybara::Helpers.to_regexp(content))
+          raise ExpectationNotMet
+        end
+      end
+      return true
+    rescue Capybara::ExpectationNotMet
+      return false
     end
 
   private
