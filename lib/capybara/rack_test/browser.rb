@@ -80,8 +80,19 @@ class Capybara::RackTest::Browser
     @dom ||= Nokogiri::HTML(html)
   end
 
-  def find(selector)
-    dom.xpath(selector).map { |node| Capybara::RackTest::Node.new(self, node) }
+  def find(selector, type=:xpath)
+    if type==:css
+      dom.css(selector, Class.new {
+        def disabled list
+          list.find_all { |node| node.has_attribute? 'disabled' }
+        end        
+        def enabled list
+          list.find_all { |node| !node.has_attribute? 'disabled' }
+        end
+      }.new)
+    else
+      dom.xpath(selector)
+    end.map { |node| Capybara::RackTest::Node.new(self, node) }
   end
 
   def html

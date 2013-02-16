@@ -145,7 +145,12 @@ module Capybara
 
       def resolve_query(query, exact=nil)
         elements = synchronize do
-          base.find(query.xpath(exact)).map do |node|
+          # base.find(query.xpath(exact)).map do |node|
+          if query.selector.name==:css && base.respond_to?(:find_css)
+            base.find_css(query.locator)
+          else
+            base.find(query.xpath(exact))
+          end.map do |node|
             Capybara::Node::Element.new(session, node, self, query)
           end
         end

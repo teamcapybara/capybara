@@ -85,7 +85,6 @@ module Capybara
 
     def xpath(exact=nil)
       exact = @options[:exact] if exact == nil
-
       if @xpath.respond_to?(:to_xpath) and exact
         @xpath.to_xpath(:exact)
       else
