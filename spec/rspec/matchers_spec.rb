@@ -412,6 +412,42 @@ describe Capybara::RSpecMatchers do
     end
   end
 
+  describe "have_title matcher" do
+    it "gives proper description" do
+      have_title('Just a title').description.should == "have title \"Just a title\""
+    end
+
+    context "on a string" do
+      let(:html) { '<title>Just a title</title>' }
+
+      it "passes if there is such a title" do
+        html.should have_title('Just a title')
+      end
+
+      it "fails if there is no such title" do
+        expect do
+          html.should have_title('No such title')
+        end.to raise_error(/expected there to be title "No such title"/)
+      end
+    end
+
+    context "on a page or node" do
+      before do
+        visit('/with_js')
+      end
+
+      it "passes if there is such a title" do
+        page.should have_title('with_js')
+      end
+
+      it "fails if there is no such title" do
+        expect do
+          page.should have_title('No such title')
+        end.to raise_error(/expected there to be title "No such title"/)
+      end
+    end
+  end
+
   describe "have_button matcher" do
     let(:html) { '<button>A button</button><input type="submit" value="Another button"/>' }
 

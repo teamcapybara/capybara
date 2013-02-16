@@ -1,6 +1,16 @@
 module Capybara
   module RSpecMatchers
-    class HaveSelector
+    class Matcher
+      def wrap(actual)
+        if actual.respond_to?("has_selector?")
+          actual
+        else
+          Capybara.string(actual.to_s)
+        end
+      end
+    end
+
+    class HaveSelector < Matcher
       def initialize(*args)
         @args = args
       end
@@ -17,20 +27,12 @@ module Capybara
         "have #{query.description}"
       end
 
-      def wrap(actual)
-        if actual.respond_to?("has_selector?")
-          actual
-        else
-          Capybara.string(actual.to_s)
-        end
-      end
-
       def query
         @query ||= Capybara::Query.new(*@args)
       end
     end
 
-    class HaveText
+    class HaveText < Matcher
       attr_reader :text
 
       def initialize(text)
@@ -59,17 +61,39 @@ module Capybara
         "have text #{format(text)}"
       end
 
-      def wrap(actual)
-        if actual.respond_to?("has_selector?")
-          actual
-        else
-          Capybara.string(actual.to_s)
-        end
-      end
-
       def format(text)
         text = Capybara::Helpers.normalize_whitespace(text) unless text.is_a? Regexp
         text.inspect
+      end
+    end
+
+    class HaveTitle < Matcher
+      attr_reader :title
+
+      def initialize(title)
+        @title = title
+      end
+
+      def matches?(actual)
+        @actual = wrap(actual)
+        @actual.has_title?(title)
+      end
+
+      def does_not_match?(actual)
+        @actual = wrap(actual)
+        @actual.has_no_title?(title)
+      end
+
+      def failure_message_for_should
+        "expected there to be title #{title.inspect} in #{@actual.title.inspect}"
+      end
+
+      def failure_message_for_should_not
+        "expected there not to be title #{title.inspect} in #{@actual.title.inspect}"
+      end
+
+      def description
+        "have title #{title.inspect}"
       end
     end
 
@@ -81,7 +105,7 @@ module Capybara
       HaveSelector.new(:xpath, xpath, options)
     end
 
-    def have_css(css, options={})
+     def have_css(css, options={})
       HaveSelector.new(:css, css, options)
     end
 
@@ -91,6 +115,10 @@ module Capybara
 
     def have_text(text)
       HaveText.new(text)
+    end
+
+    def have_title(title)
+      HaveTitle.new(title)
     end
 
     def have_link(locator, options={})
