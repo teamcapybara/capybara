@@ -53,6 +53,15 @@ Capybara::SpecHelper.spec '#has_selector?' do
       @session.should_not have_selector("//p", :text => "Doesnotexist")
     end
 
+    it "should respect visibility setting" do
+      @session.should have_selector(:id, "hidden-text", :text => "Some of this text is hidden!", :visible => false)
+      @session.should_not have_selector(:id, "hidden-text", :text => "Some of this text is hidden!", :visible => true)
+      Capybara.ignore_hidden_elements = false
+      @session.should have_selector(:id, "hidden-text", :text => "Some of this text is hidden!", :visible => false)
+      Capybara.visible_text_only = true
+      @session.should_not have_selector(:id, "hidden-text", :text => "Some of this text is hidden!", :visible => true)
+    end
+
     it "should discard all matches where the given regexp is not matched" do
       @session.should have_selector("//p//a", :text => /re[dab]i/i, :count => 1)
       @session.should_not have_selector("//p//a", :text => /Red$/)

@@ -7,18 +7,6 @@ module Capybara
     def initialize(*args)
       @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
 
-      unless options.has_key?(:visible)
-        @options[:visible] = Capybara.ignore_hidden_elements
-      end
-
-      unless options.has_key?(:exact)
-        @options[:exact] = Capybara.exact
-      end
-
-      unless options.has_key?(:match)
-        @options[:match] = Capybara.match
-      end
-
       if args[0].is_a?(Symbol)
         @selector = Selector.all[args[0]]
         @locator = args[1]
@@ -50,9 +38,10 @@ module Capybara
       node.unsynchronized do
         if options[:text]
           regexp = options[:text].is_a?(Regexp) ? options[:text] : Regexp.escape(options[:text])
-          return false if not node.text.match(regexp)
+          type = if @options.has_key?(:visible) and not @options[:visible] then :all else nil end
+          return false if not node.text(type).match(regexp)
         end
-        return false if options[:visible] and not node.visible?
+        return false if visible? and not node.visible?
         selector.custom_filters.each do |name, block|
           return false if options.has_key?(name) and not block.call(node, options[name])
         end
@@ -75,16 +64,32 @@ module Capybara
       end
     end
 
-    def exact
-      @options[:exact]
+    def visible?
+      if options.has_key?(:visible)
+        @options[:visible]
+      else
+        Capybara.ignore_hidden_elements
+      end
+    end
+
+    def exact?
+      if options.has_key?(:exact)
+        @options[:exact]
+      else
+        Capybara.exact
+      end
     end
 
     def match
-      @options[:match]
+      if options.has_key?(:match)
+        @options[:match]
+      else
+        Capybara.match
+      end
     end
 
     def xpath(exact=nil)
-      exact = @options[:exact] if exact == nil
+      exact = self.exact? if exact == nil
 
       if @xpath.respond_to?(:to_xpath) and exact
         @xpath.to_xpath(:exact)

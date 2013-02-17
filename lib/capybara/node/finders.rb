@@ -27,7 +27,7 @@ module Capybara
           query = Capybara::Query.new(*args)
           if query.match == :smart or query.match == :prefer_exact
             result = resolve_query(query, true)
-            result = resolve_query(query, false) if result.size == 0 and not query.exact
+            result = resolve_query(query, false) if result.size == 0 and not query.exact?
           else
             result = resolve_query(query)
           end
