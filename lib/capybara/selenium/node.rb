@@ -1,7 +1,12 @@
 class Capybara::Selenium::Node < Capybara::Driver::Node
-  def text
+  def visible_text
     # Selenium doesn't normalize Unicode whitespace.
     Capybara::Helpers.normalize_whitespace(native.text)
+  end
+
+  def all_text
+    text = driver.browser.execute_script("return arguments[0].textContent", native)
+    Capybara::Helpers.normalize_whitespace(text)
   end
 
   def [](name)
