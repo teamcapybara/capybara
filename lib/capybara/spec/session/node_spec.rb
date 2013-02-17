@@ -72,13 +72,13 @@ Capybara::SpecHelper.spec "node" do
       @session.first('//input').value.should == ''
     end
 
-    it 'should allow me to change the contents of a contenteditable element', :requires => [:js], :contenteditable => true do
+    it 'should allow me to change the contents of a contenteditable element', :requires => [:js] do
       @session.visit('/with_js')
       @session.find(:css,'#existing_content_editable').set('WYSIWYG')
       @session.find(:css,'#existing_content_editable').text.should == 'WYSIWYG'
     end
 
-    it 'should allow me to set the contents of a contenteditable element', :requires => [:js], :contenteditable => true do
+    it 'should allow me to set the contents of a contenteditable element', :requires => [:js] do
       @session.visit('/with_js')
       @session.find(:css,'#blank_content_editable').set('WYSIWYG')
       @session.find(:css,'#blank_content_editable').text.should == 'WYSIWYG'
