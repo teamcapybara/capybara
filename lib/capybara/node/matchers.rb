@@ -196,12 +196,13 @@ module Capybara
       # This only matches displayable text and specifically excludes text
       # contained within non-display nodes such as script or head tags.
       #
+      # @param [:all, :visible] type  Whether to only check for visible or all text
       # @param [String] content       The text to check for
       # @return [Boolean]             Whether it exists
       #
-      def has_text?(content)
+      def has_text?(type=nil, content)
         synchronize do
-          unless Capybara::Helpers.normalize_whitespace(text).match(Capybara::Helpers.to_regexp(content))
+          unless Capybara::Helpers.normalize_whitespace(text(type)).match(Capybara::Helpers.to_regexp(content))
             raise ExpectationNotMet
           end
         end
@@ -222,9 +223,9 @@ module Capybara
       # @param [String] content       The text to check for
       # @return [Boolean]             Whether it doesn't exist
       #
-      def has_no_text?(content)
+      def has_no_text?(type=nil, content)
         synchronize do
-          if Capybara::Helpers.normalize_whitespace(text).match(Capybara::Helpers.to_regexp(content))
+          if Capybara::Helpers.normalize_whitespace(text(type)).match(Capybara::Helpers.to_regexp(content))
             raise ExpectationNotMet
           end
         end

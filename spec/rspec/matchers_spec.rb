@@ -363,6 +363,15 @@ describe Capybara::RSpecMatchers do
           page.should have_text(/test/)
         end
 
+        it "can check for all text" do
+          page.should have_text(:all, 'Some of this text is hidden!')
+        end
+
+        it "can check for visible text" do
+          page.should have_text(:visible, 'Some of this text is')
+          page.should_not have_text(:visible, 'Some of this text is hidden!')
+        end
+
         it "fails if has_text? returns false" do
           expect do
             page.should have_text('No such Text')

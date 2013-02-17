@@ -26,7 +26,7 @@ module Capybara
       #
       # @return [String]    The text of the element
       #
-      def text
+      def text(type=nil)
         native.text
       end
 

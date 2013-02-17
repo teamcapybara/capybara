@@ -74,6 +74,17 @@ Capybara::SpecHelper.spec '#has_text?' do
     @session.should_not have_text('Inside element with hidden ancestor')
   end
 
+  it "should be true if :all given and text is invisible." do
+    @session.visit('/with_html')
+    @session.should have_text(:all, 'Some of this text is hidden!')
+  end
+
+  it "should be true if `Capybara.ignore_hidden_elements = true` and text is invisible." do
+    Capybara.ignore_hidden_elements = false
+    @session.visit('/with_html')
+    @session.should have_text('Some of this text is hidden!')
+  end
+
   it "should be true if the text in the page matches given regexp" do
     @session.visit('/with_html')
     @session.should have_text(/Lorem/)
@@ -170,6 +181,17 @@ Capybara::SpecHelper.spec '#has_no_text?' do
   it "should be true if the given text is on the page but not visible" do
     @session.visit('/with_html')
     @session.should have_no_text('Inside element with hidden ancestor')
+  end
+
+  it "should be false if :all given and text is invisible." do
+    @session.visit('/with_html')
+    @session.should_not have_no_text(:all, 'Some of this text is hidden!')
+  end
+
+  it "should be false if `Capybara.ignore_hidden_elements = true` and text is invisible." do
+    Capybara.ignore_hidden_elements = false
+    @session.visit('/with_html')
+    @session.should_not have_no_text('Some of this text is hidden!')
   end
 
   it "should be true if the text in the page doesn't match given regexp" do

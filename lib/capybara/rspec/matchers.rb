@@ -33,28 +33,29 @@ module Capybara
     end
 
     class HaveText < Matcher
-      attr_reader :text
+      attr_reader :text, :type
 
-      def initialize(text)
+      def initialize(type, text)
+        @type = type
         @text = text
       end
 
       def matches?(actual)
         @actual = wrap(actual)
-        @actual.has_text?(text)
+        @actual.has_text?(type, text)
       end
 
       def does_not_match?(actual)
         @actual = wrap(actual)
-        @actual.has_no_text?(text)
+        @actual.has_no_text?(type, text)
       end
 
       def failure_message_for_should
-        "expected there to be text #{format(text)} in #{format(@actual.text)}"
+        "expected there to be text #{format(text)} in #{format(@actual.text(type))}"
       end
 
       def failure_message_for_should_not
-        "expected there not to be text #{format(text)} in #{format(@actual.text)}"
+        "expected there not to be text #{format(text)} in #{format(@actual.text(type))}"
       end
 
       def description
@@ -109,12 +110,12 @@ module Capybara
       HaveSelector.new(:css, css, options)
     end
 
-    def have_content(text)
-      HaveText.new(text)
+    def have_content(type=nil, text)
+      HaveText.new(type, text)
     end
 
-    def have_text(text)
-      HaveText.new(text)
+    def have_text(type=nil, text)
+      HaveText.new(type, text)
     end
 
     def have_title(title)
