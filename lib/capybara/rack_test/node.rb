@@ -1,5 +1,9 @@
 class Capybara::RackTest::Node < Capybara::Driver::Node
-  def text
+  def all_text
+    Capybara::Helpers.normalize_whitespace(native.text)
+  end
+
+  def visible_text
     Capybara::Helpers.normalize_whitespace(unnormalized_text)
   end
 

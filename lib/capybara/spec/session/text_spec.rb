@@ -4,6 +4,37 @@ Capybara::SpecHelper.spec '#text' do
     @session.text.should == 'Bar'
   end
 
+  it "ignores invisible text by default" do
+    @session.visit('/with_html')
+    @session.find(:id, "hidden-text").text.should == 'Some of this text is'
+  end
+
+  it "shows invisible text if `:all` given" do
+    @session.visit('/with_html')
+    @session.find(:id, "hidden-text").text(:all).should == 'Some of this text is hidden!'
+  end
+
+  it "ignores invisible text if `:visible` given" do
+    Capybara.ignore_hidden_elements = false
+    @session.visit('/with_html')
+    @session.find(:id, "hidden-text").text(:visible).should == 'Some of this text is'
+  end
+
+  it "ignores invisible text if `Capybara.ignore_hidden_elements = true`" do
+    @session.visit('/with_html')
+    @session.find(:id, "hidden-text").text.should == 'Some of this text is'
+    Capybara.ignore_hidden_elements = false
+    @session.find(:id, "hidden-text").text.should == 'Some of this text is hidden!'
+  end
+
+  it "ignores invisible text if `Capybara.visible_text_only = true`" do
+    @session.visit('/with_html')
+    Capybara.visible_text_only = true
+    @session.find(:id, "hidden-text").text.should == 'Some of this text is'
+    Capybara.ignore_hidden_elements = false
+    @session.find(:id, "hidden-text").text.should == 'Some of this text is'
+  end
+
   context "with css as default selector" do
     before { Capybara.default_selector = :css }
     it "should print the text of the page" do

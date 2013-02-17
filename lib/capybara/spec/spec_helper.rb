@@ -23,6 +23,7 @@ module Capybara
         Capybara.exact = false
         Capybara.exact_options = false
         Capybara.raise_server_errors = true
+        Capybara.visible_text_only = false
         Capybara.match = :smart
       end
 

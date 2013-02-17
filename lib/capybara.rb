@@ -16,7 +16,7 @@ module Capybara
 
   class << self
     attr_accessor :asset_root, :app_host, :run_server, :default_host, :always_include_port
-    attr_accessor :server_host, :server_port, :exact, :match, :exact_options
+    attr_accessor :server_host, :server_port, :exact, :match, :exact_options, :visible_text_only
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
     attr_accessor :save_and_open_page_path, :automatic_reload, :raise_server_errors
     attr_writer :default_driver, :current_driver, :javascript_driver, :session_name
@@ -347,6 +347,7 @@ Capybara.configure do |config|
   config.match = :smart
   config.exact = false
   config.raise_server_errors = true
+  config.visible_text_only = false
 end
 
 Capybara.register_driver :rack_test do |app|
