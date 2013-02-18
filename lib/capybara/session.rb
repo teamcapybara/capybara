@@ -41,7 +41,7 @@ module Capybara
       :visit, :within, :within_fieldset, :within_table, :within_frame,
       :within_window, :current_path, :save_page, :save_and_open_page,
       :save_screenshot, :reset_session!, :response_headers, :status_code,
-      :title, :has_title?, :has_no_title?
+      :title, :has_title?, :has_no_title?, :current_scope
     ]
     DSL_METHODS = NODE_METHODS + SESSION_METHODS
 
@@ -350,7 +350,7 @@ module Capybara
     NODE_METHODS.each do |method|
       define_method method do |*args, &block|
         @touched = true
-        current_node.send(method, *args, &block)
+        current_scope.send(method, *args, &block)
       end
     end
 
@@ -380,12 +380,12 @@ module Capybara
       return false
     end
 
-  private
-
-    def current_node
+    def current_scope
       scopes.last
     end
 
+  private
+  
     def scopes
       @scopes ||= [document]
     end
