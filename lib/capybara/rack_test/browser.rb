@@ -82,14 +82,7 @@ class Capybara::RackTest::Browser
 
   def find(format=:xpath, selector)
     if format==:css
-      dom.css(selector, Class.new {
-        def disabled list
-          list.find_all { |node| node.has_attribute? 'disabled' }
-        end        
-        def enabled list
-          list.find_all { |node| !node.has_attribute? 'disabled' }
-        end
-      }.new)
+      dom.css(selector, Capybara::RackTest::CSSHandlers.new)
     else
       dom.xpath(selector)
     end.map { |node| Capybara::RackTest::Node.new(self, node) }
@@ -104,7 +97,7 @@ class Capybara::RackTest::Browser
   def title
     dom.xpath("//title").text
   end
-
+  
 protected
 
   def build_rack_mock_session

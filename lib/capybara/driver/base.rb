@@ -57,8 +57,4 @@ class Capybara::Driver::Base
   def needs_server?
     false
   end
-  
-  def supports_query_format?(format)
-    format==:xpath
-  end
 end

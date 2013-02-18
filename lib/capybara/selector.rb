@@ -8,8 +8,8 @@ module Capybara
         @selectors ||= {}
       end
 
-      def add(name, preferred_format=:xpath, &block)
-        all[name.to_sym] = Capybara::Selector.new(name.to_sym, preferred_format, &block)
+      def add(name, &block)
+        all[name.to_sym] = Capybara::Selector.new(name.to_sym, &block)
       end
 
       def remove(name)
@@ -17,13 +17,13 @@ module Capybara
       end
     end
 
-    def initialize(name, preferred_format, &block)
+    def initialize(name, &block)
       @name = name
       @custom_filters = {}
       @match = nil
       @label = nil
       @failure_message = nil
-      @preferred_format = preferred_format
+      @preferred_format = :xpath
       instance_eval(&block)
     end
 
@@ -34,6 +34,7 @@ module Capybara
 
     # Same as xpath, but wrap in XPath.css().
     def css(&block)
+      @preferred_format = :css
       if block
         @xpath = xpath { |*args| XPath.css(block.call(*args)) }
       end
@@ -68,7 +69,7 @@ Capybara.add_selector(:xpath) do
   xpath { |xpath| xpath }
 end
 
-Capybara.add_selector(:css, :css) do
+Capybara.add_selector(:css) do
   css { |css| css }
 end
 

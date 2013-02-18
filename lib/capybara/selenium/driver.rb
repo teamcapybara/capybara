@@ -128,7 +128,4 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     [Selenium::WebDriver::Error::StaleElementReferenceError, Selenium::WebDriver::Error::UnhandledError, Selenium::WebDriver::Error::ElementNotVisibleError]
   end
   
-  def supports_query_format?(format)
-    [:xpath, :css].include? format
-  end
 end

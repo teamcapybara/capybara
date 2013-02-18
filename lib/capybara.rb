@@ -99,8 +99,8 @@ module Capybara
     # @param [Symbol] name    The name of the selector to add
     # @yield                  A block executed in the context of the new {Capybara::Selector}
     #
-    def add_selector(name, preferred_format=:xpath, &block)
-      Capybara::Selector.add(name, preferred_format, &block)
+    def add_selector(name, &block)
+      Capybara::Selector.add(name, &block)
     end
 
     def drivers
@@ -327,6 +327,7 @@ module Capybara
     autoload :Node,    'capybara/rack_test/node'
     autoload :Form,    'capybara/rack_test/form'
     autoload :Browser, 'capybara/rack_test/browser'
+    autoload :CSSHandlers, 'capybara/rack_test/css_handlers.rb'
   end
 
   module Selenium

@@ -76,8 +76,12 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     native.path
   end
 
-  def find(locator)
-    native.xpath(locator).map { |n| self.class.new(driver, n) }
+  def find(format=:xpath, locator)
+    if format==:css
+      native.css(locator, Capybara::RackTest::CSSHandlers.new)
+    else
+      native.xpath(locator)
+    end.map { |n| self.class.new(driver, n) }
   end
 
   def ==(other)
