@@ -1,6 +1,6 @@
 module Capybara
   class Selector
-    attr_reader :name, :custom_filters
+    attr_reader :name, :custom_filters, :preferred_format
 
 
     class << self
@@ -8,8 +8,8 @@ module Capybara
         @selectors ||= {}
       end
 
-      def add(name, &block)
-        all[name.to_sym] = Capybara::Selector.new(name.to_sym, &block)
+      def add(name, preferred_format=:xpath, &block)
+        all[name.to_sym] = Capybara::Selector.new(name.to_sym, preferred_format, &block)
       end
 
       def remove(name)
@@ -17,12 +17,13 @@ module Capybara
       end
     end
 
-    def initialize(name, &block)
+    def initialize(name, preferred_format, &block)
       @name = name
       @custom_filters = {}
       @match = nil
       @label = nil
       @failure_message = nil
+      @preferred_format = preferred_format
       instance_eval(&block)
     end
 
@@ -67,7 +68,7 @@ Capybara.add_selector(:xpath) do
   xpath { |xpath| xpath }
 end
 
-Capybara.add_selector(:css) do
+Capybara.add_selector(:css, :css) do
   css { |css| css }
 end
 

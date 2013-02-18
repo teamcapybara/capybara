@@ -7,7 +7,7 @@ class Capybara::Driver::Base
     raise NotImplementedError
   end
 
-  def find(query)
+  def find(query_format=:xpath, query)
     raise NotImplementedError
   end
 
@@ -56,5 +56,9 @@ class Capybara::Driver::Base
 
   def needs_server?
     false
+  end
+  
+  def supports_query_format?(format)
+    format==:xpath
   end
 end

@@ -76,8 +76,8 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
 
   alias :checked? :selected?
 
-  def find(locator)
-    native.find_elements(:xpath, locator).map { |n| self.class.new(driver, n) }
+  def find(locator_format=:xpath, locator)
+    native.find_elements(locator_format, locator).map { |n| self.class.new(driver, n) }
   end
 
   def ==(other)

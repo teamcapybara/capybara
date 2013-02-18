@@ -146,8 +146,8 @@ module Capybara
       def resolve_query(query, exact=nil)
         elements = synchronize do
           # base.find(query.xpath(exact)).map do |node|
-          if query.selector.name==:css && base.respond_to?(:find_css)
-            base.find_css(query.locator)
+          if query.selector.preferred_format==:css and driver.supports_query_format?(:css)
+            base.find(:css, query.locator)
           else
             base.find(query.xpath(exact))
           end.map do |node|

@@ -4,6 +4,7 @@
   Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
   incididunt ut labore et dolore magna aliqua. Ut enim ad minim venia.
   <a href="/redirect">Go</a>
+  <input name="disabled" disabled/>
 </p>
 
 <div id="for_bar">
@@ -22,6 +23,10 @@
         <p>
           <label for="bar_first_name">First Name</label>
           <input type="text" name="form[first_name]" value="Peter" id="bar_first_name"/>
+        </p>
+        <p>
+          <label for="bar_other_name">Other Name</label>
+          <input type="text" name="form[other_name]" value="James" id="bar_other_name" disabled/>
         </p>
         <p><input type="submit" value="Go"/></p>
       </form>
