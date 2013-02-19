@@ -10,8 +10,7 @@ Capybara::SpecHelper.run_specs TestClass.new, "DSL", :skip => [
   :screenshot,
   :frames,
   :windows,
-  :server,
-  :native_css
+  :server
 ]
 
 describe Capybara::DSL do

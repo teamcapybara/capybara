@@ -42,10 +42,8 @@ Capybara::SpecHelper.spec '#find' do
       @session.find(:css, "input[id='test_field']")[:value].should == 'monkey'
     end
     
-    context "with native css query", requires: [:native_css] do
-      it "should support pseudo selectors" do
-        @session.find(:css, 'input:disabled').value.should == 'This is disabled'
-      end
+    it "should support pseudo selectors" do
+      @session.find(:css, 'input:disabled').value.should == 'This is disabled'
     end
   end
 
@@ -303,11 +301,9 @@ Capybara::SpecHelper.spec '#find' do
       end
     end
     
-    context "with native css query", requires: [:native_css] do
-      it "should find an element using the given css locator" do
-        @session.within(:xpath, "//div[@id='for_bar']") do
-          @session.find(:css, 'input:disabled').value.should == 'James'
-        end
+    it "should support pseudo selectors" do
+      @session.within(:xpath, "//div[@id='for_bar']") do
+        @session.find(:css, 'input:disabled').value.should == 'James'
       end
     end
   end
