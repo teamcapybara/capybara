@@ -7,7 +7,11 @@ class Capybara::Driver::Base
     raise NotImplementedError
   end
 
-  def find(query_format=:xpath, query)
+  def find_xpath(query)
+    raise NotImplementedError
+  end
+  
+  def find_css(query)
     raise NotImplementedError
   end
 

@@ -84,14 +84,14 @@ describe Capybara::RackTest::Driver do
     it 'should keep headers on link clicks' do
       @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       @driver.visit('/header_links')
-      @driver.find('.//a').first.click
+      @driver.find_xpath('.//a').first.click
       @driver.html.should include('foobar')
     end
 
     it 'should keep headers on form submit' do
       @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       @driver.visit('/header_links')
-      @driver.find('.//input').first.click
+      @driver.find_xpath('.//input').first.click
       @driver.html.should include('foobar')
     end
 

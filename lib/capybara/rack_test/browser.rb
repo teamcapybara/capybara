@@ -80,7 +80,7 @@ class Capybara::RackTest::Browser
     @dom ||= Nokogiri::HTML(html)
   end
 
-  def find(format=:xpath, selector)
+  def find(format, selector)
     if format==:css
       dom.css(selector, Capybara::RackTest::CSSHandlers.new)
     else

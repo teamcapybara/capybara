@@ -29,7 +29,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
 
   def select_option
     if select_node['multiple'] != 'multiple'
-      select_node.find(".//option[@selected]").each { |node| node.native.remove_attribute("selected") }
+      select_node.find_xpath(".//option[@selected]").each { |node| node.native.remove_attribute("selected") }
     end
     native["selected"] = 'selected'
   end
@@ -76,14 +76,14 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     native.path
   end
 
-  def find(format=:xpath, locator)
-    if format==:css
-      native.css(locator, Capybara::RackTest::CSSHandlers.new)
-    else
-      native.xpath(locator)
-    end.map { |n| self.class.new(driver, n) }
+  def find_xpath(locator)
+    native.xpath(locator).map { |n| self.class.new(driver, n) }
   end
-
+  
+  def find_css(locator)    
+    native.css(locator, Capybara::RackTest::CSSHandlers.new).map { |n| self.class.new(driver, n) }
+  end
+  
   def ==(other)
     native == other.native
   end
@@ -112,7 +112,7 @@ private
 
   # a reference to the select node if this is an option node
   def select_node
-    find('./ancestor::select').first
+    find_xpath('./ancestor::select').first
   end
 
   def type
