@@ -154,7 +154,7 @@ module Capybara
     private
 
       def resolve_query(query, exact=nil)
-        elements = if query.selector.preferred_format == :css
+        elements = if query.selector.format == :css
           native.css(query.css)
         else
           native.xpath(query.xpath(exact))

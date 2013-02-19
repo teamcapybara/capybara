@@ -1,6 +1,6 @@
 module Capybara
   class Selector
-    attr_reader :name, :custom_filters, :preferred_format
+    attr_reader :name, :custom_filters, :format
 
 
     class << self
@@ -23,20 +23,20 @@ module Capybara
       @match = nil
       @label = nil
       @failure_message = nil
-      @preferred_format = :xpath
       instance_eval(&block)
     end
 
     def xpath(&block)
+      @format = :xpath
       @xpath = block if block
       @xpath
     end
 
     # Same as xpath, but wrap in XPath.css().
     def css(&block)
-      @preferred_format = :css
-      @xpath = block if block
-      @xpath
+      @format = :css
+      @css = block if block
+      @css
     end
 
     def match(&block)
@@ -50,7 +50,11 @@ module Capybara
     end
 
     def call(locator)
-      @xpath.call(locator)
+      if @format==:css
+        @css.call(locator)
+      else
+        @xpath.call(locator)
+      end
     end
 
     def match?(locator)
