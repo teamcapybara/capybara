@@ -66,6 +66,17 @@ Capybara::SpecHelper.spec '#click_link' do
     end
   end
 
+  context "with :href option given" do
+    it "should find links with valid href" do
+      @session.click_link('labore', :href => '/with_simple_html')
+      @session.should have_content('Bar')
+    end
+
+    it "should raise error if link wasn't found" do
+      expect { @session.click_link('labore', :href => 'invalid_href') }.to raise_error(Capybara::ElementNotFound)
+    end
+  end
+
   it "should follow relative links" do
     @session.visit('/')
     @session.click_link('Relative')

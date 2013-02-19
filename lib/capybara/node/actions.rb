@@ -20,9 +20,11 @@ module Capybara
       # alt text inside the link.
       #
       # @param [String] locator      Text, id or text of link
+      # @param options
+      # @option options [String] :href    The value the href attribute must be
       #
-      def click_link(locator)
-        find(:link, locator).click
+      def click_link(locator, options={})
+        find(:link, locator, options).click
       end
 
       ##
