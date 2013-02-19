@@ -35,9 +35,7 @@ module Capybara
     # Same as xpath, but wrap in XPath.css().
     def css(&block)
       @preferred_format = :css
-      if block
-        @xpath = xpath { |*args| XPath.css(block.call(*args)) }
-      end
+      @xpath = block if block
       @xpath
     end
 

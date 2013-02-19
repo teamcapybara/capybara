@@ -91,6 +91,10 @@ module Capybara
         @xpath.to_s
       end
     end
+    
+    def css
+      @xpath
+    end
 
   private
 

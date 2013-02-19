@@ -147,7 +147,7 @@ module Capybara
         elements = synchronize do
           # base.find(query.xpath(exact)).map do |node|
           if query.selector.preferred_format==:css
-            base.find(:css, query.locator)
+            base.find(:css, query.css)
           else
             base.find(:xpath, query.xpath(exact))
           end.map do |node|

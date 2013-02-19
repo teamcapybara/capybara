@@ -154,7 +154,11 @@ module Capybara
     private
 
       def resolve_query(query, exact=nil)
-        elements = native.xpath(query.xpath(exact)).map do |node|
+        elements = if query.selector.preferred_format == :css
+          native.css(query.css)
+        else
+          native.xpath(query.xpath(exact))
+        end.map do |node|
           self.class.new(node)
         end
         Capybara::Result.new(elements, query)
