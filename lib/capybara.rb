@@ -327,6 +327,7 @@ module Capybara
     autoload :Node,    'capybara/rack_test/node'
     autoload :Form,    'capybara/rack_test/form'
     autoload :Browser, 'capybara/rack_test/browser'
+    autoload :CSSHandlers, 'capybara/rack_test/css_handlers.rb'
   end
 
   module Selenium

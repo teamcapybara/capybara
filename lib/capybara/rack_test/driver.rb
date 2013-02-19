@@ -62,10 +62,14 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
     response.status
   end
 
-  def find(selector)
-    browser.find(selector)
+  def find_xpath(selector)
+    browser.find(:xpath, selector)
   end
-
+  
+  def find_css(selector)
+    browser.find(:css,selector)
+  end
+  
   def html
     browser.html
   end

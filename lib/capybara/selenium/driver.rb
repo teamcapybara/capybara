@@ -46,10 +46,14 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.current_url
   end
 
-  def find(selector)
+  def find_xpath(selector)
     browser.find_elements(:xpath, selector).map { |node| Capybara::Selenium::Node.new(self, node) }
   end
-
+  
+  def find_css(selector)
+    browser.find_elements(:css, selector).map { |node| Capybara::Selenium::Node.new(self, node) }
+  end
+  
   def wait?; true; end
   def needs_server?; true; end
 
@@ -127,4 +131,5 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def invalid_element_errors
     [Selenium::WebDriver::Error::StaleElementReferenceError, Selenium::WebDriver::Error::UnhandledError, Selenium::WebDriver::Error::ElementNotVisibleError]
   end
+  
 end

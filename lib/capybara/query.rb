@@ -1,6 +1,6 @@
 module Capybara
   class Query
-    attr_accessor :selector, :locator, :options, :xpath, :find, :negative
+    attr_accessor :selector, :locator, :options, :expression, :find, :negative
 
     VALID_KEYS = [:text, :visible, :between, :count, :maximum, :minimum, :exact, :match]
 
@@ -21,7 +21,7 @@ module Capybara
         @options[:exact] = true
       end
 
-      @xpath = @selector.call(@locator)
+      @expression = @selector.call(@locator)
       assert_valid_keys!
     end
 
@@ -90,12 +90,15 @@ module Capybara
 
     def xpath(exact=nil)
       exact = self.exact? if exact == nil
-
-      if @xpath.respond_to?(:to_xpath) and exact
-        @xpath.to_xpath(:exact)
+      if @expression.respond_to?(:to_xpath) and exact
+        @expression.to_xpath(:exact)
       else
-        @xpath.to_s
+        @expression.to_s
       end
+    end
+
+    def css
+      @expression
     end
 
   private

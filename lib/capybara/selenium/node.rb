@@ -81,10 +81,14 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
 
   alias :checked? :selected?
 
-  def find(locator)
+  def find_xpath(locator)
     native.find_elements(:xpath, locator).map { |n| self.class.new(driver, n) }
   end
-
+  
+  def find_css(locator)
+    native.find_elements(:css, locator).map { |n| self.class.new(driver, n) }
+  end
+  
   def ==(other)
     native == other.native
   end
@@ -93,6 +97,6 @@ private
 
   # a reference to the select node if this is an option node
   def select_node
-    find('./ancestor::select').first
+    find_xpath('./ancestor::select').first
   end
 end

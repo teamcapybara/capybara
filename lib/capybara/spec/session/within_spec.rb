@@ -5,7 +5,7 @@ Capybara::SpecHelper.spec '#within' do
 
   context "with CSS selector" do
     it "should click links in the given scope" do
-      @session.within(:css, "#for_bar li[contains('With Simple HTML')]") do
+      @session.within(:css, "#for_bar li", text: 'With Simple HTML') do
         @session.click_link('Go')
       end
       @session.should have_content('Bar')
@@ -46,7 +46,7 @@ Capybara::SpecHelper.spec '#within' do
 
   context "with Node rather than selector" do
     it "should click links in the given scope" do
-      node_of_interest = @session.find(:css, "#for_bar li[contains('With Simple HTML')]")
+      node_of_interest = @session.find(:css, "#for_bar li", text: 'With Simple HTML')
 
       @session.within(node_of_interest) do
         @session.click_link('Go')
@@ -58,7 +58,7 @@ Capybara::SpecHelper.spec '#within' do
   context "with the default selector set to CSS" do
     before { Capybara.default_selector = :css }
     it "should use CSS" do
-      @session.within("#for_bar li[contains('With Simple HTML')]") do
+      @session.within("#for_bar li", text: 'With Simple HTML') do
         @session.click_link('Go')
       end
       @session.should have_content('Bar')

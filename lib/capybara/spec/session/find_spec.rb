@@ -41,6 +41,10 @@ Capybara::SpecHelper.spec '#find' do
       @session.find(:css, 'h1').text.should == 'This is a test'
       @session.find(:css, "input[id='test_field']")[:value].should == 'monkey'
     end
+    
+    it "should support pseudo selectors" do
+      @session.find(:css, 'input:disabled').value.should == 'This is disabled'
+    end
   end
 
   context "with xpath selectors" do
@@ -294,6 +298,12 @@ Capybara::SpecHelper.spec '#find' do
     it "should find the an element using the given locator" do
       @session.within(:xpath, "//div[@id='for_bar']") do
         @session.find('.//li[1]').text.should =~ /With Simple HTML/
+      end
+    end
+    
+    it "should support pseudo selectors" do
+      @session.within(:xpath, "//div[@id='for_bar']") do
+        @session.find(:css, 'input:disabled').value.should == 'James'
       end
     end
   end
