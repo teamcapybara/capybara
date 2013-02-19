@@ -313,18 +313,10 @@ module Capybara
     def save_page(path=nil)
       path ||= "capybara-#{Time.new.strftime("%Y%m%d%H%M%S")}#{rand(10**10)}.html"
       path = File.expand_path(path, Capybara.save_and_open_page_path) if Capybara.save_and_open_page_path
-      body_to_write = body
-
-      if Capybara.asset_host
-        parsed = Nokogiri::HTML(body_to_write)
-        if parsed.css("base").empty? && match = body_to_write.match(/<head[^<]*?>/)
-          body_to_write.insert match.end(0), "<base href='#{Capybara.asset_host}' />"
-        end
-      end
 
       FileUtils.mkdir_p(File.dirname(path))
 
-      File.open(path,'w') { |f| f.write(body_to_write) }
+      File.open(path,'w') { |f| f.write(Capybara::Helpers.inject_asset_host(body)) }
       path
     end
 
@@ -393,7 +385,7 @@ module Capybara
     end
 
   private
-  
+
     def scopes
       @scopes ||= [document]
     end

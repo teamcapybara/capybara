@@ -27,6 +27,24 @@ module Capybara
       def to_regexp(text)
         text.is_a?(Regexp) ? text : Regexp.escape(normalize_whitespace(text))
       end
+
+      ##
+      #
+      # Injects a `<base>` tag into the given HTML code, pointing to
+      # `Capybara.asset_host`.
+      #
+      # @param [String] html     HTML code to inject into
+      # @param [String]          The modified HTML code
+      #
+      def inject_asset_host(html)
+        if Capybara.asset_host
+          if Nokogiri::HTML(html).css("base").empty? and match = html.match(/<head[^<]*?>/)
+            html.insert match.end(0), "<base href='#{Capybara.asset_host}' />"
+          end
+        else
+          html
+        end
+      end
     end
   end
 end
