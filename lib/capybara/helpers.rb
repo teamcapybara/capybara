@@ -39,7 +39,7 @@ module Capybara
       def inject_asset_host(html)
         if Capybara.asset_host
           if Nokogiri::HTML(html).css("base").empty? and match = html.match(/<head[^<]*?>/)
-            html.insert match.end(0), "<base href='#{Capybara.asset_host}' />"
+            html.clone.insert match.end(0), "<base href='#{Capybara.asset_host}' />"
           end
         else
           html
