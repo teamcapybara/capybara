@@ -44,7 +44,7 @@ module Capybara
       def drag_to(element)
         raise NotImplementedError
       end
-
+      
       def tag_name
         raise NotImplementedError
       end
@@ -70,6 +70,10 @@ module Capybara
       end
 
       def trigger(event)
+        raise NotSupportedByDriverError
+      end
+
+      def hover
         raise NotSupportedByDriverError
       end
 

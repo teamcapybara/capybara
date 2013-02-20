@@ -203,6 +203,14 @@ module Capybara
         synchronize { base.drag_to(node.base) }
       end
 
+      ##
+      #
+      # move mouse over the Element
+      #
+      def hover
+        base.hover
+      end
+
       def reload
         if @allow_reload
           reloaded = parent.reload.first(@query.name, @query.locator, @query.options)
