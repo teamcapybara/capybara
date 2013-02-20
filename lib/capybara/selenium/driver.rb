@@ -64,6 +64,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def evaluate_script(script)
     browser.execute_script "return #{script}"
   end
+  
+  def resize_window(x, y)
+    browser.manage.window.resize_to(x, y)
+  end
 
   def save_screenshot(path, options={})
     browser.save_screenshot(path)

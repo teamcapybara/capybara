@@ -147,7 +147,7 @@ Capybara::SpecHelper.spec "node" do
     end
   end
   
-  describe '#hover', :requires => [:hover], hover: true do  
+  describe '#hover', :requires => [:live] do  
     it "should allow hovering on an element" do
       pending "Selenium with firefox on OSX doesnt work with this" if @session.respond_to?(:mode) && @session.mode == :selenium && @session.driver.browser.browser == :firefox && @session.driver.browser.capabilities.platform == :darwin
       Capybara.ignore_hidden_elements = false

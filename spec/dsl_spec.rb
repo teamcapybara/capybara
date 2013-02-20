@@ -11,7 +11,7 @@ Capybara::SpecHelper.run_specs TestClass.new, "DSL", :skip => [
   :frames,
   :windows,
   :server,
-  :hover
+  :live
 ]
 
 describe Capybara::DSL do

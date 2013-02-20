@@ -10,7 +10,7 @@ Capybara::SpecHelper.run_specs TestSessions::RackTest, "RackTest", :skip => [
   :frames,
   :windows,
   :server,
-  :hover
+  :live
 ]
 
 describe Capybara::Session do
