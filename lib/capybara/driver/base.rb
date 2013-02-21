@@ -47,6 +47,10 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError
   end
 
+  def window
+    raise Capybara::NotSupportedByDriverError
+  end
+  
   def invalid_element_errors
     []
   end

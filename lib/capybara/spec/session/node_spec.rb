@@ -146,7 +146,18 @@ Capybara::SpecHelper.spec "node" do
       @session.find('//div[contains(., "Dropped!")]').should_not be_nil
     end
   end
-
+  
+  describe '#hover', :requires => [:live] do  
+    it "should allow hovering on an element" do
+      pending "Selenium with firefox doesnt appear to work with this (chrome with selenium does)" if @session.respond_to?(:mode) && @session.mode == :selenium && @session.driver.browser.browser == :firefox
+      Capybara.ignore_hidden_elements = false
+      @session.visit('/with_hover')
+      @session.find(:css,'.hidden_until_hover').should_not be_visible
+      @session.find(:css,'.wrapper').hover
+      @session.find(:css, '.hidden_until_hover').should be_visible
+    end
+  end
+  
   describe '#reload', :requires => [:js] do
     context "without automatic reload" do
       before { Capybara.automatic_reload = false }

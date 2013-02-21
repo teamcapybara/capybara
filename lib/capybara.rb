@@ -309,7 +309,8 @@ module Capybara
   module Driver
     autoload :Base,     'capybara/driver/base'
     autoload :Node,     'capybara/driver/node'
-
+    autoload :Window,   'capybara/driver/window'
+    
     class Selenium
       def initialize(*args)
         raise "Capybara::Driver::Selenium has been renamed to Capybara::Selenium::Driver"
@@ -334,6 +335,7 @@ module Capybara
   module Selenium
     autoload :Node,    'capybara/selenium/node'
     autoload :Driver,  'capybara/selenium/driver'
+    autoload :Window,  'capybara/selenium/window'
   end
 end
 
