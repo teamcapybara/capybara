@@ -65,10 +65,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.execute_script "return #{script}"
   end
   
-  def resize_window(x, y)
-    browser.manage.window.resize_to(x, y)
-  end
-
   def save_screenshot(path, options={})
     browser.save_screenshot(path)
   end
@@ -126,6 +122,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.switch_to.window(handle, &blk)
   end
 
+  def window
+    @window || Capybara::Selenium::Window.new(self)
+  end
+  
   def quit
     @browser.quit
   rescue Errno::ECONNREFUSED

@@ -41,7 +41,7 @@ module Capybara
       :visit, :within, :within_fieldset, :within_table, :within_frame,
       :within_window, :current_path, :save_page, :save_and_open_page,
       :save_screenshot, :reset_session!, :response_headers, :status_code,
-      :title, :has_title?, :has_no_title?, :current_scope, :resize_window
+      :title, :has_title?, :has_no_title?, :current_scope, :window
     ]
     DSL_METHODS = NODE_METHODS + SESSION_METHODS
 
@@ -306,13 +306,12 @@ module Capybara
 
     ##
     #
-    # Resize the window
+    # The current window
     #
-    # @param [Fixnum] width    Desired width of the window including chrome and resizing borders/handles
-    # @param [Fixnum] height   Desired height of the window including chrome and resizing borders/handles
+    # @return [Object] Window object
     #
-    def resize_window(width, height)
-      driver.resize_window(width, height)
+    def window
+      driver.window
     end
 
     ##

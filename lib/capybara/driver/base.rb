@@ -47,7 +47,7 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError
   end
 
-  def resize_window(x, y)
+  def window
     raise Capybara::NotSupportedByDriverError
   end
   
