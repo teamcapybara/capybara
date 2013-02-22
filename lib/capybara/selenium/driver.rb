@@ -27,6 +27,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     @app = app
     @browser = nil
     @exit_status = nil
+    @frame_handles = {}
     @options = DEFAULT_OPTIONS.merge(options)
   end
 
@@ -94,12 +95,17 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   #   @param [Capybara::Node::Base] a_node   frame element
   #
   def within_frame(frame_handle)
+    @frame_handles[browser.window_handle] ||= []
     frame_handle = frame_handle.native if frame_handle.is_a?(Capybara::Node::Base)
-    old_window = browser.window_handle
-    browser.switch_to.frame(frame_handle)
+    @frame_handles[browser.window_handle] << frame_handle
+    a=browser.switch_to.frame(frame_handle)
     yield
   ensure
-    browser.switch_to.window old_window
+    # There doesnt appear to be any way in Webdriver to move back to a parent frame
+    # other than going back to the root and then reiterating down
+    @frame_handles[browser.window_handle].pop
+    browser.switch_to.default_content
+    @frame_handles[browser.window_handle].each { |fh| browser.switch_to.frame(fh) }
   end
 
   def find_window( selector )
