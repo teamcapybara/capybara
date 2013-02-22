@@ -29,3 +29,7 @@ before_script:
   - sh -e /etc/init.d/xvfb start
   - export DISPLAY=:99.0
 script: "bundle exec rake travis"
+env:
+  global:
+    - secure: Oc3Jh46dzQjgdKJ3/MX5fRYlS+vdo8TJipYnqOq3f7gdXugdt48aE83GO7J2Q8apvLbFcmdWu5rAsmrLNbD0gxrL2/kHBvWTcvJb0eGrULB9O2BQ1ae7EDzmkU/hC5dIhMS7FbiWS4u2QTnpYO6Ztxw6Ea0bkTuQYzF42vyJ4y0=
+    - secure: NxSAp4qAld+5OoQMJMyjpNHzIloir1vi7fIysQ2YxrEECGB1NiSavzY8QbjKGkZ640rxJdL9F9bKUeZ33gdwjljpcV1DZXKBt8wajp+GeGHhC9Tog/Q6WN+OKd8YZoRrJynMh3if7gT6sXBn2qEMbLks20/g/EPLmA16wfm2I4s=

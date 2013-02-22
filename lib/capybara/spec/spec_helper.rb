@@ -44,7 +44,7 @@ module Capybara
           false
         end
       end
-
+      
       def spec(name, options={}, &block)
         @specs ||= []
         @specs << [name, options, block]
@@ -63,7 +63,7 @@ module Capybara
           specs.each do |spec_name, spec_options, block|
             describe spec_name, spec_options do
               class_eval(&block)
-            end
+            end if options[:capybara_only].nil? || (spec_options[:requires] && options[:capybara_only].any?{|req| spec_options[:requires].include? req})
           end
         end
       end

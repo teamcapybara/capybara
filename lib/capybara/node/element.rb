@@ -141,6 +141,38 @@ module Capybara
       def hover
         synchronize { base.hover }
       end
+      
+      ##
+      #
+      # Sinlge tap on the Element
+      #
+      def single_tap
+        synchronize { base.single_tap }
+      end
+      
+      ##
+      #
+      # Double tap on the Element
+      #
+      def double_tap
+        synchronize { base.double_tap }
+      end
+      
+      ##
+      #
+      # Long press on the Element
+      #
+      def long_press
+        synchronize { base.long_press }
+      end
+      
+      ##
+      #
+      # Flick the Element
+      #
+      def flick
+        synchronize { base.flick }
+      end
 
       ##
       #

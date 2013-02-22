@@ -84,6 +84,23 @@ module Capybara
       def trigger(event)
         raise NotSupportedByDriverError, 'Capybara::Driver::Node#trigger'
       end
+      
+      def single_tap
+        raise NotSupportedByDriverError, 'Capybara::Driver::Node#single_tap'        
+      end
+      
+      def double_tap
+        raise NotSupportedByDriverError, 'Capybara::Driver::Node#double_tap'
+      end
+      
+      def long_press
+        raise NotSupportedByDriverError, 'Capybara::Driver::Node#long_press'
+      end
+      
+      def flick
+        raise NotSupportedByDriverError, 'Capybara::Driver::Node#flick'
+      end
+        
 
       def inspect
         %(#<#{self.class} tag="#{tag_name}" path="#{path}">)

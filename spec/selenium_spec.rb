@@ -14,7 +14,8 @@ end
 Capybara::SpecHelper.run_specs TestSessions::Selenium, "selenium", :capybara_skip => [
   :response_headers,
   :status_code,
-  :trigger
+  :trigger,
+  :touch
 ]
 
 RSpec.describe Capybara::Session do

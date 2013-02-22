@@ -15,6 +15,20 @@ RSpec::Core::RakeTask.new(:spec_with_chrome) do |t|
   t.pattern = './spec{,/*/**}/*{_spec.rb,_spec_chrome.rb}'
 end
 
+RSpec::Core::RakeTask.new(:spec_with_chrome_and_android) do |t|
+  t.rspec_opts = %w[--color]
+  # jruby buffers the progress formatter so travis doesn't see output often enough
+  t.rspec_opts << '--format documentation' if RUBY_PLATFORM=='java'
+  t.pattern = './spec{,/*/**}/*{_spec.rb,_spec_chrome.rb,_spec_android.rb}'
+end
+
+RSpec::Core::RakeTask.new(:spec_android) do |t|
+  t.rspec_opts = %w[--color]
+  # jruby buffers the progress formatter so travis doesn't see output often enough
+  t.rspec_opts << '--format documentation' if RUBY_PLATFORM=='java'
+  t.pattern = './spec{,/*/**}/*{_spec_android.rb}'
+end
+
 YARD::Rake::YardocTask.new do |t|
   t.files   = ['lib/**/*.rb']
   t.options = %w(--markup=markdown)
@@ -24,6 +38,6 @@ Cucumber::Rake::Task.new(:cucumber) do |task|
   task.cucumber_opts = ['--format=progress', 'features']
 end
 
-task :travis => [:spec_with_chrome, :cucumber]
+task :travis => [:spec_with_chrome, :spec_android, :cucumber]
 
 task :default => [:spec, :cucumber]

@@ -82,6 +82,26 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def hover
     driver.browser.action.move_to(native).perform
   end
+  
+  def single_tap
+    driver.browser.touch.single_tap(native).perform
+  end
+  
+  def double_tap
+    driver.browser.touch.double_tap(native).perform
+  end
+  
+  def long_press
+    #driver.browser.touch.long_press(native).perform
+    loc = native.location
+    driver.browser.touch.down(loc.x, loc.y).perform
+    sleep(0.8)
+    driver.browser.touch.up(loc.x, loc.y).perform
+  end
+  
+  def flick
+    driver.browser.touch.flick(native, 200, 0, :fast).perform
+  end
 
   def drag_to(element)
     driver.browser.action.drag_and_drop(native, element.native).perform
