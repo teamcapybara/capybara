@@ -330,11 +330,6 @@ module Capybara
     autoload :Browser, 'capybara/rack_test/browser'
     autoload :CSSHandlers, 'capybara/rack_test/css_handlers.rb'
   end
-
-  module Selenium
-    autoload :Node,    'capybara/selenium/node'
-    autoload :Driver,  'capybara/selenium/driver'
-  end
 end
 
 Capybara.configure do |config|
@@ -354,8 +349,4 @@ end
 
 Capybara.register_driver :rack_test do |app|
   Capybara::RackTest::Driver.new(app)
-end
-
-Capybara.register_driver :selenium do |app|
-  Capybara::Selenium::Driver.new(app)
 end
