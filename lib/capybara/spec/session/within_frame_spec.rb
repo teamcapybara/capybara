@@ -33,5 +33,13 @@ Capybara::SpecHelper.spec '#within_frame', :requires => [:frames] do
     @session.within_frame element do
       @session.find("//*[@id='divInFrameOne']").text.should eql 'This is the text of divInFrameOne'
     end
-  end  
+  end
+  it "should find multiple nested frames" do
+    @session.within_frame 'parentFrame' do
+      @session.within_frame 'childFrame' do
+        @session.within_frame 'grandchildFrame1' do end
+        @session.within_frame 'grandchildFrame2' do end
+      end    
+    end
+  end
 end
