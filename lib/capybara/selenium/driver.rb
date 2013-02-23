@@ -2,7 +2,7 @@ begin
   require 'selenium-webdriver'
 rescue LoadError
   $stderr.puts "You don't have 'selenium-webdriver' gem installed. Please add it to your Gemfile and run bundle install"
-  exit 1
+  raise
 end
 
 class Capybara::Selenium::Driver < Capybara::Driver::Base
