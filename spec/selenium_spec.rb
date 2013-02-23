@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'capybara/selenium'
 
 module TestSessions
   Selenium = Capybara::Session.new(:selenium, TestApp)

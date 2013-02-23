@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'capybara/selenium'
 
 describe Capybara::Selenium::Driver do
   it "should exit with a non-zero exit status" do
