@@ -1,8 +1,11 @@
 begin
   require 'selenium-webdriver'
-rescue LoadError
-  $stderr.puts "You don't have 'selenium-webdriver' gem installed. Please add it to your Gemfile and run bundle install"
-  raise
+rescue LoadError => error
+  if error.message =~ /selenium-webdriver/
+    raise LoadError, "You don't have 'selenium-webdriver' gem installed. Please add it to your Gemfile and run bundle install"
+  else
+    raise error
+  end
 end
 
 class Capybara::Selenium::Driver < Capybara::Driver::Base
