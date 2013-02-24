@@ -528,6 +528,49 @@ Finally, in drivers that support it, you can save a screenshot:
 page.save_screenshot('screenshot.png')
 ```
 
+## Matching
+
+It is possible to customize how Capybara finds elements. At your disposal
+are two options, `Capybara.exact` and `Capybara.match`.
+
+### Exactness
+
+`Capybara.exact` and the `exact` option work together with the `is` expression
+inside the XPath gem. When `exact` is true, all `is` expressions match exactly,
+when it is false, they allow substring matches. Many of the seletors built into
+Capybara use the `is` expression. This way you can specify whether you want to
+allow substring matches or not. `Capybara.exact` is false by default.
+
+For example:
+
+```ruby
+click_link("Password") # also matches "Password confirmation"
+Capybara.exact = true
+click_link("Password") # does not match "Password confirmation"
+click_link("Password", exact: false) # can be overridden
+```
+
+### Strategy
+
+Using `Capybara.match` and the equivalent `match` option, you can control how
+Capybara behaves when multiple elements all match a query. There are currently
+four different strategies built into Capybara:
+
+1. **first:** Just picks the first element that matches.
+2. **one:** Raises an error if more than one element matches.
+3. **smart:** If `exact` is `true`, raises an error if more than one element
+   matches, just like `one`. If `exact` is `false`, it will first try to find
+   an exact match. An error is raised if more than one element is found. If no
+   element is found, a new search is performed which allows partial matches. If
+   that search returns multiple matches, an error is raised.
+4. **prefer_exact:** If multiple matches are found, some of which are exact,
+   and some of which are not, then the first eaxctly matching element is
+   returned.
+
+The default for `Capybara.match` is `:smart`. To emulate the behaviour in
+Capybara 2.0.x, set `Capybara.match` to `:one`. To emulate the behaviour in
+Capybara 1.x, set `Capybara.match` to `:prefer_exact`.
+
 ## Transactions and database setup
 
 Some Capybara drivers need to run against an actual HTTP server. Capybara takes
