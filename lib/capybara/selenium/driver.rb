@@ -1,4 +1,11 @@
-require 'selenium-webdriver'
+begin
+  require 'selenium-webdriver'
+rescue LoadError => e
+  if e.message =~ /selenium-webdriver/
+    raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
+  end
+end
+
 
 class Capybara::Selenium::Driver < Capybara::Driver::Base
   DEFAULT_OPTIONS = {
@@ -42,7 +49,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def title
     browser.title
   end
-  
+
   def current_url
     browser.current_url
   end
@@ -50,11 +57,11 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def find_xpath(selector)
     browser.find_elements(:xpath, selector).map { |node| Capybara::Selenium::Node.new(self, node) }
   end
-  
+
   def find_css(selector)
     browser.find_elements(:css, selector).map { |node| Capybara::Selenium::Node.new(self, node) }
   end
-  
+
   def wait?; true; end
   def needs_server?; true; end
 
@@ -137,5 +144,5 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def invalid_element_errors
     [Selenium::WebDriver::Error::StaleElementReferenceError, Selenium::WebDriver::Error::UnhandledError, Selenium::WebDriver::Error::ElementNotVisibleError]
   end
-  
+
 end
