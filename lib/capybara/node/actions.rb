@@ -88,8 +88,8 @@ module Capybara
       #
       # @param [String] locator           Which check box to uncheck
       #
-      def uncheck(locator)
-        find(:checkbox, locator).set(false)
+      def uncheck(locator, options={})
+        find(:checkbox, locator, options).set(false)
       end
 
       ##

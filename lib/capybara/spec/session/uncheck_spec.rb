@@ -23,4 +23,18 @@ Capybara::SpecHelper.spec "#uncheck" do
     extract_results(@session)['pets'].should include('dog')
     extract_results(@session)['pets'].should_not include('hamster')
   end
+
+  context "with :exact option" do
+    it "should accept partial matches when false" do
+      @session.uncheck('Ham', :exact => false)
+      @session.click_button('awesome')
+      extract_results(@session)['pets'].should_not include('hamster')
+    end
+
+    it "should not accept partial matches when true" do
+      expect do
+        @session.uncheck('Ham', :exact => true)
+      end.to raise_error(Capybara::ElementNotFound)
+    end
+  end
 end
