@@ -3,6 +3,7 @@ module Capybara
     attr_accessor :selector, :locator, :options, :expression, :find, :negative
 
     VALID_KEYS = [:text, :visible, :between, :count, :maximum, :minimum, :exact, :match]
+    VALID_MATCH = [:first, :smart, :prefer_exact, :one]
 
     def initialize(*args)
       @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
@@ -110,6 +111,9 @@ module Capybara
         invalid_names = invalid_keys.map(&:inspect).join(", ")
         valid_names = valid_keys.map(&:inspect).join(", ")
         raise ArgumentError, "invalid keys #{invalid_names}, should be one of #{valid_names}"
+      end
+      unless VALID_MATCH.include?(match)
+        raise ArgumentError, "invalid option #{match.inspect} for :match, should be one of #{VALID_MATCH.map(&:inspect).join(", ")}"
       end
     end
   end

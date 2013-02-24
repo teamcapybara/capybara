@@ -41,7 +41,7 @@ Capybara::SpecHelper.spec '#find' do
       @session.find(:css, 'h1').text.should == 'This is a test'
       @session.find(:css, "input[id='test_field']")[:value].should == 'monkey'
     end
-    
+
     it "should support pseudo selectors" do
       @session.find(:css, 'input:disabled').value.should == 'This is disabled'
     end
@@ -157,18 +157,18 @@ Capybara::SpecHelper.spec '#find' do
       end
       it "raises an error if there is no match" do
         expect do
-          @session.find(:css, ".does-not-exist", :match => :any)
+          @session.find(:css, ".does-not-exist", :match => :one)
         end.to raise_error(Capybara::ElementNotFound)
       end
     end
 
-    context "when set to `any`" do
+    context "when set to `first`" do
       it "returns the first matched element" do
-        @session.find(:css, ".multiple", :match => :any).text.should == "multiple one"
+        @session.find(:css, ".multiple", :match => :first).text.should == "multiple one"
       end
       it "raises an error if there is no match" do
         expect do
-          @session.find(:css, ".does-not-exist", :match => :any)
+          @session.find(:css, ".does-not-exist", :match => :first)
         end.to raise_error(Capybara::ElementNotFound)
       end
     end
@@ -285,8 +285,14 @@ Capybara::SpecHelper.spec '#find' do
       expect do
         @session.find(:css, ".multiple")
       end.to raise_error(Capybara::Ambiguous)
-      Capybara.match = :any
+      Capybara.match = :first
       @session.find(:css, ".multiple").text.should == "multiple one"
+    end
+
+    it "raises an error when unknown option given" do
+      expect do
+        @session.find(:css, ".singular", :match => :schmoo)
+      end.to raise_error(ArgumentError)
     end
   end
 
@@ -300,7 +306,7 @@ Capybara::SpecHelper.spec '#find' do
         @session.find('.//li[1]').text.should =~ /With Simple HTML/
       end
     end
-    
+
     it "should support pseudo selectors" do
       @session.within(:xpath, "//div[@id='for_bar']") do
         @session.find(:css, 'input:disabled').value.should == 'James'
