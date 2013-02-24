@@ -62,8 +62,8 @@ module Capybara
       #
       # @param [String] locator           Which radio button to choose
       #
-      def choose(locator)
-        find(:radio_button, locator).set(true)
+      def choose(locator, options={})
+        find(:radio_button, locator, options).set(true)
       end
 
       ##

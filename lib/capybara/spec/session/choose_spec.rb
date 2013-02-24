@@ -37,4 +37,18 @@ Capybara::SpecHelper.spec "#choose" do
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
+
+  context "with :exact option" do
+    it "should accept partial matches when false" do
+      @session.choose("Mal", :exact => false)
+      @session.click_button('awesome')
+      extract_results(@session)['gender'].should == 'male'
+    end
+
+    it "should not accept partial matches when true" do
+      expect do
+        @session.choose("Mal", :exact => true)
+      end.to raise_error(Capybara::ElementNotFound)
+    end
+  end
 end
