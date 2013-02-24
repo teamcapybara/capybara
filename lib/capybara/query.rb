@@ -39,10 +39,12 @@ module Capybara
       node.unsynchronized do
         if options[:text]
           regexp = options[:text].is_a?(Regexp) ? options[:text] : Regexp.escape(options[:text])
-          type = if @options.has_key?(:visible) and not @options[:visible] then :all else nil end
-          return false if not node.text(type).match(regexp)
+          return false if not node.text(visible).match(regexp)
         end
-        return false if visible? and not node.visible?
+        case visible
+          when :visible then return false unless node.visible?
+          when :hidden then return false if node.visible?
+        end
         selector.custom_filters.each do |name, block|
           return false if options.has_key?(name) and not block.call(node, options[name])
         end
@@ -65,11 +67,19 @@ module Capybara
       end
     end
 
-    def visible?
+    def visible
       if options.has_key?(:visible)
-        @options[:visible]
+        case @options[:visible]
+          when true then :visible
+          when false then :all
+          else @options[:visible]
+        end
       else
-        Capybara.ignore_hidden_elements
+        if Capybara.ignore_hidden_elements
+          :visible
+        else
+          :all
+        end
       end
     end
 

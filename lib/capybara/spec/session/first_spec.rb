@@ -47,7 +47,22 @@ Capybara::SpecHelper.spec '#first' do
 
     it "should find nodes regardless of whether they are invisible when false" do
       @session.first(:css, "a#invisible", :visible => false).should_not be_nil
-      @session.first(:css, "a", :visible => false).should_not be_nil
+      @session.first(:css, "a#visible", :visible => false).should_not be_nil
+    end
+
+    it "should find nodes regardless of whether they are invisible when :all" do
+      @session.first(:css, "a#invisible", :visible => :all).should_not be_nil
+      @session.first(:css, "a#visible", :visible => :all).should_not be_nil
+    end
+
+    it "should find only hidden nodes when :hidden" do
+      @session.first(:css, "a#invisible", :visible => :hidden).should_not be_nil
+      @session.first(:css, "a#visible", :visible => :hidden).should be_nil
+    end
+
+    it "should find only visible nodes when :visible" do
+      @session.first(:css, "a#invisible", :visible => :visible).should be_nil
+      @session.first(:css, "a#visible", :visible => :visible).should_not be_nil
     end
 
     it "should default to Capybara.ignore_hidden_elements" do
