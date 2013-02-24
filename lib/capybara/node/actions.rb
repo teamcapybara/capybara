@@ -33,8 +33,8 @@ module Capybara
       #
       # @param [String] locator      Text, id or value of button
       #
-      def click_button(locator)
-        find(:button, locator).click
+      def click_button(locator, options={})
+        find(:button, locator, options).click
       end
 
       ##
