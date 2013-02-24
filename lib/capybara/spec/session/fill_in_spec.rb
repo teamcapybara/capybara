@@ -138,4 +138,18 @@ Capybara::SpecHelper.spec "#fill_in" do
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
+
+  context "with :exact option" do
+    it "should accept partial matches when false" do
+      @session.fill_in("Explanation", :with => "Dude", :exact => false)
+      @session.click_button("awesome")
+      extract_results(@session)["name_explanation"].should == "Dude"
+    end
+
+    it "should not accept partial matches when true" do
+      expect do
+        @session.fill_in("Explanation", :with => "Dude", :exact => true)
+      end.to raise_error(Capybara::ElementNotFound)
+    end
+  end
 end

@@ -49,7 +49,8 @@ module Capybara
       #
       def fill_in(locator, options={})
         raise "Must pass a hash containing 'with'" if not options.is_a?(Hash) or not options.has_key?(:with)
-        find(:fillable_field, locator).set(options[:with])
+        with = options.delete(:with)
+        find(:fillable_field, locator, options).set(with)
       end
 
       ##
