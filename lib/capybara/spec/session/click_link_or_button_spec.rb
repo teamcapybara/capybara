@@ -35,6 +35,41 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
     extract_results(@session)['first_name'].should == 'John'
   end
 
+  context "with :exact option" do
+    context "when `true`" do
+      it "clicks on approximately matching link" do
+        @session.visit('/with_html')
+        @session.click_link_or_button('abore', :exact => false)
+        @session.should have_content('Bar')
+      end
+
+      it "clicks on approximately matching button" do
+        @session.visit('/form')
+        @session.click_link_or_button('awe')
+        extract_results(@session)['first_name'].should == 'John'
+      end
+    end
+
+    context "when `false`" do
+      it "does not click on link which matches approximately" do
+        @session.visit('/with_html')
+        msg = "Unable to find link or button \"abore\""
+        expect do
+          @session.click_link_or_button('abore', :exact => true)
+        end.to raise_error(Capybara::ElementNotFound, msg)
+      end
+
+      it "does not click on approximately matching button" do
+        @session.visit('/form')
+        msg = "Unable to find link or button \"awe\""
+
+        expect do
+          @session.click_link_or_button('awe', :exact => true)
+        end.to raise_error(Capybara::ElementNotFound, msg)
+      end
+    end
+  end
+
   context "with a locator that doesn't exist" do
     it "should raise an error" do
       @session.visit('/with_html')

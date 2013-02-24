@@ -9,8 +9,8 @@ module Capybara
       #
       # @param [String] locator      Text, id or value of link or button
       #
-      def click_link_or_button(locator)
-        find(:link_or_button, locator).click
+      def click_link_or_button(locator, options={})
+        find(:link_or_button, locator, options).click
       end
       alias_method :click_on, :click_link_or_button
 
