@@ -25,4 +25,16 @@ Capybara::SpecHelper.spec '#find_field' do
       @session.field_labeled('Does not exist')
     end.to raise_error(Capybara::ElementNotFound)
   end
+
+  context "with :exact option" do
+    it "should accept partial matches when false" do
+      @session.find_field("Explanation", :exact => false)[:name].should == "form[name_explanation]"
+    end
+
+    it "should not accept partial matches when true" do
+      expect do
+        @session.find_field("Explanation", :exact => true)
+      end.to raise_error(Capybara::ElementNotFound)
+    end
+  end
 end

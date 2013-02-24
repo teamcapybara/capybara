@@ -19,6 +19,8 @@ module Capybara
       #     page.find('li', :text => 'Quox').click_link('Delete')
       #
       # @param (see Capybara::Node::Finders#all)
+      # @option options [Boolean] match       The matching strategy to use.
+      #
       # @return [Capybara::Element]           The found element
       # @raise  [Capybara::ElementNotFound]   If the element can't be found before time expires
       #
@@ -48,8 +50,8 @@ module Capybara
       # @param [String] locator       Which field to find
       # @return [Capybara::Element]   The found element
       #
-      def find_field(locator)
-        find(:field, locator)
+      def find_field(locator, options={})
+        find(:field, locator, options)
       end
       alias_method :field_labeled, :find_field
 
@@ -60,8 +62,8 @@ module Capybara
       # @param [String] locator       Which link to find
       # @return [Capybara::Element]   The found element
       #
-      def find_link(locator)
-        find(:link, locator)
+      def find_link(locator, options={})
+        find(:link, locator, options)
       end
 
       ##
@@ -71,8 +73,8 @@ module Capybara
       # @param [String] locator       Which button to find
       # @return [Capybara::Element]   The found element
       #
-      def find_button(locator)
-        find(:button, locator)
+      def find_button(locator, options={})
+        find(:button, locator, options)
       end
 
       ##
@@ -82,8 +84,8 @@ module Capybara
       # @param [String] id            Which element to find
       # @return [Capybara::Element]   The found element
       #
-      def find_by_id(id)
-        find(:id, id)
+      def find_by_id(id, options={})
+        find(:id, id, options)
       end
 
       ##
@@ -118,8 +120,8 @@ module Capybara
       #   @param [String] locator                    The selector
       #   @option options [String, Regexp] text      Only find elements which contain this text or match this regexp
       #   @option options [Boolean] visible          Only find elements that are visible on the page. Setting this to false
-      #                                              (the default, unless Capybara.ignore_hidden_elements = true), finds
-      #                                              invisible _and_ visible elements.
+      #                                              finds invisible _and_ visible elements.
+      #   @option options [Boolean] exact            Control whether `is` expressions in the given XPath match exactly or partially
       # @return [Capybara::Result]                   A collection of found elements
       #
       def all(*args)

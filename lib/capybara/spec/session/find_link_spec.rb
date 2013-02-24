@@ -17,4 +17,16 @@ Capybara::SpecHelper.spec '#find_link' do
       @session.find_link('Does not exist')
     end.to raise_error(Capybara::ElementNotFound)
   end
+
+  context "with :exact option" do
+    it "should accept partial matches when false" do
+      @session.find_link('abo', :exact => false).text.should == "labore"
+    end
+
+    it "should not accept partial matches when true" do
+      expect do
+        @session.find_link('abo', :exact => true)
+      end.to raise_error(Capybara::ElementNotFound)
+    end
+  end
 end

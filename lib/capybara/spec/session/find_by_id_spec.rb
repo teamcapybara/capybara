@@ -16,4 +16,16 @@ Capybara::SpecHelper.spec '#find_by_id' do
       @session.find_by_id('nothing_with_this_id')
     end.to raise_error(Capybara::ElementNotFound)
   end
+
+  context "with :visible option" do
+    it "finds invisible elements when `false`" do
+      @session.find_by_id("hidden_via_ancestor", :visible => false).text(:all).should =~ /with hidden ancestor/
+    end
+
+    it "finds invisible elements when `false`" do
+      expect do
+        @session.find_by_id("hidden_via_ancestor", :visible => true)
+      end.to raise_error(Capybara::ElementNotFound)
+    end
+  end
 end
