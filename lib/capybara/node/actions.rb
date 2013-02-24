@@ -75,8 +75,8 @@ module Capybara
       #
       # @param [String] locator           Which check box to check
       #
-      def check(locator)
-        find(:checkbox, locator).set(true)
+      def check(locator, options={})
+        find(:checkbox, locator, options).set(true)
       end
 
       ##
