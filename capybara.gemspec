@@ -36,6 +36,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("cucumber", [">= 0.10.5"])
   s.add_development_dependency("rake")
   s.add_development_dependency("pry")
+  s.add_development_dependency("redcarpet")
 
   if File.exist?("gem-private_key.pem")
     s.signing_key = 'gem-private_key.pem'
