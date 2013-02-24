@@ -127,4 +127,17 @@ Capybara::SpecHelper.spec '#click_link' do
       @session.click_link('No Href')
     end.to raise_error(Capybara::ElementNotFound)
   end
+
+  context "with :exact option" do
+    it "should accept partial matches when false" do
+      @session.click_link('abo', :exact => false)
+      @session.should have_content('Bar')
+    end
+
+    it "should not accept partial matches when true" do
+      expect do
+        @session.click_link('abo', :exact => true)
+      end.to raise_error(Capybara::ElementNotFound)
+    end
+  end
 end
