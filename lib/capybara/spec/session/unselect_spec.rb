@@ -69,4 +69,46 @@ Capybara::SpecHelper.spec "#unselect" do
       end.to raise_error(Capybara::ElementNotFound, msg)
     end
   end
+
+  context "with :exact option" do
+    context "when `false`" do
+      it "can match select box approximately" do
+        @session.unselect("Boxerbriefs", :from => "Under", :exact => false)
+        @session.click_button("awesome")
+        extract_results(@session)["underwear"].should_not include("Boxerbriefs")
+      end
+
+      it "can match option approximately" do
+        @session.unselect("Boxerbr", :from => "Underwear", :exact => false)
+        @session.click_button("awesome")
+        extract_results(@session)["underwear"].should_not include("Boxerbriefs")
+      end
+
+      it "can match option approximately when :from not given" do
+        @session.unselect("Boxerbr", :exact => false)
+        @session.click_button("awesome")
+        extract_results(@session)["underwear"].should_not include("Boxerbriefs")
+      end
+    end
+
+    context "when `true`" do
+      it "can match select box approximately" do
+        expect do
+          @session.unselect("Boxerbriefs", :from => "Under", :exact => true)
+        end.to raise_error(Capybara::ElementNotFound)
+      end
+
+      it "can match option approximately" do
+        expect do
+          @session.unselect("Boxerbr", :from => "Underwear", :exact => true)
+        end.to raise_error(Capybara::ElementNotFound)
+      end
+
+      it "can match option approximately when :from not given" do
+        expect do
+          @session.unselect("Boxerbr", :exact => true)
+        end.to raise_error(Capybara::ElementNotFound)
+      end
+    end
+  end
 end

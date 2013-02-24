@@ -125,9 +125,10 @@ module Capybara
       #
       def unselect(value, options={})
         if options.has_key?(:from)
-          find(:select, options[:from]).find(:option, value).unselect_option
+          from = options.delete(:from)
+          find(:select, from, options).find(:option, value, options).unselect_option
         else
-          find(:option, value).unselect_option
+          find(:option, value, options).unselect_option
         end
       end
 
