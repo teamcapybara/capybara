@@ -87,4 +87,18 @@ Capybara::SpecHelper.spec "#attach_file" do
       expect { @session.attach_file('Image', '/no_such_file.png') }.to raise_error(Capybara::FileNotFound)
     end
   end
+
+  context "with :exact option" do
+    it "should set a file path by partial label when false" do
+      @session.attach_file "Imag", __FILE__, :exact => false
+      @session.click_button('awesome')
+      extract_results(@session)['image'].should == File.basename(__FILE__)
+    end
+
+    it "not allow partial matches when true" do
+      expect do
+        @session.attach_file "Imag", __FILE__, :exact => true
+      end.to raise_error(Capybara::ElementNotFound)
+    end
+  end
 end
