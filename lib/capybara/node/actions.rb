@@ -105,9 +105,10 @@ module Capybara
       #
       def select(value, options={})
         if options.has_key?(:from)
-          find(:select, options[:from]).find(:option, value).select_option
+          from = options.delete(:from)
+          find(:select, from, options).find(:option, value, options).select_option
         else
-          find(:option, value).select_option
+          find(:option, value, options).select_option
         end
       end
 

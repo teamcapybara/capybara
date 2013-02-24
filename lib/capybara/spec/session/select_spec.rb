@@ -144,4 +144,46 @@ Capybara::SpecHelper.spec "#select" do
       @session.find_field('Underwear').value.should include('thermal')
     end
   end
+
+  context "with :exact option" do
+    context "when `false`" do
+      it "can match select box approximately" do
+        @session.select("Finish", :from => "Loc", :exact => false)
+        @session.click_button("awesome")
+        extract_results(@session)["locale"].should == "fi"
+      end
+
+      it "can match option approximately" do
+        @session.select("Fin", :from => "Locale", :exact => false)
+        @session.click_button("awesome")
+        extract_results(@session)["locale"].should == "fi"
+      end
+
+      it "can match option approximately when :from not given" do
+        @session.select("made-up language", :exact => false)
+        @session.click_button("awesome")
+        extract_results(@session)["locale"].should == "jo"
+      end
+    end
+
+    context "when `true`" do
+      it "can match select box approximately" do
+        expect do
+          @session.select("Finish", :from => "Loc", :exact => true)
+        end.to raise_error(Capybara::ElementNotFound)
+      end
+
+      it "can match option approximately" do
+        expect do
+          @session.select("Fin", :from => "Locale", :exact => true)
+        end.to raise_error(Capybara::ElementNotFound)
+      end
+
+      it "can match option approximately when :from not given" do
+        expect do
+          @session.select("made-up language", :exact => true)
+        end.to raise_error(Capybara::ElementNotFound)
+      end
+    end
+  end
 end
