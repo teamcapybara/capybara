@@ -35,19 +35,19 @@ module Capybara
     class HaveText < Matcher
       attr_reader :text, :type
 
-      def initialize(type, text)
-        @type = type
+      def initialize(text, type)
         @text = text
+        @type = type
       end
 
       def matches?(actual)
         @actual = wrap(actual)
-        @actual.has_text?(type, text)
+        @actual.has_text?(text, type)
       end
 
       def does_not_match?(actual)
         @actual = wrap(actual)
-        @actual.has_no_text?(type, text)
+        @actual.has_no_text?(text, type)
       end
 
       def failure_message_for_should
@@ -110,12 +110,12 @@ module Capybara
       HaveSelector.new(:css, css, options)
     end
 
-    def have_content(type=nil, text)
-      HaveText.new(type, text)
+    def have_content(text, type=nil)
+      HaveText.new(text, type)
     end
 
-    def have_text(type=nil, text)
-      HaveText.new(type, text)
+    def have_text(text, type=nil)
+      HaveText.new(text, type)
     end
 
     def have_title(title)
