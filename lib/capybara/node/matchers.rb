@@ -200,7 +200,7 @@ module Capybara
       # @param [String] content       The text to check for
       # @return [Boolean]             Whether it exists
       #
-      def has_text?(type=nil, content)
+      def has_text?(content, type=nil)
         synchronize do
           unless Capybara::Helpers.normalize_whitespace(text(type)).match(Capybara::Helpers.to_regexp(content))
             raise ExpectationNotMet
@@ -223,7 +223,7 @@ module Capybara
       # @param [String] content       The text to check for
       # @return [Boolean]             Whether it doesn't exist
       #
-      def has_no_text?(type=nil, content)
+      def has_no_text?(content, type=nil)
         synchronize do
           if Capybara::Helpers.normalize_whitespace(text(type)).match(Capybara::Helpers.to_regexp(content))
             raise ExpectationNotMet
