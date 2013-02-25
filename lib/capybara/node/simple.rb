@@ -127,7 +127,7 @@ module Capybara
         native[:selected]
       end
 
-      def synchronize
+      def synchronize(seconds=nil)
         yield # simple nodes don't need to wait
       end
 
