@@ -2,7 +2,7 @@ module Capybara
   class Query
     attr_accessor :selector, :locator, :options, :expression, :find, :negative
 
-    VALID_KEYS = [:text, :visible, :between, :count, :maximum, :minimum, :exact, :match]
+    VALID_KEYS = [:text, :visible, :between, :count, :maximum, :minimum, :exact, :match, :wait]
     VALID_MATCH = [:first, :smart, :prefer_exact, :one]
 
     def initialize(*args)
@@ -80,6 +80,14 @@ module Capybara
         else
           :all
         end
+      end
+    end
+
+    def wait
+      if options.has_key?(:wait)
+        @options[:wait] or 0
+      else
+        Capybara.default_wait_time
       end
     end
 

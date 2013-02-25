@@ -27,6 +27,30 @@ Capybara::SpecHelper.spec '#find' do
     @session.find(:css, "a#has-been-clicked").text.should include('Has been clicked')
   end
 
+  context "with :wait option", :requires => [:js] do
+    it "should not wait for asynchronous load when `false` given" do
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+      expect do
+        @session.find(:css, "a#has-been-clicked", :wait => false)
+      end.to raise_error(Capybara::ElementNotFound)
+    end
+
+    it "should not find element if it appears after given wait duration" do
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+      expect do
+        @session.find(:css, "a#has-been-clicked", :wait => 0.2)
+      end.to raise_error(Capybara::ElementNotFound)
+    end
+
+    it "should find element if it appears before given wait duration" do
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+      @session.find(:css, "a#has-been-clicked", :wait => 0.9).text.should include('Has been clicked')
+    end
+  end
+
   context "with frozen time", :requires => [:js] do
     it "raises an error suggesting that Capybara is stuck in time" do
       @session.visit('/with_js')

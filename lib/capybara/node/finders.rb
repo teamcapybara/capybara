@@ -19,14 +19,15 @@ module Capybara
       #     page.find('li', :text => 'Quox').click_link('Delete')
       #
       # @param (see Capybara::Node::Finders#all)
-      # @option options [Boolean] match       The matching strategy to use.
+      # @option options [Boolean] match        The matching strategy to use.
+      # @option options [false, Numeric] wait  How long to wait for the element to appear.
       #
-      # @return [Capybara::Element]           The found element
-      # @raise  [Capybara::ElementNotFound]   If the element can't be found before time expires
+      # @return [Capybara::Element]            The found element
+      # @raise  [Capybara::ElementNotFound]    If the element can't be found before time expires
       #
       def find(*args)
-        synchronize do
-          query = Capybara::Query.new(*args)
+        query = Capybara::Query.new(*args)
+        synchronize(query.wait) do
           if query.match == :smart or query.match == :prefer_exact
             result = resolve_query(query, true)
             result = resolve_query(query, false) if result.size == 0 and not query.exact?
