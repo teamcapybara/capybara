@@ -121,6 +121,14 @@ module Capybara
 
       ##
       #
+      # Hover on the Element
+      #
+      def hover
+        synchronize { base.hover }
+      end
+
+      ##
+      #
       # @return [String]      The tag name of the element
       #
       def tag_name

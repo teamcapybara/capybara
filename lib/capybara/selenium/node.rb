@@ -57,6 +57,10 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     native.click
   end
 
+  def hover
+    driver.browser.action.move_to(native).perform
+  end
+  
   def drag_to(element)
     driver.browser.action.drag_and_drop(native, element.native).perform
   end

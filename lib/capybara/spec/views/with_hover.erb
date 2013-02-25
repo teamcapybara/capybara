@@ -1,0 +1,17 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <title>with_hover</title>
+  </head>
+
+  <body id="with_hover">
+    <style type="text/css">
+      .hidden_until_hover {display: none;}
+      .wrapper:hover .hidden_until_hover { display: block }
+    </style>
+    <div class="wrapper">
+      Some text here so the wrapper has size
+      <div class="hidden_until_hover">Here I am</div>
+    </div>
+  </body>
+</html>
