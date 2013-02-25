@@ -3,6 +3,8 @@ begin
 rescue LoadError => e
   if e.message =~ /selenium-webdriver/
     raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
+  else
+    raise e
   end
 end
 
