@@ -73,14 +73,17 @@ module Capybara
       #
       def synchronize(seconds=Capybara.default_wait_time)
         start_time = Time.now
+        first_fail_time = nil
 
         begin
           yield
         rescue => e
+          first_fail_time ||= Time.now
+
           raise e if @unsynchronized
           raise e unless driver.wait?
           raise e unless driver.invalid_element_errors.include?(e.class) || e.is_a?(Capybara::ElementNotFound)
-          raise e if (Time.now - start_time) >= seconds
+          raise e if (Time.now - first_fail_time) > seconds
           sleep(0.05)
           raise Capybara::FrozenInTime, "time appears to be frozen, Capybara does not work with libraries which freeze time, consider using time travelling instead" if Time.now == start_time
           reload if Capybara.automatic_reload
