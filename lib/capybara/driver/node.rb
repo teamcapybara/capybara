@@ -41,6 +41,10 @@ module Capybara
         raise NotImplementedError
       end
 
+      def hover
+        raise NotImplementedError
+      end
+      
       def drag_to(element)
         raise NotImplementedError
       end
