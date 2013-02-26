@@ -72,18 +72,18 @@ Capybara::SpecHelper.spec '#visit' do
   it "should send a referer when following a link" do
     @session.visit '/referer_base'
     @session.find('//a[@href="/get_referer"]').click
-    @session.body.should match %r{http://.*/referer_base}
+    @session.should have_content %r{http://.*/referer_base}
   end
 
   it "should preserve the original referer URL when following a redirect" do
     @session.visit('/referer_base')
     @session.find('//a[@href="/redirect_to_get_referer"]').click
-    @session.body.should match %r{http://.*/referer_base}
+    @session.should have_content %r{http://.*/referer_base}
   end
 
   it "should send a referer when submitting a form" do
     @session.visit '/referer_base'
     @session.find('//input').click
-    @session.body.should match %r{http://.*/referer_base}
+    @session.should have_content %r{http://.*/referer_base}
   end
 end
