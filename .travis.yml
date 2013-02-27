@@ -14,11 +14,6 @@ matrix:
       rvm: rbx-19mode
     - gemfile: gemfiles/Gemfile.base-versions
       rvm: jruby-19mode
-  allow_failures:
-    - gemfile: Gemfile
-      rvm: rbx-19mode
-    - gemfile: Gemfile
-      rvm: jruby-19mode
 before_script:
   - sh -e /etc/init.d/xvfb start
   - export DISPLAY=:99.0
