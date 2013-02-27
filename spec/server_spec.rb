@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Capybara::Server do
 
   it "should spool up a rack server" do
-    @app = proc { |env| [200, {}, "Hello Server!"]}
+    @app = proc { |env| [200, {}, ["Hello Server!"]]}
     @server = Capybara::Server.new(@app).boot
 
     @res = Net::HTTP.start(@server.host, @server.port) { |http| http.get('/') }
@@ -20,7 +20,7 @@ describe Capybara::Server do
   it "should bind to the specified host" do
     Capybara.server_host = '0.0.0.0'
 
-    app = proc { |env| [200, {}, "Hello Server!"]}
+    app = proc { |env| [200, {}, ["Hello Server!"]]}
     server = Capybara::Server.new(app).boot
     server.host.should == '0.0.0.0'
 
@@ -30,7 +30,7 @@ describe Capybara::Server do
   it "should use specified port" do
     Capybara.server_port = 22789
 
-    @app = proc { |env| [200, {}, "Hello Server!"]}
+    @app = proc { |env| [200, {}, ["Hello Server!"]]}
     @server = Capybara::Server.new(@app).boot
 
     @res = Net::HTTP.start(@server.host, 22789) { |http| http.get('/') }
@@ -40,7 +40,7 @@ describe Capybara::Server do
   end
 
   it "should use given port" do
-    @app = proc { |env| [200, {}, "Hello Server!"]}
+    @app = proc { |env| [200, {}, ["Hello Server!"]]}
     @server = Capybara::Server.new(@app, 22790).boot
 
     @res = Net::HTTP.start(@server.host, 22790) { |http| http.get('/') }
@@ -50,8 +50,8 @@ describe Capybara::Server do
   end
 
   it "should find an available port" do
-    @app1 = proc { |env| [200, {}, "Hello Server!"]}
-    @app2 = proc { |env| [200, {}, "Hello Second Server!"]}
+    @app1 = proc { |env| [200, {}, ["Hello Server!"]]}
+    @app2 = proc { |env| [200, {}, ["Hello Second Server!"]]}
 
     @server1 = Capybara::Server.new(@app1).boot
     @server2 = Capybara::Server.new(@app2).boot
@@ -64,8 +64,8 @@ describe Capybara::Server do
   end
 
   it "should use the server if it already running" do
-    @app1 = proc { |env| [200, {}, "Hello Server!"]}
-    @app2 = proc { |env| [200, {}, "Hello Second Server!"]}
+    @app1 = proc { |env| [200, {}, ["Hello Server!"]]}
+    @app2 = proc { |env| [200, {}, ["Hello Second Server!"]]}
 
     @server1a = Capybara::Server.new(@app1).boot
     @server1b = Capybara::Server.new(@app1).boot
