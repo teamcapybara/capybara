@@ -21,6 +21,8 @@ perfect, but even a simple script demonstrating the error would suffice.
 Please don't send us an entire application, unless the bug is in the
 *interaction* between Capybara and a particular framework.
 
+Make sure to specify which version of Capybara you are using.
+
 Feature requests are great, but they usually end up lying around the issue
 tracker indefinitely. Sending a pull request is a much better way of getting a
 particular feature into Capybara.
