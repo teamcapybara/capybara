@@ -9,10 +9,14 @@ Release date: Unreleased
 * Capybara no longer depends on the `selenium-webdriver` gem. Add it to
   your Gemfile if you wish to use the Selenium driver. [Jonas Nicklas]
 * `Capybara.ignore_hidden_elements` defaults to `true`. [Jonas Nicklas]
-* In case of multiple matches `smart` matching is used by default.
-  [Jonas Nicklas].
+* In case of multiple matches `smart` matching is used by default. Set
+  `Capybara.match = :one` to revert to old behaviour. [Jonas Nicklas].
 * Options in select boxes use smart matching and no longer need to match
-  exactly [Jonas Nicklas].
+  exactly. Set `Capybara.exact_options = false` to revert to old behaviour.
+  [Jonas Nicklas].
+* Visibility of text depends on `Capybara.ignore_hidden_elements` instead of
+  always returning only visible text. Set `Capybara.visible_text_only = true`
+  to revert to old behaviour. [Jonas Nicklas]
 * Cucumber cleans up session after scenario instead. This is consistent with
   RSpec and makes more sense, since we raise server errors in `reset!`.
   [Jonas Nicklas]
