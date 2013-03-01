@@ -1,3 +1,63 @@
+# Version 2.1.0
+
+Release date: Unreleased
+
+### Changed
+
+* Hard version requirement on Ruby >= 1.9.0. Capybara will no longer install
+  on 1.8.7. [Felix Schäfer]
+* Capybara no longer depends on the `selenium-webdriver` gem. Add it to
+  your Gemfile if you wish to use the Selenium driver. [Jonas Nicklas]
+* `Capybara.ignore_hidden_elements` defaults to `true`. [Jonas Nicklas]
+* In case of multiple matches `smart` matching is used by default.
+  [Jonas Nicklas].
+* Options in select boxes use smart matching and no longer need to match
+  exactly [Jonas Nicklas].
+* Cucumber cleans up session after scenario instead. This is consistent with
+  RSpec and makes more sense, since we raise server errors in `reset!`.
+  [Jonas Nicklas]
+
+### Added
+
+* All actions (`click_link`, `fill_in`, etc...) and finders now take an options
+  hash, which is passed through to `find`. [Jonas Nicklas]
+* CSS selectors are sent straight through to driver instead of being converted
+  to XPath first. Enables the use of some pseudo selectors, such as `invalid`
+  in some drivers. [Thomas Walpole]
+* `Capybara.asset_host` option, which inserts a `base` tag into the page on
+  `save_and_open_page`, eases debugging with the Rails asset pipeline.
+  [Steve Hull]
+* `exact` option, can specify whether to match substrings or entire text.
+  [Jonas Nicklas]
+* `match` option, can specify behaviour in case of multiple matches.
+  [Jonas Nicklas]
+* `wait` option, can specify how long to wait for a given action/finder.
+  [Jonas Nicklas]
+* Config option which disables bubbling of errors raised inside server.
+  [Jonas Nicklas]
+* `text` now takes a parameter which makes it possible to return either all
+  text or only visible text. The default depends on
+  `Capybara.ignore_hidden_elements`. `Capybara.visible_text_only` option is
+  available for compatibility. [Jonas Nicklas]
+* `current_scope` is now public API, returns the current element when `within`
+  is used. [Martijn Walraven]
+* `find("input").disabled?` returns true if a node is disabled. [Ben Lovell]
+* `find("input").hover` moves the mouse to the element in supported drivers.
+  [Thomas Walpole]
+* RackTest driver now support `form` attribute on form elements.
+  [Thomas Walpole]
+* `page.title` returns the page title. [Terry Progetto]
+* `has_title?` matcher to assert on page title. [Jonas Nicklas]
+* The gem is now signed with a certicficate. The public key is available in the
+  repo. [Jonas Nicklas]
+
+### Fixed
+
+* Use posix character class for whitespace replace, solves various encoding
+  problems on Ruby 2.0.0 and JRuby. [Jonas Nicklas]
+* Fix issue with `within_frame`, where selecting multiple nested frames didn't
+  work as intended. [Thomas Walpole]
+
 # Version 2.0.2
 
 Release date: 2012-12-31
