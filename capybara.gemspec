@@ -39,8 +39,6 @@ Gem::Specification.new do |s|
 
   if File.exist?("gem-private_key.pem")
     s.signing_key = 'gem-private_key.pem'
-  else
-    puts "WARNING!! No private key specified, gem will not be signed!"
   end
   s.cert_chain = ['gem-public_cert.pem']
 end
