@@ -30,7 +30,7 @@ describe Capybara::RSpecMatchers do
         it "fails if matched node count does not equal expected count" do
           expect do
             "<h1>Text</h1>".should have_css('h1', :count => 2)
-          end.to raise_error(/expected css "h1" to be found 2 times/)
+          end.to raise_error("expected to find css \"h1\" 2 times, found 1 match: \"Text\"")
         end
       end
 
@@ -222,7 +222,7 @@ describe Capybara::RSpecMatchers do
 
   describe "have_content matcher" do
     it "gives proper description" do
-      have_content('Text').description.should == "have text \"Text\""
+      have_content('Text').description.should == "text \"Text\""
     end
 
     context "on a string" do
@@ -238,7 +238,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_content? returns false" do
           expect do
             "<h1>Text</h1>".should have_content('No such Text')
-          end.to raise_error(/expected there to be text "No such Text" in "Text"/)
+          end.to raise_error(/expected to find text "No such Text" in "Text"/)
         end
       end
 
@@ -254,7 +254,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_no_content? returns false" do
           expect do
             "<h1>Text</h1>".should_not have_content('Text')
-          end.to raise_error(/expected there not to be text "Text" in "Text"/)
+          end.to raise_error(/expected not to find text "Text" in "Text"/)
         end
       end
     end
@@ -276,7 +276,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_content? returns false" do
           expect do
             page.should have_content('No such Text')
-          end.to raise_error(/expected there to be text "No such Text" in "(.*)This is a test(.*)"/)
+          end.to raise_error(/expected to find text "No such Text" in "(.*)This is a test(.*)"/)
         end
 
         context "with default selector CSS" do
@@ -284,7 +284,7 @@ describe Capybara::RSpecMatchers do
           it "fails if has_content? returns false" do
             expect do
               page.should have_content('No such Text')
-            end.to raise_error(/expected there to be text "No such Text" in "(.*)This is a test(.*)"/)
+            end.to raise_error(/expected to find text "No such Text" in "(.*)This is a test(.*)"/)
           end
           after { Capybara.default_selector = :xpath }
         end
@@ -298,7 +298,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_no_content? returns false" do
           expect do
             page.should_not have_content('This is a test')
-          end.to raise_error(/expected there not to be text "This is a test"/)
+          end.to raise_error(/expected not to find text "This is a test"/)
         end
       end
     end
@@ -306,7 +306,7 @@ describe Capybara::RSpecMatchers do
 
   describe "have_text matcher" do
     it "gives proper description" do
-      have_text('Text').description.should == "have text \"Text\""
+      have_text('Text').description.should == "text \"Text\""
     end
 
     context "on a string" do
@@ -322,13 +322,13 @@ describe Capybara::RSpecMatchers do
         it "fails if has_text? returns false" do
           expect do
             "<h1>Text</h1>".should have_text('No such Text')
-          end.to raise_error(/expected there to be text "No such Text" in "Text"/)
+          end.to raise_error(/expected to find text "No such Text" in "Text"/)
         end
 
         it "casts has_text? argument to string" do
           expect do
             "<h1>Text</h1>".should have_text(:cast_me)
-          end.to raise_error(/expected there to be text "cast_me" in "Text"/)
+          end.to raise_error(/expected to find text "cast_me" in "Text"/)
         end
       end
 
@@ -344,7 +344,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_no_text? returns false" do
           expect do
             "<h1>Text</h1>".should_not have_text('Text')
-          end.to raise_error(/expected there not to be text "Text" in "Text"/)
+          end.to raise_error(/expected not to find text "Text" in "Text"/)
         end
       end
     end
@@ -375,7 +375,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_text? returns false" do
           expect do
             page.should have_text('No such Text')
-          end.to raise_error(/expected there to be text "No such Text" in "(.*)This is a test(.*)"/)
+          end.to raise_error(/expected to find text "No such Text" in "(.*)This is a test(.*)"/)
         end
 
         context "with default selector CSS" do
@@ -383,7 +383,7 @@ describe Capybara::RSpecMatchers do
           it "fails if has_text? returns false" do
             expect do
               page.should have_text('No such Text')
-            end.to raise_error(/expected there to be text "No such Text" in "(.*)This is a test(.*)"/)
+            end.to raise_error(/expected to find text "No such Text" in "(.*)This is a test(.*)"/)
           end
           after { Capybara.default_selector = :xpath }
         end
@@ -397,7 +397,7 @@ describe Capybara::RSpecMatchers do
         it "fails if has_no_text? returns false" do
           expect do
             page.should_not have_text('This is a test')
-          end.to raise_error(/expected there not to be text "This is a test"/)
+          end.to raise_error(/expected not to find text "This is a test"/)
         end
       end
     end

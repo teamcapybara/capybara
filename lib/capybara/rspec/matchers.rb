@@ -33,38 +33,41 @@ module Capybara
     end
 
     class HaveText < Matcher
-      attr_reader :text, :type
+      attr_reader :type, :content, :options
 
-      def initialize(type, text)
-        @type = type
-        @text = text
+      def initialize(*args)
+        @options = (args.last.is_a?(Hash))? args.pop : {}
+        @content = args.pop
+        @type = args.first
       end
 
       def matches?(actual)
         @actual = wrap(actual)
-        @actual.has_text?(type, text)
+        @actual.has_text?(type, content, options)
       end
 
       def does_not_match?(actual)
         @actual = wrap(actual)
-        @actual.has_no_text?(type, text)
+        @actual.has_no_text?(type, content, options)
       end
 
       def failure_message_for_should
-        "expected there to be text #{format(text)} in #{format(@actual.text(type))}"
+        message = Capybara::CountHelpers.failure_message(description, options)
+        message << " in #{format(@actual.text(type))}"
+        message
       end
 
       def failure_message_for_should_not
-        "expected there not to be text #{format(text)} in #{format(@actual.text(type))}"
+        failure_message_for_should.sub(/(to find)/, 'not \1')
       end
 
       def description
-        "have text #{format(text)}"
+        "text #{format(content)}"
       end
 
-      def format(text)
-        text = Capybara::Helpers.normalize_whitespace(text) unless text.is_a? Regexp
-        text.inspect
+      def format(content)
+        content = Capybara::Helpers.normalize_whitespace(content) unless content.is_a? Regexp
+        content.inspect
       end
     end
 
@@ -106,17 +109,14 @@ module Capybara
       HaveSelector.new(:xpath, xpath, options)
     end
 
-     def have_css(css, options={})
+    def have_css(css, options={})
       HaveSelector.new(:css, css, options)
     end
 
-    def have_content(type=nil, text)
-      HaveText.new(type, text)
+    def have_text(*args)
+      HaveText.new(*args)
     end
-
-    def have_text(type=nil, text)
-      HaveText.new(type, text)
-    end
+    alias_method :have_content, :have_text
 
     def have_title(title)
       HaveTitle.new(title)

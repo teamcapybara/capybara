@@ -287,14 +287,15 @@ module Capybara
   self.default_driver = nil
   self.current_driver = nil
 
-  autoload :DSL,        'capybara/dsl'
-  autoload :Server,     'capybara/server'
-  autoload :Session,    'capybara/session'
-  autoload :Selector,   'capybara/selector'
-  autoload :Query,      'capybara/query'
-  autoload :Result,     'capybara/result'
-  autoload :Helpers,    'capybara/helpers'
-  autoload :VERSION,    'capybara/version'
+  autoload :DSL,          'capybara/dsl'
+  autoload :Server,       'capybara/server'
+  autoload :Session,      'capybara/session'
+  autoload :Selector,     'capybara/selector'
+  autoload :Query,        'capybara/query'
+  autoload :Result,       'capybara/result'
+  autoload :Helpers,      'capybara/helpers'
+  autoload :CountHelpers, 'capybara/helpers'
+  autoload :VERSION,      'capybara/version'
 
   module Node
     autoload :Base,       'capybara/node/base'
