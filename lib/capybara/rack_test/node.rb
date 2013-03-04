@@ -149,7 +149,7 @@ private
     if text_or_password? && attribute_is_not_blank?(:maxlength)
       # Browser behavior for maxlength="0" is inconsistent, so we stick with
       # Firefox, allowing no input
-      value = value[0...self[:maxlength].to_i]
+      value = value.to_s[0...self[:maxlength].to_i]
     end
     if Array === value #Assert multiple attribute is present
       value.each do |v|
