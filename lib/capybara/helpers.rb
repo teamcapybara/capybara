@@ -1,6 +1,8 @@
 # encoding: UTF-8
 
 module Capybara
+
+  # @api private
   module Helpers
     class << self
       ##
@@ -48,6 +50,7 @@ module Capybara
     end
   end
 
+  # @api private
   module CountHelpers
     class << self
       def matches_count?(count, options={})
@@ -55,29 +58,28 @@ module Capybara
         when options[:between]
           options[:between] === count
         when options[:count]
-          options[:count].to_i == count
+          Integer(options[:count]) == count
         when options[:maximum]
-          options[:maximum].to_i >= count
+          Integer(options[:maximum]) >= count
         when options[:minimum]
-          options[:minimum].to_i <= count
+          Integer(options[:minimum]) <= count
         else
           count > 0
         end
       end
 
       def failure_message(description, options={})
-        message_prototype = "expected to find #{description} COUNT"
-        message = if options[:count]
-          message_prototype.sub(/COUNT/, "#{options[:count]} #{declension('time', 'times', options[:count])}")
+        message = "expected to find #{description}"
+        if options[:count]
+          message << " #{options[:count]} #{declension('time', 'times', options[:count])}"
         elsif options[:between]
-          message_prototype.sub(/COUNT/, "between #{options[:between].first} and #{options[:between].last} times")
+          message << " between #{options[:between].first} and #{options[:between].last} times"
         elsif options[:maximum]
-          message_prototype.sub(/COUNT/, "at most #{options[:maximum]} #{declension('time', 'times', options[:maximum])}")
+          message << " at most #{options[:maximum]} #{declension('time', 'times', options[:maximum])}"
         elsif options[:minimum]
-          message_prototype.sub(/COUNT/, "at least #{options[:minimum]} #{declension('time', 'times', options[:minimum])}")
-        else
-          "expected to find #{description}"
+          message << " at least #{options[:minimum]} #{declension('time', 'times', options[:minimum])}"
         end
+        message
       end
 
       def declension(singular, plural, count)

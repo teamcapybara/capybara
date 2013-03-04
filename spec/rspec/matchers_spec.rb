@@ -29,9 +29,28 @@ describe Capybara::RSpecMatchers do
 
         it "fails if matched node count does not equal expected count" do
           expect do
-            "<h1>Text</h1>".should have_css('h1', :count => 2)
+            "<h1>Text</h1>".should have_css('h1', count: 2)
           end.to raise_error("expected to find css \"h1\" 2 times, found 1 match: \"Text\"")
         end
+
+        it "fails if matched node count is less than expected minimum count" do
+          expect do
+            "<h1>Text</h1>".should have_css('p', minimum: 1)
+          end.to raise_error("expected to find css \"p\" at least 1 time but there were no matches")
+        end
+
+        it "fails if matched node count is more than expected maximum count" do
+          expect do
+            "<h1>Text</h1><h1>Text</h1><h1>Text</h1>".should have_css('h1', maximum: 2)
+          end.to raise_error('expected to find css "h1" at most 2 times, found 3 matches: "Text", "Text", "Text"')
+        end
+
+        it "fails if matched node count does not belong to expected range" do
+          expect do
+            "<h1>Text</h1>".should have_css('h1', between: 2..3)
+          end.to raise_error("expected to find css \"h1\" between 2 and 3 times, found 1 match: \"Text\"")
+        end
+
       end
 
       context "with should_not" do
@@ -329,6 +348,30 @@ describe Capybara::RSpecMatchers do
           expect do
             "<h1>Text</h1>".should have_text(:cast_me)
           end.to raise_error(/expected to find text "cast_me" in "Text"/)
+        end
+
+        it "fails if matched text count does not equal to expected count" do
+          expect do
+            "<h1>Text</h1>".should have_text('Text', count: 2)
+          end.to raise_error(/expected to find text "Text" 2 times in "Text"/)
+        end
+
+        it "fails if matched text count is less than expected minimum count" do
+          expect do
+            "<h1>Text</h1>".should have_text('Lorem', minimum: 1)
+          end.to raise_error(/expected to find text "Lorem" at least 1 time in "Text"/)
+        end
+
+        it "fails if matched text count is more than expected maximum count" do
+          expect do
+            "<h1>Text TextText</h1>".should have_text('Text', maximum: 2)
+          end.to raise_error(/expected to find text "Text" at most 2 times in "Text TextText"/)
+        end
+
+        it "fails if matched text count does not belong to expected range" do
+          expect do
+            "<h1>Text</h1>".should have_text('Text', between: 2..3)
+          end.to raise_error(/expected to find text "Text" between 2 and 3 times in "Text"/)
         end
       end
 
