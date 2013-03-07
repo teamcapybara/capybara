@@ -42,12 +42,16 @@ Capybara::SpecHelper.spec '#has_field' do
       @session.should have_field('First Name', :type => 'text')
       @session.should have_field('Html5 Email', :type => 'email')
       @session.should have_field('Html5 Tel', :type => 'tel')
+      @session.should have_field('Description', :type => 'textarea')
+      @session.should have_field('Languages', :type => 'select')
     end
 
     it "should be false if the given field is not on the page" do
-      @session.should_not have_field('First Name', :type => 'email')
+      @session.should_not have_field('First Name', :type => 'textarea')
       @session.should_not have_field('Html5 Email', :type => 'tel')
       @session.should_not have_field('Description', :type => '')
+      @session.should_not have_field('Description', :type => 'email')
+      @session.should_not have_field('Languages', :type => 'textarea')
     end
   end
 end
@@ -95,12 +99,16 @@ Capybara::SpecHelper.spec '#has_no_field' do
       @session.should_not have_no_field('First Name', :type => 'text')
       @session.should_not have_no_field('Html5 Email', :type => 'email')
       @session.should_not have_no_field('Html5 Tel', :type => 'tel')
+      @session.should_not have_no_field('Description', :type => 'textarea')
+      @session.should_not have_no_field('Languages', :type => 'select')
     end
 
     it "should be true if the given field is not on the page" do
-      @session.should have_no_field('First Name', :type => 'email')
+      @session.should have_no_field('First Name', :type => 'textarea')
       @session.should have_no_field('Html5 Email', :type => 'tel')
       @session.should have_no_field('Description', :type => '')
+      @session.should have_no_field('Description', :type => 'email')
+      @session.should have_no_field('Languages', :type => 'textarea')
     end
   end
 end

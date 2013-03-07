@@ -84,7 +84,13 @@ Capybara.add_selector(:field) do
   filter(:checked) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked) { |node, value| (value ^ node.checked?) }
   filter(:with) { |node, with| node.value == with }
-  filter(:type) { |node, type| node[:type] == type }
+  filter(:type) do |node, type|
+    if ['textarea', 'select'].include?(type)
+      node.tag_name == type
+    else
+      node[:type] == type
+    end
+  end
 end
 
 Capybara.add_selector(:fieldset) do
