@@ -50,6 +50,20 @@ Capybara::SpecHelper.spec '#has_field' do
       @session.should_not have_field('Description', :type => '')
     end
   end
+
+  context 'with tag_name' do
+    it "should be true if a field with the given tag_name is on the page" do
+      @session.should have_field('First Name', :tag_name => 'input')
+      @session.should have_field('Description', :tag_name => 'textarea')
+      @session.should have_field('Languages', :tag_name => 'select')
+    end
+
+    it "should be false if the given field with tag_name is not on the page" do
+      @session.should_not have_field('First Name', :tag_name => 'select')
+      @session.should_not have_field('Description', :tag_name => 'input')
+      @session.should_not have_field('Languages', :tag_name => 'textarea')
+    end
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_field' do
@@ -101,6 +115,20 @@ Capybara::SpecHelper.spec '#has_no_field' do
       @session.should have_no_field('First Name', :type => 'email')
       @session.should have_no_field('Html5 Email', :type => 'tel')
       @session.should have_no_field('Description', :type => '')
+    end
+  end
+
+  context 'with tag_name' do
+    it "should be true if a field with the given tag_name is not on the page" do
+      @session.should have_no_field('First Name', :tag_name => 'select')
+      @session.should have_no_field('Description', :tag_name => 'input')
+      @session.should have_no_field('Languages', :tag_name => 'textarea')
+    end
+
+    it "should be false if the given field with tag_name is on the page" do
+      @session.should_not have_no_field('First Name', :tag_name => 'input')
+      @session.should_not have_no_field('Description', :tag_name => 'textarea')
+      @session.should_not have_no_field('Languages', :tag_name => 'select')
     end
   end
 end

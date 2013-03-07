@@ -300,10 +300,15 @@ module Capybara
       #
       #     page.has_field?('Email', :type => 'email')
       #
-      # @param [String] locator           The label, name or id of a field to check for
-      # @option options [String] :with    The text content of the field
-      # @option options [String] :type    The type attribute of the field
-      # @return [Boolean]                 Whether it exists
+      # And also to filter by the field tag name:
+      #
+      #     page.has_field?('Description', :tag_name => 'textarea')
+      #
+      # @param [String] locator             The label, name or id of a field to check for
+      # @option options [String] :with      The text content of the field
+      # @option options [String] :type      The type attribute of the field
+      # @option options [String] :tag_name  The tag name of the field
+      # @return [Boolean]                   Whether it exists
       #
       def has_field?(locator, options={})
         has_selector?(:field, locator, options)
@@ -314,10 +319,11 @@ module Capybara
       # Checks if the page or current node has no form field with the given
       # label, name or id. See {Capybara::Node::Matchers#has_field?}.
       #
-      # @param [String] locator           The label, name or id of a field to check for
-      # @option options [String] :with    The text content of the field
-      # @option options [String] :type    The type attribute of the field
-      # @return [Boolean]                 Whether it doesn't exist
+      # @param [String] locator             The label, name or id of a field to check for
+      # @option options [String] :with      The text content of the field
+      # @option options [String] :type      The type attribute of the field
+      # @option options [String] :tag_name  The tag name of the field
+      # @return [Boolean]                   Whether it doesn't exist
       #
       def has_no_field?(locator, options={})
         has_no_selector?(:field, locator, options)
