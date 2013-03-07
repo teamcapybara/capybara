@@ -10,7 +10,11 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def [](name)
-    native.attribute(name.to_s)
+    if name == :tag_name
+      native.tag_name
+    else 
+      native.attribute(name.to_s)
+    end
   rescue Selenium::WebDriver::Error::WebDriverError
     nil
   end
