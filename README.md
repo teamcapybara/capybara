@@ -29,6 +29,12 @@ To install, type
 gem install capybara
 ```
 
+If you are using Ruby 1.8.X, use 1.1.X (latest version could be found [here](https://rubygems.org/gems/capybara/versions))
+
+```bash
+gem install capybara -v 1.1.X
+```
+
 If you are using Rails, add this line to your test helper file:
 
 ```ruby
