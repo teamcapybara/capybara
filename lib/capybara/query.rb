@@ -45,8 +45,12 @@ module Capybara
           when :visible then return false unless node.visible?
           when :hidden then return false if node.visible?
         end
-        selector.custom_filters.each do |name, block|
-          return false if options.has_key?(name) and not block.call(node, options[name])
+        selector.custom_filters.each do |name, filter|
+          if options.has_key?(name)
+            return false unless filter.matches?(node, options[name])
+          elsif filter.default?
+            return false unless filter.matches?(node, filter.default)
+          end
         end
         true
       end
