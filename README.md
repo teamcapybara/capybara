@@ -537,7 +537,7 @@ are two options, `Capybara.exact` and `Capybara.match`.
 
 `Capybara.exact` and the `exact` option work together with the `is` expression
 inside the XPath gem. When `exact` is true, all `is` expressions match exactly,
-when it is false, they allow substring matches. Many of the seletors built into
+when it is false, they allow substring matches. Many of the selectors built into
 Capybara use the `is` expression. This way you can specify whether you want to
 allow substring matches or not. `Capybara.exact` is false by default.
 
@@ -564,7 +564,7 @@ four different strategies built into Capybara:
    element is found, a new search is performed which allows partial matches. If
    that search returns multiple matches, an error is raised.
 4. **prefer_exact:** If multiple matches are found, some of which are exact,
-   and some of which are not, then the first eaxctly matching element is
+   and some of which are not, then the first exactly matching element is
    returned.
 
 The default for `Capybara.match` is `:smart`. To emulate the behaviour in
@@ -622,7 +622,7 @@ page.should have_content('baz')
 If clicking on the *foo* link triggers an asynchronous process, such as
 an Ajax request, which, when complete will add the *bar* link to the page,
 clicking on the *bar* link would be expected to fail, since that link doesn't
-exist yet. However Capybara is smart enought to retry finding the link for a
+exist yet. However Capybara is smart enough to retry finding the link for a
 brief period of time before giving up and throwing an error. The same is true of
 the next line, which looks for the content *baz* on the page; it will retry
 looking for that content for a brief time. You can adjust how long this period
@@ -695,7 +695,7 @@ This enables its use in unsupported testing frameworks, and for general-purpose 
 ## Calling remote servers
 
 Normally Capybara expects to be testing an in-process Rack application, but you
-can also use it to talk to a web server running anywhere on the internets, by
+can also use it to talk to a web server running anywhere on the internet, by
 setting app_host:
 
 ```ruby
