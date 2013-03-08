@@ -38,9 +38,9 @@ Capybara::SpecHelper.spec '#find' do
 
     it "should not find element if it appears after given wait duration" do
       @session.visit('/with_js')
-      @session.click_link('Click me')
+      @session.click_link('Slowly')
       expect do
-        @session.find(:css, "a#has-been-clicked", :wait => 0.2)
+        @session.find(:css, "a#slow-clicked", :wait => 0.2)
       end.to raise_error(Capybara::ElementNotFound)
     end
 
