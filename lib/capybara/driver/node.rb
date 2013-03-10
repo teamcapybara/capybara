@@ -70,21 +70,21 @@ module Capybara
       end
 
       def path
-        raise NotSupportedByDriverError
+        raise NotSupportedByDriverError, 'Capybara::Driver::Node#path'
       end
 
       def trigger(event)
-        raise NotSupportedByDriverError
+        raise NotSupportedByDriverError, 'Capybara::Driver::Node#trigger'
       end
 
       def inspect
         %(#<#{self.class} tag="#{tag_name}" path="#{path}">)
-      rescue NotSupportedByDriverError
+      rescue NotSupportedByDriverError, 'Capybara::Driver::Node#inspect'
         %(#<#{self.class} tag="#{tag_name}">)
       end
 
       def ==(other)
-        raise NotSupportedByDriverError
+        raise NotSupportedByDriverError, 'Capybara::Driver::Node#=='
       end
     end
   end
