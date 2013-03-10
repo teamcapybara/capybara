@@ -71,6 +71,18 @@ Capybara::SpecHelper.spec "node" do
       @session.first('//input').set('')
       @session.first('//input').value.should == ''
     end
+    
+    it "should not set if the text field is readonly" do
+      @session.first('//input[@readonly]').value.should == 'should not change'
+      @session.first('//input[@readonly]').set('changed')
+      @session.first('//input[@readonly]').value.should == 'should not change'
+    end
+    
+    it "should not set if the textarea is readonly" do
+      @session.first('//textarea[@readonly]').value.should == 'textarea should not change'
+      @session.first('//textarea[@readonly]').set('changed')
+      @session.first('//textarea[@readonly]').value.should == 'textarea should not change'
+    end      
   end
 
   describe "#tag_name" do
