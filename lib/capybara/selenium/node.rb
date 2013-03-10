@@ -37,7 +37,8 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       path_names = value.to_s.empty? ? [] : value
       native.send_keys(*path_names)
     elsif tag_name == 'textarea' or tag_name == 'input'
-      driver.browser.execute_script "arguments[0].value = ''", native
+      #script can change a readonly element which user input cannot, so dont execute if readonly
+      driver.browser.execute_script "arguments[0].value = ''", native unless self[:readonly]
       native.send_keys(value.to_s)
     end
   end

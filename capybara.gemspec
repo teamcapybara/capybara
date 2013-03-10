@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.name = "capybara"
   s.rubyforge_project = "capybara"
   s.version = Capybara::VERSION
-  s.required_ruby_version = ">= 1.9.0"
+  s.required_ruby_version = ">= 1.9.3"
 
   s.authors = ["Jonas Nicklas"]
   s.email = ["jonas.nicklas@gmail.com"]
@@ -39,8 +39,6 @@ Gem::Specification.new do |s|
 
   if File.exist?("gem-private_key.pem")
     s.signing_key = 'gem-private_key.pem'
-  else
-    puts "WARNING!! No private key specified, gem will not be signed!"
   end
   s.cert_chain = ['gem-public_cert.pem']
 end
