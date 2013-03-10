@@ -461,9 +461,9 @@ module Capybara
       private
 
       def text_found?(*args)
-        options = (args.last.is_a?(Hash))? args.pop : {}
-        content = (args.last.is_a?(Regexp))? args.pop : args.pop.to_s
-        type = args.first
+        type = args.shift if args.first.is_a?(Symbol) or args.first.nil?
+        content = args.shift
+        options = (args.first.is_a?(Hash))? args.first : {}
         count = Capybara::Helpers.normalize_whitespace(text(type)).scan(Capybara::Helpers.to_regexp(content)).count
         
         Capybara::CountHelpers.matches_count?(count, options)

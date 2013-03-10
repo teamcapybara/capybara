@@ -36,9 +36,9 @@ module Capybara
       attr_reader :type, :content, :options
 
       def initialize(*args)
-        @options = (args.last.is_a?(Hash))? args.pop : {}
-        @content = args.pop
-        @type = args.first
+        @type = args.shift if args.first.is_a?(Symbol)
+        @content = args.shift
+        @options = (args.first.is_a?(Hash))? args.first : {}
       end
 
       def matches?(actual)

@@ -344,10 +344,10 @@ describe Capybara::RSpecMatchers do
           end.to raise_error(/expected to find text "No such Text" in "Text"/)
         end
 
-        it "casts has_text? argument to string" do
+        it "casts Fixnum to string" do
           expect do
-            "<h1>Text</h1>".should have_text(:cast_me)
-          end.to raise_error(/expected to find text "cast_me" in "Text"/)
+            "<h1>Text</h1>".should have_text(3)
+          end.to raise_error(/expected to find text "3" in "Text"/)
         end
 
         it "fails if matched text count does not equal to expected count" do
