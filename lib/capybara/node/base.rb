@@ -74,36 +74,24 @@ module Capybara
       def synchronize(seconds=Capybara.default_wait_time)
         start_time = Time.now
 
-        begin
+        if session.synchronized
           yield
-        rescue => e
-          raise e if @unsynchronized
-          raise e unless driver.wait?
-          raise e unless driver.invalid_element_errors.include?(e.class) || e.is_a?(Capybara::ElementNotFound)
-          raise e if (Time.now - start_time) >= seconds
-          sleep(0.05)
-          raise Capybara::FrozenInTime, "time appears to be frozen, Capybara does not work with libraries which freeze time, consider using time travelling instead" if Time.now == start_time
-          reload if Capybara.automatic_reload
-          retry
+        else
+          session.synchronized = true
+          begin
+            yield
+          rescue => e
+            raise e unless driver.wait?
+            raise e unless driver.invalid_element_errors.include?(e.class) || e.is_a?(Capybara::ElementNotFound)
+            raise e if (Time.now - start_time) >= seconds
+            sleep(0.05)
+            raise Capybara::FrozenInTime, "time appears to be frozen, Capybara does not work with libraries which freeze time, consider using time travelling instead" if Time.now == start_time
+            reload if Capybara.automatic_reload
+            retry
+          ensure
+            session.synchronized = false
+          end
         end
-      end
-
-      ##
-      #
-      # Within the given block, prevent synchronize from having any effect.
-      #
-      # This is an internal method which should not be called unless you are
-      # absolutely sure of what you're doing.
-      #
-      # @api private
-      # @return [Object]                  The result of the given block
-      #
-      def unsynchronized
-        orig = @unsynchronized
-        @unsynchronized = true
-        yield
-      ensure
-        @unsynchronized = orig
       end
 
     protected

@@ -46,6 +46,7 @@ module Capybara
     DSL_METHODS = NODE_METHODS + SESSION_METHODS
 
     attr_reader :mode, :app, :server
+    attr_accessor :synchronized
 
     def initialize(mode, app=nil)
       @mode = mode
