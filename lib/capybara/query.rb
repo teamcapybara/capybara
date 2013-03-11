@@ -36,20 +36,18 @@ module Capybara
     end
 
     def matches_filters?(node)
-      node.unsynchronized do
-        if options[:text]
-          regexp = options[:text].is_a?(Regexp) ? options[:text] : Regexp.escape(options[:text])
-          return false if not node.text(visible).match(regexp)
-        end
-        case visible
-          when :visible then return false unless node.visible?
-          when :hidden then return false if node.visible?
-        end
-        selector.custom_filters.each do |name, block|
-          return false if options.has_key?(name) and not block.call(node, options[name])
-        end
-        true
+      if options[:text]
+        regexp = options[:text].is_a?(Regexp) ? options[:text] : Regexp.escape(options[:text])
+        return false if not node.text(visible).match(regexp)
       end
+      case visible
+        when :visible then return false unless node.visible?
+        when :hidden then return false if node.visible?
+      end
+      selector.custom_filters.each do |name, block|
+        return false if options.has_key?(name) and not block.call(node, options[name])
+      end
+      true
     end
 
     def matches_count?(count)
