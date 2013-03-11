@@ -37,4 +37,22 @@ Capybara::SpecHelper.spec '#find_field' do
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
+
+  context "with :disabled option" do
+    it "should find disabled fields when true" do
+      @session.find_field("Disabled Checkbox", :disabled => true)[:name].should == "form[disabled_checkbox]"
+    end
+
+    it "should not find disabled fields when false" do
+      expect do
+        @session.find_field("Disabled Checkbox", :disabled => false)
+      end.to raise_error(Capybara::ElementNotFound)
+    end
+
+    it "should not find disabled fields by default" do
+      expect do
+        @session.find_field("Disabled Checkbox")
+      end.to raise_error(Capybara::ElementNotFound)
+    end
+  end
 end

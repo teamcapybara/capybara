@@ -80,43 +80,72 @@ Capybara::SpecHelper.spec '#find' do
 
   context "with custom selector" do
     it "should use the custom selector" do
-      Capybara.add_selector(:monkey) do
-        xpath { |name| ".//*[@id='#{name}_monkey']" }
+      Capybara.add_selector(:beatle) do
+        xpath { |name| ".//*[@id='#{name}']" }
       end
-      @session.find(:monkey, 'john').text.should == 'Monkey John'
-      @session.find(:monkey, 'paul').text.should == 'Monkey Paul'
+      @session.find(:beatle, 'john').text.should == 'John'
+      @session.find(:beatle, 'paul').text.should == 'Paul'
     end
   end
 
   context "with custom selector with :for option" do
     it "should use the selector when it matches the :for option" do
-      Capybara.add_selector(:monkey) do
-        xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
+      Capybara.add_selector(:beatle) do
+        xpath { |num| ".//*[contains(@class, 'beatle')][#{num}]" }
         match { |value| value.is_a?(Fixnum) }
       end
-      @session.find(:monkey, '2').text.should == 'Monkey Paul'
-      @session.find(1).text.should == 'Monkey John'
-      @session.find(2).text.should == 'Monkey Paul'
+      @session.find(:beatle, '2').text.should == 'Paul'
+      @session.find(1).text.should == 'John'
+      @session.find(2).text.should == 'Paul'
       @session.find('//h1').text.should == 'This is a test'
     end
   end
 
   context "with custom selector with custom filter" do
     before do
-      Capybara.add_selector(:monkey) do
-        xpath { |num| ".//*[contains(@id, 'monkey')][#{num}]" }
-        filter(:name) { |node, name| node.text == name }
+      Capybara.add_selector(:beatle) do
+        xpath { |name| ".//li[contains(@class, 'beatle')][contains(text(), '#{name}')]" }
+        filter(:type) { |node, type| node[:class].split(/\s+/).include?(type) }
       end
     end
 
     it "should find elements that match the filter" do
-      @session.find(:monkey, '1', :name => 'Monkey John').text.should == 'Monkey John'
-      @session.find(:monkey, '2', :name => 'Monkey Paul').text.should == 'Monkey Paul'
+      @session.find(:beatle, 'Paul', :type => 'drummer').text.should == 'Paul'
+      @session.find(:beatle, 'Ringo', :type => 'drummer').text.should == 'Ringo'
+    end
+
+    it "ignores filter when it is not given" do
+      @session.find(:beatle, 'Paul').text.should == 'Paul'
+      @session.find(:beatle, 'John').text.should == 'John'
     end
 
     it "should not find elements that don't match the filter" do
-      expect { @session.find(:monkey, '2', :name => 'Monkey John') }.to raise_error(Capybara::ElementNotFound)
-      expect { @session.find(:monkey, '1', :name => 'Monkey Paul') }.to raise_error(Capybara::ElementNotFound)
+      expect { @session.find(:beatle, 'John', :type => 'drummer') }.to raise_error(Capybara::ElementNotFound)
+      expect { @session.find(:beatle, 'George', :type => 'drummer') }.to raise_error(Capybara::ElementNotFound)
+    end
+  end
+
+  context "with custom selector with custom filter and default" do
+    before do
+      Capybara.add_selector(:beatle) do
+        xpath { |name| ".//li[contains(@class, 'beatle')][contains(text(), '#{name}')]" }
+        filter(:type, :default => "drummer") { |node, type| node[:class].split(/\s+/).include?(type) }
+      end
+    end
+
+    it "should find elements that match the filter" do
+      @session.find(:beatle, 'Paul', :type => 'drummer').text.should == 'Paul'
+      @session.find(:beatle, 'Ringo', :type => 'drummer').text.should == 'Ringo'
+    end
+
+    it "should use default value when filter is not given" do
+      @session.find(:beatle, 'Paul').text.should == 'Paul'
+      expect { @session.find(:beatle, 'John') }.to raise_error(Capybara::ElementNotFound)
+    end
+
+    it "should not find elements that don't match the filter" do
+      expect { @session.find(:beatle, 'John', :type => 'drummer') }.to raise_error(Capybara::ElementNotFound)
+      expect { @session.find(:beatle, 'George', :type => 'drummer') }.to raise_error(Capybara::ElementNotFound)
     end
   end
 

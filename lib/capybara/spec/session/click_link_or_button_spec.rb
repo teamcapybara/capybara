@@ -79,4 +79,34 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
       end.to raise_error(Capybara::ElementNotFound, msg)
     end
   end
+
+  context "with :disabled option" do
+    it "ignores disabled buttons when false" do
+      @session.visit('/form')
+      expect do
+        @session.click_link_or_button('Disabled button', :disabled => false)
+      end.to raise_error(Capybara::ElementNotFound)
+    end
+
+    it "ignores disabled buttons by default" do
+      @session.visit('/form')
+      expect do
+        @session.click_link_or_button('Disabled button')
+      end.to raise_error(Capybara::ElementNotFound)
+    end
+
+    it "happily clicks on links which incorrectly have the disabled attribute" do
+      @session.visit('/with_html')
+      @session.click_link_or_button('Disabled link')
+      @session.should have_content("Bar")
+    end
+
+    it "does nothing when button is disabled" do
+      @session.visit('/form')
+      expect do
+        @session.click_link_or_button('Disabled button', :disabled => false)
+      end.to raise_error(Capybara::ElementNotFound)
+    end
+
+  end
 end
