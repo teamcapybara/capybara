@@ -127,7 +127,7 @@ module Capybara
     end
 
     def have_link_to(href)
-      HaveSelector.new(:link, '', {href: href})
+      HaveSelector.new(:link, nil, {href: href})
     end
 
     def have_button(locator)
