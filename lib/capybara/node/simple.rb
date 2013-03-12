@@ -135,10 +135,6 @@ module Capybara
         # no op
       end
 
-      def unsynchronized
-        yield # simple nodes don't need to wait
-      end
-
       def title
         native.xpath("//title").first.text
       end
