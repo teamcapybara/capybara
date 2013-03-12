@@ -263,6 +263,30 @@ module Capybara
 
       ##
       #
+      # Checks if the page or current node has a link with the given
+      # href.
+      #
+      # @param [String] href              The URL of a link to check for
+      # @return [Boolean]                 Whether it exists
+      #
+      def has_link_to?(href)
+        has_selector?(:link, '', {href: href})
+      end
+
+      ##
+      #
+      # Checks if the page or current node has no link with the given
+      # href.
+      #
+      # @param (see Capybara::Node::Finders#has_link_to?)
+      # @return [Boolean]            Whether it doesn't exist
+      #
+      def has_no_link_to?(href)
+        has_no_selector?(:link, '', {href: href})
+      end
+
+      ##
+      #
       # Checks if the page or current node has a button with the given
       # text, value or id.
       #
