@@ -23,7 +23,16 @@ module Capybara
       end
 
       @expression = @selector.call(@locator)
+      
       assert_valid_keys!
+
+      @selector.custom_modifiers.each do |name, modifier|
+        if options.has_key?(name) 
+          @expression=modifier.modify(@expression, options[name])
+        elsif modifier.default?
+          @expression=modifier.modify(@expression, modifier.default)
+        end
+      end
     end
 
     def name; selector.name; end
@@ -127,7 +136,7 @@ module Capybara
   private
 
     def assert_valid_keys!
-      valid_keys = VALID_KEYS + @selector.custom_filters.keys
+      valid_keys = VALID_KEYS + @selector.custom_filters.keys + @selector.custom_modifiers.keys
       invalid_keys = @options.keys - valid_keys
       unless invalid_keys.empty?
         invalid_names = invalid_keys.map(&:inspect).join(", ")
