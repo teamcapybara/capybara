@@ -32,6 +32,7 @@ module Capybara
     def description
       @description = "#{label} #{locator.inspect}"
       @description << " with text #{options[:text].inspect}" if options[:text]
+      @description = "#{label} with href #{options[:href].inspect}" if locator.nil? and options[:href]
       @description
     end
 

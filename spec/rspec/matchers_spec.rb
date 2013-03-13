@@ -421,6 +421,24 @@ describe Capybara::RSpecMatchers do
     end
   end
 
+  describe "have_link_to matcher" do
+    let(:html) { '<a href="/foo/bar">Just a link</a>' }
+
+    it "gives proper description" do
+      have_link_to('/foo/bar').description.should == "have link with href \"/foo/bar\""
+    end
+
+    it "passes if there is such a button" do
+      html.should have_link_to('/foo/bar')
+    end
+
+    it "fails if there is no such button" do
+      expect do
+        html.should have_link_to('/bar/foo')
+      end.to raise_error(/expected to find link with href "\/bar\/foo"/)
+    end
+  end
+
   describe "have_title matcher" do
     it "gives proper description" do
       have_title('Just a title').description.should == "have title \"Just a title\""
