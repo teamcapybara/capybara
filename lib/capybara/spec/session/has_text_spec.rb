@@ -116,6 +116,80 @@ Capybara::SpecHelper.spec '#has_text?' do
     @session.click_link('Click me')
     @session.should have_text("Has been clicked")
   end
+
+  context "with between" do
+    it "should be true if the text occurs within the range given" do
+      @session.visit('/with_count')
+      @session.should have_text('count', between: 1..3)
+      @session.should have_text(/count/, between: 2..2)
+    end
+
+    it "should be false if the text occurs more or fewer times than range" do
+      @session.visit('/with_count')
+      @session.should_not have_text('count', between: 0..1)
+      @session.should_not have_text('count', between: 3..10)
+      @session.should_not have_text(/count/, between: 2...2)
+    end
+  end
+
+  context "with count" do
+    it "should be true if the text occurs the given number of times" do
+      @session.visit('/with_count')
+      @session.should have_text('count', count: 2)
+    end
+
+    it "should be false if the text occurs a different number of times than the given" do
+      @session.visit('/with_count')
+      @session.should_not have_text('count', count: 0)
+      @session.should_not have_text('count', count: 1)
+      @session.should_not have_text(/count/, count: 3)
+    end
+
+    it "should coerce count to an integer" do
+      @session.visit('/with_count')
+      @session.should have_text('count', count: '2')
+      @session.should_not have_text('count', count: '3')
+    end
+  end
+
+  context "with maximum" do
+    it "should be true when text occurs same or fewer times than given" do
+      @session.visit('/with_count')
+      @session.should have_text('count', maximum: 2)
+      @session.should have_text(/count/, maximum: 3)
+    end
+
+    it "should be false when text occurs more times than given" do
+      @session.visit('/with_count')
+      @session.should_not have_text('count', maximum: 1)
+      @session.should_not have_text('count', maximum: 0)
+    end
+
+    it "should coerce maximum to an integer" do
+      @session.visit('/with_count')
+      @session.should have_text('count', maximum: '2')
+      @session.should_not have_text('count', maximum: '1')
+    end
+  end
+
+  context "with minimum" do
+    it "should be true when text occurs same or more times than given" do
+      @session.visit('/with_count')
+      @session.should have_text('count', minimum: 2)
+      @session.should have_text(/count/, minimum: 0)
+    end
+
+    it "should be false when text occurs fewer times than given" do
+      @session.visit('/with_count')
+      @session.should_not have_text('count', minimum: 3)
+    end
+
+    it "should coerce minimum to an integer" do
+      @session.visit('/with_count')
+      @session.should have_text('count', minimum: '2')
+      @session.should_not have_text('count', minimum: '3')
+    end
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_text?' do
