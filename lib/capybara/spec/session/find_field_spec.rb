@@ -87,7 +87,7 @@ Capybara::SpecHelper.spec '#find_field' do
       context "inside non-first legend" do
         it "should not find fields when false" do
           expect do
-            r=@session.find_field("Disabled Fieldset Legend2 Checkbox", :disabled => false)
+            @session.find_field("Disabled Fieldset Legend2 Checkbox", :disabled => false)
           end.to raise_error(Capybara::ElementNotFound)
         end
         it "should find fields when true" do
