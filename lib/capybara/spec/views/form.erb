@@ -401,3 +401,27 @@
     <input type="submit" name="form[no_action]" value="No Action" />
   </p>
 </form>
+
+<form action="/form" method="post">
+  <fieldset id="disabled_fieldset" disabled="disabled">
+    <legend>
+      <label>
+        Disabled Fieldset Legend Checkbox
+        <input type="checkbox" name="form[legend_checkbox]" value="Should see me" checked="checked" />
+      </label>
+    </legend>
+    <legend>
+      <label>
+        Disabled Fieldset Legend2 Checkbox
+        <input type="checkbox" name="form[legend2_checkbox]" value="Should see me" checked="checked" />
+      </label>
+    </legend>
+    <p>
+      <label for="form_disabled_fieldset_checkbox">
+        Disabled Fieldset Checkbox
+        <input type="checkbox" name="form[disabled_fieldset_checkbox]" value="Should not see me" checked="checked" />
+      </label>
+      <button type="submit" name="form[button]" value="Button disabled due to fieldset">Disabled due to fieldset</button>
+    </p>
+  </fieldset>
+</form>
