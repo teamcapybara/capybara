@@ -81,7 +81,7 @@ module Capybara
             yield
           rescue => e
             raise e unless driver.wait?
-            raise e unless driver.invalid_element_errors.include?(e.class) || e.is_a?(Capybara::ElementNotFound)
+            raise e unless catch_error?(e)
             raise e if (Time.now - start_time) >= seconds
             sleep(0.05)
             raise Capybara::FrozenInTime, "time appears to be frozen, Capybara does not work with libraries which freeze time, consider using time travelling instead" if Time.now == start_time
@@ -94,6 +94,12 @@ module Capybara
       end
 
     protected
+
+      def catch_error?(error)
+        (driver.invalid_element_errors + [Capybara::ElementNotFound]).any? do |type|
+          error.is_a?(type)
+        end
+      end
 
       def driver
         session.driver

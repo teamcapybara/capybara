@@ -213,8 +213,12 @@ module Capybara
 
       def reload
         if @allow_reload
-          reloaded = parent.reload.first(@query.name, @query.locator, @query.options)
-          @base = reloaded.base if reloaded
+          begin
+            reloaded = parent.reload.first(@query.name, @query.locator, @query.options)
+            @base = reloaded.base if reloaded
+          rescue => e
+            raise e unless catch_error?(e)
+          end
         end
         self
       end
