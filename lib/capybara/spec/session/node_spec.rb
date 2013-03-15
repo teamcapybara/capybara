@@ -99,6 +99,18 @@ Capybara::SpecHelper.spec "node" do
       @session.find('//input[@id="customer_name"]').should be_disabled
       @session.find('//input[@id="customer_email"]').should_not be_disabled
     end
+    
+    it "should see disabled options as disabled" do
+      @session.visit('/form')
+      @session.find('//select[@id="form_title"]/option[1]').should_not be_disabled
+      @session.find('//select[@id="form_title"]/option[@disabled]').should be_disabled
+    end
+    
+    it "should see enabled options in disabled select as disabled" do
+      @session.visit('/form')
+      @session.find('//select[@id="form_disabled_select"]/option').should be_disabled
+      @session.find('//select[@id="form_title"]/option[1]').should_not be_disabled
+    end
   end
 
   describe "#visible?" do
