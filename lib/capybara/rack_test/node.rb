@@ -73,7 +73,11 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   end
 
   def disabled?
-    string_node.disabled?
+    if %w(option optgroup).include? tag_name
+      string_node.disabled? || find_xpath("parent::*")[0].disabled?
+    else
+      string_node.disabled?
+    end
   end
   
   def path
