@@ -98,4 +98,53 @@ describe Capybara::Server do
       Capybara.server {|app, port| Capybara.run_default_server(app, port)}
     end
   end
+
+  context "#responsive?" do
+    let(:app) { lambda { [200, {}, ['hello']] } }
+    let(:server_thread) { stub('Server Thread', :join => false) }
+    let(:subject) {
+      Capybara::Server.new(app).tap do |server|
+        server.stub!(:server_thread => server_thread)
+      end
+    }
+
+    let(:http_response) {
+      stub('HTTP Response', :is_a? => false)
+    }
+
+    before(:each) do
+      Net::HTTP.stub!(:start => http_response)
+    end
+
+    it "returns false if the server thread is present but no longer running" do
+      server_thread.should_receive(:join).with(0).and_return(true)
+      expect(subject.responsive?).to eq false
+    end
+
+    shared_examples_for "it receives an HTTP response" do |response_class|
+      context "when the Net::HTTP response is #{response_class}" do
+        before(:each) do
+          http_response.should_receive(:is_a?).with(response_class).and_return(true)
+        end
+
+        it "returns true when the Net::HTTP response body is equal to the application's #object_id" do
+          http_response.stub!(:body => app.object_id.to_s)
+          expect(subject.responsive?).to eq true
+        end
+
+        it "returns false when the Net::HTTP response body is not equal to the application's #object_id" do
+          http_response.stub!(:body => "Incorrect")
+          expect(subject.responsive?).to eq false
+        end
+      end
+    end
+
+    it_behaves_like "it receives an HTTP response", Net::HTTPSuccess
+    it_behaves_like "it receives an HTTP response", Net::HTTPRedirection
+
+    it "returns false when the Net::HTTP calls raise a SystemCallError" do
+      Net::HTTP.should_receive(:start).and_raise(SystemCallError.allocate)
+      expect(subject.responsive?).to eq false
+    end
+  end
 end
