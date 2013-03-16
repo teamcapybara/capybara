@@ -38,7 +38,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       #ensure we are focused on the element
       script = <<-JS
         var range = document.createRange();
-        range.setStart(arguments[0].childNodes[0], 0);
+        range.setStart(arguments[0], 0);
         window.getSelection().addRange(range);
       JS
       driver.browser.execute_script script, native
