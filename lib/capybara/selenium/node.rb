@@ -35,10 +35,6 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       driver.browser.execute_script "arguments[0].value = ''", native
       native.send_keys(value.to_s)
     elsif self[:contenteditable]
-      if native.text == ''
-        #workaround for selenium raising an ElementNotVisible on empty elements
-        driver.browser.execute_script "arguments[0].innerHTML = '&nbsp;'", native
-      end
       #ensure we are focused on the element
       script = <<-JS
         var range = document.createRange();
