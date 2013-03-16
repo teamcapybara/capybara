@@ -1,5 +1,8 @@
 module Capybara
   class Selector
+    ONLY_DISABLED_FIELDS = XPath.attr(:disabled) | (XPath::Expression.new(:literal, :'ancestor::fieldset[@disabled]') & ~XPath::Expression.new(:literal, :'ancestor::legend[not(preceding-sibling::legend)]') )
+    NO_DISABLED_FIELDS   = ~XPath.attr(:disabled) & (~XPath::Expression.new(:literal, :'ancestor::fieldset[@disabled]') | XPath::Expression.new(:literal, :'ancestor::legend[not(preceding-sibling::legend)]') )
+    
     class Filter
       def initialize(name, block, options={})
         @name = name
@@ -19,8 +22,14 @@ module Capybara
         @block.call(node, value)
       end
     end
-
-    attr_reader :name, :custom_filters, :format
+    
+    class Modifier < Filter
+      def modify(query, value)
+        @block.call(query, value)
+      end
+    end
+      
+    attr_reader :name, :custom_filters, :custom_modifiers, :format
 
     class << self
       def all
@@ -39,6 +48,7 @@ module Capybara
     def initialize(name, &block)
       @name = name
       @custom_filters = {}
+      @custom_modifiers = {}
       @match = nil
       @label = nil
       @failure_message = nil
@@ -83,6 +93,10 @@ module Capybara
     def filter(name, options={}, &block)
       @custom_filters[name] = Filter.new(name, block, options)
     end
+    
+    def modifier(name, options={}, &block)
+      @custom_modifiers[name] = Modifier.new(name, block, options)
+    end
   end
 end
 
@@ -102,7 +116,6 @@ Capybara.add_selector(:field) do
   xpath { |locator| XPath::HTML.field(locator) }
   filter(:checked) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked) { |node, value| (value ^ node.checked?) }
-  filter(:disabled, :default => false) { |node, value| not(value ^ node.disabled?) }
   filter(:with) { |node, with| node.value == with }
   filter(:type) do |node, type|
     if ['textarea', 'select'].include?(type)
@@ -111,6 +124,7 @@ Capybara.add_selector(:field) do
       node[:type] == type
     end
   end
+  modifier(:disabled, :default => false) { |query, value| value ? query[Capybara::Selector::ONLY_DISABLED_FIELDS] : query[Capybara::Selector::NO_DISABLED_FIELDS] }
 end
 
 Capybara.add_selector(:fieldset) do
@@ -120,7 +134,13 @@ end
 Capybara.add_selector(:link_or_button) do
   label "link or button"
   xpath { |locator| XPath::HTML.link_or_button(locator) }
-  filter(:disabled, :default => false) { |node, value| node.tag_name == "a" or not(value ^ node.disabled?) }
+  modifier(:disabled, :default => false) { |query, value| 
+    if value
+      query.expressions[0] + query.expressions[1][Capybara::Selector::ONLY_DISABLED_FIELDS]
+    else
+      query.expressions[0] + query.expressions[1][Capybara::Selector::NO_DISABLED_FIELDS]
+    end 
+  }
 end
 
 Capybara.add_selector(:link) do
@@ -132,13 +152,14 @@ end
 
 Capybara.add_selector(:button) do
   xpath { |locator| XPath::HTML.button(locator) }
-  filter(:disabled, :default => false) { |node, value| not(value ^ node.disabled?) }
+  modifier(:disabled, :default => false) { |query, value| value ? query[Capybara::Selector::ONLY_DISABLED_FIELDS] : query[Capybara::Selector::NO_DISABLED_FIELDS] }
 end
+
 
 Capybara.add_selector(:fillable_field) do
   label "field"
   xpath { |locator| XPath::HTML.fillable_field(locator) }
-  filter(:disabled, :default => false) { |node, value| not(value ^ node.disabled?) }
+  modifier(:disabled, :default => false) { |query, value| value ? query[Capybara::Selector::ONLY_DISABLED_FIELDS] : query[Capybara::Selector::NO_DISABLED_FIELDS] }
 end
 
 Capybara.add_selector(:radio_button) do
@@ -146,14 +167,14 @@ Capybara.add_selector(:radio_button) do
   xpath { |locator| XPath::HTML.radio_button(locator) }
   filter(:checked) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked) { |node, value| (value ^ node.checked?) }
-  filter(:disabled, :default => false) { |node, value| not(value ^ node.disabled?) }
+  modifier(:disabled, :default => false) { |query, value| value ? query[Capybara::Selector::ONLY_DISABLED_FIELDS] : query[Capybara::Selector::NO_DISABLED_FIELDS] }
 end
 
 Capybara.add_selector(:checkbox) do
   xpath { |locator| XPath::HTML.checkbox(locator) }
   filter(:checked) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked) { |node, value| (value ^ node.checked?) }
-  filter(:disabled, :default => false) { |node, value| not(value ^ node.disabled?) }
+  modifier(:disabled, :default => false) { |query, value| value ? query[Capybara::Selector::ONLY_DISABLED_FIELDS] : query[Capybara::Selector::NO_DISABLED_FIELDS] }
 end
 
 Capybara.add_selector(:select) do
@@ -168,7 +189,7 @@ Capybara.add_selector(:select) do
     actual = node.all(:xpath, './/option').select { |option| option.selected? }.map { |option| option.text }
     [selected].flatten.sort == actual.sort
   end
-  filter(:disabled, :default => false) { |node, value| not(value ^ node.disabled?) }
+  modifier(:disabled, :default => false) { |query, value| value ? query[Capybara::Selector::ONLY_DISABLED_FIELDS] : query[Capybara::Selector::NO_DISABLED_FIELDS] }
 end
 
 Capybara.add_selector(:option) do
@@ -178,7 +199,7 @@ end
 Capybara.add_selector(:file_field) do
   label "file field"
   xpath { |locator| XPath::HTML.file_field(locator) }
-  filter(:disabled, :default => false) { |node, value| not(value ^ node.disabled?) }
+  modifier(:disabled, :default => false) { |query, value| value ? query[Capybara::Selector::ONLY_DISABLED_FIELDS] : query[Capybara::Selector::NO_DISABLED_FIELDS] }
 end
 
 Capybara.add_selector(:table) do

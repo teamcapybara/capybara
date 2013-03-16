@@ -370,6 +370,12 @@ Capybara::SpecHelper.spec '#click_button' do
       @session.click_button('Disabled button')
     end.to raise_error(Capybara::ElementNotFound)
   end
+  
+  it "ignores buttons disabled by fieldset" do
+    expect do
+      @session.click_button('Button disabled due to fieldset')
+    end.to raise_error(Capybara::ElementNotFound)
+  end
 
   it "should encode complex field names, like array[][value]" do
     @session.visit('/form')

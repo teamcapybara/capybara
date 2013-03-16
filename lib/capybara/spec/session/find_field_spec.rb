@@ -54,5 +54,46 @@ Capybara::SpecHelper.spec '#find_field' do
         @session.find_field("Disabled Checkbox")
       end.to raise_error(Capybara::ElementNotFound)
     end
+    
+    context "inside disabled fieldset" do
+      it "should find fields when true" do
+        @session.find_field("Disabled Fieldset Checkbox", :disabled => true)[:name].should == "form[disabled_fieldset_checkbox]"
+      end
+
+      it "should not find fields when false" do
+        expect do
+          @session.find_field("Disabled Fieldset Checkbox", :disabled => false)
+        end.to raise_error(Capybara::ElementNotFound)
+      end
+
+      it "should not find fields by default" do
+        expect do
+          @session.find_field("Disabled Fieldset Checkbox")
+        end.to raise_error(Capybara::ElementNotFound)
+      end    
+      
+      context "inside first legend" do
+        it "should find fields that are not disabled when false" do
+          @session.find_field("Disabled Fieldset Legend Checkbox", :disabled => false)[:name].should == "form[legend_checkbox]"
+        end  
+        
+        it "should not find fields that are not disabled when true" do
+          expect do
+            @session.find_field("Disabled Fieldset Legend Checkbox", :disabled => true)
+          end.to raise_error(Capybara::ElementNotFound)
+        end
+      end
+      
+      context "inside non-first legend" do
+        it "should not find fields when false" do
+          expect do
+            @session.find_field("Disabled Fieldset Legend2 Checkbox", :disabled => false)
+          end.to raise_error(Capybara::ElementNotFound)
+        end
+        it "should find fields when true" do
+          @session.find_field("Disabled Fieldset Legend2 Checkbox", :disabled => true)[:name].should == "form[legend2_checkbox]"
+        end
+      end
+    end
   end
 end
