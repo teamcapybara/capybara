@@ -32,13 +32,13 @@ module Capybara
     def_delegators :@result, :each, :[], :at, :size, :count, :length, :first, :last, :empty?
 
     def matches_count?
-      Capybara::CountHelpers.matches_count?(@result.size, @query.options)
+      Capybara::Helpers.matches_count?(@result.size, @query.options)
     end
 
     def failure_message
-      message = Capybara::CountHelpers.failure_message(@query.description, @query.options)
+      message = Capybara::Helpers.failure_message(@query.description, @query.options)
       if count > 0
-        message << ", found #{count} #{Capybara::CountHelpers.declension("match", "matches", count)}: " << @result.map(&:text).map(&:inspect).join(", ")
+        message << ", found #{count} #{Capybara::Helpers.declension("match", "matches", count)}: " << @result.map(&:text).map(&:inspect).join(", ")
       else
         message << " but there were no matches"
       end

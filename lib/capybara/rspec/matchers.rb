@@ -52,7 +52,7 @@ module Capybara
       end
 
       def failure_message_for_should
-        message = Capybara::CountHelpers.failure_message(description, options)
+        message = Capybara::Helpers.failure_message(description, options)
         message << " in #{format(@actual.text(type))}"
         message
       end

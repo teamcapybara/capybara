@@ -458,15 +458,14 @@ module Capybara
         self.eql?(other) or (other.respond_to?(:base) and base == other.base)
       end
 
-      private
+    private
 
       def text_found?(*args)
         type = args.shift if args.first.is_a?(Symbol) or args.first.nil?
-        content = args.shift
-        options = (args.first.is_a?(Hash))? args.first : {}
+        content, options = args
         count = Capybara::Helpers.normalize_whitespace(text(type)).scan(Capybara::Helpers.to_regexp(content)).count
-        
-        Capybara::CountHelpers.matches_count?(count, options)
+
+        Capybara::Helpers.matches_count?(count, options || {})
       end
     end
   end
