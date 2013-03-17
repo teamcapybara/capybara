@@ -63,12 +63,12 @@ module Capybara
       # until a certain amount of time passes. The amount of time defaults to
       # {Capybara.default_wait_time} and can be overriden through the `seconds`
       # argument. This time is compared with the system time to see how much
-      # time has passed. If the return value of {Time.now} is stubbed out,
+      # time has passed. If the return value of `Time.now` is stubbed out,
       # Capybara will raise `Capybara::FrozenInTime`.
       #
-      # @param [Integer] seconds          Number of seconds to retry this block
+      # @param  [Integer] seconds         Number of seconds to retry this block
       # @return [Object]                  The result of the given block
-      # @raise [Capybara::FrozenInTime]   If the return value of {Time.now} appears stuck
+      # @raise  [Capybara::FrozenInTime]  If the return value of `Time.now` appears stuck
       #
       def synchronize(seconds=Capybara.default_wait_time)
         start_time = Time.now

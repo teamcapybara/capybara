@@ -291,13 +291,13 @@ module Capybara
   module RackTest; end
   module Selenium; end
 
+  require 'capybara/helpers'
   require 'capybara/session'
   require 'capybara/dsl'
   require 'capybara/server'
   require 'capybara/selector'
   require 'capybara/query'
   require 'capybara/result'
-  require 'capybara/helpers'
   require 'capybara/version'
 
   require 'capybara/node/finders'

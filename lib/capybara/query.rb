@@ -53,21 +53,6 @@ module Capybara
       end
     end
 
-    def matches_count?(count)
-      case
-      when options[:between]
-        options[:between] === count
-      when options[:count]
-        options[:count].to_i == count
-      when options[:maximum]
-        options[:maximum].to_i >= count
-      when options[:minimum]
-        options[:minimum].to_i <= count
-      else
-        count > 0
-      end
-    end
-
     def visible
       if options.has_key?(:visible)
         case @options[:visible]
