@@ -55,7 +55,7 @@ module Capybara
     end
 
     def responsive?
-      return false if server_thread && server_thread.join(0)
+      return false if @server_thread && @server_thread.join(0)
 
       res = Net::HTTP.start(host, @port) { |http| http.get('/__identify__') }
 
@@ -74,7 +74,7 @@ module Capybara
           Capybara.server.call(@middleware, @port)
         end
 
-        Timeout.timeout(60) { server_thread.join(0.1) until responsive? }
+        Timeout.timeout(60) { @server_thread.join(0.1) until responsive? }
       end
     rescue Timeout::Error
       raise "Rack application timed out during boot"
@@ -83,8 +83,6 @@ module Capybara
     end
 
   private
-
-    attr_reader :server_thread
 
     def find_available_port
       server = TCPServer.new('127.0.0.1', 0)
