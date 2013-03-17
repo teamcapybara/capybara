@@ -4,7 +4,7 @@ Release date: Unreleased
 
 ### Changed
 
-* Hard version requirement on Ruby >= 1.9.0. Capybara will no longer install
+* Hard version requirement on Ruby >= 1.9.3. Capybara will no longer install
   on 1.8.7. [Felix Schäfer]
 * Capybara no longer depends on the `selenium-webdriver` gem. Add it to
   your Gemfile if you wish to use the Selenium driver. [Jonas Nicklas]
@@ -43,9 +43,12 @@ Release date: Unreleased
   text or only visible text. The default depends on
   `Capybara.ignore_hidden_elements`. `Capybara.visible_text_only` option is
   available for compatibility. [Jonas Nicklas]
+* `has_content?` and `has_text?` now take the same count options as `has_selector?`
+  [Andrey Botalov]
 * `current_scope` is now public API, returns the current element when `within`
   is used. [Martijn Walraven]
 * `find("input").disabled?` returns true if a node is disabled. [Ben Lovell]
+* Find disabled fields and buttons with `:disabled => false`. [Jonas Nicklas]
 * `find("input").hover` moves the mouse to the element in supported drivers.
   [Thomas Walpole]
 * RackTest driver now support `form` attribute on form elements.
@@ -54,13 +57,19 @@ Release date: Unreleased
 * `has_title?` matcher to assert on page title. [Jonas Nicklas]
 * The gem is now signed with a certicficate. The public key is available in the
   repo. [Jonas Nicklas]
+* `:select` and `:textarea` are valid options for the `:type` filter on `find_field`
+  and `has_field?`. [Yann Plancqueel]
 
 ### Fixed
 
+* Fixed race conditions when synchronizing across multiple nodes [Jonas Nicklas]
+* Fixed race conditions in deeply nested selectors [Jonas Nicklas]
 * Use posix character class for whitespace replace, solves various encoding
   problems on Ruby 2.0.0 and JRuby. [Jonas Nicklas]
 * Fix issue with `within_frame`, where selecting multiple nested frames didn't
   work as intended. [Thomas Walpole]
+* RackTest no longer fills in readonly textareas. [Thomas Walpole]
+* Don't use autoload to load files, require them directly instead. [Jonas Nicklas]
 
 # Version 2.0.2
 
