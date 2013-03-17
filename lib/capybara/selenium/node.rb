@@ -34,7 +34,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     elsif tag_name == 'textarea' or tag_name == 'input'
       driver.browser.execute_script "arguments[0].value = ''", native
       native.send_keys(value.to_s)
-    elsif self[:contenteditable]
+    elsif native.attribute('isContentEditable')
       #ensure we are focused on the element
       script = <<-JS
         var range = document.createRange();
