@@ -310,6 +310,15 @@ module Capybara
 
   require 'capybara/driver/base'
   require 'capybara/driver/node'
+
+  require 'capybara/rack_test/driver'
+  require 'capybara/rack_test/node'
+  require 'capybara/rack_test/form'
+  require 'capybara/rack_test/browser'
+  require 'capybara/rack_test/css_handlers.rb'
+
+  require 'capybara/selenium/node'
+  require 'capybara/selenium/driver'
 end
 
 Capybara.configure do |config|
@@ -328,18 +337,9 @@ Capybara.configure do |config|
 end
 
 Capybara.register_driver :rack_test do |app|
-  require 'capybara/rack_test/driver'
-  require 'capybara/rack_test/node'
-  require 'capybara/rack_test/form'
-  require 'capybara/rack_test/browser'
-  require 'capybara/rack_test/css_handlers.rb'
-
   Capybara::RackTest::Driver.new(app)
 end
 
 Capybara.register_driver :selenium do |app|
-  require 'capybara/selenium/node'
-  require 'capybara/selenium/driver'
-
   Capybara::Selenium::Driver.new(app)
 end
