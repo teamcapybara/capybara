@@ -98,4 +98,11 @@ describe Capybara::Server do
       Capybara.server {|app, port| Capybara.run_default_server(app, port)}
     end
   end
+
+  it "is not #responsive? when Net::HTTP raises a SystemCallError" do
+    app = lambda { [200, {}, ['Hello, world']] }
+    server = Capybara::Server.new(app)
+    Net::HTTP.should_receive(:start).and_raise(SystemCallError.allocate)
+    expect(server.responsive?).to eq false
+  end
 end
