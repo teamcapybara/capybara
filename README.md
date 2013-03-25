@@ -23,7 +23,7 @@ GitHub): http://groups.google.com/group/ruby-capybara
 
 ## Setup
 
-Capybara require Ruby 1.9.3 or later. To install, type:
+Capybara requires Ruby 1.9.3 or later. To install, type:
 
 ```bash
 gem install capybara
