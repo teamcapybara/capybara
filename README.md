@@ -784,25 +784,6 @@ find(:row, 3)
 find(:flash_type, :notice)
 ```
 
-You can specify an optional match option which will automatically use the
-selector if it matches the argument:
-
-```ruby
-Capybara.add_selector(:id) do
-  xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
-  match { |value| value.is_a?(Symbol) }
-end
-```
-
-Now use it like this:
-
-```ruby
-find(:post_123)
-```
-
-This :id selector is already built into Capybara by default, so you don't
-need to add it yourself.
-
 ## Beware the XPath // trap
 
 In XPath the expression // means something very specific, and it might not be what
@@ -887,7 +868,6 @@ additional info about how the underlying driver can be configured.
 To set up a development environment, simply do:
 
 ```bash
-git submodule update --init
 bundle install
 bundle exec rake  # run the test suite
 ```
