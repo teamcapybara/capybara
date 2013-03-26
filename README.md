@@ -571,15 +571,11 @@ failures, so use caution with this approach. It can be implemented in
 ActiveRecord through the following monkey patch:
 
 ```ruby
-class ActiveRecord::Base
-  mattr_accessor :shared_connection
-  @@shared_connection = nil
-
-  def self.connection
-    @@shared_connection || retrieve_connection
+ActiveRecord::ConnectionAdapters::ConnectionPool.class_eval do
+  def current_connection_id
+    Thread.main.object_id
   end
 end
-ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
 ```
 
 ## Asynchronous JavaScript (Ajax and friends)
