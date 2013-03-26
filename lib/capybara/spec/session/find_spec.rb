@@ -27,6 +27,12 @@ Capybara::SpecHelper.spec '#find' do
     @session.find(:css, "a#has-been-clicked").text.should include('Has been clicked')
   end
 
+  context "with :text option" do
+    it "casts text's argument to string" do
+      expect { @session.find(:css, '.number', text: 42) }.to_not raise_error
+    end
+  end
+
   context "with :wait option", :requires => [:js] do
     it "should not wait for asynchronous load when `false` given" do
       @session.visit('/with_js')
