@@ -74,7 +74,7 @@ module Capybara
       #
       def value
         if tag_name == 'textarea'
-          native.content.sub(/\A\n/, '')
+          native.inner_html.sub(/\A\n/, '')
         elsif tag_name == 'select'
           if native['multiple'] == 'multiple'
             native.xpath(".//option[@selected='selected']").map { |option| option[:value] || option.content  }
