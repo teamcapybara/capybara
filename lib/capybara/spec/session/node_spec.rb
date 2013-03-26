@@ -63,7 +63,7 @@ Capybara::SpecHelper.spec "node" do
       @session.find('//textarea[1]').value.should == "some <em>html</em> here"
     end
 
-    it "return any HTML content in textarea", :focus => true do
+    it "return any HTML content in textarea" do
       @session.find(:css, 'textarea#with-html').value.should == "contains <em>html</em>"
     end
   end
