@@ -29,7 +29,7 @@ Capybara::SpecHelper.spec '#find' do
 
   context "with :text option" do
     it "casts text's argument to string" do
-      expect { @session.find(:css, '.number', text: 42) }.to_not raise_error
+      @session.find(:css, '.number', text: 42).should have_content("42")
     end
   end
 
