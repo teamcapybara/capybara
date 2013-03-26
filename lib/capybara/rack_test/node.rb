@@ -79,7 +79,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
       string_node.disabled?
     end
   end
-  
+
   def path
     native.path
   end
@@ -87,11 +87,11 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   def find_xpath(locator)
     native.xpath(locator).map { |n| self.class.new(driver, n) }
   end
-  
-  def find_css(locator)    
+
+  def find_css(locator)
     native.css(locator, Capybara::RackTest::CSSHandlers.new).map { |n| self.class.new(driver, n) }
   end
-  
+
   def ==(other)
     native == other.native
   end
@@ -153,7 +153,7 @@ private
     if text_or_password? && attribute_is_not_blank?(:maxlength)
       # Browser behavior for maxlength="0" is inconsistent, so we stick with
       # Firefox, allowing no input
-      value = value[0...self[:maxlength].to_i]
+      value = value.to_s[0...self[:maxlength].to_i]
     end
     if Array === value #Assert multiple attribute is present
       value.each do |v|
