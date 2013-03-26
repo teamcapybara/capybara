@@ -57,6 +57,11 @@ Capybara::SpecHelper.spec "node" do
     it "should not swallow extra newlines in textarea" do
       @session.find('//textarea[@id="additional_newline"]').value.should == "\nbanana"
     end
+
+    it "return any HTML content in textarea", :focus => true do
+      @session.find('//textarea[1]').set("some <em>html</em> here")
+      @session.find('//textarea[1]').value.should == "some <em>html</em> here"
+    end
   end
 
   describe "#set" do

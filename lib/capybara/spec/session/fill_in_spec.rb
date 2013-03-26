@@ -51,6 +51,12 @@ Capybara::SpecHelper.spec "#fill_in" do
     extract_results(@session)['password'].should == 'supasikrit'
   end
 
+  it "should handle HTML in a textarea" do
+    @session.fill_in('form_description', :with => 'is <strong>very</strong> secret!')
+    @session.click_button('awesome')
+    extract_results(@session)['description'].should == 'is <strong>very</strong> secret!'
+  end
+
   it "should fill in a field with a custom type" do
     @session.fill_in('Schmooo', :with => 'Schmooo is the game')
     @session.click_button('awesome')
