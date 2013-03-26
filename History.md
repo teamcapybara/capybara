@@ -64,12 +64,19 @@ Release date: Unreleased
 
 * Fixed race conditions when synchronizing across multiple nodes [Jonas Nicklas]
 * Fixed race conditions in deeply nested selectors [Jonas Nicklas]
-* Use posix character class for whitespace replace, solves various encoding
-  problems on Ruby 2.0.0 and JRuby. [Jonas Nicklas]
 * Fix issue with `within_frame`, where selecting multiple nested frames didn't
   work as intended. [Thomas Walpole]
 * RackTest no longer fills in readonly textareas. [Thomas Walpole]
 * Don't use autoload to load files, require them directly instead. [Jonas Nicklas]
+
+# Version 2.0.3
+
+Release date: 2013-03-26
+
+* Check against Rails version fixed to work with Rails' master branch now returning
+  a Gem::Version [Jonas Nicklas]
+* Use posix character class for whitespace replace, solves various encoding
+  problems on Ruby 2.0.0 and JRuby. [Ben Cates]
 
 # Version 2.0.2
 
