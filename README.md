@@ -29,13 +29,13 @@ To install, type
 gem install capybara
 ```
 
-If you are using Rails, add this line to your test helper file:
+If application that you test is Rails app, add this line to your test helper file:
 
 ```ruby
 require 'capybara/rails'
 ```
 
-If you are not using Rails, set Capybara.app to your rack app:
+If application that you test is Rack (but not Rails) app, set Capybara.app to your rack app:
 
 ```ruby
 Capybara.app = MyRackApp
