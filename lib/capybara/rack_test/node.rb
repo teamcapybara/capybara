@@ -27,7 +27,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     elsif input_field?
       set_input(value)
     elsif textarea?
-      native.inner_html = value.to_s unless self[:readonly]
+      native.content = value.to_s unless self[:readonly]
     end
   end
 
