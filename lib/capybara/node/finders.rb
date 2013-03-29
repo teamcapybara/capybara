@@ -137,7 +137,7 @@ module Capybara
       # @overload first([kind], locator, options)
       #   @param [:css, :xpath] kind                 The type of selector
       #   @param [String] locator                    The selector
-      #   @param [Hash] options                      Additional options; see {all}
+      #   @param [Hash] options                      Additional options; see {#all}
       # @return [Capybara::Element]                  The found element or nil
       #
       def first(*args)

@@ -28,12 +28,12 @@ module Capybara
       #     page.has_selector?(:xpath, XPath.descendant(:p))
       #
       # @param (see Capybara::Node::Finders#all)
-      # @param options                             a customizable set of options
-      # @option options [Integer] :count (nil)     Number of times the text should occur
-      # @option options [Integer] :minimum (nil)   Minimum number of times the text should occur
-      # @option options [Integer] :maximum (nil)   Maximum number of times the text should occur
-      # @option options [Range]   :between (nil)   Range of times that should contain number of times text occurs
-      # @return [Boolean]                          If the expression exists
+      # @param args
+      # @option args [Integer] :count (nil)     Number of times the text should occur
+      # @option args [Integer] :minimum (nil)   Minimum number of times the text should occur
+      # @option args [Integer] :maximum (nil)   Maximum number of times the text should occur
+      # @option args [Range]   :between (nil)   Range of times that should contain number of times text occurs
+      # @return [Boolean]                       If the expression exists
       #
       def has_selector?(*args)
         assert_selector(*args)
