@@ -325,7 +325,7 @@ module Capybara
     #
     # Save a snapshot of the page and open it in a browser for inspection
     #
-    # @param  [String] path     The path to where it should be saved [optional]
+    # @param  [String] file_name  The path to where it should be saved [optional]
     #
     def save_and_open_page(file_name=nil)
       require "launchy"

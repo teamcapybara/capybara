@@ -36,8 +36,8 @@ module Capybara
       #
       #     element[:title] # => HTML title attribute
       #
-      # @param  [Symbol] attribute     The attribute to retrieve
-      # @return [String]               The value of the attribute
+      # @param  [Symbol] name  The attribute name to retrieve
+      # @return [String]       The value of the attribute
       #
       def [](name)
         attr_name = name.to_s

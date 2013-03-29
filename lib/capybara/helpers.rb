@@ -37,7 +37,7 @@ module Capybara
     # `Capybara.asset_host`.
     #
     # @param [String] html     HTML code to inject into
-    # @param [String]          The modified HTML code
+    # @return [String]         The modified HTML code
     #
     def inject_asset_host(html)
       if Capybara.asset_host
