@@ -146,6 +146,21 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.switch_to.window(handle, &blk)
   end
 
+  def accept_modal(type, options={}, &blk)
+    yield
+    modal.send_keys options[:response] if options[:response]
+    message = modal.text
+    modal.accept
+    message
+  end
+
+  def dismiss_modal(type, &blk)
+    yield
+    message = modal.text
+    modal.dismiss
+    message
+  end
+
   def quit
     @browser.quit if @browser
   rescue Errno::ECONNREFUSED
@@ -156,6 +171,12 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def invalid_element_errors
     [Selenium::WebDriver::Error::StaleElementReferenceError, Selenium::WebDriver::Error::UnhandledError, Selenium::WebDriver::Error::ElementNotVisibleError]
+  end
+
+private
+
+  def modal
+    @browser.switch_to.alert
   end
 
 end
