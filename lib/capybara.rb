@@ -33,7 +33,6 @@ module Capybara
     #
     # === Configurable options
     #
-    # [asset_host = String]               The hostname for a server from which assets can be loaded, used by save_and_open_page
     # [app_host = String]                 The default host to use when giving a relative URL to visit
     # [always_include_port = Boolean]     Whether the Rack server's port should automatically be inserted into every visited URL (Default: false)
     # [asset_host = String]               Where dynamic assets are hosted - will be prepended to relative asset locations if present (Default: nil)
