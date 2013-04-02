@@ -6,7 +6,7 @@ require 'capybara/rspec/matchers'
 World(Capybara::DSL)
 World(Capybara::RSpecMatchers)
 
-After do
+After('~@no_reset_sessions') do
   Capybara.reset_sessions!
 end
 
