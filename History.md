@@ -68,6 +68,8 @@ Release date: Unreleased
   work as intended. [Thomas Walpole]
 * RackTest no longer fills in readonly textareas. [Thomas Walpole]
 * Don't use autoload to load files, require them directly instead. [Jonas Nicklas]
+* Rescue weird exceptions when booting server [John Wilger]
+* Non strings are now properly cast when using the maxlength attribute [Jonas Nicklas]
 
 # Version 2.0.3
 
