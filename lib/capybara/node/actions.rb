@@ -19,7 +19,7 @@ module Capybara
       # Finds a link by id or text and clicks it. Also looks at image
       # alt text inside the link.
       #
-      # @param [String] locator      Text, id or text of link
+      # @param [String] locator      Text or id of link
       # @param options
       # @option options [String] :href    The value the href attribute must be
       #
