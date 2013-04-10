@@ -1,6 +1,6 @@
 # Version 2.1.0
 
-Release date: Unreleased
+Release date: 2013-04-09
 
 ### Changed
 
