@@ -565,10 +565,12 @@ Cucumber handles this by using truncation instead of transactions, i.e. they
 empty out the entire database after each test. You can get the same behaviour
 by using a gem such as [database_cleaner](https://github.com/bmabey/database_cleaner).
 
-It is also possible to force your ORM to use the same transaction for all
-threads.  This may have thread safety implications and could cause strange
-failures, so use caution with this approach. It can be implemented in
-ActiveRecord through the following monkey patch:
+It is also possible to force your ORM to use the same connection for all
+threads, which makes the uncommitted data visible to both Capybara and your
+tests. (This may have thread safety implications and could cause strange
+failures, so use caution with this approach.) It can be implemented in
+ActiveRecord by adding the [connection_pool](https://github.com/mperham/connection_pool)
+gem to your Gemfile, and applying the following monkey patch:
 
 ```ruby
 class ActiveRecord::Base
@@ -576,9 +578,10 @@ class ActiveRecord::Base
   @@shared_connection = nil
 
   def self.connection
-    @@shared_connection || retrieve_connection
+    @@shared_connection || ConnectionPool::Wrapper.new(:size => 1) { retrieve_connection }
   end
 end
+
 ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
 ```
 
