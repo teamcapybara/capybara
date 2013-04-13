@@ -1,3 +1,5 @@
+require 'selenium-webdriver'
+
 class Capybara::Selenium::Driver < Capybara::Driver::Base
   DEFAULT_OPTIONS = {
     :browser => :firefox
