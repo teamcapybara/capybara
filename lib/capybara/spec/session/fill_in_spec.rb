@@ -121,7 +121,7 @@ Capybara::SpecHelper.spec "#fill_in" do
       @session.fill_in('with_change_event', :with => 'some value')
       # click outside the field to trigger the change event
       @session.find(:css, 'body').click
-      @session.find(:css, '.change_event_triggered').should have_text 'some value'
+      @session.find(:css, '.change_event_triggered', :match => :one).should have_text 'some value'
     end
   end
 
