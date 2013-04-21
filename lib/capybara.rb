@@ -15,12 +15,58 @@ module Capybara
   class InfiniteRedirectError < CapybaraError; end
 
   class << self
-    attr_accessor :asset_host, :app_host, :run_server, :default_host, :always_include_port
-    attr_accessor :server_host, :server_port, :exact, :match, :exact_options, :visible_text_only
-    attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
-    attr_accessor :save_and_open_page_path, :automatic_reload, :raise_server_errors
-    attr_writer :default_driver, :current_driver, :javascript_driver, :session_name
-    attr_accessor :app
+    attr_accessor :asset_host, :app_host, :server_host, :server_port,
+                  :exact_options, :save_and_open_page_path, :app
+
+    attr_writer :run_server, :default_host, :always_include_port, :exact,
+                :match, :visible_text_only, :default_selector,
+                :default_wait_time, :ignore_hidden_elements, :automatic_reload,
+                :raise_server_errors, :default_driver, :current_driver,
+                :javascript_driver, :session_name, :server
+
+    def always_include_port
+      defined?(@always_include_port) ? @always_include_port : false
+    end
+
+    def run_server
+      defined?(@run_server) ? @run_server : true
+    end
+
+    def default_selector
+      @default_selector || :css
+    end
+
+    def default_wait_time
+      @default_wait_time || 2
+    end
+
+    def ignore_hidden_elements
+      defined?(@ignore_hidden_elements) ? @ignore_hidden_elements : true
+    end
+
+    def default_host
+      @default_host || "http://www.example.com"
+    end
+
+    def automatic_reload
+      defined?(@automatic_reload) ? @automatic_reload : true
+    end
+
+    def match
+      @match || :smart
+    end
+
+    def exact
+      defined?(@exact) ? @exact : false
+    end
+
+    def raise_server_errors
+      defined?(@raise_server_errors) ? @raise_server_errors : true
+    end
+
+    def visible_text_only
+      defined?(@visible_text_only) ? @visible_text_only : false
+    end
 
     ##
     #
@@ -124,7 +170,7 @@ module Capybara
       if block_given?
         @server = block
       else
-        @server
+        @server || default_server
       end
     end
 
@@ -153,20 +199,6 @@ module Capybara
     #
     def string(html)
       Capybara::Node::Simple.new(html)
-    end
-
-    ##
-    #
-    # Runs Capybara's default server for the given application and port
-    # under most circumstances you should not have to call this method
-    # manually.
-    #
-    # @param [Rack Application] app    The rack application to run
-    # @param [Fixnum] port              The port to run the application on
-    #
-    def run_default_server(app, port)
-      require 'rack/handler/webrick'
-      Rack::Handler::WEBrick.run(app, :Port => port, :AccessLog => [], :Logger => WEBrick::Log::new(nil, 0))
     end
 
     ##
@@ -281,6 +313,13 @@ module Capybara
     def session_pool
       @session_pool ||= {}
     end
+
+    def default_server
+      @default_server ||= lambda do |app, port|
+        require 'rack/handler/webrick'
+        Rack::Handler::WEBrick.run(app, :Port => port, :AccessLog => [], :Logger => WEBrick::Log::new(nil, 0))
+      end
+    end
   end
 
   self.default_driver = nil
@@ -318,21 +357,6 @@ module Capybara
 
   require 'capybara/selenium/node'
   require 'capybara/selenium/driver'
-end
-
-Capybara.configure do |config|
-  config.always_include_port = false
-  config.run_server = true
-  config.server {|app, port| Capybara.run_default_server(app, port)}
-  config.default_selector = :css
-  config.default_wait_time = 2
-  config.ignore_hidden_elements = true
-  config.default_host = "http://www.example.com"
-  config.automatic_reload = true
-  config.match = :smart
-  config.exact = false
-  config.raise_server_errors = true
-  config.visible_text_only = false
 end
 
 Capybara.register_driver :rack_test do |app|
