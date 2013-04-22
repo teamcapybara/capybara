@@ -15,6 +15,51 @@ module Capybara
       include Capybara::Node::Finders
       include Capybara::Node::Matchers
 
+      BOOLEAN_ATTRIBUTES = [
+        'async',
+        'autofocus',
+        'autoplay',
+        'checked',
+        'compact',
+        'complete',
+        'controls',
+        'declare',
+        'defaultchecked',
+        'defaultselected',
+        'defer',
+        'disabled',
+        'draggable',
+        'ended',
+        'formnovalidate',
+        'hidden',
+        'indeterminate',
+        'iscontenteditable',
+        'ismap',
+        'itemscope',
+        'loop',
+        'multiple',
+        'muted',
+        'nohref',
+        'noresize',
+        'noshade',
+        'novalidate',
+        'nowrap',
+        'open',
+        'paused',
+        'pubdate',
+        'readonly',
+        'required',
+        'reversed',
+        'scoped',
+        'seamless',
+        'seeking',
+        'selected',
+        'spellcheck',
+        'truespeed',
+        'willvalidate'
+      ];
+
+
       attr_reader :native
 
       def initialize(native)
@@ -43,8 +88,8 @@ module Capybara
         attr_name = name.to_s
         if attr_name == 'value'
           value
-        elsif 'input' == tag_name and 'checkbox' == native[:type] and 'checked' == attr_name
-          native['checked'] == 'checked'
+        elsif boolean_attribute?(attr_name)
+          native.has_attribute?(attr_name) ? "true" : nil
         else
           native[attr_name]
         end
@@ -76,10 +121,10 @@ module Capybara
         if tag_name == 'textarea'
           native.content.sub(/\A\n/, '')
         elsif tag_name == 'select'
-          if native['multiple'] == 'multiple'
-            native.xpath(".//option[@selected='selected']").map { |option| option[:value] || option.content  }
+          if self.[]('multiple')
+            native.xpath(".//option[@selected]").map { |option| option[:value] || option.content  }
           else
-            option = native.xpath(".//option[@selected='selected']").first || native.xpath(".//option").first
+            option = native.xpath(".//option[@selected]").first || native.xpath(".//option").first
             option[:value] || option.content if option
           end
         else
@@ -158,6 +203,10 @@ module Capybara
           self.class.new(node)
         end
         Capybara::Result.new(elements, query)
+      end
+      
+      def boolean_attribute?(attr_name)
+        BOOLEAN_ATTRIBUTES.include?(attr_name)
       end
     end
   end

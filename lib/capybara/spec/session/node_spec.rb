@@ -45,7 +45,17 @@ Capybara::SpecHelper.spec "node" do
     end
 
     it "should extract boolean node attributes" do
-      @session.find('//input[@id="checked_field"]')[:checked].should be_true
+      # See lib/capybara/node/simple.rb for the complete list of boolean attributes
+      @session.find('//input[@id="checked_field"]')[:checked].should eql("true")
+      @session.find('//input[@id="disabled_text"]')[:disabled].should eql("true")
+      @session.find('//input[@id="readonly_text"]')[:readonly].should eql("true")
+    end
+    
+    it "should return false for boolean attributes when not in element" do
+      # See lib/capybara/node/simple.rb for the complete list of boolean attributes
+      @session.find('//input[@id="test_field"]')[:checked].should be_nil
+      @session.find('//input[@id="test_field"]')[:disabled].should be_nil
+      @session.find('//input[@id="test_field"]')[:readonly].should be_nil
     end
   end
 
