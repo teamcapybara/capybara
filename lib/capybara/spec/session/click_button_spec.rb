@@ -225,6 +225,12 @@ Capybara::SpecHelper.spec '#click_button' do
     end
   end
 
+  context "with submit button not associated with any form" do
+    it "should not error when clicked" do
+      lambda { @session.click_button('no_form_button') }.should_not raise_error
+    end
+  end
+
   context "with alt given on an image button" do
     it "should submit the associated form" do
       @session.click_button('oh hai thar')
@@ -236,6 +242,7 @@ Capybara::SpecHelper.spec '#click_button' do
       extract_results(@session)['first_name'].should == 'John'
     end
   end
+  
 
   context "with value given on an image button" do
     it "should submit the associated form" do
