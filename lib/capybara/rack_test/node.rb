@@ -52,7 +52,8 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
       driver.follow(method, self[:href].to_s)
     elsif (tag_name == 'input' and %w(submit image).include?(type)) or
         ((tag_name == 'button') and type.nil? or type == "submit")
-      Capybara::RackTest::Form.new(driver, form).submit(self)
+      associated_form = form
+      Capybara::RackTest::Form.new(driver, associated_form).submit(self) if associated_form
     end
   end
 
