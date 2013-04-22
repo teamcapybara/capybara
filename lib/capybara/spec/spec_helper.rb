@@ -24,6 +24,7 @@ module Capybara
         Capybara.raise_server_errors = true
         Capybara.visible_text_only = false
         Capybara.match = :smart
+        Capybara.server = nil
       end
 
       def filter(requires, metadata)

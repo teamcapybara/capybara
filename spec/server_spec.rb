@@ -83,20 +83,14 @@ describe Capybara::Server do
   end
 
   it "should raise server errors when the server errors before the timeout" do
-    begin
-      Capybara.server do
-        sleep 0.1
-        raise 'kaboom'
-      end
-
-      proc do
-        Capybara::Server.new(proc {|e|}).boot
-      end.should raise_error(RuntimeError, 'kaboom')
-    ensure
-      # TODO refactor out the defaults so it's reliant on unset state instead of
-      # a one-time call in capybara.rb
-      Capybara.server {|app, port| Capybara.run_default_server(app, port)}
+    Capybara.server do
+      sleep 0.1
+      raise 'kaboom'
     end
+
+    proc do
+      Capybara::Server.new(proc {|e|}).boot
+    end.should raise_error(RuntimeError, 'kaboom')
   end
 
   it "is not #responsive? when Net::HTTP raises a SystemCallError" do
