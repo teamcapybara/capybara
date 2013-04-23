@@ -27,7 +27,7 @@ class Capybara::RackTest::Browser
   end
 
   def follow(method, path, attributes = {})
-    return if path.gsub(/^#{request_path}/, '').start_with?('#')
+    return if same_page?(current_url, path)
     process_and_follow_redirects(method, path, attributes, {'HTTP_REFERER' => current_url})
   end
 
@@ -77,7 +77,7 @@ class Capybara::RackTest::Browser
   end
 
   def dom
-    @dom ||= Nokogiri::HTML(html)
+    @dom ||= Nokogiri::HTML(html, current_url)
   end
 
   def find(format, selector)
@@ -109,5 +109,12 @@ protected
     last_request.path
   rescue Rack::Test::Error
     ""
+  end
+  
+  def same_page?(url1, url2)
+    url1=URI.parse(url1)
+    url2=url1.merge(url2)
+    route=url1.route_to(url2).to_s
+    route=="" || route.start_with?('#')
   end
 end

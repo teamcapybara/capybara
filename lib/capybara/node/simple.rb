@@ -90,6 +90,9 @@ module Capybara
           value
         elsif boolean_attribute?(attr_name)
           native.has_attribute?(attr_name) ? "true" : nil
+        elsif ((tag_name == 'img' && attr_name == 'src') ||
+               (tag_name == 'a' && attr_name == 'href'))
+          URI.join(native.document.url, native[attr_name]).to_s
         else
           native[attr_name]
         end
