@@ -126,7 +126,11 @@ Capybara::SpecHelper.spec '#click_button' do
       it "should not serialize a select tag without options" do
         @results['tendency'].should be_nil
       end
-
+      
+      it "should convert lf to cr/lf in submitted textareas" do
+        @results['newline'].should == "\r\nNew line after and before textarea tag\r\n"
+      end
+      
       it "should not submit disabled fields" do
         @results['disabled_text_field'].should be_nil
         @results['disabled_textarea'].should be_nil

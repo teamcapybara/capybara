@@ -18,7 +18,11 @@ module Capybara
       attr_reader :native
 
       def initialize(native)
-        native = Nokogiri::HTML(native) if native.is_a?(String)
+        native = Nokogiri::HTML(native).tap do |document|
+          document.xpath('//textarea').each do |textarea| 
+            textarea.content.sub!(/\A\n/,'')
+          end
+        end if native.is_a?(String)
         @native = native
       end
 
@@ -74,7 +78,7 @@ module Capybara
       #
       def value
         if tag_name == 'textarea'
-          native.content.sub(/\A\n/, '')
+          native.content
         elsif tag_name == 'select'
           if native['multiple'] == 'multiple'
             native.xpath(".//option[@selected='selected']").map { |option| option[:value] || option.content  }

@@ -44,7 +44,7 @@ Capybara::SpecHelper.spec "#fill_in" do
     @session.click_button('awesome')
     extract_results(@session)['description'].should == 'Texty text'
   end
-
+  
   it "should fill in a password field by id" do
     @session.fill_in('form_password', :with => 'supasikrit')
     @session.click_button('awesome')
@@ -55,6 +55,12 @@ Capybara::SpecHelper.spec "#fill_in" do
     @session.fill_in('form_description', :with => 'is <strong>very</strong> secret!')
     @session.click_button('awesome')
     extract_results(@session)['description'].should == 'is <strong>very</strong> secret!'
+  end
+  
+  it "should handle newlines in a textarea", tw: true do
+    @session.fill_in('form_description', :with => "\nSome text\n")
+    @session.click_button('awesome')
+    extract_results(@session)['description'].should == "\r\nSome text\r\n"
   end
 
   it "should fill in a field with a custom type" do

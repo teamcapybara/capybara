@@ -77,7 +77,11 @@ class Capybara::RackTest::Browser
   end
 
   def dom
-    @dom ||= Nokogiri::HTML(html)
+    @dom ||= Nokogiri::HTML(html).tap do |document|
+      document.xpath('//textarea').each do |textarea|
+        textarea.content=textarea.content.sub(/\A\n/,'')
+      end
+    end
   end
 
   def find(format, selector)
