@@ -18,11 +18,7 @@ module Capybara
       attr_reader :native
 
       def initialize(native)
-        native = Nokogiri::HTML(native).tap do |document|
-          document.xpath('//textarea').each do |textarea| 
-            textarea.content.sub!(/\A\n/,'')
-          end
-        end if native.is_a?(String)
+        native = Capybara::HTML(native) if native.is_a?(String)
         @native = native
       end
 

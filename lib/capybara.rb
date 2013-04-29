@@ -266,6 +266,21 @@ module Capybara
     ensure
       self.session_name = :default
     end
+    
+    ##
+    #
+    # Parse raw html into a document using Nokogiri, and adjust textarea contents as defined by the spec.
+    #
+    # @param [String] html              The raw html
+    # @return [Nokogiri::HTML::Document]      HTML document
+    #
+    def HTML(html)
+      Nokogiri::HTML(html).tap do |document|
+        document.xpath('//textarea').each do |textarea| 
+          textarea.content=textarea.content.sub(/\A\n/,'')
+        end
+      end
+    end
 
     def included(base)
       base.send(:include, Capybara::DSL)
