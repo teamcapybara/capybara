@@ -18,6 +18,7 @@ module Capybara
     attr_accessor :asset_host, :app_host, :run_server, :default_host, :always_include_port
     attr_accessor :server_host, :server_port, :exact, :match, :exact_options, :visible_text_only
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
+    attr_accessor :before_action, :after_action
     attr_accessor :save_and_open_page_path, :automatic_reload, :raise_server_errors
     attr_writer :default_driver, :current_driver, :javascript_driver, :session_name
     attr_accessor :app
@@ -39,6 +40,8 @@ module Capybara
     # [run_server = Boolean]              Whether to start a Rack server for the given Rack app (Default: true)
     # [default_selector = :css/:xpath]    Methods which take a selector use the given type by default (Default: CSS)
     # [default_wait_time = Integer]       The number of seconds to wait for asynchronous processes to finish (Default: 2)
+    # [before_action = String]            The Javascript command that is executed before every action (Default: nil)
+    # [after_action = String]             The Javascript command that is executed after every action (Default: nil)
     # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: false)
     # [automatic_reload = Boolean]        Whether to automatically reload elements as Capybara is waiting (Default: true)
     # [save_and_open_page_path = String]  Where to put pages saved through save_and_open_page (Default: Dir.pwd)

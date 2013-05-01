@@ -73,12 +73,16 @@ module Capybara
       def synchronize(seconds=Capybara.default_wait_time)
         start_time = Time.now
 
-        if session.synchronized
-          yield
+        if session.synchronized then
+          with_around_action do
+            yield
+          end
         else
           session.synchronized = true
           begin
-            yield
+            with_around_action do
+              yield
+            end
           rescue => e
             raise e unless driver.wait?
             raise e unless catch_error?(e)
@@ -94,6 +98,33 @@ module Capybara
       end
 
     protected
+
+      ##
+      #
+      # This method is Capybara's mechanism for running a specified javascript command before and one after
+      # every action. A example use case is starting an Ember run loop before the action and stopping the runloop after
+      # the command completed.
+      #
+      def with_around_action
+        if execute_script_supported?
+          session.execute_script Capybara.before_action if Capybara.before_action
+          value = yield
+          session.execute_script Capybara.after_action if Capybara.after_action
+        else
+          value = yield
+        end
+        value
+      end
+
+      def execute_script_supported?
+        supported = true
+        begin
+          session.execute_script('')
+        rescue Capybara::NotSupportedByDriverError
+          supported = false
+        end
+        supported
+      end
 
       def catch_error?(error)
         (driver.invalid_element_errors + [Capybara::ElementNotFound]).any? do |type|
