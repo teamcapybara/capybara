@@ -481,6 +481,19 @@ that this may break with more complicated expressions:
 result = page.evaluate_script('4 + 4');
 ```
 
+Some javascript frameworks (like [Ember.js](http://www.emberjs.com/)) use the concept of a run loop. For these kinds 
+of frameworks it can beneficial to start a run loop before a Capybara action and end the run loop directly after the
+Capybara action. Capybara supports this by setting the `Capybara.before_action` and the `Capybara.after_action`. You can set these in your `spec_helper.rb`.
+
+```ruby
+Capybara.before_action = "Ember.run.start();"
+Capybara.before_action = "Ember.run.end();"
+```
+
+To use this feature, the driver you use *MUST* support the `page_execute`. If you drivers doesn't support it, the
+directives are ignored.
+
+
 ### Debugging
 
 It can be useful to take a snapshot of the page as it currently is and take a

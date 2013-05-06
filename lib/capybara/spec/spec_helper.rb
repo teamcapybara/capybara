@@ -2,6 +2,7 @@ require "rspec"
 require "capybara"
 require "capybara/rspec" # Required here instead of in rspec_spec to avoid RSpec deprecation warning
 require "capybara/spec/test_app"
+require "capybara/spec/shared_examples"
 require "nokogiri"
 
 module Capybara

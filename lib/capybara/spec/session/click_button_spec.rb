@@ -3,10 +3,24 @@ Capybara::SpecHelper.spec '#click_button' do
     @session.visit('/form')
   end
 
+  it_behaves_like "acknowledge Capybara.before_action" do
+    subject do
+      @session.visit('/with_js')
+      @session.click_button('Fire Ajax Request')
+    end
+
+  end
+
+  it_behaves_like "acknowledge Capybara.after_action" do
+    subject do
+      @session.visit('/with_js')
+      @session.click_button('Fire Ajax Request')
+    end
+  end
+
   it "should wait for asynchronous load", :requires => [:js] do
     @session.visit('/with_js')
     @session.click_link('Click me')
-    @session.click_button('New Here')
   end
 
   it "casts to string" do

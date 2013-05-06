@@ -3,6 +3,22 @@ Capybara::SpecHelper.spec '#click_link' do
     @session.visit('/with_html')
   end
 
+  it_behaves_like "acknowledge Capybara.before_action" do
+    subject do
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+    end
+
+  end
+
+  it_behaves_like "acknowledge Capybara.after_action" do
+    subject do
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+    end
+  end
+
+
   it "should wait for asynchronous load", :requires => [:js] do
     @session.visit('/with_js')
     @session.click_link('Click me')
