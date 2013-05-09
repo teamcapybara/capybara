@@ -109,7 +109,7 @@ Capybara::SpecHelper.spec "#fill_in" do
     extract_results(@session)['first_name'].should == 'Harry'
   end
 
-  it "casts to string if field has maxlength", :focus => true do
+  it "casts to string if field has maxlength" do
     @session.fill_in(:'form_zipcode', :with => 1234567)
     @session.click_button('awesome')
     extract_results(@session)['zipcode'].should == '12345'
