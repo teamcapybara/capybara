@@ -189,7 +189,7 @@ module Capybara
                   end
       begin
         scopes.push(new_scope)
-        yield
+        yield(new_scope)
       ensure
         scopes.pop
       end
