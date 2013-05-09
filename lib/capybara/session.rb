@@ -221,7 +221,7 @@ module Capybara
       new_scope = if args.first.is_a?(Capybara::Node::Base) then args.first else find(*args) end
       begin
         scopes.push(new_scope)
-        yield
+        yield(new_scope)
       ensure
         scopes.pop
       end
