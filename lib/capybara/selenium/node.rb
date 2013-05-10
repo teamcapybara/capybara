@@ -57,6 +57,14 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def click
     native.click
   end
+  
+  def right_click
+    driver.browser.action.context_click(native).perform
+  end
+  
+  def double_click
+    driver.browser.action.double_click(native).perform
+  end
 
   def hover
     driver.browser.action.move_to(native).perform
