@@ -108,6 +108,6 @@ protected
   def request_path
     last_request.path
   rescue Rack::Test::Error
-    ""
+    "/"
   end
 end
