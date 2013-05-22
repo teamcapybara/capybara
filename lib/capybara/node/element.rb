@@ -94,6 +94,8 @@ module Capybara
         synchronize { base.set(value) }
       end
 
+      alias :value= :set
+
       ##
       #
       # Select this node if is an option element inside a select tag
