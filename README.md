@@ -96,7 +96,7 @@ Capybara with `:type => :feature`.
 You can now write your specs like so:
 
 ```ruby
-describe "the signup process", :type => :feature do
+describe "the signin process", :type => :feature do
   before :each do
     User.make(:email => 'user@example.com', :password => 'caplin')
   end
@@ -127,7 +127,7 @@ end
 Finally, Capybara also comes with a built in DSL for creating descriptive acceptance tests:
 
 ```ruby
-feature "Signing up" do
+feature "Signing in" do
   background do
     User.make(:email => 'user@example.com', :password => 'caplin')
   end
@@ -162,7 +162,7 @@ end
 
 ## Using Capybara with Test::Unit
 
-* If you are using Rails, add the following code in your `test_helper.rb` 
+* If you are using Rails, add the following code in your `test_helper.rb`
     file to make Capybara available in all test cases deriving from
     `ActionDispatch::IntegrationTest`:
 
