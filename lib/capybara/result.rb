@@ -52,5 +52,9 @@ module Capybara
     def negative_failure_message
       failure_message.sub(/(to be found|to find)/, 'not \1')
     end
+
+    def pluck(attribute)
+      map { |element| element[attribute] }
+    end
   end
 end
