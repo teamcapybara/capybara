@@ -144,6 +144,21 @@ module Capybara
         all(*args).first
       end
 
+      ##
+      #
+      # Find the last element on the page matching the given selector
+      # and options, or nil if no element matches.
+      #
+      # @overload last([kind], locator, options)
+      #   @param [:css, :xpath] kind                 The type of selector
+      #   @param [String] locator                    The selector
+      #   @param [Hash] options                      Additional options; see {#all}
+      # @return [Capybara::Element]                  The found element or nil
+      #
+      def last(*args)
+        all(*args).last
+      end
+
     private
 
       def resolve_query(query, exact=nil)
