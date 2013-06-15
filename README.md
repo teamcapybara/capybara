@@ -108,7 +108,7 @@ describe "the signin process", :type => :feature do
       fill_in 'Password', :with => 'password'
     end
     click_link 'Sign in'
-    page.should have_content 'Success'
+    expect(page).to have_content 'Success'
   end
 end
 ```
@@ -139,7 +139,7 @@ feature "Signing in" do
       fill_in 'Password', :with => 'caplin'
     end
     click_link 'Sign in'
-    page.should have_content 'Success'
+    expect(page).to have_content 'Success'
   end
 
   given(:other_user) { User.make(:email => 'other@example.com', :password => 'rous') }
@@ -151,7 +151,7 @@ feature "Signing in" do
       fill_in 'Password', :with => other_user.password
     end
     click_link 'Sign in'
-    page.should have_content 'Invalid email or password'
+    expect(page).to have_content 'Invalid email or password'
   end
 end
 ```
