@@ -17,9 +17,10 @@ answer the following questions:
 - What happened instead?
 
 Please also post code to replicate the bug. Ideally a failing test would be
-perfect, but even a simple script demonstrating the error would suffice.
-Please don't send us an entire application, unless the bug is in the
-*interaction* between Capybara and a particular framework.
+perfect, but even a simple script demonstrating the error would suffice. You
+could use [this template](https://gist.github.com/jnicklas/5137053) as a
+starting point. Please don't send us an entire application, unless the bug is
+in the *interaction* between Capybara and a particular framework.
 
 Make sure to specify which version of Capybara you are using.
 
