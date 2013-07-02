@@ -262,9 +262,12 @@ module Capybara
     #   @param [String] name           name of a frame
     #
     def within_frame(frame_handle)
+      scopes.push(nil)
       driver.within_frame(frame_handle) do
         yield
       end
+    ensure
+      scopes.pop
     end
 
     ##
@@ -275,7 +278,10 @@ module Capybara
     # @param [String] handle of the window
     #
     def within_window(handle, &blk)
+      scopes.push(nil)
       driver.within_window(handle, &blk)
+    ensure
+      scopes.pop
     end
 
     ##
@@ -382,7 +388,7 @@ module Capybara
     end
 
     def current_scope
-      scopes.last
+      scopes.last || document
     end
 
   private
