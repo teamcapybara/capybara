@@ -71,6 +71,11 @@ Capybara::SpecHelper.spec "#attach_file" do
       @session.body.should include(File.read(@test_file_path))
       @session.body.should include(File.read(@another_test_file_path))
     end
+
+    it "should not send anything when attaching no files to a multiple upload field" do
+      @session.click_button('Upload Empty Multiple')
+      @session.body.should include("Successfully ignored empty file field")
+    end
   end
 
   context "with a locator that doesn't exist" do

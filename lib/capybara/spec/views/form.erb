@@ -319,6 +319,20 @@
   <p>
 </form>
 
+<form action="/upload_empty" method="post" enctype="multipart/form-data">
+  <p>
+    <label>
+      <input type="file" name="form[file]" multiple="multiple"/>
+      Multiple empty files
+    </label>
+  </p>
+
+  <p>
+    <input type="hidden" name="form[dummy]" value="ensure params[:form] exists"/>
+    <input type="submit" value="Upload Empty Multiple"/>
+  <p>
+</form>
+
 <form action="/upload" method="post" enctype="multipart/form-data">
   <p>
     <label for="form_file_name">File Name</label>
