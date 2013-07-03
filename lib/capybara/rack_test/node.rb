@@ -32,14 +32,14 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   end
 
   def select_option
-    if select_node['multiple'] != 'multiple'
+    if !select_node['multiple']
       select_node.find_xpath(".//option[@selected]").each { |node| node.native.remove_attribute("selected") }
     end
     native["selected"] = 'selected'
   end
 
   def unselect_option
-    if select_node['multiple'] != 'multiple'
+    if !select_node['multiple']
       raise Capybara::UnselectNotAllowed, "Cannot unselect option from single select box."
     end
     native.remove_attribute('selected')

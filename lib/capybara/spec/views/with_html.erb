@@ -30,7 +30,7 @@
 
 <p>
   <input type="text" id="test_field" value="monkey"/>
-  <input type="text" readonly="readonly" value="should not change" />
+  <input type="text" readonly="readonly" value="should not change" id="readonly_text"/>
   <textarea id="normal">
 banana</textarea>
   <textarea id="additional_newline">
@@ -101,4 +101,9 @@ banana</textarea>
   <div class="almost_singular">almost singular</div>
 </div>
 
-<input type="text" disabled="disabled" name="disabled_text" value="This is disabled"/>
+<input type="text" disabled="disabled" name="disabled_text" value="This is disabled" id="disabled_text"/>
+
+<a id="relative_href" href="../relative">relative</a>
+<a id="absolute_href" href="http://github.com/jnicklas/capybara">absolute</a>
+<a id="root_relative_href" href="/root_relative">other</a>
+

@@ -45,7 +45,29 @@ Capybara::SpecHelper.spec "node" do
     end
 
     it "should extract boolean node attributes" do
-      @session.find('//input[@id="checked_field"]')[:checked].should be_true
+      # See lib/capybara/node/simple.rb for the complete list of boolean attributes
+      @session.find('//input[@id="checked_field"]')[:checked].should eql("true")
+      @session.find('//input[@id="disabled_text"]')[:disabled].should eql("true")
+      @session.find('//input[@id="readonly_text"]')[:readonly].should eql("true")
+    end
+    
+    it "should return false for boolean attributes when not in element" do
+      # See lib/capybara/node/simple.rb for the complete list of boolean attributes
+      @session.find('//input[@id="test_field"]')[:checked].should be_nil
+      @session.find('//input[@id="test_field"]')[:disabled].should be_nil
+      @session.find('//input[@id="test_field"]')[:readonly].should be_nil
+    end
+    
+    context "with url type attributes" do
+      it "should return full urls for relative attributes" do
+        @session.find('//a[@id="relative_href"]')[:href].should == URI.join(@session.current_url, '../relative').to_s
+      end
+      it "should return full urls for root relative attributes" do
+        @session.find('//a[@id="root_relative_href"]')[:href].should == URI.join(@session.current_url, '/root_relative').to_s
+      end
+      it "should return full urls for absolute attributes" do
+        @session.find('//a[@id="absolute_href"]')[:href].should == 'http://github.com/jnicklas/capybara'
+      end
     end
   end
 
