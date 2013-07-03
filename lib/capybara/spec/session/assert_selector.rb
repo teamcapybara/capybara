@@ -58,6 +58,16 @@ Capybara::SpecHelper.spec '#assert_selector' do
       expect { @session.assert_selector("//p//a", :text => /Red$/) }.to raise_error(Capybara::ElementNotFound)
     end
   end
+
+  context "with wait", :requires => [:js] do
+    it "should find element if it appears before given wait duration" do
+      Capybara.using_wait_time(0.1) do
+        @session.visit('/with_js')
+        @session.click_link('Click me')
+        @session.assert_selector(:css, "a#has-been-clicked", :text => "Has been clicked", :wait => 0.9)
+      end
+    end
+  end
 end
 
 Capybara::SpecHelper.spec '#assert_no_selector' do
@@ -118,6 +128,15 @@ Capybara::SpecHelper.spec '#assert_no_selector' do
     it "should discard all matches where the given regexp is matched" do
       expect { @session.assert_no_selector("//p//a", :text => /re[dab]i/i, :count => 1) }.to raise_error(Capybara::ElementNotFound)
       @session.assert_no_selector("//p//a", :text => /Red$/)
+    end
+  end
+
+  context "with wait", :requires => [:js] do
+    it "should not find element if it appears after given wait duration" do
+      p Capybara.default_wait_time
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+      @session.assert_no_selector(:css, "a#has-been-clicked", :text => "Has been clicked", :wait => 0.1)
     end
   end
 end
