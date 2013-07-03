@@ -190,6 +190,16 @@ Capybara::SpecHelper.spec '#has_text?' do
       @session.should_not have_text('count', minimum: '3')
     end
   end
+
+  context "with wait", :requires => [:js] do
+    it "should find element if it appears before given wait duration" do
+      Capybara.using_wait_time(0.1) do
+        @session.visit('/with_js')
+        @session.click_link('Click me')
+        @session.should have_text('Has been clicked', :wait => 0.9)
+      end
+    end
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_text?' do
@@ -287,5 +297,13 @@ Capybara::SpecHelper.spec '#has_no_text?' do
     @session.visit('/with_js')
     @session.click_link('Click me')
     @session.should have_no_text("I changed it")
+  end
+
+  context "with wait", :requires => [:js] do
+    it "should not find element if it appears after given wait duration" do
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+      @session.should have_no_text('Has been clicked', :wait => 0.1)
+    end
   end
 end

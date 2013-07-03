@@ -85,7 +85,8 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]      If the selector does not exist
       #
       def assert_selector(*args)
-        synchronize do
+        query = Capybara::Query.new(*args)
+        synchronize(query.wait) do
           result = all(*args)
           result.matches_count? or raise Capybara::ExpectationNotMet, result.failure_message
         end
@@ -101,7 +102,8 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]      If the selector exists
       #
       def assert_no_selector(*args)
-        synchronize do
+        query = Capybara::Query.new(*args)
+        synchronize(query.wait) do
           result = all(*args)
           result.matches_count? and raise Capybara::ExpectationNotMet, result.negative_failure_message
         end
@@ -215,7 +217,8 @@ module Capybara
       #   @return [Boolean]                          Whether it exists
       #
       def has_text?(*args)
-        synchronize do
+        query = Capybara::Query.new(*args)
+        synchronize(query.wait) do
           raise ExpectationNotMet unless text_found?(*args)
         end
         return true
@@ -233,7 +236,8 @@ module Capybara
       # @return [Boolean]  Whether it doesn't exist
       #
       def has_no_text?(*args)
-        synchronize do
+        query = Capybara::Query.new(*args)
+        synchronize(query.wait) do
           raise ExpectationNotMet if text_found?(*args)
         end
         return true
