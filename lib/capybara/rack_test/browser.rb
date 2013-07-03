@@ -77,7 +77,7 @@ class Capybara::RackTest::Browser
   end
 
   def dom
-    @dom ||= Nokogiri::HTML(html)
+    @dom ||= Capybara::HTML(html)
   end
 
   def find(format, selector)
