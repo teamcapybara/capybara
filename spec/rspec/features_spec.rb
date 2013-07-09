@@ -34,6 +34,21 @@ feature "Capybara's feature DSL" do
   scenario "doesn't pollute the Object namespace" do
     Object.new.respond_to?(:feature, true).should be_false
   end
+
+  feature 'nested features' do
+    scenario 'work as expected' do
+      visit '/'
+      page.should have_content 'Hello world!'
+    end
+
+    scenario 'are marked in the metadata as capybara_feature' do
+      example.metadata[:capybara_feature].should be_true
+    end
+
+    scenario 'have a type of :feature' do
+      example.metadata[:type].should eq :feature
+    end
+  end
 end
 
 feature "given and given! aliases to let and let!" do
