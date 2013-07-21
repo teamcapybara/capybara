@@ -18,7 +18,7 @@ RSpec.configure do |config|
   config.before do |example|
     if self.class.include?(Capybara::DSL)
       Capybara.current_driver = Capybara.javascript_driver if example.metadata[:js]
-      ampleCapybara.current_driver = example.metadata[:driver] if example.metadata[:driver]
+      Capybara.current_driver = example.metadata[:driver] if example.metadata[:driver]
     end
   end
 end
