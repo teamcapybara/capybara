@@ -15,7 +15,7 @@ feature "Capybara's feature DSL" do
     page.should have_content('Hello world!')
   end
 
-  scenario "preserves description" do |example|
+  scenario "preserves description" do
     example.metadata[:full_description].should == "Capybara's feature DSL preserves description"
   end
 
@@ -41,11 +41,11 @@ feature "Capybara's feature DSL" do
       page.should have_content 'Hello world!'
     end
 
-    scenario 'are marked in the metadata as capybara_feature' do |example|
+    scenario 'are marked in the metadata as capybara_feature' do
       example.metadata[:capybara_feature].should be_true
     end
 
-    scenario 'have a type of :feature' do |example|
+    scenario 'have a type of :feature' do
       example.metadata[:type].should eq :feature
     end
   end
