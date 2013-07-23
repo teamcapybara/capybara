@@ -356,7 +356,7 @@ module Capybara
       # checked.
       #
       # @param [String] locator           The label, name or id of a checked field
-      # @return [Boolean]                 Whether it doesn't exists
+      # @return [Boolean]                 Whether it doesn't exist
       #
       def has_no_checked_field?(locator)
         has_no_selector?(:field, locator, :checked => true)
@@ -382,7 +382,7 @@ module Capybara
       # unchecked.
       #
       # @param [String] locator           The label, name or id of an unchecked field
-      # @return [Boolean]                 Whether it doesn't exists
+      # @return [Boolean]                 Whether it doesn't exist
       #
       def has_no_unchecked_field?(locator)
         has_no_selector?(:field, locator, :unchecked => true)
