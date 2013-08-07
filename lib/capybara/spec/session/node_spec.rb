@@ -183,7 +183,6 @@ Capybara::SpecHelper.spec "node" do
 
   describe '#hover', :requires => [:hover] do
     it "should allow hovering on an element" do
-      pending "Selenium with firefox doesn't currently work with this (selenium with chrome does)" if @session.respond_to?(:mode) && @session.mode == :selenium && @session.driver.browser.browser == :firefox
       @session.visit('/with_hover')
       @session.find(:css,'.hidden_until_hover', :visible => false).should_not be_visible
       @session.find(:css,'.wrapper').hover
