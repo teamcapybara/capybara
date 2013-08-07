@@ -130,6 +130,8 @@ Capybara::SpecHelper.spec "node" do
 
       @session.find('//div[@id="hidden"]').should_not be_visible
       @session.find('//div[@id="hidden_via_ancestor"]').should_not be_visible
+      @session.find('//div[@id="hidden_attr"]').should_not be_visible
+      @session.find('//a[@id="hidden_attr_via_ancestor"]').should_not be_visible
     end
   end
 
