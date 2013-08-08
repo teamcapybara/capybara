@@ -319,6 +319,14 @@ describe Capybara::RSpecMatchers do
           "<h1>Text</h1>".should have_text(/ext/)
         end
 
+        it "passes if there is a space in the search pattern" do
+          "A little more text for this test".should have_text('more text')
+        end
+
+        it "passes if there is an escaped space in the search pattern" do
+          "A little more text for this test".should have_text(Capybara::Helpers::to_regexp('more text'))
+        end
+
         it "fails if has_text? returns false" do
           expect do
             "<h1>Text</h1>".should have_text('No such Text')
@@ -329,6 +337,10 @@ describe Capybara::RSpecMatchers do
           expect do
             "<h1>Text</h1>".should have_text(:cast_me)
           end.to raise_error(/expected there to be text "cast_me" in "Text"/)
+        end
+
+        it "collapses multiple whitespace into a single space" do
+          "There  is\n more  space".should have_text('is more space')
         end
       end
 
@@ -345,6 +357,10 @@ describe Capybara::RSpecMatchers do
           expect do
             "<h1>Text</h1>".should_not have_text('Text')
           end.to raise_error(/expected there not to be text "Text" in "Text"/)
+        end
+
+        it "fails to match escaped Regexp" do
+          'A little\ awkward text'.should_not have_text(Capybara::Helpers::to_regexp('little awkward'))
         end
       end
     end
