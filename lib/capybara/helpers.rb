@@ -25,7 +25,7 @@ module Capybara
       # @return [String]     Escaped text
       #
       def to_regexp(text)
-        text.is_a?(Regexp) ? text : Regexp.escape(normalize_whitespace(text))
+        text.is_a?(Regexp) ? text : Regexp.new(Regexp.escape(normalize_whitespace(text)))
       end
     end
   end
