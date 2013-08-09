@@ -345,8 +345,8 @@ module Capybara
       # @param [String] locator           The label, name or id of a checked field
       # @return [Boolean]                 Whether it exists
       #
-      def has_checked_field?(locator)
-        has_selector?(:field, locator, :checked => true)
+      def has_checked_field?(locator, options={})
+        has_selector?(:field, locator, options.merge(:checked => true))
       end
 
       ##
@@ -358,8 +358,8 @@ module Capybara
       # @param [String] locator           The label, name or id of a checked field
       # @return [Boolean]                 Whether it doesn't exist
       #
-      def has_no_checked_field?(locator)
-        has_no_selector?(:field, locator, :checked => true)
+      def has_no_checked_field?(locator, options={})
+        has_no_selector?(:field, locator, options.merge(:checked => true))
       end
 
       ##
@@ -371,8 +371,8 @@ module Capybara
       # @param [String] locator           The label, name or id of an unchecked field
       # @return [Boolean]                 Whether it exists
       #
-      def has_unchecked_field?(locator)
-        has_selector?(:field, locator, :unchecked => true)
+      def has_unchecked_field?(locator, options={})
+        has_selector?(:field, locator, options.merge(:unchecked => true))
       end
 
       ##
@@ -384,8 +384,8 @@ module Capybara
       # @param [String] locator           The label, name or id of an unchecked field
       # @return [Boolean]                 Whether it doesn't exist
       #
-      def has_no_unchecked_field?(locator)
-        has_no_selector?(:field, locator, :unchecked => true)
+      def has_no_unchecked_field?(locator, options={})
+        has_no_selector?(:field, locator, options.merge(:unchecked => true))
       end
 
       ##

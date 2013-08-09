@@ -134,12 +134,12 @@ module Capybara
       HaveSelector.new(:field, locator, options)
     end
 
-    def have_checked_field(locator)
-      HaveSelector.new(:field, locator, :checked => true)
+    def have_checked_field(locator, options={})
+      HaveSelector.new(:field, locator, options.merge(:checked => true))
     end
 
-    def have_unchecked_field(locator)
-      HaveSelector.new(:field, locator, :unchecked => true)
+    def have_unchecked_field(locator, options={})
+      HaveSelector.new(:field, locator, options.merge(:unchecked => true))
     end
 
     def have_select(locator, options={})
