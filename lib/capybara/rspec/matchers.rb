@@ -126,8 +126,8 @@ module Capybara
       HaveSelector.new(:link, locator, options)
     end
 
-    def have_button(locator)
-      HaveSelector.new(:button, locator)
+    def have_button(locator, options={})
+      HaveSelector.new(:button, locator, options)
     end
 
     def have_field(locator, options={})
