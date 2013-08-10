@@ -240,6 +240,32 @@ tests that require a JavaScript-capable driver using `:js => true` or
 `:selenium` driver. You can change this by setting
 `Capybara.javascript_driver`.
 
+You can change the driver for single test by passing `driver` option:
+
+```ruby
+scenario 'Create account', driver: :selenium do
+  ... test ...
+end
+```
+
+If you want to run some code before or after tests that are run using particular driver,
+you can do it in spec_helper like this:
+
+```ruby
+  config.before do
+    if example.metadata[:driver] == :selenium
+      @headless = Headless.new
+      @headless.start
+    end
+  end
+
+  config.after do
+    if example.metadata[:driver] == :selenium
+      @headless.destroy
+    end
+  end
+```
+
 You can also change the driver temporarily (typically in the Before/setup and
 After/teardown blocks):
 
