@@ -252,18 +252,18 @@ If you want to run some code before or after tests that are run using particular
 you can do it in spec_helper like this:
 
 ```ruby
-  config.before do
-    if example.metadata[:driver] == :selenium
-      @headless = Headless.new
-      @headless.start
-    end
+config.before do
+  if example.metadata[:driver] == :selenium
+    @headless = Headless.new
+    @headless.start
   end
+end
 
-  config.after do
-    if example.metadata[:driver] == :selenium
-      @headless.destroy
-    end
+config.after do
+  if example.metadata[:driver] == :selenium
+    @headless.destroy
   end
+end
 ```
 
 You can also change the driver temporarily (typically in the Before/setup and
