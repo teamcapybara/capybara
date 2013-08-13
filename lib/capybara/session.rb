@@ -335,10 +335,15 @@ module Capybara
     # @param  [String] file_name  The path to where it should be saved [optional]
     #
     def save_and_open_page(file_name=nil)
-      require "launchy"
-      Launchy.open(save_page(file_name))
-    rescue LoadError
-      warn "Please install the launchy gem to open page with save_and_open_page"
+      file_name = save_page(file_name)
+
+      begin
+        require "launchy"
+        Launchy.open(file_name)
+      rescue LoadError
+        warn "Page saved to #{file_name} with save_and_open_page."
+        warn "Please install the launchy gem to open page automatically."
+      end
     end
 
     ##
