@@ -124,6 +124,8 @@ describe 'some stuff which requires js', :js => true do
 end
 ```
 
+**Note**: `:js => true` should not be placed on an `it` block, but on a `describe` or `context` block.
+
 Finally, Capybara also comes with a built in DSL for creating descriptive acceptance tests:
 
 ```ruby
