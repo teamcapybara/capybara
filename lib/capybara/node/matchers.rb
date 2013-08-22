@@ -85,12 +85,25 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]      If the selector does not exist
       #
       def assert_selector(*args)
+        args, wait_time = parse_args_for_immediate(args)
         query = Capybara::Query.new(*args)
-        synchronize(query.wait) do
+        synchronize(wait_time) do
           result = all(*args)
           result.matches_count? or raise Capybara::ExpectationNotMet, result.failure_message
         end
         return true
+      end
+
+      def parse_args_for_immediate args
+        options = args.select {|a| a.is_a?(Hash)}[0]
+        options_index = args.index(options)
+        wait_time = Capybara.default_wait_time
+        if options.is_a?(Hash) and options[:immediate]
+          wait_time = 0
+          options.delete(:immediate)
+          args[options_index] = options
+        end
+        [args, wait_time]
       end
 
       ##
@@ -102,8 +115,9 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]      If the selector exists
       #
       def assert_no_selector(*args)
+        args, wait_time = parse_args_for_immediate(args)
         query = Capybara::Query.new(*args)
-        synchronize(query.wait) do
+        synchronize(wait_time) do
           result = all(*args)
           result.matches_count? and raise Capybara::ExpectationNotMet, result.negative_failure_message
         end
