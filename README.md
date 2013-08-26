@@ -271,7 +271,7 @@ RackTest can be configured with a set of headers like this:
 
 ```ruby
 Capybara.register_driver :rack_test do |app|
-  Capybara::RackTest::Driver.new(app, :browser => :chrome)
+  Capybara::RackTest::Driver.new(app, :headers => { 'User-Agent' => 'Capybara' })
 end
 ```
 
