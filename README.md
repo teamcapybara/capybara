@@ -506,6 +506,13 @@ Finally, in drivers that support it, you can save a screenshot:
 page.save_screenshot('screenshot.png')
 ```
 
+#### Asset Host
+Assets can be displayed by supplying capybara the address of your asset server (usually Rails):
+
+```ruby
+Capybara.asset_host = "http://localhost:3000"
+```
+
 ## Matching
 
 It is possible to customize how Capybara finds elements. At your disposal
