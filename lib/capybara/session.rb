@@ -320,7 +320,7 @@ module Capybara
     #
     def save_page(path=nil)
       path ||= "capybara-#{Time.new.strftime("%Y%m%d%H%M%S")}#{rand(10**10)}.html"
-      path = File.expand_path(path, Capybara.save_and_open_page_path) if Capybara.save_and_open_page_path
+      path = File.expand_path(path, Capybara.save_and_open_page_path)
 
       FileUtils.mkdir_p(File.dirname(path))
 

@@ -37,11 +37,17 @@ Capybara::SpecHelper.spec '#save_page' do
     File.read("capybara-001122.html").should include("Another World")
   end
 
-  it "returns the filename" do
+  it "returns an absolute path in pwd" do
     result = @session.save_page
-    path = Dir.glob("capybara-*.html").first
-    filename = path.split("/").last
-    result.should == filename
+    path = File.expand_path(Dir.glob("capybara-*.html").first, Dir.pwd)
+    result.should == path
+  end
+
+  it "returns an absolute path in given directory" do
+    Capybara.save_and_open_page_path = alternative_path
+    result = @session.save_page
+    path = File.expand_path(Dir.glob(alternative_path + "/capybara-*.html").first, alternative_path)
+    result.should == path
   end
 
   context "asset_host contains a string" do
