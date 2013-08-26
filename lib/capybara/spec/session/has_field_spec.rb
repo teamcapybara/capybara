@@ -121,6 +121,10 @@ Capybara::SpecHelper.spec '#has_checked_field?' do
     @session.should have_checked_field('Hamster')
   end
 
+  it "should be true for disabled checkboxes if :disabled => true" do
+    @session.should have_checked_field('Disabled Checkbox', :disabled => true)
+  end
+
   it "should be false if an unchecked field is on the page" do
     @session.should_not have_checked_field('form_pets_cat')
     @session.should_not have_checked_field('Male')
@@ -128,6 +132,14 @@ Capybara::SpecHelper.spec '#has_checked_field?' do
 
   it "should be false if no field is on the page" do
     @session.should_not have_checked_field('Does Not Exist')
+  end
+
+  it "should be false for disabled checkboxes by default" do
+    @session.should_not have_checked_field('Disabled Checkbox')
+  end
+
+  it "should be false for disabled checkboxes if :disabled => false" do
+    @session.should_not have_checked_field('Disabled Checkbox', :disabled => false)
   end
 
   it "should be true after an unchecked checkbox is checked" do
@@ -159,6 +171,10 @@ Capybara::SpecHelper.spec '#has_no_checked_field?' do
     @session.should_not have_no_checked_field('Hamster')
   end
 
+  it "should be false for disabled checkboxes if :disabled => true" do
+    @session.should_not have_no_checked_field('Disabled Checkbox', :disabled => true)
+  end
+
   it "should be true if an unchecked field is on the page" do
     @session.should have_no_checked_field('form_pets_cat')
     @session.should have_no_checked_field('Male')
@@ -166,6 +182,14 @@ Capybara::SpecHelper.spec '#has_no_checked_field?' do
 
   it "should be true if no field is on the page" do
     @session.should have_no_checked_field('Does Not Exist')
+  end
+
+  it "should be true for disabled checkboxes by default" do
+    @session.should have_no_checked_field('Disabled Checkbox')
+  end
+
+  it "should be true for disabled checkboxes if :disabled => false" do
+    @session.should have_no_checked_field('Disabled Checkbox', :disabled => false)
   end
 end
 
@@ -182,8 +206,20 @@ Capybara::SpecHelper.spec '#has_unchecked_field?' do
     @session.should have_unchecked_field('Male')
   end
 
+  it "should be true for disabled unchecked fields if :disabled => true" do
+    @session.should have_unchecked_field('Disabled Unchecked Checkbox', :disabled => true)
+  end
+
   it "should be false if no field is on the page" do
     @session.should_not have_unchecked_field('Does Not Exist')
+  end
+
+  it "should be false for disabled unchecked fields by default" do
+    @session.should_not have_unchecked_field('Disabled Unchecked Checkbox')
+  end
+
+  it "should be false for disabled unchecked fields if :disabled => false" do
+    @session.should_not have_unchecked_field('Disabled Unchecked Checkbox', :disabled => false)
   end
 
   it "should be false after an unchecked checkbox is checked" do
@@ -220,7 +256,19 @@ Capybara::SpecHelper.spec '#has_no_unchecked_field?' do
     @session.should_not have_no_unchecked_field('Male')
   end
 
+  it "should be false for disabled unchecked fields if :disabled => true" do
+    @session.should_not have_no_unchecked_field('Disabled Unchecked Checkbox', :disabled => true)
+  end
+
   it "should be true if no field is on the page" do
     @session.should have_no_unchecked_field('Does Not Exist')
+  end
+
+  it "should be true for disabled unchecked fields by default" do
+    @session.should have_no_unchecked_field('Disabled Unchecked Checkbox')
+  end
+
+  it "should be true for disabled unchecked fields if :disabled => false" do
+    @session.should have_no_unchecked_field('Disabled Unchecked Checkbox', :disabled => false)
   end
 end
