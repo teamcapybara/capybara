@@ -196,19 +196,30 @@ module Capybara
 
     ##
     #
-    # Execute the given block for a particular scope on the page. Within will find the first
-    # element matching the given selector and execute the block scoped to that element:
+    # Executes the given block within the context of a node. `within` takes the
+    # same options as `find`, as well as a block. For the duration of the
+    # block, any command to Capybara will be handled as though it were scoped
+    # to the given element.
     #
     #     within(:xpath, '//div[@id="delivery-address"]') do
     #       fill_in('Street', :with => '12 Main Street')
     #     end
     #
-    # It is possible to omit the first parameter, in that case, the selector is assumed to be
-    # of the type set in Capybara.default_selector.
+    # Just as with `find`, if multiple elements match the selector given to
+    # `within`, an error will be raised, and just as with `find`, this
+    # behaviour can be controlled through the `:match` and `:exact` options.
+    #
+    # It is possible to omit the first parameter, in that case, the selector is
+    # assumed to be of the type set in Capybara.default_selector.
     #
     #     within('div#delivery-address') do
     #       fill_in('Street', :with => '12 Main Street')
     #     end
+    #
+    # Note that a lot of uses of `within` can be replaced more succinctly with
+    # chaining:
+    #
+    #     find('div#delivery-address').fill_in('Street', :with => '12 Main Street')
     #
     # @overload within(*find_args)
     #   @param (see Capybara::Node::Finders#all)
@@ -216,7 +227,7 @@ module Capybara
     # @overload within(a_node)
     #   @param [Capybara::Node::Base] a_node   The node in whose scope the block should be evaluated
     #
-    # @raise  [Capybara::ElementNotFound]   If the scope can't be found before time expires
+    # @raise  [Capybara::ElementNotFound]      If the scope can't be found before time expires
     #
     def within(*args)
       new_scope = if args.first.is_a?(Capybara::Node::Base) then args.first else find(*args) end
