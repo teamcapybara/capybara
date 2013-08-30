@@ -75,6 +75,16 @@ module Capybara
       end
     end
 
+
+    def extract_wait(*args)
+      options = args.last
+      if options.is_a?(Hash) && options.has_key?(:wait)
+        options[:wait] or 0
+      else
+        Capybara.default_wait_time
+      end
+    end
+
     ##
     #
     # Generates a failure message given a description of the query and count

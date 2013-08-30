@@ -133,7 +133,6 @@ Capybara::SpecHelper.spec '#assert_no_selector' do
 
   context "with wait", :requires => [:js] do
     it "should not find element if it appears after given wait duration" do
-      p Capybara.default_wait_time
       @session.visit('/with_js')
       @session.click_link('Click me')
       @session.assert_no_selector(:css, "a#has-been-clicked", :text => "Has been clicked", :wait => 0.1)

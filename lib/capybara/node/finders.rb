@@ -27,7 +27,8 @@ module Capybara
       #
       def find(*args)
         query = Capybara::Query.new(*args)
-        synchronize(query.wait) do
+        wait = Capybara::Helpers.extract_wait(*args)
+        synchronize(wait) do
           if query.match == :smart or query.match == :prefer_exact
             result = resolve_query(query, true)
             result = resolve_query(query, false) if result.size == 0 and not query.exact?
