@@ -31,13 +31,13 @@ module Capybara
       end
     end
 
-    attr_reader :app, :port
+    attr_reader :app, :port, :host
 
-    def initialize(app, port=Capybara.server_port)
+    def initialize(app, port=Capybara.server_port, host=Capybara.server_host)
       @app = app
       @middleware = Middleware.new(@app)
       @server_thread = nil # supress warnings
-      @port = port
+      @host, @port = host, port
       @port ||= Capybara::Server.ports[@app.object_id]
       @port ||= find_available_port
     end
@@ -48,10 +48,6 @@ module Capybara
 
     def error
       @middleware.error
-    end
-
-    def host
-      Capybara.server_host || "127.0.0.1"
     end
 
     def responsive?
