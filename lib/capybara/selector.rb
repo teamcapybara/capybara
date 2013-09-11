@@ -128,6 +128,9 @@ Capybara.add_selector(:link) do
   filter(:href) do |node, href|
     node.first(:xpath, XPath.axis(:self)[XPath.attr(:href).equals(href.to_s)])
   end
+  filter(:rel) do |node, rel|
+    node.first(:xpath, XPath.axis(:self)[XPath.attr(:rel).equals(rel.to_s)])
+  end
 end
 
 Capybara.add_selector(:button) do

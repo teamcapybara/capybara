@@ -448,6 +448,7 @@ describe Capybara::RSpecMatchers do
 
   describe "have_link matcher" do
     let(:html) { '<a href="#">Just a link</a>' }
+    let(:html_with_rel) { '<a href="#" rel="nofollow">A link with a rel</a>' }
 
     it "gives proper description" do
       have_link('Just a link').description.should == "have link \"Just a link\""
@@ -461,6 +462,18 @@ describe Capybara::RSpecMatchers do
       expect do
         html.should have_link('No such Link')
       end.to raise_error(/expected to find link "No such Link"/)
+    end
+
+    context 'with a rel filter' do
+      it "passes if there is such a link with a matching rel attribute" do
+        html_with_rel.should have_link('A link with a rel', :rel => 'nofollow')
+      end
+
+      it 'fails if there is no such link with a mathcing rel attribute' do
+        expect do
+          html.should have_link('Just a link', rel: 'nofollow')
+        end.to raise_error(/expected to find link "Just a link"/)
+      end
     end
   end
 
