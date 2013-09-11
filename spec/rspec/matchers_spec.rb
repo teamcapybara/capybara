@@ -475,6 +475,19 @@ describe Capybara::RSpecMatchers do
         end.to raise_error(/expected to find link "Just a link"/)
       end
     end
+
+    context 'with a href filter' do
+      it "passes if there is such a link with a matching href attribute" do
+        html.should have_link('Just a link', :href => '#')
+      end
+
+      it 'fails if there is no such link with a mathcing rel attribute' do
+        expect do
+          html.should have_link('Just a link', href: 'http://example.com')
+        end.to raise_error(/expected to find link "Just a link"/)
+      end
+    end
+
   end
 
   describe "have_title matcher" do
