@@ -18,13 +18,21 @@ describe Capybara::Server do
   end
 
   it "should bind to the specified host" do
-    Capybara.server_host = '0.0.0.0'
+    begin
+      app = proc { |env| [200, {}, ['Hello Server!']] }
 
-    app = proc { |env| [200, {}, ["Hello Server!"]]}
-    server = Capybara::Server.new(app).boot
-    server.host.should == '0.0.0.0'
+      Capybara.server_host = '127.0.0.1'
+      server = Capybara::Server.new(app).boot
+      res = Net::HTTP.get(URI("http://127.0.0.1:#{server.port}"))
+      expect(res).to eq('Hello Server!')
 
-    Capybara.server_host = nil
+      Capybara.server_host = '0.0.0.0'
+      server = Capybara::Server.new(app).boot
+      res = Net::HTTP.get(URI("http://127.0.0.1:#{server.port}"))
+      expect(res).to eq('Hello Server!')
+    ensure
+      Capybara.server_host = nil
+    end
   end
 
   it "should use specified port" do
