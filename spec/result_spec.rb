@@ -48,4 +48,8 @@ describe Capybara::Result do
       memo += element.text[0]
     end.should == 'ABGD'
   end
+
+  it 'can be sampled' do
+    result.should include(result.sample)
+  end
 end
