@@ -125,7 +125,9 @@ Capybara::SpecHelper.spec "#fill_in" do
     it 'should only trigger onchange once' do
       @session.visit('/with_js')
       @session.fill_in('with_change_event', :with => 'some value')
-      @session.find(:css, '#with_change_event').value.should == 'some value'
+      # click outside the field to trigger the change event
+      @session.find(:css, 'body').click
+      @session.find(:css, '.change_event_triggered', :match => :one).should have_text 'some value'
     end
   end
 
