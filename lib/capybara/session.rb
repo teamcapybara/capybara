@@ -75,8 +75,11 @@ module Capybara
     # Reset the session, removing all cookies.
     #
     def reset!
-      driver.reset! if @touched
-      @touched = false
+      if @touched
+        driver.reset!
+        @touched = false
+        assert_no_selector :xpath, "/html/body/*"
+      end
       raise @server.error if Capybara.raise_server_errors and @server and @server.error
     ensure
       @server.reset_error! if @server

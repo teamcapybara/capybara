@@ -14,6 +14,8 @@ module Capybara
   class NotSupportedByDriverError < CapybaraError; end
   class InfiniteRedirectError < CapybaraError; end
 
+  EMPTY_HTML_FILE_PATH = File.expand_path('./capybara/empty.html', File.dirname(__FILE__))
+
   class << self
     attr_accessor :asset_host, :app_host, :run_server, :default_host, :always_include_port
     attr_accessor :server_port, :exact, :match, :exact_options, :visible_text_only
@@ -274,7 +276,7 @@ module Capybara
     ensure
       self.session_name = :default
     end
-    
+
     ##
     #
     # Parse raw html into a document using Nokogiri, and adjust textarea contents as defined by the spec.
@@ -284,7 +286,7 @@ module Capybara
     #
     def HTML(html)
       Nokogiri::HTML(html).tap do |document|
-        document.xpath('//textarea').each do |textarea| 
+        document.xpath('//textarea').each do |textarea|
           textarea.content=textarea.content.sub(/\A\n/,'')
         end
       end
