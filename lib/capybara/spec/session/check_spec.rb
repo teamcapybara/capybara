@@ -96,4 +96,18 @@ Capybara::SpecHelper.spec "#check" do
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
+
+  context "with `option` option" do
+    it "can check boxes by their value" do
+      @session.check('form[pets][]', :option => "cat")
+      @session.click_button('awesome')
+      extract_results(@session)['pets'].should include('cat')
+    end
+
+    it "should raise an error if option not found" do
+      expect do
+        @session.check('form[pets][]', :option => "elephant")
+      end.to raise_error(Capybara::ElementNotFound)
+    end
+  end
 end
