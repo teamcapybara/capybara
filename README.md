@@ -271,7 +271,7 @@ RackTest can be configured with a set of headers like this:
 
 ```ruby
 Capybara.register_driver :rack_test do |app|
-  Capybara::RackTest::Driver.new(app, :headers => { 'User-Agent' => 'Capybara' })
+  Capybara::RackTest::Driver.new(app, :headers => { 'HTTP_USER_AGENT' => 'Capybara' })
 end
 ```
 
@@ -794,7 +794,7 @@ end
 
 Capybara makes it convenient to switch between different drivers. It also exposes
 an API to tweak those drivers with whatever settings you want, or to add your own
-drivers. This is how to switch the selenium driver to use chrome:
+drivers. This is how to override the selenium driver configuration to use chrome:
 
 ```ruby
 Capybara.register_driver :selenium do |app|
@@ -802,13 +802,17 @@ Capybara.register_driver :selenium do |app|
 end
 ```
 
-However, it's also possible to give this a different name, so tests can switch
-between using different browsers effortlessly:
+However, it's also possible to give this configuration a different name. 
 
 ```ruby
 Capybara.register_driver :selenium_chrome do |app|
   Capybara::Selenium::Driver.new(app, :browser => :chrome)
 end
+```
+
+Then tests can switch between using different browsers effortlessly:
+```ruby
+Capybara.current_driver = :selenium_chrome
 ```
 
 Whatever is returned from the block should conform to the API described by
