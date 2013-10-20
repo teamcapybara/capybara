@@ -31,7 +31,7 @@ describe Capybara do
     end
 
     it "should default to a proc that calls run_default_server" do
-      mock_app = mock('app')
+      mock_app = double('app')
       Capybara.should_receive(:run_default_server).with(mock_app, 8000)
       Capybara.server.call(mock_app, 8000)
     end

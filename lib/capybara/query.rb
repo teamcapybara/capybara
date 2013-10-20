@@ -32,6 +32,7 @@ module Capybara
     def description
       @description = "#{label} #{locator.inspect}"
       @description << " with text #{options[:text].inspect}" if options[:text]
+      @description << " with value #{options[:with].inspect}" if options[:with]
       @description
     end
 

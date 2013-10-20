@@ -519,20 +519,43 @@ describe Capybara::RSpecMatchers do
   end
 
   describe "have_field matcher" do
-    let(:html) { '<p><label>Text field<input type="text"/></label></p>' }
+    let(:html) { '<p><label>Text field<input type="text" value="some value"/></label></p>' }
 
     it "gives proper description" do
       have_field('Text field').description.should == "have field \"Text field\""
+    end
+
+    it "gives proper description for a given value" do
+      have_field('Text field', with: 'some value').description.should == "have field \"Text field\" with value \"some value\""
     end
 
     it "passes if there is such a field" do
       html.should have_field('Text field')
     end
 
+    it "passes if there is such a field with value" do
+      html.should have_field('Text field', with: 'some value')
+    end
+
     it "fails if there is no such field" do
       expect do
         html.should have_field('No such Field')
       end.to raise_error(/expected to find field "No such Field"/)
+    end
+
+    it "fails if there is such field but with false value" do
+      expect do
+        html.should have_field('Text field', with: 'false value')
+      end.to raise_error(/expected to find field "Text field"/)
+    end
+
+    it "treats a given value as a string" do
+      class Foo
+        def to_s
+          "some value"
+        end
+      end
+      html.should have_field('Text field', with: Foo.new)
     end
   end
 
