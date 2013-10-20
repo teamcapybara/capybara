@@ -70,14 +70,6 @@ module Capybara
       end
     end
 
-    def wait
-      if options.has_key?(:wait)
-        @options[:wait] or 0
-      else
-        Capybara.default_wait_time
-      end
-    end
-
     def exact?
       if options.has_key?(:exact)
         @options[:exact]
