@@ -6,8 +6,8 @@
 
 Capybara helps you test web applications by simulating how a real user would
 interact with your app. It is agnostic about the driver running your tests and
-comes with Rack::Test and Selenium support built in. WebKit is supported
-through an external gem.
+comes with Rack::Test (no further gems to install) and Selenium-Webdriver
+(you must install the Selenium-Webdriver gem). WebKit is supported through an external gem.
 
 **Need help?** Ask on the mailing list (please do not open an issue on
 GitHub): http://groups.google.com/group/ruby-capybara
@@ -281,7 +281,14 @@ See the section on adding and configuring drivers.
 
 At the moment, Capybara supports [Selenium 2.0
 (Webdriver)](http://seleniumhq.org/docs/01_introducing_selenium.html#selenium-2-aka-selenium-webdriver),
-*not* Selenium RC. Provided Firefox is installed, everything is set up for you,
+*not* Selenium RC. The Selenium-Webdriver gem is no longer packaged as a dependency so if you would like use it, add
+the following to your Gemfile:
+
+```
+  gem 'selenium-webdriver'
+```
+
+Provided Firefox is installed, everything is set up for you,
 and you should be able to start using Selenium right away.
 
 **Note**: drivers which run the server in a different thread may not work share the
