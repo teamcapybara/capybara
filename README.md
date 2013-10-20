@@ -281,10 +281,12 @@ See the section on adding and configuring drivers.
 
 At the moment, Capybara supports [Selenium 2.0
 (Webdriver)](http://seleniumhq.org/docs/01_introducing_selenium.html#selenium-2-aka-selenium-webdriver),
-*not* Selenium RC. Provided Firefox is installed, everything is set up for you,
-and you should be able to start using Selenium right away.
+*not* Selenium RC. In order to use Selenium, you'll need to install the
+`selenium-webdriver` gem, and add it to your Gemfile if you're using bundler.
+Provided Firefox is installed, everything is set up for you, and you should be
+able to start using Selenium right away.
 
-**Note**: drivers which run the server in a different thread may not work share the
+**Note**: drivers which run the server in a different thread may not share the
 same transaction as your tests, causing data not to be shared between your test
 and test server, see "Transactions and database setup" below.
 
@@ -802,7 +804,7 @@ Capybara.register_driver :selenium do |app|
 end
 ```
 
-However, it's also possible to give this configuration a different name. 
+However, it's also possible to give this configuration a different name.
 
 ```ruby
 Capybara.register_driver :selenium_chrome do |app|
