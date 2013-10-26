@@ -84,12 +84,14 @@ Capybara::SpecHelper.spec "node" do
 
     it "should not set if the text field is readonly" do
       @session.first('//input[@readonly]').value.should == 'should not change'
+      Kernel.should_receive(:warn).with('Attempt to set readonly field')
       @session.first('//input[@readonly]').set('changed')
       @session.first('//input[@readonly]').value.should == 'should not change'
     end
 
     it "should not set if the textarea is readonly" do
       @session.first('//textarea[@readonly]').value.should == 'textarea should not change'
+      Kernel.should_receive(:warn).with('Attempt to set readonly field')
       @session.first('//textarea[@readonly]').set('changed')
       @session.first('//textarea[@readonly]').value.should == 'textarea should not change'
     end

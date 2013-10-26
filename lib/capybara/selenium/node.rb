@@ -38,8 +38,12 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       native.send_keys(*path_names)
     elsif tag_name == 'textarea' or tag_name == 'input'
       #script can change a readonly element which user input cannot, so dont execute if readonly
-      driver.browser.execute_script "arguments[0].value = ''", native unless self[:readonly]
-      native.send_keys(value.to_s)
+      unless self[:readonly]
+        driver.browser.execute_script "arguments[0].value = ''", native
+        native.send_keys(value.to_s)
+      else
+        Kernel.warn('Attempt to set readonly field')
+      end
     elsif native.attribute('isContentEditable')
       #ensure we are focused on the element
       script = <<-JS
