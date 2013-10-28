@@ -10,13 +10,21 @@ class Capybara::Driver::Base
   def find_xpath(query)
     raise NotImplementedError
   end
-  
+
   def find_css(query)
     raise NotImplementedError
   end
 
   def html
     raise NotImplementedError
+  end
+
+  def go_back
+    raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#execute_script'
+  end
+
+  def go_forward
+    raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#execute_script'
   end
 
   def execute_script(script)

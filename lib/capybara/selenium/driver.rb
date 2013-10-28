@@ -45,6 +45,14 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.navigate.to(path)
   end
 
+  def go_back
+    browser.navigate.back
+  end
+
+  def go_forward
+    browser.navigate.forward
+  end
+
   def html
     browser.page_source
   end

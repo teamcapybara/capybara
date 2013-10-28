@@ -38,7 +38,7 @@ module Capybara
     ]
     SESSION_METHODS = [
       :body, :html, :source, :current_url, :current_host, :current_path,
-      :execute_script, :evaluate_script, :visit,
+      :execute_script, :evaluate_script, :visit, :go_back, :go_forward,
       :within, :within_fieldset, :within_table, :within_frame, :within_window,
       :save_page, :save_and_open_page, :save_screenshot,
       :reset_session!, :response_headers, :status_code,
@@ -195,6 +195,22 @@ module Capybara
       end
 
       driver.visit(url)
+    end
+
+    ##
+    #
+    # Move back a single entry in the browser's history.
+    #
+    def go_back
+      driver.go_back
+    end
+
+    ##
+    #
+    # Move forward a single entry in the browser's history.
+    #
+    def go_forward
+      driver.go_forward
     end
 
     ##
