@@ -28,7 +28,7 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
       case field.name
       when 'input'
         if %w(radio checkbox).include? field['type']
-          merge_param!(params, field['name'].to_s, field['value'].nil? ? 'on' : field['value'].to_s) if field['checked']
+          merge_param!(params, field['name'].to_s, field['value'].to_s) if field['checked']
         elsif %w(submit image).include? field['type']
           # TO DO identify the click button here (in document order, rather
           # than leaving until the end of the params)
