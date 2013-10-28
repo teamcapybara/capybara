@@ -462,6 +462,23 @@ module Capybara
         self.eql?(other) or (other.respond_to?(:base) and base == other.base)
       end
 
+      ##
+      #
+      # Checks if the page or current node has a meta tag with the given name:
+      #
+      #    page.has_meta?('description')
+      #    page.has_meta?('description', :content => 'People')
+      #
+      # @param [String] name                           The name of a meta tag
+      # @return [Boolean]                              Whether it exist
+      #
+      def has_meta?(name, options={})
+        locator = %![name="#{name}"]!
+        locator += %![content="#{options.delete(:content)}"]! if options[:content]
+
+        has_selector?(:meta, locator, { :visible => false }.merge(options))
+      end
+
     private
 
       def text_found?(*args)
