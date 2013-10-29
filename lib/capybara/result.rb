@@ -29,7 +29,8 @@ module Capybara
       @query = query
     end
 
-    def_delegators :@result, :each, :[], :at, :size, :count, :length, :first, :last, :empty?, :inspect, :sample
+    def_delegators :@result, :each, :[], :at, :size, :count, :length,
+                   :first, :last, :values_at, :empty?, :inspect, :sample, :index
 
     def matches_count?
       Capybara::Helpers.matches_count?(@result.size, @query.options)

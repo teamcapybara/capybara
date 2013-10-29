@@ -28,6 +28,10 @@ describe Capybara::Result do
     result.last.text == 'Delta'
   end
 
+  it 'can supports values_at method' do
+    result.values_at(0, 2).map(&:text).should == %w(Alpha Gamma)
+  end
+
   it "can return an element by its index" do
     result.at(1).text.should == 'Beta'
     result[2].text.should == 'Gamma'
@@ -51,5 +55,11 @@ describe Capybara::Result do
 
   it 'can be sampled' do
     result.should include(result.sample)
+  end
+
+  it 'can be indexed' do
+    result.index do |el|
+      el.text == 'Gamma'
+    end.should == 2
   end
 end
