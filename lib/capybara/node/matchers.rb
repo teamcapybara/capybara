@@ -462,12 +462,16 @@ module Capybara
         self.eql?(other) or (other.respond_to?(:base) and base == other.base)
       end
 
+      # @api private
+      attr_reader :actual_text
+
     private
 
       def text_found?(*args)
         type = args.shift if args.first.is_a?(Symbol) or args.first.nil?
         content, options = args
-        count = Capybara::Helpers.normalize_whitespace(text(type)).scan(Capybara::Helpers.to_regexp(content)).count
+        @actual_text = text(type)
+        count = @actual_text.scan(Capybara::Helpers.to_regexp(content)).size
 
         Capybara::Helpers.matches_count?(count, options || {})
       end
