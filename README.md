@@ -452,8 +452,6 @@ within(:xpath, "//li[@id='employee']") do
 end
 ```
 
-**Note**: `within` will scope the actions to the _first_ (not _any_) element that matches the selector.
-
 There are special methods for restricting the scope to a specific fieldset,
 identified by either an id or the text of the fieldset's legend tag, and to a
 specific table, identified by either id or text of the table's caption tag.
