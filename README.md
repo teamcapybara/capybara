@@ -44,178 +44,15 @@ Capybara.app = MyRackApp
 If you need to test JavaScript, or if your app interacts with (or is located at)
 a remote URL, you'll need to [use a different driver](#drivers).
 
-## Using Capybara with Cucumber
+Capybara integrates nicely with a number of popular Ruby test frameworks:
 
-The `cucumber-rails` gem comes with Capybara support built-in. If you
-are not using Rails, manually load the `capybara/cucumber` module:
+- [Cucumber](doc/cucumber.md)
+- [RSpec](doc/rspec.md)
+- [Test::Unit](doc/test_unit.md)
+- [MiniTest::Spec](doc/minitest_spec.md)
 
-```ruby
-require 'capybara/cucumber'
-Capybara.app = MyRackApp
-```
-
-You can use the Capybara DSL in your steps, like so:
-
-```ruby
-When /I sign in/ do
-  within("#session") do
-    fill_in 'Login', :with => 'user@example.com'
-    fill_in 'Password', :with => 'password'
-  end
-  click_link 'Sign in'
-end
-```
-
-You can switch to the `Capybara.javascript_driver` (`:selenium`
-by default) by tagging scenarios (or features) with `@javascript`:
-
-```ruby
-@javascript
-Scenario: do something Ajaxy
-  When I click the Ajax link
-  ...
-```
-
-There are also explicit `@selenium` and `@rack_test`
-tags set up for you.
-
-## Using Capybara with RSpec
-
-Load RSpec 2.x support by adding the following line (typically to your
-`spec_helper.rb` file):
-
-```ruby
-require 'capybara/rspec'
-```
-
-If you are using Rails, put your Capybara specs in `spec/features`.
-
-If you are not using Rails, tag all the example groups in which you want to use
-Capybara with `:type => :feature`.
-
-You can now write your specs like so:
-
-```ruby
-describe "the signin process", :type => :feature do
-  before :each do
-    User.make(:email => 'user@example.com', :password => 'caplin')
-  end
-
-  it "signs me in" do
-    visit '/sessions/new'
-    within("#session") do
-      fill_in 'Login', :with => 'user@example.com'
-      fill_in 'Password', :with => 'password'
-    end
-    click_link 'Sign in'
-    expect(page).to have_content 'Success'
-  end
-end
-```
-
-Use `:js => true` to switch to the `Capybara.javascript_driver`
-(`:selenium` by default), or provide a `:driver` option to switch
-to one specific driver. For example:
-
-```ruby
-describe 'some stuff which requires js', :js => true do
-  it 'will use the default js driver'
-  it 'will switch to one specific driver', :driver => :webkit
-end
-```
-
-Finally, Capybara also comes with a built in DSL for creating descriptive acceptance tests:
-
-```ruby
-feature "Signing in" do
-  background do
-    User.make(:email => 'user@example.com', :password => 'caplin')
-  end
-
-  scenario "Signing in with correct credentials" do
-    visit '/sessions/new'
-    within("#session") do
-      fill_in 'Login', :with => 'user@example.com'
-      fill_in 'Password', :with => 'caplin'
-    end
-    click_link 'Sign in'
-    expect(page).to have_content 'Success'
-  end
-
-  given(:other_user) { User.make(:email => 'other@example.com', :password => 'rous') }
-
-  scenario "Signing in as another user" do
-    visit '/sessions/new'
-    within("#session") do
-      fill_in 'Login', :with => other_user.email
-      fill_in 'Password', :with => other_user.password
-    end
-    click_link 'Sign in'
-    expect(page).to have_content 'Invalid email or password'
-  end
-end
-```
-
-`feature` is in fact just an alias for `describe ..., :type => :feature`,
-`background` is an alias for `before`, `scenario` for `it`, and
-`given`/`given!` aliases for `let`/`let!`, respectively.
-
-## Using Capybara with Test::Unit
-
-* If you are using Rails, add the following code in your `test_helper.rb`
-    file to make Capybara available in all test cases deriving from
-    `ActionDispatch::IntegrationTest`:
-
-    ```ruby
-    class ActionDispatch::IntegrationTest
-      # Make the Capybara DSL available in all integration tests
-      include Capybara::DSL
-    end
-    ```
-
-* If you are not using Rails, define a base class for your Capybara tests like
-  so:
-
-    ```ruby
-    class CapybaraTestCase < Test::Unit::TestCase
-      include Capybara::DSL
-
-      def teardown
-        Capybara.reset_sessions!
-        Capybara.use_default_driver
-      end
-    end
-    ```
-
-    Remember to call `super` in any subclasses that override
-    `teardown`.
-
-To switch the driver, set `Capybara.current_driver`. For instance,
-
-```ruby
-class BlogTest < ActionDispatch::IntegrationTest
-  setup do
-    Capybara.current_driver = Capybara.javascript_driver # :selenium by default
-  end
-
-  test 'shows blog posts' do
-    # ... this test is run with Selenium ...
-  end
-end
-```
-
-## Using Capybara with MiniTest::Spec
-
-Set up your base class as with Test::Unit. (On Rails, the right base class
-could be something other than ActionDispatch::IntegrationTest.)
-
-The capybara_minitest_spec gem ([Github](https://github.com/ordinaryzelig/capybara_minitest_spec),
-[rubygems.org](https://rubygems.org/gems/capybara_minitest_spec)) provides MiniTest::Spec
-expectations for Capybara. For example:
-
-```ruby
-page.must_have_content('Important!')
-```
+You can also use Capybara on its own by [including it's DSL in other modules](doc/standalone.md), and
+by [manually instantiating Capybara sessions](doc/standalone.md).
 
 ## Drivers
 
@@ -234,7 +71,7 @@ Capybara.default_driver = :selenium
 ```
 
 However, if you are using RSpec or Cucumber, you may instead want to consider
-leaving the faster `:rack_test` as the __default_driver__, and marking only those
+leaving the faster `:rack_test` as the `default_driver`, and marking only those
 tests that require a JavaScript-capable driver using `:js => true` or
 `@javascript`, respectively.  By default, JavaScript tests are run using the
 `:selenium` driver. You can change this by setting
@@ -644,32 +481,6 @@ the text of the `h1` to "Something", and this happened, this test would
 pass. If you do not want this behaviour, you can set
 `Capybara.automatic_reload` to `false`.
 
-## Using the DSL elsewhere
-
-You can mix the DSL into any context by including <tt>Capybara::DSL</tt>:
-
-
-```ruby
-require 'capybara'
-require 'capybara/dsl'
-
-Capybara.default_driver = :webkit
-
-module MyModule
-  include Capybara::DSL
-
-  def login!
-    within("//form[@id='session']") do
-      fill_in 'Login', :with => 'user@example.com'
-      fill_in 'Password', :with => 'password'
-    end
-    click_link 'Sign in'
-  end
-end
-```
-
-This enables its use in unsupported testing frameworks, and for general-purpose scripting.
-
 ## Calling remote servers
 
 Normally Capybara expects to be testing an in-process Rack application, but you
@@ -697,23 +508,6 @@ remote application:
 
 ```ruby
 Capybara.run_server = false
-```
-
-## Using the sessions manually
-
-For ultimate control, you can instantiate and use a
-[Session](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session)
-manually.
-
-```ruby
-require 'capybara'
-
-session = Capybara::Session.new(:webkit, my_rack_app)
-session.within("//form[@id='session']") do
-  session.fill_in 'Login', :with => 'user@example.com'
-  session.fill_in 'Password', :with => 'password'
-end
-session.click_link 'Sign in'
 ```
 
 ## XPath, CSS and selectors
