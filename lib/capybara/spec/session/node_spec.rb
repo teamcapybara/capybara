@@ -67,6 +67,16 @@ Capybara::SpecHelper.spec "node" do
       @session.find('//textarea[1]').set("some <em>html</em> here")
       @session.find('//textarea[1]').value.should == "some <em>html</em> here"
     end
+    
+    it "defaults to 'on' for checkbox" do
+      @session.visit('/form')
+      @session.find('//input[@id="valueless_checkbox"]').value.should == 'on'
+    end
+
+    it "defaults to 'on' for radio buttons" do
+      @session.visit('/form')
+      @session.find('//input[@id="valueless_radio"]').value.should == 'on'
+    end    
   end
 
   describe "#set" do

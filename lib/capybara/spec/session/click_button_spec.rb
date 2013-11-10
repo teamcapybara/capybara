@@ -102,9 +102,17 @@ Capybara::SpecHelper.spec '#click_button' do
         @results['gender'].should == 'female'
       end
 
+      it "should default radio value to 'on' if none specified" do
+        @results['valueless_radio'].should == 'on'
+      end
+
       it "should serialize check boxes" do
         @results['pets'].should include('dog', 'hamster')
         @results['pets'].should_not include('cat')
+      end
+      
+      it "should default checkbox value to 'on' if none specififed" do
+        @results['valueless_checkbox'].should == 'on'
       end
 
       it "should serialize text areas" do
