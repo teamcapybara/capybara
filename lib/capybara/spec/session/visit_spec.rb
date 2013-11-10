@@ -86,4 +86,11 @@ Capybara::SpecHelper.spec '#visit' do
     @session.find('//input').click
     @session.should have_content %r{http://.*/referer_base}
   end
+  
+  it "can set cookie if a blank path is specified" do
+    @session.visit("")
+    @session.visit('/get_cookie')
+    @session.should have_content('root cookie')
+  end
+  
 end
