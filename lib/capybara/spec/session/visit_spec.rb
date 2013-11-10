@@ -17,6 +17,15 @@ Capybara::SpecHelper.spec '#visit' do
     @session.should have_content('Another World')
   end
 
+  it "should fetch a response when absolute URI doesn't have a trailing slash" do
+    # Preparation
+    @session.visit('/foo/bar')
+    root_uri = URI.parse(@session.current_url)
+
+    @session.visit("http://localhost:#{root_uri.port}")
+    @session.should have_content('Hello world!')
+  end
+
   context "when Capybara.always_include_port is true" do
 
     let(:root_uri) do
@@ -86,11 +95,11 @@ Capybara::SpecHelper.spec '#visit' do
     @session.find('//input').click
     @session.should have_content %r{http://.*/referer_base}
   end
-  
+
   it "can set cookie if a blank path is specified" do
     @session.visit("")
     @session.visit('/get_cookie')
     @session.should have_content('root cookie')
   end
-  
+
 end
