@@ -1,7 +1,14 @@
 require 'spec_helper'
+require "selenium-webdriver"
+
+Capybara.register_driver :selenium_focus do |app|
+  profile = Selenium::WebDriver::Firefox::Profile.new
+  profile["focusmanager.testmode"] = true
+  Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile)
+end
 
 module TestSessions
-  Selenium = Capybara::Session.new(:selenium, TestApp)
+  Selenium = Capybara::Session.new(:selenium_focus, TestApp)
 end
 
 Capybara::SpecHelper.run_specs TestSessions::Selenium, "selenium", :skip => [
