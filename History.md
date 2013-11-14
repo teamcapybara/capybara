@@ -1,3 +1,50 @@
+# Version 2.2.0
+
+Release date: 2013-11-14
+
+### Added
+
+* Add `go_back` and `go_forward` methods. [Vasiliy Ermolovich]
+* Support RSpec 3 [Thomas Holmes]
+* `has_button?`, `has_checked_field?` and `has_unchecked_field?` accept
+  options, like other matchers. [Carol Nichols]
+* The `assert_selector` and `has_text?` methods now support the `:wait` option
+  [Vasiliy Ermolovich]
+* RackTest's visible? method now checks for the HTML5 `hidden` attribute.
+* Results from `#all` now delegate the `sample` method. [Phil Lee]
+* The `set` method now works for contenteditable attributes under Selenium.
+  [Jon Rowe]
+* radio buttons and check boxes can be filtered by option value, useful when
+  selecting by name [Jonas Nicklas]
+* feature blocks can be nested within other feature blocks in RSpec tests
+  [Travis Gaff]
+
+### Fixed
+
+* Fixed race conditions causing stale element errors when filtering by text.
+  [Jonas Nicklas]
+* Resetting the page is now synchronous and navigates to an empty HTML file,
+  instead of `about:blank`, fixing hanging issues in JRuby. [Jonas Nicklas]
+* Fixed cookies not being set when path is blank under RackTest [Thomas Walpole]
+* Clearing fields now correctly causes change events [Jonas Nicklas]
+* Navigating to an absolut URI without trailing slash now works as expected
+  under RackTest [Jonas Nicklas]
+* Checkboxes without assigned value default to `on` under RackTest [Nigel Sheridan-Smith]
+* Clicks on buttons with no form associated with them are ignored in RackTest
+  instead of raising an obscure exception. [Thomas Walpole]
+* execute_script is now a session method [Andrey Botalov]
+* Nesting `within_window` and `within_frame` inside `within` resets the scope
+  so that they behave like a user would expect [Thomas Walpole]
+* Improve handling of newlines in textareas [Thomas Walpole]
+* `Capybara::Result` delegates its inspect method, so as not to confuse users
+  [Sam Rawlins]
+* save_page always returns a full path, fixes problems with Launchy [Jonas Nicklas]
+* Selenium driver's `quit` method does nothing when browser hasn't been loaded
+  [randoum]
+* Capybara's WEBRick server now propertly respects the server_host option
+  [Dmitry Vorotilin]
+* gemspec now includes license information [Jonas Nicklas]
+
 # Version 2.1.0
 
 Release date: 2013-04-09
