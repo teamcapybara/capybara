@@ -3,7 +3,9 @@ rvm:
   - 1.9.3
   - 2.0.0
   - jruby-19mode
-  - rbx-19mode
+  - rbx-2.1.1
+  - rbx-2.1.0
+  - rbx-2.0.0
 gemfile:
   - Gemfile
   - gemfiles/Gemfile.base-versions
@@ -11,7 +13,11 @@ matrix:
   exclude:
     # Nokogiri 1.3.3 is not compatible with Rubinius or JRuby
     - gemfile: gemfiles/Gemfile.base-versions
-      rvm: rbx-19mode
+      rvm: rbx-2.1.1
+    - gemfile: gemfiles/Gemfile.base-versions
+      rvm: rbx-2.1.0
+    - gemfile: gemfiles/Gemfile.base-versions
+      rvm: rbx-2.0.0
     - gemfile: gemfiles/Gemfile.base-versions
       rvm: jruby-19mode
 before_script:
