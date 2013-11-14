@@ -327,7 +327,7 @@ Capybara heavily uses XPath, which doesn't support case insensitivity.
 ### Navigating
 
 You can use the
-[#visit](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#visit-instance_method)
+<tt>[visit](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#visit-instance_method)</tt>
 method to navigate to other pages:
 
 ```ruby
