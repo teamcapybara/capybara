@@ -2,25 +2,25 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
   it "should click on a link" do
     @session.visit('/with_html')
     @session.click_link_or_button('labore')
-    @session.should have_content('Bar')
+    expect(@session).to have_content('Bar')
   end
 
   it "should click on a button" do
     @session.visit('/form')
     @session.click_link_or_button('awe123')
-    extract_results(@session)['first_name'].should == 'John'
+    expect(extract_results(@session)['first_name']).to eq('John')
   end
 
   it "should click on a button with no type attribute" do
     @session.visit('/form')
     @session.click_link_or_button('no_type')
-    extract_results(@session)['first_name'].should == 'John'
+    expect(extract_results(@session)['first_name']).to eq('John')
   end
 
   it "should be aliased as click_on" do
     @session.visit('/form')
     @session.click_on('awe123')
-    extract_results(@session)['first_name'].should == 'John'
+    expect(extract_results(@session)['first_name']).to eq('John')
   end
 
   it "should wait for asynchronous load", :requires => [:js] do
@@ -32,7 +32,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
   it "casts to string" do
     @session.visit('/form')
     @session.click_link_or_button(:'awe123')
-    extract_results(@session)['first_name'].should == 'John'
+    expect(extract_results(@session)['first_name']).to eq('John')
   end
 
   context "with :exact option" do
@@ -40,13 +40,13 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
       it "clicks on approximately matching link" do
         @session.visit('/with_html')
         @session.click_link_or_button('abore', :exact => false)
-        @session.should have_content('Bar')
+        expect(@session).to have_content('Bar')
       end
 
       it "clicks on approximately matching button" do
         @session.visit('/form')
         @session.click_link_or_button('awe')
-        extract_results(@session)['first_name'].should == 'John'
+        expect(extract_results(@session)['first_name']).to eq('John')
       end
     end
 
@@ -98,7 +98,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
     it "happily clicks on links which incorrectly have the disabled attribute" do
       @session.visit('/with_html')
       @session.click_link_or_button('Disabled link')
-      @session.should have_content("Bar")
+      expect(@session).to have_content("Bar")
     end
 
     it "does nothing when button is disabled" do

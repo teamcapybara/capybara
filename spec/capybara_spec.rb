@@ -10,7 +10,7 @@ describe Capybara do
     it "should be changeable" do
       @previous_default_time = Capybara.default_wait_time
       Capybara.default_wait_time = 5
-      Capybara.default_wait_time.should == 5
+      expect(Capybara.default_wait_time).to eq(5)
     end
   end
 
@@ -21,7 +21,7 @@ describe Capybara do
       end
       session = Capybara::Session.new(:schmoo, TestApp)
       session.visit('/')
-      session.body.should include("Hello world!")
+      expect(session.body).to include("Hello world!")
     end
   end
 
@@ -32,14 +32,14 @@ describe Capybara do
 
     it "should default to a proc that calls run_default_server" do
       mock_app = double('app')
-      Capybara.should_receive(:run_default_server).with(mock_app, 8000)
+      expect(Capybara).to receive(:run_default_server).with(mock_app, 8000)
       Capybara.server.call(mock_app, 8000)
     end
 
     it "should return a custom server proc" do
       server = lambda {|app, port|}
       Capybara.server(&server)
-      Capybara.server.should == server
+      expect(Capybara.server).to eq(server)
     end
   end
 end

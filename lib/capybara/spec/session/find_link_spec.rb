@@ -4,12 +4,12 @@ Capybara::SpecHelper.spec '#find_link' do
   end
 
   it "should find any field" do
-    @session.find_link('foo').text.should == "ullamco"
-    @session.find_link('labore')[:href].should =~ %r(/with_simple_html$)
+    expect(@session.find_link('foo').text).to eq("ullamco")
+    expect(@session.find_link('labore')[:href]).to match %r(/with_simple_html$)
   end
 
   it "casts to string" do
-    @session.find_link(:'foo').text.should == "ullamco"
+    expect(@session.find_link(:'foo').text).to eq("ullamco")
   end
 
   it "should raise error if the field doesn't exist" do
@@ -20,7 +20,7 @@ Capybara::SpecHelper.spec '#find_link' do
 
   context "with :exact option" do
     it "should accept partial matches when false" do
-      @session.find_link('abo', :exact => false).text.should == "labore"
+      expect(@session.find_link('abo', :exact => false).text).to eq("labore")
     end
 
     it "should not accept partial matches when true" do

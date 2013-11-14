@@ -19,7 +19,7 @@ module Capybara
   #
   #     session.fill_in('q', :with => 'Capybara')
   #     session.click_button('Search')
-  #     session.should have_content('Capybara')
+  #     expect(session).to have_content('Capybara')
   #
   # When using capybara/dsl, the Session is initialized automatically for you.
   #
