@@ -31,7 +31,7 @@ describe Capybara::Session do
 
     describe '#mode' do
       it "should remember the mode" do
-        @session.mode.should == :selenium
+        @session.mode.should == :selenium_focus
       end
     end
 
