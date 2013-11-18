@@ -26,6 +26,7 @@ before_install:
   - sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
   - sudo apt-get update
   - sudo apt-get install google-chrome-stable
+  - sudo chmod 1777 /dev/shm
 before_script:
   - sh -e /etc/init.d/xvfb start
   - export DISPLAY=:99.0

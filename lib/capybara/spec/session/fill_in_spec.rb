@@ -57,7 +57,7 @@ Capybara::SpecHelper.spec "#fill_in" do
     extract_results(@session)['description'].should == 'is <strong>very</strong> secret!'
   end
 
-  it "should handle newlines in a textarea", tw: true do
+  it "should handle newlines in a textarea" do
     @session.fill_in('form_description', :with => "\nSome text\n")
     @session.click_button('awesome')
     extract_results(@session)['description'].should == "\r\nSome text\r\n"

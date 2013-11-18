@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 Capybara.register_driver :selenium_chrome do |app|
-  Capybara::Selenium::Driver.new(app, :browser => :chrome)
+  args = ENV['TRAVIS'] ? ['no-sandbox' ] : []
+  Capybara::Selenium::Driver.new(app, :browser => :chrome, :args => args)
 end
 
 class ChromeTestApp < TestApp
