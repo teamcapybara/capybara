@@ -37,7 +37,13 @@ Gem::Specification.new do |s|
   s.add_development_dependency("cucumber", [">= 0.10.5"])
   s.add_development_dependency("rake")
   s.add_development_dependency("pry")
-
+  
+  if RUBY_ENGINE == 'rbx' then
+    s.add_development_dependency("racc")
+    s.add_development_dependency("json")
+    s.add_development_dependency("rubysl")
+  end
+  
   if File.exist?("gem-private_key.pem")
     s.signing_key = 'gem-private_key.pem'
   end
