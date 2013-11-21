@@ -1,6 +1,6 @@
 # Version 2.2.0
 
-Release date: 2013-11-14
+Release date: 2013-11-21
 
 ### Added
 
