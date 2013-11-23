@@ -57,3 +57,20 @@ describe Capybara::Session do
     end
   end
 end
+
+describe Capybara::Selenium::Driver do
+  before do
+    @driver = Capybara::Selenium::Driver.new(TestApp, browser: :firefox)
+  end
+  
+  describe '#quit' do
+    it "should reset browser when quit" do
+      @driver.browser.should be
+      @driver.quit
+      #access instance variable directly so we don't create a new browser instance
+      @driver.instance_variable_get(:@browser).should be_nil
+    end
+  end
+end
+
+

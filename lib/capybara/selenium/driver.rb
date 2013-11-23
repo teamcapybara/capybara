@@ -152,6 +152,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     @browser.quit if @browser
   rescue Errno::ECONNREFUSED
     # Browser must have already gone
+  ensure
+    @browser = nil
   end
 
   def invalid_element_errors
