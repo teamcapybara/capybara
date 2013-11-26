@@ -220,6 +220,22 @@ Capybara::SpecHelper.spec "node" do
       @session.find(:css, '.hidden_until_hover', :visible => false).should be_visible
     end
   end
+  
+  describe '#double_click', :requires => [:js] do
+    it "should double click an element" do
+      @session.visit('/with_js')
+      @session.find(:css, '#click-test').double_click
+      @session.find(:css, '#has-been-double-clicked').should be
+    end
+  end
+
+  describe '#right_click', :requires => [:js] do
+    it "should double click an element" do
+      @session.visit('/with_js')
+      @session.find(:css, '#click-test').right_click
+      @session.find(:css, '#has-been-right-clicked').should be
+    end
+  end  
 
   describe '#reload', :requires => [:js] do
     context "without automatic reload" do
