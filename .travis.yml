@@ -21,7 +21,7 @@ matrix:
     - gemfile: gemfiles/Gemfile.base-versions
       rvm: jruby-19mode
 before_install:
-  - URL='http://chromedriver.storage.googleapis.com/2.6/chromedriver_linux64.zip'; FILE=`mktemp`; wget "$URL" -qO $FILE && sudo unzip $FILE chromedriver -d /usr/local/bin; rm $FILE; sudo chmod 777 /usr/local/bin/chromedriver
+  - URL='http://chromedriver.storage.googleapis.com/2.7/chromedriver_linux64.zip'; FILE=`mktemp`; wget "$URL" -qO $FILE && sudo unzip $FILE chromedriver -d /usr/local/bin; rm $FILE; sudo chmod 777 /usr/local/bin/chromedriver
   - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
   - sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
   - sudo apt-get update
