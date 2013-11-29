@@ -607,7 +607,7 @@ looking for that content for a brief time. You can adjust how long this period
 is (the default is 2 seconds):
 
 ```ruby
-Capybara.default_wait_time = 5
+Capybara.default_wait_time = 5.seconds
 ```
 
 Be aware that because of this behaviour, the following two statements are **not**
