@@ -31,3 +31,9 @@ Feature: Capybara's cucumber integration
     When I visit the root page
     And I use a matcher that fails
     Then the failing exception should be nice
+
+  Scenario: formaction support
+    When I visit "/test_formaction" page
+    And I click "ChUnkY!"
+    Then status code should be 200
+    And I should see "BACON!"

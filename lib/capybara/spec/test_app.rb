@@ -123,6 +123,15 @@ class TestApp < Sinatra::Base
     raise TestAppError, "some error"
   end
 
+  get '/test_formaction' do
+    '<form method="post" action="/fail_formaction"><input type="submit" ' +
+    'value="Full of fail"><input type="submit" formaction="/pass_formaction" value="ChUnkY!"></form>'
+  end
+
+  post '/pass_formaction' do
+    '<span>BACON!</span>'
+  end
+
   get '/:view' do |view|
     erb view.to_sym
   end
@@ -162,6 +171,7 @@ class TestApp < Sinatra::Base
       'No files uploaded'
     end
   end
+
 end
 
 if __FILE__ == $0

@@ -22,3 +22,15 @@ Then /^the failing exception should be nice$/ do
   @error_message.should =~ %r(expected to find css \"h1#doesnotexist\")
 end
 
+When /^I visit "(.*?)" page$/ do |page|
+  visit page
+end
+
+When /^I click "(.*?)"$/ do |locator|
+  page.click_link_or_button locator
+end
+
+Then /^status code should be (\d+)$/ do |code|
+  page.status_code.should == code.to_i
+end
+
