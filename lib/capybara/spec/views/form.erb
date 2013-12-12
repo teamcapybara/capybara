@@ -429,6 +429,13 @@ New line after and before textarea tag
   </p>
 </form>
 
+<form action="/other_form" method="post">
+  <p>
+    <input type="text" name="form[which_form]" value="formaction form"/>
+  </p>
+  <input type="submit" name="form[button]" formaction="/form" value="Formaction button"/>
+</form>
+
 <form action="relative" method="post">
   <p>
     <input type="submit" name="form[relative]" value="Relative Action" />
