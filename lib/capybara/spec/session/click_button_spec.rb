@@ -346,6 +346,15 @@ Capybara::SpecHelper.spec '#click_button' do
     end
   end
 
+  context "with formaction attribute on button" do
+    it "should submit to the formaction attribute" do
+      @session.click_button('Formaction button')
+      @session.current_path.should == '/form'
+      @results = extract_results(@session)
+      @results['which_form'].should == 'formaction form'
+    end
+  end
+
   it "should serialize and send valueless buttons that were clicked" do
     @session.click_button('No Value!')
     @results = extract_results(@session)
