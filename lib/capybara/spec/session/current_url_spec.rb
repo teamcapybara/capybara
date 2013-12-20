@@ -90,4 +90,11 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
     @session.execute_script("window.history.replaceState({}, '', '/replaced')")
     @session.current_path.should == "/replaced"
   end
+
+  it "returns data url", :requires => [:js] do
+    @session.visit("data:text/html,<h1>Hello</h1>")
+    @session.current_url.should == "data:text/html,<h1>Hello</h1>"
+    @session.current_path.should == "data:text/html,<h1>Hello</h1>"
+    @session.current_host.should be_nil
+  end
 end

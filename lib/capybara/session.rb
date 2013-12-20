@@ -45,6 +45,7 @@ module Capybara
       :title, :has_title?, :has_no_title?, :current_scope
     ]
     DSL_METHODS = NODE_METHODS + SESSION_METHODS
+    SCHEME_REGEXP = /^(https?|data):/
 
     attr_reader :mode, :app, :server
     attr_accessor :synchronized
@@ -122,8 +123,13 @@ module Capybara
     # @return [String] Path of the current page, without any domain information
     #
     def current_path
-      path = URI.parse(current_url).path
-      path if path and not path.empty?
+      url = current_url
+      if url.start_with?("data:")
+        url
+      else
+        path = URI.parse(url).path
+        path if path and not path.empty?
+      end
     end
 
     ##
@@ -131,8 +137,11 @@ module Capybara
     # @return [String] Host of the current page
     #
     def current_host
-      uri = URI.parse(current_url)
-      "#{uri.scheme}://#{uri.host}" if uri.host
+      url = current_url
+      unless url.start_with?("data:")
+        uri = URI.parse(current_url)
+        "#{uri.scheme}://#{uri.host}" if uri.host
+      end
     end
 
     ##
@@ -180,12 +189,12 @@ module Capybara
     def visit(url)
       @touched = true
 
-      if url !~ /^http/ and Capybara.app_host
+      if url !~ SCHEME_REGEXP and Capybara.app_host
         url = Capybara.app_host + url.to_s
       end
 
       if @server
-        url = "http://#{@server.host}:#{@server.port}" + url.to_s unless url =~ /^http/
+        url = "http://#{@server.host}:#{@server.port}" + url.to_s if url !~ SCHEME_REGEXP
 
         if Capybara.always_include_port
           uri = URI.parse(url)
