@@ -14,8 +14,6 @@ module Capybara
   class NotSupportedByDriverError < CapybaraError; end
   class InfiniteRedirectError < CapybaraError; end
 
-  EMPTY_HTML_FILE_PATH = File.expand_path('./capybara/empty.html', File.dirname(__FILE__))
-
   class << self
     attr_accessor :asset_host, :app_host, :run_server, :default_host, :always_include_port
     attr_accessor :server_port, :exact, :match, :exact_options, :visible_text_only
