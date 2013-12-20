@@ -18,4 +18,4 @@ Capybara::SpecHelper.run_specs TestSessions::Chrome, "selenium_chrome", :skip =>
   :response_headers,
   :status_code,
   :trigger  
-]
+  ] unless ENV['TRAVIS'] && (RUBY_PLATFORM == 'java')
