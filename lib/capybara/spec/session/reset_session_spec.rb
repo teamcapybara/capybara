@@ -16,17 +16,8 @@ Capybara::SpecHelper.spec '#reset_session!' do
     @session.current_path.should == '/foo'
 
     @session.reset_session!
-    [
-      ->(v) { v == nil },
-      ->(v) { v == '' },
-      ->(v) { v == 'about:blank' },
-      ->(v) { v.end_with? Capybara::EMPTY_HTML_FILE_PATH } # allow file:// protocol
-    ].any? { |p| p.(@session.current_url) }.should be_true
-    [
-      ->(v) { v == '' },
-      ->(v) { v == nil },
-      ->(v) { v == Capybara::EMPTY_HTML_FILE_PATH }
-    ].any? { |p| p.(@session.current_path) }.should be_true
+    [nil, '', 'about:blank'].should include(@session.current_url)
+    ['', nil].should include(@session.current_path)
     @session.current_host.should be_nil
   end
 
