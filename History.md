@@ -1,3 +1,12 @@
+# Version 2.2.1
+
+Release date: 2014-01-06
+
+### Fixed
+
+* Reverted a change in 2.2.0 which navigates to an empty file on `reset`.
+  Capybara, now visits `about:blank` like it did before. [Jonas Nicklas]
+
 # Version 2.2.0
 
 Release date: 2013-11-21
