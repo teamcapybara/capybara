@@ -20,12 +20,12 @@ Capybara::SpecHelper.spec '#reset_session!' do
       ->(v) { v == nil },
       ->(v) { v == '' },
       ->(v) { v == 'about:blank' },
-      ->(v) { v.end_with? Capybara::EMPTY_HTML_FILE_PATH } # allow file:// protocol
+      ->(v) { v.start_with? "data:text/html" }
     ].any? { |p| p.(@session.current_url) }.should be_true
     [
       ->(v) { v == '' },
       ->(v) { v == nil },
-      ->(v) { v == Capybara::EMPTY_HTML_FILE_PATH }
+      ->(v) { v.start_with? "data:text/html" }
     ].any? { |p| p.(@session.current_path) }.should be_true
     @session.current_host.should be_nil
   end
