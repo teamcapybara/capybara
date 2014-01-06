@@ -23,10 +23,11 @@ GitHub): http://groups.google.com/group/ruby-capybara
 
 ## Setup
 
-Capybara requires Ruby 1.9.3 or later. To install, type:
+Capybara requires Ruby 1.9.3 or later. To install, add this line to your
+`Gemfile` and run `bundle install`:
 
-```bash
-gem install capybara
+```ruby
+gem 'capybara'
 ```
 
 If the application that you are testing is a Rails app, add this line to your test helper file:
