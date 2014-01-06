@@ -8,6 +8,19 @@ module Capybara
           Capybara.string(actual.to_s)
         end
       end
+
+      if RSpec::Expectations::Version::STRING[0] == "2"
+        # RSpec 2 and 3 use different methods
+        # to access failure messages.
+
+        def failure_message_for_should
+          failure_message
+        end
+
+        def failure_message_for_should_not
+          failure_message_when_negated
+        end
+      end
     end
 
     class HaveSelector < Matcher
@@ -51,13 +64,13 @@ module Capybara
         @actual.has_no_text?(type, content, options)
       end
 
-      def failure_message_for_should
+      def failure_message
         message = Capybara::Helpers.failure_message(description, options)
         message << " in #{format(@actual.text(type))}"
         message
       end
 
-      def failure_message_for_should_not
+      def failure_message_when_negated
         failure_message_for_should.sub(/(to find)/, 'not \1')
       end
 
@@ -88,11 +101,11 @@ module Capybara
         @actual.has_no_title?(title)
       end
 
-      def failure_message_for_should
+      def failure_message
         "expected there to be title #{title.inspect} in #{@actual.title.inspect}"
       end
 
-      def failure_message_for_should_not
+      def failure_message_when_negated
         "expected there not to be title #{title.inspect} in #{@actual.title.inspect}"
       end
 
