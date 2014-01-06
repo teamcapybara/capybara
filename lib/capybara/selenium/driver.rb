@@ -97,9 +97,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         # to about:blank, so we rescue this error and do nothing
         # instead.
       end
-      uri = URI(Capybara::EMPTY_HTML_FILE_PATH)
-      uri.scheme = "file"
-      @browser.navigate.to(uri.to_s)
+      @browser.navigate.to("about:blank")
     end
   end
 
