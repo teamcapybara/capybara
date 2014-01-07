@@ -354,7 +354,7 @@ module Capybara
 
       FileUtils.mkdir_p(File.dirname(path))
 
-      File.open(path,'w') { |f| f.write(Capybara::Helpers.inject_asset_host(body)) }
+      File.open(path,'wb') { |f| f.write(Capybara::Helpers.inject_asset_host(body)) }
       path
     end
 
