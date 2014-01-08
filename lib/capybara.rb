@@ -39,7 +39,7 @@ module Capybara
     # [run_server = Boolean]              Whether to start a Rack server for the given Rack app (Default: true)
     # [default_selector = :css/:xpath]    Methods which take a selector use the given type by default (Default: CSS)
     # [default_wait_time = Integer]       The number of seconds to wait for asynchronous processes to finish (Default: 2)
-    # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: false)
+    # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: true)
     # [automatic_reload = Boolean]        Whether to automatically reload elements as Capybara is waiting (Default: true)
     # [save_and_open_page_path = String]  Where to put pages saved through save_and_open_page (Default: Dir.pwd)
     #
