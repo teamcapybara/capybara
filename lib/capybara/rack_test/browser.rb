@@ -1,11 +1,12 @@
 class Capybara::RackTest::Browser
   include ::Rack::Test::Methods
 
-  attr_reader :driver
+  attr_reader :driver, :redirects
   attr_accessor :current_host
 
   def initialize(driver)
     @driver = driver
+    @redirects = 0
   end
 
   def app
@@ -32,10 +33,14 @@ class Capybara::RackTest::Browser
   end
 
   def process_and_follow_redirects(method, path, attributes = {}, env = {})
+    @redirects = 0
     process(method, path, attributes, env)
     if driver.follow_redirects?
       driver.redirect_limit.times do
-        process(:get, last_response["Location"], {}, env) if last_response.redirect?
+        if last_response.redirect?
+          @redirects += 1
+          process(:get, last_response["Location"], {}, env)
+        end
       end
       raise Capybara::InfiniteRedirectError, "redirected more than #{driver.redirect_limit} times, check for infinite redirects." if last_response.redirect?
     end
@@ -97,6 +102,10 @@ class Capybara::RackTest::Browser
 
   def title
     dom.xpath("//title").text
+  end
+
+  def redirected?
+    redirects > 0
   end
 
 protected

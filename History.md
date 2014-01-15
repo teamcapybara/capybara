@@ -1,3 +1,12 @@
+# Version 2.2.2
+
+Release date: unreleased
+
+### Added
+
+* Add `redirects` counter and `redirected?` to `RackTest::Driver` and
+  `RackTest::Browser` [Łukasz Strzałkowski]
+
 # Version 2.2.1
 
 Release date: 2014-01-06

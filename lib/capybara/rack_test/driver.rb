@@ -30,6 +30,14 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
     @options[:redirect_limit]
   end
 
+  def redirects
+    browser.redirects
+  end
+
+  def redirected?
+    browser.redirected?
+  end
+
   def response
     browser.last_response
   end

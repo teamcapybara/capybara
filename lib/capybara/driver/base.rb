@@ -69,4 +69,12 @@ class Capybara::Driver::Base
   def needs_server?
     false
   end
+
+  def redirects
+    raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#redirects'
+  end
+
+  def redirected?
+    raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#redirected?'
+  end
 end
