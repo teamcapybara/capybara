@@ -19,10 +19,10 @@ Capybara::SpecHelper.spec '#visit' do
 
   it "should fetch a response when absolute URI doesn't have a trailing slash" do
     # Preparation
-    @session.visit('/foo/bar')
+    @session.visit('/')
     root_uri = URI.parse(@session.current_url)
 
-    @session.visit("http://localhost:#{root_uri.port}")
+    @session.visit("http://#{root_uri.host}:#{root_uri.port}")
     @session.should have_content('Hello world!')
   end
 
