@@ -89,11 +89,10 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]      If the selector does not exist
       #
       def assert_selector(*args)
-        options = args.last.is_a?(Hash) ? args.pop.dup : {}
-        expect_none = (options[:count] && Integer(options[:count]) == 0) ? true : false
+        options = args.last.is_a?(Hash) ? args.last.dup : {}
         synchronize(Capybara::Query.new(*args).wait) do
           result = all(*args)
-          raise Capybara::ExpectationNotMet, result.failure_message if result.size == 0 unless expect_none
+          raise Capybara::ExpectationNotMet, result.failure_message if result.size == 0 && !Capybara::Helpers.expects_none?(options)
         end
         return true
       end
@@ -115,13 +114,16 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]      If the selector exists
       #
       def assert_no_selector(*args)
+        options = args.last.is_a?(Hash) ? args.last.dup : {}
         synchronize(Capybara::Query.new(*args).wait) do
           begin
             result = all(*args)
           rescue Capybara::ExpectationNotMet => e
             return true
           else
-            raise(Capybara::ExpectationNotMet, result.negative_failure_message) if result.size > 0
+            if result.size > 0 || (result.size == 0 && Capybara::Helpers.expects_none?(options))
+              raise(Capybara::ExpectationNotMet, result.negative_failure_message)
+            end
           end
         end
         return true
@@ -486,7 +488,7 @@ module Capybara
         content, options = args
         count = Capybara::Helpers.normalize_whitespace(text(type)).scan(Capybara::Helpers.to_regexp(content)).count
 
-        Capybara::Helpers.matches_count?(count, options || {})
+        Capybara::Helpers.matches_count?(count, {:minimum=>1}.merge(options || {}))
       end
     end
   end
