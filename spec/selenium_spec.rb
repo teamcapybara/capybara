@@ -35,6 +35,14 @@ describe Capybara::Session do
       end
     end
 
+    describe "#reset!" do
+      it "freshly reset session should not be touched" do
+        @session.instance_variable_set(:@touched, true)
+        @session.reset!
+        @session.instance_variable_get(:@touched).should be_false
+      end
+    end
+
     describe "exit codes" do
       before do
         @current_dir = Dir.getwd

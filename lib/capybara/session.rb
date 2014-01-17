@@ -77,8 +77,8 @@ module Capybara
     def reset!
       if @touched
         driver.reset!
-        @touched = false
         assert_no_selector :xpath, "/html/body/*"
+        @touched = false
       end
       raise @server.error if Capybara.raise_server_errors and @server and @server.error
     ensure
