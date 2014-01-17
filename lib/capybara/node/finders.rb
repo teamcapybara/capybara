@@ -116,17 +116,38 @@ module Capybara
       #     page.all('a', :text => 'Home')
       #     page.all('#menu li', :visible => true)
       #
+      # By default if no elements are found, an empty array is returned;
+      # however, expectations can be set on the number of elements to be
+      # found using:
+      #
+      #     page.assert_selector('p#foo', :count => 4)
+      #     page.assert_selector('p#foo', :maximum => 10)
+      #     page.assert_selector('p#foo', :minimum => 1)
+      #     page.assert_selector('p#foo', :between => 1..10)
+      #
+      # See {Capybara::Helpers#matches_count?} for additional information about
+      # count matching.
+      #
       # @overload all([kind], locator, options)
       #   @param [:css, :xpath] kind                 The type of selector
       #   @param [String] locator                    The selector
       #   @option options [String, Regexp] text      Only find elements which contain this text or match this regexp
       #   @option options [Boolean] visible          Only find elements that are visible on the page. Setting this to false
       #                                              finds invisible _and_ visible elements.
+      #   @option options [Integer] count            Exact number of matches that are expected to be found
+      #   @option options [Integer] maximum          Maximum number of matches that are expected to be found
+      #   @option options [Integer] minimum          Minimum number of matches that are expected to be found
+      #   @option options [Range]   between          Number of matches found must be within the given range
       #   @option options [Boolean] exact            Control whether `is` expressions in the given XPath match exactly or partially
       # @return [Capybara::Result]                   A collection of found elements
       #
       def all(*args)
-        resolve_query(Capybara::Query.new(*args))
+        query = Capybara::Query.new(*args)
+        synchronize(query.wait) do
+          result = resolve_query(query)
+          raise(Capybara::ExpectationNotMet, result.failure_message) unless result.matches_count?
+          result
+        end
       end
 
       ##

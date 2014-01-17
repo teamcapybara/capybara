@@ -68,7 +68,11 @@ module Capybara
       #
       #     page.assert_selector('p#foo', :count => 4)
       #
-      # This will check if the expression occurs exactly 4 times.
+      # This will check if the expression occurs exactly 4 times. See
+      # {Capybara::Node::Finders#all} for other available result size options.
+      #
+      # If a :count of 0 is specified, it will behave like {#assert_no_selector};
+      # however, use of that method is preferred over this one.
       #
       # It also accepts all options that {Capybara::Node::Finders#all} accepts,
       # such as :text and :visible.
@@ -85,10 +89,11 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]      If the selector does not exist
       #
       def assert_selector(*args)
-        query = Capybara::Query.new(*args)
-        synchronize(query.wait) do
+        options = args.last.is_a?(Hash) ? args.pop.dup : {}
+        expect_none = (options[:count] && Integer(options[:count]) == 0) ? true : false
+        synchronize(Capybara::Query.new(*args).wait) do
           result = all(*args)
-          result.matches_count? or raise Capybara::ExpectationNotMet, result.failure_message
+          raise Capybara::ExpectationNotMet, result.failure_message if result.size == 0 unless expect_none
         end
         return true
       end
@@ -98,14 +103,26 @@ module Capybara
       # Asserts that a given selector is not on the page or current node.
       # Usage is identical to Capybara::Node::Matchers#assert_selector
       #
+      # Query options such as :count, :minimum, :maximum, and :between are
+      # considered to be an integral part of the selector. This will return
+      # true, for example, if a page contains 4 anchors but the query expects 5:
+      #
+      #     page.assert_no_selector('a', :minimum => 1) # Found, raises Capybara::ExpectationNotMet
+      #     page.assert_no_selector('a', :count => 4)   # Found, raises Capybara::ExpectationNotMet
+      #     page.assert_no_selector('a', :count => 5)   # Not Found, returns true
+      #
       # @param (see Capybara::Node::Finders#assert_selector)
       # @raise [Capybara::ExpectationNotMet]      If the selector exists
       #
       def assert_no_selector(*args)
-        query = Capybara::Query.new(*args)
-        synchronize(query.wait) do
-          result = all(*args)
-          result.matches_count? and raise Capybara::ExpectationNotMet, result.negative_failure_message
+        synchronize(Capybara::Query.new(*args).wait) do
+          begin
+            result = all(*args)
+          rescue Capybara::ExpectationNotMet => e
+            return true
+          else
+            raise(Capybara::ExpectationNotMet, result.negative_failure_message) if result.size > 0
+          end
         end
         return true
       end
