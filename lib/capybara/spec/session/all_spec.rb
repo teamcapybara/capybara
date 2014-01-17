@@ -67,6 +67,54 @@ Capybara::SpecHelper.spec "#all" do
     end
   end
 
+  { :count => {
+      :success => 4,
+      :failure => 5
+  }, :minimum => {
+      :success => 0,
+      :failure => 5
+  }, :maximum => {
+      :success => 4,
+      :failure => 0
+  }, :between => {
+      :success => 2..7,
+      :failure => 0..3
+  }}.tap do |options|
+    options.each do |option_key, conditions|
+      context "with #{option_key} filters" do
+        it 'should succeed when the number of elements founds matches the expectation' do
+          expect { @session.all(:css, 'h1, p', option_key => conditions[:success]) }.to_not raise_error
+        end
+        it 'should raise ExpectationNotMet when the number of elements founds does not match the expectation' do
+          expect { @session.all(:css, 'h1, p', option_key => conditions[:failure]) }.to raise_error(Capybara::ExpectationNotMet)
+        end
+      end
+    end
+
+    context 'with multiple count filters' do
+      it 'ignores other filters when :count is specified' do
+        o = {}
+        options.each { |k,v| o[k] = (k == :count) ? v[:success] : v[:failure] }
+        expect { @session.all(:css, 'h1, p', o) }.to_not raise_error
+      end
+
+      options.select { |k,v| [:minimum, :maximum, :range].include? k }.tap do |combineable_filters|
+        combineable_filters.each do |option_key, conditions|
+          it "fails if the #{option_key} condition is not met" do
+            o = {}
+            combineable_filters.each { |k,v| o[k] = (k == option_key) ? v[:failure] : v[:success] }
+            expect { @session.all(:css, 'h1, p', o) }.to raise_error(Capybara::ExpectationNotMet)
+          end
+        end
+        it 'succeeds if all combineable expectations are met' do
+          o = {}
+          combineable_filters.each { |k,v| o[k] = v[:success] }
+          expect { @session.all(:css, 'h1, p', o) }.to_not raise_error
+        end
+      end
+    end
+  end
+
   context "within a scope" do
     before do
       @session.visit('/with_scope')
