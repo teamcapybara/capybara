@@ -8,6 +8,8 @@ tmp
 *gem
 spec.opts
 .rvmrc
+.ruby-version
+.ruby-gemset
 capybara-*.html
 .yardoc
 doc
