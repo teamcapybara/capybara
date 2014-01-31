@@ -68,85 +68,70 @@ Capybara::SpecHelper.spec "#all" do
   end
 
   context 'with element count filters' do
-    let(:options) {
-      { :count => {
-          :success => 4,
-          :failure => 5
-      }, :minimum => {
-          :success => 0,
-          :failure => 5
-      }, :maximum => {
-          :success => 4,
-          :failure => 0
-      }, :between => {
-          :success => 2..7,
-          :failure => 0..3
-      } } }
-
     context ':count' do
       it 'should succeed when the number of elements founds matches the expectation' do
-        expect { @session.all(:css, 'h1, p', :count => options[:count][:success]) }.to_not raise_error
+        expect { @session.all(:css, 'h1, p', :count => 4) }.to_not raise_error
       end
       it 'should raise ExpectationNotMet when the number of elements founds does not match the expectation' do
-        expect { @session.all(:css, 'h1, p', :count => options[:count][:failure]) }.to raise_error(Capybara::ExpectationNotMet)
+        expect { @session.all(:css, 'h1, p', :count => 5) }.to raise_error(Capybara::ExpectationNotMet)
       end
     end
     context ':minimum' do
       it 'should succeed when the number of elements founds matches the expectation' do
-        expect { @session.all(:css, 'h1, p', :minimum => options[:minimum][:success]) }.to_not raise_error
+        expect { @session.all(:css, 'h1, p', :minimum => 0) }.to_not raise_error
       end
       it 'should raise ExpectationNotMet when the number of elements founds does not match the expectation' do
-        expect { @session.all(:css, 'h1, p', :minimum => options[:minimum][:failure]) }.to raise_error(Capybara::ExpectationNotMet)
+        expect { @session.all(:css, 'h1, p', :minimum => 5) }.to raise_error(Capybara::ExpectationNotMet)
       end
     end
     context ':maximum' do
       it 'should succeed when the number of elements founds matches the expectation' do
-        expect { @session.all(:css, 'h1, p', :maximum => options[:maximum][:success]) }.to_not raise_error
+        expect { @session.all(:css, 'h1, p', :maximum => 4) }.to_not raise_error
       end
       it 'should raise ExpectationNotMet when the number of elements founds does not match the expectation' do
-        expect { @session.all(:css, 'h1, p', :maximum => options[:maximum][:failure]) }.to raise_error(Capybara::ExpectationNotMet)
+        expect { @session.all(:css, 'h1, p', :maximum => 0) }.to raise_error(Capybara::ExpectationNotMet)
       end
     end
     context ':between' do
       it 'should succeed when the number of elements founds matches the expectation' do
-        expect { @session.all(:css, 'h1, p', :between => options[:between][:success]) }.to_not raise_error
+        expect { @session.all(:css, 'h1, p', :between => 2..7) }.to_not raise_error
       end
       it 'should raise ExpectationNotMet when the number of elements founds does not match the expectation' do
-        expect { @session.all(:css, 'h1, p', :between => options[:between][:failure]) }.to raise_error(Capybara::ExpectationNotMet)
+        expect { @session.all(:css, 'h1, p', :between => 0..3) }.to raise_error(Capybara::ExpectationNotMet)
       end
     end
 
     context 'with multiple count filters' do
       it 'ignores other filters when :count is specified' do
-        o = {:count   => options[:count][:success],
-             :minimum => options[:minimum][:failure],
-             :maximum => options[:maximum][:failure],
-             :between => options[:between][:failure]}
+        o = {:count   => 4,
+             :minimum => 5,
+             :maximum => 0,
+             :between => 0..3}
         expect { @session.all(:css, 'h1, p', o) }.to_not raise_error
       end
       context 'with no :count expectation' do
         it 'fails if :minimum is not met' do
-          o = {:minimum => options[:minimum][:failure],
-               :maximum => options[:maximum][:success],
-               :between => options[:between][:success]}
+          o = {:minimum => 5,
+               :maximum => 4,
+               :between => 2..7}
           expect { @session.all(:css, 'h1, p', o) }.to raise_error(Capybara::ExpectationNotMet)
         end
         it 'fails if :maximum is not met' do
-          o = {:minimum => options[:minimum][:success],
-               :maximum => options[:maximum][:failure],
-               :between => options[:between][:success]}
+          o = {:minimum => 0,
+               :maximum => 0,
+               :between => 2..7}
           expect { @session.all(:css, 'h1, p', o) }.to raise_error(Capybara::ExpectationNotMet)
         end
         it 'fails if :between is not met' do
-          o = {:minimum => options[:minimum][:success],
-               :maximum => options[:maximum][:success],
-               :between => options[:between][:failure]}
+          o = {:minimum => 0,
+               :maximum => 4,
+               :between => 0..3}
           expect { @session.all(:css, 'h1, p', o) }.to raise_error(Capybara::ExpectationNotMet)
         end
         it 'succeeds if all combineable expectations are met' do
-          o = {:minimum => options[:minimum][:success],
-               :maximum => options[:maximum][:success],
-               :between => options[:between][:success]}
+          o = {:minimum => 0,
+               :maximum => 4,
+               :between => 2..7}
           expect { @session.all(:css, 'h1, p', o) }.to_not raise_error
         end
       end
