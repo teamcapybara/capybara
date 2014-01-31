@@ -110,6 +110,8 @@ module Capybara
         return true
       end
 
+      alias_method :refute_selector, :assert_no_selector
+
       ##
       #
       # Checks if a given XPath expression is on the page or current node.
