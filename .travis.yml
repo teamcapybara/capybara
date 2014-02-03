@@ -29,7 +29,6 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install google-chrome-stable
   - sudo chmod 1777 /dev/shm
-  - gem install bundler -v '>= 1.5.1' # Temporary workaround for gem installation error on ruby 2.1.0
 before_script:
   - sh -e /etc/init.d/xvfb start
   - export DISPLAY=:99.0
