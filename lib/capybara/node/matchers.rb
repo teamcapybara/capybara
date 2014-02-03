@@ -89,10 +89,10 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]      If the selector does not exist
       #
       def assert_selector(*args)
-        options = args.last.is_a?(Hash) ? args.last.dup : {}
-        synchronize(Capybara::Query.new(*args).wait) do
+        query = Capybara::Query.new(*args)
+        synchronize(query.wait) do
           result = all(*args)
-          raise Capybara::ExpectationNotMet, result.failure_message if result.size == 0 && !Capybara::Helpers.expects_none?(options)
+          raise Capybara::ExpectationNotMet, result.failure_message if result.size == 0 && !Capybara::Helpers.expects_none?(query.options)
         end
         return true
       end
@@ -114,14 +114,14 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]      If the selector exists
       #
       def assert_no_selector(*args)
-        options = args.last.is_a?(Hash) ? args.last.dup : {}
-        synchronize(Capybara::Query.new(*args).wait) do
+        query = Capybara::Query.new(*args)
+        synchronize(query.wait) do
           begin
             result = all(*args)
           rescue Capybara::ExpectationNotMet => e
             return true
           else
-            if result.size > 0 || (result.size == 0 && Capybara::Helpers.expects_none?(options))
+            if result.size > 0 || (result.size == 0 && Capybara::Helpers.expects_none?(query.options))
               raise(Capybara::ExpectationNotMet, result.negative_failure_message)
             end
           end
