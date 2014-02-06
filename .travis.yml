@@ -3,26 +3,21 @@ rvm:
   - 1.9.3
   - 2.0.0
   - jruby-19mode
-  - rbx-2.1.1
-  - rbx-2.0.0
+  - rbx
 gemfile:
   - Gemfile
   - gemfiles/Gemfile.base-versions
 matrix:
-  allow_failures:
-    - rvm: rbx-2.0.0
   exclude:
     # Nokogiri 1.3.3 is not compatible with Rubinius or JRuby
     - gemfile: gemfiles/Gemfile.base-versions
-      rvm: rbx-2.1.1
-    - gemfile: gemfiles/Gemfile.base-versions
-      rvm: rbx-2.1.0
-    - gemfile: gemfiles/Gemfile.base-versions
-      rvm: rbx-2.0.0
+      rvm: rbx
     - gemfile: gemfiles/Gemfile.base-versions
       rvm: jruby-19mode
 before_install:
-  - URL='http://chromedriver.storage.googleapis.com/2.7/chromedriver_linux64.zip'; FILE=`mktemp`; wget "$URL" -qO $FILE && sudo unzip $FILE chromedriver -d /usr/local/bin; rm $FILE; sudo chmod 777 /usr/local/bin/chromedriver
+  - CHROMEDRIVER_VERSION=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+  - CHROMEDRIVER_URL="http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip"
+  - FILE=`mktemp`; wget "$CHROMEDRIVER_URL" -qO $FILE && sudo unzip $FILE chromedriver -d /usr/local/bin; rm $FILE; sudo chmod 777 /usr/local/bin/chromedriver
   - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
   - sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
   - sudo apt-get update
@@ -32,4 +27,3 @@ before_script:
   - sh -e /etc/init.d/xvfb start
   - export DISPLAY=:99.0
 script: "bundle exec rake travis"
-  
