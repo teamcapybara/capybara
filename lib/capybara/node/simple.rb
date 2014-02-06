@@ -27,7 +27,7 @@ module Capybara
       # @return [String]    The text of the element
       #
       def text(type=nil)
-        native.text
+        Capybara::Helpers.normalize_whitespace(native.text)
       end
 
       ##
