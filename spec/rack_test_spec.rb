@@ -31,6 +31,13 @@ describe Capybara::Session do
       end
     end
 
+    describe "#current_path" do
+      it "should handle spaces if the driver provides them in the current_url" do
+        @session.visit(URI.encode("/path with a space/with_html"))
+        lambda { @session.current_path }.should_not raise_error
+      end
+    end
+
     describe '#click_link' do
       it "should use data-method if option is true" do
         @session.driver.options[:respect_data_method] = true
@@ -66,6 +73,25 @@ describe Capybara::Session do
           @session.html.should include('Successfully ignored empty file field.')
         end
       end
+    end
+  end
+end
+
+
+describe Capybara::RackTest::Browser do
+  before do
+    @browser = Capybara::RackTest::Browser.new(TestSessions::RackTest.driver)
+  end
+
+  describe ':current_url' do
+    it 'should return the last requested url' do
+      @browser.visit('/with_simple_html')
+      @browser.current_url.should include('/with_simple_html')
+    end
+
+    it "should behave like firefox's window.location, presenting a decoded url" do
+      @browser.visit(URI.encode('/path with spaces and/simple_html'))
+      @browser.current_url.should include('/path with spaces and/simple_html')
     end
   end
 end
