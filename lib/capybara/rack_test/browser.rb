@@ -61,7 +61,7 @@ class Capybara::RackTest::Browser
   end
 
   def current_url
-    last_request.url
+    URI.decode(last_request.url)
   rescue Rack::Test::Error
     ""
   end
