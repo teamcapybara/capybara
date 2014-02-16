@@ -106,7 +106,7 @@ Capybara::SpecHelper.spec '#has_text?' do
   end
 
   it "should be true when passed nil" do
-    # Historical behavior; no particular reason other than compatibility.
+    # nil is converted to '' when to_s is invoked
     @session.visit('/with_html')
     expect(@session).to have_text(nil)
   end

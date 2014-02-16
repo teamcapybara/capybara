@@ -35,7 +35,11 @@ module Capybara
       :has_no_table?, :has_table?, :unselect, :has_select?, :has_no_select?,
       :has_selector?, :has_no_selector?, :click_on, :has_no_checked_field?,
       :has_no_unchecked_field?, :query, :assert_selector, :assert_no_selector,
-      :refute_selector
+      :refute_selector, :assert_text, :assert_no_text
+    ]
+    # @api private
+    DOCUMENT_METHODS = [
+      :title, :assert_title, :assert_no_title, :has_title?, :has_no_title?
     ]
     SESSION_METHODS = [
       :body, :html, :source, :current_url, :current_host, :current_path,
@@ -44,8 +48,8 @@ module Capybara
       :windows, :open_new_window, :switch_to_window, :within_window, :window_opened_by,
       :save_page, :save_and_open_page, :save_screenshot,
       :save_and_open_screenshot, :reset_session!, :response_headers,
-      :status_code, :title, :has_title?, :has_no_title?, :current_scope
-    ]
+      :status_code, :current_scope
+    ] + DOCUMENT_METHODS
     MODAL_METHODS = [
       :accept_alert, :accept_confirm, :dismiss_confirm, :accept_prompt,
       :dismiss_prompt
@@ -169,14 +173,6 @@ module Capybara
     #
     def current_url
       driver.current_url
-    end
-
-    ##
-    #
-    # @return [String] Title of the current page
-    #
-    def title
-      driver.title
     end
 
     ##
@@ -699,30 +695,14 @@ module Capybara
       end
     end
 
+    DOCUMENT_METHODS.each do |method|
+      define_method method do |*args, &block|
+        document.send(method, *args, &block)
+      end
+    end
+
     def inspect
       %(#<Capybara::Session>)
-    end
-
-    def has_title?(content)
-      document.synchronize do
-        unless title.match(Capybara::Helpers.to_regexp(content))
-          raise ExpectationNotMet
-        end
-      end
-      return true
-    rescue Capybara::ExpectationNotMet
-      return false
-    end
-
-    def has_no_title?(content)
-      document.synchronize do
-        if title.match(Capybara::Helpers.to_regexp(content))
-          raise ExpectationNotMet
-        end
-      end
-      return true
-    rescue Capybara::ExpectationNotMet
-      return false
     end
 
     def current_scope

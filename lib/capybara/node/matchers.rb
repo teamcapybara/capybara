@@ -91,8 +91,11 @@ module Capybara
       def assert_selector(*args)
         query = Capybara::Query.new(*args)
         synchronize(query.wait) do
-          result = all(*args)
-          raise Capybara::ExpectationNotMet, result.failure_message if result.size == 0 && !Capybara::Helpers.expects_none?(query.options)
+          result = query.resolve_for(self)
+          matches_count = Capybara::Helpers.matches_count?(result.size, query.options)
+          unless matches_count && ((result.size > 0) || Capybara::Helpers.expects_none?(query.options))
+            raise Capybara::ExpectationNotMet, result.failure_message
+          end
         end
         return true
       end
@@ -116,19 +119,14 @@ module Capybara
       def assert_no_selector(*args)
         query = Capybara::Query.new(*args)
         synchronize(query.wait) do
-          begin
-            result = all(*args)
-          rescue Capybara::ExpectationNotMet => e
-            return true
-          else
-            if result.size > 0 || (result.size == 0 && Capybara::Helpers.expects_none?(query.options))
-              raise(Capybara::ExpectationNotMet, result.negative_failure_message)
-            end
+          result = query.resolve_for(self)
+          matches_count = Capybara::Helpers.matches_count?(result.size, query.options)
+          if matches_count && ((result.size > 0) || Capybara::Helpers.expects_none?(query.options))
+            raise Capybara::ExpectationNotMet, result.negative_failure_message
           end
         end
         return true
       end
-
       alias_method :refute_selector, :assert_no_selector
 
       ##
@@ -214,58 +212,6 @@ module Capybara
       def has_no_css?(path, options={})
         has_no_selector?(:css, path, options)
       end
-
-      ##
-      #
-      # Checks if the page or current node has the given text content,
-      # ignoring any HTML tags and normalizing whitespace.
-      #
-      # By default it will check if the text occurs at least once,
-      # but a different number can be specified.
-      #
-      #     page.has_text?('lorem ipsum', between: 2..4)
-      #
-      # This will check if the text occurs from 2 to 4 times.
-      #
-      # @overload has_text?([type], text, [options])
-      #   @param [:all, :visible] type               Whether to check for only visible or all text
-      #   @param [String, Regexp] text               The text/regexp to check for
-      #   @param [Hash] options                      additional options
-      #   @option options [Integer] :count (nil)     Number of times the text should occur
-      #   @option options [Integer] :minimum (nil)   Minimum number of times the text should occur
-      #   @option options [Integer] :maximum (nil)   Maximum number of times the text should occur
-      #   @option options [Range]   :between (nil)   Range of times that should contain number of times text occurs
-      #   @return [Boolean]                          Whether it exists
-      #
-      def has_text?(*args)
-        query = Capybara::Query.new(*args)
-        synchronize(query.wait) do
-          raise ExpectationNotMet unless text_found?(*args)
-        end
-        return true
-      rescue Capybara::ExpectationNotMet
-        return false
-      end
-      alias_method :has_content?, :has_text?
-
-      ##
-      #
-      # Checks if the page or current node does not have the given text
-      # content, ignoring any HTML tags and normalizing whitespace.
-      #
-      # @param             (see #has_text?)
-      # @return [Boolean]  Whether it doesn't exist
-      #
-      def has_no_text?(*args)
-        query = Capybara::Query.new(*args)
-        synchronize(query.wait) do
-          raise ExpectationNotMet if text_found?(*args)
-        end
-        return true
-      rescue Capybara::ExpectationNotMet
-        return false
-      end
-      alias_method :has_no_content?, :has_no_text?
 
       ##
       #
@@ -479,18 +425,102 @@ module Capybara
         has_no_selector?(:table, locator, options)
       end
 
-      def ==(other)
-        self.eql?(other) or (other.respond_to?(:base) and base == other.base)
+      ##
+      # Asserts that the page or current node has the given text content,
+      # ignoring any HTML tags.
+      #
+      # @!macro text_query_params
+      #   @overload $0(type, text, options = {})
+      #     @param [:all, :visible] type               Whether to check for only visible or all text
+      #     @param [String, Regexp] text               The string/regexp to check for. If it's a string, text is expected to include it. If it's a regexp, text is expected to match it.
+      #     @option options [Integer] :count (nil)     Number of times the text is expected to occur
+      #     @option options [Integer] :minimum (nil)   Minimum number of times the text is expected to occur
+      #     @option options [Integer] :maximum (nil)   Maximum number of times the text is expected to occur
+      #     @option options [Range]   :between (nil)   Range of times that is expected to contain number of times text occurs
+      #     @option options [Numeric] :wait (Capybara.default_wait_time)      Time that Capybara will wait for text to eq/match given string/regexp argument
+      #   @overload $0(text, options = {})
+      #     @param [String, Regexp] text               The string/regexp to check for. If it's a string, text is expected to include it. If it's a regexp, text is expected to match it.
+      #     @option options [Integer] :count (nil)     Number of times the text is expected to occur
+      #     @option options [Integer] :minimum (nil)   Minimum number of times the text is expected to occur
+      #     @option options [Integer] :maximum (nil)   Maximum number of times the text is expected to occur
+      #     @option options [Range]   :between (nil)   Range of times that is expected to contain number of times text occurs
+      #     @option options [Numeric] :wait (Capybara.default_wait_time)      Time that Capybara will wait for text to eq/match given string/regexp argument
+      # @raise [Capybara::ExpectationNotMet] if the assertion hasn't succeeded during wait time
+      # @return [true]
+      #
+      def assert_text(*args)
+        query = Capybara::Queries::TextQuery.new(*args)
+        synchronize(query.wait) do
+          count = query.resolve_for(self)
+          matches_count = Capybara::Helpers.matches_count?(count, query.options)
+          unless matches_count && ((count > 0) || Capybara::Helpers.expects_none?(query.options))
+            raise Capybara::ExpectationNotMet, query.failure_message
+          end
+        end
+        return true
       end
 
-    private
+      ##
+      # Asserts that the page or current node doesn't have the given text content,
+      # ignoring any HTML tags.
+      #
+      # @macro text_query_params
+      # @raise [Capybara::ExpectationNotMet] if the assertion hasn't succeeded during wait time
+      # @return [true]
+      #
+      def assert_no_text(*args)
+        query = Capybara::Queries::TextQuery.new(*args)
+        synchronize(query.wait) do
+          count = query.resolve_for(self)
+          matches_count = Capybara::Helpers.matches_count?(count, query.options)
+          if matches_count && ((count > 0) || Capybara::Helpers.expects_none?(query.options))
+            raise Capybara::ExpectationNotMet, query.negative_failure_message
+          end
+        end
+        return true
+      end
 
-      def text_found?(*args)
-        type = args.shift if args.first.is_a?(Symbol) or args.first.nil?
-        content, options = args
-        count = Capybara::Helpers.normalize_whitespace(text(type)).scan(Capybara::Helpers.to_regexp(content)).count
+      ##
+      # Checks if the page or current node has the given text content,
+      # ignoring any HTML tags.
+      #
+      # Whitespaces are normalized in both node's text and passed text parameter.
+      # Note that whitespace isn't normalized in passed regexp as normalizing whitespace
+      # in regexp isn't easy and doesn't seem to be worth it.
+      #
+      # By default it will check if the text occurs at least once,
+      # but a different number can be specified.
+      #
+      #     page.has_text?('lorem ipsum', between: 2..4)
+      #
+      # This will check if the text occurs from 2 to 4 times.
+      #
+      # @macro text_query_params
+      # @return [Boolean]                            Whether it exists
+      #
+      def has_text?(*args)
+        assert_text(*args)
+      rescue Capybara::ExpectationNotMet
+        return false
+      end
+      alias_method :has_content?, :has_text?
 
-        Capybara::Helpers.matches_count?(count, {:minimum=>1}.merge(options || {}))
+      ##
+      # Checks if the page or current node does not have the given text
+      # content, ignoring any HTML tags and normalizing whitespace.
+      #
+      # @macro text_query_params
+      # @return [Boolean]  Whether it doesn't exist
+      #
+      def has_no_text?(*args)
+        assert_no_text(*args)
+      rescue Capybara::ExpectationNotMet
+        return false
+      end
+      alias_method :has_no_content?, :has_no_text?
+
+      def ==(other)
+        self.eql?(other) || (other.respond_to?(:base) && base == other.base)
       end
     end
   end

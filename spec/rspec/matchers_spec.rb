@@ -5,12 +5,12 @@ require 'capybara/rspec/matchers'
 RSpec.describe Capybara::RSpecMatchers do
   include Capybara::DSL
   include Capybara::RSpecMatchers
-  
+
   describe "have_css matcher" do
     it "gives proper description" do
       expect(have_css('h1').description).to eq("have css \"h1\"")
     end
-    
+
     context "on a string" do
       context "with should" do
         it "passes if has_css? returns true" do
@@ -350,18 +350,24 @@ RSpec.describe Capybara::RSpecMatchers do
 
     context "on a string" do
       context "with should" do
-        it "passes if has_text? returns true" do
+        it "passes if text contains given string" do
           expect("<h1>Text</h1>").to have_text('Text')
         end
 
-        it "passes if has_text? returns true using regexp" do
+        it "passes if text matches given regexp" do
           expect("<h1>Text</h1>").to have_text(/ext/)
         end
 
-        it "fails if has_text? returns false" do
+        it "fails if text doesn't contain given string" do
           expect do
             expect("<h1>Text</h1>").to have_text('No such Text')
           end.to raise_error(/expected to find text "No such Text" in "Text"/)
+        end
+
+        it "fails if text doesn't match given regexp" do
+          expect do
+            expect("<h1>Text</h1>").to have_text(/No such Text/)
+          end.to raise_error('expected to find text matching /No such Text/ in "Text"')
         end
 
         it "casts Fixnum to string" do
@@ -373,30 +379,30 @@ RSpec.describe Capybara::RSpecMatchers do
         it "fails if matched text count does not equal to expected count" do
           expect do
             expect("<h1>Text</h1>").to have_text('Text', count: 2)
-          end.to raise_error(/expected to find text "Text" 2 times in "Text"/)
+          end.to raise_error('expected to find text "Text" 2 times but found 1 time in "Text"')
         end
 
         it "fails if matched text count is less than expected minimum count" do
           expect do
             expect("<h1>Text</h1>").to have_text('Lorem', minimum: 1)
-          end.to raise_error(/expected to find text "Lorem" at least 1 time in "Text"/)
+          end.to raise_error('expected to find text "Lorem" at least 1 time but found 0 times in "Text"')
         end
 
         it "fails if matched text count is more than expected maximum count" do
           expect do
             expect("<h1>Text TextText</h1>").to have_text('Text', maximum: 2)
-          end.to raise_error(/expected to find text "Text" at most 2 times in "Text TextText"/)
+          end.to raise_error('expected to find text "Text" at most 2 times but found 3 times in "Text TextText"')
         end
 
         it "fails if matched text count does not belong to expected range" do
           expect do
             expect("<h1>Text</h1>").to have_text('Text', between: 2..3)
-          end.to raise_error(/expected to find text "Text" between 2 and 3 times in "Text"/)
+          end.to raise_error('expected to find text "Text" between 2 and 3 times but found 1 time in "Text"')
         end
       end
 
       context "with should_not" do
-        it "passes if has_no_text? returns true" do
+        it "passes if text doesn't contain a string" do
           expect("<h1>Text</h1>").not_to have_text('No such Text')
         end
 
@@ -404,7 +410,7 @@ RSpec.describe Capybara::RSpecMatchers do
           expect("<h1>Text</h1>").not_to have_text('.')
         end
 
-        it "fails if has_no_text? returns false" do
+        it "fails if text contains a string" do
           expect do
             expect("<h1>Text</h1>").not_to have_text('Text')
           end.to raise_error(/expected not to find text "Text" in "Text"/)
@@ -477,7 +483,7 @@ RSpec.describe Capybara::RSpecMatchers do
     it "gives proper description" do
       expect(have_link('Just a link').description).to eq("have link \"Just a link\"")
     end
-    
+
     it "passes if there is such a button" do
       expect(html).to have_link('Just a link')
     end
@@ -509,23 +515,48 @@ RSpec.describe Capybara::RSpecMatchers do
       it "fails if there is no such title" do
         expect do
           expect(html).to have_title('No such title')
-        end.to raise_error(/expected there to be title "No such title"/)
+        end.to raise_error('expected "Just a title" to include "No such title"')
+      end
+
+      it "fails if title doesn't match regexp" do
+        expect do
+          expect(html).to have_title(/[[:upper:]]+[[:lower:]]+l{2}o/)
+        end.to raise_error('expected "Just a title" to match /[[:upper:]]+[[:lower:]]+l{2}o/')
       end
     end
 
     context "on a page or node" do
-      before do
-        visit('/with_js')
-      end
-
       it "passes if there is such a title" do
+        visit('/with_js')
         expect(page).to have_title('with_js')
       end
 
       it "fails if there is no such title" do
+        visit('/with_js')
         expect do
           expect(page).to have_title('No such title')
-        end.to raise_error(/expected there to be title "No such title"/)
+        end.to raise_error('expected "with_js" to include "No such title"')
+      end
+
+      context 'with wait' do
+        before(:each) do
+          @session = TestSessions::Selenium
+          @session.visit('/with_js')
+        end
+
+        it 'waits if wait time is more than timeout' do
+          @session.click_link("Change title")
+          using_wait_time 0 do
+            expect(@session).to have_title('changed title', wait: 0.5)
+          end
+        end
+
+        it "doesn't wait if wait time is less than timeout" do
+          @session.click_link("Change title")
+          using_wait_time 0 do
+            expect(@session).not_to have_title('changed title')
+          end
+        end
       end
     end
     
@@ -727,7 +758,7 @@ RSpec.describe Capybara::RSpecMatchers do
     it "gives proper description" do
       expect(have_table('Lovely table').description).to eq("have table \"Lovely table\"")
     end
-    
+
     it "passes if there is such a select" do
       expect(html).to have_table('Lovely table')
     end
@@ -743,4 +774,3 @@ RSpec.describe Capybara::RSpecMatchers do
     end if RSpec::Version::STRING.to_f >= 3.0
   end
 end
-
