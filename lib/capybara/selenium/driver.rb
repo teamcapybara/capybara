@@ -98,6 +98,12 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         # instead.
       end
       @browser.navigate.to("about:blank")
+      # Navigating away might cause an onbeforeunload alert which we need to handle
+      begin
+        @browser.switch_to.alert.accept
+      rescue Selenium::WebDriver::Error::NoAlertPresentError
+        # There was no alert so we don't need to do anything
+      end
     end
   end
 
