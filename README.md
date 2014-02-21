@@ -378,6 +378,13 @@ attach_file('Image', '/path/to/image.jpg')
 select('Option', :from => 'Select Box')
 ```
 
+If you need to access hidden values (or if you are using Bootstrap select), use "visible => false" option:
+
+```ruby
+select 'EUR', :from => 'Currency', :visible => false
+```
+
+
 ### Querying
 
 *Full reference: [Capybara::Node::Matchers](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Matchers)*
