@@ -14,6 +14,13 @@ Capybara::SpecHelper.spec '#click_link' do
     @session.should have_content('Another World')
   end
 
+  it "raises any errors caught inside the server", :requires => [:server] do
+    quietly { @session.visit("/error") }
+    expect do
+      @session.click_link('foo')
+    end.to raise_error(TestApp::TestAppError)
+  end
+
   context "with id given" do
     it "should take user to the linked page" do
       @session.click_link('foo')

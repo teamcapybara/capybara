@@ -26,6 +26,13 @@ Capybara::SpecHelper.spec '#visit' do
     @session.should have_content('Hello world!')
   end
 
+  it "raises any errors caught inside the server", :requires => [:server] do
+    quietly { @session.visit("/error") }
+    expect do
+      @session.visit("/")
+    end.to raise_error(TestApp::TestAppError)
+  end
+
   context "when Capybara.always_include_port is true" do
 
     let(:root_uri) do

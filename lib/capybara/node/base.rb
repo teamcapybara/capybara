@@ -80,6 +80,7 @@ module Capybara
           begin
             yield
           rescue => e
+            session.raise_server_error!
             raise e unless driver.wait?
             raise e unless catch_error?(e)
             raise e if (Time.now - start_time) >= seconds

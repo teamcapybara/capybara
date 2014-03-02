@@ -81,12 +81,20 @@ module Capybara
         assert_no_selector :xpath, "/html/body/*"
         @touched = false
       end
+      raise_server_error!
+    end
+    alias_method :cleanup!, :reset!
+    alias_method :reset_session!, :reset!
+
+    ##
+    #
+    # Raise errors encountered in the server
+    #
+    def raise_server_error!
       raise @server.error if Capybara.raise_server_errors and @server and @server.error
     ensure
       @server.reset_error! if @server
     end
-    alias_method :cleanup!, :reset!
-    alias_method :reset_session!, :reset!
 
     ##
     #
@@ -179,6 +187,8 @@ module Capybara
     # @param [String] url     The URL to navigate to
     #
     def visit(url)
+      raise_server_error!
+
       @touched = true
 
       if url !~ /^http/ and Capybara.app_host
