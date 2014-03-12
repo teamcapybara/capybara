@@ -3,6 +3,7 @@
 [![Build Status](https://secure.travis-ci.org/jnicklas/capybara.png)](http://travis-ci.org/jnicklas/capybara)
 [![Dependency Status](https://gemnasium.com/jnicklas/capybara.png)](https://gemnasium.com/jnicklas/capybara)
 [![Code Climate](https://codeclimate.com/github/jnicklas/capybara.png)](https://codeclimate.com/github/jnicklas/capybara)
+[![Inline docs](http://inch-pages.github.io/github/jnicklas/capybara.png)](http://inch-pages.github.io/github/jnicklas/capybara)
 
 Capybara helps you test web applications by simulating how a real user would
 interact with your app. It is agnostic about the driver running your tests and
