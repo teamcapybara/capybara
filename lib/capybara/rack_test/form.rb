@@ -1,6 +1,6 @@
 class Capybara::RackTest::Form < Capybara::RackTest::Node
   # This only needs to inherit from Rack::Test::UploadedFile because Rack::Test checks for
-  # the class specifically when determing whether to consturct the request as multipart.
+  # the class specifically when determining whether to construct the request as multipart.
   # That check should be based solely on the form element's 'enctype' attribute value,
   # which should probably be provided to Rack::Test in its non-GET request methods.
   class NilUploadedFile < Rack::Test::UploadedFile

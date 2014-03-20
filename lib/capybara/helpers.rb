@@ -112,7 +112,7 @@ module Capybara
     #
     # A poor man's `pluralize`. Given two declensions, one singular and one
     # plural, as well as a count, this will pick the correct declension. This
-    # way we can generate gramatically correct error message.
+    # way we can generate grammatically correct error message.
     #
     # @param [String] singular     The singular form of the word
     # @param [String] plural       The plural form of the word
