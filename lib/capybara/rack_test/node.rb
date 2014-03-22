@@ -107,7 +107,7 @@ protected
     elsif native.element?
       native.children.map do |child|
         Capybara::RackTest::Node.new(driver, child).unnormalized_text
-      end.join
+      end.join(' ')
     else
       ''
     end
