@@ -42,8 +42,8 @@ module Capybara
       :execute_script, :evaluate_script, :visit, :go_back, :go_forward,
       :within, :within_fieldset, :within_table, :within_frame, :within_window,
       :save_page, :save_and_open_page, :save_screenshot,
-      :reset_session!, :response_headers, :status_code,
-      :title, :has_title?, :has_no_title?, :current_scope
+      :save_and_open_screenshot, :reset_session!, :response_headers,
+      :status_code, :title, :has_title?, :has_no_title?, :current_scope
     ]
     DSL_METHODS = NODE_METHODS + SESSION_METHODS
 
@@ -360,8 +360,7 @@ module Capybara
     # @param  [String] path     The path to where it should be saved [optional]
     #
     def save_page(path=nil)
-      path ||= "capybara-#{Time.new.strftime("%Y%m%d%H%M%S")}#{rand(10**10)}.html"
-      path = File.expand_path(path, Capybara.save_and_open_page_path)
+      path ||= default_path('html')
 
       FileUtils.mkdir_p(File.dirname(path))
 
@@ -377,14 +376,7 @@ module Capybara
     #
     def save_and_open_page(file_name=nil)
       file_name = save_page(file_name)
-
-      begin
-        require "launchy"
-        Launchy.open(file_name)
-      rescue LoadError
-        warn "Page saved to #{file_name} with save_and_open_page."
-        warn "Please install the launchy gem to open page automatically."
-      end
+      open_file(file_name)
     end
 
     ##
@@ -394,7 +386,23 @@ module Capybara
     # @param  [String] path    A string of image path
     # @option [Hash]   options Options for saving screenshot
     def save_screenshot(path, options={})
+      path ||= default_path('png')
+
+      FileUtils.mkdir_p(File.dirname(path))
+
       driver.save_screenshot(path, options)
+      path
+    end
+
+    ##
+    #
+    # Save a screenshot of the page and open it for inspection
+    #
+    # @param  [String] file_name  The path to where it should be saved [optional]
+    #
+    def save_and_open_screenshot(file_name=nil)
+      file_name = save_screenshot(file_name)
+      open_file(file_name)
     end
 
     def document
@@ -439,6 +447,22 @@ module Capybara
     end
 
   private
+
+    def open_file(file_name)
+      begin
+        require "launchy"
+        Launchy.open(file_name)
+      rescue LoadError
+        warn "File saved to #{file_name}."
+        warn "Please install the launchy gem to open the file automatically."
+      end
+    end
+
+    def default_path(extension)
+      timestamp = Time.new.strftime("%Y%m%d%H%M%S")
+      path = "capybara-#{timestamp}#{rand(10**10)}.#{extension}"
+      File.expand_path(path, Capybara.save_and_open_page_path)
+    end
 
     def scopes
       @scopes ||= [document]
