@@ -37,6 +37,11 @@ Capybara::SpecHelper.spec '#has_text?' do
     @session.should have_text("text     with \n\n whitespace")
   end
 
+  it "should not collapse whitespace between tags" do
+    @session.visit('/with_html')
+    @session.should have_text('Label span')
+  end
+
   it "should be false if the given text is not on the page" do
     @session.visit('/with_html')
     @session.should_not have_text('xxxxyzzz')
