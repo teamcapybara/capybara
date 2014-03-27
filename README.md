@@ -572,15 +572,15 @@ failures, so use caution with this approach. It can be implemented in
 ActiveRecord through the following monkey patch:
 
 ```ruby
-class ActiveRecord::Base
-  mattr_accessor :shared_connection
-  @@shared_connection = nil
-
-  def self.connection
-    @@shared_connection || retrieve_connection
+RSpec.configure do |config| do
+  # Monkey-patch ActiveRecord::Base to share the same DB connection between
+  # threads so both the headless browser thread and server thread can access
+  # the same DB transaction on JS feature specs.
+  config.before :each, js: true do
+    shared_connection = ActiveRecord::Base.connection
+    allow(ActiveRecord::Base).to receive(:connection).and_return(shared_connection)
   end
 end
-ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
 ```
 
 ## Asynchronous JavaScript (Ajax and friends)
