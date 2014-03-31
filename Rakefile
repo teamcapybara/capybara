@@ -7,10 +7,10 @@ desc "Run all examples"
 RSpec::Core::RakeTask.new(:spec) do |t|
   t.rspec_opts = %w[--color]
 end
-  
+
 RSpec::Core::RakeTask.new(:spec_with_chrome) do |t|
   t.rspec_opts = %w[--color]
-  #jruby buffers the progress formatter so travis doesnt see output often enough
+  # jruby buffers the progress formatter so travis doesn't see output often enough
   t.rspec_opts << '--format documentation' if RUBY_PLATFORM=='java'
   t.pattern = './spec{,/*/**}/*{_spec.rb,_spec_chrome.rb}'
 end
