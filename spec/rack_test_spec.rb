@@ -157,3 +157,17 @@ describe Capybara::RackTest::Driver do
     end
   end
 end
+
+module CSSHandlerIncludeTester
+  def dont_extend_css_handler
+    raise 'should never be called'
+  end
+end
+include CSSHandlerIncludeTester
+
+describe  Capybara::RackTest::CSSHandlers do  
+  it "should not be extended by global includes" do
+    expect(Capybara::RackTest::CSSHandlers.new).not_to respond_to(:dont_extend_css_handler)
+  end
+end
+  
