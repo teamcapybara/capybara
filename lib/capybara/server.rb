@@ -36,7 +36,7 @@ module Capybara
     def initialize(app, port=Capybara.server_port, host=Capybara.server_host)
       @app = app
       @middleware = Middleware.new(@app)
-      @server_thread = nil # supress warnings
+      @server_thread = nil # suppress warnings
       @host, @port = host, port
       @port ||= Capybara::Server.ports[@app.object_id]
       @port ||= find_available_port

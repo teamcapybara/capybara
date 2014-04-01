@@ -12,7 +12,7 @@ describe 'capybara/rspec', :type => :feature do
       page.body.should include('Cookie set to test_cookie')
     end
 
-    it "...then it is not availbable in the next" do
+    it "...then it is not available in the next" do
       visit('/get_cookie')
       page.body.should_not include('test_cookie')
     end

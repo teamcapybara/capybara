@@ -118,7 +118,7 @@ module Capybara
     #
     # By default, Capybara will try to run webrick.
     #
-    # @yield [app, port]                      This block recieves a rack app and port and should run a Rack handler
+    # @yield [app, port]                      This block receives a rack app and port and should run a Rack handler
     #
     def server(&block)
       if block_given?
