@@ -17,49 +17,43 @@ describe Capybara::Result do
   end
 
   it "has a length" do
-    result.length.should == 4
+    expect(result.length).to be_eql 4
   end
 
   it "has a first element" do
-    result.first.text == 'Alpha'
+    expect(result.first.text).to be_eql 'Alpha'
   end
 
   it "has a last element" do
-    result.last.text == 'Delta'
+    expect(result.last.text).to be_eql 'Delta'
   end
 
   it 'can supports values_at method' do
-    result.values_at(0, 2).map(&:text).should == %w(Alpha Gamma)
+    expect(result.values_at(0, 2).map(&:text)).to be_eql %w(Alpha Gamma)
   end
 
   it "can return an element by its index" do
-    result.at(1).text.should == 'Beta'
-    result[2].text.should == 'Gamma'
+    expect(result.at(1).text).to be_eql 'Beta'
+    expect(result[2].text).to be_eql 'Gamma'
   end
 
   it "can be mapped" do
-    result.map(&:text).should == %w(Alpha Beta Gamma Delta)
+    expect(result.map(&:text)).to be_eql %w(Alpha Beta Gamma Delta)
   end
 
   it "can be selected" do
-    result.select do |element|
-      element.text.include? 't'
-    end.length.should == 2
+    expect(result.select { |element| element.text.include? 't'}.length).to be_eql 2
   end
 
   it "can be reduced" do
-    result.reduce('') do |memo, element|
-      memo += element.text[0]
-    end.should == 'ABGD'
+    expect(result.reduce('') { |memo, element| memo += element.text[0] }).to be_eql 'ABGD'
   end
 
   it 'can be sampled' do
-    result.should include(result.sample)
+    expect(result).to include(result.sample)
   end
 
   it 'can be indexed' do
-    result.index do |el|
-      el.text == 'Gamma'
-    end.should == 2
+    expect(result.index { |el| el.text == 'Gamma' }).to be_eql 2
   end
 end

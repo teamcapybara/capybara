@@ -3,18 +3,18 @@ require 'spec_helper'
 describe 'capybara/rspec', :type => :feature do
   it "should include Capybara in rspec" do
     visit('/foo')
-    page.body.should include('Another World')
+    expect(page.body).to include('Another World')
   end
 
   context "resetting session" do
     it "sets a cookie in one example..." do
       visit('/set_cookie')
-      page.body.should include('Cookie set to test_cookie')
+      expect(page.body).to include('Cookie set to test_cookie')
     end
 
     it "...then it is not available in the next" do
       visit('/get_cookie')
-      page.body.should_not include('test_cookie')
+      expect(page.body).not_to include('test_cookie')
     end
   end
 
@@ -24,16 +24,16 @@ describe 'capybara/rspec', :type => :feature do
     end
 
     it "...then it has returned to the default in the next example" do
-      Capybara.current_driver.should == :rack_test
+      expect(Capybara.current_driver).to be_eql :rack_test
     end
   end
 
   it "switches to the javascript driver when giving it as metadata", :js => true do
-    Capybara.current_driver.should == Capybara.javascript_driver
+    expect(Capybara.current_driver).to be_eql Capybara.javascript_driver
   end
 
   it "switches to the given driver when giving it as metadata", :driver => :culerity do
-    Capybara.current_driver.should == :culerity
+    expect(Capybara.current_driver).to be_eql :culerity
   end
 end
 
@@ -46,6 +46,6 @@ end
 feature "Feature DSL" do
   scenario "is pulled in" do
     visit('/foo')
-    page.body.should include('Another World')
+    expect(page.body).to include('Another World')
   end
 end

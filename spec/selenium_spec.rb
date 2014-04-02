@@ -25,13 +25,13 @@ describe Capybara::Session do
 
     describe '#driver' do
       it "should be a selenium driver" do
-        @session.driver.should be_an_instance_of(Capybara::Selenium::Driver)
+        expect(@session.driver).to be_an_instance_of(Capybara::Selenium::Driver)
       end
     end
 
     describe '#mode' do
       it "should remember the mode" do
-        @session.mode.should == :selenium_focus
+        expect(@session.mode).to be_eql :selenium_focus
       end
     end
 
@@ -39,7 +39,7 @@ describe Capybara::Session do
       it "freshly reset session should not be touched" do
         @session.instance_variable_set(:@touched, true)
         @session.reset!
-        @session.instance_variable_get(:@touched).should be_false
+        expect(@session.instance_variable_get(:@touched)).to be_false
       end
     end
 
@@ -55,12 +55,12 @@ describe Capybara::Session do
 
       it "should have return code 1 when running selenium_driver_rspec_failure.rb" do
         `rspec spec/fixtures/selenium_driver_rspec_failure.rb`
-        $?.exitstatus.should be 1
+        expect($?.exitstatus).to be 1
       end
 
       it "should have return code 0 when running selenium_driver_rspec_success.rb" do
         `rspec spec/fixtures/selenium_driver_rspec_success.rb`
-        $?.exitstatus.should be 0
+        expect($?.exitstatus).to be 0
       end
     end
   end
@@ -73,10 +73,10 @@ describe Capybara::Selenium::Driver do
   
   describe '#quit' do
     it "should reset browser when quit" do
-      @driver.browser.should be
+      expect(@driver.browser).to be
       @driver.quit
       #access instance variable directly so we don't create a new browser instance
-      @driver.instance_variable_get(:@browser).should be_nil
+      expect(@driver.instance_variable_get(:@browser)).to be_nil
     end
   end
 end

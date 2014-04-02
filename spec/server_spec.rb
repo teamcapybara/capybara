@@ -8,13 +8,11 @@ describe Capybara::Server do
 
     @res = Net::HTTP.start(@server.host, @server.port) { |http| http.get('/') }
 
-    @res.body.should include('Hello Server')
+    expect(@res.body).to include('Hello Server')
   end
 
   it "should do nothing when no server given" do
-    expect do
-      @server = Capybara::Server.new(nil).boot
-    end.not_to raise_error
+    expect {@server = Capybara::Server.new(nil).boot}.not_to raise_error
   end
 
   it "should bind to the specified host" do
@@ -42,7 +40,7 @@ describe Capybara::Server do
     @server = Capybara::Server.new(@app).boot
 
     @res = Net::HTTP.start(@server.host, 22789) { |http| http.get('/') }
-    @res.body.should include('Hello Server')
+    expect(@res.body).to include('Hello Server')
 
     Capybara.server_port = nil
   end
@@ -52,7 +50,7 @@ describe Capybara::Server do
     @server = Capybara::Server.new(@app, 22790).boot
 
     @res = Net::HTTP.start(@server.host, 22790) { |http| http.get('/') }
-    @res.body.should include('Hello Server')
+    expect(@res.body).to include('Hello Server')
 
     Capybara.server_port = nil
   end
@@ -65,10 +63,10 @@ describe Capybara::Server do
     @server2 = Capybara::Server.new(@app2).boot
 
     @res1 = Net::HTTP.start(@server1.host, @server1.port) { |http| http.get('/') }
-    @res1.body.should include('Hello Server')
+    expect(@res1.body).to include('Hello Server')
 
     @res2 = Net::HTTP.start(@server2.host, @server2.port) { |http| http.get('/') }
-    @res2.body.should include('Hello Second Server')
+    expect(@res2.body).to include('Hello Second Server')
   end
 
   it "should use the server if it already running" do
@@ -81,13 +79,13 @@ describe Capybara::Server do
     @server2b = Capybara::Server.new(@app2).boot
 
     @res1 = Net::HTTP.start(@server1b.host, @server1b.port) { |http| http.get('/') }
-    @res1.body.should include('Hello Server')
+    expect(@res1.body).to include('Hello Server')
 
     @res2 = Net::HTTP.start(@server2b.host, @server2b.port) { |http| http.get('/') }
-    @res2.body.should include('Hello Second Server')
+    expect(@res2.body).to include('Hello Second Server')
 
-    @server1a.port.should == @server1b.port
-    @server2a.port.should == @server2b.port
+    expect(@server1a.port).to be_eql @server1b.port
+    expect(@server2a.port).to be_eql @server2b.port
   end
 
   it "should raise server errors when the server errors before the timeout" do
@@ -97,9 +95,7 @@ describe Capybara::Server do
         raise 'kaboom'
       end
 
-      proc do
-        Capybara::Server.new(proc {|e|}).boot
-      end.should raise_error(RuntimeError, 'kaboom')
+      expect(proc {Capybara::Server.new(proc {|e|}).boot}).to raise_error(RuntimeError, 'kaboom')
     ensure
       # TODO refactor out the defaults so it's reliant on unset state instead of
       # a one-time call in capybara.rb
@@ -110,7 +106,7 @@ describe Capybara::Server do
   it "is not #responsive? when Net::HTTP raises a SystemCallError" do
     app = lambda { [200, {}, ['Hello, world']] }
     server = Capybara::Server.new(app)
-    Net::HTTP.should_receive(:start).and_raise(SystemCallError.allocate)
+    expect(Net::HTTP).to receive(:start).and_raise(SystemCallError.allocate)
     expect(server.responsive?).to eq false
   end
 end

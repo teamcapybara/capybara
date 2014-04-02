@@ -21,13 +21,13 @@ describe Capybara::Session do
 
     describe '#driver' do
       it "should be a rack test driver" do
-        @session.driver.should be_an_instance_of(Capybara::RackTest::Driver)
+        expect(@session.driver).to be_an_instance_of(Capybara::RackTest::Driver)
       end
     end
 
     describe '#mode' do
       it "should remember the mode" do
-        @session.mode.should == :rack_test
+        expect(@session.mode).to be_eql :rack_test
       end
     end
 
@@ -36,21 +36,21 @@ describe Capybara::Session do
         @session.driver.options[:respect_data_method] = true
         @session.visit "/with_html"
         @session.click_link "A link with data-method"
-        @session.html.should include('The requested object was deleted')
+        expect(@session.html).to include('The requested object was deleted')
       end
 
       it "should not use data-method if option is false" do
         @session.driver.options[:respect_data_method] = false
         @session.visit "/with_html"
         @session.click_link "A link with data-method"
-        @session.html.should include('Not deleted')
+        expect(@session.html).to include('Not deleted')
       end
 
       it "should use data-method if available even if it's capitalized" do
         @session.driver.options[:respect_data_method] = true
         @session.visit "/with_html"
         @session.click_link "A link with capitalized data-method"
-        @session.html.should include('The requested object was deleted')
+        expect(@session.html).to include('The requested object was deleted')
       end
 
       after do
@@ -63,7 +63,7 @@ describe Capybara::Session do
         it "should submit an empty form-data section if no file is submitted" do
           @session.visit("/form")
           @session.click_button("Upload Empty")
-          @session.html.should include('Successfully ignored empty file field.')
+          expect(@session.html).to include('Successfully ignored empty file field.')
         end
       end
     end
@@ -79,45 +79,43 @@ describe Capybara::RackTest::Driver do
     it 'should always set headers' do
       @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       @driver.visit('/get_header')
-      @driver.html.should include('foobar')
+      expect(@driver.html).to include('foobar')
     end
 
     it 'should keep headers on link clicks' do
       @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       @driver.visit('/header_links')
       @driver.find_xpath('.//a').first.click
-      @driver.html.should include('foobar')
+      expect(@driver.html).to include('foobar')
     end
 
     it 'should keep headers on form submit' do
       @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       @driver.visit('/header_links')
       @driver.find_xpath('.//input').first.click
-      @driver.html.should include('foobar')
+      expect(@driver.html).to include('foobar')
     end
 
     it 'should keep headers on redirects' do
       @driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       @driver.visit('/get_header_via_redirect')
-      @driver.html.should include('foobar')
+      expect(@driver.html).to include('foobar')
     end
   end
 
   describe ':follow_redirects option' do
     it "defaults to following redirects" do
       @driver = Capybara::RackTest::Driver.new(TestApp)
-
       @driver.visit('/redirect')
       @driver.response.header['Location'].should be_nil
-      @driver.browser.current_url.should match %r{/landed$}
+      expect(@driver.browser.current_url).to match %r{/landed$}
     end
 
     it "is possible to not follow redirects" do
       @driver = Capybara::RackTest::Driver.new(TestApp, :follow_redirects => false)
-
       @driver.visit('/redirect')
-      @driver.response.header['Location'].should match %r{/redirect_again$}
-      @driver.browser.current_url.should match %r{/redirect$}
+      expect(@driver.response.header['Location']).to match %r{/redirect_again$}
+      expect(@driver.browser.current_url).to match %r{/redirect$}
     end
   end
 
@@ -129,7 +127,7 @@ describe Capybara::RackTest::Driver do
 
       it "should follow 5 redirects" do
         @driver.visit("/redirect/5/times")
-        @driver.html.should include('redirection complete')
+        expect(@driver.html).to include('redirection complete')
       end
 
       it "should not follow more than 6 redirects" do
@@ -146,7 +144,7 @@ describe Capybara::RackTest::Driver do
 
       it "should follow 21 redirects" do
         @driver.visit("/redirect/21/times")
-        @driver.html.should include('redirection complete')
+        expect(@driver.html).to include('redirection complete')
       end
 
       it "should not follow more than 21 redirects" do

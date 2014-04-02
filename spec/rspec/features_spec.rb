@@ -12,41 +12,41 @@ feature "Capybara's feature DSL" do
 
   scenario "includes Capybara" do
     visit('/')
-    page.should have_content('Hello world!')
+    expect(page).to have_content('Hello world!')
   end
 
   scenario "preserves description" do
-    example.metadata[:full_description].should == "Capybara's feature DSL preserves description"
+    expect(example.metadata[:full_description]).to be_eql "Capybara's feature DSL preserves description"
   end
 
   scenario "allows driver switching", :driver => :selenium do
-    Capybara.current_driver.should == :selenium
+    expect(Capybara.current_driver).to be_eql :selenium
   end
 
   scenario "runs background" do
-    @in_background.should be_true
+    expect(@in_background).to be_true
   end
 
   scenario "runs hooks filtered by file path" do
-    @in_filtered_hook.should be_true
+    expect(@in_filtered_hook).to be_true
   end
 
   scenario "doesn't pollute the Object namespace" do
-    Object.new.respond_to?(:feature, true).should be_false
+    expect(Object.new.respond_to?(:feature, true)).to be_false
   end
 
   feature 'nested features' do
     scenario 'work as expected' do
       visit '/'
-      page.should have_content 'Hello world!'
+      expect(page).to have_content 'Hello world!'
     end
 
     scenario 'are marked in the metadata as capybara_feature' do
-      example.metadata[:capybara_feature].should be_true
+      expect(example.metadata[:capybara_feature]).to be_true
     end
 
     scenario 'have a type of :feature' do
-      example.metadata[:type].should eq :feature
+      expect(example.metadata[:type]).to be_eql :feature
     end
   end
 end
@@ -56,12 +56,12 @@ feature "given and given! aliases to let and let!" do
   given!(:value_in_background) { :available }
 
   background do
-    value_in_background.should be(:available)
+    expect(value_in_background).to be(:available)
   end
 
   scenario "given and given! work as intended" do
-    value.should be(:available)
-    value_in_background.should be(:available)
+    expect(value).to be(:available)
+    expect(value_in_background).to be(:available)
   end
 end
 
@@ -72,6 +72,6 @@ end
 
 feature "Capybara's feature DSL with driver", :driver => :culerity do
   scenario "switches driver" do
-    Capybara.current_driver.should == :culerity
+    expect(Capybara.current_driver).to be_eql :culerity
   end
 end
