@@ -98,6 +98,9 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         # instead.
       end
       @browser.navigate.to("about:blank")
+      # If browser has alerts while navigating, then the entire test suite crashes. There is no
+      # way to check for alert without expecting for exception
+      browser.switch_to.alert.accept rescue Selenium::WebDriver::Error::NoAlertOpenError
     end
   end
 
