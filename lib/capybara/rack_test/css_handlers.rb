@@ -1,4 +1,6 @@
-class Capybara::RackTest::CSSHandlers
+class Capybara::RackTest::CSSHandlers < BasicObject
+  include ::Kernel
+  
   def disabled list
     list.find_all { |node| node.has_attribute? 'disabled' }
   end        
