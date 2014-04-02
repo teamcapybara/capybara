@@ -86,7 +86,7 @@ module Capybara
     #     find(:row, 3)
     #     page.find('table#myTable').find(:row, 3).text
     #     page.find('table#myTable').has_selector?(:row, 3)
-    #     within(:row, 3) { page.should have_content('$100.000') }
+    #     within(:row, 3) { expect(page).to have_content('$100.000') }
     #
     # Here is another example:
     #

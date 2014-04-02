@@ -14,7 +14,7 @@ module TestSessions
   Chrome = Capybara::Session.new(:selenium_chrome, ChromeTestApp)
 end
 
-Capybara::SpecHelper.run_specs TestSessions::Chrome, "selenium_chrome", :skip => [
+Capybara::SpecHelper.run_specs TestSessions::Chrome, "selenium_chrome", :capybara_skip => [
   :response_headers,
   :status_code,
   :trigger  

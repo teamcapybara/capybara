@@ -15,39 +15,39 @@ Capybara::SpecHelper.spec '#save_page' do
   it "saves the page in the root directory" do
     @session.save_page
     path = Dir.glob("capybara-*.html").first
-    File.read(path).should include("Another World")
+    expect(File.read(path)).to include("Another World")
   end
 
   it "generates a sensible filename" do
     @session.save_page
     path = Dir.glob("capybara-*.html").first
     filename = path.split("/").last
-    filename.should =~ /^capybara-\d+\.html$/
+    expect(filename).to match /^capybara-\d+\.html$/
   end
 
   it "can store files in a specified directory" do
     Capybara.save_and_open_page_path = alternative_path
     @session.save_page
     path = Dir.glob(alternative_path + "/capybara-*.html").first
-    File.read(path).should include("Another World")
+    expect(File.read(path)).to include("Another World")
   end
 
   it "uses the given filename" do
     @session.save_page("capybara-001122.html")
-    File.read("capybara-001122.html").should include("Another World")
+    expect(File.read("capybara-001122.html")).to include("Another World")
   end
 
   it "returns an absolute path in pwd" do
     result = @session.save_page
     path = File.expand_path(Dir.glob("capybara-*.html").first, Dir.pwd)
-    result.should == path
+    expect(result).to eq(path)
   end
 
   it "returns an absolute path in given directory" do
     Capybara.save_and_open_page_path = alternative_path
     result = @session.save_page
     path = File.expand_path(Dir.glob(alternative_path + "/capybara-*.html").first, alternative_path)
-    result.should == path
+    expect(result).to eq(path)
   end
 
   context "asset_host contains a string" do
@@ -59,7 +59,7 @@ Capybara::SpecHelper.spec '#save_page' do
       path = @session.save_page
 
       result = File.read(path)
-      result.should include("<head><base href='http://example.com' />")
+      expect(result).to include("<head><base href='http://example.com' />")
     end
 
     it "doesn't prepend base tag to pages when asset_host is nil" do
@@ -68,7 +68,7 @@ Capybara::SpecHelper.spec '#save_page' do
       path = @session.save_page
 
       result = File.read(path)
-      result.should_not include("http://example.com")
+      expect(result).not_to include("http://example.com")
     end
 
     it "doesn't prepend base tag to pages which already have it" do
@@ -76,7 +76,7 @@ Capybara::SpecHelper.spec '#save_page' do
       path = @session.save_page
 
       result = File.read(path)
-      result.should_not include("http://example.com")
+      expect(result).not_to include("http://example.com")
     end
   end
 end

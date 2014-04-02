@@ -6,19 +6,19 @@ Capybara::SpecHelper.spec "#choose" do
   it "should choose a radio button by id" do
     @session.choose("gender_male")
     @session.click_button('awesome')
-    extract_results(@session)['gender'].should == 'male'
+    expect(extract_results(@session)['gender']).to eq('male')
   end
 
   it "should choose a radio button by label" do
     @session.choose("Both")
     @session.click_button('awesome')
-    extract_results(@session)['gender'].should == 'both'
+    expect(extract_results(@session)['gender']).to eq('both')
   end
 
   it "casts to string" do
     @session.choose("Both")
     @session.click_button(:'awesome')
-    extract_results(@session)['gender'].should == 'both'
+    expect(extract_results(@session)['gender']).to eq('both')
   end
 
   context "with a locator that doesn't exist" do
@@ -42,7 +42,7 @@ Capybara::SpecHelper.spec "#choose" do
     it "should accept partial matches when false" do
       @session.choose("Mal", :exact => false)
       @session.click_button('awesome')
-      extract_results(@session)['gender'].should == 'male'
+      expect(extract_results(@session)['gender']).to eq('male')
     end
 
     it "should not accept partial matches when true" do
@@ -56,7 +56,7 @@ Capybara::SpecHelper.spec "#choose" do
     it "can check radio buttons by their value" do
       @session.choose('form[gender]', :option => "male")
       @session.click_button('awesome')
-      extract_results(@session)['gender'].should == "male"
+      expect(extract_results(@session)['gender']).to eq("male")
     end
 
     it "should raise an error if option not found" do

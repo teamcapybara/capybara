@@ -6,64 +6,64 @@ Capybara::SpecHelper.spec "#check" do
   describe "'checked' attribute" do
     it "should be true if checked" do
       @session.check("Terms of Use")
-      @session.find(:xpath, "//input[@id='form_terms_of_use']")['checked'].should be_true
+      expect(@session.find(:xpath, "//input[@id='form_terms_of_use']")['checked']).to be_truthy
     end
 
     it "should be false if unchecked" do
-      @session.find(:xpath, "//input[@id='form_terms_of_use']")['checked'].should be_false
+      expect(@session.find(:xpath, "//input[@id='form_terms_of_use']")['checked']).to be_falsey
     end
   end
 
   it "should trigger associated events", :requires => [:js] do
     @session.visit('/with_js')
     @session.check('checkbox_with_event')
-    @session.should have_css('#checkbox_event_triggered');
+    expect(@session).to have_css('#checkbox_event_triggered');
   end
 
   describe "checking" do
     it "should not change an already checked checkbox" do
-      @session.find(:xpath, "//input[@id='form_pets_dog']")['checked'].should be_true
+      expect(@session.find(:xpath, "//input[@id='form_pets_dog']")['checked']).to be_truthy
       @session.check('form_pets_dog')
-      @session.find(:xpath, "//input[@id='form_pets_dog']")['checked'].should be_true
+      expect(@session.find(:xpath, "//input[@id='form_pets_dog']")['checked']).to be_truthy
     end
 
     it "should check an unchecked checkbox" do
-      @session.find(:xpath, "//input[@id='form_pets_cat']")['checked'].should be_false
+      expect(@session.find(:xpath, "//input[@id='form_pets_cat']")['checked']).to be_falsey
       @session.check('form_pets_cat')
-      @session.find(:xpath, "//input[@id='form_pets_cat']")['checked'].should be_true
+      expect(@session.find(:xpath, "//input[@id='form_pets_cat']")['checked']).to be_truthy
     end
   end
 
   describe "unchecking" do
     it "should not change an already unchecked checkbox" do
-      @session.find(:xpath, "//input[@id='form_pets_cat']")['checked'].should be_false
+      expect(@session.find(:xpath, "//input[@id='form_pets_cat']")['checked']).to be_falsey
       @session.uncheck('form_pets_cat')
-      @session.find(:xpath, "//input[@id='form_pets_cat']")['checked'].should be_false
+      expect(@session.find(:xpath, "//input[@id='form_pets_cat']")['checked']).to be_falsey
     end
 
     it "should uncheck a checked checkbox" do
-      @session.find(:xpath, "//input[@id='form_pets_dog']")['checked'].should be_true
+      expect(@session.find(:xpath, "//input[@id='form_pets_dog']")['checked']).to be_truthy
       @session.uncheck('form_pets_dog')
-      @session.find(:xpath, "//input[@id='form_pets_dog']")['checked'].should be_false
+      expect(@session.find(:xpath, "//input[@id='form_pets_dog']")['checked']).to be_falsey
     end
   end
 
   it "should check a checkbox by id" do
     @session.check("form_pets_cat")
     @session.click_button('awesome')
-    extract_results(@session)['pets'].should include('dog', 'cat', 'hamster')
+    expect(extract_results(@session)['pets']).to include('dog', 'cat', 'hamster')
   end
 
   it "should check a checkbox by label" do
     @session.check("Cat")
     @session.click_button('awesome')
-    extract_results(@session)['pets'].should include('dog', 'cat', 'hamster')
+    expect(extract_results(@session)['pets']).to include('dog', 'cat', 'hamster')
   end
 
   it "casts to string" do
     @session.check(:"form_pets_cat")
     @session.click_button('awesome')
-    extract_results(@session)['pets'].should include('dog', 'cat', 'hamster')
+    expect(extract_results(@session)['pets']).to include('dog', 'cat', 'hamster')
   end
 
   context "with a locator that doesn't exist" do
@@ -87,7 +87,7 @@ Capybara::SpecHelper.spec "#check" do
     it "should accept partial matches when false" do
       @session.check('Ham', :exact => false)
       @session.click_button('awesome')
-      extract_results(@session)['pets'].should include('hamster')
+      expect(extract_results(@session)['pets']).to include('hamster')
     end
 
     it "should not accept partial matches when true" do
@@ -101,7 +101,7 @@ Capybara::SpecHelper.spec "#check" do
     it "can check boxes by their value" do
       @session.check('form[pets][]', :option => "cat")
       @session.click_button('awesome')
-      extract_results(@session)['pets'].should include('cat')
+      expect(extract_results(@session)['pets']).to include('cat')
     end
 
     it "should raise an error if option not found" do

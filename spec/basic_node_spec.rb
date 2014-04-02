@@ -44,96 +44,96 @@ describe Capybara do
     end
 
     it "allows using matchers" do
-      string.should have_css('#page')
-      string.should_not have_css('#does-not-exist')
+      expect(string).to have_css('#page')
+      expect(string).not_to have_css('#does-not-exist')
     end
 
     it "allows using custom matchers" do
       Capybara.add_selector :lifeform do
         xpath { |name| "//option[contains(.,'#{name}')]" }
       end
-      string.should have_selector(:id, "page")
-      string.should_not have_selector(:id, 'does-not-exist')
-      string.should have_selector(:lifeform, "Monkey")
-      string.should_not have_selector(:lifeform, "Gorilla")
+      expect(string).to have_selector(:id, "page")
+      expect(string).not_to have_selector(:id, 'does-not-exist')
+      expect(string).to have_selector(:lifeform, "Monkey")
+      expect(string).not_to have_selector(:lifeform, "Gorilla")
     end
 
     it 'allows custom matcher using css' do
       Capybara.add_selector :section do
         css { |css_class| "section .#{css_class}" }
       end
-      string.should     have_selector(:section, 'subsection')
-      string.should_not have_selector(:section, 'section_8')
+      expect(string).to     have_selector(:section, 'subsection')
+      expect(string).not_to have_selector(:section, 'section_8')
     end
 
     it "allows using matchers with text option" do
-      string.should have_css('h1', :text => 'Totally awesome')
-      string.should_not have_css('h1', :text => 'Not so awesome')
+      expect(string).to have_css('h1', :text => 'Totally awesome')
+      expect(string).not_to have_css('h1', :text => 'Not so awesome')
     end
 
     it "allows finding only visible nodes" do
-      string.all(:css, '#secret', :visible => true).should be_empty
-      string.all(:css, '#secret', :visible => false).should have(1).element
+      expect(string.all(:css, '#secret', :visible => true)).to be_empty
+      expect(string.all(:css, '#secret', :visible => false).size).to eq(1)
     end
 
     it "allows finding elements and extracting text from them" do
-      string.find('//h1').text.should == 'Totally awesome'
+      expect(string.find('//h1').text).to eq('Totally awesome')
     end
 
     it "allows finding elements and extracting attributes from them" do
-      string.find('//h1')[:data].should == 'fantastic'
+      expect(string.find('//h1')[:data]).to eq('fantastic')
     end
 
     it "allows finding elements and extracting the tag name from them" do
-      string.find('//h1').tag_name.should == 'h1'
+      expect(string.find('//h1').tag_name).to eq('h1')
     end
 
     it "allows finding elements and extracting the path" do
-      string.find('//h1').path.should == '/html/body/div/div[1]/h1'
+      expect(string.find('//h1').path).to eq('/html/body/div/div[1]/h1')
     end
 
     it "allows finding elements and extracting the path" do
-      string.find('//div/input').value.should == 'bar'
-      string.find('//select').value.should == 'Capybara'
+      expect(string.find('//div/input').value).to eq('bar')
+      expect(string.find('//select').value).to eq('Capybara')
     end
 
     it "allows finding elements and checking if they are visible" do
-      string.find('//h1').should be_visible
-      string.find(:css, "#secret", :visible => false).should_not be_visible
+      expect(string.find('//h1')).to be_visible
+      expect(string.find(:css, "#secret", :visible => false)).not_to be_visible
     end
 
     it "allows finding elements and checking if they are disabled" do
-      string.find('//form/input[@name="bleh"]').should be_disabled
-      string.find('//form/input[@name="meh"]').should_not be_disabled
+      expect(string.find('//form/input[@name="bleh"]')).to be_disabled
+      expect(string.find('//form/input[@name="meh"]')).not_to be_disabled
     end
 
     describe "#title" do
       it "returns the page title" do
-        string.title.should == "simple_node"
+        expect(string.title).to eq("simple_node")
       end
     end
 
     describe "#has_title?" do
       it "returns whether the page has the given title" do
-        string.has_title?('simple_node').should be_true
-        string.has_title?('monkey').should be_false
+        expect(string.has_title?('simple_node')).to be_truthy
+        expect(string.has_title?('monkey')).to be_falsey
       end
 
       it "allows regexp matches" do
-        string.has_title?(/s[a-z]+_node/).should be_true
-        string.has_title?(/monkey/).should be_false
+        expect(string.has_title?(/s[a-z]+_node/)).to be_truthy
+        expect(string.has_title?(/monkey/)).to be_falsey
       end
     end
 
     describe '#has_no_title?' do
       it "returns whether the page does not have the given title" do
-        string.has_no_title?('simple_node').should be_false
-        string.has_no_title?('monkey').should be_true
+        expect(string.has_no_title?('simple_node')).to be_falsey
+        expect(string.has_no_title?('monkey')).to be_truthy
       end
 
       it "allows regexp matches" do
-        string.has_no_title?(/s[a-z]+_node/).should be_false
-        string.has_no_title?(/monkey/).should be_true
+        expect(string.has_no_title?(/s[a-z]+_node/)).to be_falsey
+        expect(string.has_no_title?(/monkey/)).to be_truthy
       end
     end
   end

@@ -13,32 +13,32 @@ Capybara::SpecHelper.spec '#within_window', :requires => [:windows] do
 
   it "should find the div in firstPopup" do
     @session.within_window("firstPopup") do
-      @session.find("//*[@id='divInPopupOne']").text.should eql 'This is the text of divInPopupOne'
+      expect(@session.find("//*[@id='divInPopupOne']").text).to eql 'This is the text of divInPopupOne'
     end
   end
   it "should find the div in secondPopup" do
     @session.within_window("secondPopup") do
-      @session.find("//*[@id='divInPopupTwo']").text.should eql 'This is the text of divInPopupTwo'
+      expect(@session.find("//*[@id='divInPopupTwo']").text).to eql 'This is the text of divInPopupTwo'
     end
   end
   it "should find the divs in both popups" do
     @session.within_window("secondPopup") do
-      @session.find("//*[@id='divInPopupTwo']").text.should eql 'This is the text of divInPopupTwo'
+      expect(@session.find("//*[@id='divInPopupTwo']").text).to eql 'This is the text of divInPopupTwo'
     end
     @session.within_window("firstPopup") do
-      @session.find("//*[@id='divInPopupOne']").text.should eql 'This is the text of divInPopupOne'
+      expect(@session.find("//*[@id='divInPopupOne']").text).to eql 'This is the text of divInPopupOne'
     end
   end
   it "should find the div in the main window after finding a div in a popup" do
     @session.within_window("secondPopup") do
-      @session.find("//*[@id='divInPopupTwo']").text.should eql 'This is the text of divInPopupTwo'
+      expect(@session.find("//*[@id='divInPopupTwo']").text).to eql 'This is the text of divInPopupTwo'
     end
-    @session.find("//*[@id='divInMainWindow']").text.should eql 'This is the text for divInMainWindow'
+    expect(@session.find("//*[@id='divInMainWindow']").text).to eql 'This is the text for divInMainWindow'
   end
   it "should reset scope when switching windows" do
     @session.within(:css, '#divInMainWindow') do
       @session.within_window("secondPopup") do
-        @session.find("//*[@id='divInPopupTwo']").text.should eql 'This is the text of divInPopupTwo'
+        expect(@session.find("//*[@id='divInPopupTwo']").text).to eql 'This is the text of divInPopupTwo'
       end
     end
   end

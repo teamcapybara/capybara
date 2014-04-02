@@ -7,42 +7,42 @@ Capybara::SpecHelper.spec "#unselect" do
     it "should unselect an option from a select box by id" do
       @session.unselect('Commando', :from => 'form_underwear')
       @session.click_button('awesome')
-      extract_results(@session)['underwear'].should include('Briefs', 'Boxerbriefs')
-      extract_results(@session)['underwear'].should_not include('Commando')
+      expect(extract_results(@session)['underwear']).to include('Briefs', 'Boxerbriefs')
+      expect(extract_results(@session)['underwear']).not_to include('Commando')
     end
 
     it "should unselect an option without a select box" do
       @session.unselect('Commando')
       @session.click_button('awesome')
-      extract_results(@session)['underwear'].should include('Briefs', 'Boxerbriefs')
-      extract_results(@session)['underwear'].should_not include('Commando')
+      expect(extract_results(@session)['underwear']).to include('Briefs', 'Boxerbriefs')
+      expect(extract_results(@session)['underwear']).not_to include('Commando')
     end
 
     it "should unselect an option from a select box by label" do
       @session.unselect('Commando', :from => 'Underwear')
       @session.click_button('awesome')
-      extract_results(@session)['underwear'].should include('Briefs', 'Boxerbriefs')
-      extract_results(@session)['underwear'].should_not include('Commando')
+      expect(extract_results(@session)['underwear']).to include('Briefs', 'Boxerbriefs')
+      expect(extract_results(@session)['underwear']).not_to include('Commando')
     end
 
     it "should favour exact matches to option labels" do
       @session.unselect("Briefs", :from => 'Underwear')
       @session.click_button('awesome')
-      extract_results(@session)['underwear'].should include('Commando', 'Boxerbriefs')
-      extract_results(@session)['underwear'].should_not include('Briefs')
+      expect(extract_results(@session)['underwear']).to include('Commando', 'Boxerbriefs')
+      expect(extract_results(@session)['underwear']).not_to include('Briefs')
     end
 
     it "should escape quotes" do
       @session.unselect("Frenchman's Pantalons", :from => 'Underwear')
       @session.click_button('awesome')
-      extract_results(@session)['underwear'].should_not include("Frenchman's Pantalons")
+      expect(extract_results(@session)['underwear']).not_to include("Frenchman's Pantalons")
     end
 
     it "casts to string" do
       @session.unselect(:"Briefs", :from => :'Underwear')
       @session.click_button('awesome')
-      extract_results(@session)['underwear'].should include('Commando', 'Boxerbriefs')
-      extract_results(@session)['underwear'].should_not include('Briefs')
+      expect(extract_results(@session)['underwear']).to include('Commando', 'Boxerbriefs')
+      expect(extract_results(@session)['underwear']).not_to include('Briefs')
     end
   end
 
@@ -75,19 +75,19 @@ Capybara::SpecHelper.spec "#unselect" do
       it "can match select box approximately" do
         @session.unselect("Boxerbriefs", :from => "Under", :exact => false)
         @session.click_button("awesome")
-        extract_results(@session)["underwear"].should_not include("Boxerbriefs")
+        expect(extract_results(@session)["underwear"]).not_to include("Boxerbriefs")
       end
 
       it "can match option approximately" do
         @session.unselect("Boxerbr", :from => "Underwear", :exact => false)
         @session.click_button("awesome")
-        extract_results(@session)["underwear"].should_not include("Boxerbriefs")
+        expect(extract_results(@session)["underwear"]).not_to include("Boxerbriefs")
       end
 
       it "can match option approximately when :from not given" do
         @session.unselect("Boxerbr", :exact => false)
         @session.click_button("awesome")
-        extract_results(@session)["underwear"].should_not include("Boxerbriefs")
+        expect(extract_results(@session)["underwear"]).not_to include("Boxerbriefs")
       end
     end
 
