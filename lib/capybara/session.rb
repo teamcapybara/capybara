@@ -73,7 +73,21 @@ module Capybara
 
     ##
     #
-    # Reset the session, removing all cookies.
+    # Reset the session (i.e. remove cookies and navigate to blank page)
+    #
+    # This method does not:
+    #
+    #   * accept modal dialogs if they are present
+    #   * clear browser cache/HTML 5 local storage/IndexedDB/Web SQL database/etc.
+    #   * modify state of the driver/underlying browser in any other way
+    #
+    # as doing so will result in performance downsides and it's not needed to do everything from list above for most apps.
+    #
+    # If you want to do anything from the list above on a general basis you can:
+    #
+    #   * write RSpec/Cucumber/etc. after hook
+    #   * monkeypatch this method
+    #   * use Ruby's `prepend` method
     #
     def reset!
       if @touched
