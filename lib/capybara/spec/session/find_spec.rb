@@ -8,13 +8,13 @@ Capybara::SpecHelper.spec '#find' do
   end
 
   it "should find the first element using the given locator" do
-    @session.find('//h1').text.should == 'This is a test'
-    @session.find("//input[@id='test_field']")[:value].should == 'monkey'
+    expect(@session.find('//h1').text).to eq('This is a test')
+    expect(@session.find("//input[@id='test_field']")[:value]).to eq('monkey')
   end
 
   it "should find the first element using the given locator and options" do
-    @session.find('//a', :text => 'Redirect')[:id].should == 'red'
-    @session.find(:css, 'a', :text => 'A link came first')[:title].should == 'twas a fine link'
+    expect(@session.find('//a', :text => 'Redirect')[:id]).to eq('red')
+    expect(@session.find(:css, 'a', :text => 'A link came first')[:title]).to eq('twas a fine link')
   end
 
   it "should raise an error if there are multiple matches" do
@@ -24,12 +24,12 @@ Capybara::SpecHelper.spec '#find' do
   it "should wait for asynchronous load", :requires => [:js] do
     @session.visit('/with_js')
     @session.click_link('Click me')
-    @session.find(:css, "a#has-been-clicked").text.should include('Has been clicked')
+    expect(@session.find(:css, "a#has-been-clicked").text).to include('Has been clicked')
   end
 
   context "with :text option" do
     it "casts text's argument to string" do
-      @session.find(:css, '.number', text: 42).should have_content("42")
+      expect(@session.find(:css, '.number', text: 42)).to have_content("42")
     end
   end
 
@@ -53,7 +53,7 @@ Capybara::SpecHelper.spec '#find' do
     it "should find element if it appears before given wait duration" do
       @session.visit('/with_js')
       @session.click_link('Click me')
-      @session.find(:css, "a#has-been-clicked", :wait => 0.9).text.should include('Has been clicked')
+      expect(@session.find(:css, "a#has-been-clicked", :wait => 0.9).text).to include('Has been clicked')
     end
   end
 
@@ -61,26 +61,26 @@ Capybara::SpecHelper.spec '#find' do
     it "raises an error suggesting that Capybara is stuck in time" do
       @session.visit('/with_js')
       now = Time.now
-      Time.stub(:now).and_return(now)
+      allow(Time).to receive(:now).and_return(now)
       expect { @session.find('//isnotthere') }.to raise_error(Capybara::FrozenInTime)
     end
   end
 
   context "with css selectors" do
     it "should find the first element using the given locator" do
-      @session.find(:css, 'h1').text.should == 'This is a test'
-      @session.find(:css, "input[id='test_field']")[:value].should == 'monkey'
+      expect(@session.find(:css, 'h1').text).to eq('This is a test')
+      expect(@session.find(:css, "input[id='test_field']")[:value]).to eq('monkey')
     end
 
     it "should support pseudo selectors" do
-      @session.find(:css, 'input:disabled').value.should == 'This is disabled'
+      expect(@session.find(:css, 'input:disabled').value).to eq('This is disabled')
     end
   end
 
   context "with xpath selectors" do
     it "should find the first element using the given locator" do
-      @session.find(:xpath, '//h1').text.should == 'This is a test'
-      @session.find(:xpath, "//input[@id='test_field']")[:value].should == 'monkey'
+      expect(@session.find(:xpath, '//h1').text).to eq('This is a test')
+      expect(@session.find(:xpath, "//input[@id='test_field']")[:value]).to eq('monkey')
     end
   end
 
@@ -89,8 +89,8 @@ Capybara::SpecHelper.spec '#find' do
       Capybara.add_selector(:beatle) do
         xpath { |name| ".//*[@id='#{name}']" }
       end
-      @session.find(:beatle, 'john').text.should == 'John'
-      @session.find(:beatle, 'paul').text.should == 'Paul'
+      expect(@session.find(:beatle, 'john').text).to eq('John')
+      expect(@session.find(:beatle, 'paul').text).to eq('Paul')
     end
   end
 
@@ -100,10 +100,10 @@ Capybara::SpecHelper.spec '#find' do
         xpath { |num| ".//*[contains(@class, 'beatle')][#{num}]" }
         match { |value| value.is_a?(Fixnum) }
       end
-      @session.find(:beatle, '2').text.should == 'Paul'
-      @session.find(1).text.should == 'John'
-      @session.find(2).text.should == 'Paul'
-      @session.find('//h1').text.should == 'This is a test'
+      expect(@session.find(:beatle, '2').text).to eq('Paul')
+      expect(@session.find(1).text).to eq('John')
+      expect(@session.find(2).text).to eq('Paul')
+      expect(@session.find('//h1').text).to eq('This is a test')
     end
   end
 
@@ -116,13 +116,13 @@ Capybara::SpecHelper.spec '#find' do
     end
 
     it "should find elements that match the filter" do
-      @session.find(:beatle, 'Paul', :type => 'drummer').text.should == 'Paul'
-      @session.find(:beatle, 'Ringo', :type => 'drummer').text.should == 'Ringo'
+      expect(@session.find(:beatle, 'Paul', :type => 'drummer').text).to eq('Paul')
+      expect(@session.find(:beatle, 'Ringo', :type => 'drummer').text).to eq('Ringo')
     end
 
     it "ignores filter when it is not given" do
-      @session.find(:beatle, 'Paul').text.should == 'Paul'
-      @session.find(:beatle, 'John').text.should == 'John'
+      expect(@session.find(:beatle, 'Paul').text).to eq('Paul')
+      expect(@session.find(:beatle, 'John').text).to eq('John')
     end
 
     it "should not find elements that don't match the filter" do
@@ -140,12 +140,12 @@ Capybara::SpecHelper.spec '#find' do
     end
 
     it "should find elements that match the filter" do
-      @session.find(:beatle, 'Paul', :type => 'drummer').text.should == 'Paul'
-      @session.find(:beatle, 'Ringo', :type => 'drummer').text.should == 'Ringo'
+      expect(@session.find(:beatle, 'Paul', :type => 'drummer').text).to eq('Paul')
+      expect(@session.find(:beatle, 'Ringo', :type => 'drummer').text).to eq('Ringo')
     end
 
     it "should use default value when filter is not given" do
-      @session.find(:beatle, 'Paul').text.should == 'Paul'
+      expect(@session.find(:beatle, 'Paul').text).to eq('Paul')
       expect { @session.find(:beatle, 'John') }.to raise_error(Capybara::ElementNotFound)
     end
 
@@ -158,8 +158,8 @@ Capybara::SpecHelper.spec '#find' do
   context "with css as default selector" do
     before { Capybara.default_selector = :css }
     it "should find the first element using the given locator" do
-      @session.find('h1').text.should == 'This is a test'
-      @session.find("input[id='test_field']")[:value].should == 'monkey'
+      expect(@session.find('h1').text).to eq('This is a test')
+      expect(@session.find("input[id='test_field']")[:value]).to eq('monkey')
     end
     after { Capybara.default_selector = :xpath }
   end
@@ -173,20 +173,20 @@ Capybara::SpecHelper.spec '#find' do
   it "should accept an XPath instance" do
     @session.visit('/form')
     @xpath = XPath::HTML.fillable_field('First Name')
-    @session.find(@xpath).value.should == 'John'
+    expect(@session.find(@xpath).value).to eq('John')
   end
 
   context "with :exact option" do
     it "matches exactly when true" do
-      @session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("test_field")], :exact => true).value.should == "monkey"
+      expect(@session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("test_field")], :exact => true).value).to eq("monkey")
       expect do
         @session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("est_fiel")], :exact => true)
       end.to raise_error(Capybara::ElementNotFound)
     end
 
     it "matches loosely when false" do
-      @session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("test_field")], :exact => false).value.should == "monkey"
-      @session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("est_fiel")], :exact => false).value.should == "monkey"
+      expect(@session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("test_field")], :exact => false).value).to eq("monkey")
+      expect(@session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("est_fiel")], :exact => false).value).to eq("monkey")
     end
 
     it "defaults to `Capybara.exact`" do
@@ -212,7 +212,7 @@ Capybara::SpecHelper.spec '#find' do
         end.to raise_error(Capybara::Ambiguous)
       end
       it "returns the element if there is only one" do
-        @session.find(:css, ".singular", :match => :one).text.should == "singular"
+        expect(@session.find(:css, ".singular", :match => :one).text).to eq("singular")
       end
       it "raises an error if there is no match" do
         expect do
@@ -223,7 +223,7 @@ Capybara::SpecHelper.spec '#find' do
 
     context "when set to `first`" do
       it "returns the first matched element" do
-        @session.find(:css, ".multiple", :match => :first).text.should == "multiple one"
+        expect(@session.find(:css, ".multiple", :match => :first).text).to eq("multiple one")
       end
       it "raises an error if there is no match" do
         expect do
@@ -241,7 +241,7 @@ Capybara::SpecHelper.spec '#find' do
         end
         it "finds a single exact match when there also are inexact matches" do
           result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular")], :match => :smart, :exact => false)
-          result.text.should == "almost singular"
+          expect(result.text).to eq("almost singular")
         end
         it "raises an error when there are multiple inexact matches" do
           expect do
@@ -250,7 +250,7 @@ Capybara::SpecHelper.spec '#find' do
         end
         it "finds a single inexact match" do
           result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular but")], :match => :smart, :exact => false)
-          result.text.should == "almost singular but not quite"
+          expect(result.text).to eq("almost singular but not quite")
         end
         it "raises an error if there is no match" do
           expect do
@@ -267,7 +267,7 @@ Capybara::SpecHelper.spec '#find' do
         end
         it "finds a single exact match when there also are inexact matches" do
           result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular")], :match => :smart, :exact => true)
-          result.text.should == "almost singular"
+          expect(result.text).to eq("almost singular")
         end
         it "raises an error when there are multiple inexact matches" do
           expect do
@@ -291,19 +291,19 @@ Capybara::SpecHelper.spec '#find' do
       context "and `exact` set to `false`" do
         it "picks the first one when there are multiple exact matches" do
           result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("multiple")], :match => :prefer_exact, :exact => false)
-          result.text.should == "multiple one"
+          expect(result.text).to eq("multiple one")
         end
         it "finds a single exact match when there also are inexact matches" do
           result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular")], :match => :prefer_exact, :exact => false)
-          result.text.should == "almost singular"
+          expect(result.text).to eq("almost singular")
         end
         it "picks the first one when there are multiple inexact matches" do
           result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singul")], :match => :prefer_exact, :exact => false)
-          result.text.should == "almost singular but not quite"
+          expect(result.text).to eq("almost singular but not quite")
         end
         it "finds a single inexact match" do
           result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular but")], :match => :prefer_exact, :exact => false)
-          result.text.should == "almost singular but not quite"
+          expect(result.text).to eq("almost singular but not quite")
         end
         it "raises an error if there is no match" do
           expect do
@@ -315,11 +315,11 @@ Capybara::SpecHelper.spec '#find' do
       context "with `exact` set to `true`" do
         it "picks the first one when there are multiple exact matches" do
           result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("multiple")], :match => :prefer_exact, :exact => true)
-          result.text.should == "multiple one"
+          expect(result.text).to eq("multiple one")
         end
         it "finds a single exact match when there also are inexact matches" do
           result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular")], :match => :prefer_exact, :exact => true)
-          result.text.should == "almost singular"
+          expect(result.text).to eq("almost singular")
         end
         it "raises an error if there are multiple inexact matches" do
           expect do
@@ -345,7 +345,7 @@ Capybara::SpecHelper.spec '#find' do
         @session.find(:css, ".multiple")
       end.to raise_error(Capybara::Ambiguous)
       Capybara.match = :first
-      @session.find(:css, ".multiple").text.should == "multiple one"
+      expect(@session.find(:css, ".multiple").text).to eq("multiple one")
     end
 
     it "raises an error when unknown option given" do
@@ -362,13 +362,13 @@ Capybara::SpecHelper.spec '#find' do
 
     it "should find the an element using the given locator" do
       @session.within(:xpath, "//div[@id='for_bar']") do
-        @session.find('.//li[1]').text.should =~ /With Simple HTML/
+        expect(@session.find('.//li[1]').text).to match(/With Simple HTML/)
       end
     end
 
     it "should support pseudo selectors" do
       @session.within(:xpath, "//div[@id='for_bar']") do
-        @session.find(:css, 'input:disabled').value.should == 'James'
+        expect(@session.find(:css, 'input:disabled').value).to eq('James')
       end
     end
   end

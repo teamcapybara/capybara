@@ -2,8 +2,8 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
   before :all do
     @servers = 2.times.map { Capybara::Server.new(TestApp.clone).boot }
     # sanity check
-    @servers[0].port.should_not == @servers[1].port
-    @servers.map { |s| s.port }.should_not include 80
+    expect(@servers[0].port).not_to eq(@servers[1].port)
+    expect(@servers.map { |s| s.port }).not_to include 80
   end
 
   def bases
@@ -13,12 +13,12 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
   def should_be_on server_index, path="/host", scheme="http"
     # Check that we are on /host on the given server
     s = @servers[server_index]
-    @session.current_url.chomp('?').should == "#{scheme}://#{s.host}:#{s.port}#{path}"
-    @session.current_host.should == "#{scheme}://#{s.host}" # no port
-    @session.current_path.should == path
+    expect(@session.current_url.chomp('?')).to eq("#{scheme}://#{s.host}:#{s.port}#{path}")
+    expect(@session.current_host).to eq("#{scheme}://#{s.host}") # no port
+    expect(@session.current_path).to eq(path)
     if path == '/host'
       # Server should agree with us
-      @session.should have_content("Current host is #{scheme}://#{s.host}:#{s.port}")
+      expect(@session).to have_content("Current host is #{scheme}://#{s.host}:#{s.port}")
     end
   end
 
@@ -82,12 +82,12 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
   it "is affected by pushState", :requires => [:js] do
     @session.visit("/with_js")
     @session.execute_script("window.history.pushState({}, '', '/pushed')")
-    @session.current_path.should == "/pushed"
+    expect(@session.current_path).to eq("/pushed")
   end
 
   it "is affected by replaceState", :requires => [:js] do
     @session.visit("/with_js")
     @session.execute_script("window.history.replaceState({}, '', '/replaced')")
-    @session.current_path.should == "/replaced"
+    expect(@session.current_path).to eq("/replaced")
   end
 end

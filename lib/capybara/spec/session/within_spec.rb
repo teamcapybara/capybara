@@ -8,21 +8,21 @@ Capybara::SpecHelper.spec '#within' do
       @session.within(:css, "#for_bar li", text: 'With Simple HTML') do
         @session.click_link('Go')
       end
-      @session.should have_content('Bar')
+      expect(@session).to have_content('Bar')
     end
 
     it "should assert content in the given scope" do
       @session.within(:css, "#for_foo") do
-        @session.should_not have_content('First Name')
+        expect(@session).not_to have_content('First Name')
       end
-      @session.should have_content('First Name')
+      expect(@session).to have_content('First Name')
     end
 
     it "should accept additional options" do
       @session.within(:css, "#for_bar li", :text => 'With Simple HTML') do
         @session.click_link('Go')
       end
-      @session.should have_content('Bar')
+      expect(@session).to have_content('Bar')
     end
   end
 
@@ -31,7 +31,7 @@ Capybara::SpecHelper.spec '#within' do
       @session.within(:xpath, "//div[@id='for_bar']//li[contains(.,'With Simple HTML')]") do
         @session.click_link('Go')
       end
-      @session.should have_content('Bar')
+      expect(@session).to have_content('Bar')
     end
   end
 
@@ -40,7 +40,7 @@ Capybara::SpecHelper.spec '#within' do
       @session.within("//div[@id='for_bar']//li[contains(.,'With Simple HTML')]") do
         @session.click_link('Go')
       end
-      @session.should have_content('Bar')
+      expect(@session).to have_content('Bar')
     end
   end
 
@@ -51,7 +51,7 @@ Capybara::SpecHelper.spec '#within' do
       @session.within(node_of_interest) do
         @session.click_link('Go')
       end
-      @session.should have_content('Bar')
+      expect(@session).to have_content('Bar')
     end
   end
 
@@ -61,7 +61,7 @@ Capybara::SpecHelper.spec '#within' do
       @session.within("#for_bar li", text: 'With Simple HTML') do
         @session.click_link('Go')
       end
-      @session.should have_content('Bar')
+      expect(@session).to have_content('Bar')
     end
     after { Capybara.default_selector = :xpath }
   end
@@ -73,7 +73,7 @@ Capybara::SpecHelper.spec '#within' do
           @session.click_link('Go')
         end
       end
-      @session.should have_content('Another World')
+      expect(@session).to have_content('Another World')
     end
 
     it "should respect the outer scope" do
@@ -82,7 +82,7 @@ Capybara::SpecHelper.spec '#within' do
           @session.click_link('Go')
         end
       end
-      @session.should have_content('Hello world')
+      expect(@session).to have_content('Hello world')
     end
   end
 
@@ -110,13 +110,13 @@ Capybara::SpecHelper.spec '#within' do
     @session.within("//li[contains(.,'Bar')]") do
       @session.click_button('Go')
     end
-    extract_results(@session)['first_name'].should == 'Peter'
+    expect(extract_results(@session)['first_name']).to eq('Peter')
     @session.visit('/with_scope')
     @session.within("//li[contains(.,'Bar')]") do
       @session.fill_in('First Name', :with => 'Dagobert')
       @session.click_button('Go')
     end
-    extract_results(@session)['first_name'].should == 'Dagobert'
+    expect(extract_results(@session)['first_name']).to eq('Dagobert')
   end
 end
 
@@ -130,7 +130,7 @@ Capybara::SpecHelper.spec '#within_fieldset' do
       @session.fill_in("Name", :with => 'Goldfinger')
       @session.click_button("Create")
     end
-    extract_results(@session)['villain_name'].should == 'Goldfinger'
+    expect(extract_results(@session)['villain_name']).to eq('Goldfinger')
   end
 
   it "should restrict scope to a fieldset given by legend" do
@@ -138,7 +138,7 @@ Capybara::SpecHelper.spec '#within_fieldset' do
       @session.fill_in("Name", :with => 'Goldfinger')
       @session.click_button("Create")
     end
-    extract_results(@session)['villain_name'].should == 'Goldfinger'
+    expect(extract_results(@session)['villain_name']).to eq('Goldfinger')
   end
 end
 
@@ -152,7 +152,7 @@ Capybara::SpecHelper.spec '#within_table' do
       @session.fill_in("Name", :with => 'Christmas')
       @session.click_button("Create")
     end
-    extract_results(@session)['girl_name'].should == 'Christmas'
+    expect(extract_results(@session)['girl_name']).to eq('Christmas')
   end
 
   it "should restrict scope to a fieldset given by legend" do
@@ -160,6 +160,6 @@ Capybara::SpecHelper.spec '#within_table' do
       @session.fill_in("Name", :with => 'Quantum')
       @session.click_button("Create")
     end
-    extract_results(@session)['villain_name'].should == 'Quantum'
+    expect(extract_results(@session)['villain_name']).to eq('Quantum')
   end
 end

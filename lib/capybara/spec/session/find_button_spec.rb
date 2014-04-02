@@ -4,12 +4,12 @@ Capybara::SpecHelper.spec '#find_button' do
   end
 
   it "should find any button" do
-    @session.find_button('med')[:id].should == "mediocre"
-    @session.find_button('crap321').value.should == "crappy"
+    expect(@session.find_button('med')[:id]).to eq("mediocre")
+    expect(@session.find_button('crap321').value).to eq("crappy")
   end
 
   it "casts to string" do
-    @session.find_button(:'med')[:id].should == "mediocre"
+    expect(@session.find_button(:'med')[:id]).to eq("mediocre")
   end
 
   it "should raise error if the button doesn't exist" do
@@ -20,7 +20,7 @@ Capybara::SpecHelper.spec '#find_button' do
 
   context "with :exact option" do
     it "should accept partial matches when false" do
-      @session.find_button('What an Awesome', :exact => false)[:value].should == "awesome"
+      expect(@session.find_button('What an Awesome', :exact => false)[:value]).to eq("awesome")
     end
 
     it "should not accept partial matches when true" do

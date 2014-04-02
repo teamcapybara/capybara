@@ -4,22 +4,22 @@ Capybara::SpecHelper.spec "#select" do
   end
 
   it "should return value of the first option" do
-    @session.find_field('Title').value.should == 'Mrs'
+    expect(@session.find_field('Title').value).to eq('Mrs')
   end
 
   it "should return value of the selected option" do
     @session.select("Miss", :from => 'Title')
-    @session.find_field('Title').value.should == 'Miss'
+    expect(@session.find_field('Title').value).to eq('Miss')
   end
 
   it "should allow selecting options where there are inexact matches" do
     @session.select("Mr", :from => 'Title')
-    @session.find_field('Title').value.should == 'Mr'
+    expect(@session.find_field('Title').value).to eq('Mr')
   end
 
   it "should allow selecting options where they are the only inexact match" do
     @session.select("Mis", :from => 'Title')
-    @session.find_field('Title').value.should == 'Miss'
+    expect(@session.find_field('Title').value).to eq('Miss')
   end
 
   it "should not allow selecting options where they are the only inexact match if `Capybara.exact_options = true`" do
@@ -36,50 +36,50 @@ Capybara::SpecHelper.spec "#select" do
   end
 
   it "should return the value attribute rather than content if present" do
-    @session.find_field('Locale').value.should == 'en'
+    expect(@session.find_field('Locale').value).to eq('en')
   end
 
   it "should select an option from a select box by id" do
     @session.select("Finish", :from => 'form_locale')
     @session.click_button('awesome')
-    extract_results(@session)['locale'].should == 'fi'
+    expect(extract_results(@session)['locale']).to eq('fi')
   end
 
   it "should select an option from a select box by label" do
     @session.select("Finish", :from => 'Locale')
     @session.click_button('awesome')
-    extract_results(@session)['locale'].should == 'fi'
+    expect(extract_results(@session)['locale']).to eq('fi')
   end
 
   it "should select an option without giving a select box" do
     @session.select("Swedish")
     @session.click_button('awesome')
-    extract_results(@session)['locale'].should == 'sv'
+    expect(extract_results(@session)['locale']).to eq('sv')
   end
 
   it "should escape quotes" do
     @session.select("John's made-up language", :from => 'Locale')
     @session.click_button('awesome')
-    extract_results(@session)['locale'].should == 'jo'
+    expect(extract_results(@session)['locale']).to eq('jo')
   end
 
   it "should obey from" do
     @session.select("Miss", :from => "Other title")
     @session.click_button('awesome')
     results = extract_results(@session)
-    results['other_title'].should == "Miss"
-    results['title'].should_not == "Miss"
+    expect(results['other_title']).to eq("Miss")
+    expect(results['title']).not_to eq("Miss")
   end
 
   it "show match labels with preceding or trailing whitespace" do
     @session.select("Lojban", :from => 'Locale')
     @session.click_button('awesome')
-    extract_results(@session)['locale'].should == 'jbo'
+    expect(extract_results(@session)['locale']).to eq('jbo')
   end
 
   it "casts to string" do
     @session.select(:"Miss", :from => :'Title')
-    @session.find_field('Title').value.should == 'Miss'
+    expect(@session.find_field('Title').value).to eq('Miss')
   end
 
   context "with a locator that doesn't exist" do
@@ -110,26 +110,26 @@ Capybara::SpecHelper.spec "#select" do
 
   context "with multiple select" do
     it "should return an empty value" do
-      @session.find_field('Language').value.should == []
+      expect(@session.find_field('Language').value).to eq([])
     end
 
     it "should return value of the selected options" do
       @session.select("Ruby",       :from => 'Language')
       @session.select("Javascript", :from => 'Language')
-      @session.find_field('Language').value.should include('Ruby', 'Javascript')
+      expect(@session.find_field('Language').value).to include('Ruby', 'Javascript')
     end
 
     it "should select one option" do
       @session.select("Ruby", :from => 'Language')
       @session.click_button('awesome')
-      extract_results(@session)['languages'].should == ['Ruby']
+      expect(extract_results(@session)['languages']).to eq(['Ruby'])
     end
 
     it "should select multiple options" do
       @session.select("Ruby",       :from => 'Language')
       @session.select("Javascript", :from => 'Language')
       @session.click_button('awesome')
-      extract_results(@session)['languages'].should include('Ruby', 'Javascript')
+      expect(extract_results(@session)['languages']).to include('Ruby', 'Javascript')
     end
 
     it "should remain selected if already selected" do
@@ -137,11 +137,11 @@ Capybara::SpecHelper.spec "#select" do
       @session.select("Javascript", :from => 'Language')
       @session.select("Ruby",       :from => 'Language')
       @session.click_button('awesome')
-      extract_results(@session)['languages'].should include('Ruby', 'Javascript')
+      expect(extract_results(@session)['languages']).to include('Ruby', 'Javascript')
     end
 
     it "should return value attribute rather than content if present" do
-      @session.find_field('Underwear').value.should include('thermal')
+      expect(@session.find_field('Underwear').value).to include('thermal')
     end
   end
 
@@ -150,19 +150,19 @@ Capybara::SpecHelper.spec "#select" do
       it "can match select box approximately" do
         @session.select("Finish", :from => "Loc", :exact => false)
         @session.click_button("awesome")
-        extract_results(@session)["locale"].should == "fi"
+        expect(extract_results(@session)["locale"]).to eq("fi")
       end
 
       it "can match option approximately" do
         @session.select("Fin", :from => "Locale", :exact => false)
         @session.click_button("awesome")
-        extract_results(@session)["locale"].should == "fi"
+        expect(extract_results(@session)["locale"]).to eq("fi")
       end
 
       it "can match option approximately when :from not given" do
         @session.select("made-up language", :exact => false)
         @session.click_button("awesome")
-        extract_results(@session)["locale"].should == "jo"
+        expect(extract_results(@session)["locale"]).to eq("jo")
       end
     end
 

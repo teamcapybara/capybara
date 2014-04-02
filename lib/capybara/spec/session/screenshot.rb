@@ -9,6 +9,6 @@ Capybara::SpecHelper.spec "#save_screenshot" do
 
   it "should generate PNG file", :requires => [:screenshot] do
     magic = File.read(image_path, 4)
-    magic.should eq "\x89PNG"
+    expect(magic).to eq "\x89PNG"
   end
 end

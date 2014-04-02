@@ -45,6 +45,14 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.navigate.to(path)
   end
 
+  def go_back
+    browser.navigate.back
+  end
+
+  def go_forward
+    browser.navigate.forward
+  end
+
   def html
     browser.page_source
   end
@@ -89,9 +97,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         # to about:blank, so we rescue this error and do nothing
         # instead.
       end
-      uri = URI(Capybara::EMPTY_HTML_FILE_PATH)
-      uri.scheme = "file"
-      @browser.navigate.to(uri.to_s)
+      @browser.navigate.to("about:blank")
     end
   end
 
@@ -144,6 +150,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     @browser.quit if @browser
   rescue Errno::ECONNREFUSED
     # Browser must have already gone
+  ensure
+    @browser = nil
   end
 
   def invalid_element_errors

@@ -1,10 +1,17 @@
 require 'spec_helper'
+require "selenium-webdriver"
 
-module TestSessions
-  Selenium = Capybara::Session.new(:selenium, TestApp)
+Capybara.register_driver :selenium_focus do |app|
+  profile = Selenium::WebDriver::Firefox::Profile.new
+  profile["focusmanager.testmode"] = true
+  Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile)
 end
 
-Capybara::SpecHelper.run_specs TestSessions::Selenium, "selenium", :skip => [
+module TestSessions
+  Selenium = Capybara::Session.new(:selenium_focus, TestApp)
+end
+
+Capybara::SpecHelper.run_specs TestSessions::Selenium, "selenium", :capybara_skip => [
   :response_headers,
   :status_code,
   :trigger
@@ -18,13 +25,21 @@ describe Capybara::Session do
 
     describe '#driver' do
       it "should be a selenium driver" do
-        @session.driver.should be_an_instance_of(Capybara::Selenium::Driver)
+        expect(@session.driver).to be_an_instance_of(Capybara::Selenium::Driver)
       end
     end
 
     describe '#mode' do
       it "should remember the mode" do
-        @session.mode.should == :selenium
+        expect(@session.mode).to eq(:selenium_focus)
+      end
+    end
+
+    describe "#reset!" do
+      it "freshly reset session should not be touched" do
+        @session.instance_variable_set(:@touched, true)
+        @session.reset!
+        expect(@session.instance_variable_get(:@touched)).to eq false
       end
     end
 
@@ -40,13 +55,30 @@ describe Capybara::Session do
 
       it "should have return code 1 when running selenium_driver_rspec_failure.rb" do
         `rspec spec/fixtures/selenium_driver_rspec_failure.rb`
-        $?.exitstatus.should be 1
+        expect($?.exitstatus).to be 1
       end
 
       it "should have return code 0 when running selenium_driver_rspec_success.rb" do
         `rspec spec/fixtures/selenium_driver_rspec_success.rb`
-        $?.exitstatus.should be 0
+        expect($?.exitstatus).to be 0
       end
     end
   end
 end
+
+describe Capybara::Selenium::Driver do
+  before do
+    @driver = Capybara::Selenium::Driver.new(TestApp, browser: :firefox)
+  end
+  
+  describe '#quit' do
+    it "should reset browser when quit" do
+      expect(@driver.browser).to be
+      @driver.quit
+      #access instance variable directly so we don't create a new browser instance
+      expect(@driver.instance_variable_get(:@browser)).to be_nil
+    end
+  end
+end
+
+

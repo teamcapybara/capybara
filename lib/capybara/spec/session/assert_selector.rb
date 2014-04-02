@@ -70,6 +70,12 @@ Capybara::SpecHelper.spec '#assert_selector' do
   end
 end
 
+Capybara::SpecHelper.spec '#refute_selector' do
+  it "should be an alias of #assert_no_selector" do
+    expect(Capybara::Node::Matchers.instance_method(:refute_selector)).to eq Capybara::Node::Matchers.instance_method(:assert_no_selector)
+  end
+end
+
 Capybara::SpecHelper.spec '#assert_no_selector' do
   before do
     @session.visit('/with_html')

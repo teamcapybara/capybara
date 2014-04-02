@@ -11,49 +11,56 @@ Capybara::SpecHelper.spec '#click_link' do
 
   it "casts to string" do
     @session.click_link(:'foo')
-    @session.should have_content('Another World')
+    expect(@session).to have_content('Another World')
+  end
+
+  it "raises any errors caught inside the server", :requires => [:server] do
+    quietly { @session.visit("/error") }
+    expect do
+      @session.click_link('foo')
+    end.to raise_error(TestApp::TestAppError)
   end
 
   context "with id given" do
     it "should take user to the linked page" do
       @session.click_link('foo')
-      @session.should have_content('Another World')
+      expect(@session).to have_content('Another World')
     end
   end
 
   context "with text given" do
     it "should take user to the linked page" do
       @session.click_link('labore')
-      @session.should have_content('Bar')
+      expect(@session).to have_content('Bar')
     end
 
     it "should accept partial matches" do
       @session.click_link('abo')
-      @session.should have_content('Bar')
+      expect(@session).to have_content('Bar')
     end
   end
 
   context "with title given" do
     it "should take user to the linked page" do
       @session.click_link('awesome title')
-      @session.should have_content('Bar')
+      expect(@session).to have_content('Bar')
     end
 
     it "should accept partial matches" do
       @session.click_link('some titl')
-      @session.should have_content('Bar')
+      expect(@session).to have_content('Bar')
     end
   end
 
   context "with alternative text given to a contained image" do
     it "should take user to the linked page" do
       @session.click_link('awesome image')
-      @session.should have_content('Bar')
+      expect(@session).to have_content('Bar')
     end
 
     it "should accept partial matches" do
       @session.click_link('some imag')
-      @session.should have_content('Bar')
+      expect(@session).to have_content('Bar')
     end
   end
 
@@ -69,7 +76,7 @@ Capybara::SpecHelper.spec '#click_link' do
   context "with :href option given" do
     it "should find links with valid href" do
       @session.click_link('labore', :href => '/with_simple_html')
-      @session.should have_content('Bar')
+      expect(@session).to have_content('Bar')
     end
 
     it "should raise error if link wasn't found" do
@@ -80,46 +87,46 @@ Capybara::SpecHelper.spec '#click_link' do
   it "should follow relative links" do
     @session.visit('/')
     @session.click_link('Relative')
-    @session.should have_content('This is a test')
+    expect(@session).to have_content('This is a test')
   end
 
   it "should follow protocol relative links" do
     @session.click_link('Protocol')
-    @session.should have_content('Another World')
+    expect(@session).to have_content('Another World')
   end
 
   it "should follow redirects" do
     @session.click_link('Redirect')
-    @session.should have_content('You landed')
+    expect(@session).to have_content('You landed')
   end
 
   it "should follow redirects" do
     @session.click_link('BackToMyself')
-    @session.should have_content('This is a test')
+    expect(@session).to have_content('This is a test')
   end
 
   it "should add query string to current URL with naked query string" do
     @session.click_link('Naked Query String')
-    @session.should have_content('Query String sent')
+    expect(@session).to have_content('Query String sent')
   end
 
   it "should do nothing on anchor links" do
     @session.fill_in("test_field", :with => 'blah')
     @session.click_link('Normal Anchor')
-    @session.find_field("test_field").value.should == 'blah'
+    expect(@session.find_field("test_field").value).to eq('blah')
     @session.click_link('Blank Anchor')
-    @session.find_field("test_field").value.should == 'blah'
+    expect(@session.find_field("test_field").value).to eq('blah')
   end
 
   it "should do nothing on URL+anchor links for the same page" do
     @session.fill_in("test_field", :with => 'blah')
     @session.click_link('Anchor on same page')
-    @session.find_field("test_field").value.should == 'blah'
+    expect(@session.find_field("test_field").value).to eq('blah')
   end
 
   it "should follow link on URL+anchor links for a different page" do
     @session.click_link('Anchor on different page')
-    @session.should have_content('Bar')
+    expect(@session).to have_content('Bar')
   end
 
   it "raise an error with links with no href" do
@@ -131,7 +138,7 @@ Capybara::SpecHelper.spec '#click_link' do
   context "with :exact option" do
     it "should accept partial matches when false" do
       @session.click_link('abo', :exact => false)
-      @session.should have_content('Bar')
+      expect(@session).to have_content('Bar')
     end
 
     it "should not accept partial matches when true" do

@@ -68,7 +68,11 @@ module Capybara
       #
       #     page.assert_selector('p#foo', :count => 4)
       #
-      # This will check if the expression occurs exactly 4 times.
+      # This will check if the expression occurs exactly 4 times. See
+      # {Capybara::Node::Finders#all} for other available result size options.
+      #
+      # If a :count of 0 is specified, it will behave like {#assert_no_selector};
+      # however, use of that method is preferred over this one.
       #
       # It also accepts all options that {Capybara::Node::Finders#all} accepts,
       # such as :text and :visible.
@@ -88,7 +92,7 @@ module Capybara
         query = Capybara::Query.new(*args)
         synchronize(query.wait) do
           result = all(*args)
-          result.matches_count? or raise Capybara::ExpectationNotMet, result.failure_message
+          raise Capybara::ExpectationNotMet, result.failure_message if result.size == 0 && !Capybara::Helpers.expects_none?(query.options)
         end
         return true
       end
@@ -98,17 +102,34 @@ module Capybara
       # Asserts that a given selector is not on the page or current node.
       # Usage is identical to Capybara::Node::Matchers#assert_selector
       #
+      # Query options such as :count, :minimum, :maximum, and :between are
+      # considered to be an integral part of the selector. This will return
+      # true, for example, if a page contains 4 anchors but the query expects 5:
+      #
+      #     page.assert_no_selector('a', :minimum => 1) # Found, raises Capybara::ExpectationNotMet
+      #     page.assert_no_selector('a', :count => 4)   # Found, raises Capybara::ExpectationNotMet
+      #     page.assert_no_selector('a', :count => 5)   # Not Found, returns true
+      #
       # @param (see Capybara::Node::Finders#assert_selector)
       # @raise [Capybara::ExpectationNotMet]      If the selector exists
       #
       def assert_no_selector(*args)
         query = Capybara::Query.new(*args)
         synchronize(query.wait) do
-          result = all(*args)
-          result.matches_count? and raise Capybara::ExpectationNotMet, result.negative_failure_message
+          begin
+            result = all(*args)
+          rescue Capybara::ExpectationNotMet => e
+            return true
+          else
+            if result.size > 0 || (result.size == 0 && Capybara::Helpers.expects_none?(query.options))
+              raise(Capybara::ExpectationNotMet, result.negative_failure_message)
+            end
+          end
         end
         return true
       end
+
+      alias_method :refute_selector, :assert_no_selector
 
       ##
       #
@@ -469,7 +490,7 @@ module Capybara
         content, options = args
         count = Capybara::Helpers.normalize_whitespace(text(type)).scan(Capybara::Helpers.to_regexp(content)).count
 
-        Capybara::Helpers.matches_count?(count, options || {})
+        Capybara::Helpers.matches_count?(count, {:minimum=>1}.merge(options || {}))
       end
     end
   end

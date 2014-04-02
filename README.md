@@ -23,10 +23,11 @@ GitHub): http://groups.google.com/group/ruby-capybara
 
 ## Setup
 
-Capybara requires Ruby 1.9.3 or later. To install, type:
+Capybara requires Ruby 1.9.3 or later. To install, add this line to your
+`Gemfile` and run `bundle install`:
 
-```bash
-gem install capybara
+```ruby
+gem 'capybara'
 ```
 
 If the application that you are testing is a Rails app, add this line to your test helper file:
@@ -209,7 +210,7 @@ end
 Set up your base class as with Test::Unit. (On Rails, the right base class
 could be something other than ActionDispatch::IntegrationTest.)
 
-The capybara_minitest_spec gem ([Github](https://github.com/ordinaryzelig/capybara_minitest_spec),
+The capybara_minitest_spec gem ([GitHub](https://github.com/ordinaryzelig/capybara_minitest_spec),
 [rubygems.org](https://rubygems.org/gems/capybara_minitest_spec)) provides MiniTest::Spec
 expectations for Capybara. For example:
 
@@ -327,7 +328,7 @@ Capybara heavily uses XPath, which doesn't support case insensitivity.
 ### Navigating
 
 You can use the
-[#visit](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#visit-instance_method)
+<tt>[visit](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#visit-instance_method)</tt>
 method to navigate to other pages:
 
 ```ruby
@@ -342,7 +343,7 @@ You can get the [current path](http://rubydoc.info/github/jnicklas/capybara/mast
 of the browsing session for test assertions:
 
 ```ruby
-current_path.should == post_comments_path(post)
+expect(current_path).to eq(post_comments_path(post))
 ```
 
 ### Clicking links and buttons
@@ -399,12 +400,12 @@ has_selector?`. Read the section on asynchronous JavaScript for an explanation.
 You can use these with RSpec's magic matchers:
 
 ```ruby
-page.should have_selector('table tr')
-page.should have_selector(:xpath, '//table/tr')
+expect(page).to have_selector('table tr')
+expect(page).to have_selector(:xpath, '//table/tr')
 
-page.should have_xpath('//table/tr')
-page.should have_css('table tr.foo')
-page.should have_content('foo')
+expect(page).to have_xpath('//table/tr')
+expect(page).to have_css('table tr.foo')
+expect(page).to have_content('foo')
 ```
 
 ### Finding
@@ -431,7 +432,7 @@ to specific parts of the page:
 
 ```ruby
 find('#navigation').click_link('Home')
-find('#navigation').should have_button('Sign out')
+expect(find('#navigation')).to have_button('Sign out')
 ```
 
 ### Scoping
@@ -451,8 +452,6 @@ within(:xpath, "//li[@id='employee']") do
   fill_in 'Name', :with => 'Jimmy'
 end
 ```
-
-**Note**: `within` will scope the actions to the _first_ (not _any_) element that matches the selector.
 
 There are special methods for restricting the scope to a specific fieldset,
 identified by either an id or the text of the fieldset's legend tag, and to a
@@ -596,7 +595,7 @@ When issuing instructions to the DSL such as:
 ```ruby
 click_link('foo')
 click_link('bar')
-page.should have_content('baz')
+expect(page).to have_content('baz')
 ```
 
 If clicking on the *foo* link triggers an asynchronous process, such as
@@ -628,15 +627,15 @@ Capybara's Rspec matchers, however, are smart enough to handle either form.
 The two following statements are functionally equivalent:
 
 ```ruby
-page.should_not have_xpath('a')
-page.should have_no_xpath('a')
+expect(page).not_to have_xpath('a')
+expect(page).to have_no_xpath('a')
 ```
 
 Capybara's waiting behaviour is quite advanced, and can deal with situations
 such as the following line of code:
 
 ```ruby
-find('#sidebar').find('h1').should have_content('Something')
+expect(find('#sidebar').find('h1')).to have_content('Something')
 ```
 
 Even if JavaScript causes `#sidebar` to disappear off the page, Capybara

@@ -40,7 +40,15 @@ module Capybara
       def click
         raise NotImplementedError
       end
-
+      
+      def right_click
+        raise NotImplmentedError
+      end
+      
+      def double_click
+        raise NotImplementedError
+      end
+      
       def hover
         raise NotImplementedError
       end

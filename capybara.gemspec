@@ -37,31 +37,15 @@ Gem::Specification.new do |s|
   s.add_development_dependency("cucumber", [">= 0.10.5"])
   s.add_development_dependency("rake")
   s.add_development_dependency("pry")
-
+  
+  if RUBY_ENGINE == 'rbx' then
+    s.add_development_dependency("racc")
+    s.add_development_dependency("json")
+    s.add_development_dependency("rubysl")
+  end
+  
   if File.exist?("gem-private_key.pem")
     s.signing_key = 'gem-private_key.pem'
   end
   s.cert_chain = ['gem-public_cert.pem']
-
-  s.post_install_message = <<-MESSAGE
-IMPORTANT! Some of the defaults have changed in Capybara 2.1. If you're experiencing failures,
-please revert to the old behaviour by setting:
-
-    Capybara.configure do |config|
-      config.match = :one
-      config.exact_options = true
-      config.ignore_hidden_elements = true
-      config.visible_text_only = true
-    end
-
-If you're migrating from Capybara 1.x, try:
-
-    Capybara.configure do |config|
-      config.match = :prefer_exact
-      config.ignore_hidden_elements = false
-    end
-
-Details here: http://www.elabs.se/blog/60-introducing-capybara-2-1
-
-  MESSAGE
 end

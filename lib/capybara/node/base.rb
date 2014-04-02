@@ -40,14 +40,14 @@ module Capybara
 
       ##
       #
-      # This method is Capybara's primary defence agains asynchronicity
+      # This method is Capybara's primary defence against asynchronicity
       # problems. It works by attempting to run a given block of code until it
       # succeeds. The exact behaviour of this method depends on a number of
       # factors. Basically there are certain exceptions which, when raised
       # from the block, instead of bubbling up, are caught, and the block is
       # re-run.
       #
-      # Certain drivers, such as RackTest, have no support for aynchronous
+      # Certain drivers, such as RackTest, have no support for asynchronous
       # processes, these drivers run the block, and any error raised bubbles up
       # immediately. This allows faster turn around in the case where an
       # expectation fails.
@@ -61,7 +61,7 @@ module Capybara
       #
       # As long as any of these exceptions are thrown, the block is re-run,
       # until a certain amount of time passes. The amount of time defaults to
-      # {Capybara.default_wait_time} and can be overriden through the `seconds`
+      # {Capybara.default_wait_time} and can be overridden through the `seconds`
       # argument. This time is compared with the system time to see how much
       # time has passed. If the return value of `Time.now` is stubbed out,
       # Capybara will raise `Capybara::FrozenInTime`.
@@ -80,6 +80,7 @@ module Capybara
           begin
             yield
           rescue => e
+            session.raise_server_error!
             raise e unless driver.wait?
             raise e unless catch_error?(e)
             raise e if (Time.now - start_time) >= seconds

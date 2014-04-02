@@ -6,183 +6,191 @@ Capybara::SpecHelper.spec "node" do
   it "should act like a session object" do
     @session.visit('/form')
     @form = @session.find(:css, '#get-form')
-    @form.should have_field('Middle Name')
-    @form.should have_no_field('Languages')
+    expect(@form).to have_field('Middle Name')
+    expect(@form).to have_no_field('Languages')
     @form.fill_in('Middle Name', :with => 'Monkey')
     @form.click_button('med')
-    extract_results(@session)['middle_name'].should == 'Monkey'
+    expect(extract_results(@session)['middle_name']).to eq('Monkey')
   end
 
   it "should scope CSS selectors" do
-    @session.find(:css, '#second').should have_no_css('h1')
+    expect(@session.find(:css, '#second')).to have_no_css('h1')
   end
 
   describe "#parent" do
     it "should have a reference to its parent if there is one" do
       @node = @session.find(:css, '#first')
-      @node.parent.should == @node.session.document
-      @node.find(:css, '#foo').parent.should == @node
+      expect(@node.parent).to eq(@node.session.document)
+      expect(@node.find(:css, '#foo').parent).to eq(@node)
     end
   end
 
   describe "#text" do
     it "should extract node texts" do
-      @session.all('//a')[0].text.should == 'labore'
-      @session.all('//a')[1].text.should == 'ullamco'
+      expect(@session.all('//a')[0].text).to eq('labore')
+      expect(@session.all('//a')[1].text).to eq('ullamco')
     end
 
     it "should return document text on /html selector" do
       @session.visit('/with_simple_html')
-      @session.all('/html')[0].text.should == 'Bar'
+      expect(@session.all('/html')[0].text).to eq('Bar')
     end
   end
 
   describe "#[]" do
     it "should extract node attributes" do
-      @session.all('//a')[0][:class].should == 'simple'
-      @session.all('//a')[1][:id].should == 'foo'
-      @session.all('//input')[0][:type].should == 'text'
+      expect(@session.all('//a')[0][:class]).to eq('simple')
+      expect(@session.all('//a')[1][:id]).to eq('foo')
+      expect(@session.all('//input')[0][:type]).to eq('text')
     end
 
     it "should extract boolean node attributes" do
-      @session.find('//input[@id="checked_field"]')[:checked].should be_true
+      expect(@session.find('//input[@id="checked_field"]')[:checked]).to be_truthy
     end
   end
 
   describe "#value" do
     it "should allow retrieval of the value" do
-      @session.find('//textarea[@id="normal"]').value.should == 'banana'
+      expect(@session.find('//textarea[@id="normal"]').value).to eq('banana')
     end
 
     it "should not swallow extra newlines in textarea" do
-      @session.find('//textarea[@id="additional_newline"]').value.should == "\nbanana"
+      expect(@session.find('//textarea[@id="additional_newline"]').value).to eq("\nbanana")
     end
 
     it "should not swallow leading newlines for set content in textarea" do
       @session.find('//textarea[@id="normal"]').set("\nbanana")
-      @session.find('//textarea[@id="normal"]').value.should == "\nbanana"
+      expect(@session.find('//textarea[@id="normal"]').value).to eq("\nbanana")
     end
 
     it "return any HTML content in textarea" do
       @session.find('//textarea[1]').set("some <em>html</em> here")
-      @session.find('//textarea[1]').value.should == "some <em>html</em> here"
+      expect(@session.find('//textarea[1]').value).to eq("some <em>html</em> here")
     end
+    
+    it "defaults to 'on' for checkbox" do
+      @session.visit('/form')
+      expect(@session.find('//input[@id="valueless_checkbox"]').value).to eq('on')
+    end
+
+    it "defaults to 'on' for radio buttons" do
+      @session.visit('/form')
+      expect(@session.find('//input[@id="valueless_radio"]').value).to eq('on')
+    end    
   end
 
   describe "#set" do
     it "should allow assignment of field value" do
-      @session.first('//input').value.should == 'monkey'
+      expect(@session.first('//input').value).to eq('monkey')
       @session.first('//input').set('gorilla')
-      @session.first('//input').value.should == 'gorilla'
+      expect(@session.first('//input').value).to eq('gorilla')
     end
 
     it "should fill the field even if the caret was not at the end", :requires => [:js] do
       @session.execute_script("var el = document.getElementById('test_field'); el.focus(); el.setSelectionRange(0, 0);")
       @session.first('//input').set('')
-      @session.first('//input').value.should == ''
+      expect(@session.first('//input').value).to eq('')
     end
 
     it "should not set if the text field is readonly" do
-      @session.first('//input[@readonly]').value.should == 'should not change'
-      Kernel.should_receive(:warn).with('Attempt to set readonly field')
+      expect(@session.first('//input[@readonly]').value).to eq('should not change')
       @session.first('//input[@readonly]').set('changed')
-      @session.first('//input[@readonly]').value.should == 'should not change'
+      expect(@session.first('//input[@readonly]').value).to eq('should not change')
     end
 
     it "should not set if the textarea is readonly" do
-      @session.first('//textarea[@readonly]').value.should == 'textarea should not change'
-      Kernel.should_receive(:warn).with('Attempt to set readonly field')
+      expect(@session.first('//textarea[@readonly]').value).to eq('textarea should not change')
       @session.first('//textarea[@readonly]').set('changed')
-      @session.first('//textarea[@readonly]').value.should == 'textarea should not change'
+      expect(@session.first('//textarea[@readonly]').value).to eq('textarea should not change')
     end
 
     it 'should allow me to change the contents of a contenteditable element', :requires => [:js] do
       @session.visit('/with_js')
       @session.find(:css,'#existing_content_editable').set('WYSIWYG')
-      @session.find(:css,'#existing_content_editable').text.should == 'WYSIWYG'
+      expect(@session.find(:css,'#existing_content_editable').text).to eq('WYSIWYG')
     end
 
     it 'should allow me to set the contents of a contenteditable element', :requires => [:js] do
       @session.visit('/with_js')
       @session.find(:css,'#blank_content_editable').set('WYSIWYG')
-      @session.find(:css,'#blank_content_editable').text.should == 'WYSIWYG'
+      expect(@session.find(:css,'#blank_content_editable').text).to eq('WYSIWYG')
     end
 
     it 'should allow me to change the contents of a contenteditable elements child', :requires => [:js] do
       pending "Selenium doesn't like editing nested contents"
       @session.visit('/with_js')
       @session.find(:css,'#existing_content_editable_child').set('WYSIWYG')
-      @session.find(:css,'#existing_content_editable_child').text.should == 'WYSIWYG'
+      expect(@session.find(:css,'#existing_content_editable_child').text).to eq('WYSIWYG')
     end
   end
 
   describe "#tag_name" do
     it "should extract node tag name" do
-      @session.all('//a')[0].tag_name.should == 'a'
-      @session.all('//a')[1].tag_name.should == 'a'
-      @session.all('//p')[1].tag_name.should == 'p'
+      expect(@session.all('//a')[0].tag_name).to eq('a')
+      expect(@session.all('//a')[1].tag_name).to eq('a')
+      expect(@session.all('//p')[1].tag_name).to eq('p')
     end
   end
 
   describe "#disabled?" do
     it "should extract disabled node" do
       @session.visit('/form')
-      @session.find('//input[@id="customer_name"]').should be_disabled
-      @session.find('//input[@id="customer_email"]').should_not be_disabled
+      expect(@session.find('//input[@id="customer_name"]')).to be_disabled
+      expect(@session.find('//input[@id="customer_email"]')).not_to be_disabled
     end
 
     it "should see disabled options as disabled" do
       @session.visit('/form')
-      @session.find('//select[@id="form_title"]/option[1]').should_not be_disabled
-      @session.find('//select[@id="form_title"]/option[@disabled]').should be_disabled
+      expect(@session.find('//select[@id="form_title"]/option[1]')).not_to be_disabled
+      expect(@session.find('//select[@id="form_title"]/option[@disabled]')).to be_disabled
     end
 
     it "should see enabled options in disabled select as disabled" do
       @session.visit('/form')
-      @session.find('//select[@id="form_disabled_select"]/option').should be_disabled
-      @session.find('//select[@id="form_title"]/option[1]').should_not be_disabled
+      expect(@session.find('//select[@id="form_disabled_select"]/option')).to be_disabled
+      expect(@session.find('//select[@id="form_title"]/option[1]')).not_to be_disabled
     end
   end
 
   describe "#visible?" do
     it "should extract node visibility" do
       Capybara.ignore_hidden_elements = false
-      @session.first('//a').should be_visible
+      expect(@session.first('//a')).to be_visible
 
-      @session.find('//div[@id="hidden"]').should_not be_visible
-      @session.find('//div[@id="hidden_via_ancestor"]').should_not be_visible
-      @session.find('//div[@id="hidden_attr"]').should_not be_visible
-      @session.find('//a[@id="hidden_attr_via_ancestor"]').should_not be_visible
+      expect(@session.find('//div[@id="hidden"]')).not_to be_visible
+      expect(@session.find('//div[@id="hidden_via_ancestor"]')).not_to be_visible
+      expect(@session.find('//div[@id="hidden_attr"]')).not_to be_visible
+      expect(@session.find('//a[@id="hidden_attr_via_ancestor"]')).not_to be_visible
     end
   end
 
   describe "#checked?" do
     it "should extract node checked state" do
       @session.visit('/form')
-      @session.find('//input[@id="gender_female"]').should be_checked
-      @session.find('//input[@id="gender_male"]').should_not be_checked
-      @session.first('//h1').should_not be_checked
+      expect(@session.find('//input[@id="gender_female"]')).to be_checked
+      expect(@session.find('//input[@id="gender_male"]')).not_to be_checked
+      expect(@session.first('//h1')).not_to be_checked
     end
   end
 
   describe "#selected?" do
     it "should extract node selected state" do
       @session.visit('/form')
-      @session.find('//option[@value="en"]').should be_selected
-      @session.find('//option[@value="sv"]').should_not be_selected
-      @session.first('//h1').should_not be_selected
+      expect(@session.find('//option[@value="en"]')).to be_selected
+      expect(@session.find('//option[@value="sv"]')).not_to be_selected
+      expect(@session.first('//h1')).not_to be_selected
     end
   end
 
   describe "#==" do
     it "preserve object identity" do
-      (@session.find('//h1') == @session.find('//h1')).should be_true
-      (@session.find('//h1') === @session.find('//h1')).should be_true
-      (@session.find('//h1').eql? @session.find('//h1')).should be_false
+      expect(@session.find('//h1') == @session.find('//h1')).to be true
+      expect(@session.find('//h1') === @session.find('//h1')).to be true
+      expect(@session.find('//h1').eql? @session.find('//h1')).to be false
     end
 
     it "returns false for unrelated object" do
-      (@session.find('//h1') == "Not Capybara::Node::Base").should be_false
+      expect(@session.find('//h1') == "Not Capybara::Node::Base").to be false
     end
   end
 
@@ -190,7 +198,7 @@ Capybara::SpecHelper.spec "node" do
     it "should allow triggering of custom JS events" do
       @session.visit('/with_js')
       @session.find(:css, '#with_focus_event').trigger(:focus)
-      @session.should have_css('#focus_event_triggered')
+      expect(@session).to have_css('#focus_event_triggered')
     end
   end
 
@@ -200,18 +208,34 @@ Capybara::SpecHelper.spec "node" do
       element = @session.find('//div[@id="drag"]')
       target = @session.find('//div[@id="drop"]')
       element.drag_to(target)
-      @session.find('//div[contains(., "Dropped!")]').should_not be_nil
+      expect(@session.find('//div[contains(., "Dropped!")]')).not_to be_nil
     end
   end
 
   describe '#hover', :requires => [:hover] do
     it "should allow hovering on an element" do
       @session.visit('/with_hover')
-      @session.find(:css,'.hidden_until_hover', :visible => false).should_not be_visible
+      expect(@session.find(:css,'.hidden_until_hover', :visible => false)).not_to be_visible
       @session.find(:css,'.wrapper').hover
-      @session.find(:css, '.hidden_until_hover', :visible => false).should be_visible
+      expect(@session.find(:css, '.hidden_until_hover', :visible => false)).to be_visible
     end
   end
+  
+  describe '#double_click', :requires => [:js] do
+    it "should double click an element" do
+      @session.visit('/with_js')
+      @session.find(:css, '#click-test').double_click
+      expect(@session.find(:css, '#has-been-double-clicked')).to be
+    end
+  end
+
+  describe '#right_click', :requires => [:js] do
+    it "should double click an element" do
+      @session.visit('/with_js')
+      @session.find(:css, '#click-test').right_click
+      expect(@session.find(:css, '#has-been-right-clicked')).to be
+    end
+  end  
 
   describe '#reload', :requires => [:js] do
     context "without automatic reload" do
@@ -221,8 +245,8 @@ Capybara::SpecHelper.spec "node" do
         node = @session.find(:css, '#reload-me')
         @session.click_link('Reload!')
         sleep(0.3)
-        node.reload.text.should == 'has been reloaded'
-        node.text.should == 'has been reloaded'
+        expect(node.reload.text).to eq('has been reloaded')
+        expect(node.text).to eq('has been reloaded')
       end
 
       it "should reload a parent node" do
@@ -230,8 +254,8 @@ Capybara::SpecHelper.spec "node" do
         node = @session.find(:css, '#reload-me').find(:css, 'em')
         @session.click_link('Reload!')
         sleep(0.3)
-        node.reload.text.should == 'has been reloaded'
-        node.text.should == 'has been reloaded'
+        expect(node.reload.text).to eq('has been reloaded')
+        expect(node.text).to eq('has been reloaded')
       end
 
       it "should not automatically reload" do
@@ -250,7 +274,7 @@ Capybara::SpecHelper.spec "node" do
         node = @session.find(:css, '#reload-me')
         @session.click_link('Reload!')
         sleep(0.3)
-        node.text.should == 'has been reloaded'
+        expect(node.text).to eq('has been reloaded')
       end
 
       it "should reload a parent node automatically" do
@@ -258,7 +282,7 @@ Capybara::SpecHelper.spec "node" do
         node = @session.find(:css, '#reload-me').find(:css, 'em')
         @session.click_link('Reload!')
         sleep(0.3)
-        node.text.should == 'has been reloaded'
+        expect(node.text).to eq('has been reloaded')
       end
 
       it "should reload a node automatically when using find" do
@@ -266,7 +290,7 @@ Capybara::SpecHelper.spec "node" do
         node = @session.find(:css, '#reload-me')
         @session.click_link('Reload!')
         sleep(0.3)
-        node.find(:css, 'a').text.should == 'has been reloaded'
+        expect(node.find(:css, 'a').text).to eq('has been reloaded')
       end
 
       it "should not reload nodes which haven't been found" do
@@ -283,7 +307,7 @@ Capybara::SpecHelper.spec "node" do
         node = @session.find(:css, 'em', :text => "reloaded")
         @session.click_link('Reload!')
         sleep(1)
-        node.text.should == 'has been reloaded'
+        expect(node.text).to eq('has been reloaded')
       end
     end
   end

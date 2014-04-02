@@ -17,7 +17,7 @@ describe Capybara::Result do
   end
 
   it "has a length" do
-    result.length.should == 4
+    expect(result.length).to eq(4)
   end
 
   it "has a first element" do
@@ -28,28 +28,38 @@ describe Capybara::Result do
     result.last.text == 'Delta'
   end
 
+  it 'can supports values_at method' do
+    expect(result.values_at(0, 2).map(&:text)).to eq(%w(Alpha Gamma))
+  end
+
   it "can return an element by its index" do
-    result.at(1).text.should == 'Beta'
-    result[2].text.should == 'Gamma'
+    expect(result.at(1).text).to eq('Beta')
+    expect(result[2].text).to eq('Gamma')
   end
 
   it "can be mapped" do
-    result.map(&:text).should == %w(Alpha Beta Gamma Delta)
+    expect(result.map(&:text)).to eq(%w(Alpha Beta Gamma Delta))
   end
 
   it "can be selected" do
-    result.select do |element|
+    expect(result.select do |element|
       element.text.include? 't'
-    end.length.should == 2
+    end.length).to eq(2)
   end
 
   it "can be reduced" do
-    result.reduce('') do |memo, element|
+    expect(result.reduce('') do |memo, element|
       memo += element.text[0]
-    end.should == 'ABGD'
+    end).to eq('ABGD')
   end
 
   it 'can be sampled' do
-    result.should include(result.sample)
+    expect(result).to include(result.sample)
+  end
+
+  it 'can be indexed' do
+    expect(result.index do |el|
+      el.text == 'Gamma'
+    end).to eq(2)
   end
 end

@@ -13,6 +13,7 @@ class TestApp < Sinatra::Base
   # Also check lib/capybara/spec/views/*.erb for pages not listed here
 
   get '/' do
+    response.set_cookie('capybara', { value: 'root cookie', domain: request.host, path: request.path} )
     'Hello world! <a href="with_html">Relative</a>'
   end
 

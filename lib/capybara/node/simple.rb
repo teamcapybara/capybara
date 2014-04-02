@@ -82,6 +82,8 @@ module Capybara
             option = native.xpath(".//option[@selected='selected']").first || native.xpath(".//option").first
             option[:value] || option.content if option
           end
+        elsif tag_name == 'input' && %w(radio checkbox).include?(native[:type])
+          native[:value] || 'on'
         else
           native[:value]
         end

@@ -120,6 +120,22 @@ module Capybara
 
       ##
       #
+      # Right Click the Element
+      #
+      def right_click
+        synchronize { base.right_click }
+      end
+
+      ##
+      #
+      # Double Click the Element
+      #
+      def double_click
+        synchronize { base.double_click }
+      end
+
+      ##
+      #
       # Hover on the Element
       #
       def hover

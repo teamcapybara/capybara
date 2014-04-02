@@ -14,8 +14,6 @@ module Capybara
   class NotSupportedByDriverError < CapybaraError; end
   class InfiniteRedirectError < CapybaraError; end
 
-  EMPTY_HTML_FILE_PATH = File.expand_path('./capybara/empty.html', File.dirname(__FILE__))
-
   class << self
     attr_accessor :asset_host, :app_host, :run_server, :default_host, :always_include_port
     attr_accessor :server_port, :exact, :match, :exact_options, :visible_text_only
@@ -41,7 +39,7 @@ module Capybara
     # [run_server = Boolean]              Whether to start a Rack server for the given Rack app (Default: true)
     # [default_selector = :css/:xpath]    Methods which take a selector use the given type by default (Default: CSS)
     # [default_wait_time = Integer]       The number of seconds to wait for asynchronous processes to finish (Default: 2)
-    # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: false)
+    # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: true)
     # [automatic_reload = Boolean]        Whether to automatically reload elements as Capybara is waiting (Default: true)
     # [save_and_open_page_path = String]  Where to put pages saved through save_and_open_page (Default: Dir.pwd)
     #
@@ -88,7 +86,7 @@ module Capybara
     #     find(:row, 3)
     #     page.find('table#myTable').find(:row, 3).text
     #     page.find('table#myTable').has_selector?(:row, 3)
-    #     within(:row, 3) { page.should have_content('$100.000') }
+    #     within(:row, 3) { expect(page).to have_content('$100.000') }
     #
     # Here is another example:
     #
@@ -120,7 +118,7 @@ module Capybara
     #
     # By default, Capybara will try to run webrick.
     #
-    # @yield [app, port]                      This block recieves a rack app and port and should run a Rack handler
+    # @yield [app, port]                      This block receives a rack app and port and should run a Rack handler
     #
     def server(&block)
       if block_given?

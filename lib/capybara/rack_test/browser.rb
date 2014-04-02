@@ -46,6 +46,7 @@ class Capybara::RackTest::Browser
     method.downcase! unless method.is_a? Symbol
 
     new_uri.path = request_path if path.start_with?("?")
+    new_uri.path = "/" if new_uri.path.empty?
     new_uri.path = request_path.sub(%r(/[^/]*$), '/') + new_uri.path unless new_uri.path.start_with?('/')
     new_uri.scheme ||= @current_scheme
     new_uri.host ||= @current_host
@@ -93,11 +94,11 @@ class Capybara::RackTest::Browser
   rescue Rack::Test::Error
     ""
   end
-  
+
   def title
     dom.xpath("//title").text
   end
-  
+
 protected
 
   def build_rack_mock_session
@@ -108,6 +109,6 @@ protected
   def request_path
     last_request.path
   rescue Rack::Test::Error
-    ""
+    "/"
   end
 end

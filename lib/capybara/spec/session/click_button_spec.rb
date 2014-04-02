@@ -11,31 +11,31 @@ Capybara::SpecHelper.spec '#click_button' do
 
   it "casts to string" do
     @session.click_button(:'Relative Action')
-    @session.current_path.should == '/relative'
-    extract_results(@session)['relative'].should == 'Relative Action'
+    expect(@session.current_path).to eq('/relative')
+    expect(extract_results(@session)['relative']).to eq('Relative Action')
   end
 
   context "with multiple values with the same name" do
     it "should use the latest given value" do
       @session.check('Terms of Use')
       @session.click_button('awesome')
-      extract_results(@session)['terms_of_use'].should == '1'
+      expect(extract_results(@session)['terms_of_use']).to eq('1')
     end
   end
 
   context "with a form that has a relative url as an action" do
     it "should post to the correct url" do
       @session.click_button('Relative Action')
-      @session.current_path.should == '/relative'
-      extract_results(@session)['relative'].should == 'Relative Action'
+      expect(@session.current_path).to eq('/relative')
+      expect(extract_results(@session)['relative']).to eq('Relative Action')
     end
   end
 
   context "with a form that has no action specified" do
     it "should post to the correct url" do
       @session.click_button('No Action')
-      @session.current_path.should == '/form'
-      extract_results(@session)['no_action'].should == 'No Action'
+      expect(@session.current_path).to eq('/form')
+      expect(extract_results(@session)['no_action']).to eq('No Action')
     end
   end
 
@@ -47,23 +47,23 @@ Capybara::SpecHelper.spec '#click_button' do
       end
 
       it "should serialise and submit search fields" do
-        @results['html5_search'].should == 'what are you looking for'
+        expect(@results['html5_search']).to eq('what are you looking for')
       end
 
       it "should serialise and submit email fields" do
-        @results['html5_email'].should == 'person@email.com'
+        expect(@results['html5_email']).to eq('person@email.com')
       end
 
       it "should serialise and submit url fields" do
-        @results['html5_url'].should == 'http://www.example.com'
+        expect(@results['html5_url']).to eq('http://www.example.com')
       end
 
       it "should serialise and submit tel fields" do
-        @results['html5_tel'].should == '911'
+        expect(@results['html5_tel']).to eq('911')
       end
 
       it "should serialise and submit color fields" do
-        @results['html5_color'].upcase.should == '#FFFFFF'
+        expect(@results['html5_color'].upcase).to eq('#FFFFFF')
       end
     end
 
@@ -74,70 +74,78 @@ Capybara::SpecHelper.spec '#click_button' do
       end
 
       it "should serialize and submit text fields" do
-        @results['first_name'].should == 'John'
+        expect(@results['first_name']).to eq('John')
       end
 
       it "should escape fields when submitting" do
-        @results['phone'].should == '+1 555 7021'
+        expect(@results['phone']).to eq('+1 555 7021')
       end
 
       it "should serialize and submit password fields" do
-        @results['password'].should == 'seeekrit'
+        expect(@results['password']).to eq('seeekrit')
       end
 
       it "should serialize and submit hidden fields" do
-        @results['token'].should == '12345'
+        expect(@results['token']).to eq('12345')
       end
 
       it "should not serialize fields from other forms" do
-        @results['middle_name'].should be_nil
+        expect(@results['middle_name']).to be_nil
       end
 
       it "should submit the button that was clicked, but not other buttons" do
-        @results['awesome'].should == 'awesome'
-        @results['crappy'].should be_nil
+        expect(@results['awesome']).to eq('awesome')
+        expect(@results['crappy']).to be_nil
       end
 
       it "should serialize radio buttons" do
-        @results['gender'].should == 'female'
+        expect(@results['gender']).to eq('female')
+      end
+
+      it "should default radio value to 'on' if none specified" do
+        expect(@results['valueless_radio']).to eq('on')
       end
 
       it "should serialize check boxes" do
-        @results['pets'].should include('dog', 'hamster')
-        @results['pets'].should_not include('cat')
+        expect(@results['pets']).to include('dog', 'hamster')
+        expect(@results['pets']).not_to include('cat')
+      end
+      
+      it "should default checkbox value to 'on' if none specififed" do
+        expect(@results['valueless_checkbox']).to eq('on')
       end
 
       it "should serialize text areas" do
-        @results['description'].should == 'Descriptive text goes here'
+        expect(@results['description']).to eq('Descriptive text goes here')
       end
 
       it "should serialize select tag with values" do
-        @results['locale'].should == 'en'
+        expect(@results['locale']).to eq('en')
       end
 
       it "should serialize select tag without values" do
-        @results['region'].should == 'Norway'
+        expect(@results['region']).to eq('Norway')
       end
 
       it "should serialize first option for select tag with no selection" do
-        @results['city'].should == 'London'
+        expect(@results['city']).to eq('London')
       end
 
       it "should not serialize a select tag without options" do
-        @results['tendency'].should be_nil
+        expect(@results['tendency']).to be_nil
       end
       
       it "should convert lf to cr/lf in submitted textareas" do
-        @results['newline'].should == "\r\nNew line after and before textarea tag\r\n"
+        expect(@results['newline']).to eq("\r\nNew line after and before textarea tag\r\n")
       end
       
       it "should not submit disabled fields" do
-        @results['disabled_text_field'].should be_nil
-        @results['disabled_textarea'].should be_nil
-        @results['disabled_checkbox'].should be_nil
-        @results['disabled_radio'].should be_nil
-        @results['disabled_select'].should be_nil
-        @results['disabled_file'].should be_nil
+        expect(@results['disabled_text_field']).to be_nil
+        expect(@results['disabled_textarea']).to be_nil
+        expect(@results['disabled_checkbox']).to be_nil
+        expect(@results['disabled_radio']).to be_nil
+        expect(@results['disabled_select']).to be_nil
+        expect(@results['disabled_file']).to be_nil
       end
     end
   end
@@ -145,24 +153,24 @@ Capybara::SpecHelper.spec '#click_button' do
   context "with id given on a submit button" do
     it "should submit the associated form" do
       @session.click_button('awe123')
-      extract_results(@session)['first_name'].should == 'John'
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
 
     it "should work with partial matches" do
       @session.click_button('Go')
-      @session.should have_content('You landed')
+      expect(@session).to have_content('You landed')
     end
   end
 
   context "with title given on a submit button" do
     it "should submit the associated form" do
       @session.click_button('What an Awesome Button')
-      extract_results(@session)['first_name'].should == 'John'
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
 
     it "should work with partial matches" do
       @session.click_button('What an Awesome')
-      extract_results(@session)['first_name'].should == 'John'
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
   end
 
@@ -173,19 +181,19 @@ Capybara::SpecHelper.spec '#click_button' do
     end
 
     it "should serialize and submit text fields" do
-      @results['outside_input'].should == 'outside_input'
+      expect(@results['outside_input']).to eq('outside_input')
     end
 
     it "should serialize text areas" do
-      @results['outside_textarea'].should == 'Some text here'
+      expect(@results['outside_textarea']).to eq('Some text here')
     end
 
     it "should serialize select tags" do
-      @results['outside_select'].should == 'Ruby'
+      expect(@results['outside_select']).to eq('Ruby')
     end
 
     it "should not serliaze fields associated with a different form" do
-      @results['for_form2'].should be_nil
+      expect(@results['for_form2']).to be_nil
     end
   end
 
@@ -197,12 +205,12 @@ Capybara::SpecHelper.spec '#click_button' do
     end
 
     it "should submit the associated form" do
-      @results['which_form'].should == 'form2'
+      expect(@results['which_form']).to eq('form2')
     end
 
     it "should submit the button that was clicked, but not other buttons" do
-      @results['outside_button'].should == 'outside_button'
-      @results['unused'].should be_nil
+      expect(@results['outside_button']).to eq('outside_button')
+      expect(@results['unused']).to be_nil
     end
   end
 
@@ -213,37 +221,37 @@ Capybara::SpecHelper.spec '#click_button' do
     end
 
     it "should submit the associated form" do
-      @results['which_form'].should == 'form1'
+      expect(@results['which_form']).to eq('form1')
     end
 
     it "should submit the button that was clicked, but not other buttons" do
-      @results['outside_submit'].should == 'outside_submit'
-      @results['submit_form1'].should be_nil
+      expect(@results['outside_submit']).to eq('outside_submit')
+      expect(@results['submit_form1']).to be_nil
     end
   end
 
   context "with submit button for form1 located within form2" do
     it "should submit the form associated with the button" do
       @session.click_button('other_form_button')
-      extract_results(@session)['which_form'].should == "form1"
+      expect(extract_results(@session)['which_form']).to eq("form1")
     end
   end
 
   context "with submit button not associated with any form" do
     it "should not error when clicked" do
-      lambda { @session.click_button('no_form_button') }.should_not raise_error
+      expect { @session.click_button('no_form_button') }.not_to raise_error
     end
   end
 
   context "with alt given on an image button" do
     it "should submit the associated form" do
       @session.click_button('oh hai thar')
-      extract_results(@session)['first_name'].should == 'John'
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
 
     it "should work with partial matches" do
       @session.click_button('hai')
-      extract_results(@session)['first_name'].should == 'John'
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
   end
   
@@ -251,82 +259,82 @@ Capybara::SpecHelper.spec '#click_button' do
   context "with value given on an image button" do
     it "should submit the associated form" do
       @session.click_button('okay')
-      extract_results(@session)['first_name'].should == 'John'
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
 
     it "should work with partial matches" do
       @session.click_button('kay')
-      extract_results(@session)['first_name'].should == 'John'
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
   end
 
   context "with id given on an image button" do
     it "should submit the associated form" do
       @session.click_button('okay556')
-      extract_results(@session)['first_name'].should == 'John'
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
   end
 
   context "with title given on an image button" do
     it "should submit the associated form" do
       @session.click_button('Okay 556 Image')
-      extract_results(@session)['first_name'].should == 'John'
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
 
     it "should work with partial matches" do
       @session.click_button('Okay 556')
-      extract_results(@session)['first_name'].should == 'John'
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
   end
 
   context "with text given on a button defined by <button> tag" do
     it "should submit the associated form" do
       @session.click_button('Click me')
-      extract_results(@session)['first_name'].should == 'John'
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
 
     it "should work with partial matches" do
       @session.click_button('Click')
-      extract_results(@session)['first_name'].should == 'John'
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
   end
 
  context "with id given on a button defined by <button> tag" do
     it "should submit the associated form" do
       @session.click_button('click_me_123')
-      extract_results(@session)['first_name'].should == 'John'
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
 
     it "should serialize and send GET forms" do
       @session.visit('/form')
       @session.click_button('med')
       @results = extract_results(@session)
-      @results['middle_name'].should == 'Darren'
-      @results['foo'].should be_nil
+      expect(@results['middle_name']).to eq('Darren')
+      expect(@results['foo']).to be_nil
     end
   end
 
  context "with value given on a button defined by <button> tag" do
     it "should submit the associated form" do
       @session.click_button('click_me')
-      extract_results(@session)['first_name'].should == 'John'
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
 
     it "should work with partial matches" do
       @session.click_button('ck_me')
-      extract_results(@session)['first_name'].should == 'John'
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
   end
 
   context "with title given on a button defined by <button> tag" do
     it "should submit the associated form" do
       @session.click_button('Click Title button')
-      extract_results(@session)['first_name'].should == 'John'
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
 
     it "should work with partial matches" do
       @session.click_button('Click Title')
-      extract_results(@session)['first_name'].should == 'John'
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
   end
   context "with a locator that doesn't exist" do
@@ -338,42 +346,51 @@ Capybara::SpecHelper.spec '#click_button' do
     end
   end
 
+  context "with formaction attribute on button" do
+    it "should submit to the formaction attribute" do
+      @session.click_button('Formaction button')
+      expect(@session.current_path).to eq '/form'
+      @results = extract_results(@session)
+      expect(@results['which_form']).to eq 'formaction form'
+    end
+  end
+
   it "should serialize and send valueless buttons that were clicked" do
     @session.click_button('No Value!')
     @results = extract_results(@session)
-    @results['no_value'].should_not be_nil
+    expect(@results['no_value']).not_to be_nil
   end
 
   it "should not send image buttons that were not clicked" do
     @session.click_button('Click me!')
     @results = extract_results(@session)
-    @results['okay'].should be_nil
+    expect(@results['okay']).to be_nil
   end
 
   it "should serialize and send GET forms" do
     @session.visit('/form')
     @session.click_button('med')
     @results = extract_results(@session)
-    @results['middle_name'].should == 'Darren'
-    @results['foo'].should be_nil
+    expect(@results['middle_name']).to eq('Darren')
+    expect(@results['foo']).to be_nil
   end
 
   it "should follow redirects" do
     @session.click_button('Go FAR')
-    @session.current_url.should match(%r{/landed$})
-    @session.should have_content('You landed')
+    expect(@session.current_url).to match(%r{/landed$})
+    expect(@session).to have_content('You landed')
   end
 
   it "should post pack to the same URL when no action given" do
     @session.visit('/postback')
     @session.click_button('With no action')
-    @session.should have_content('Postback')
+    expect(@session).to have_content('Postback')
   end
 
   it "should post pack to the same URL when blank action given" do
     @session.visit('/postback')
     @session.click_button('With blank action')
-    @session.should have_content('Postback')
+    expect(@session).to have_content('Postback')
   end
 
   it "ignores disabled buttons" do
@@ -396,21 +413,21 @@ Capybara::SpecHelper.spec '#click_button' do
     @session.click_button "awesome"
 
     addresses=extract_results(@session)["addresses"]
-    addresses.should have(2).addresses
+    expect(addresses.size).to eq(2)
 
-    addresses[0]["street"].should   == 'CDG'
-    addresses[0]["city"].should     == 'Paris'
-    addresses[0]["country"].should  == 'France'
+    expect(addresses[0]["street"]).to eq('CDG')
+    expect(addresses[0]["city"]).to eq('Paris')
+    expect(addresses[0]["country"]).to eq('France')
 
-    addresses[1]["street"].should   == 'PGS'
-    addresses[1]["city"].should     == 'Mikolaiv'
-    addresses[1]["country"].should  == 'Ukraine'
+    expect(addresses[1]["street"]).to eq('PGS')
+    expect(addresses[1]["city"]).to eq('Mikolaiv')
+    expect(addresses[1]["country"]).to eq('Ukraine')
   end
 
   context "with :exact option" do
     it "should accept partial matches when false" do
       @session.click_button('What an Awesome', :exact => false)
-      extract_results(@session)['first_name'].should == 'John'
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
 
     it "should not accept partial matches when true" do

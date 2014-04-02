@@ -51,15 +51,19 @@ module Capybara
         @actual.has_no_text?(type, content, options)
       end
 
-      def failure_message_for_should
+      def failure_message
         message = Capybara::Helpers.failure_message(description, options)
         message << " in #{format(@actual.text(type))}"
         message
       end
 
-      def failure_message_for_should_not
-        failure_message_for_should.sub(/(to find)/, 'not \1')
+      def failure_message_when_negated
+        failure_message.sub(/(to find)/, 'not \1')
       end
+
+      # RSpec 2 compatibility:
+      alias_method :failure_message_for_should, :failure_message
+      alias_method :failure_message_for_should_not, :failure_message_when_negated
 
       def description
         "text #{format(content)}"
@@ -88,13 +92,17 @@ module Capybara
         @actual.has_no_title?(title)
       end
 
-      def failure_message_for_should
+      def failure_message
         "expected there to be title #{title.inspect} in #{@actual.title.inspect}"
       end
 
-      def failure_message_for_should_not
+      def failure_message_when_negated
         "expected there not to be title #{title.inspect} in #{@actual.title.inspect}"
       end
+
+      # RSpec 2 compatibility:
+      alias_method :failure_message_for_should, :failure_message
+      alias_method :failure_message_for_should_not, :failure_message_when_negated
 
       def description
         "have title #{title.inspect}"

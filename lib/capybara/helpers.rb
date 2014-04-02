@@ -51,8 +51,10 @@ module Capybara
 
     ##
     #
-    # Checks if the given count matches the given count options. By default,
-    # when no options are given, count should be larger than zero.
+    # Checks if the given count matches the given count options.
+    # Defaults to true if no options are specified. If multiple
+    # options are provided, it tests that all conditions are met;
+    # however, if :count is supplied, all other options are ignored.
     #
     # @param [Integer] count     The actual number. Should be coercible via Integer()
     # @option [Range] between    Count must be within the given range
@@ -61,17 +63,23 @@ module Capybara
     # @option [Integer] minimum  Count must be larger than or equal to this value
     #
     def matches_count?(count, options={})
-      case
-      when options[:between]
-        options[:between] === count
-      when options[:count]
-        Integer(options[:count]) == count
-      when options[:maximum]
-        Integer(options[:maximum]) >= count
-      when options[:minimum]
-        Integer(options[:minimum]) <= count
+      return (Integer(options[:count]) == count)     if options[:count]
+      return false if options[:maximum] && (Integer(options[:maximum]) < count)
+      return false if options[:minimum] && (Integer(options[:minimum]) > count)
+      return false if options[:between] && !(options[:between] === count)
+      return true
+    end
+
+    ##
+    #
+    # Checks if a count of 0 is valid for the given options hash.
+    # Returns false if options hash does not specify any count options.
+    #
+    def expects_none?(options={})
+      if [:count, :maximum, :minimum, :between].any? { |k| options.has_key? k }
+        matches_count?(0,options)
       else
-        count > 0
+        false
       end
     end
 
@@ -104,7 +112,7 @@ module Capybara
     #
     # A poor man's `pluralize`. Given two declensions, one singular and one
     # plural, as well as a count, this will pick the correct declension. This
-    # way we can generate gramatically correct error message.
+    # way we can generate grammatically correct error message.
     #
     # @param [String] singular     The singular form of the word
     # @param [String] plural       The plural form of the word

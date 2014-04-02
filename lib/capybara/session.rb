@@ -19,7 +19,7 @@ module Capybara
   #
   #     session.fill_in('q', :with => 'Capybara')
   #     session.click_button('Search')
-  #     session.should have_content('Capybara')
+  #     expect(session).to have_content('Capybara')
   #
   # When using capybara/dsl, the Session is initialized automatically for you.
   #
@@ -34,11 +34,12 @@ module Capybara
       :has_no_field?, :has_checked_field?, :has_unchecked_field?,
       :has_no_table?, :has_table?, :unselect, :has_select?, :has_no_select?,
       :has_selector?, :has_no_selector?, :click_on, :has_no_checked_field?,
-      :has_no_unchecked_field?, :query, :assert_selector, :assert_no_selector
+      :has_no_unchecked_field?, :query, :assert_selector, :assert_no_selector,
+      :refute_selector
     ]
     SESSION_METHODS = [
       :body, :html, :source, :current_url, :current_host, :current_path,
-      :execute_script, :evaluate_script, :visit,
+      :execute_script, :evaluate_script, :visit, :go_back, :go_forward,
       :within, :within_fieldset, :within_table, :within_frame, :within_window,
       :save_page, :save_and_open_page, :save_screenshot,
       :reset_session!, :response_headers, :status_code,
@@ -77,15 +78,23 @@ module Capybara
     def reset!
       if @touched
         driver.reset!
-        @touched = false
         assert_no_selector :xpath, "/html/body/*"
+        @touched = false
       end
+      raise_server_error!
+    end
+    alias_method :cleanup!, :reset!
+    alias_method :reset_session!, :reset!
+
+    ##
+    #
+    # Raise errors encountered in the server
+    #
+    def raise_server_error!
       raise @server.error if Capybara.raise_server_errors and @server and @server.error
     ensure
       @server.reset_error! if @server
     end
-    alias_method :cleanup!, :reset!
-    alias_method :reset_session!, :reset!
 
     ##
     #
@@ -178,6 +187,8 @@ module Capybara
     # @param [String] url     The URL to navigate to
     #
     def visit(url)
+      raise_server_error!
+
       @touched = true
 
       if url !~ /^http/ and Capybara.app_host
@@ -195,6 +206,22 @@ module Capybara
       end
 
       driver.visit(url)
+    end
+
+    ##
+    #
+    # Move back a single entry in the browser's history.
+    #
+    def go_back
+      driver.go_back
+    end
+
+    ##
+    #
+    # Move forward a single entry in the browser's history.
+    #
+    def go_forward
+      driver.go_forward
     end
 
     ##
@@ -338,7 +365,7 @@ module Capybara
 
       FileUtils.mkdir_p(File.dirname(path))
 
-      File.open(path,'w') { |f| f.write(Capybara::Helpers.inject_asset_host(body)) }
+      File.open(path,'wb') { |f| f.write(Capybara::Helpers.inject_asset_host(body)) }
       path
     end
 
