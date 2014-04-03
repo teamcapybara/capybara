@@ -5,7 +5,6 @@ require 'capybara/rspec/matchers'
 require 'capybara/rspec/features'
 
 RSpec.configure do |config|
-  config.expose_dsl_globally = false if config.respond_to? :expose_dsl_globally
   config.include Capybara::DSL, :type => :feature
   config.include Capybara::RSpecMatchers, :type => :feature
 
