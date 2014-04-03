@@ -45,7 +45,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
           driver.browser.execute_script "arguments[0].value = ''", native
           native.send_keys(value.to_s)
         else
-          #TODO
+          raise Capybara::ReadOnlyElementError.new "Attempt to set readonly #{tag_name} with value: #{value}"
         end
       end
     elsif native.attribute('isContentEditable')
