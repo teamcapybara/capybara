@@ -507,6 +507,12 @@ Finally, in drivers that support it, you can save a screenshot:
 page.save_screenshot('screenshot.png')
 ```
 
+Or have it save and automatically open:
+
+```ruby
+save_and_open_screenshot
+```
+
 ## Matching
 
 It is possible to customize how Capybara finds elements. At your disposal
