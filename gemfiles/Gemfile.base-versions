@@ -9,7 +9,6 @@ gem 'rack', '= 1.3.0' # cannot go lower because referer tests need aa7ce77cd0
 gem 'rack-test', '= 0.5.4'
 gem 'nokogiri', '= 1.3.3'
 gem 'rspec', '= 2.2.0'
-gem 'fuubar', '>= 0.0.1'
 gem 'cucumber', '= 0.10.5'
 # We cannot test against older versions of selenium-webdriver without
 # installing older compatible Firefox versions.
