@@ -13,7 +13,7 @@ Capybara::SpecHelper.run_specs TestSessions::RackTest, "RackTest", :capybara_ski
   :hover
 ]
 
-describe Capybara::Session do
+RSpec.describe Capybara::Session do
   context 'with rack test driver' do
     before do
       @session = TestSessions::RackTest
@@ -70,7 +70,7 @@ describe Capybara::Session do
   end
 end
 
-describe Capybara::RackTest::Driver do
+RSpec.describe Capybara::RackTest::Driver do
   before do
     @driver = TestSessions::RackTest.driver
   end
@@ -165,7 +165,7 @@ module CSSHandlerIncludeTester
 end
 include CSSHandlerIncludeTester
 
-describe  Capybara::RackTest::CSSHandlers do  
+RSpec.describe  Capybara::RackTest::CSSHandlers do  
   it "should not be extended by global includes" do
     expect(Capybara::RackTest::CSSHandlers.new).not_to respond_to(:dont_extend_css_handler)
   end

@@ -17,7 +17,7 @@ Capybara::SpecHelper.run_specs TestSessions::Selenium, "selenium", :capybara_ski
   :trigger
 ]
 
-describe Capybara::Session do
+RSpec.describe Capybara::Session do
   context 'with selenium driver' do
     before do
       @session = TestSessions::Selenium
@@ -66,7 +66,7 @@ describe Capybara::Session do
   end
 end
 
-describe Capybara::Selenium::Driver do
+RSpec.describe Capybara::Selenium::Driver do
   before do
     @driver = Capybara::Selenium::Driver.new(TestApp, browser: :firefox)
   end

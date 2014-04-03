@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe Capybara do
-
+RSpec.describe Capybara do
   describe 'default_wait_time' do
     after do
       Capybara.default_wait_time = @previous_default_time
@@ -44,7 +43,7 @@ describe Capybara do
   end
 end
 
-describe Capybara::Session do
+RSpec.describe Capybara::Session do
   context 'with non-existant driver' do
     it "should raise an error" do
       expect {

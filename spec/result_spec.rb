@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Capybara::Result do
+RSpec.describe Capybara::Result do
   let :string do
     Capybara.string <<-STRING
       <ul>

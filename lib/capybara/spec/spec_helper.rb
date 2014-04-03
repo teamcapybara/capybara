@@ -52,7 +52,7 @@ module Capybara
 
       def run_specs(session, name, options={})
         specs = @specs
-        describe Capybara::Session, name, options do
+        RSpec.describe Capybara::Session, name, options do
           include Capybara::SpecHelper
           before do
             @session = session

@@ -21,7 +21,8 @@ def self.feature(*args, &block)
   options[:caller] ||= caller
   args.push(options)
 
-  describe(*args, &block)
+  #call describe on RSpec in case user has expose_dsl_globally set to false
+  RSpec.describe(*args, &block)
 end
 
 RSpec.configuration.include Capybara::Features, :capybara_feature => true

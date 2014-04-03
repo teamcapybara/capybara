@@ -14,7 +14,7 @@ Capybara::SpecHelper.run_specs TestClass.new, "DSL", :capybara_skip => [
   :hover
 ]
 
-describe Capybara::DSL do
+RSpec.describe Capybara::DSL do
   after do
     Capybara.session_name = nil
     Capybara.default_driver = nil

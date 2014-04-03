@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'capybara/dsl'
 require 'capybara/rspec/matchers'
 
-describe Capybara::RSpecMatchers do
+RSpec.describe Capybara::RSpecMatchers do
   include Capybara::DSL
   include Capybara::RSpecMatchers
 
