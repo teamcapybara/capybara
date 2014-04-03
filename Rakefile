@@ -17,7 +17,7 @@ end
 
 YARD::Rake::YardocTask.new do |t|
   t.files   = ['lib/**/*.rb']
-  #t.options = ['--any', '--extra', '--opts'] # optional
+  t.options = %w(--markup=markdown)
 end
 
 Cucumber::Rake::Task.new(:cucumber) do |task|
