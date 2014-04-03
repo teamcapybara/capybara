@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Capybara::Server do
+RSpec.describe Capybara::Server do
 
   it "should spool up a rack server" do
     @app = proc { |env| [200, {}, ["Hello Server!"]]}

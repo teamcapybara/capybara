@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'capybara/rspec', :type => :feature do
+RSpec.describe 'capybara/rspec', :type => :feature do
   it "should include Capybara in rspec" do
     visit('/foo')
     expect(page.body).to include('Another World')
@@ -37,7 +37,7 @@ describe 'capybara/rspec', :type => :feature do
   end
 end
 
-describe 'capybara/rspec', :type => :other do
+RSpec.describe 'capybara/rspec', :type => :other do
   it "should not include Capybara" do
     expect { visit('/') }.to raise_error(NoMethodError)
   end
