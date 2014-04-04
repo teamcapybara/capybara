@@ -13,6 +13,7 @@ module Capybara
   class UnselectNotAllowed < CapybaraError; end
   class NotSupportedByDriverError < CapybaraError; end
   class InfiniteRedirectError < CapybaraError; end
+  class ReadOnlyElementError < CapybaraError; end
 
   class << self
     attr_accessor :asset_host, :app_host, :run_server, :default_host, :always_include_port

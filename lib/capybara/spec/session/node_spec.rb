@@ -94,13 +94,17 @@ Capybara::SpecHelper.spec "node" do
 
     it "should not set if the text field is readonly" do
       expect(@session.first('//input[@readonly]').value).to eq('should not change')
-      @session.first('//input[@readonly]').set('changed')
+      expect do
+        @session.first('//input[@readonly]').set('changed')
+      end.to raise_error(Capybara::ReadOnlyElementError)
       expect(@session.first('//input[@readonly]').value).to eq('should not change')
     end
 
     it "should not set if the textarea is readonly" do
       expect(@session.first('//textarea[@readonly]').value).to eq('textarea should not change')
-      @session.first('//textarea[@readonly]').set('changed')
+      expect do
+        @session.first('//textarea[@readonly]').set('changed')
+      end.to raise_error(Capybara::ReadOnlyElementError)
       expect(@session.first('//textarea[@readonly]').value).to eq('textarea should not change')
     end
 

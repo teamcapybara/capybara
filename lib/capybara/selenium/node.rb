@@ -41,8 +41,12 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
         native.clear
       else
         #script can change a readonly element which user input cannot, so dont execute if readonly
-        driver.browser.execute_script "arguments[0].value = ''", native unless self[:readonly]
-        native.send_keys(value.to_s)
+        unless self[:readonly]
+          driver.browser.execute_script "arguments[0].value = ''", native
+          native.send_keys(value.to_s)
+        else
+          raise Capybara::ReadOnlyElementError.new "Attempt to set readonly #{tag_name} with value: #{value}"
+        end
       end
     elsif native.attribute('isContentEditable')
       #ensure we are focused on the element
