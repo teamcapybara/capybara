@@ -31,5 +31,5 @@ before_script:
 script: "bundle exec rake travis"
 env:
   global:
-    - secure: Oc3Jh46dzQjgdKJ3/MX5fRYlS+vdo8TJipYnqOq3f7gdXugdt48aE83GO7J2Q8apvLbFcmdWu5rAsmrLNbD0gxrL2/kHBvWTcvJb0eGrULB9O2BQ1ae7EDzmkU/hC5dIhMS7FbiWS4u2QTnpYO6Ztxw6Ea0bkTuQYzF42vyJ4y0=
-    - secure: NxSAp4qAld+5OoQMJMyjpNHzIloir1vi7fIysQ2YxrEECGB1NiSavzY8QbjKGkZ640rxJdL9F9bKUeZ33gdwjljpcV1DZXKBt8wajp+GeGHhC9Tog/Q6WN+OKd8YZoRrJynMh3if7gT6sXBn2qEMbLks20/g/EPLmA16wfm2I4s=
+    - secure: WQWRg/gDuaSK1Wg2l4yVgiLCoGZUbfGgxJhqEJy2N7/Rc7FKc+ErHCiE1xAAK7Ss3Ro9NP3dnQpRNJ/RqtKvE3uaGwulW4zT4P1lGFGhFdSr6prftCZHMwMGIlaPrPqjOivYLcj8HEiDf+s/pRwsBnh2E4BeTyeMNC4KZo4kgbE=
+    - secure: WkP27gt4TSXnf+kyE+vU1+jbETip3XwlMxKpjqJioNViFEw5UdaIZmXba11JFk9zXk2zffJV0W1iXOmy3mRetdEosh+cSsnJU2hFnWH8h7NFGBbOkfg4AZxtzpGRKUiQkRc2U0nHvcVEf5j9vUwQo1wXTDe2AED62tWK21BNmQ0=
