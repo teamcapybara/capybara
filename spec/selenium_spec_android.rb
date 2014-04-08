@@ -21,4 +21,4 @@ Capybara::SpecHelper.run_specs TestSessions::Android, "selenium_android",
   capybara_skip: [
     :response_headers,
     :status_code,
-    :trigger ], capybara_only: [:touch], sauce: true unless ENV['TRAVIS'] && (RUBY_PLATFORM == 'java')
+    :trigger ], capybara_only: [:touch], sauce: true unless ENV['TRAVIS'] && (!ENV['TRAVIS_SECURE_ENV_VARS'] || RUBY_PLATFORM == 'java')
