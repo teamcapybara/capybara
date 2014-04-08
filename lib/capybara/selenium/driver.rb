@@ -126,24 +126,56 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     @frame_handles[browser.window_handle].each { |fh| browser.switch_to.frame(fh) }
   end
 
-  def find_window( selector )
+  def current_window_handle
+    browser.window_handle
+  end
+
+  def current_window_size
+    size = browser.manage.window.size
+    [size.width, size.height]
+  end
+
+  def resize_current_window_to(width, height)
+    browser.manage.window.resize_to(width, height)
+  end
+
+  def close_current_window
+    browser.close
+  end
+
+  def window_handles
+    browser.window_handles
+  end
+
+  def open_new_window
+    browser.execute_script('window.open();')
+  end
+
+  def switch_to_window(handle)
+    browser.switch_to.window handle
+  end
+
+  # @api private
+  def find_window(locator)
+    handles = browser.window_handles
+    return locator if handles.include? locator
+
     original_handle = browser.window_handle
-    browser.window_handles.each do |handle|
+    handles.each do |handle|
       browser.switch_to.window handle
-      if( selector == browser.execute_script("return window.name") ||
-          browser.title.include?(selector) ||
-          browser.current_url.include?(selector) ||
-          (selector == handle) )
+      if (locator == browser.execute_script("return window.name") ||
+          browser.title.include?(locator) ||
+          browser.current_url.include?(locator))
         browser.switch_to.window original_handle
         return handle
       end
     end
-    raise Capybara::ElementNotFound, "Could not find a window identified by #{selector}"
+    raise Capybara::ElementNotFound, "Could not find a window identified by #{locator}"
   end
 
-  def within_window(selector, &blk)
-    handle = find_window( selector )
-    browser.switch_to.window(handle, &blk)
+  def within_window(locator)
+    handle = find_window(locator)
+    browser.switch_to.window(handle) { yield }
   end
 
   def quit
@@ -158,4 +190,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     [Selenium::WebDriver::Error::StaleElementReferenceError, Selenium::WebDriver::Error::UnhandledError, Selenium::WebDriver::Error::ElementNotVisibleError]
   end
 
+  def no_such_window_error
+    Selenium::WebDriver::Error::NoSuchWindowError
+  end
 end

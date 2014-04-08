@@ -54,6 +54,7 @@ module Capybara
         specs = @specs
         RSpec.describe Capybara::Session, name, options do
           include Capybara::SpecHelper
+          include Capybara::RSpecMatchers
           before do
             @session = session
           end
@@ -92,4 +93,4 @@ module Capybara
   end
 end
 
-Dir[File.dirname(__FILE__)+'/session/*'].each { |group| require group }
+Dir[File.dirname(__FILE__) + "/session/**/*.rb"].each { |file| require_relative file }

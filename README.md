@@ -467,6 +467,21 @@ within_table('Employee') do
 end
 ```
 
+### Working with windows
+
+Capybara provides some methods to ease finding and switching windows:
+
+```ruby
+facebook_window = window_opened_by do
+  click_button 'Like'
+end
+within_window facebook_window do
+  find('#login_email').set('a@example.com')
+  find('#login_password').set('qwerty')
+  click_button 'Submit'
+end
+```
+
 ### Scripting
 
 In drivers which support it, you can easily execute JavaScript:

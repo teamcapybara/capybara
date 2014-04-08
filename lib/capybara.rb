@@ -13,6 +13,8 @@ module Capybara
   class UnselectNotAllowed < CapybaraError; end
   class NotSupportedByDriverError < CapybaraError; end
   class InfiniteRedirectError < CapybaraError; end
+  class ScopeError < CapybaraError; end
+  class WindowError < CapybaraError; end
 
   class << self
     attr_accessor :asset_host, :app_host, :run_server, :default_host, :always_include_port
@@ -316,6 +318,7 @@ module Capybara
   require 'capybara/helpers'
   require 'capybara/session'
   require 'capybara/dsl'
+  require 'capybara/window'
   require 'capybara/server'
   require 'capybara/selector'
   require 'capybara/query'
