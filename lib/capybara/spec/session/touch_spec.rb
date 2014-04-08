@@ -19,7 +19,19 @@ Capybara::SpecHelper.spec "touch events", requires: [:touch] do
   end
 
   it "should flick elements" do
-    @session.find(:css, '#touchable').flick
+    @session.find(:css, '#touchable').flick(:right)
     expect(@session).to have_text('Flicked')
+  end
+  
+  describe "swipeable" do
+    it "should swipe right" do
+      @session.find(:css, '#swipeable').swipe(:right)
+      expect(@session).to have_text('Swiped right')
+    end
+    
+    it "should swipe down" do
+      @session.find(:css, '#swipeable').swipe(down: 300)
+      expect(@session).to have_text('Swiped down')
+    end
   end
 end

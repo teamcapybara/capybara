@@ -170,8 +170,16 @@ module Capybara
       #
       # Flick the Element
       #
-      def flick
-        synchronize { base.flick }
+      def flick(*args)
+        synchronize { base.flick(args) }
+      end
+      
+      ##
+      #
+      # Swipe the Element
+      #
+      def swipe(*args)
+        synchronize { base.swipe(*args) }
       end
 
       ##

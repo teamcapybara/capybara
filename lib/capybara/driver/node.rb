@@ -97,10 +97,13 @@ module Capybara
         raise NotSupportedByDriverError, 'Capybara::Driver::Node#long_press'
       end
       
-      def flick
+      def flick(*args)
         raise NotSupportedByDriverError, 'Capybara::Driver::Node#flick'
       end
-        
+
+      def swipe(*args)
+        raise NotSupportedByDriverError, 'Capybara::Driver::Node#swipe'
+      end        
 
       def inspect
         %(#<#{self.class} tag="#{tag_name}" path="#{path}">)
