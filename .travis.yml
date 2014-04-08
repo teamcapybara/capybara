@@ -6,7 +6,7 @@ rvm:
   - jruby-19mode
   - rbx
 gemfile:
-  - Gemfile
+- Gemfile
 matrix:
   include:
     - gemfile: gemfiles/Gemfile.base-versions
@@ -31,5 +31,5 @@ before_script:
 script: "bundle exec rake travis"
 env:
   global:
-    - secure: WQWRg/gDuaSK1Wg2l4yVgiLCoGZUbfGgxJhqEJy2N7/Rc7FKc+ErHCiE1xAAK7Ss3Ro9NP3dnQpRNJ/RqtKvE3uaGwulW4zT4P1lGFGhFdSr6prftCZHMwMGIlaPrPqjOivYLcj8HEiDf+s/pRwsBnh2E4BeTyeMNC4KZo4kgbE=
-    - secure: WkP27gt4TSXnf+kyE+vU1+jbETip3XwlMxKpjqJioNViFEw5UdaIZmXba11JFk9zXk2zffJV0W1iXOmy3mRetdEosh+cSsnJU2hFnWH8h7NFGBbOkfg4AZxtzpGRKUiQkRc2U0nHvcVEf5j9vUwQo1wXTDe2AED62tWK21BNmQ0=
+    - secure: nb9XP2Tq83Ricw2k40qhOe0RPoVHqurYY+J/s6YlVa//R1YabZN1QwfmhAyx60JQwgTZkSRID6uj5w3wzqbNIhOnyMHdQFb+NZV5k7/oRUaSIhbs62mYg/Xa44phaSkVZaxu73dGYFvktNy1TLEuAyd8WYxnoE4WFWja5EMykUI=
+    - secure: SzUkplVQ+f7/G/2KsG9tUvP33b85t44DAaK7EXU9MKlQ2UYxcVI5avciD9aRyXR0s2UIgvd+x0AHdeXGCN++1FgF75oH4Yd4t8jLIiOJP1b/Tof4mRP6UYXvLVhaiVX22QRKKwwfO5tG8OHaN9RB8GbeCMFBIaiGJlVZ9LJkDd8=
