@@ -42,11 +42,14 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
       window = (@session.windows - [@window]).first
       expect do
         @session.within_window(window) do
-          raise 'some error'
+          @session.within 'html' do
+            raise 'some error'
+          end
         end
       end.to raise_error(StandardError, 'some error')
       expect(@session.current_window).to eq(@window)
       expect(@session).to have_css('#doesNotOpenWindows')
+      expect(@session.send(:scopes)).to eq([nil])
     end
 
     it 'should raise error if closed window was passed' do
@@ -59,7 +62,9 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
           raise 'should not be invoked'
         end
       end.to raise_error(@session.driver.no_such_window_error)
+      expect(@session.current_window).to eq(@window)
       expect(@session).to have_css('#doesNotOpenWindows')
+      expect(@session.send(:scopes)).to eq([nil])
     end
   end
 
@@ -86,7 +91,9 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
           expect(@session).to have_css('#divInPopupOne')
         end
       end.to raise_error(Capybara::WindowError, "Could not find a window matching block/lambda")
+      expect(@session.current_window).to eq(@window)
       expect(@session).to have_css('#doesNotOpenWindows')
+      expect(@session.send(:scopes)).to eq([nil])
     end
 
     it "returns value from the block" do
@@ -103,6 +110,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
         end
       end.to raise_error(StandardError, 'some error')
       expect(@session.current_window).to eq(@window)
+      expect(@session.send(:scopes)).to eq([nil])
     end
   end
 
@@ -110,7 +118,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
     it "should warn" do
       expect(@session).to receive(:warn).with("DEPRECATION WARNING: Passing string argument "\
         "to #within_window is deprecated. Pass window object or lambda. "\
-        "(called from #{__FILE__}:114)").and_call_original
+        "(called from #{__FILE__}:122)").and_call_original
       @session.within_window('firstPopup') {}
     end
 

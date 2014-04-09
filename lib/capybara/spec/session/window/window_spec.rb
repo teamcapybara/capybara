@@ -54,7 +54,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
     it 'should return false if window is closed' do
       @session.switch_to_window(@other_window)
       @other_window.close
-      expect(@other_window.current?).to be_false
+      expect(@other_window.current?).to eq(false)
     end
   end
 

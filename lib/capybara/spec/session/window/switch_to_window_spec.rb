@@ -30,6 +30,17 @@ Capybara::SpecHelper.spec '#switch_to_window', requires: [:windows] do
       @session.switch_to_window(window)
       expect(['', 'about:blank']).to include(@session.title)
     end
+
+    it "should raise error when closed window is passed" do
+      original_window = @session.current_window
+      new_window = @session.open_new_window
+      @session.switch_to_window(new_window)
+      new_window.close
+      @session.switch_to_window(original_window)
+      expect do
+        @session.switch_to_window(new_window)
+      end.to raise_error(@session.driver.no_such_window_error)
+    end
   end
 
   context "with block" do
@@ -83,11 +94,21 @@ Capybara::SpecHelper.spec '#switch_to_window', requires: [:windows] do
         end
       end.to raise_error(Capybara::ScopeError, "`switch_to_window` is not supposed to be invoked from `within`'s, `within_frame`'s' or `within_window`'s' block.")
     end
-  end
 
-  it "should raise error if window matching block wasn't found" do
-    expect do
-      @session.switch_to_window { @session.title == 'A title' }
-    end.to raise_error(Capybara::WindowError, "Could not find a window matching block/lambda")
+    it "should raise error if window matching block wasn't found" do
+      original = @session.current_window
+      expect do
+        @session.switch_to_window { @session.title == 'A title' }
+      end.to raise_error(Capybara::WindowError, "Could not find a window matching block/lambda")
+      expect(@session.current_window).to eq(original)
+    end
+
+    it "should switch to original window if error is raised inside block" do
+      original = @session.switch_to_window(@session.windows[1])
+      expect do
+        @session.switch_to_window { raise 'error' }
+      end.to raise_error(StandardError, 'error')
+      expect(@session.current_window).to eq(original)
+    end
   end
 end

@@ -363,14 +363,15 @@ module Capybara
     ##
     # @overload switch_to_window(&block)
     #   Switches to the first window for which given block returns a value other than false or nil.
+    #   If window that matches block can't be found, the window will be switched back and `WindowError` will be raised.
     #   @example
     #     window = switch_to_window { title == 'Page title' }
-    #   @return [Capybara::Window]         window that has been switched to
     #   @raise [Capybara::WindowError]     if no window matches given block
     # @overload switch_to_window(window)
     #   @param window [Capybara::Window]   window that should be switched to
     #   @raise [Capybara::Driver::Base#no_such_window_error] if unexistent (e.g. closed) window was passed
     #
+    # @return [Capybara::Window]         window that has been switched to
     # @raise [Capybara::ScopeError]        if this method is invoked inside `within`,
     #   `within_frame` or `within_window` methods
     # @raise [ArgumentError]               if both or neither arguments were provided
@@ -388,14 +389,23 @@ module Capybara
 
       if window
         driver.switch_to_window(window.handle)
+        window
       else
-        driver.window_handles.each do |handle|
-          driver.switch_to_window handle
-          if yield
-            return Window.new(self, handle)
+        original_window_handle = driver.current_window_handle
+        begin
+          driver.window_handles.each do |handle|
+            driver.switch_to_window handle
+            if yield
+              return Window.new(self, handle)
+            end
           end
+        rescue => e
+          driver.switch_to_window(original_window_handle)
+          raise e
+        else
+          driver.switch_to_window(original_window_handle)
+          raise Capybara::WindowError, "Could not find a window matching block/lambda"
         end
-        raise Capybara::WindowError, "Could not find a window matching block/lambda"
       end
     end
 
@@ -409,6 +419,7 @@ module Capybara
     # @overload within_window(window) { do_something }
     #   @param [Capybara::Window]             instance of Capybara::Window class
     #     that will be switched to
+    #   @raise [driver#no_such_window_error] if unexistent (e.g. closed) window was passed
     # @overload within_window(proc_or_lambda) { do_something }
     #   @param lambda [Proc]                  lambda. First window for which lambda
     #     returns a value other than false or nil will be switched to.
@@ -421,7 +432,6 @@ module Capybara
     #
     # @raise [Capybara::ScopeError]        if this method is invoked inside `within`,
     #   `within_frame` or `within_window` methods
-    # @raise [driver#no_such_window_error] if unexistent (e.g. closed) window was passed
     # @return                              value returned by the block
     #
     def within_window(window_or_handle)
@@ -429,20 +439,20 @@ module Capybara
         original = current_window
         begin
           switch_to_window(window_or_handle) unless original == window_or_handle
-          scopes.push(nil)
+          scopes << nil
           yield
         ensure
-          scopes.pop if scopes.last.nil? # It will be not nil if closed window has been passed
+          @scopes = [nil]
           switch_to_window(original) unless original == window_or_handle
         end
       elsif window_or_handle.is_a?(Proc)
         original = current_window
+        switch_to_window { window_or_handle.call }
+        scopes << nil
         begin
-          switch_to_window { window_or_handle.call }
-          scopes.push(nil)
           yield
         ensure
-          scopes.pop if scopes.last.nil?
+          @scopes = [nil]
           switch_to_window(original)
         end
       else
@@ -451,10 +461,10 @@ module Capybara
         warn "DEPRECATION WARNING: Passing string argument to #within_window is deprecated. "\
              "Pass window object or lambda. (called from #{file_line})"
         begin
-          scopes.push(nil)
+          scopes << nil
           driver.within_window(window_or_handle) { yield }
         ensure
-          scopes.pop
+          @scopes = [nil]
         end
       end
     end
@@ -625,7 +635,7 @@ module Capybara
     end
 
     def scopes
-      @scopes ||= [document]
+      @scopes ||= [nil]
     end
   end
 end
