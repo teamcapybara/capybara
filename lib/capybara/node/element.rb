@@ -144,7 +144,7 @@ module Capybara
       
       ##
       #
-      # Sinlge tap on the Element
+      # Single tap on the Element
       #
       def single_tap
         synchronize { base.single_tap }
