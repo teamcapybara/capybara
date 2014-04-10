@@ -139,6 +139,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.manage.window.resize_to(width, height)
   end
 
+  def maximize_current_window
+    browser.manage.window.maximize
+  end
+
   def close_current_window
     browser.close
   end

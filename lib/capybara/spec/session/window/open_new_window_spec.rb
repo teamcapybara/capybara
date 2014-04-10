@@ -18,7 +18,7 @@ Capybara::SpecHelper.spec '#open_new_window', requires: [:windows] do
     expect(@session.current_url).to eq('about:blank')
   end
 
-  it 'should open window with changable content' do
+  it 'should open window with changeable content' do
     window = @session.open_new_window
     @session.within_window window do
       @session.visit '/with_html'

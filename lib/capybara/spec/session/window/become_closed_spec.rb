@@ -1,4 +1,4 @@
-Capybara::SpecHelper.spec '#become_closed', requires: [:windows] do
+Capybara::SpecHelper.spec '#become_closed', requires: [:windows, :js] do
   before(:each) do
     @window = @session.current_window
     @session.visit('/with_windows')
@@ -48,7 +48,7 @@ Capybara::SpecHelper.spec '#become_closed', requires: [:windows] do
 
     it 'should raise error if value of default_wait_time is less than timeout' do
       @session.within_window @other_window do
-        @session.execute_script('setTimeout(function(){ window.close(); }, 700);')
+        @session.execute_script('setTimeout(function(){ window.close(); }, 800);')
       end
       Capybara.using_wait_time 0.4 do
         expect do

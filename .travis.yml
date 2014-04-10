@@ -25,7 +25,9 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install google-chrome-stable --force-yes
   - sudo chmod 1777 /dev/shm
+  - sudo apt-get install fluxbox -y --force-yes
 before_script:
-  - sh -e /etc/init.d/xvfb start
   - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - fluxbox > /dev/null 2>&1 &
 script: "bundle exec rake travis"

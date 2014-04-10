@@ -417,7 +417,7 @@ module Capybara
     # 3. Switches back (this step will be invoked even if exception will happen at second step)
     #
     # @overload within_window(window) { do_something }
-    #   @param [Capybara::Window]             instance of Capybara::Window class
+    #   @param window [Capybara::Window]       instance of `Capybara::Window` class
     #     that will be switched to
     #   @raise [driver#no_such_window_error] if unexistent (e.g. closed) window was passed
     # @overload within_window(proc_or_lambda) { do_something }

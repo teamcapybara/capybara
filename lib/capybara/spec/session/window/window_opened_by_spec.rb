@@ -47,7 +47,7 @@ Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
     end
 
     it 'should find window if default_wait_time is more than timeout' do
-      Capybara.using_wait_time 1 do
+      Capybara.using_wait_time 1.2 do
         window = @session.window_opened_by do
           @session.find(:css, '#openWindowWithTimeout').click
         end

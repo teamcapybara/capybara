@@ -81,7 +81,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
   end
 
   describe '#size' do
-    it 'should return size of whole window' do
+    it 'should return size of whole window', requires: [:js] do
       expect(@session.current_window.size).to eq @session.evaluate_script("[window.outerWidth, window.outerHeight];")
     end
 
@@ -96,7 +96,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
   end
 
   describe '#resize_to' do
-    it 'should be able to resize window' do
+    it 'should be able to resize window', requires: [:js] do
       width, height = @session.evaluate_script("[window.outerWidth, window.outerHeight];")
       @session.current_window.resize_to(width-10, height-10)
       expect(@session.evaluate_script("[window.outerWidth, window.outerHeight];")).to eq([width-10, height-10])
@@ -109,6 +109,27 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
       expect do
         @other_window.resize_to(1000, 700)
       end.to raise_error(Capybara::WindowError, "Resizing not current window is not possible.")
+    end
+  end
+
+  describe '#maximize' do
+    it 'should be able to maximize window', requires: [:js] do
+      screen_width, screen_height = @session.evaluate_script("[window.screen.availWidth, window.screen.availHeight];")
+      window = @session.current_window
+      window.resize_to(screen_width-100, screen_height-100)
+      expect(@session.evaluate_script("[window.outerWidth, window.outerHeight];")).to eq([screen_width-100, screen_height-100])
+      window.maximize
+      sleep 0.6 # Selenium returns when window isn't yet fully resized
+      expect(@session.evaluate_script("[window.outerWidth, window.outerHeight];")).to eq([screen_width, screen_height])
+    end
+
+    it 'should raise error if invoked not for current window' do
+      @other_window = @session.window_opened_by do
+        @session.find(:css, '#openWindow').click
+      end
+      expect do
+        @other_window.maximize
+      end.to raise_error(Capybara::WindowError, "Maximizing not current window is not possible.")
     end
   end
 end

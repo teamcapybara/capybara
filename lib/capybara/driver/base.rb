@@ -63,6 +63,10 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#resize_window_to'
   end
 
+  def maximize_current_window
+    raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#maximize_current_window'
+  end
+
   def close_current_window
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#close_window'
   end

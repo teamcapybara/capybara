@@ -45,7 +45,8 @@ module Capybara
 
     ##
     # Close window. Available only for current window.
-    # After calling this method future invocations of other Capybara methods should raise `session.driver.no_such_window_error` until another window will be switched to.
+    # After calling this method future invocations of other Capybara methods should raise
+    #   `session.driver.no_such_window_error` until another window will be switched to.
     # @raise [Capybara::WindowError] if invoked not for current window
     #
     def close
@@ -72,6 +73,17 @@ module Capybara
     def resize_to(width, height)
       raise_unless_current('Resizing')
       @driver.resize_current_window_to(width, height)
+    end
+
+    ##
+    # Maximize window. Available only for current window.
+    # If a particular driver (e.g. headless driver) doesn't have concept of maximizing it
+    #   may not support this method.
+    # @raise [Capybara::WindowError] if invoked not for current window
+    #
+    def maximize
+      raise_unless_current('Maximizing')
+      @driver.maximize_current_window
     end
 
     def eql?(other)
