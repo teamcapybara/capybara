@@ -240,7 +240,7 @@ module Capybara
 
       def inspect
         %(#<Capybara::Element tag="#{tag_name}" path="#{path}">)
-      rescue NotSupportedByDriverError, 'Capybara::Node::Element#inspect'
+      rescue NotSupportedByDriverError
         %(#<Capybara::Element tag="#{tag_name}">)
       end
     end
