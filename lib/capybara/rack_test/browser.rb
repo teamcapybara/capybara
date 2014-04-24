@@ -42,6 +42,7 @@ class Capybara::RackTest::Browser
   end
 
   def process(method, path, attributes = {}, env = {})
+    path = path.to_s
     new_uri = URI.parse(path)
     method.downcase! unless method.is_a? Symbol
 
