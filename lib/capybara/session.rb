@@ -205,12 +205,14 @@ module Capybara
 
       @touched = true
 
+      url = url.to_s
+
       if url !~ /^http/ and Capybara.app_host
-        url = Capybara.app_host + url.to_s
+        url = Capybara.app_host + url
       end
 
       if @server
-        url = "http://#{@server.host}:#{@server.port}" + url.to_s unless url =~ /^http/
+        url = "http://#{@server.host}:#{@server.port}" + url unless url =~ /^http/
 
         if Capybara.always_include_port
           uri = URI.parse(url)
