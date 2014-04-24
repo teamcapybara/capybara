@@ -65,18 +65,22 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
       end
     end
 
-    it 'should change number of windows' do
-      expect do
-        @session.within_window(@other_window) do
-          @other_window.close
-        end
-      end.to change { @session.windows.size }.from(2).to(1)
+    it 'should switch to original window if invoked not for current window' do
+      expect(@session.windows.size).to eq(2)
+      expect(@session.current_window).to eq(@window)
+      @other_window.close
+      expect(@session.windows.size).to eq(1)
+      expect(@session.current_window).to eq(@window)
     end
 
-    it 'should raise error if invoked not for current window' do
+    it 'should make subsequent invocations of other methods raise no_such_window_error if invoked for current window' do
+      @session.switch_to_window(@other_window)
+      expect(@session.current_window).to eq(@other_window)
+      @other_window.close
       expect do
-        @other_window.close
-      end.to raise_error(Capybara::WindowError, "Closing not current window is not possible.")
+        @session.find(:css, '#some_id')
+      end.to raise_error(@session.driver.no_such_window_error)
+      @session.switch_to_window(@window)
     end
   end
 
@@ -85,13 +89,16 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
       expect(@session.current_window.size).to eq @session.evaluate_script("[window.outerWidth, window.outerHeight];")
     end
 
-    it 'should raise error if invoked not for current window' do
+    it 'should switch to original window if invoked not for current window' do
       @other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
-      expect do
-        @other_window.size
-      end.to raise_error(Capybara::WindowError, "Getting size of not current window is not possible.")
+      size =
+        @session.within_window @other_window do
+          @session.evaluate_script("[window.outerWidth, window.outerHeight];")
+        end
+      expect(@other_window.size).to eq(size)
+      expect(@session.current_window).to eq(@window)
     end
   end
 
@@ -102,13 +109,13 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
       expect(@session.evaluate_script("[window.outerWidth, window.outerHeight];")).to eq([width-10, height-10])
     end
 
-    it 'should raise error if invoked not for current window' do
+    it 'should switch to original window if invoked not for current window' do
       @other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
-      expect do
-        @other_window.resize_to(1000, 700)
-      end.to raise_error(Capybara::WindowError, "Resizing not current window is not possible.")
+      @other_window.resize_to(400, 300)
+      expect(@session.current_window).to eq(@window)
+      expect(@other_window.size).to eq([400, 300])
     end
   end
 
@@ -119,17 +126,17 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
       window.resize_to(screen_width-100, screen_height-100)
       expect(@session.evaluate_script("[window.outerWidth, window.outerHeight];")).to eq([screen_width-100, screen_height-100])
       window.maximize
-      sleep 0.6 # Selenium returns when window isn't yet fully resized
+      sleep 0.1
       expect(@session.evaluate_script("[window.outerWidth, window.outerHeight];")).to eq([screen_width, screen_height])
     end
 
-    it 'should raise error if invoked not for current window' do
+    it 'should switch to original window if invoked not for current window' do
       @other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
-      expect do
-        @other_window.maximize
-      end.to raise_error(Capybara::WindowError, "Maximizing not current window is not possible.")
+      @other_window.maximize
+      expect(@session.current_window).to eq(@window)
+      expect(@other_window.size).to eq(@session.evaluate_script("[window.screen.availWidth, window.screen.availHeight];"))
     end
   end
 end

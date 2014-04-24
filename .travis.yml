@@ -25,9 +25,11 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install google-chrome-stable --force-yes
   - sudo chmod 1777 /dev/shm
-  - sudo apt-get install fluxbox -y --force-yes
+  - sudo apt-get install awesome -y; mkdir -p ~/.config/awesome
+  - echo "require('awful'); tags = {}; tags[1] = awful.tag({'name'})" > ~/.config/awesome/rc.lua
 before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
-  - fluxbox > /dev/null 2>&1 &
+  - sleep 1
+  - "awesome &"
 script: "bundle exec rake travis"

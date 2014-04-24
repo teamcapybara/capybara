@@ -9,8 +9,16 @@ module Capybara
   # * {Capybara::Session#window_opened_by}
   # * {Capybara::Session#switch_to_window}
   #
+  # Note that some drivers (e.g. Selenium) support getting size of/resizing/closing only
+  #   current window. So if you invoke such method for:
+  #
+  #   * window that is current, Capybara will make 2 Selenium method invocations
+  #     (get handle of current window + get size/resize/close).
+  #   * window that is not current, Capybara will make 4 Selenium method invocations
+  #     (get handle of current window + switch to given handle + get size/resize/close + switch to original handle)
+  #
   class Window
-    # @return [String]   a string that uniquely identifies window
+    # @return [String]   a string that uniquely identifies window within session
     attr_reader :handle
 
     # @return [Capybara::Session] session that this window belongs to
@@ -44,46 +52,51 @@ module Capybara
     end
 
     ##
-    # Close window. Available only for current window.
-    # After calling this method future invocations of other Capybara methods should raise
+    # Close window.
+    #
+    # If this method was called for window that is current, then after calling this method
+    #   future invocations of other Capybara methods should raise
     #   `session.driver.no_such_window_error` until another window will be switched to.
-    # @raise [Capybara::WindowError] if invoked not for current window
+    #
+    # @!macro about_current
+    #   If this method was called for window that is not current, then after calling this method
+    #   current window shouldn remain the same as it was before calling this method.
     #
     def close
-      raise_unless_current('Closing')
-      @driver.close_current_window
+      @driver.close_window(handle)
     end
 
     ##
-    # Get window size. Available only for current window.
+    # Get window size.
+    #
+    # @macro about_current
     # @return [Array<(Fixnum, Fixnum)>] an array with width and height
-    # @raise [Capybara::WindowError] if invoked not for current window
     #
     def size
-      raise_unless_current('Getting size of')
-      @driver.current_window_size
+      @driver.window_size(handle)
     end
 
     ##
-    # Resize window. Available only for current window.
+    # Resize window.
+    #
+    # @macro about_current
     # @param width [String]  the new window width in pixels
     # @param height [String]  the new window height in pixels
-    # @raise [Capybara::WindowError] if invoked not for current window
     #
     def resize_to(width, height)
-      raise_unless_current('Resizing')
-      @driver.resize_current_window_to(width, height)
+      @driver.resize_window_to(handle, width, height)
     end
 
     ##
-    # Maximize window. Available only for current window.
+    # Maximize window.
+    #
     # If a particular driver (e.g. headless driver) doesn't have concept of maximizing it
     #   may not support this method.
-    # @raise [Capybara::WindowError] if invoked not for current window
+    #
+    # @macro about_current
     #
     def maximize
-      raise_unless_current('Maximizing')
-      @driver.maximize_current_window
+      @driver.maximize_window(handle)
     end
 
     def eql?(other)

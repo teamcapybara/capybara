@@ -130,21 +130,29 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.window_handle
   end
 
-  def current_window_size
-    size = browser.manage.window.size
-    [size.width, size.height]
+  def window_size(handle)
+    within_given_window(handle) do
+      size = browser.manage.window.size
+      [size.width, size.height]
+    end
   end
 
-  def resize_current_window_to(width, height)
-    browser.manage.window.resize_to(width, height)
+  def resize_window_to(handle, width, height)
+    within_given_window(handle) do
+      browser.manage.window.resize_to(width, height)
+    end
   end
 
-  def maximize_current_window
-    browser.manage.window.maximize
+  def maximize_window(handle)
+    within_given_window(handle) do
+      browser.manage.window.maximize
+    end
   end
 
-  def close_current_window
-    browser.close
+  def close_window(handle)
+    within_given_window(handle) do
+      browser.close
+    end
   end
 
   def window_handles
@@ -157,6 +165,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def switch_to_window(handle)
     browser.switch_to.window handle
+    sleep 0.05 # https://code.google.com/p/chromedriver/issues/detail?id=769
   end
 
   # @api private
@@ -166,11 +175,11 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
     original_handle = browser.window_handle
     handles.each do |handle|
-      browser.switch_to.window handle
+      switch_to_window(handle)
       if (locator == browser.execute_script("return window.name") ||
           browser.title.include?(locator) ||
           browser.current_url.include?(locator))
-        browser.switch_to.window original_handle
+        switch_to_window(original_handle)
         return handle
       end
     end
@@ -196,5 +205,19 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def no_such_window_error
     Selenium::WebDriver::Error::NoSuchWindowError
+  end
+
+  private
+
+  def within_given_window(handle)
+    original_handle = self.current_window_handle
+    if handle == original_handle
+      yield
+    else
+      switch_to_window(handle)
+      result = yield
+      switch_to_window(original_handle)
+      result
+    end
   end
 end
