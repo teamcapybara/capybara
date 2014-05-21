@@ -82,7 +82,31 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def hover
     driver.browser.action.move_to(native).perform
   end
+  
+  def single_tap
+    driver.browser.touch.single_tap(native).perform
+  end
+  
+  def double_tap
+    driver.browser.touch.double_tap(native).perform
+  end
+  
+  def long_press
+    #driver.browser.touch.long_press(native).perform
+    loc = native.location
+    driver.browser.touch.down(loc.x, loc.y).perform
+    sleep(0.8)
+    driver.browser.touch.up(loc.x, loc.y).perform
+  end
+  
+  def flick(*args)
+    driver.browser.touch.flick(native, *extract_directions(*args), :fast).perform
+  end
 
+  def swipe(*args)
+    driver.browser.touch.flick(native, *extract_directions(*args), :normal).perform
+  end
+  
   def drag_to(element)
     driver.browser.action.drag_and_drop(native, element.native).perform
   end
@@ -121,6 +145,14 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
 
 private
 
+  def extract_directions(*args)
+    directions = if args.last.is_a?(Hash) then args.pop else {} end
+    directions.default = 0
+    args.each { |arg| directions[arg] = 200 }
+    x = directions[:right] - directions[:left]
+    y = directions[:down] - directions[:up]
+    [x,y]
+  end
   # a reference to the select node if this is an option node
   def select_node
     find_xpath('./ancestor::select').first

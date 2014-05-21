@@ -14,7 +14,8 @@ end
 Capybara::SpecHelper.run_specs TestSessions::Selenium, "selenium", :capybara_skip => [
   :response_headers,
   :status_code,
-  :trigger
+  :trigger,
+  :touch
 ]
 
 RSpec.describe Capybara::Session do
@@ -81,4 +82,40 @@ RSpec.describe Capybara::Selenium::Driver do
   end
 end
 
+RSpec.describe Capybara::Selenium::Node do
+  before do
+    @touch = double('touch')
+    browser = double('browser', touch: @touch)
+    driver = double('driver', browser: browser)
+    @native = double('native')
+    @node = Capybara::Selenium::Node.new(driver, @native)
+  end
+  
+  describe '#swipe' do
+    before do
+      allow(@touch).to receive(:flick).and_return(double(perform: true))
+    end
+    
+    it "should interpret directions as default length 200" do
+      @node.swipe(:left)
+      expect(@touch).to have_received(:flick).with(@native, -200, 0, :normal)
+    end
+
+    it "should allow specifying distance with direction" do
+      @node.swipe(down: 350)
+      expect(@touch).to have_received(:flick).with(@native, 0, 350, :normal)
+    end
+
+    it "should allow multiple directions" do
+      @node.swipe(:down, :right)
+      expect(@touch).to have_received(:flick).with(@native, 200, 200, :normal)
+    end
+    
+    it "should allow multiple directions with distance" do
+      @node.swipe(:up, right: 375)
+      expect(@touch).to have_received(:flick).with(@native, 375, -200, :normal)
+    end    
+  end
+end
+    
 
