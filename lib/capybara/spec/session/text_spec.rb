@@ -34,6 +34,11 @@ Capybara::SpecHelper.spec '#text' do
     Capybara.ignore_hidden_elements = false
     expect(@session.find(:id, "hidden-text").text).to eq('Some of this text is')
   end
+  
+  it "ignores invisible text if ancestor is invisible" do
+    @session.visit('/with_html')
+    expect(@session.find(:id, "hidden_via_ancestor", visible: false).text).to eq('')
+  end
 
   context "with css as default selector" do
     before { Capybara.default_selector = :css }

@@ -99,14 +99,14 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
 
 protected
 
-  def unnormalized_text
-    if !visible?
+  def unnormalized_text(check_ancestor_visibility = true)
+    if !string_node.visible?(check_ancestor_visibility)
       ''
     elsif native.text?
       native.text
     elsif native.element?
       native.children.map do |child|
-        Capybara::RackTest::Node.new(driver, child).unnormalized_text
+        Capybara::RackTest::Node.new(driver, child).unnormalized_text(false)
       end.join
     else
       ''

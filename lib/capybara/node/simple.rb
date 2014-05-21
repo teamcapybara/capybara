@@ -94,10 +94,17 @@ module Capybara
       # Whether or not the element is visible. Does not support CSS, so
       # the result may be inaccurate.
       #
+      # @param  [Boolean] check_ancestors  Whether to inherit visibility from ancestors
       # @return [Boolean]     Whether the element is visible
       #
-      def visible?
-        native.xpath("./ancestor-or-self::*[contains(@style, 'display:none') or contains(@style, 'display: none') or @hidden or name()='script' or name()='head']").size == 0
+      def visible?(check_ancestors = true)
+        if check_ancestors
+          #check size because oldest supported nokogiri doesnt support xpath boolean() function
+          native.xpath("./ancestor-or-self::*[contains(@style, 'display:none') or contains(@style, 'display: none') or @hidden or name()='script' or name()='head']").size() == 0
+        else
+          #no need for an xpath if only checking the current element
+          !(native.has_attribute?('hidden') || (native[:style] =~ /display:\s?none/) || %w(script head).include?(tag_name))
+        end
       end
 
       ##
