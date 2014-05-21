@@ -55,6 +55,14 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#within_window'
   end
 
+  def accept_modal(type, options={}, &blk)
+    raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#accept_modal'
+  end
+
+  def dismiss_modal(type, &blk)
+    raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#dismiss_modal'
+  end
+
   def invalid_element_errors
     []
   end
