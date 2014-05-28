@@ -6,10 +6,10 @@ Capybara::SpecHelper.spec '#become_closed', requires: [:windows, :js] do
       @session.find(:css, '#openWindow').click
     end
   end
+
   after(:each) do
-    (@session.windows - [@window]).each do |w|
-      @session.switch_to_window w
-      w.close
+    @session.document.synchronize(3, errors: [Capybara::CapybaraError]) do
+      raise Capybara::CapybaraError if @session.windows.size != 1
     end
     @session.switch_to_window(@window)
   end
@@ -48,7 +48,7 @@ Capybara::SpecHelper.spec '#become_closed', requires: [:windows, :js] do
 
     it 'should raise error if value of default_wait_time is less than timeout' do
       @session.within_window @other_window do
-        @session.execute_script('setTimeout(function(){ window.close(); }, 800);')
+        @session.execute_script('setTimeout(function(){ window.close(); }, 900);')
       end
       Capybara.using_wait_time 0.4 do
         expect do

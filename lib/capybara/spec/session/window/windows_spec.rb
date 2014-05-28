@@ -3,6 +3,10 @@ Capybara::SpecHelper.spec '#windows', requires: [:windows] do
     @window = @session.current_window
     @session.visit('/with_windows')
     @session.find(:css, '#openTwoWindows').click
+
+    @session.document.synchronize(3, errors: [Capybara::CapybaraError]) do
+      raise Capybara::CapybaraError if @session.windows.size != 3
+    end
   end
   after(:each) do
     (@session.windows - [@window]).each do |w|

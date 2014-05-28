@@ -147,6 +147,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     within_given_window(handle) do
       browser.manage.window.maximize
     end
+    sleep 0.1 # work around for https://code.google.com/p/selenium/issues/detail?id=7405
   end
 
   def close_window(handle)
@@ -165,7 +166,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def switch_to_window(handle)
     browser.switch_to.window handle
-    sleep 0.05 # https://code.google.com/p/chromedriver/issues/detail?id=769
   end
 
   # @api private

@@ -126,7 +126,6 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
       window.resize_to(screen_width-100, screen_height-100)
       expect(@session.evaluate_script("[window.outerWidth, window.outerHeight];")).to eq([screen_width-100, screen_height-100])
       window.maximize
-      sleep 0.1
       expect(@session.evaluate_script("[window.outerWidth, window.outerHeight];")).to eq([screen_width, screen_height])
     end
 

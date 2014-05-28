@@ -23,6 +23,9 @@ Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
           end
         end.to raise_error(Capybara::WindowError, zero_windows_message)
       end
+      @session.document.synchronize(2, errors: [Capybara::CapybaraError]) do
+        raise Capybara::CapybaraError if @session.windows.size != 2
+      end
     end
 
     it 'should find window if value of :wait is more than timeout' do
@@ -44,6 +47,9 @@ Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
           end
         end.to raise_error(Capybara::WindowError, zero_windows_message)
       end
+      @session.document.synchronize(2, errors: [Capybara::CapybaraError]) do
+        raise Capybara::CapybaraError if @session.windows.size != 2
+      end
     end
 
     it 'should find window if default_wait_time is more than timeout' do
@@ -62,6 +68,9 @@ Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
         @session.find(:css, '#openTwoWindows').click
       end
     end.to raise_error(Capybara::WindowError, two_windows_message)
+    @session.document.synchronize(2, errors: [Capybara::CapybaraError]) do
+      raise Capybara::CapybaraError if @session.windows.size != 3
+    end
   end
 
   it 'should raise error when no windows were opened by block' do

@@ -3,6 +3,10 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
     @window = @session.current_window
     @session.visit('/with_windows')
     @session.find(:css, '#openTwoWindows').click
+
+    @session.document.synchronize(3, errors: [Capybara::CapybaraError]) do
+      raise Capybara::CapybaraError if @session.windows.size != 3
+    end
   end
   after(:each) do
     (@session.windows - [@window]).each do |w|
@@ -47,6 +51,18 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
           end
         end
       end.to raise_error(StandardError, 'some error')
+      expect(@session.current_window).to eq(@window)
+      expect(@session).to have_css('#doesNotOpenWindows')
+      expect(@session.send(:scopes)).to eq([nil])
+    end
+
+    it "should leave correct scopes after execution in case of error" do
+      window = (@session.windows - [@window]).first
+      expect do
+        @session.within 'html' do
+          @session.within_window(window) {}
+        end
+      end.to raise_error(Capybara::ScopeError)
       expect(@session.current_window).to eq(@window)
       expect(@session).to have_css('#doesNotOpenWindows')
       expect(@session.send(:scopes)).to eq([nil])
@@ -118,7 +134,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
     it "should warn" do
       expect(@session).to receive(:warn).with("DEPRECATION WARNING: Passing string argument "\
         "to #within_window is deprecated. Pass window object or lambda. "\
-        "(called from #{__FILE__}:122)").and_call_original
+        "(called from #{__FILE__}:138)").and_call_original
       @session.within_window('firstPopup') {}
     end
 

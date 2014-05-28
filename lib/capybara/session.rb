@@ -437,12 +437,12 @@ module Capybara
     def within_window(window_or_handle)
       if window_or_handle.instance_of?(Capybara::Window)
         original = current_window
+        switch_to_window(window_or_handle) unless original == window_or_handle
+        scopes << nil
         begin
-          switch_to_window(window_or_handle) unless original == window_or_handle
-          scopes << nil
           yield
         ensure
-          @scopes = [nil]
+          @scopes.pop
           switch_to_window(original) unless original == window_or_handle
         end
       elsif window_or_handle.is_a?(Proc)
@@ -452,7 +452,7 @@ module Capybara
         begin
           yield
         ensure
-          @scopes = [nil]
+          @scopes.pop
           switch_to_window(original)
         end
       else
@@ -464,7 +464,7 @@ module Capybara
           scopes << nil
           driver.within_window(window_or_handle) { yield }
         ensure
-          @scopes = [nil]
+          @scopes.pop
         end
       end
     end
