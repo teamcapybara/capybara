@@ -105,7 +105,7 @@ describe "the signin process", :type => :feature do
   it "signs me in" do
     visit '/sessions/new'
     within("#session") do
-      fill_in 'Login', :with => 'user@example.com'
+      fill_in 'Email', :with => 'user@example.com'
       fill_in 'Password', :with => 'password'
     end
     click_link 'Sign in'
