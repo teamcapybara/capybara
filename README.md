@@ -108,7 +108,7 @@ describe "the signin process", :type => :feature do
       fill_in 'Login', :with => 'user@example.com'
       fill_in 'Password', :with => 'password'
     end
-    click_link 'Sign in'
+    click_button 'Sign in'
     expect(page).to have_content 'Success'
   end
 end
