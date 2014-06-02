@@ -16,6 +16,9 @@ matrix:
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
       rvm: 2.1.1
+    - gemfile: Gemfile
+      rvm: jruby-19mode
+    
 before_install:
   - CHROMEDRIVER_VERSION=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
   - CHROMEDRIVER_URL="http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip"
