@@ -221,6 +221,13 @@ Capybara::SpecHelper.spec "node" do
     end
   end
   
+  describe '#click' do
+    it "should not follow a link if no href" do
+      @session.find(:css, '#link_placeholder').click
+      expect(@session.current_url).to match(%r{/with_html$})
+    end
+  end
+  
   describe '#double_click', :requires => [:js] do
     it "should double click an element" do
       @session.visit('/with_js')

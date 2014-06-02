@@ -46,7 +46,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   end
 
   def click
-    if tag_name == 'a'
+    if tag_name == 'a' && !self[:href].nil?
       method = self["data-method"] if driver.options[:respect_data_method]
       method ||= :get
       driver.follow(method, self[:href].to_s)
