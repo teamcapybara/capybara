@@ -1,3 +1,20 @@
+# Version 2.3.0
+
+Release date: 2014-06-02
+
+### Added
+* New window management API [Andrey Botalov]
+* Speed improvement for visible text detection in RackTest [Thomas Walpole]
+  Thanks to Phillipe Creux for instigating this
+* RSpec 3 compatability
+* 'save_and_open_screenshot' functionality [Greg Lazarev]
+* Server errors raised on visit and synchronize [Jonas Nicklas]
+
+### Fixed
+
+* CSSHandlers now derives from BasicObject so globally included functions (concat, etc) shouldn't cause issues [Thomas Walpole]
+* touched reset after session is reset [lesliepc16]
+
 # Version 2.2.1
 
 Release date: 2014-01-06
