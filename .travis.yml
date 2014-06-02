@@ -25,7 +25,12 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install google-chrome-stable --force-yes
   - sudo chmod 1777 /dev/shm
+  - sudo apt-get install awesome -y
 before_script:
-  - sh -e /etc/init.d/xvfb start
   - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - sleep 1
+  - mkdir -p ~/.config/awesome
+  - echo "require('awful'); tags = {}; tags[1] = awful.tag({'name'})" > ~/.config/awesome/rc.lua
+  - "awesome &"
 script: "bundle exec rake travis"

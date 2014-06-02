@@ -67,10 +67,13 @@ module Capybara
       # Capybara will raise `Capybara::FrozenInTime`.
       #
       # @param  [Integer] seconds         Number of seconds to retry this block
+      # @param options [Hash]
+      # @option options [Array<Exception>] :errors (driver.invalid_element_errors +
+      #   [Capybara::ElementNotFound]) exception types that cause the block to be rerun
       # @return [Object]                  The result of the given block
       # @raise  [Capybara::FrozenInTime]  If the return value of `Time.now` appears stuck
       #
-      def synchronize(seconds=Capybara.default_wait_time)
+      def synchronize(seconds=Capybara.default_wait_time, options = {})
         start_time = Time.now
 
         if session.synchronized
@@ -82,7 +85,7 @@ module Capybara
           rescue => e
             session.raise_server_error!
             raise e unless driver.wait?
-            raise e unless catch_error?(e)
+            raise e unless catch_error?(e, options[:errors])
             raise e if (Time.now - start_time) >= seconds
             sleep(0.05)
             raise Capybara::FrozenInTime, "time appears to be frozen, Capybara does not work with libraries which freeze time, consider using time travelling instead" if Time.now == start_time
@@ -96,8 +99,9 @@ module Capybara
 
     protected
 
-      def catch_error?(error)
-        (driver.invalid_element_errors + [Capybara::ElementNotFound]).any? do |type|
+      def catch_error?(error, errors = nil)
+        errors ||= (driver.invalid_element_errors + [Capybara::ElementNotFound])
+        errors.any? do |type|
           error.is_a?(type)
         end
       end

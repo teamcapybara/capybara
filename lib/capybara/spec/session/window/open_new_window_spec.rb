@@ -1,0 +1,28 @@
+Capybara::SpecHelper.spec '#open_new_window', requires: [:windows] do
+  before(:each) do
+    @window = @session.current_window
+    @session.visit('/with_windows')
+  end
+  after(:each) do
+    (@session.windows - [@window]).each do |w|
+      @session.switch_to_window w
+      w.close
+    end
+    @session.switch_to_window(@window)
+  end
+
+  it 'should open new window with blank url and title' do
+    window = @session.open_new_window
+    @session.switch_to_window(window)
+    expect(['', 'about:blank']).to include(@session.title)
+    expect(@session.current_url).to eq('about:blank')
+  end
+
+  it 'should open window with changeable content' do
+    window = @session.open_new_window
+    @session.within_window window do
+      @session.visit '/with_html'
+      expect(@session).to have_css('#first')
+    end
+  end
+end

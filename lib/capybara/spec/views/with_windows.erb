@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <title>With Windows</title>
+    <script src="/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script language="javascript" type="text/javascript">
+    $(document).ready(function(){
+      $('#openWindow').click(function(){
+        window.open('/popup_one', 'firstPopup');
+        return false;
+      });
+
+      $('#openWindowWithTimeout').click(function(){
+        setTimeout(function(){
+          window.open('/popup_one', 'firstPopup');
+        }, 600);
+        return false;
+      });
+
+      $('#openTwoWindows').click(function() {
+        window.open('/popup_one', 'firstPopup');
+        window.open('/popup_two', 'secondPopup');
+        return false;
+      });
+    });
+    </script>
+  </head>
+  <body>
+    <button id="openWindow">Open new window</button>
+
+    <button id="openWindowWithTimeout">Open new window with timeout</button>
+
+    <button id="openTwoWindows">Open two windows</button>
+
+    <button id="doesNotOpenWindows">Does not open windows</button>
+
+    <iframe src="/frame_one" id="frameOne"></iframe>
+  </body>
+</html>

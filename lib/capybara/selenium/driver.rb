@@ -126,24 +126,69 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     @frame_handles[browser.window_handle].each { |fh| browser.switch_to.frame(fh) }
   end
 
-  def find_window( selector )
+  def current_window_handle
+    browser.window_handle
+  end
+
+  def window_size(handle)
+    within_given_window(handle) do
+      size = browser.manage.window.size
+      [size.width, size.height]
+    end
+  end
+
+  def resize_window_to(handle, width, height)
+    within_given_window(handle) do
+      browser.manage.window.resize_to(width, height)
+    end
+  end
+
+  def maximize_window(handle)
+    within_given_window(handle) do
+      browser.manage.window.maximize
+    end
+    sleep 0.1 # work around for https://code.google.com/p/selenium/issues/detail?id=7405
+  end
+
+  def close_window(handle)
+    within_given_window(handle) do
+      browser.close
+    end
+  end
+
+  def window_handles
+    browser.window_handles
+  end
+
+  def open_new_window
+    browser.execute_script('window.open();')
+  end
+
+  def switch_to_window(handle)
+    browser.switch_to.window handle
+  end
+
+  # @api private
+  def find_window(locator)
+    handles = browser.window_handles
+    return locator if handles.include? locator
+
     original_handle = browser.window_handle
-    browser.window_handles.each do |handle|
-      browser.switch_to.window handle
-      if( selector == browser.execute_script("return window.name") ||
-          browser.title.include?(selector) ||
-          browser.current_url.include?(selector) ||
-          (selector == handle) )
-        browser.switch_to.window original_handle
+    handles.each do |handle|
+      switch_to_window(handle)
+      if (locator == browser.execute_script("return window.name") ||
+          browser.title.include?(locator) ||
+          browser.current_url.include?(locator))
+        switch_to_window(original_handle)
         return handle
       end
     end
-    raise Capybara::ElementNotFound, "Could not find a window identified by #{selector}"
+    raise Capybara::ElementNotFound, "Could not find a window identified by #{locator}"
   end
 
-  def within_window(selector, &blk)
-    handle = find_window( selector )
-    browser.switch_to.window(handle, &blk)
+  def within_window(locator)
+    handle = find_window(locator)
+    browser.switch_to.window(handle) { yield }
   end
 
   def quit
@@ -158,4 +203,21 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     [Selenium::WebDriver::Error::StaleElementReferenceError, Selenium::WebDriver::Error::UnhandledError, Selenium::WebDriver::Error::ElementNotVisibleError]
   end
 
+  def no_such_window_error
+    Selenium::WebDriver::Error::NoSuchWindowError
+  end
+
+  private
+
+  def within_given_window(handle)
+    original_handle = self.current_window_handle
+    if handle == original_handle
+      yield
+    else
+      switch_to_window(handle)
+      result = yield
+      switch_to_window(original_handle)
+      result
+    end
+  end
 end

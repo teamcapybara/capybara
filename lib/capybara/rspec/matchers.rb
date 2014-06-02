@@ -109,6 +109,33 @@ module Capybara
       end
     end
 
+    class BecomeClosed
+      def initialize(options)
+        @wait_time = Capybara::Query.new(options).wait
+      end
+
+      def matches?(window)
+        @window = window
+        start_time = Time.now
+        while window.exists? && (Time.now - start_time) < @wait_time
+          sleep 0.05
+        end
+        window.closed?
+      end
+
+      def failure_message
+        "expected #{@window.inspect} to become closed after #{@wait_time} seconds"
+      end
+
+      def failure_message_when_negated
+        "expected #{@window.inspect} not to become closed after #{@wait_time} seconds"
+      end
+
+      # RSpec 2 compatibility:
+      alias_method :failure_message_for_should, :failure_message
+      alias_method :failure_message_for_should_not, :failure_message_when_negated
+    end
+
     def have_selector(*args)
       HaveSelector.new(*args)
     end
@@ -156,6 +183,16 @@ module Capybara
 
     def have_table(locator, options={})
       HaveSelector.new(:table, locator, options)
+    end
+
+    ##
+    # Wait for window to become closed.
+    # @example
+    #   expect(window).to become_closed(wait: 0.8)
+    # @param options [Hash] optional param
+    # @option options [Numeric] :wait (Capybara.default_wait_time) wait time
+    def become_closed(options = {})
+      BecomeClosed.new(options)
     end
   end
 end

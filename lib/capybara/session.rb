@@ -40,7 +40,8 @@ module Capybara
     SESSION_METHODS = [
       :body, :html, :source, :current_url, :current_host, :current_path,
       :execute_script, :evaluate_script, :visit, :go_back, :go_forward,
-      :within, :within_fieldset, :within_table, :within_frame, :within_window,
+      :within, :within_fieldset, :within_table, :within_frame, :current_window,
+      :windows, :open_new_window, :switch_to_window, :within_window, :window_opened_by,
       :save_page, :save_and_open_page, :save_screenshot,
       :save_and_open_screenshot, :reset_session!, :response_headers,
       :status_code, :title, :has_title?, :has_no_title?, :current_scope
@@ -327,17 +328,172 @@ module Capybara
     end
 
     ##
+    # @return [Capybara::Window]   current window
     #
-    # Execute the given block within the given window. Only works on
-    # some drivers (e.g. Selenium)
+    def current_window
+      Window.new(self, driver.current_window_handle)
+    end
+
+    ##
+    # Get all opened windows.
+    # The order of windows in returned array is not defined.
+    # The driver may sort windows by their creation time but it's not required.
     #
-    # @param [String] handle of the window
+    # @return [Array<Capybara::Window>]   an array of all windows
     #
-    def within_window(handle, &blk)
-      scopes.push(nil)
-      driver.within_window(handle, &blk)
-    ensure
-      scopes.pop
+    def windows
+      driver.window_handles.map do |handle|
+        Window.new(self, handle)
+      end
+    end
+
+    ##
+    # Open new window.
+    # Current window doesn't change as the result of this call.
+    # It should be switched to explicitly.
+    #
+    # @return [Capybara::Window]   window that has been opened
+    #
+    def open_new_window
+      window_opened_by do
+        driver.open_new_window
+      end
+    end
+
+    ##
+    # @overload switch_to_window(&block)
+    #   Switches to the first window for which given block returns a value other than false or nil.
+    #   If window that matches block can't be found, the window will be switched back and `WindowError` will be raised.
+    #   @example
+    #     window = switch_to_window { title == 'Page title' }
+    #   @raise [Capybara::WindowError]     if no window matches given block
+    # @overload switch_to_window(window)
+    #   @param window [Capybara::Window]   window that should be switched to
+    #   @raise [Capybara::Driver::Base#no_such_window_error] if unexistent (e.g. closed) window was passed
+    #
+    # @return [Capybara::Window]         window that has been switched to
+    # @raise [Capybara::ScopeError]        if this method is invoked inside `within`,
+    #   `within_frame` or `within_window` methods
+    # @raise [ArgumentError]               if both or neither arguments were provided
+    #
+    def switch_to_window(window = nil)
+      block_given = block_given?
+      if window && block_given
+        raise ArgumentError, "`switch_to_window` can take either a block or a window, not both"
+      elsif !window && !block_given
+        raise ArgumentError, "`switch_to_window`: either window or block should be provided"
+      elsif scopes.size > 1
+        raise Capybara::ScopeError, "`switch_to_window` is not supposed to be invoked from "\
+                                    "`within`'s, `within_frame`'s' or `within_window`'s' block."
+      end
+
+      if window
+        driver.switch_to_window(window.handle)
+        window
+      else
+        original_window_handle = driver.current_window_handle
+        begin
+          driver.window_handles.each do |handle|
+            driver.switch_to_window handle
+            if yield
+              return Window.new(self, handle)
+            end
+          end
+        rescue => e
+          driver.switch_to_window(original_window_handle)
+          raise e
+        else
+          driver.switch_to_window(original_window_handle)
+          raise Capybara::WindowError, "Could not find a window matching block/lambda"
+        end
+      end
+    end
+
+    ##
+    # This method does the following:
+    #
+    # 1. Switches to the given window (it can be located by window instance/lambda/string).
+    # 2. Executes the given block (within window located at previous step).
+    # 3. Switches back (this step will be invoked even if exception will happen at second step)
+    #
+    # @overload within_window(window) { do_something }
+    #   @param window [Capybara::Window]       instance of `Capybara::Window` class
+    #     that will be switched to
+    #   @raise [driver#no_such_window_error] if unexistent (e.g. closed) window was passed
+    # @overload within_window(proc_or_lambda) { do_something }
+    #   @param lambda [Proc]                  lambda. First window for which lambda
+    #     returns a value other than false or nil will be switched to.
+    #   @example
+    #     within_window(->{ page.title == 'Page title' }) { click_button 'Submit' }
+    #   @raise [Capybara::WindowError]         if no window matching lambda was found
+    # @overload within_window(string) { do_something }
+    #   @deprecated                            Pass window or lambda instead
+    #   @param [String]                        handle, name, url or title of the window
+    #
+    # @raise [Capybara::ScopeError]        if this method is invoked inside `within`,
+    #   `within_frame` or `within_window` methods
+    # @return                              value returned by the block
+    #
+    def within_window(window_or_handle)
+      if window_or_handle.instance_of?(Capybara::Window)
+        original = current_window
+        switch_to_window(window_or_handle) unless original == window_or_handle
+        scopes << nil
+        begin
+          yield
+        ensure
+          @scopes.pop
+          switch_to_window(original) unless original == window_or_handle
+        end
+      elsif window_or_handle.is_a?(Proc)
+        original = current_window
+        switch_to_window { window_or_handle.call }
+        scopes << nil
+        begin
+          yield
+        ensure
+          @scopes.pop
+          switch_to_window(original)
+        end
+      else
+        offending_line = caller.first
+        file_line = offending_line.match(/^(.+?):(\d+)/)[0]
+        warn "DEPRECATION WARNING: Passing string argument to #within_window is deprecated. "\
+             "Pass window object or lambda. (called from #{file_line})"
+        begin
+          scopes << nil
+          driver.within_window(window_or_handle) { yield }
+        ensure
+          @scopes.pop
+        end
+      end
+    end
+
+    ##
+    # Get the window that has been opened by the passed block.
+    # It will wait for it to be opened (in the same way as other Capybara methods wait).
+    # It's better to use this method than `windows.last`
+    # {https://dvcs.w3.org/hg/webdriver/raw-file/default/webdriver-spec.html#h_note_10 as order of windows isn't defined in some drivers}
+    #
+    # @param options [Hash]
+    # @option options [Numeric] :wait (Capybara.default_wait_time) wait time
+    # @return [Capybara::Window]       the window that has been opened within a block
+    # @raise [Capybara::WindowError]   if block passed to window hasn't opened window
+    #   or opened more than one window
+    #
+    def window_opened_by(options = {}, &block)
+      old_handles = driver.window_handles
+      block.call
+
+      wait_time = Capybara::Query.new(options).wait
+      document.synchronize(wait_time, errors: [Capybara::WindowError]) do
+        opened_handles = (driver.window_handles - old_handles)
+        if opened_handles.size != 1
+          raise Capybara::WindowError, "block passed to #window_opened_by "\
+                                       "opened #{opened_handles.size} windows instead of 1"
+        end
+        Window.new(self, opened_handles.first)
+      end
     end
 
     ##
@@ -479,7 +635,7 @@ module Capybara
     end
 
     def scopes
-      @scopes ||= [document]
+      @scopes ||= [nil]
     end
   end
 end
