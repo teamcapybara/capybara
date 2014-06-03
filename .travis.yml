@@ -2,7 +2,7 @@ language: ruby
 rvm:
   - 1.9.3
   - 2.0.0
-  - 2.1.1
+  - 2.1.2
   - jruby-19mode
   - rbx-2
 gemfile:
@@ -12,10 +12,10 @@ matrix:
     - gemfile: gemfiles/Gemfile.base-versions
       rvm: 1.9.3
     - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: 2.1.1
+      rvm: 2.1.2
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: 2.1.1
+      rvm: 2.1.2
     - gemfile: Gemfile
       rvm: jruby-19mode
     
