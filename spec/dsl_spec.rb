@@ -7,6 +7,7 @@ end
 
 Capybara::SpecHelper.run_specs TestClass.new, "DSL", :capybara_skip => [
   :js,
+  :modals,
   :screenshot,
   :frames,
   :windows,

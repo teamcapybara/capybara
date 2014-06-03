@@ -46,7 +46,11 @@ module Capybara
       :save_and_open_screenshot, :reset_session!, :response_headers,
       :status_code, :title, :has_title?, :has_no_title?, :current_scope
     ]
-    DSL_METHODS = NODE_METHODS + SESSION_METHODS
+    MODAL_METHODS = [
+      :accept_alert, :accept_confirm, :dismiss_confirm, :accept_prompt,
+      :dismiss_prompt, :respond_to_prompt
+    ]
+    DSL_METHODS = NODE_METHODS + SESSION_METHODS + MODAL_METHODS
 
     attr_reader :mode, :app, :server
     attr_accessor :synchronized
@@ -521,6 +525,56 @@ module Capybara
     def evaluate_script(script)
       @touched = true
       driver.evaluate_script(script)
+    end
+
+    ##
+    #
+    # Execute the block, accepting a alert.
+    #
+    def accept_alert(&blk)
+      driver.accept_modal(:alert, &blk)
+    end
+
+    ##
+    #
+    # Execute the block, accepting a confirm.
+    #
+    def accept_confirm(&blk)
+      driver.accept_modal(:confirm, &blk)
+    end
+
+    ##
+    #
+    # Execute the block, dismissing a confirm.
+    #
+    def dismiss_confirm(&blk)
+      driver.dismiss_modal(:confirm, &blk)
+    end
+
+    ##
+    #
+    # Execute the block, accepting a prompt.
+    #
+    def accept_prompt(&blk)
+      driver.accept_modal(:prompt, &blk)
+    end
+
+    ##
+    #
+    # Execute the block, dismissing a prompt.
+    #
+    def dismiss_prompt(&blk)
+      driver.dismiss_modal(:prompt, &blk)
+    end
+
+    ##
+    #
+    # Execute the block, responding with the provided value.
+    #
+    # @param [String] response   Response to provide to the prompt
+    #
+    def respond_to_prompt(response, &blk)
+      driver.accept_modal(:prompt, {response: response}, &blk)
     end
 
     ##

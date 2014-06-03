@@ -497,6 +497,44 @@ that this may break with more complicated expressions:
 result = page.evaluate_script('4 + 4');
 ```
 
+### Modals
+
+In drivers which support it, you can accept, dismiss and respond to alerts, confirms and prompts.
+
+You can accept or dismiss alert messages by wrapping the code that produces an alert in a block:
+
+```ruby
+accept_alert do
+  click_link('Show Alert')
+end
+```
+
+You can accept or dismiss a confirmation by wrapping it in a block, as well:
+
+```ruby
+dismiss_confirm do
+  click_link('Show Confirm')
+end
+```
+
+You can accept or dismiss prompts as well. Additionally, you can respond to a prompt:
+
+```ruby
+respond_to_prompt 'Linus Torvalds' do
+  click_link('Show Prompt About Linux')
+end
+```
+
+All modal methods return the message that was presented. So, you can access the prompt message
+by assigning the return to a variable:
+
+```ruby
+message = respond_to_prompt 'Linus Torvalds' do
+  click_link('Show Prompt About Linux')
+end
+expect(message).to eq('Who is the chief architect of Linux?')
+```
+
 ### Debugging
 
 It can be useful to take a snapshot of the page as it currently is and take a

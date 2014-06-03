@@ -191,6 +191,21 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.switch_to.window(handle) { yield }
   end
 
+  def accept_modal(type, options={}, &blk)
+    yield
+    modal.send_keys options[:response] if options[:response]
+    message = modal.text
+    modal.accept
+    message
+  end
+
+  def dismiss_modal(type, &blk)
+    yield
+    message = modal.text
+    modal.dismiss
+    message
+  end
+
   def quit
     @browser.quit if @browser
   rescue Errno::ECONNREFUSED
@@ -220,4 +235,9 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       result
     end
   end
+
+  def modal
+    @browser.switch_to.alert
+  end
+
 end
