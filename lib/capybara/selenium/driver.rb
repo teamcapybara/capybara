@@ -98,7 +98,9 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
           # to about:blank, so we rescue this error and do nothing
           # instead.
         end
-        @browser.navigate.to("about:blank")
+        @browser.execute_script %Q{
+          window.location = "about:blank";
+        }
       rescue Selenium::WebDriver::Error::UnhandledAlertError
         # This error is thrown if an unhandled alert is on the page
         # Firefox appears to automatically dismiss this alert, chrome does not
