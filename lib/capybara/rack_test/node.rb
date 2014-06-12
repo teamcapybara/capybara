@@ -27,7 +27,11 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     elsif input_field?
       set_input(value)
     elsif textarea?
-      native.content = value.to_s unless self[:readonly]
+      if self[:readonly]
+        warn "Attempt to set readonly element with value: #{value} \n * This will raise an exception in a future version of Capybara"
+      else
+        native.content = value.to_s
+      end
     end
   end
 
@@ -165,7 +169,11 @@ private
       end
       native.remove
     else
-      native['value'] = value.to_s unless self[:readonly]
+      if self[:readonly]
+        warn "Attempt to set readonly element with value: #{value} \n *This will raise an exception in a future version of Capybara"
+      else
+        native['value'] = value.to_s
+      end
     end
   end
 
