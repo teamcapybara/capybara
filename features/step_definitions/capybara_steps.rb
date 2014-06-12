@@ -13,7 +13,7 @@ end
 When /^I use a matcher that fails$/ do
   begin
     expect(page).to have_css('h1#doesnotexist')
-  rescue StandardError => e
+  rescue StandardError, RSpec::Expectations::ExpectationNotMetError => e
     @error_message = e.message
   end
 end

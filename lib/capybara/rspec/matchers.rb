@@ -1,6 +1,8 @@
 module Capybara
   module RSpecMatchers
     class Matcher
+      include ::RSpec::Matchers::Composable if defined?(::RSpec::Version) && ::RSpec::Version::STRING.to_f >= 3.0
+      
       def wrap(actual)
         if actual.respond_to?("has_selector?")
           actual
@@ -11,16 +13,24 @@ module Capybara
     end
 
     class HaveSelector < Matcher
+      attr_accessor :failure_message, :failure_message_when_negated
+      
       def initialize(*args)
         @args = args
       end
 
       def matches?(actual)
         wrap(actual).assert_selector(*@args)
+      rescue Capybara::ExpectationNotMet => e
+        @failure_message = e.message        
+        return false
       end
 
       def does_not_match?(actual)
         wrap(actual).assert_no_selector(*@args)
+      rescue Capybara::ExpectationNotMet => e
+        @failure_message_when_negated = e.message
+        return false
       end
 
       def description
@@ -30,6 +40,11 @@ module Capybara
       def query
         @query ||= Capybara::Query.new(*@args)
       end
+      
+      # RSpec 2 compatibility:
+      alias_method :failure_message_for_should, :failure_message
+      alias_method :failure_message_for_should_not, :failure_message_when_negated
+      
     end
 
     class HaveText < Matcher
