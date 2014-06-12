@@ -15,6 +15,7 @@ module Capybara
   class InfiniteRedirectError < CapybaraError; end
   class ScopeError < CapybaraError; end
   class WindowError < CapybaraError; end
+  class ReadOnlyElementError < CapybaraError; end
 
   class << self
     attr_accessor :asset_host, :app_host, :run_server, :default_host, :always_include_port
