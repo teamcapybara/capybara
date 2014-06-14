@@ -1,4 +1,4 @@
-if RSpec::Version::STRING.to_f >= 3.0
+if RSpec::Core::Version::STRING.to_f >= 3.0
   RSpec.shared_context "Capybara Features", :capybara_feature => true do
     instance_eval do
       alias background before
