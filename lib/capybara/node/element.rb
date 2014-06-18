@@ -89,9 +89,24 @@ module Capybara
       # Set the value of the form element to the given value.
       #
       # @param [String] value    The new value
+      # @param [Hash{}] options  Driver specific options for how to set the value
       #
-      def set(value)
-        synchronize { base.set(value) }
+      def set(value, options={})
+        options ||= {}
+        
+        driver_supports_options = (base.method(:set).arity != 1)
+
+        unless options.empty? || driver_supports_options 
+          warn "Options passed to Capybara::Node#set but the driver doesn't support them"
+        end
+
+        synchronize do
+          if driver_supports_options
+            base.set(value, options)
+          else
+            base.set(value)
+          end
+        end
       end
 
       ##
