@@ -10,7 +10,8 @@ Capybara::SpecHelper.run_specs TestSessions::RackTest, "RackTest", :capybara_ski
   :frames,
   :windows,
   :server,
-  :hover
+  :hover,
+  :about_scheme,
 ]
 
 RSpec.describe Capybara::Session do

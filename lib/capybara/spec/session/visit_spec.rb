@@ -33,6 +33,11 @@ Capybara::SpecHelper.spec '#visit' do
     end.to raise_error(TestApp::TestAppError)
   end
 
+  it "should be able to open non-http url", requires: [:about_scheme] do
+    @session.visit("about:blank")
+    @session.assert_no_selector :xpath, "/html/body/*"
+  end
+
   context "when Capybara.always_include_port is true" do
 
     let(:root_uri) do
