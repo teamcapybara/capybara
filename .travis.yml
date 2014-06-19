@@ -18,6 +18,10 @@ matrix:
       rvm: 2.1.2
     - gemfile: Gemfile
       rvm: jruby-19mode
+env:
+  global:
+    - BUNDLE_JOBS=4
+    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
     
 before_install:
   - CHROMEDRIVER_VERSION=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
