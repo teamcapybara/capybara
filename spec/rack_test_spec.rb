@@ -57,6 +57,15 @@ RSpec.describe Capybara::Session do
         @session.driver.options[:respect_data_method] = false
       end
     end
+    
+    describe "#fill_in" do
+      it "should warn that :fill_options are not supported" do
+        expect_any_instance_of(Capybara::Node::Element).to receive(:warn)
+          .with("Options passed to Capybara::Node#set but the driver doesn't support them")
+        @session.visit "/with_html"
+        @session.fill_in 'test_field', with: 'not_moneky', fill_options: { random: true }
+      end
+    end
 
     describe "#attach_file" do
       context "with multipart form" do
