@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'capybara/rspec'
 
-RSpec.configuration.before(:each, :example_group => {:file_path => "./spec/rspec/features_spec.rb"}) do
+RSpec.configuration.before(:each, { file_path: "./spec/rspec/features_spec.rb" } ) do
   @in_filtered_hook = true
 end
 
