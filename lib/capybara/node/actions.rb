@@ -45,12 +45,15 @@ module Capybara
       #     page.fill_in 'Name', :with => 'Bob'
       #
       # @param [String] locator                 Which field to fill in
-      # @param [Hash{:with => String}] options  The value to fill in
+      # @param [Hash] options
+      # @option options [String] :with     The value to fill in - required
+      # @option options [Hash] :fill_options Driver specific options regarding how to fill fields
       #
       def fill_in(locator, options={})
         raise "Must pass a hash containing 'with'" if not options.is_a?(Hash) or not options.has_key?(:with)
         with = options.delete(:with)
-        find(:fillable_field, locator, options).set(with)
+        fill_options = options.delete(:fill_options)
+        find(:fillable_field, locator, options).set(with, fill_options)
       end
 
       ##
