@@ -13,7 +13,7 @@ module Capybara
     end
 
     class HaveSelector < Matcher
-      attr_accessor :failure_message, :failure_message_when_negated
+      attr_reader :failure_message, :failure_message_when_negated
       
       def initialize(*args)
         @args = args
