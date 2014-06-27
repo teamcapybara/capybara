@@ -132,10 +132,11 @@ module Capybara
       def matches?(window)
         @window = window
         start_time = Time.now
-        while window.exists? && (Time.now - start_time) < @wait_time
+        while window.exists?
+          return false if (Time.now - start_time) > @wait_time
           sleep 0.05
         end
-        window.closed?
+        true
       end
 
       def failure_message
