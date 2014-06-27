@@ -517,10 +517,10 @@ dismiss_confirm do
 end
 ```
 
-You can accept or dismiss prompts as well. Additionally, you can respond to a prompt:
+You can accept or dismiss prompts as well, and also provide text to fill in for the response:
 
 ```ruby
-respond_to_prompt 'Linus Torvalds' do
+accept_prompt(with: 'Linus Torvalds') do
   click_link('Show Prompt About Linux')
 end
 ```
@@ -529,7 +529,7 @@ All modal methods return the message that was presented. So, you can access the 
 by assigning the return to a variable:
 
 ```ruby
-message = respond_to_prompt 'Linus Torvalds' do
+message = accept_prompt(with: 'Linus Torvalds') do
   click_link('Show Prompt About Linux')
 end
 expect(message).to eq('Who is the chief architect of Linux?')

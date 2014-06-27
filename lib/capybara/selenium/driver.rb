@@ -207,7 +207,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def accept_modal(type, options={}, &blk)
     yield
     modal = find_modal(options)
-    modal.send_keys options[:response] if options[:response]
+    modal.send_keys options[:with] if options[:with]
     message = modal.text
     modal.accept
     message

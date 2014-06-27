@@ -11,7 +11,7 @@ Capybara::SpecHelper.spec '#accept_alert', :requires => [:modals] do
   end
   
   it "should accept the alert if the text matches" do
-    @session.accept_alert(text: 'Alert opened') do
+    @session.accept_alert 'Alert opened' do
       @session.click_link('Open alert')
     end
     expect(@session).to have_xpath("//a[@id='open-alert' and @opened='true']")
@@ -19,7 +19,7 @@ Capybara::SpecHelper.spec '#accept_alert', :requires => [:modals] do
   
   it "should not accept the alert if the text doesnt match" do
     expect do
-      @session.accept_alert(text: 'Incorrect Text') do
+      @session.accept_alert 'Incorrect Text' do
         @session.click_link('Open alert')
       end
     end.to raise_error(Capybara::ModalNotFound)
