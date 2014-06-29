@@ -43,7 +43,7 @@ module Capybara
       end
       
       def right_click
-        raise NotImplmentedError
+        raise NotImplementedError
       end
       
       def double_click
