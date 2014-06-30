@@ -206,30 +206,30 @@ module Capybara
     #
     # @param [#to_s] url     The URL to navigate to. The parameter will be cast to a String.
     #
-    def visit(url)
+    def visit(visit_uri)
       raise_server_error!
-
-      url = url.to_s
       @touched = true
 
-      url_relative = URI.parse(url).scheme.nil?
+      visit_uri = URI.parse(visit_uri.to_s)
 
-      if url_relative && Capybara.app_host
-        url = Capybara.app_host + url
-        url_relative = false
+      uri_base = if @server
+        visit_uri.port = @server.port if Capybara.always_include_port && (visit_uri.port == visit_uri.default_port)
+        URI.parse(Capybara.app_host || "http://#{@server.host}:#{@server.port}")
+      else
+        Capybara.app_host && URI.parse(Capybara.app_host)
       end
 
-      if @server
-        url = "http://#{@server.host}:#{@server.port}" + url if url_relative
-
-        if Capybara.always_include_port
-          uri = URI.parse(url)
-          uri.port = @server.port if uri.port == uri.default_port
-          url = uri.to_s
-        end
+      # TODO - this is only for compatability with previous 2.x behavior that concatenated
+      # Capybara.app_host and a "relative" path - Consider removing in 3.0
+      # @abotalov brought up a good point about this behavior potentially being useful to people
+      # deploying to a subdirectory and/or single page apps where only the url fragment changes
+      if visit_uri.scheme.nil? && uri_base
+        visit_uri.path = uri_base.path + visit_uri.path
       end
 
-      driver.visit(url)
+      visit_uri = uri_base.merge(visit_uri) unless uri_base.nil?
+
+      driver.visit(visit_uri.to_s)
     end
 
     ##
