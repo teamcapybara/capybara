@@ -208,27 +208,29 @@ module Capybara
 
       uri = URI.parse(url.to_s)
 
-      if uri.host.nil? && Capybara.app_host
-        app_host_uri = URI.parse(Capybara.app_host)
-        uri.scheme = app_host_uri.scheme
-        uri.host   = app_host_uri.host
-        uri.port   = app_host_uri.port
-      end
+      unless uri.registry || uri.opaque
 
-      if @server
-        if uri.host.nil?
-          uri.host = @server.host
-          uri.port = @server.port
+        if uri.host.nil? && Capybara.app_host
+          app_host_uri = URI.parse(Capybara.app_host)
+          uri.scheme = app_host_uri.scheme
+          uri.host   = app_host_uri.host
+          uri.port   = app_host_uri.port
         end
 
-        if Capybara.always_include_port && uri.port == uri.default_port
-          uri.port = @server.port
+        if @server
+          if uri.host.nil?
+            uri.host = @server.host
+            uri.port = @server.port
+          end
+
+          if Capybara.always_include_port && uri.port == uri.default_port
+            uri.port = @server.port
+          end
         end
+
+        uri.scheme ||= 'http'
+        uri.path = '/' if uri.path.to_s.empty?
       end
-
-      uri.scheme ||= 'http'
-      uri.path = '/' if uri.path.to_s.empty?
-
       driver.visit(uri.to_s)
     end
 
