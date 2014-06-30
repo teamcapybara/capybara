@@ -17,6 +17,15 @@ Capybara::SpecHelper.spec '#visit' do
     expect(@session).to have_content('Another World')
   end
 
+  it "should fetch a response when absolute URI doesn't have a scheme" do
+    # Preparation
+    @session.visit('/')
+    root_uri = URI.parse(@session.current_url)
+
+    @session.visit("//#{root_uri.host}:#{root_uri.port}/")
+    expect(@session).to have_content('Hello world!')
+  end
+
   it "should fetch a response when absolute URI doesn't have a trailing slash" do
     # Preparation
     @session.visit('/foo/bar')
@@ -75,6 +84,12 @@ Capybara::SpecHelper.spec '#visit' do
     it "should visit a fully qualified URL" do
       serverless_session = Capybara::Session.new(@session.mode, nil)
       serverless_session.visit("http://#{@session.server.host}:#{@session.server.port}/foo")
+      expect(serverless_session).to have_content("Another World")
+    end
+
+    it "should visit an absolute URL without scheme" do
+      serverless_session = Capybara::Session.new(@session.mode, nil)
+      serverless_session.visit("//#{@session.server.host}:#{@session.server.port}/foo")
       expect(serverless_session).to have_content("Another World")
     end
   end
