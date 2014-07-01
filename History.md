@@ -1,3 +1,22 @@
+# Unreleased
+
+### Added
+
+* 'assert_text', 'assert_no_text', 'assert_title', 'assert_no_title' methods added [Andrey Botalov]
+* have_title matcher now supports :wait option [Andrey Botalov]
+* More descriptive have_text error messages [Andrey Botalov]
+* API for working with modals (alert, confirm, prompt) - [Mike Pack, Thomas Walpole]
+* Warning when attempting to set contents of a readonly element
+* Suport for and/or compounding of Capybara's RSpec matchers for RSpec 3 [Thomas Walpole]
+
+### Fixed
+
+* HaveText error message now shows the text checked all the time
+* RackTest driver no longer attempts to follow an anchor tag without an href attribute
+* Warnings under RSpec 3
+* Handle URI schemes like about: correctly [Andrey Botalov]
+* RSpecs expose_dsl_globally option is now followed [Myron Marston, Thomas Walpole]
+
 # Version 2.3.0
 
 Release date: 2014-06-02
