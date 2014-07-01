@@ -91,13 +91,26 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def reset!
     # Use instance variable directly so we avoid starting the browser just to reset the session
     if @browser
-      begin @browser.manage.delete_all_cookies
-      rescue Selenium::WebDriver::Error::UnhandledError
-        # delete_all_cookies fails when we've previously gone
-        # to about:blank, so we rescue this error and do nothing
-        # instead.
+      begin
+        begin @browser.manage.delete_all_cookies
+        rescue Selenium::WebDriver::Error::UnhandledError
+          # delete_all_cookies fails when we've previously gone
+          # to about:blank, so we rescue this error and do nothing
+          # instead.
+        end
+        @browser.navigate.to("about:blank")
+      rescue Selenium::WebDriver::Error::UnhandledAlertError
+        # This error is thrown if an unhandled alert is on the page
+        # Firefox appears to automatically dismiss this alert, chrome does not
+        # We'll try to accept it
+        begin
+          @browser.switch_to.alert.accept
+        rescue Selenium::WebDriver::Error::NoAlertPresentError
+          # The alert is now gone - nothing to do
+        end
+        # try cleaning up the browser again
+        retry
       end
-      @browser.navigate.to("about:blank")
     end
   end
 
@@ -191,6 +204,23 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.switch_to.window(handle) { yield }
   end
 
+  def accept_modal(type, options={}, &blk)
+    yield
+    modal = find_modal(options)
+    modal.send_keys options[:with] if options[:with]
+    message = modal.text
+    modal.accept
+    message
+  end
+
+  def dismiss_modal(type, options={}, &blk)
+    yield
+    modal = find_modal(options)
+    message = modal.text
+    modal.dismiss
+    message
+  end
+
   def quit
     @browser.quit if @browser
   rescue Errno::ECONNREFUSED
@@ -220,4 +250,22 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       result
     end
   end
+
+  def find_modal(options={})
+    # Selenium has its own built in wait (2 seconds)for a modal to show up, so this wait is really the minimum time
+    # Actual wait time may be longer than specified
+    wait = Selenium::WebDriver::Wait.new(
+      timeout: (options[:wait] || Capybara.default_wait_time),
+      ignore: Selenium::WebDriver::Error::NoAlertPresentError)
+    begin
+      modal = wait.until do
+        alert = @browser.switch_to.alert
+        regexp = options[:text].is_a?(Regexp) ? options[:text] : Regexp.escape(options[:text].to_s)
+        alert.text.match(regexp) ? alert : nil
+      end
+    rescue Selenium::WebDriver::Error::TimeOutError
+      raise Capybara::ModalNotFound.new("Unable to find modal dialog#{" with #{options[:text]}" if options[:text]}")
+    end
+  end
+
 end

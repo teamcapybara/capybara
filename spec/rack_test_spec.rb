@@ -6,6 +6,7 @@ end
 
 Capybara::SpecHelper.run_specs TestSessions::RackTest, "RackTest", :capybara_skip => [
   :js,
+  :modals,
   :screenshot,
   :frames,
   :windows,
