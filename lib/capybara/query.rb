@@ -1,5 +1,7 @@
 module Capybara
-  class Query
+  # @deprecated This class and its methods are not supposed to be used by users of Capybara's public API.
+  #   It may be removed in future versions of Capybara.
+  class Query < Queries::BaseQuery
     attr_accessor :selector, :locator, :options, :expression, :find, :negative
 
     VALID_KEYS = [:text, :visible, :between, :count, :maximum, :minimum, :exact, :match, :wait]
@@ -23,7 +25,7 @@ module Capybara
       end
 
       @expression = @selector.call(@locator)
-      assert_valid_keys!
+      assert_valid_keys
     end
 
     def name; selector.name; end
@@ -70,14 +72,6 @@ module Capybara
       end
     end
 
-    def wait
-      if options.has_key?(:wait)
-        @options[:wait] or 0
-      else
-        Capybara.default_wait_time
-      end
-    end
-
     def exact?
       if options.has_key?(:exact)
         @options[:exact]
@@ -107,16 +101,32 @@ module Capybara
       @expression
     end
 
-  private
-
-    def assert_valid_keys!
-      valid_keys = VALID_KEYS + @selector.custom_filters.keys
-      invalid_keys = @options.keys - valid_keys
-      unless invalid_keys.empty?
-        invalid_names = invalid_keys.map(&:inspect).join(", ")
-        valid_names = valid_keys.map(&:inspect).join(", ")
-        raise ArgumentError, "invalid keys #{invalid_names}, should be one of #{valid_names}"
+    # @api private
+    def resolve_for(node, exact = nil)
+      node.synchronize do
+        children = if selector.format == :css
+          node.find_css(self.css)
+        else
+          node.find_xpath(self.xpath(exact))
+        end.map do |child|
+          if node.is_a?(Capybara::Node::Base)
+            Capybara::Node::Element.new(node.session, child, node, self)
+          else
+            Capybara::Node::Simple.new(child)
+          end
+        end
+        Capybara::Result.new(children, self)
       end
+    end
+
+    private
+
+    def valid_keys
+      COUNT_KEYS + [:text, :visible, :exact, :match, :wait] + @selector.custom_filters.keys
+    end
+
+    def assert_valid_keys
+      super
       unless VALID_MATCH.include?(match)
         raise ArgumentError, "invalid option #{match.inspect} for :match, should be one of #{VALID_MATCH.map(&:inspect).join(", ")}"
       end

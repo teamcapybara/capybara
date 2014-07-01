@@ -2,7 +2,7 @@ module Capybara
   module RSpecMatchers
     class Matcher
       include ::RSpec::Matchers::Composable if defined?(::RSpec::Version) && ::RSpec::Version::STRING.to_f >= 3.0
-      
+
       def wrap(actual)
         if actual.respond_to?("has_selector?")
           actual
@@ -14,7 +14,7 @@ module Capybara
 
     class HaveSelector < Matcher
       attr_reader :failure_message, :failure_message_when_negated
-      
+
       def initialize(*args)
         @args = args
       end
@@ -22,7 +22,7 @@ module Capybara
       def matches?(actual)
         wrap(actual).assert_selector(*@args)
       rescue Capybara::ExpectationNotMet => e
-        @failure_message = e.message        
+        @failure_message = e.message
         return false
       end
 
@@ -40,45 +40,39 @@ module Capybara
       def query
         @query ||= Capybara::Query.new(*@args)
       end
-      
+
       # RSpec 2 compatibility:
       alias_method :failure_message_for_should, :failure_message
       alias_method :failure_message_for_should_not, :failure_message_when_negated
-      
     end
 
     class HaveText < Matcher
       attr_reader :type, :content, :options
 
+      attr_reader :failure_message, :failure_message_when_negated
+
       def initialize(*args)
+        @args = args.dup
+
+        # are set just for backwards compatability
         @type = args.shift if args.first.is_a?(Symbol)
         @content = args.shift
         @options = (args.first.is_a?(Hash))? args.first : {}
       end
 
       def matches?(actual)
-        @actual = wrap(actual)
-        @actual.has_text?(type, content, options)
+        wrap(actual).assert_text(*@args)
+      rescue Capybara::ExpectationNotMet => e
+        @failure_message = e.message
+        return false
       end
 
       def does_not_match?(actual)
-        @actual = wrap(actual)
-        @actual.has_no_text?(type, content, options)
+        wrap(actual).assert_no_text(*@args)
+      rescue Capybara::ExpectationNotMet => e
+        @failure_message_when_negated = e.message
+        return false
       end
-
-      def failure_message
-        message = Capybara::Helpers.failure_message(description, options)
-        message << " in #{format(@actual.text(type))}"
-        message
-      end
-
-      def failure_message_when_negated
-        failure_message.sub(/(to find)/, 'not \1')
-      end
-
-      # RSpec 2 compatibility:
-      alias_method :failure_message_for_should, :failure_message
-      alias_method :failure_message_for_should_not, :failure_message_when_negated
 
       def description
         "text #{format(content)}"
@@ -88,40 +82,45 @@ module Capybara
         content = Capybara::Helpers.normalize_whitespace(content) unless content.is_a? Regexp
         content.inspect
       end
+
+      # RSpec 2 compatibility:
+      alias_method :failure_message_for_should, :failure_message
+      alias_method :failure_message_for_should_not, :failure_message_when_negated
     end
 
     class HaveTitle < Matcher
       attr_reader :title
 
-      def initialize(title)
-        @title = title
+      attr_reader :failure_message, :failure_message_when_negated
+
+      def initialize(*args)
+        @args = args
+
+        # are set just for backwards compatability
+        @title = args.first
       end
 
       def matches?(actual)
-        @actual = wrap(actual)
-        @actual.has_title?(title)
+        wrap(actual).assert_title(*@args)
+      rescue Capybara::ExpectationNotMet => e
+        @failure_message = e.message
+        return false
       end
 
       def does_not_match?(actual)
-        @actual = wrap(actual)
-        @actual.has_no_title?(title)
+        wrap(actual).assert_no_title(*@args)
+      rescue Capybara::ExpectationNotMet => e
+        @failure_message_when_negated = e.message
+        return false
       end
 
-      def failure_message
-        "expected there to be title #{title.inspect} in #{@actual.title.inspect}"
-      end
-
-      def failure_message_when_negated
-        "expected there not to be title #{title.inspect} in #{@actual.title.inspect}"
+      def description
+        "have title #{title.inspect}"
       end
 
       # RSpec 2 compatibility:
       alias_method :failure_message_for_should, :failure_message
       alias_method :failure_message_for_should_not, :failure_message_when_negated
-
-      def description
-        "have title #{title.inspect}"
-      end
     end
 
     class BecomeClosed
@@ -169,8 +168,8 @@ module Capybara
     end
     alias_method :have_content, :have_text
 
-    def have_title(title)
-      HaveTitle.new(title)
+    def have_title(title, options = {})
+      HaveTitle.new(title, options)
     end
 
     def have_link(locator, options={})

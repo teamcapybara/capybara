@@ -51,7 +51,7 @@ module Capybara
     end
 
     def negative_failure_message
-      failure_message.sub(/(to be found|to find)/, 'not \1')
+      failure_message.sub(/(to find)/, 'not \1')
     end
   end
 end

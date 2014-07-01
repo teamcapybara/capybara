@@ -14,6 +14,7 @@ module Capybara
     class Simple
       include Capybara::Node::Finders
       include Capybara::Node::Matchers
+      include Capybara::Node::DocumentMatchers
 
       attr_reader :native
 
@@ -148,25 +149,18 @@ module Capybara
         native.xpath("//title").first.text
       end
 
-      def has_title?(content)
-        title.match(Capybara::Helpers.to_regexp(content))
+      def inspect
+        %(#<Capybara::Node::Simple tag="#{tag_name}" path="#{path}">)
       end
 
-      def has_no_title?(content)
-        not has_title?(content)
+      # @api private
+      def find_css(css)
+        native.css(css)
       end
 
-    private
-
-      def resolve_query(query, exact=nil)
-        elements = if query.selector.format == :css
-          native.css(query.css)
-        else
-          native.xpath(query.xpath(exact))
-        end.map do |node|
-          self.class.new(node)
-        end
-        Capybara::Result.new(elements, query)
+      # @api private
+      def find_xpath(xpath)
+        native.xpath(xpath)
       end
     end
   end

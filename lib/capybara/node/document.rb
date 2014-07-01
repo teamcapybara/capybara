@@ -9,6 +9,8 @@ module Capybara
     # @see Capybara::Node
     #
     class Document < Base
+      include Capybara::Node::DocumentMatchers
+
       def inspect
         %(#<Capybara::Document>)
       end

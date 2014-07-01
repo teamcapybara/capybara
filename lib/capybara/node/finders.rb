@@ -29,10 +29,10 @@ module Capybara
         query = Capybara::Query.new(*args)
         synchronize(query.wait) do
           if query.match == :smart or query.match == :prefer_exact
-            result = resolve_query(query, true)
-            result = resolve_query(query, false) if result.size == 0 and not query.exact?
+            result = query.resolve_for(self, true)
+            result = query.resolve_for(self, false) if result.size == 0 && !query.exact?
           else
-            result = resolve_query(query)
+            result = query.resolve_for(self)
           end
           if query.match == :one or query.match == :smart and result.size > 1
             raise Capybara::Ambiguous.new("Ambiguous match, found #{result.size} elements matching #{query.description}")
@@ -144,8 +144,8 @@ module Capybara
       def all(*args)
         query = Capybara::Query.new(*args)
         synchronize(query.wait) do
-          result = resolve_query(query)
-          raise(Capybara::ExpectationNotMet, result.failure_message) unless result.matches_count?
+          result = query.resolve_for(self)
+          raise Capybara::ExpectationNotMet, result.failure_message unless result.matches_count?
           result
         end
       end
@@ -163,21 +163,6 @@ module Capybara
       #
       def first(*args)
         all(*args).first
-      end
-
-    private
-
-      def resolve_query(query, exact=nil)
-        synchronize do
-          elements = if query.selector.format==:css
-            base.find_css(query.css)
-          else
-            base.find_xpath(query.xpath(exact))
-          end.map do |node|
-            Capybara::Node::Element.new(session, node, self, query)
-          end
-          Capybara::Result.new(elements, query)
-        end
       end
     end
   end

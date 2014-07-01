@@ -97,6 +97,16 @@ module Capybara
         end
       end
 
+      # @api private
+      def find_css(css)
+        base.find_css(css)
+      end
+
+      # @api private
+      def find_xpath(xpath)
+        base.find_xpath(xpath)
+      end
+
     protected
 
       def catch_error?(error, errors = nil)
