@@ -245,7 +245,7 @@ Capybara::SpecHelper.spec "node" do
   end
 
   describe '#right_click', :requires => [:js] do
-    it "should double click an element" do
+    it "should right click an element" do
       @session.visit('/with_js')
       @session.find(:css, '#click-test').right_click
       expect(@session.find(:css, '#has-been-right-clicked')).to be
