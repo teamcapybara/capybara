@@ -115,7 +115,7 @@ class Capybara::Driver::Base
   # @return [String]  the message shown in the modal
   # @raise [Capybara::ModalNotFound]  if modal dialog hasn't been found
   #
-  def dismiss_modal(type, &blk)
+  def dismiss_modal(type, options={}, &blk)
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#dismiss_modal'
   end
 

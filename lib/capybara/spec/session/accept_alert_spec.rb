@@ -23,7 +23,6 @@ Capybara::SpecHelper.spec '#accept_alert', :requires => [:modals] do
         @session.click_link('Open alert')
       end
     end.to raise_error(Capybara::ModalNotFound)
-    # @session.accept_alert {}  # clear the alert so browser continues to function
   end
 
   it "should return the message presented" do

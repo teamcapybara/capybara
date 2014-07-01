@@ -82,7 +82,7 @@ module Capybara
     #
     # This method does not:
     #
-    #   * accept modal dialogs if they are present
+    #   * accept modal dialogs if they are present (Selenium driver now does, others may not)
     #   * clear browser cache/HTML 5 local storage/IndexedDB/Web SQL database/etc.
     #   * modify state of the driver/underlying browser in any other way
     #
