@@ -91,10 +91,30 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#no_such_window_error'
   end
   
+  
+  ##
+  #
+  # Execute the block, and then accept the modal opened.
+  # @param type [:alert, :confirm, :prompt]
+  # @option options [Numeric] :wait  How long to wait for the modal to appear after executing the block.
+  # @option options [String, Regexp] :text  Text to verify is in the message shown in the modal
+  # @option options [String] :with  Text to fill in in the case of a prompt
+  # @return [String]  the message shown in the modal
+  # @raise [Capybara::ModalNotFound]  if modal dialog hasn't been found
+  #
   def accept_modal(type, options={}, &blk)
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#accept_modal'
   end
 
+  ##
+  #
+  # Execute the block, and then dismiss the modal opened.
+  # @param type [:alert, :confirm, :prompt]
+  # @option options [Numeric] :wait  How long to wait for the modal to appear after executing the block.
+  # @option options [String, Regexp] :text  Text to verify is in the message shown in the modal
+  # @return [String]  the message shown in the modal
+  # @raise [Capybara::ModalNotFound]  if modal dialog hasn't been found
+  #
   def dismiss_modal(type, &blk)
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#dismiss_modal'
   end
