@@ -19,6 +19,12 @@ Capybara::SpecHelper.spec '#find_field' do
     end.to raise_error(Capybara::ElementNotFound)
   end
 
+  it "should warn if filter option is invalid" do
+    expect_any_instance_of(Kernel).to receive(:warn).
+      with('Invalid value nil passed to filter disabled')
+    @session.find_field('Dog', disabled: nil)
+  end
+
   it "should be aliased as 'field_labeled' for webrat compatibility" do
     expect(@session.field_labeled('Dog').value).to eq('dog')
     expect do

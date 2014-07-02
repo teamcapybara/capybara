@@ -597,7 +597,7 @@ RSpec.describe Capybara::RSpecMatchers do
     it "gives proper description for a given value" do
       expect(have_field('Text field', with: 'some value').description).to eq("have field \"Text field\" with value \"some value\"")
     end
-
+    
     it "passes if there is such a field" do
       expect(html).to have_field('Text field')
     end
@@ -639,9 +639,9 @@ RSpec.describe Capybara::RSpecMatchers do
     end
 
     it "gives proper description" do
-      expect(have_checked_field('it is checked').description).to eq("have field \"it is checked\"")
+      expect(have_checked_field('it is checked').description).to eq("have field \"it is checked\" that is checked")
     end
-
+    
     context "with should" do
       it "passes if there is such a field and it is checked" do
         expect(html).to have_checked_field('it is checked')
@@ -688,7 +688,7 @@ RSpec.describe Capybara::RSpecMatchers do
     end
 
     it "gives proper description" do
-      expect(have_unchecked_field('unchecked field').description).to eq("have field \"unchecked field\"")
+      expect(have_unchecked_field('unchecked field').description).to eq("have field \"unchecked field\" that is not checked")
     end
 
     context "with should" do
@@ -735,6 +735,10 @@ RSpec.describe Capybara::RSpecMatchers do
 
     it "gives proper description" do
       expect(have_select('Select Box').description).to eq("have select box \"Select Box\"")
+    end
+    
+    it "gives proper description for a given selected value" do
+      expect(have_select('Select Box', selected: 'some value').description).to eq("have select box \"Select Box\" with \"some value\" selected")
     end
 
     it "passes if there is such a select" do
