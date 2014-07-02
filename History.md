@@ -5,9 +5,10 @@
 * 'assert_text', 'assert_no_text', 'assert_title', 'assert_no_title' methods added [Andrey Botalov]
 * have_title matcher now supports :wait option [Andrey Botalov]
 * More descriptive have_text error messages [Andrey Botalov]
-* API for working with modals (alert, confirm, prompt) - [Mike Pack, Thomas Walpole]
+* New modal API ('accept_alert', 'accept_confirm', 'dismiss_confirm', 'accept_prompt', 'dismiss_prompt') - [Mike Pack, Thomas Walpole]
 * Warning when attempting to set contents of a readonly element
 * Suport for and/or compounding of Capybara's RSpec matchers for RSpec 3 [Thomas Walpole]
+* :fill_options option for 'fill_in' method that propagates to 'set' to allow for driver specific modification of how fields are filled in
 
 ### Fixed
 
