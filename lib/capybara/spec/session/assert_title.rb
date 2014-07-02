@@ -12,7 +12,6 @@ Capybara::SpecHelper.spec '#assert_title' do
   end
 
   it "should allow regexp matches" do
-    @session.should have_title(/w[a-z]{3}_js/)
     expect(@session.assert_title(/w[a-z]{3}_js/)).to eq(true)
     expect do
       @session.assert_title(/w[a-z]{10}_js/)
