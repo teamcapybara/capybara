@@ -64,7 +64,7 @@ RSpec.describe Capybara::Session do
       end
     end
     
-    describe "#accept_alert", focus: true do
+    describe "#accept_alert" do
       it "supports a blockless mode" do
         @session.visit('/with_js')
         @session.click_link('Open alert')

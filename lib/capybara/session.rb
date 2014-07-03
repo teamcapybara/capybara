@@ -530,12 +530,13 @@ module Capybara
     #
     # Execute the block, accepting a alert.
     #
-    # @overload accept_alert(text, options = {}, &blk)
-    #   @param text [String, Regexp]  Text or regex to match against the text in the modal.  If not provided any prompt modal is matched
-    # @overload accept_alert(options = {}, &blk)
-    # @option options [Numeric] :wait  How long to wait for the modal to appear after executing the block.
-    # @return [String]  the message shown in the modal
-    # @raise [Capybara::ModalNotFound]  if modal dialog hasn't been found
+    # @!macro modal_params
+    #   @overload $0(text, options = {}, &blk)
+    #     @param text [String, Regexp]  Text or regex to match against the text in the modal.  If not provided any modal is matched
+    #   @overload $0(options = {}, &blk)
+    #   @option options [Numeric] :wait  How long to wait for the modal to appear after executing the block.
+    #   @return [String]  the message shown in the modal
+    #   @raise [Capybara::ModalNotFound]  if modal dialog hasn't been found
     #
     def accept_alert(text_or_options=nil, options={}, &blk)
       if text_or_options.is_a? Hash
@@ -551,12 +552,7 @@ module Capybara
     #
     # Execute the block, accepting a confirm.
     #
-    # @overload accept_confirm(text, options = {}, &blk)
-    #   @param text [String, Regexp]  Text or regex to match against the text in the modal.  If not provided any prompt modal is matched
-    # @overload accept_confirm(options = {}, &blk)
-    # @option options [Numeric] :wait  How long to wait for the modal to appear after executing the block.
-    # @return [String]  the message shown in the modal
-    # @raise [Capybara::ModalNotFound]  if modal dialog hasn't been found
+    # @macro modal_params
     #
     def accept_confirm(text_or_options=nil, options={}, &blk)
       if text_or_options.is_a? Hash
@@ -572,12 +568,7 @@ module Capybara
     #
     # Execute the block, dismissing a confirm.
     #
-    # @overload dismiss_confirm(text, options = {}, &blk)
-    #   @param text [String, Regexp]  Text or regex to match against the text in the modal.  If not provided any prompt modal is matched
-    # @overload dismiss_confirm(options = {}, &blk)
-    # @option options [Numeric] :wait  How long to wait for the modal to appear after executing the block.
-    # @return [String]  the message shown in the modal
-    # @raise [Capybara::ModalNotFound]  if modal dialog hasn't been found
+    # @macro modal_params
     #
     def dismiss_confirm(text_or_options=nil, options={}, &blk)
       if text_or_options.is_a? Hash
@@ -593,13 +584,8 @@ module Capybara
     #
     # Execute the block, accepting a prompt, optionally responding to the prompt.
     #
-    # @overload accept_prompt(text, options = {}, &blk)
-    #   @param text [String, Regexp]  Text or regex to match against the text in the modal.  If not provided any prompt modal is matched
-    # @overload accept_prompt(options = {}, &blk)
+    # @macro modal_params
     # @option options [String] :with   Response to provide to the prompt
-    # @option options [Numeric] :wait  How long to wait for the prompt to appear after executing the block.
-    # @return [String]  the message shown in the modal
-    # @raise [Capybara::ModalNotFound]  if modal dialog hasn't been found
     #
     def accept_prompt(text_or_options=nil, options={}, &blk)
       if text_or_options.is_a? Hash
@@ -615,12 +601,7 @@ module Capybara
     #
     # Execute the block, dismissing a prompt.
     #
-    # @overload dismiss_prompt(text, options = {}, &blk)
-    #   @param text [String, Regexp]  Text or regex to match against the text in the modal.  If not provided any prompt modal is matched
-    # @overload dismiss_prompt(options = {}, &blk)
-    # @option options [Numeric] :wait  How long to wait for the prompt to appear after executing the block.
-    # @return [String]  the message shown in the modal
-    # @raise [Capybara::ModalNotFound]  if modal dialog hasn't been found
+    # @macro modal_params
     #
     def dismiss_prompt(text_or_options=nil, options={}, &blk)
       if text_or_options.is_a? Hash
