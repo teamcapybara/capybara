@@ -205,7 +205,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def accept_modal(type, options={}, &blk)
-    yield
+    yield if block_given?
     modal = find_modal(options)
     modal.send_keys options[:with] if options[:with]
     message = modal.text
@@ -214,7 +214,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def dismiss_modal(type, options={}, &blk)
-    yield
+    yield if block_given?
     modal = find_modal(options)
     message = modal.text
     modal.dismiss
