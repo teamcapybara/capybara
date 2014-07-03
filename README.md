@@ -60,10 +60,10 @@ You can use the Capybara DSL in your steps, like so:
 ```ruby
 When /I sign in/ do
   within("#session") do
-    fill_in 'Login', :with => 'user@example.com'
+    fill_in 'Email', :with => 'user@example.com'
     fill_in 'Password', :with => 'password'
   end
-  click_link 'Sign in'
+  click_button 'Sign in'
 end
 ```
 
@@ -105,10 +105,10 @@ describe "the signin process", :type => :feature do
   it "signs me in" do
     visit '/sessions/new'
     within("#session") do
-      fill_in 'Login', :with => 'user@example.com'
+      fill_in 'Email', :with => 'user@example.com'
       fill_in 'Password', :with => 'password'
     end
-    click_link 'Sign in'
+    click_button 'Sign in'
     expect(page).to have_content 'Success'
   end
 end
@@ -136,10 +136,10 @@ feature "Signing in" do
   scenario "Signing in with correct credentials" do
     visit '/sessions/new'
     within("#session") do
-      fill_in 'Login', :with => 'user@example.com'
+      fill_in 'Email', :with => 'user@example.com'
       fill_in 'Password', :with => 'caplin'
     end
-    click_link 'Sign in'
+    click_button 'Sign in'
     expect(page).to have_content 'Success'
   end
 
@@ -148,10 +148,10 @@ feature "Signing in" do
   scenario "Signing in as another user" do
     visit '/sessions/new'
     within("#session") do
-      fill_in 'Login', :with => other_user.email
+      fill_in 'Email', :with => other_user.email
       fill_in 'Password', :with => other_user.password
     end
-    click_link 'Sign in'
+    click_button 'Sign in'
     expect(page).to have_content 'Invalid email or password'
   end
 end
@@ -720,10 +720,10 @@ module MyModule
 
   def login!
     within("//form[@id='session']") do
-      fill_in 'Login', :with => 'user@example.com'
+      fill_in 'Email', :with => 'user@example.com'
       fill_in 'Password', :with => 'password'
     end
-    click_link 'Sign in'
+    click_button 'Sign in'
   end
 end
 ```
@@ -770,10 +770,10 @@ require 'capybara'
 
 session = Capybara::Session.new(:webkit, my_rack_app)
 session.within("//form[@id='session']") do
-  session.fill_in 'Login', :with => 'user@example.com'
+  session.fill_in 'Email', :with => 'user@example.com'
   session.fill_in 'Password', :with => 'password'
 end
-session.click_link 'Sign in'
+session.click_button 'Sign in'
 ```
 
 ## XPath, CSS and selectors
