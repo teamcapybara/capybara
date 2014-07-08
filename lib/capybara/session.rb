@@ -199,7 +199,7 @@ module Capybara
     #
     # Will actually navigate to `http://google.com:4567/test`.
     #
-    # @param [String] url     The URL to navigate to
+    # @param [#to_s] url     The URL to navigate to. The parameter will be cast to a String.
     #
     def visit(url)
       raise_server_error!
