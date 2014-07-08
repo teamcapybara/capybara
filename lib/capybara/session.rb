@@ -204,17 +204,18 @@ module Capybara
     def visit(url)
       raise_server_error!
 
+      url = url.to_s
       @touched = true
 
-      url_relative = URI.parse(url.to_s).scheme.nil?
+      url_relative = URI.parse(url).scheme.nil?
 
       if url_relative && Capybara.app_host
-        url = Capybara.app_host + url.to_s
+        url = Capybara.app_host + url
         url_relative = false
       end
 
       if @server
-        url = "http://#{@server.host}:#{@server.port}" + url.to_s if url_relative
+        url = "http://#{@server.host}:#{@server.port}" + url if url_relative
 
         if Capybara.always_include_port
           uri = URI.parse(url)
