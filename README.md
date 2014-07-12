@@ -83,7 +83,7 @@ tags set up for you.
 ## Using Capybara with RSpec
 
 Load RSpec 2.x support by adding the following line (typically to your
-`spec_helper.rb` file):
+`rails_helper.rb` file):
 
 ```ruby
 require 'capybara/rspec'
