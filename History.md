@@ -1,6 +1,6 @@
 # Version 2.4.1
 
-Release data: 2014-07-03
+Release date: 2014-07-03
 
 ### Added
 
