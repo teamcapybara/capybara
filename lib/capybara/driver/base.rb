@@ -27,11 +27,11 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#go_forward'
   end
 
-  def execute_script(script)
+  def execute_script(script, *args)
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#execute_script'
   end
 
-  def evaluate_script(script)
+  def evaluate_script(script, *args)
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#evaluate_script'
   end
 
