@@ -43,12 +43,12 @@ module Capybara
     ]
     SESSION_METHODS = [
       :body, :html, :source, :current_url, :current_host, :current_path,
-      :execute_script, :evaluate_script, :visit, :go_back, :go_forward,
-      :within, :within_fieldset, :within_table, :within_frame, :current_window,
-      :windows, :open_new_window, :switch_to_window, :within_window, :window_opened_by,
-      :save_page, :save_and_open_page, :save_screenshot,
-      :save_and_open_screenshot, :reset_session!, :response_headers,
-      :status_code, :current_scope
+      :current_path_query, :execute_script, :evaluate_script, :visit, :go_back,
+      :go_forward, :within, :within_fieldset, :within_table, :within_frame,
+      :current_window, :windows, :open_new_window, :switch_to_window,
+      :within_window, :window_opened_by, :save_page, :save_and_open_page,
+      :save_screenshot, :save_and_open_screenshot, :reset_session!,
+      :response_headers, :status_code, :current_scope
     ] + DOCUMENT_METHODS
     MODAL_METHODS = [
       :accept_alert, :accept_confirm, :dismiss_confirm, :accept_prompt,
@@ -173,6 +173,16 @@ module Capybara
     #
     def current_url
       driver.current_url
+    end
+
+    ##
+    #
+    # @return [String] Path and query of the current page, without any domain information
+    #
+    def current_path_query
+      uri = URI.parse(current_url)
+      return current_path if (not uri.query) or (uri.query and uri.query.empty?)
+      return "#{uri.path}?#{uri.query}" if uri.path and not uri.path.empty?
     end
 
     ##
