@@ -72,7 +72,8 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
 
   def submit(button)
     action = (button && button['formaction']) || native['action']
-    driver.submit(method, action.to_s, params(button))
+    requset_method = (button && button['formmethod']) || method
+    driver.submit(requset_method, action.to_s, params(button))
   end
 
   def multipart?
