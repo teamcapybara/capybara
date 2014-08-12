@@ -355,6 +355,15 @@ Capybara::SpecHelper.spec '#click_button' do
     end
   end
 
+  context "with formmethod attribute on button" do
+    it "should submit to the formethod attribute" do
+      @session.click_button('Formmethod button')
+      expect(@session.current_path).to eq '/form/get'
+      @results = extract_results(@session)
+      expect(@results['which_form']).to eq 'formaction form'
+    end
+  end
+
   it "should serialize and send valueless buttons that were clicked" do
     @session.click_button('No Value!')
     @results = extract_results(@session)
