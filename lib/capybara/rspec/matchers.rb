@@ -1,7 +1,7 @@
 module Capybara
   module RSpecMatchers
     class Matcher
-      include ::RSpec::Matchers::Composable if defined?(::RSpec::Version) && ::RSpec::Version::STRING.to_f >= 3.0
+      include ::RSpec::Matchers::Composable if defined?(::RSpec::Expectations::Version) && RSpec::Expectations::Version::STRING.to_f >= 3.0
 
       def wrap(actual)
         if actual.respond_to?("has_selector?")
