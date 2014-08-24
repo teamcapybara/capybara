@@ -6,7 +6,6 @@ require 'capybara/version'
 
 Gem::Specification.new do |s|
   s.name = "capybara"
-  s.rubyforge_project = "capybara"
   s.version = Capybara::VERSION
   s.required_ruby_version = ">= 1.9.3"
   s.license = "MIT"
