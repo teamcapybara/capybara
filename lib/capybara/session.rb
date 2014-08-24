@@ -616,54 +616,64 @@ module Capybara
 
     ##
     #
-    # Save a snapshot of the page.
+    # Save a snapshot of the page. If `Capybara.asset_host` is set it will inject `base` tag
+    #   pointing to `asset_host`.
     #
-    # @param  [String] path     The path to where it should be saved [optional]
+    # If invoked without arguments it will save file to `Capybara.save_and_open_page_path`
+    #   and file will be given randomly generated filename.
     #
-    def save_page(path=nil)
-      path ||= default_path('html')
-
-      FileUtils.mkdir_p(File.dirname(path))
-
-      File.open(path,'wb') { |f| f.write(Capybara::Helpers.inject_asset_host(body)) }
+    # @param [String] path  the path to where it should be saved
+    # @return [String]      the path to which the file was saved
+    #
+    def save_page(path = nil)
+      path = prepare_path(path, 'html')
+      File.write(path, Capybara::Helpers.inject_asset_host(body), mode: 'wb')
       path
     end
 
     ##
     #
-    # Save a snapshot of the page and open it in a browser for inspection
+    # Save a snapshot of the page and open it in a browser for inspection.
     #
-    # @param  [String] file_name  The path to where it should be saved [optional]
+    # If invoked without arguments it will save file to `Capybara.save_and_open_page_path`
+    #   and file will be given randomly generated filename.
     #
-    def save_and_open_page(file_name=nil)
-      file_name = save_page(file_name)
-      open_file(file_name)
+    # @param [String] path  the path to where it should be saved
+    #
+    def save_and_open_page(path = nil)
+      path = save_page(path)
+      open_file(path)
     end
 
     ##
     #
-    # Save a screenshot of page
+    # Save a screenshot of page.
     #
-    # @param  [String] path    A string of image path
-    # @option [Hash]   options Options for saving screenshot
-    def save_screenshot(path, options={})
-      path ||= default_path('png')
-
-      FileUtils.mkdir_p(File.dirname(path))
-
+    # If invoked without `path` argument it will save file to `Capybara.save_and_open_page_path`
+    #   and file will be given randomly generated filename.
+    #
+    # @param [String] path    the path to where it should be saved
+    # @param [Hash] options   a customizable set of options
+    # @return [String]        the path to which the file was saved
+    def save_screenshot(path = nil, options = {})
+      path = prepare_path(path, 'png')
       driver.save_screenshot(path, options)
       path
     end
 
     ##
     #
-    # Save a screenshot of the page and open it for inspection
+    # Save a screenshot of the page and open it for inspection.
     #
-    # @param  [String] file_name  The path to where it should be saved [optional]
+    # If invoked without `path` argument it will save file to `Capybara.save_and_open_page_path`
+    #   and file will be given randomly generated filename.
     #
-    def save_and_open_screenshot(file_name=nil)
-      file_name = save_screenshot(file_name)
-      open_file(file_name)
+    # @param [String] path    the path to where it should be saved
+    # @param [Hash] options   a customizable set of options
+    #
+    def save_and_open_screenshot(path = nil, options = {})
+      path = save_screenshot(path, options)
+      open_file(path)
     end
 
     def document
@@ -693,14 +703,20 @@ module Capybara
 
   private
 
-    def open_file(file_name)
+    def open_file(path)
       begin
         require "launchy"
-        Launchy.open(file_name)
+        Launchy.open(path)
       rescue LoadError
-        warn "File saved to #{file_name}."
+        warn "File saved to #{path}."
         warn "Please install the launchy gem to open the file automatically."
       end
+    end
+
+    def prepare_path(path, extension)
+      path = default_path(extension) if path.nil?
+      FileUtils.mkdir_p(File.dirname(path))
+      path
     end
 
     def default_path(extension)
