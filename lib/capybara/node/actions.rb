@@ -16,12 +16,12 @@ module Capybara
 
       ##
       #
-      # Finds a link by id or text and clicks it. Also looks at image
+      # Finds a link by id, text or title and clicks it. Also looks at image
       # alt text inside the link.
       #
-      # @param [String] locator      Text or id of link
+      # @param [String] locator         text, id, title or nested image's alt attribute
       # @param options
-      # @option options [String] :href    The value the href attribute must be
+      # @option options [String] :href    The value the href attribute must equal
       #
       def click_link(locator, options={})
         find(:link, locator, options).click
@@ -29,9 +29,9 @@ module Capybara
 
       ##
       #
-      # Finds a button by id, text or value and clicks it.
+      # Finds a button by id, text, value or title and clicks it.
       #
-      # @param [String] locator      Text, id or value of button
+      # @param [String] locator      Text, id, value or title of button
       #
       def click_button(locator, options={})
         find(:button, locator, options).click
@@ -97,14 +97,17 @@ module Capybara
 
       ##
       #
-      # Find a select box on the page and select a particular option from it. If the select
-      # box is a multiple select, +select+ can be called multiple times to select more than
-      # one option. The select box can be found via its name, id or label text.
+      # If `:from` option is present, `select` finds a select box on the page
+      # and selects a particular option from it.
+      # Otherwise it finds an option inside current scope and selects it.
+      # If the select box is a multiple select, +select+ can be called multiple times to select more than
+      # one option.
+      # The select box can be found via its name, id or label text. The option can be found by its text.
       #
       #     page.select 'March', :from => 'Month'
       #
       # @param [String] value                   Which option to select
-      # @param [Hash{:from => String}] options  The id, name or label of the select box
+      # @option options [String] :from  The id, name or label of the select box
       #
       def select(value, options={})
         if options.has_key?(:from)
