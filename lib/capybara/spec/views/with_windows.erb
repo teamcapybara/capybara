@@ -16,6 +16,13 @@
         return false;
       });
 
+      $('#openWindowWithLongerTimeout').click(function(){
+        setTimeout(function(){
+          window.open('/popup_one', 'firstPopup');
+        }, 1400);
+        return false;
+      });
+
       $('#openTwoWindows').click(function() {
         window.open('/popup_one', 'firstPopup');
         window.open('/popup_two', 'secondPopup');
@@ -28,6 +35,8 @@
     <button id="openWindow">Open new window</button>
 
     <button id="openWindowWithTimeout">Open new window with timeout</button>
+
+    <button id="openWindowWithLongerTimeout">Open new window with longer timeout</button>
 
     <button id="openTwoWindows">Open two windows</button>
 
