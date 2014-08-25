@@ -624,6 +624,7 @@ your test code to be invisible to Capybara.
 Cucumber handles this by using truncation instead of transactions, i.e. they
 empty out the entire database after each test. You can get the same behaviour
 by using a gem such as [database_cleaner](https://github.com/bmabey/database_cleaner).
+[This post](http://devblog.avdi.org/2012/08/31/configuring-database_cleaner-with-rails-rspec-capybara-and-selenium/#comment-1550901866) shows how to setup database_cleaner for use with Capybara.
 
 It is also possible to force your ORM to use the same transaction for all
 threads.  This may have thread safety implications and could cause strange
