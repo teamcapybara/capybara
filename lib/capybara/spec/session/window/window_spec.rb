@@ -85,7 +85,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
   end
 
   describe '#size' do
-    it 'should return size of whole window', requires: [:js] do
+    it 'should return size of whole window', requires: [:windows, :js] do
       expect(@session.current_window.size).to eq @session.evaluate_script("[window.outerWidth, window.outerHeight];")
     end
 
@@ -103,7 +103,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
   end
 
   describe '#resize_to' do
-    it 'should be able to resize window', requires: [:js] do
+    it 'should be able to resize window', requires: [:windows, :js] do
       width, height = @session.evaluate_script("[window.outerWidth, window.outerHeight];")
       @session.current_window.resize_to(width-10, height-10)
       expect(@session.evaluate_script("[window.outerWidth, window.outerHeight];")).to eq([width-10, height-10])
@@ -120,7 +120,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
   end
 
   describe '#maximize' do
-    it 'should be able to maximize window', requires: [:js] do
+    it 'should be able to maximize window', requires: [:windows, :js] do
       screen_width, screen_height = @session.evaluate_script("[window.screen.availWidth, window.screen.availHeight];")
       window = @session.current_window
       window.resize_to(screen_width-100, screen_height-100)
