@@ -2,6 +2,12 @@ require 'capybara'
 require 'capybara/dsl'
 
 Capybara.app = Rack::Builder.new do
+  # Work around an issue where rails allows concurrency in test mode even though eager_load
+  # is false which can cause an issue with constant loading
+  if Gem::Version.new(Rails.version) >= Gem::Version.new("4.0")
+    use Rack::Lock unless Rails.application.config.eager_load || Rails.application.middleware.include?(Rack::Lock)
+  end
+  
   map "/" do
     if Gem::Version.new(Rails.version) >= Gem::Version.new("3.0")
       run Rails.application
