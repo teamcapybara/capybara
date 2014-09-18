@@ -41,7 +41,7 @@ module Capybara
     # [always_include_port = Boolean]     Whether the Rack server's port should automatically be inserted into every visited URL (Default: false)
     # [asset_host = String]               Where dynamic assets are hosted - will be prepended to relative asset locations if present (Default: nil)
     # [run_server = Boolean]              Whether to start a Rack server for the given Rack app (Default: true)
-    # [default_selector = :css/:xpath]    Methods which take a selector use the given type by default (Default: CSS)
+    # [default_selector = :css/:xpath]    Methods which take a selector use the given type by default (Default: :css)
     # [default_wait_time = Integer]       The number of seconds to wait for asynchronous processes to finish (Default: 2)
     # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: true)
     # [automatic_reload = Boolean]        Whether to automatically reload elements as Capybara is waiting (Default: true)
@@ -63,7 +63,7 @@ module Capybara
     # Register a new driver for Capybara.
     #
     #     Capybara.register_driver :rack_test do |app|
-    #       Capybara::Driver::RackTest.new(app)
+    #       Capybara::RackTest::Driver.new(app)
     #     end
     #
     # @param [Symbol] name                    The name of the new driver
@@ -135,9 +135,9 @@ module Capybara
     ##
     #
     # Wraps the given string, which should contain an HTML document or fragment
-    # in a {Capybara::Node::Simple} which exposes all {Capybara::Node::Matchers} and
-    # {Capybara::Node::Finders}. This allows you to query any string containing
-    # HTML in the exact same way you would query the current document in a Capybara
+    # in a {Capybara::Node::Simple} which exposes all {Capybara::Node::Matchers}, 
+    # {Capybara::Node::Finders} and {Capybara::Node::DocumentMatchers}. This allows you to query
+    # any string containing HTML in the exact same way you would query the current document in a Capybara
     # session. For example:
     #
     #     node = Capybara.string <<-HTML
@@ -149,8 +149,8 @@ module Capybara
     #
     #     node.find('#projects').text # => 'Projects'
     #     node.has_selector?('li#home', :text => 'Home')
-    #     node.has_selector?(:projects)
-    #     node.find('ul').find('li').text # => 'Home'
+    #     node.has_selector?('#projects')
+    #     node.find('ul').find('li:first-child').text # => 'Home'
     #
     # @param [String] html              An html fragment or document
     # @return [Capybara::Node::Simple]   A node which has Capybara's finders and matchers
