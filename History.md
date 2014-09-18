@@ -76,7 +76,7 @@ Release date: 2013-11-21
   instead of `about:blank`, fixing hanging issues in JRuby. [Jonas Nicklas]
 * Fixed cookies not being set when path is blank under RackTest [Thomas Walpole]
 * Clearing fields now correctly causes change events [Jonas Nicklas]
-* Navigating to an absolut URI without trailing slash now works as expected
+* Navigating to an absolute URI without trailing slash now works as expected
   under RackTest [Jonas Nicklas]
 * Checkboxes without assigned value default to `on` under RackTest [Nigel Sheridan-Smith]
 * Clicks on buttons with no form associated with them are ignored in RackTest
