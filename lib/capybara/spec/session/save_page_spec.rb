@@ -20,9 +20,8 @@ Capybara::SpecHelper.spec '#save_page' do
 
   it "generates a sensible filename" do
     @session.save_page
-    path = Dir.glob("capybara-*.html").first
-    filename = path.split("/").last
-    expect(filename).to match /^capybara-\d+\.html$/
+    filename = Dir.glob("capybara-*.html").first
+    expect(filename).to match(/^capybara-\d+\.html$/)
   end
 
   it "can store files in a specified directory" do
@@ -68,6 +67,7 @@ Capybara::SpecHelper.spec '#save_page' do
       path = @session.save_page
 
       result = File.read(path)
+      expect(result).to include('<html')
       expect(result).not_to include("http://example.com")
     end
 
@@ -76,6 +76,7 @@ Capybara::SpecHelper.spec '#save_page' do
       path = @session.save_page
 
       result = File.read(path)
+      expect(result).to include('<html')
       expect(result).not_to include("http://example.com")
     end
   end
