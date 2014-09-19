@@ -126,10 +126,11 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
       window.resize_to(screen_width-100, screen_height-100)
       expect(@session.evaluate_script("[window.outerWidth, window.outerHeight];")).to eq([screen_width-100, screen_height-100])
       window.maximize
+      sleep 0.5  # The timing on maximize is finicky on Travis -- wait a bit for maximize to occur
       expect(@session.evaluate_script("[window.outerWidth, window.outerHeight];")).to eq([screen_width, screen_height])
     end
 
-    it 'should switch to original window if invoked not for current window' do
+    it 'should switch to original window if invoked not for current window', requires: [:windows, :js] do
       @other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
