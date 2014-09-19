@@ -6,6 +6,7 @@ Release date: unreleased
 * Tags for windows API tests fixed [Dmitry Vorotilin]
 * Documentation Fixes [Andrey Botalov]
 * Always convert visit url to string, fixes issue with visit when always_include_port was enabled [Jake Goulding]
+* Check correct rspec version before including ::RSpec::Matchers::Composable in Capybara RSpec matchers [Thomas Walpole, Justin Ko]
 
 # Version 2.4.1
 
