@@ -1,3 +1,12 @@
+# Version 2.4.2
+Release date: unreleased
+
+### Fixed
+* Prevent concurrency issue when testing Rails app with default test environment [Thomas Walpole]
+* Tags for windows API tests fixed [Dmitry Vorotilin]
+* Documentation Fixes [Andrey Botalov]
+* Always convert visit url to string, fixes issue with visit when always_include_port was enabled [Jake Goulding]
+
 # Version 2.4.1
 
 Release date: 2014-07-03
