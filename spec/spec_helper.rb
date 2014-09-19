@@ -1,3 +1,4 @@
+require 'rspec/expectations'
 require "capybara/spec/spec_helper"
 require "pry"
 
