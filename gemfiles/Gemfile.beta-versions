@@ -4,5 +4,3 @@ gem 'bundler', '~> 1.0'
 gemspec :path => '..'
 
 gem 'xpath', :git => 'git://github.com/jnicklas/xpath.git'
-
-gem 'fuubar', '>= 2.0.0.beta1'
