@@ -8,7 +8,7 @@ Capybara::SpecHelper.spec '#become_closed', requires: [:windows, :js] do
   end
 
   after(:each) do
-    @session.document.synchronize(3, errors: [Capybara::CapybaraError]) do
+    @session.document.synchronize(5, errors: [Capybara::CapybaraError]) do
       raise Capybara::CapybaraError if @session.windows.size != 1
     end
     @session.switch_to_window(@window)
@@ -20,7 +20,7 @@ Capybara::SpecHelper.spec '#become_closed', requires: [:windows, :js] do
         @session.execute_script('setTimeout(function(){ window.close(); }, 500);')
       end
       Capybara.using_wait_time 0.1 do
-        expect(@other_window).to become_closed(wait: 0.7)
+        expect(@other_window).to become_closed(wait: 2)
       end
     end
 
@@ -41,7 +41,7 @@ Capybara::SpecHelper.spec '#become_closed', requires: [:windows, :js] do
       @session.within_window @other_window do
         @session.execute_script('setTimeout(function(){ window.close(); }, 500);')
       end
-      Capybara.using_wait_time 0.7 do
+      Capybara.using_wait_time 1.5 do
         expect(@other_window).to become_closed
       end
     end
