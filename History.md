@@ -1,5 +1,5 @@
 # Version 2.4.2
-Release date: unreleased
+Release date: 2014-09-20
 
 ### Fixed
 * Prevent concurrency issue when testing Rails app with default test environment [Thomas Walpole]
