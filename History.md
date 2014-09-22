@@ -1,3 +1,9 @@
+# Version 2.4.3
+Relase date: 2014-09-21
+
+###Fixed
+* Update concurrency prevention to match Rails 4.2 behavior
+
 # Version 2.4.2
 Release date: 2014-09-20
 
