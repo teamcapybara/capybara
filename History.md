@@ -1,3 +1,10 @@
+# Version 2.5.0
+Release date: unreleased
+
+### Added
+
+* 'formmethod' attribute support in RackTest driver [Emilia Andrzejewska]
+
 # Version 2.4.3
 Relase date: 2014-09-21
 
