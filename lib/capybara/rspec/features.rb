@@ -11,7 +11,7 @@ if RSpec::Core::Version::STRING.to_f >= 3.0
     config.alias_example_group_to :feature, :capybara_feature => true, :type => :feature
     config.alias_example_to :scenario
     config.alias_example_to :xscenario, :skip => "Temporarily disabled with xscenario"
-    # config.alias_example_to :fscenario, :focus => true
+    config.alias_example_to :fscenario, :focus => true
   end
 else
   module Capybara
