@@ -22,7 +22,7 @@ Capybara::SpecHelper.spec '#visit' do
     @session.visit('/foo/bar')
     root_uri = URI.parse(@session.current_url)
 
-    @session.visit("http://localhost:#{root_uri.port}")
+    @session.visit("http://#{root_uri.host}:#{root_uri.port}")
     expect(@session).to have_content('Hello world!')
   end
 
