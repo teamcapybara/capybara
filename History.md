@@ -1,3 +1,10 @@
+#Version 2.4.4
+Release data: Unreleased
+
+###Fixed
+* Test for visit behavior updated [Phil Baker]
+* Removed concurrency prevention in favor of a note in the README - due to load order issues
+
 # Version 2.4.3
 Relase date: 2014-09-21
 
