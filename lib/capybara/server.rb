@@ -25,6 +25,30 @@ module Capybara
       end
     end
 
+    class Client
+      def initialize(host, port)
+        @host, @port = host, port
+      end
+
+      def request(&block)
+        Net::HTTP.start(@host, @port, &block)
+      rescue Errno::ECONNRESET
+        https_request(&block)
+      end
+
+      def https_request(&block)
+        Net::HTTP.start(@host, @port, ssl_options, &block)
+      end
+
+      private
+
+      def ssl_options
+        { :use_ssl => true,
+          :verify_mode => OpenSSL::SSL::VERIFY_NONE
+        }
+      end
+    end
+
     class << self
       def ports
         @ports ||= {}
@@ -40,6 +64,7 @@ module Capybara
       @host, @port = host, port
       @port ||= Capybara::Server.ports[@app.object_id]
       @port ||= find_available_port
+      @client = Client.new(@host, @port)
     end
 
     def reset_error!
@@ -53,7 +78,7 @@ module Capybara
     def responsive?
       return false if @server_thread && @server_thread.join(0)
 
-      res = Net::HTTP.start(host, @port) { |http| http.get('/__identify__') }
+      res = @client.request { |http| http.get('/__identify__') }
 
       if res.is_a?(Net::HTTPSuccess) or res.is_a?(Net::HTTPRedirection)
         return res.body == @app.object_id.to_s
