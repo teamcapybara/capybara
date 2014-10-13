@@ -36,6 +36,9 @@ If the application that you are testing is a Rails app, add this line to your te
 require 'capybara/rails'
 ```
 
+Note:  In rails 4.0/4.1 The default rails test environment ( config/environments/test.rb ) is not threadsafe - see https://github.com/rails/rails/issues/15089
+If you experience random errors about missing constants, adding config.allow_concurrency = false to config/environements/test.rb should solve the issue.
+
 If the application that you are testing is a Rack app, but not Rails, set Capybara.app to your Rack app:
 
 ```ruby
