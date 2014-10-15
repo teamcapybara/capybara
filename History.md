@@ -316,7 +316,7 @@ Release date: 2012-11-05
 * `Node#synchronize` method to rerun a block of code if certain errors are raised
   [Jonas Nicklas]
 * `Capybara.always_include_port` config option always includes the server port in
-  URLs when using `visit`. Facilitates testing different domain names`. [Douwe Maan]
+  URLs when using `visit`. Facilitates testing different domain names. [Douwe Maan]
 * Redirect limit for RackTest driver is configurable [Josh Lane]
 * Server port can be manually specified during initialization of server.
   [Jonas Nicklas, John Wilger]
