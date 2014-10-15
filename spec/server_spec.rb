@@ -4,7 +4,7 @@ RSpec.describe Capybara::Server do
 
   it "should spool up a rack server" do
     @app = proc { |env| [200, {}, ["Hello Server!"]]}
-    @server = Capybara::Server.new(@app).boot
+    @server = Capybara::Server.new(@app, nil).boot
 
     @res = Net::HTTP.start(@server.host, @server.port) { |http| http.get('/') }
 
@@ -13,7 +13,7 @@ RSpec.describe Capybara::Server do
 
   it "should do nothing when no server given" do
     expect do
-      @server = Capybara::Server.new(nil).boot
+      @server = Capybara::Server.new(nil, nil).boot
     end.not_to raise_error
   end
 
@@ -22,12 +22,12 @@ RSpec.describe Capybara::Server do
       app = proc { |env| [200, {}, ['Hello Server!']] }
 
       Capybara.server_host = '127.0.0.1'
-      server = Capybara::Server.new(app).boot
+      server = Capybara::Server.new(app, nil).boot
       res = Net::HTTP.get(URI("http://127.0.0.1:#{server.port}"))
       expect(res).to eq('Hello Server!')
 
       Capybara.server_host = '0.0.0.0'
-      server = Capybara::Server.new(app).boot
+      server = Capybara::Server.new(app, nil).boot
       res = Net::HTTP.get(URI("http://127.0.0.1:#{server.port}"))
       expect(res).to eq('Hello Server!')
     ensure
@@ -39,7 +39,7 @@ RSpec.describe Capybara::Server do
     Capybara.server_port = 22789
 
     @app = proc { |env| [200, {}, ["Hello Server!"]]}
-    @server = Capybara::Server.new(@app).boot
+    @server = Capybara::Server.new(@app, nil).boot
 
     @res = Net::HTTP.start(@server.host, 22789) { |http| http.get('/') }
     expect(@res.body).to include('Hello Server')
@@ -49,7 +49,7 @@ RSpec.describe Capybara::Server do
 
   it "should use given port" do
     @app = proc { |env| [200, {}, ["Hello Server!"]]}
-    @server = Capybara::Server.new(@app, 22790).boot
+    @server = Capybara::Server.new(@app, nil, 22790).boot
 
     @res = Net::HTTP.start(@server.host, 22790) { |http| http.get('/') }
     expect(@res.body).to include('Hello Server')
@@ -61,8 +61,8 @@ RSpec.describe Capybara::Server do
     @app1 = proc { |env| [200, {}, ["Hello Server!"]]}
     @app2 = proc { |env| [200, {}, ["Hello Second Server!"]]}
 
-    @server1 = Capybara::Server.new(@app1).boot
-    @server2 = Capybara::Server.new(@app2).boot
+    @server1 = Capybara::Server.new(@app1, nil).boot
+    @server2 = Capybara::Server.new(@app2, nil).boot
 
     @res1 = Net::HTTP.start(@server1.host, @server1.port) { |http| http.get('/') }
     expect(@res1.body).to include('Hello Server')
@@ -75,10 +75,10 @@ RSpec.describe Capybara::Server do
     @app1 = proc { |env| [200, {}, ["Hello Server!"]]}
     @app2 = proc { |env| [200, {}, ["Hello Second Server!"]]}
 
-    @server1a = Capybara::Server.new(@app1).boot
-    @server1b = Capybara::Server.new(@app1).boot
-    @server2a = Capybara::Server.new(@app2).boot
-    @server2b = Capybara::Server.new(@app2).boot
+    @server1a = Capybara::Server.new(@app1, nil).boot
+    @server1b = Capybara::Server.new(@app1, nil).boot
+    @server2a = Capybara::Server.new(@app2, nil).boot
+    @server2b = Capybara::Server.new(@app2, nil).boot
 
     @res1 = Net::HTTP.start(@server1b.host, @server1b.port) { |http| http.get('/') }
     expect(@res1.body).to include('Hello Server')
@@ -98,7 +98,7 @@ RSpec.describe Capybara::Server do
       end
 
       expect do
-        Capybara::Server.new(proc {|e|}).boot
+        Capybara::Server.new(proc {|e|}, nil).boot
       end.to raise_error(RuntimeError, 'kaboom')
     ensure
       # TODO refactor out the defaults so it's reliant on unset state instead of
@@ -109,7 +109,7 @@ RSpec.describe Capybara::Server do
 
   it "is not #responsive? when Net::HTTP raises a SystemCallError" do
     app = lambda { [200, {}, ['Hello, world']] }
-    server = Capybara::Server.new(app)
+    server = Capybara::Server.new(app, nil)
     expect(Net::HTTP).to receive(:start).and_raise(SystemCallError.allocate)
     expect(server.responsive?).to eq false
   end

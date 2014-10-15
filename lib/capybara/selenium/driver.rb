@@ -33,7 +33,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         raise e
       end
     end
-
     @app = app
     @browser = nil
     @exit_status = nil
@@ -75,6 +74,13 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def wait?; true; end
   def needs_server?; true; end
+  def supports_proxy_protocol?; options[:browser] == :firefox; end
+
+  def setup_proxy_host(host, port)
+    proxy_server = "#{host}:#{port}"
+    options[:profile] ||= Selenium::WebDriver::Firefox::Profile.new
+    options[:profile].proxy = Selenium::WebDriver::Proxy.new(:http => proxy_server, :ssl => proxy_server)
+  end
 
   def execute_script(script)
     browser.execute_script script

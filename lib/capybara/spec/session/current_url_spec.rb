@@ -1,6 +1,6 @@
 Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
   before :all do
-    @servers = 2.times.map { Capybara::Server.new(TestApp.clone).boot }
+    @servers = 2.times.map { Capybara::Server.new(TestApp.clone, nil).boot }
     # sanity check
     expect(@servers[0].port).not_to eq(@servers[1].port)
     expect(@servers.map { |s| s.port }).not_to include 80

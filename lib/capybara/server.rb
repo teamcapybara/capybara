@@ -33,8 +33,9 @@ module Capybara
 
     attr_reader :app, :port, :host
 
-    def initialize(app, port=Capybara.server_port, host=Capybara.server_host)
+    def initialize(app, driver, port=Capybara.server_port, host=Capybara.server_host)
       @app = app
+      @driver = driver
       @middleware = Middleware.new(@app)
       @server_thread = nil # suppress warnings
       @host, @port = host, port
@@ -65,9 +66,15 @@ module Capybara
     def boot
       unless responsive?
         Capybara::Server.ports[@app.object_id] = @port
+        if Capybara.use_proxy_protocol && @driver.supports_proxy_protocol?
+          server_proc = Capybara.proxy_server
+          @driver.setup_proxy_host(@host, @port)
+        else
+          server_proc = Capybara.server
+        end
 
         @server_thread = Thread.new do
-          Capybara.server.call(@middleware, @port)
+          server_proc.call(@middleware, @port)
         end
 
         Timeout.timeout(60) { @server_thread.join(0.1) until responsive? }

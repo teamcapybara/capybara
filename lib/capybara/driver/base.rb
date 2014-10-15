@@ -133,4 +133,8 @@ class Capybara::Driver::Base
   def needs_server?
     false
   end
+
+  def supports_proxy_protocol?
+    false
+  end
 end
