@@ -133,4 +133,8 @@ class Capybara::Driver::Base
   def needs_server?
     false
   end
+
+  def browser_initialized?
+    true
+  end
 end

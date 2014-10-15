@@ -244,6 +244,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     Selenium::WebDriver::Error::NoSuchWindowError
   end
 
+  def browser_initialized?
+    !@browser.nil?
+  end
+
   private
 
   def within_given_window(handle)
