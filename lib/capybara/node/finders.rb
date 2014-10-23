@@ -132,8 +132,12 @@ module Capybara
       #   @param [:css, :xpath] kind                 The type of selector
       #   @param [String] locator                    The selector
       #   @option options [String, Regexp] text      Only find elements which contain this text or match this regexp
-      #   @option options [Boolean] visible          Only find elements that are visible on the page. Setting this to false
-      #                                              finds invisible _and_ visible elements.
+      #   @option options [Boolean, Symbol] visible  Only find elements with the specified visibility:
+      #                                              * true - only finds visible elements.
+      #                                              * false - finds invisible _and_ visible elements.
+      #                                              * :all - same as false; finds visible and invisible elements.
+      #                                              * :hidden - only finds invisible elements.
+      #                                              * :visible - same as true; only finds visible elements.
       #   @option options [Integer] count            Exact number of matches that are expected to be found
       #   @option options [Integer] maximum          Maximum number of matches that are expected to be found
       #   @option options [Integer] minimum          Minimum number of matches that are expected to be found
