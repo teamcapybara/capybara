@@ -6,7 +6,7 @@ Release date: unreleased
 * 'formmethod' attribute support in RackTest driver [Emilia Andrzejewska]
 
 #Version 2.4.4
-Release data: 2014-10-13
+Release date: 2014-10-13
 
 ###Fixed
 * Test for visit behavior updated [Phil Baker]
