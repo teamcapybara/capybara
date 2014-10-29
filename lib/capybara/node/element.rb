@@ -258,6 +258,17 @@ module Capybara
       rescue NotSupportedByDriverError
         %(#<Capybara::Element tag="#{tag_name}">)
       end
+
+      def previous(html_tag=nil)
+        evaluated_html_tag = html_tag.nil? ? "*" : html_tag
+        self.first(:xpath, "(ancestor::#{evaluated_html_tag}[1]|preceding::#{evaluated_html_tag}[1])[last()]")
+      end
+
+      def next(html_tag=nil)
+        evaluated_html_tag = html_tag.nil? ? "*" : html_tag
+        self.first(:xpath, "following-sibling::#{evaluated_html_tag}[1]")
+      end
+
     end
   end
 end
