@@ -242,15 +242,12 @@ module Capybara
       end
 
       def reload
-        if @allow_reload
-          begin
-            reloaded = parent.reload.first(@query.name, @query.locator, @query.options)
-            @base = reloaded.base if reloaded
-          rescue => e
-            raise e unless catch_error?(e)
-          end
-        end
+        @index ||= 0 # just for backwards compatibility (in case if `Element` wasn't modified by `Result`)
+        reloaded = parent.reload.all(@query.name, @query.locator, @query.options)[@index]
+        @base = reloaded.base if reloaded
         self
+      rescue => e
+        raise e unless catch_error?(e)
       end
 
       def inspect

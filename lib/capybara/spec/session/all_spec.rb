@@ -24,6 +24,32 @@ Capybara::SpecHelper.spec "#all" do
     expect { @session.all('//p', :schmoo => "foo") }.to raise_error(ArgumentError)
   end
 
+  it "should return reloadable elements", requires: [:js] do
+    @session.visit('/with_js')
+    node = @session.all(:css, 'em')[1]
+    @session.click_link('Reload!')
+    sleep(1)
+    expect(node.text).to eq('has been reloaded')
+  end
+
+  it "should return reloadable elements that behave properly when elements are removed or added", requires: [:js] do
+    Capybara.automatic_reload = true
+    @session.visit('/with_js')
+
+    @session.find(:css, '#four-elements').click
+    sleep 0.5
+    node = @session.all(:css, '#the-list > li')[2]
+    expect(node.text).to eq('Third')
+
+    @session.find(:css, '#two-elements').click
+    sleep 0.5
+    expect { node.text }.to raise_error
+
+    @session.find(:css, '#three-elements').click
+    sleep 0.5
+    expect(node.text).to eq('3')
+  end
+
   context "with css selectors" do
     it "should find all elements using the given selector" do
       expect(@session.all(:css, 'h1').first.text).to eq('This is a test')

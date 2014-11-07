@@ -41,7 +41,7 @@ module Capybara
             raise Capybara::ElementNotFound.new("Unable to find #{query.description}")
           end
           result.first
-        end.tap(&:allow_reload!)
+        end
       end
 
       ##

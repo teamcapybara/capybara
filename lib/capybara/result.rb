@@ -25,6 +25,9 @@ module Capybara
     def initialize(elements, query)
       @elements = elements
       @result = elements.select { |node| query.matches_filters?(node) }
+      @result.each_with_index do |el, index|
+        el.instance_variable_set(:@index, index)
+      end
       @rest = @elements - @result
       @query = query
     end
