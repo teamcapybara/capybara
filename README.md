@@ -912,7 +912,7 @@ additional info about how the underlying driver can be configured.
   the thread that runs the web server will not be killed. So if you still have AJAX
   requests running at the end of test A, you might see weird errors in subsequent
   test B if the database state is different than what was set up in test A.
-  If you're using jQuery, you can test to see if there are any AJAX requests
+  If you're using jQuery, you can see if there are any AJAX requests
   still running at the end of your test with `p page.evaluate_script('jQuery.active')`.
   If you need to wait for AJAX to finish in your test, you can use
   [this](http://robots.thoughtbot.com/automatically-wait-for-ajax-with-capybara)
