@@ -7,7 +7,7 @@ end
 
 class ChromeTestApp < TestApp
   # Object.id is different from the TestApp used in firefox session so 
-  # a new Capybar::Server instance will get launched for chrome testing
+  # a new Capybara::Server instance will get launched for chrome testing
 end
 
 module TestSessions
