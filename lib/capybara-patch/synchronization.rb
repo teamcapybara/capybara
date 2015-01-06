@@ -1,6 +1,6 @@
 require "capybara-patch/wait_factory"
 
-module Capybara
+module CapybaraPatch
 
   module SynchronizationAccess
 
@@ -58,15 +58,19 @@ module Capybara
 
   end
 
+end
+
+module Capybara
+
   module Node
 
     class Base
 
-      include SynchronizeWithWait
+      include CapybaraPatch::SynchronizeWithWait
 
     end
 
-    extend SynchronizationAccess
+    extend CapybaraPatch::SynchronizationAccess
 
   end
 

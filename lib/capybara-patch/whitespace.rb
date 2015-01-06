@@ -1,4 +1,12 @@
-module Capybara
+module CapybaraPatch
+
+  module DisableWhitespace
+
+    def normalize_whitespace(text)
+      Capybara.disable_whitespace_normalization ? text : super
+    end
+
+  end
 
   module WhitespaceAccess
 
@@ -6,22 +14,16 @@ module Capybara
 
   end
 
+end
+
+module Capybara
+
   module Helpers
 
-    private
-
-    module DisableWhitespace
-
-      def normalize_whitespace(text)
-        Capybara.disable_whitespace_normalization ? text : super
-      end
-
-    end
-
-    extend DisableWhitespace
+    extend CapybaraPatch::DisableWhitespace
 
   end
 
-  extend WhitespaceAccess
+  extend CapybaraPatch::WhitespaceAccess
 
 end
