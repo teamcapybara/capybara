@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 group :spec do
-  # for using the capybara tests
+  # for running the capybara tests
   gem "cucumber", ">= 0.10.5"
   gem "rake"
   gem "rspec", ">= 2.2.0"
