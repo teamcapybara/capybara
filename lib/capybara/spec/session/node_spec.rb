@@ -326,4 +326,29 @@ Capybara::SpecHelper.spec "node" do
       end
     end
   end
+
+  context "Found a link" do
+    let!(:node){@session.find(:css, 'a[title="a fine link with data method"]')}
+
+    describe "#previous" do
+      it "should find the previous element with the given element tag" do
+        expect(node.previous('a')['title']).to eq('a fine link')
+      end
+
+      it "should find the previous element without a given element tag" do
+        expect(node.previous['title']).to eq('a fine link')
+      end
+    end
+
+    describe "#next" do
+      it "should find the next element with the given element tag" do
+        expect(node.next('a')['title']).to eq('a fine link with capitalized data method')
+      end
+
+      it "should find the next element without a given element tag" do
+        expect(node.next['title']).to eq('a fine link with capitalized data method')
+      end
+    end
+  end
+
 end
