@@ -2,7 +2,8 @@ language: ruby
 rvm:
   - 1.9.3
   - 2.0.0
-  - 2.1.3
+  - 2.1
+  - 2.2
   - jruby-19mode
   - rbx-2
 gemfile:
@@ -12,17 +13,16 @@ matrix:
     - gemfile: gemfiles/Gemfile.base-versions
       rvm: 1.9.3
     - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: 2.2.0-preview1
+      rvm: 2.2
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: 2.2.0-preview1
+      rvm: 2.2
     - gemfile: Gemfile
       rvm: jruby-19mode
 env:
   global:
-    - BUNDLE_JOBS=4
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
-    
+
 before_install:
   - CHROMEDRIVER_VERSION=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
   - CHROMEDRIVER_URL="http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip"
