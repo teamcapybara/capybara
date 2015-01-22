@@ -1,7 +1,16 @@
-source :rubygems
+source "https://rubygems.org"
 
-gem 'bundler', '~> 1.0'
-gemspec
+group :spec do
+  # for running the capybara tests
+  gem "cucumber", ">= 0.10.5"
+  gem "rake"
+  gem "rspec", ">= 2.2.0"
+  gem "selenium-webdriver", "~> 2.0"
+  gem "sinatra", ">= 0.9.4"
+  gem "launchy", ">= 2.0.4"
+  gem "fuubar", ">= 0.0.1"
+  gem "pry"
+end
 
-@dependencies.delete_if {|d| d.name == "xpath" }
-gem 'xpath', :path => 'xpath'
+gem "capybara", "2.4.4"
+gem "wait", "~> 0.5"
