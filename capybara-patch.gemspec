@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.licenses    = ["MIT"]
   s.homepage    = "http://github.com/paperlesspost/capybara"
   s.summary     = "Patches for capybara"
-  s.description = "Patches for capybara"
+  s.description = "Patches for capybara gem"
 
   s.add_development_dependency("cucumber", "~> 0.10", ">= 0.10.5")
   s.add_development_dependency("pry", "~> 0.10", ">= 0.10.1")
@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("launchy", "~> 2.0", ">= 2.0.4")
   s.add_development_dependency("fuubar", "~> 0.0", ">= 0.0.1")
 
-  s.add_runtime_dependency("capybara", "~> 2.4", "=> 2.4.4")
+  s.add_runtime_dependency("capybara", "~> 2.4", ">= 2.4.4")
   s.add_runtime_dependency("wait", "~> 0.5", ">= 0.5.2")
 
   s.required_rubygems_version = ">= 1.3.6"
