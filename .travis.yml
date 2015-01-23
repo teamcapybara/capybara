@@ -17,8 +17,6 @@ matrix:
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
       rvm: 2.2
-    - gemfile: Gemfile
-      rvm: jruby-19mode
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
