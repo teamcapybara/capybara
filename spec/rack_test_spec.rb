@@ -10,6 +10,7 @@ Capybara::SpecHelper.run_specs TestSessions::RackTest, "RackTest", :capybara_ski
   :screenshot,
   :frames,
   :windows,
+  :send_keys,
   :server,
   :hover,
   :about_scheme,
