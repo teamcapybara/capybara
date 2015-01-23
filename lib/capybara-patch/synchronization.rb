@@ -70,8 +70,8 @@ module Capybara
 
     end
 
-    extend CapybaraPatch::SynchronizationAccess
-
   end
+
+  extend CapybaraPatch::SynchronizationAccess
 
 end
