@@ -80,6 +80,10 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def double_click
     driver.browser.action.double_click(native).perform
   end
+  
+  def send_keys(*args)
+    native.send_keys(*args)
+  end
 
   def hover
     driver.browser.action.move_to(native).perform

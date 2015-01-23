@@ -50,6 +50,10 @@ module Capybara
         raise NotImplementedError
       end
       
+      def send_keys(*args)
+        raise NotImplementedError
+      end
+      
       def hover
         raise NotImplementedError
       end
