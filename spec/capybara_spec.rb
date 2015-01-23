@@ -1,6 +1,18 @@
 require 'spec_helper'
 
 RSpec.describe Capybara do
+  describe 'synchronize_log_pathname' do
+    after do
+      Capybara.synchronize_log_pathname = @previous_logname
+    end
+
+    it "should be changeable" do
+      @previous_default_time = "test1"
+      Capybara.synchronize_log_pathname = "test2"
+      expect(Capybara.synchronize_log_pathname).to eq("test2")
+    end
+  end
+  
   describe 'default_wait_time' do
     after do
       Capybara.default_wait_time = @previous_default_time
