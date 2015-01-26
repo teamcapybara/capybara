@@ -1,30 +1,9 @@
 module Capybara
   class Selector
-    class Filter
-      def initialize(name, block, options={})
-        @name = name
-        @block = block
-        @options = options
-        @options[:valid_values] = [true,false] if options[:boolean]
-      end
+    # @deprecated  This alias will be removed in Capybara 3.0.
+    Filter = ElementType::Filter
 
-      def default?
-        @options.has_key?(:default)
-      end
-
-      def default
-        @options[:default]
-      end
-
-      def matches?(node, value)
-        if @options.has_key?(:valid_values) && !Array(@options[:valid_values]).include?(value)
-          warn "Invalid value #{value.inspect} passed to filter #{@name}"
-        end
-        @block.call(node, value)
-      end
-    end
-
-    attr_reader :name, :custom_filters, :format
+    attr_reader :name, :format
 
     class << self
       def all
@@ -42,11 +21,8 @@ module Capybara
 
     def initialize(name, &block)
       @name = name
-      @custom_filters = {}
       @match = nil
-      @label = nil
-      @failure_message = nil
-      @description = nil
+      @element_type = Capybara::ElementType.add(name, &block)
       instance_eval(&block)
     end
 
@@ -56,7 +32,6 @@ module Capybara
       @xpath
     end
 
-    # Same as xpath, but wrap in XPath.css().
     def css(&block)
       @format = :css
       @css = block if block
@@ -66,15 +41,6 @@ module Capybara
     def match(&block)
       @match = block if block
       @match
-    end
-
-    def label(label=nil)
-      @label = label if label
-      @label
-    end
-
-    def description(options={})
-      (@description && @description.call(options)).to_s
     end
 
     def call(locator)
@@ -89,154 +55,25 @@ module Capybara
       @match and @match.call(locator)
     end
 
-    def filter(name, options={}, &block)
-      @custom_filters[name] = Filter.new(name, block, options)
+    # @!macro use_element_type
+    #   @deprecated  This method will be removed in Capybara 3.0. Register element type using Capybara.register_element_type
+    def label(label = nil)
+      @element_type.label(label)
     end
 
-    def describe &block
-      @description = block
+    # @macro use_element_type
+    def filter(name, options = {}, &block)
+      @element_type.filter(name, options, &block)
+    end
+
+    # @macro use_element_type
+    def description(options = {})
+      @element_type.description(options)
+    end
+
+    # @macro use_element_type
+    def describe(&block)
+      @element_type.describe(&block)
     end
   end
-end
-
-Capybara.add_selector(:xpath) do
-  xpath { |xpath| xpath }
-end
-
-Capybara.add_selector(:css) do
-  css { |css| css }
-end
-
-Capybara.add_selector(:id) do
-  xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
-end
-
-Capybara.add_selector(:field) do
-  xpath { |locator| XPath::HTML.field(locator) }
-  filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
-  filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
-  filter(:disabled, default: false, boolean: true) { |node, value| not(value ^ node.disabled?) }
-  filter(:with) { |node, with| node.value == with.to_s }
-  filter(:type) do |node, type|
-    if ['textarea', 'select'].include?(type)
-      node.tag_name == type
-    else
-      node[:type] == type
-    end
-  end
-  describe do |options|
-    desc, states = "", []
-    desc << " of type #{options[:type].inspect}" if options[:type]
-    desc << " with value #{options[:with].to_s.inspect}" if options.has_key?(:with)
-    states << 'checked' if options[:checked] || (options.has_key?(:unchecked) && !options[:unchecked])
-    states << 'not checked' if options[:unchecked] || (options.has_key?(:checked) && !options[:checked])
-    states << 'disabled' if options[:disabled]
-    desc << " that is #{states.join(' and ')}" unless states.empty?
-    desc
-  end
-end
-
-Capybara.add_selector(:fieldset) do
-  xpath { |locator| XPath::HTML.fieldset(locator) }
-end
-
-Capybara.add_selector(:link_or_button) do
-  label "link or button"
-  xpath { |locator| XPath::HTML.link_or_button(locator) }
-  filter(:disabled, default: false, boolean: true) { |node, value| node.tag_name == "a" or not(value ^ node.disabled?) }
-  describe { |options| " that is disabled" if options[:disabled] }
-end
-
-Capybara.add_selector(:link) do
-  xpath { |locator| XPath::HTML.link(locator) }
-  filter(:href) do |node, href|
-    node.first(:xpath, XPath.axis(:self)[XPath.attr(:href).equals(href.to_s)])
-  end
-  describe { |options| " with href #{options[:href].inspect}" if options[:href] }
-end
-
-Capybara.add_selector(:button) do
-  xpath { |locator| XPath::HTML.button(locator) }
-  filter(:disabled, default: false, boolean: true) { |node, value| not(value ^ node.disabled?) }
-  describe { |options| " that is disabled" if options[:disabled] }
-end
-
-Capybara.add_selector(:fillable_field) do
-  label "field"
-  xpath { |locator| XPath::HTML.fillable_field(locator) }
-  filter(:disabled, default: false, boolean: true) { |node, value| not(value ^ node.disabled?) }
-  describe { |options| " that is disabled" if options[:disabled] }
-end
-
-Capybara.add_selector(:radio_button) do
-  label "radio button"
-  xpath { |locator| XPath::HTML.radio_button(locator) }
-  filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
-  filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
-  filter(:option)  { |node, value|  node.value == value.to_s }
-  filter(:disabled, default: false, boolean: true) { |node, value| not(value ^ node.disabled?) }
-  describe do |options|
-    desc, states = "", []
-    desc << " with value #{options[:option].inspect}" if options[:option]
-    states << 'checked' if options[:checked] || (options.has_key?(:unchecked) && !options[:unchecked])
-    states << 'not checked' if options[:unchecked] || (options.has_key?(:checked) && !options[:checked])
-    states << 'disabled' if options[:disabled]
-    desc << " that is #{states.join(' and ')}" unless states.empty?
-    desc
-  end
-end
-
-Capybara.add_selector(:checkbox) do
-  xpath { |locator| XPath::HTML.checkbox(locator) }
-  filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
-  filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
-  filter(:option)  { |node, value|  node.value == value.to_s }
-  filter(:disabled, default: false, boolean: true) { |node, value| not(value ^ node.disabled?) }
-  describe do |options|
-    desc, states = "", []
-    desc << " with value #{options[:option].inspect}" if options[:option]
-    states << 'checked' if options[:checked] || (options.has_key?(:unchecked) && !options[:unchecked])
-    states << 'not checked' if options[:unchecked] || (options.has_key?(:checked) && !options[:checked])
-    states << 'disabled' if options[:disabled]
-    desc << " that is #{states.join(' and ')}" unless states.empty?
-    desc
-  end
-end
-
-Capybara.add_selector(:select) do
-  label "select box"
-  xpath { |locator| XPath::HTML.select(locator) }
-  filter(:options) do |node, options|
-    actual = node.all(:xpath, './/option').map { |option| option.text }
-    options.sort == actual.sort
-  end
-  filter(:with_options) { |node, options| options.all? { |option| node.first(:option, option) } }
-  filter(:selected) do |node, selected|
-    actual = node.all(:xpath, './/option').select { |option| option.selected? }.map { |option| option.text }
-    [selected].flatten.sort == actual.sort
-  end
-  filter(:disabled, default: false, boolean: true) { |node, value| not(value ^ node.disabled?) }
-  describe do |options|
-    desc = ""
-    desc << " with options #{options[:options].inspect}" if options[:options]
-    desc << " with at least options #{options[:with_options].inspect}" if options[:with_options]
-    desc << " with #{options[:selected].inspect} selected" if options[:selected]
-    desc << " that is disabled" if options[:disabled]
-    desc
-  end
-end
-
-Capybara.add_selector(:option) do
-  xpath { |locator| XPath::HTML.option(locator) }
-end
-
-Capybara.add_selector(:file_field) do
-  label "file field"
-  xpath { |locator| XPath::HTML.file_field(locator) }
-  filter(:disabled, default: false, boolean: true) { |node, value| not(value ^ node.disabled?) }
-  describe { |options| " that is disabled" if options[:disabled] }
-end
-
-Capybara.add_selector(:table) do
-  xpath { |locator| XPath::HTML.table(locator) }
 end

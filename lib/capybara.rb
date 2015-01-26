@@ -107,6 +107,11 @@ module Capybara
       Capybara::Selector.add(name, &block)
     end
 
+    # @param [Symbol] element_type_name    The name of the element type to add
+    def register_element_type(element_type_name, &block)
+      Capybara::ElementType.add(element_type_name, &block)
+    end
+
     def drivers
       @drivers ||= {}
     end
@@ -322,7 +327,10 @@ module Capybara
   require 'capybara/dsl'
   require 'capybara/window'
   require 'capybara/server'
+  require 'capybara/element_type'
   require 'capybara/selector'
+  require 'capybara/add_selectors'
+  require 'capybara/register_element_types'
   require 'capybara/result'
   require 'capybara/version'
 
@@ -339,6 +347,9 @@ module Capybara
   require 'capybara/node/base'
   require 'capybara/node/element'
   require 'capybara/node/document'
+
+  require 'capybara/node/elements/field'
+  require 'capybara/node/elements/select'
 
   require 'capybara/driver/base'
   require 'capybara/driver/node'
