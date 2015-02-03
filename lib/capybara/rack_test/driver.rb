@@ -42,7 +42,7 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
     browser.visit(path, attributes)
   end
 
-  def submit(method, path, attributes)
+  def submit(method, path, attributes = {})
     browser.submit(method, path, attributes)
   end
 

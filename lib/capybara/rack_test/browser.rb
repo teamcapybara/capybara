@@ -21,7 +21,7 @@ class Capybara::RackTest::Browser
     process_and_follow_redirects(:get, path, attributes)
   end
 
-  def submit(method, path, attributes)
+  def submit(method, path, attributes = {})
     path = request_path if not path or path.empty?
     process_and_follow_redirects(method, path, attributes, {'HTTP_REFERER' => current_url})
   end
