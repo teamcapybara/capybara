@@ -132,7 +132,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       @frame_handles[browser.window_handle] ||= []
       @frame_handles[browser.window_handle] << frame_handle
     end
-    a=browser.switch_to.frame(frame_handle)
+    browser.switch_to.frame(frame_handle)
     yield
   ensure
     if browser.switch_to.respond_to?(:parent_frame)
@@ -269,7 +269,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       timeout: (options[:wait] || Capybara.default_wait_time),
       ignore: Selenium::WebDriver::Error::NoAlertPresentError)
     begin
-      modal = wait.until do
+      wait.until do
         alert = @browser.switch_to.alert
         regexp = options[:text].is_a?(Regexp) ? options[:text] : Regexp.escape(options[:text].to_s)
         alert.text.match(regexp) ? alert : nil
