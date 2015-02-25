@@ -12,6 +12,45 @@ through an external gem.
 **Need help?** Ask on the mailing list (please do not open an issue on
 GitHub): http://groups.google.com/group/ruby-capybara
 
+## Table of contents
+
+- [Key benefits](#key-benefits)
+- [Setup](#setup)
+- [Using Capybara with Cucumber](#using-capybara-with-cucumber)
+- [Using Capybara with RSpec](#using-capybara-with-rspec)
+- [Using Capybara with Test::Unit](#using-capybara-with-testunit)
+- [Using Capybara with MiniTest::Spec](#using-capybara-with-minitestspec)
+- [Drivers](#drivers)
+    - [Selecting the Driver](#selecting-the-driver)
+    - [RackTest](#racktest)
+    - [Selenium](#selenium)
+    - [Capybara-webkit](#capybara-webkit)
+    - [Poltergeist](#poltergeist)
+- [The DSL](#the-dsl)
+    - [Navigating](#navigating)
+    - [Clicking links and buttons](#clicking-links-and-buttons)
+    - [Interacting with forms](#interacting-with-forms)
+    - [Querying](#querying)
+    - [Finding](#finding)
+    - [Scoping](#scoping)
+    - [Working with windows](#working-with-windows)
+    - [Scripting](#scripting)
+    - [Modals](#modals)
+    - [Debugging](#debugging)
+- [Matching](#matching)
+    - [Exactness](#exactness)
+    - [Strategy](#strategy)
+- [Transactions and database setup](#transactions-and-database-setup)
+- [Asynchronous JavaScript (Ajax and friends)](#asynchronous-javascript-ajax-and-friends)
+- [Using the DSL elsewhere](#using-the-dsl-elsewhere)
+- [Calling remote servers](#calling-remote-servers)
+- [Using the sessions manually](#using-the-sessions-manually)
+- [XPath, CSS and selectors](#xpath-css-and-selectors)
+- [Beware the XPath // trap](#beware-the-xpath--trap)
+- [Configuring and adding drivers](#configuring-and-adding-drivers)
+- [Gotchas:](#gotchas)
+- [Development](#development)
+
 ## Key benefits
 
 - **No setup** necessary for Rails and Rack application. Works out of the box.
