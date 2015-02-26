@@ -11,6 +11,7 @@ Capybara::SpecHelper.run_specs TestClass.new, "DSL", :capybara_skip => [
   :screenshot,
   :frames,
   :windows,
+  :send_keys,
   :server,
   :hover,
   :about_scheme,

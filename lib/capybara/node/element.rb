@@ -148,6 +148,79 @@ module Capybara
       def double_click
         synchronize { base.double_click }
       end
+      
+      ##
+      #
+      # Send Keystrokes to the Element
+      #
+      # @param [String, Symbol, Array]
+      #
+      # Examples:
+      #
+      #     element.send_keys "foo"                     #=> value: 'foo'
+      #     element.send_keys "tet", :left, "s"   #=> value: 'test'
+      #     element.send_keys [:control, 'a'], :space   #=> value: ' '
+      #
+      # Symbols supported for keys
+      # :cancel
+      # :help
+      # :backspace
+      # :tab
+      # :clear
+      # :return
+      # :enter
+      # :shift
+      # :control
+      # :alt
+      # :pause
+      # :escape
+      # :space
+      # :page_up
+      # :page_down
+      # :end
+      # :home
+      # :left
+      # :up
+      # :right
+      # :down
+      # :insert
+      # :delete
+      # :semicolon
+      # :equals
+      # :numpad0
+      # :numpad1
+      # :numpad2
+      # :numpad3
+      # :numpad4
+      # :numpad5
+      # :numpad6
+      # :numpad7
+      # :numpad8
+      # :numpad9
+      # :multiply      - numeric keypad *
+      # :add           - numeric keypad +
+      # :separator     - numeric keypad 'separator' key ??
+      # :subtract      - numeric keypad -
+      # :decimal       - numeric keypad .
+      # :divide        - numeric keypad /
+      # :f1
+      # :f2
+      # :f3
+      # :f4
+      # :f5
+      # :f6
+      # :f7
+      # :f8
+      # :f9
+      # :f10
+      # :f11
+      # :f12
+      # :meta         
+      # :command      - alias of :meta
+      #
+      def send_keys(*args)
+        synchronize { base.send_keys(*args) }
+      end
 
       ##
       #

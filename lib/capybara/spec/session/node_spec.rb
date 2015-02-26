@@ -251,6 +251,32 @@ Capybara::SpecHelper.spec "node" do
       expect(@session.find(:css, '#has-been-right-clicked')).to be
     end
   end  
+  
+  describe '#send_keys', requires: [:send_keys] do
+    it "should send a string of keys to an element" do
+      @session.visit('/form')
+      @session.find(:css, '#address1_city').send_keys('Oceanside')
+      expect(@session.find(:css, '#address1_city').value).to eq 'Oceanside'
+    end
+    
+    it "should send special characters" do
+      @session.visit('/form')
+      @session.find(:css, '#address1_city').send_keys('Ocean', :space, 'sie', :left, 'd')
+      expect(@session.find(:css, '#address1_city').value).to eq 'Ocean side'
+    end
+    
+    it "should allow for multiple simultaneous keys" do
+      @session.visit('/form')
+      @session.find(:css, '#address1_city').send_keys([:shift, 'o'], 'ceanside')
+      expect(@session.find(:css, '#address1_city').value).to eq 'Oceanside'
+    end
+    
+    it "should generate key events", requires: [:send_keys, :js] do 
+      @session.visit('/with_js')
+      @session.find(:css, '#with-key-events').send_keys([:shift,'t'], [:shift,'w'])
+      expect(@session.find(:css, '#key-events-output')).to have_text('keydown:16 keydown:84 keydown:16 keydown:87')
+    end
+  end
 
   describe '#reload', :requires => [:js] do
     context "without automatic reload" do
