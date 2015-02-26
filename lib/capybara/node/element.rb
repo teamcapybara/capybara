@@ -3,7 +3,7 @@ module Capybara
 
     ##
     #
-    # A {Capybara::Element} represents a single element on the page. It is possible
+    # A {Capybara::Node::Element} represents a single element on the page. It is possible
     # to interact with the contents of this element the same as with a document:
     #
     #     session = Capybara::Session.new(:rack_test, my_app)
@@ -11,7 +11,7 @@ module Capybara
     #     bar = session.find('#bar')              # from Capybara::Node::Finders
     #     bar.select('Baz', :from => 'Quox')      # from Capybara::Node::Actions
     #
-    # {Capybara::Element} also has access to HTML attributes and other properties of the
+    # {Capybara::Node::Element} also has access to HTML attributes and other properties of the
     # element:
     #
     #      bar.value
@@ -93,10 +93,10 @@ module Capybara
       #
       def set(value, options={})
         options ||= {}
-        
+
         driver_supports_options = (base.method(:set).arity != 1)
 
-        unless options.empty? || driver_supports_options 
+        unless options.empty? || driver_supports_options
           warn "Options passed to Capybara::Node#set but the driver doesn't support them"
         end
 
@@ -235,7 +235,7 @@ module Capybara
       #     target = page.find('#bar')
       #     source.drag_to(target)
       #
-      # @param [Capybara::Element] node     The element to drag to
+      # @param [Capybara::Node::Element] node     The element to drag to
       #
       def drag_to(node)
         synchronize { base.drag_to(node.base) }
@@ -254,9 +254,9 @@ module Capybara
       end
 
       def inspect
-        %(#<Capybara::Element tag="#{tag_name}" path="#{path}">)
+        %(#<Capybara::Node::Element tag="#{tag_name}" path="#{path}">)
       rescue NotSupportedByDriverError
-        %(#<Capybara::Element tag="#{tag_name}">)
+        %(#<Capybara::Node::Element tag="#{tag_name}">)
       end
     end
   end
