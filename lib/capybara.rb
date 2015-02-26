@@ -22,7 +22,7 @@ module Capybara
     attr_accessor :asset_host, :app_host, :run_server, :default_host, :always_include_port
     attr_accessor :server_port, :exact, :match, :exact_options, :visible_text_only
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
-    attr_accessor :save_and_open_page_path, :automatic_reload, :raise_server_errors
+    attr_accessor :save_and_open_page_path, :automatic_reload, :raise_server_errors, :server_errors
     attr_writer :default_driver, :current_driver, :javascript_driver, :session_name, :server_host
     attr_accessor :app
 
@@ -135,7 +135,7 @@ module Capybara
     ##
     #
     # Wraps the given string, which should contain an HTML document or fragment
-    # in a {Capybara::Node::Simple} which exposes all {Capybara::Node::Matchers}, 
+    # in a {Capybara::Node::Simple} which exposes all {Capybara::Node::Matchers},
     # {Capybara::Node::Finders} and {Capybara::Node::DocumentMatchers}. This allows you to query
     # any string containing HTML in the exact same way you would query the current document in a Capybara
     # session. For example:
@@ -365,6 +365,7 @@ Capybara.configure do |config|
   config.match = :smart
   config.exact = false
   config.raise_server_errors = true
+  config.server_errors = [StandardError]
   config.visible_text_only = false
 end
 
