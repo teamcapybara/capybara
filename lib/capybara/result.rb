@@ -3,7 +3,7 @@ require 'forwardable'
 module Capybara
 
   ##
-  # A {Capybara::Result} represents a collection of {Capybara::Element} on the page. It is possible to interact with this
+  # A {Capybara::Result} represents a collection of {Capybara::Node::Element} on the page. It is possible to interact with this
   # collection similar to an Array because it implements Enumerable and offers the following Array methods through delegation:
   #
   # * []
@@ -16,7 +16,7 @@ module Capybara
   # * last()
   # * empty?()
   #
-  # @see Capybara::Element
+  # @see Capybara::Node::Element
   #
   class Result
     include Enumerable

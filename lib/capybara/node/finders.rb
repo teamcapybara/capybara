@@ -4,7 +4,7 @@ module Capybara
 
       ##
       #
-      # Find an {Capybara::Element} based on the given arguments. +find+ will raise an error if the element
+      # Find an {Capybara::Node::Element} based on the given arguments. +find+ will raise an error if the element
       # is not found.
       #
       # If the driver is capable of executing JavaScript, +find+ will wait for a set amount of time
@@ -22,7 +22,7 @@ module Capybara
       # @option options [Boolean] match        The matching strategy to use.
       # @option options [false, Numeric] wait  How long to wait for the element to appear.
       #
-      # @return [Capybara::Element]            The found element
+      # @return [Capybara::Node::Element]      The found element
       # @raise  [Capybara::ElementNotFound]    If the element can't be found before time expires
       #
       def find(*args)
@@ -48,8 +48,8 @@ module Capybara
       #
       # Find a form field on the page. The field can be found by its name, id or label text.
       #
-      # @param [String] locator       Which field to find
-      # @return [Capybara::Element]   The found element
+      # @param [String] locator             Which field to find
+      # @return [Capybara::Node::Element]   The found element
       #
       def find_field(locator, options={})
         find(:field, locator, options)
@@ -60,8 +60,8 @@ module Capybara
       #
       # Find a link on the page. The link can be found by its id or text.
       #
-      # @param [String] locator       Which link to find
-      # @return [Capybara::Element]   The found element
+      # @param [String] locator             Which link to find
+      # @return [Capybara::Node::Element]   The found element
       #
       def find_link(locator, options={})
         find(:link, locator, options)
@@ -71,8 +71,8 @@ module Capybara
       #
       # Find a button on the page. The button can be found by its id, name or value.
       #
-      # @param [String] locator       Which button to find
-      # @return [Capybara::Element]   The found element
+      # @param [String] locator             Which button to find
+      # @return [Capybara::Node::Element]   The found element
       #
       def find_button(locator, options={})
         find(:button, locator, options)
@@ -82,8 +82,8 @@ module Capybara
       #
       # Find a element on the page, given its id.
       #
-      # @param [String] id            Which element to find
-      # @return [Capybara::Element]   The found element
+      # @param [String] id                  Which element to find
+      # @return [Capybara::Node::Element]   The found element
       #
       def find_by_id(id, options={})
         find(:id, id, options)
@@ -163,7 +163,7 @@ module Capybara
       #   @param [:css, :xpath] kind                 The type of selector
       #   @param [String] locator                    The selector
       #   @param [Hash] options                      Additional options; see {#all}
-      # @return [Capybara::Element]                  The found element or nil
+      # @return [Capybara::Node::Element]            The found element or nil
       #
       def first(*args)
         all(*args).first

@@ -116,7 +116,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   ##
   #
-  # Webdriver supports frame name, id, index(zero-based) or {Capybara::Element} to find iframe
+  # Webdriver supports frame name, id, index(zero-based) or {Capybara::Node::Element} to find iframe
   #
   # @overload within_frame(index)
   #   @param [Integer] index                 index of a frame
