@@ -123,6 +123,10 @@ class TestApp < Sinatra::Base
     raise TestAppError, "some error"
   end
 
+  get '/load_error' do
+    raise LoadError
+  end
+
   get '/:view' do |view|
     erb view.to_sym
   end

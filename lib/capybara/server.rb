@@ -17,7 +17,7 @@ module Capybara
         else
           begin
             @app.call(env)
-          rescue StandardError => e
+          rescue *Capybara.server_errors => e
             @error = e unless @error
             raise e
           end

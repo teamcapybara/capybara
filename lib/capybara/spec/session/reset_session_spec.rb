@@ -37,13 +37,30 @@ Capybara::SpecHelper.spec '#reset_session!' do
     expect(@session).to have_no_selector :xpath, "/html/body/*", wait: false
   end
 
-  it "raises any errors caught inside the server", :requires => [:server] do
+  it "raises any standard errors caught inside the server", :requires => [:server] do
     quietly { @session.visit("/error") }
     expect do
       @session.reset_session!
     end.to raise_error(TestApp::TestAppError)
     @session.visit("/")
     expect(@session.current_path).to eq("/")
+  end
+
+  it "raises configured errors caught inside the server", :requires => [:server] do
+    prev_errors = Capybara.server_errors
+
+    Capybara.server_errors = [LoadError]
+    quietly { @session.visit("/error") }
+    expect do
+      @session.reset_session!
+    end.not_to raise_error
+
+    quietly { @session.visit("/load_error") }
+    expect do
+      @session.reset_session!
+    end.to raise_error(LoadError)
+
+    Capybara.server_errors = prev_errors
   end
 
   it "ignores server errors when `Capybara.raise_server_errors = false`", :requires => [:server] do
