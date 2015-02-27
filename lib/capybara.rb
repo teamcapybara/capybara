@@ -37,22 +37,24 @@ module Capybara
     #
     # === Configurable options
     #
-    # [app_host = String]                 The default host to use when giving a relative URL to visit
-    # [always_include_port = Boolean]     Whether the Rack server's port should automatically be inserted into every visited URL (Default: false)
-    # [asset_host = String]               Where dynamic assets are hosted - will be prepended to relative asset locations if present (Default: nil)
-    # [run_server = Boolean]              Whether to start a Rack server for the given Rack app (Default: true)
-    # [default_selector = :css/:xpath]    Methods which take a selector use the given type by default (Default: :css)
-    # [default_wait_time = Integer]       The number of seconds to wait for asynchronous processes to finish (Default: 2)
-    # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: true)
-    # [automatic_reload = Boolean]        Whether to automatically reload elements as Capybara is waiting (Default: true)
-    # [save_and_open_page_path = String]  Where to put pages saved through save_and_open_page (Default: Dir.pwd)
+    # [app_host = String]                 The default host to use when giving a relative URL to visit  
+    # [always_include_port = Boolean]     Whether the Rack server's port should automatically be inserted into every visited URL (Default: false)  
+    # [asset_host = String]               Where dynamic assets are hosted - will be prepended to relative asset locations if present (Default: nil)  
+    # [run_server = Boolean]              Whether to start a Rack server for the given Rack app (Default: true)  
+    # [raise_server_errors = Boolean]     Should errors raised in the server be raised in the tests? (Default: true)  
+    # [server_errors = Array\<Class\>]    Error classes that should be raised in the tests if they are raised in the server and Capybara.raise_server_errors is true (Default: [StandardError])  
+    # [default_selector = :css/:xpath]    Methods which take a selector use the given type by default (Default: :css)  
+    # [default_wait_time = Integer]       The maximumnumber of seconds to wait for asynchronous processes to finish (Default: 2)  
+    # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: true)  
+    # [automatic_reload = Boolean]        Whether to automatically reload elements as Capybara is waiting (Default: true)  
+    # [save_and_open_page_path = String]  Where to put pages saved through save_and_open_page (Default: Dir.pwd)  
     #
     # === DSL Options
     #
     # when using capybara/dsl, the following options are also available:
     #
-    # [default_driver = Symbol]           The name of the driver to use by default. (Default: :rack_test)
-    # [javascript_driver = Symbol]        The name of a driver to use for JavaScript enabled tests. (Default: :selenium)
+    # [default_driver = Symbol]           The name of the driver to use by default. (Default: :rack_test)  
+    # [javascript_driver = Symbol]        The name of a driver to use for JavaScript enabled tests. (Default: :selenium)  
     #
     def configure
       yield self
