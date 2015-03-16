@@ -116,6 +116,8 @@ Capybara::SpecHelper.spec '#click_link' do
     expect(@session.find_field("test_field").value).to eq('blah')
     @session.click_link('Blank Anchor')
     expect(@session.find_field("test_field").value).to eq('blah')
+    @session.click_link('Blank JS Anchor')
+    expect(@session.find_field("test_field").value).to eq('blah')
   end
 
   it "should do nothing on URL+anchor links for the same page" do
