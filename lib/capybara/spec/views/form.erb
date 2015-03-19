@@ -161,7 +161,7 @@ New line after and before textarea tag
     <input type="checkbox" value="hamster" name="form[pets][]" id="form_pets_hamster" checked="checked"/>
     <label for="form_pets_hamster">Hamster</label>
   </p>
-  
+
   <p>
     <input type="checkbox" name="form[valueless_checkbox]" id="valueless_checkbox" checked="checked"/>
     <label for="valueless_checkbox">Valueless Checkbox</label>
@@ -292,6 +292,11 @@ New line after and before textarea tag
 </form>
 
 <input type="text" name="form[outside_input]" value="outside_input" form="form1"/>
+
+<label>
+  Nested Label
+  <input type="text" name="nested_label" id="nested_label"/>
+</label>
 
 <form id="form1" action="/form" method="post">
   <input type="text" name="form[which_form]" value="form1" id="form_which_form"/>

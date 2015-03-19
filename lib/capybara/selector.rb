@@ -56,11 +56,16 @@ module Capybara
       @xpath
     end
 
-    # Same as xpath, but wrap in XPath.css().
     def css(&block)
       @format = :css
       @css = block if block
       @css
+    end
+
+    def dynamic(&block)
+      @format = :dynamic
+      @dynamic = block if block
+      @dynamic
     end
 
     def match(&block)
@@ -80,8 +85,12 @@ module Capybara
     def call(locator)
       if @format==:css
         @css.call(locator)
-      else
+      elsif @format==:xpath
         @xpath.call(locator)
+      elsif @format==:dynamic
+        @dynamic.curry(2).call(locator)
+      else
+        warn "Unknown selector format"
       end
     end
 
@@ -149,7 +158,7 @@ end
 
 Capybara.add_selector(:link) do
   xpath { |locator| XPath::HTML.link(locator) }
-  filter(:href) do |node, href| 
+  filter(:href) do |node, href|
     if href.is_a? Regexp
       node[:href].match href
     else
@@ -243,4 +252,20 @@ end
 
 Capybara.add_selector(:table) do
   xpath { |locator| XPath::HTML.table(locator) }
+end
+
+Capybara.add_selector(:label) do
+  dynamic do |locator, node|
+    if locator.is_a? Capybara::Node::Element
+      nodes = locator.find_xpath('ancestor::label[not(@for)][1]')
+      if locator[:id]
+        selector = XPath.descendant(:label)[XPath.attr(:for).equals(locator[:id])]
+        nodes += node.find_xpath(selector.to_xpath)
+      end
+      nodes
+    else
+      selector = XPath.descendant(:label)[XPath.attr(:for).equals(locator.to_s) | XPath.string.n.is(locator.to_s)]
+      node.find_xpath(selector.to_xpath)
+    end
+  end
 end
