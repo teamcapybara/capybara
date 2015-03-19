@@ -1,102 +1,5 @@
 # frozen_string_literal: true
-require 'capybara/selector/filter'
-
-module Capybara
-  class Selector
-
-    attr_reader :name, :custom_filters, :format
-
-    class << self
-      def all
-        @selectors ||= {}
-      end
-
-      def add(name, &block)
-        all[name.to_sym] = Capybara::Selector.new(name.to_sym, &block)
-      end
-
-      def update(name, &block)
-        all[name.to_sym].instance_eval(&block)
-      end
-
-      def remove(name)
-        all.delete(name.to_sym)
-      end
-    end
-
-    def initialize(name, &block)
-      @name = name
-      @custom_filters = {}
-      @match = nil
-      @label = nil
-      @failure_message = nil
-      @description = nil
-      instance_eval(&block)
-    end
-
-    def xpath(&block)
-      if block
-        @format = :xpath
-        @xpath, @css = block, nil
-      end
-      @xpath
-    end
-
-    # Same as xpath, but wrap in XPath.css().
-    def css(&block)
-      if block
-        @format = :css
-        @css, @xpath = block, nil
-      end
-      @css
-    end
-
-    def match(&block)
-      @match = block if block
-      @match
-    end
-
-    def label(label=nil)
-      @label = label if label
-      @label
-    end
-
-    def description(options={})
-      (@description && @description.call(options)).to_s
-    end
-
-    def call(locator)
-      if @format==:css
-        @css.call(locator)
-      else
-        @xpath.call(locator)
-      end
-    end
-
-    def match?(locator)
-      @match and @match.call(locator)
-    end
-
-    def filter(name, options={}, &block)
-      @custom_filters[name] = Filter.new(name, block, options)
-    end
-
-    def describe &block
-      @description = block
-    end
-
-    private
-
-    def locate_field(xpath, locator)
-      locate_field = xpath[XPath.attr(:id).equals(locator) |
-                           XPath.attr(:name).equals(locator) |
-                           XPath.attr(:placeholder).equals(locator) |
-                           XPath.attr(:id).equals(XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for))]
-      locate_field += XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(xpath)
-      locate_field
-    end
-  end
-end
+require 'capybara/selector/selector'
 
 Capybara.add_selector(:xpath) do
   xpath { |xpath| xpath }
@@ -359,5 +262,24 @@ Capybara.add_selector(:table) do
     xpath = XPath.descendant(:table)
     xpath = xpath[XPath.attr(:id).equals(locator.to_s) | XPath.descendant(:caption).is(locator.to_s)] unless locator.nil?
     xpath
+  end
+end
+
+Capybara.add_selector(:label) do
+  dynamic do |locator|
+    Proc.new do |ctx_node, exact|
+      exact = exact ? :exact : nil
+      if locator.is_a? Capybara::Node::Element
+        nodes = locator.find_xpath('ancestor::label[not(@for)][1]')
+        if locator[:id]
+          selector = XPath.descendant(:label)[XPath.attr(:for).equals(locator[:id])]
+          nodes += ctx_node.find_xpath(selector.to_xpath(exact))
+        end
+        nodes
+      else
+        selector = XPath.descendant(:label)[XPath.attr(:for).equals(locator.to_s) | XPath.string.n.is(locator.to_s)]
+        ctx_node.find_xpath(selector.to_xpath(exact))
+      end
+    end
   end
 end

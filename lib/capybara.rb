@@ -421,7 +421,7 @@ module Capybara
   require 'capybara/session'
   require 'capybara/window'
   require 'capybara/server'
-  require 'capybara/selector'
+  require 'capybara/selectors'
   require 'capybara/result'
   require 'capybara/version'
 
