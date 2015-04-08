@@ -4,6 +4,7 @@ Release date: unreleased
 ### Added
 
 * 'formmethod' attribute support in RackTest driver [Emilia Andrzejewska]
+* Clear field using backspaces in Selenium driver by using `:fill_options => { :clear => :backspace }` [Joe Lencioni]
 
 #Version 2.4.4
 Release date: 2014-10-13

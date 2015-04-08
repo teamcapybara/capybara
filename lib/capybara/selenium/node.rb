@@ -23,7 +23,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     end
   end
 
-  def set(value)
+  def set(value, fill_options)
     tag_name = self.tag_name
     type = self[:type]
     if (Array === value) && !self[:multiple]
@@ -42,9 +42,17 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       elsif value.to_s.empty?
         native.clear
       else
-        #script can change a readonly element which user input cannot, so dont execute if readonly
-        driver.browser.execute_script "arguments[0].value = ''", native
-        native.send_keys(value.to_s)
+        if fill_options[:clear] == :backspace
+          # Clear field by sending the correct number of backspace keys.
+          backspaces = [:backspace] * self.value.to_s.length
+          native.send_keys(*(backspaces + [value.to_s]))
+        else
+          # Clear field by JavaScript assignment of the value property.
+          # Script can change a readonly element which user input cannot, so
+          # don't execute if readonly.
+          driver.browser.execute_script "arguments[0].value = ''", native
+          native.send_keys(value.to_s)
+        end
       end
     elsif native.attribute('isContentEditable')
       #ensure we are focused on the element
