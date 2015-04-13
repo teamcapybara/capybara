@@ -148,12 +148,12 @@ module Capybara
       def double_click
         synchronize { base.double_click }
       end
-      
+
       ##
       #
       # Send Keystrokes to the Element
       #
-      # @param [String, Symbol, Array]
+      # @param args [String, Symbol, Array]
       #
       # Examples:
       #
@@ -215,7 +215,7 @@ module Capybara
       # :f10
       # :f11
       # :f12
-      # :meta         
+      # :meta
       # :command      - alias of :meta
       #
       def send_keys(*args)
