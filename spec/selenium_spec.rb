@@ -100,6 +100,25 @@ RSpec.describe Capybara::Session do
       end
     end
 
+    context "#fill_in with { clear: :none } fill_options" do
+      it 'should append to content in a field' do
+        @session.visit('/form')
+        @session.fill_in('form_first_name', :with => 'Harry',
+                          fill_options: { clear: :none} )
+        expect(@session.find(:fillable_field, 'form_first_name').value).to eq('JohnHarry')
+      end
+    end
+
+    context "#fill_in with { clear: Array } fill_options" do
+      it 'should pass the array through to the element', tw: true do
+        #this is mainly for use with [[:ctrl, 'a'], :backspace] - however since that is platform dependant I'm testing with something less useful
+        @session.visit('/form')
+        @session.fill_in('form_first_name', :with => 'Harry',
+                          fill_options: { clear: [[:shift, 'abc'], :backspace] } )
+        expect(@session.find(:fillable_field, 'form_first_name').value).to eq('JohnABHarry')
+      end
+    end
+
     describe "#path" do
       it "returns xpath" do
         # this is here because it is testing for an XPath that is specific to the algorithm used in the selenium driver
