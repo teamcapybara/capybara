@@ -23,7 +23,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     end
   end
 
-  def set(value, fill_options)
+  def set(value, fill_options={})
     tag_name = self.tag_name
     type = self[:type]
     if (Array === value) && !self[:multiple]
@@ -80,15 +80,15 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def click
     native.click
   end
-  
+
   def right_click
     driver.browser.action.context_click(native).perform
   end
-  
+
   def double_click
     driver.browser.action.double_click(native).perform
   end
-  
+
   def send_keys(*args)
     native.send_keys(*args)
   end
