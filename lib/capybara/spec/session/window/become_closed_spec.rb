@@ -37,7 +37,7 @@ Capybara::SpecHelper.spec '#become_closed', requires: [:windows, :js] do
   end
 
   context 'without :wait option' do
-    it 'should wait if value of default_wait_time is more than timeout' do
+    it 'should wait if value of default_max_wait_time is more than timeout' do
       @session.within_window @other_window do
         @session.execute_script('setTimeout(function(){ window.close(); }, 500);')
       end
@@ -46,7 +46,7 @@ Capybara::SpecHelper.spec '#become_closed', requires: [:windows, :js] do
       end
     end
 
-    it 'should raise error if value of default_wait_time is less than timeout' do
+    it 'should raise error if value of default_max_wait_time is less than timeout' do
       @session.within_window @other_window do
         @session.execute_script('setTimeout(function(){ window.close(); }, 900);')
       end
@@ -59,7 +59,7 @@ Capybara::SpecHelper.spec '#become_closed', requires: [:windows, :js] do
   end
 
   context 'with not_to' do
-    it 'should raise error if default_wait_time is more than timeout' do
+    it 'should raise error if default_max_wait_time is more than timeout' do
       @session.within_window @other_window do
         @session.execute_script('setTimeout(function(){ window.close(); }, 700);')
       end
@@ -70,7 +70,7 @@ Capybara::SpecHelper.spec '#become_closed', requires: [:windows, :js] do
       end
     end
 
-    it 'should raise error if default_wait_time is more than timeout' do
+    it 'should raise error if default_max_wait_time is more than timeout' do
       @session.within_window @other_window do
         @session.execute_script('setTimeout(function(){ window.close(); }, 700);')
       end

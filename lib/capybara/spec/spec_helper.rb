@@ -26,7 +26,7 @@ module Capybara
         Capybara.app = TestApp
         Capybara.app_host = nil
         Capybara.default_selector = :xpath
-        Capybara.default_wait_time = 1
+        Capybara.default_max_wait_time = 1
         Capybara.ignore_hidden_elements = true
         Capybara.exact = false
         Capybara.exact_options = false

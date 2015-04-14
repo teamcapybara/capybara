@@ -205,7 +205,7 @@ module Capybara
     # @example
     #   expect(window).to become_closed(wait: 0.8)
     # @param options [Hash] optional param
-    # @option options [Numeric] :wait (Capybara.default_wait_time) wait time
+    # @option options [Numeric] :wait (Capybara.default_max_wait_time) Maximum wait time
     def become_closed(options = {})
       BecomeClosed.new(options)
     end

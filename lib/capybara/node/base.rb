@@ -61,7 +61,7 @@ module Capybara
       #
       # As long as any of these exceptions are thrown, the block is re-run,
       # until a certain amount of time passes. The amount of time defaults to
-      # {Capybara.default_wait_time} and can be overridden through the `seconds`
+      # {Capybara.default_max_wait_time} and can be overridden through the `seconds`
       # argument. This time is compared with the system time to see how much
       # time has passed. On rubies/platforms which don't support access to a monotonic process clock
       # if the return value of `Time.now` is stubbed out, Capybara will raise `Capybara::FrozenInTime`.
@@ -73,7 +73,7 @@ module Capybara
       # @return [Object]                  The result of the given block
       # @raise  [Capybara::FrozenInTime]  If the return value of `Time.now` appears stuck
       #
-      def synchronize(seconds=Capybara.default_wait_time, options = {})
+      def synchronize(seconds=Capybara.default_max_wait_time, options = {})
         start_time = Capybara::Helpers.monotonic_time
 
         if session.synchronized
