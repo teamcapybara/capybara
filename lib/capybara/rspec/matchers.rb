@@ -1,3 +1,5 @@
+require 'monotonic_time'
+
 module Capybara
   module RSpecMatchers
     class Matcher
@@ -130,9 +132,9 @@ module Capybara
 
       def matches?(window)
         @window = window
-        start_time = Time.now
+        start_time = MonotonicTime.now
         while window.exists?
-          return false if (Time.now - start_time) > @wait_time
+          return false if (MonotonicTime.now - start_time) > @wait_time
           sleep 0.05
         end
         true

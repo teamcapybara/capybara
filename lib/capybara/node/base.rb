@@ -1,3 +1,5 @@
+require 'monotonic_time'
+
 module Capybara
   module Node
 
@@ -63,18 +65,19 @@ module Capybara
       # until a certain amount of time passes. The amount of time defaults to
       # {Capybara.default_wait_time} and can be overridden through the `seconds`
       # argument. This time is compared with the system time to see how much
-      # time has passed. If the return value of `Time.now` is stubbed out,
-      # Capybara will raise `Capybara::FrozenInTime`.
+      # time has passed. If the return value of `MonotonicTime.now` is stubbed
+      # out, Capybara will raise `Capybara::FrozenInTime`.
       #
       # @param  [Integer] seconds         Number of seconds to retry this block
       # @param options [Hash]
       # @option options [Array<Exception>] :errors (driver.invalid_element_errors +
       #   [Capybara::ElementNotFound]) exception types that cause the block to be rerun
       # @return [Object]                  The result of the given block
-      # @raise  [Capybara::FrozenInTime]  If the return value of `Time.now` appears stuck
+      # @raise  [Capybara::FrozenInTime]  If the return value of
+      #   `MonotonicTime.now` appears stuck
       #
       def synchronize(seconds=Capybara.default_wait_time, options = {})
-        start_time = Time.now
+        start_time = MonotonicTime.now
 
         if session.synchronized
           yield
@@ -86,9 +89,9 @@ module Capybara
             session.raise_server_error!
             raise e unless driver.wait?
             raise e unless catch_error?(e, options[:errors])
-            raise e if (Time.now - start_time) >= seconds
+            raise e if (MonotonicTime.now - start_time) >= seconds
             sleep(0.05)
-            raise Capybara::FrozenInTime, "time appears to be frozen, Capybara does not work with libraries which freeze time, consider using time travelling instead" if Time.now == start_time
+            raise Capybara::FrozenInTime, "time appears to be frozen, Capybara does not work with libraries which freeze time, consider using time travelling instead" if MonotonicTime.now == start_time
             reload if Capybara.automatic_reload
             retry
           ensure
