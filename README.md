@@ -935,7 +935,8 @@ additional info about how the underlying driver can be configured.
   since we're not using Rails' integration testing.
 
 * Freezing time: It's common practice to mock out the Time so that features
-  that depend on the current Date work as expected. This can be problematic,
+  that depend on the current Date work as expected. This can be problematic on
+  ruby/platform combinations that don't support access to a monotonic process clock,
   since Capybara's Ajax timing uses the system time, resulting in Capybara
   never timing out and just hanging when a failure occurs. It's still possible to
   use gems which allow you to travel in time, rather than freeze time.
