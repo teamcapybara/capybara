@@ -119,7 +119,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
     end
   end
 
-  describe '#maximize', tw: true do
+  describe '#maximize' do
     it 'should be able to maximize window', requires: [:windows, :js] do
       skip "This test fails when run with Firefox on Travis - see issue #1493 - skipping for now" if ENV['TRAVIS'] && @session.respond_to?(:mode) && (@session.mode == :selenium_focus)
       screen_width, screen_height = @session.evaluate_script("[window.screen.availWidth, window.screen.availHeight];")

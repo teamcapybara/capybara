@@ -127,6 +127,10 @@ class TestApp < Sinatra::Base
     raise LoadError
   end
 
+  get '/with.*html' do
+    erb :with_html
+  end
+
   get '/:view' do |view|
     erb view.to_sym
   end

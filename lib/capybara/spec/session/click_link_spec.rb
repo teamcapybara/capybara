@@ -131,6 +131,12 @@ Capybara::SpecHelper.spec '#click_link' do
     expect(@session).to have_content('Bar')
   end
 
+  it "should follow link on anchor if the path has regex special characters" do
+    @session.visit('/with.*html')
+    @session.click_link('Anchor on different page')
+    expect(@session).to have_content('Bar')
+  end
+
   it "raise an error with links with no href" do
     expect do
       @session.click_link('No Href')
