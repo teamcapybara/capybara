@@ -4,7 +4,7 @@ module Capybara
   class Query < Queries::BaseQuery
     attr_accessor :selector, :locator, :options, :expression, :find, :negative
 
-    VALID_KEYS = [:text, :visible, :between, :count, :maximum, :minimum, :exact, :match, :wait]
+    VALID_KEYS = [:element, :text, :visible, :between, :count, :maximum, :minimum, :exact, :match, :wait]
     VALID_MATCH = [:first, :smart, :prefer_exact, :one]
 
     def initialize(*args)
@@ -18,6 +18,8 @@ module Capybara
         @locator = args[0]
       end
       @selector ||= Selector.all[Capybara.default_selector]
+      element_name = options.fetch(:element, @selector.name)
+      @element_type = Capybara::ElementType.all[element_name]
 
       # for compatibility with Capybara 2.0
       if Capybara.exact_options and @selector == Selector.all[:option]
@@ -29,12 +31,12 @@ module Capybara
     end
 
     def name; selector.name; end
-    def label; selector.label or selector.name; end
+    def label; @element_type.label or @element_type.name; end
 
     def description
       @description = "#{label} #{locator.inspect}"
       @description << " with text #{options[:text].inspect}" if options[:text]
-      @description << selector.description(options)
+      @description << @element_type.description(options)
       @description
     end
 
@@ -47,7 +49,7 @@ module Capybara
         when :visible then return false unless node.visible?
         when :hidden then return false if node.visible?
       end
-      selector.custom_filters.each do |name, filter|
+      @element_type.custom_filters.each do |name, filter|
         if options.has_key?(name)
           return false unless filter.matches?(node, options[name])
         elsif filter.default?
@@ -110,7 +112,7 @@ module Capybara
           node.find_xpath(self.xpath(exact))
         end.map do |child|
           if node.is_a?(Capybara::Node::Base)
-            Capybara::Node::Element.new(node.session, child, node, self)
+            @element_type.element_class.new(node.session, child, node, self)
           else
             Capybara::Node::Simple.new(child)
           end
@@ -122,7 +124,7 @@ module Capybara
     private
 
     def valid_keys
-      COUNT_KEYS + [:text, :visible, :exact, :match, :wait] + @selector.custom_filters.keys
+      COUNT_KEYS + [:text, :visible, :exact, :match, :wait] + @element_type.custom_filters.keys
     end
 
     def assert_valid_keys

@@ -22,6 +22,13 @@ module Capybara
     #
     class Element < Base
 
+      # Associate the child of the element with element type
+      # @param [Symbol] element_name
+      def self.class_for(element_name)
+        Capybara::ElementType.all[element_name].set_class(self)
+      end
+
+      # @deprecated This method is used internally by Capybara and is not intended to be used/overrided by end users
       def initialize(session, base, parent, query)
         super(session, base)
         @parent = parent
