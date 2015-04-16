@@ -130,9 +130,9 @@ module Capybara
 
       def matches?(window)
         @window = window
-        start_time = Time.now
+        start_time = Capybara::Helpers.monotonic_time
         while window.exists?
-          return false if (Time.now - start_time) > @wait_time
+          return false if (Capybara::Helpers.monotonic_time - start_time) > @wait_time
           sleep 0.05
         end
         true

@@ -40,7 +40,7 @@ module Capybara
     # @return [String]         The modified HTML code
     #
     def inject_asset_host(html)
-      if Capybara.asset_host && Nokogiri::HTML(html).css("base").empty? 
+      if Capybara.asset_host && Nokogiri::HTML(html).css("base").empty?
         match = html.match(/<head[^<]*?>/)
         html.clone.insert match.end(0), "<base href='#{Capybara.asset_host}' />"
       else
@@ -122,6 +122,16 @@ module Capybara
         singular
       else
         plural
+      end
+    end
+
+    if defined?(Process::CLOCK_MONOTONIC)
+      def monotonic_time
+       Process.clock_gettime Process::CLOCK_MONOTONIC
+      end
+    else
+      def monotonic_time
+        Time.now.to_f
       end
     end
   end
