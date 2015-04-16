@@ -200,6 +200,16 @@ module Capybara
       HaveSelector.new(:table, locator, options)
     end
 
+    [:have_xpath, :have_css, :have_title, :have_link, :have_button, :have_field, :have_checked_field, :have_unchecked_field, :have_select, :have_table].each do |method_name|
+      alias_method "#{method_name}_without_options_verification", method_name
+      define_method method_name do |locator, options={}|
+        unless options.is_a?(Hash)
+          options={}
+          warn "WARNING: #{__method__} options should be a Hash - Ignoring the passed in options."
+        end
+        send "#{method_name}_without_options_verification", locator, options
+      end
+    end
     ##
     # Wait for window to become closed.
     # @example

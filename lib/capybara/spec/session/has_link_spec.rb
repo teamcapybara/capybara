@@ -14,6 +14,12 @@ Capybara::SpecHelper.spec '#has_link?' do
     expect(@session).not_to have_link('monkey')
     expect(@session).not_to have_link('A link', :href => '/non-existant-href')
   end
+
+  it "should warn if options is not a hash" do
+    expect_any_instance_of(Kernel).to receive(:warn).
+      with('WARNING: have_link options should be a Hash - Ignoring the passed in options.')
+    expect(@session).to have_link('foo', 'not proper options')
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_link?' do
