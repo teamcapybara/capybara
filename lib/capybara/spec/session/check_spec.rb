@@ -32,6 +32,12 @@ Capybara::SpecHelper.spec "#check" do
       @session.check('form_pets_cat')
       expect(@session.find(:xpath, "//input[@id='form_pets_cat']")['checked']).to be_truthy
     end
+
+    it "should warn if the options are not a hash" do
+      expect_any_instance_of(Kernel).to receive(:warn).
+        with('WARNING: #check options should be a Hash - Ignoring the passed in options.')
+      @session.check('form_pets_cat', 'not proper options')
+    end
   end
 
   describe "unchecking" do

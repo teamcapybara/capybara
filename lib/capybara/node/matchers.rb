@@ -530,7 +530,7 @@ module Capybara
           define_method method_name do |locator, options={}|
             unless options.is_a?(Hash)
               options={}
-              warn "WARNING: #{__method__} options should be a Hash - Ignoring the passed in options."
+              warn "WARNING: ##{__method__} options should be a Hash - Ignoring the passed in options."
             end
             send "#{method_name}_without_options_verification", locator, options
           end
