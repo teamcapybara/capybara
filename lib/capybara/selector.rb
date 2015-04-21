@@ -150,7 +150,7 @@ end
 Capybara.add_selector(:link) do
   xpath { |locator| XPath::HTML.link(locator) }
   filter(:href) do |node, href|
-    node.first(:xpath, XPath.axis(:self)[XPath.attr(:href).equals(href.to_s)])
+    node.first(:xpath, XPath.axis(:self)[XPath.attr(:href).equals(href.to_s)], minimum: 0)
   end
   describe { |options| " with href #{options[:href].inspect}" if options[:href] }
 end
@@ -210,7 +210,7 @@ Capybara.add_selector(:select) do
     actual = node.all(:xpath, './/option').map { |option| option.text }
     options.sort == actual.sort
   end
-  filter(:with_options) { |node, options| options.all? { |option| node.first(:option, option) } }
+  filter(:with_options) { |node, options| options.all? { |option| node.first(:option, option, minimum: 0) } }
   filter(:selected) do |node, selected|
     actual = node.all(:xpath, './/option').select { |option| option.selected? }.map { |option| option.text }
     [selected].flatten.sort == actual.sort
