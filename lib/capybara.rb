@@ -22,7 +22,7 @@ module Capybara
     attr_accessor :asset_host, :app_host, :run_server, :default_host, :always_include_port
     attr_accessor :server_port, :exact, :match, :exact_options, :visible_text_only
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
-    attr_accessor :save_and_open_page_path, :automatic_reload, :raise_server_errors, :server_errors
+    attr_accessor :save_and_open_page_path, :wait_on_first_by_default, :automatic_reload, :raise_server_errors, :server_errors
     attr_writer :default_driver, :current_driver, :javascript_driver, :session_name, :server_host
     attr_accessor :app
 
@@ -48,7 +48,7 @@ module Capybara
     # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: true)  
     # [automatic_reload = Boolean]        Whether to automatically reload elements as Capybara is waiting (Default: true)  
     # [save_and_open_page_path = String]  Where to put pages saved through save_and_open_page (Default: Dir.pwd)  
-    #
+    # [wait_on_first_by_default = Boolean]   Whether Node#first defaults to Capybara waiting behavior for at least 1 element to match (Default: false) 
     # === DSL Options
     #
     # when using capybara/dsl, the following options are also available:
@@ -369,6 +369,7 @@ Capybara.configure do |config|
   config.raise_server_errors = true
   config.server_errors = [StandardError]
   config.visible_text_only = false
+  config.wait_on_first_by_default = false
 end
 
 Capybara.register_driver :rack_test do |app|
