@@ -7,6 +7,8 @@ Capybara.register_driver :selenium_focus do |app|
   Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile)
 end
 
+Capybara.run_proxy = true
+
 module TestSessions
   Selenium = Capybara::Session.new(:selenium_focus, TestApp)
 end
@@ -98,6 +100,36 @@ RSpec.describe Capybara::Session do
         # click outside the field to trigger the change event
         @session.find(:css, 'body').click
         expect(@session).to have_selector(:css, '.change_event_triggered', :match => :one)
+      end
+    end
+
+    describe "with whitelist" do
+      before do
+        Capybara.default_whitelist_urls = [/.*js/]
+      end
+
+      after do
+        Capybara.default_whitelist_urls = nil
+      end
+
+      it 'should visit pages that match the whitelist' do
+        #force the session to reload the default whitelist
+        @session.reset!
+        @session.visit('/with_js')
+        @session.fill_in('response-code-tester', with: '/with_js')
+        # click outside the field to trigger the change event
+        @session.find(:css, 'body').click
+        expect(@session).to have_css('#response-code-output', text: '200')
+      end
+
+      it "should not visit pages that don't match the whitelist" do
+        #force the session to reload the default whitelist
+        @session.reset!
+        @session.visit('/with_js')
+        @session.fill_in('response-code-tester', with: '/with_html')
+        # click outside the field to trigger the change event
+        @session.find(:css, 'body').click
+        expect(@session).to have_css('#response-code-output', text: '404')
       end
     end
   end
