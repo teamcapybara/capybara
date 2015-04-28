@@ -149,8 +149,12 @@ end
 
 Capybara.add_selector(:link) do
   xpath { |locator| XPath::HTML.link(locator) }
-  filter(:href) do |node, href|
-    node.first(:xpath, XPath.axis(:self)[XPath.attr(:href).equals(href.to_s)], minimum: 0)
+  filter(:href) do |node, href| 
+    if href.is_a? Regexp
+      node[:href].match href
+    else
+      node.first(:xpath, XPath.axis(:self)[XPath.attr(:href).equals(href.to_s)], minimum: 0)
+    end
   end
   describe { |options| " with href #{options[:href].inspect}" if options[:href] }
 end

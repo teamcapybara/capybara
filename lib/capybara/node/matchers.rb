@@ -220,7 +220,7 @@ module Capybara
       #
       # @param [String] locator           The text or id of a link to check for
       # @param options
-      # @option options [String] :href    The value the href attribute must be
+      # @option options [String, Regexp] :href    The value the href attribute must be
       # @return [Boolean]                 Whether it exists
       #
       def has_link?(locator, options={})
