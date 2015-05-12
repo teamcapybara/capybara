@@ -142,6 +142,8 @@ module Capybara
       #
       # Find a file field on the page and attach a file given its path. The file field can
       # be found via its name, id or label text.
+      # Exception is raised if file does not exist. This can be suppressed for remote testing scenarios
+      # with the config option config.remote => true
       #
       #     page.attach_file(locator, '/path/to/file.png')
       #
@@ -150,7 +152,7 @@ module Capybara
       #
       def attach_file(locator, path, options={})
         Array(path).each do |p|
-          raise Capybara::FileNotFound, "cannot attach file, #{p} does not exist" unless File.exist?(p.to_s)
+          raise Capybara::FileNotFound, "cannot attach file, #{p} does not exist" unless File.exist?(p.to_s) or Capybara.remote
         end
         find(:file_field, locator, options).set(path)
       end
