@@ -88,8 +88,13 @@ Capybara::SpecHelper.spec "#attach_file" do
   end
 
   context "with a path that doesn't exist" do
-    it "should raise an error" do
+    it "should raise an error", :attach_file => true do
       expect { @session.attach_file('Image', '/no_such_file.png') }.to raise_error(Capybara::FileNotFound)
+    end
+
+    it "should not raise an error for remote test", :attach_file => true do
+      Capybara.remote = true
+      expect { @session.attach_file('Image', '/no_such_file.png') }.not_to raise_error
     end
   end
 

@@ -24,7 +24,7 @@ module Capybara
     attr_accessor :default_selector, :default_max_wait_time, :ignore_hidden_elements
     attr_accessor :save_and_open_page_path, :wait_on_first_by_default, :automatic_reload, :raise_server_errors, :server_errors
     attr_writer :default_driver, :current_driver, :javascript_driver, :session_name, :server_host
-    attr_accessor :app
+    attr_accessor :app, :remote
 
     ##
     #
