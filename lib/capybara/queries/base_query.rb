@@ -10,7 +10,7 @@ module Capybara
         if @options.has_key?(:wait)
           @options[:wait] || 0
         else
-          Capybara.default_wait_time
+          Capybara.default_max_wait_time
         end
       end
 

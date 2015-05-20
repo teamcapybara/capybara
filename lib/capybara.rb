@@ -21,7 +21,7 @@ module Capybara
   class << self
     attr_accessor :asset_host, :app_host, :run_server, :default_host, :always_include_port
     attr_accessor :server_port, :exact, :match, :exact_options, :visible_text_only
-    attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
+    attr_accessor :default_selector, :default_max_wait_time, :ignore_hidden_elements
     attr_accessor :save_and_open_page_path, :wait_on_first_by_default, :automatic_reload, :raise_server_errors, :server_errors
     attr_writer :default_driver, :current_driver, :javascript_driver, :session_name, :server_host
     attr_accessor :app
@@ -44,7 +44,7 @@ module Capybara
     # [raise_server_errors = Boolean]     Should errors raised in the server be raised in the tests? (Default: true)  
     # [server_errors = Array\<Class\>]    Error classes that should be raised in the tests if they are raised in the server and Capybara.raise_server_errors is true (Default: [StandardError])  
     # [default_selector = :css/:xpath]    Methods which take a selector use the given type by default (Default: :css)  
-    # [default_wait_time = Integer]       The maximumnumber of seconds to wait for asynchronous processes to finish (Default: 2)  
+    # [default_max_wait_time = Numeric]   The maximum number of seconds to wait for asynchronous processes to finish (Default: 2)  
     # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: true)  
     # [automatic_reload = Boolean]        Whether to automatically reload elements as Capybara is waiting (Default: true)  
     # [save_and_open_page_path = String]  Where to put pages saved through save_and_open_page (Default: Dir.pwd)  
@@ -233,11 +233,11 @@ module Capybara
     # Yield a block using a specific wait time
     #
     def using_wait_time(seconds)
-      previous_wait_time = Capybara.default_wait_time
-      Capybara.default_wait_time = seconds
+      previous_wait_time = Capybara.default_max_wait_time
+      Capybara.default_max_wait_time = seconds
       yield
     ensure
-      Capybara.default_wait_time = previous_wait_time
+      Capybara.default_max_wait_time = previous_wait_time
     end
 
     ##
@@ -294,6 +294,18 @@ module Capybara
           textarea.content=textarea.content.sub(/\A\n/,'')
         end
       end
+    end
+    
+    # @deprecated Use default_max_wait_time instead
+    def default_wait_time
+      deprecate('default_wait_time', 'default_max_wait_time')
+      default_max_wait_time
+    end
+    
+    # @deprecated Use default_max_wait_time= instead
+    def default_wait_time=(t)
+      deprecate('default_wait_time=', 'default_max_wait_time=')
+      self.default_max_wait_time = t
     end
 
     def included(base)
@@ -360,7 +372,7 @@ Capybara.configure do |config|
   config.run_server = true
   config.server {|app, port| Capybara.run_default_server(app, port)}
   config.default_selector = :css
-  config.default_wait_time = 2
+  config.default_max_wait_time = 2
   config.ignore_hidden_elements = true
   config.default_host = "http://www.example.com"
   config.automatic_reload = true

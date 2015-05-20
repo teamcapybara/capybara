@@ -9,7 +9,7 @@ module Capybara
       #
       # If the driver is capable of executing JavaScript, +find+ will wait for a set amount of time
       # and continuously retry finding the element until either the element is found or the time
-      # expires. The length of time +find+ will wait is controlled through {Capybara.default_wait_time}
+      # expires. The length of time +find+ will wait is controlled through {Capybara.default_max_wait_time}
       # and defaults to 2 seconds.
       #
       # +find+ takes the same options as +all+.

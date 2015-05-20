@@ -480,7 +480,7 @@ module Capybara
     # {https://dvcs.w3.org/hg/webdriver/raw-file/default/webdriver-spec.html#h_note_10 as order of windows isn't defined in some drivers}
     #
     # @param options [Hash]
-    # @option options [Numeric] :wait (Capybara.default_wait_time) wait time
+    # @option options [Numeric] :wait (Capybara.default_max_wait_time) maximum wait time
     # @return [Capybara::Window]       the window that has been opened within a block
     # @raise [Capybara::WindowError]   if block passed to window hasn't opened window
     #   or opened more than one window
@@ -561,7 +561,7 @@ module Capybara
       else
         options[:text]=text_or_options
       end
-      
+
       driver.accept_modal(:confirm, options, &blk)
     end
 
@@ -577,7 +577,7 @@ module Capybara
       else
         options[:text]=text_or_options
       end
-      
+
       driver.dismiss_modal(:confirm, options, &blk)
     end
 
@@ -594,7 +594,7 @@ module Capybara
       else
         options[:text]=text_or_options
       end
-      
+
       driver.accept_modal(:prompt, options, &blk)
     end
 
@@ -610,7 +610,7 @@ module Capybara
       else
         options[:text]=text_or_options
       end
-      
+
       driver.dismiss_modal(:prompt, options, &blk)
     end
 
