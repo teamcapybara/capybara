@@ -1,4 +1,5 @@
 require 'sinatra/base'
+require 'tilt/erb'
 require 'rack'
 require 'yaml'
 
