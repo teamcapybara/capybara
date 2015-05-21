@@ -15,6 +15,13 @@ RSpec::Core::RakeTask.new(:spec_with_chrome) do |t|
   t.pattern = './spec{,/*/**}/*{_spec.rb,_spec_chrome.rb}'
 end
 
+RSpec::Core::RakeTask.new(:spec_chrome) do |t|
+  t.rspec_opts = %w[--color]
+  # jruby buffers the progress formatter so travis doesn't see output often enough
+  t.rspec_opts << '--format documentation' if RUBY_PLATFORM=='java'
+  t.pattern = './spec/*{_spec_chrome.rb}'
+end
+
 YARD::Rake::YardocTask.new do |t|
   t.files   = ['lib/**/*.rb']
   t.options = %w(--markup=markdown)
@@ -24,6 +31,13 @@ Cucumber::Rake::Task.new(:cucumber) do |task|
   task.cucumber_opts = ['--format=progress', 'features']
 end
 
-task :travis => [:spec_with_chrome, :cucumber]
+task :travis do |t|
+  if ENV['CAPYBARA_CHROME']
+    Rake::Task[:spec_chrome].invoke
+  else
+    Rake::Task[:spec].invoke
+    Rake::Task[:cucumber].invoke
+  end
+end
 
 task :default => [:spec, :cucumber]

@@ -237,7 +237,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def invalid_element_errors
-    [Selenium::WebDriver::Error::StaleElementReferenceError, Selenium::WebDriver::Error::UnhandledError, Selenium::WebDriver::Error::ElementNotVisibleError]
+    [Selenium::WebDriver::Error::StaleElementReferenceError,
+     Selenium::WebDriver::Error::UnhandledError,
+     Selenium::WebDriver::Error::ElementNotVisibleError,
+     Selenium::WebDriver::Error::InvalidSelectorError]  # Work around a race condition that can occur with chromedriver and #go_back/#go_forward
   end
 
   def no_such_window_error
