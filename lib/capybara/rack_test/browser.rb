@@ -96,7 +96,12 @@ class Capybara::RackTest::Browser
   end
 
   def title
-    dom.title
+    if dom.respond_to? :title
+      dom.title
+    else
+      #old versions of nokogiri don't have #title - remove in 3.0
+      dom.xpath('/html/head/title | /html/title').first.text
+    end
   end
 
 protected
