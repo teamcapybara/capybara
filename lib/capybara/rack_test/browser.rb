@@ -96,7 +96,7 @@ class Capybara::RackTest::Browser
   end
 
   def title
-    dom.xpath("//title").text
+    dom.title
   end
 
 protected

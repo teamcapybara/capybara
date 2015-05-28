@@ -146,7 +146,7 @@ module Capybara
       end
 
       def title
-        native.xpath("//title").first.text
+        native.title
       end
 
       def inspect
