@@ -7,6 +7,7 @@ require 'capybara/rspec/features'
 RSpec.configure do |config|
   config.include Capybara::DSL, :type => :feature
   config.include Capybara::RSpecMatchers, :type => :feature
+  config.include Capybara::RSpecMatchers, :type => :view
 
   # A work-around to support accessing the current example that works in both
   # RSpec 2 and RSpec 3.

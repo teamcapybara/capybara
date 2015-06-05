@@ -167,7 +167,7 @@ describe 'some stuff which requires js', :js => true do
 end
 ```
 
-Finally, Capybara also comes with a built in DSL for creating descriptive acceptance tests:
+Capybara also comes with a built in DSL for creating descriptive acceptance tests:
 
 ```ruby
 feature "Signing in" do
@@ -202,6 +202,20 @@ end
 `feature` is in fact just an alias for `describe ..., :type => :feature`,
 `background` is an alias for `before`, `scenario` for `it`, and
 `given`/`given!` aliases for `let`/`let!`, respectively.
+
+Finally, Capybara matchers are supported in view specs:
+
+```ruby
+RSpec.describe "todos/show.html.erb", type: :view do
+  it "displays the todo title" do
+    assign :todo, Todo.new(title: "Buy milk")
+
+    render
+
+    expect(rendered).to have_css("header h1", text: "Buy milk")
+  end
+end
+```
 
 ## Using Capybara with Test::Unit
 
