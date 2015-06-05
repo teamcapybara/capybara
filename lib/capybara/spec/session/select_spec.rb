@@ -108,6 +108,18 @@ Capybara::SpecHelper.spec "#select" do
     end
   end
 
+  context "on a disabled option" do
+    it "should not select" do
+      @session.select('Other', :from => 'form_title')
+      expect(@session.find_field('form_title').value).not_to eq 'Other'
+    end
+
+    it "should warn" do
+      expect_any_instance_of(Capybara::Node::Element).to receive(:warn).once
+      @session.select('Other', :from => 'form_title')
+    end
+  end
+
   context "with multiple select" do
     it "should return an empty value" do
       expect(@session.find_field('Language').value).to eq([])
