@@ -27,7 +27,7 @@ matrix:
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
-
+    - RUBYOPT='-Ku'
 before_install:
   - if [ $CAPYBARA_CHROME ]; then
       CHROMEDRIVER_VERSION=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE);
