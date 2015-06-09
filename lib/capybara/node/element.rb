@@ -114,6 +114,7 @@ module Capybara
       # Select this node if is an option element inside a select tag
       #
       def select_option
+        warn "Attempt to select disabled option: #{value || text}" if disabled?
         synchronize { base.select_option }
       end
 
@@ -148,7 +149,7 @@ module Capybara
       def double_click
         synchronize { base.double_click }
       end
-      
+
       ##
       #
       # Send Keystrokes to the Element
@@ -215,7 +216,7 @@ module Capybara
       # :f10
       # :f11
       # :f12
-      # :meta         
+      # :meta
       # :command      - alias of :meta
       #
       def send_keys(*args)
