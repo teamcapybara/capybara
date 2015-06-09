@@ -298,7 +298,7 @@ module Capybara
     
     # @deprecated Use default_max_wait_time instead
     def default_wait_time
-      deprecate('default_wait_time', 'default_max_wait_time')
+      deprecate('default_wait_time', 'default_max_wait_time', true)
       default_max_wait_time
     end
     
@@ -313,8 +313,10 @@ module Capybara
       warn "`include Capybara` is deprecated. Please use `include Capybara::DSL` instead."
     end
 
-    def deprecate(method, alternate_method)
-      warn "DEPRECATED: ##{method} is deprecated, please use ##{alternate_method} instead"
+    def deprecate(method, alternate_method, once=false)
+      @deprecation_notified ||= {}
+      warn "DEPRECATED: ##{method} is deprecated, please use ##{alternate_method} instead" unless once and @deprecation_notified[method]
+      @deprecation_notified[method]=true
     end
 
   private
