@@ -4,18 +4,18 @@ module Capybara
 
       ##
       #
-      # Checks if a given selector is on the page or current node.
+      # Checks that a given selector is on the page or the current node.
       #
       #     page.has_selector?('p#foo')
       #     page.has_selector?(:xpath, './/p[@id="foo"]')
       #     page.has_selector?(:foo)
       #
-      # By default it will check if the expression occurs at least once,
-      # but a different number can be specified.
+      # By default, it will check that the expression occurs at least once,
+      # but another number can be specified.
       #
       #     page.has_selector?('p.foo', :count => 4)
       #
-      # This will check if the expression occurs exactly 4 times.
+      # This will check that the expression occurs exactly 4 times.
       #
       # It also accepts all options that {Capybara::Node::Finders#all} accepts,
       # such as :text and :visible.
@@ -43,7 +43,7 @@ module Capybara
 
       ##
       #
-      # Checks if a given selector is not on the page or current node.
+      # Checks that a given selector is not on the page or the current node.
       # Usage is identical to Capybara::Node::Matchers#has_selector?
       #
       # @param (see Capybara::Node::Finders#has_selector?)
@@ -57,18 +57,18 @@ module Capybara
 
       ##
       #
-      # Asserts that a given selector is on the page or current node.
+      # Asserts that a given selector is on the page or the current node.
       #
       #     page.assert_selector('p#foo')
       #     page.assert_selector(:xpath, './/p[@id="foo"]')
       #     page.assert_selector(:foo)
       #
-      # By default it will check if the expression occurs at least once,
+      # By default it will check that the expression occurs at least once,
       # but a different number can be specified.
       #
       #     page.assert_selector('p#foo', :count => 4)
       #
-      # This will check if the expression occurs exactly 4 times. See
+      # This will check that the expression occurs exactly 4 times. See
       # {Capybara::Node::Finders#all} for other available result size options.
       #
       # If a :count of 0 is specified, it will behave like {#assert_no_selector};
@@ -102,7 +102,7 @@ module Capybara
 
       ##
       #
-      # Asserts that a given selector is not on the page or current node.
+      # Asserts that a given selector is not on the page or the current node.
       # Usage is identical to Capybara::Node::Matchers#assert_selector
       #
       # Query options such as :count, :minimum, :maximum, and :between are
@@ -131,16 +131,16 @@ module Capybara
 
       ##
       #
-      # Checks if a given XPath expression is on the page or current node.
+      # Checks that a given XPath expression is on the page or the current node.
       #
       #     page.has_xpath?('.//p[@id="foo"]')
       #
-      # By default it will check if the expression occurs at least once,
+      # By default it will check that the expression occurs at least once,
       # but a different number can be specified.
       #
       #     page.has_xpath?('.//p[@id="foo"]', :count => 4)
       #
-      # This will check if the expression occurs exactly 4 times.
+      # This will check that the expression occurs exactly 4 times.
       #
       # It also accepts all options that {Capybara::Node::Finders#all} accepts,
       # such as :text and :visible.
@@ -164,7 +164,7 @@ module Capybara
 
       ##
       #
-      # Checks if a given XPath expression is not on the page or current node.
+      # Checks that a given XPath expression is not on the page or the current node.
       # Usage is identical to Capybara::Node::Matchers#has_xpath?
       #
       # @param (see Capybara::Node::Finders#has_xpath?)
@@ -176,16 +176,16 @@ module Capybara
 
       ##
       #
-      # Checks if a given CSS selector is on the page or current node.
+      # Checks that a given CSS selector is on the page or the current node.
       #
       #     page.has_css?('p#foo')
       #
-      # By default it will check if the selector occurs at least once,
+      # By default it will check that the selector occurs at least once,
       # but a different number can be specified.
       #
       #     page.has_css?('p#foo', :count => 4)
       #
-      # This will check if the selector occurs exactly 4 times.
+      # This will check that the selector occurs exactly 4 times.
       #
       # It also accepts all options that {Capybara::Node::Finders#all} accepts,
       # such as :text and :visible.
@@ -203,7 +203,7 @@ module Capybara
 
       ##
       #
-      # Checks if a given CSS selector is not on the page or current node.
+      # Checks that a given CSS selector is not on the page or the current node.
       # Usage is identical to Capybara::Node::Matchers#has_css?
       #
       # @param (see Capybara::Node::Finders#has_css?)
@@ -215,7 +215,7 @@ module Capybara
 
       ##
       #
-      # Checks if the page or current node has a link with the given
+      # Checks that the page or the current node has a link with the given
       # text or id.
       #
       # @param [String] locator           The text or id of a link to check for
@@ -229,7 +229,7 @@ module Capybara
 
       ##
       #
-      # Checks if the page or current node has no link with the given
+      # Checks that the page or the current node has no link with the given
       # text or id.
       #
       # @param (see Capybara::Node::Finders#has_link?)
@@ -241,7 +241,7 @@ module Capybara
 
       ##
       #
-      # Checks if the page or current node has a button with the given
+      # Checks that the page or the current node has a button with the given
       # text, value or id.
       #
       # @param [String] locator      The text, value or id of a button to check for
@@ -253,7 +253,7 @@ module Capybara
 
       ##
       #
-      # Checks if the page or current node has no button with the given
+      # Checks that the page or the current node has no button with the given
       # text, value or id.
       #
       # @param [String] locator      The text, value or id of a button to check for
@@ -265,7 +265,7 @@ module Capybara
 
       ##
       #
-      # Checks if the page or current node has a form field with the given
+      # Checks that the page or the current node has a form field with the given
       # label, name or id.
       #
       # For text fields and other textual fields, such as textareas and
@@ -291,7 +291,7 @@ module Capybara
 
       ##
       #
-      # Checks if the page or current node has no form field with the given
+      # Checks that the page or the current node has no form field with the given
       # label, name or id. See {Capybara::Node::Matchers#has_field?}.
       #
       # @param [String] locator           The label, name or id of a field to check for
@@ -305,7 +305,7 @@ module Capybara
 
       ##
       #
-      # Checks if the page or current node has a radio button or
+      # Checks that the page or the current node has a radio button or
       # checkbox with the given label, value or id, that is currently
       # checked.
       #
@@ -318,7 +318,7 @@ module Capybara
 
       ##
       #
-      # Checks if the page or current node has no radio button or
+      # Checks that the page or the current node has no radio button or
       # checkbox with the given label, value or id, that is currently
       # checked.
       #
@@ -331,7 +331,7 @@ module Capybara
 
       ##
       #
-      # Checks if the page or current node has a radio button or
+      # Checks that the page or the current node has a radio button or
       # checkbox with the given label, value or id, that is currently
       # unchecked.
       #
@@ -344,7 +344,7 @@ module Capybara
 
       ##
       #
-      # Checks if the page or current node has no radio button or
+      # Checks that the page or the current node has no radio button or
       # checkbox with the given label, value or id, that is currently
       # unchecked.
       #
@@ -357,7 +357,7 @@ module Capybara
 
       ##
       #
-      # Checks if the page or current node has a select field with the
+      # Checks that the page or the current node has a select field with the
       # given label, name or id.
       #
       # It can be specified which option should currently be selected:
@@ -368,7 +368,7 @@ module Capybara
       #
       #     page.has_select?('Language', :selected => ['English', 'German'])
       #
-      # It's also possible to check if the exact set of options exists for
+      # It's also possible to check that the exact set of options exists for
       # this select box:
       #
       #     page.has_select?('Language', :options => ['English', 'German', 'Spanish'])
@@ -389,7 +389,7 @@ module Capybara
 
       ##
       #
-      # Checks if the page or current node has no select field with the
+      # Checks that the page or the current node has no select field with the
       # given label, name or id. See {Capybara::Node::Matchers#has_select?}.
       #
       # @param (see Capybara::Node::Matchers#has_select?)
@@ -401,7 +401,7 @@ module Capybara
 
       ##
       #
-      # Checks if the page or current node has a table with the given id
+      # Checks that the page or the current node has a table with the given id
       # or caption:
       #
       #    page.has_table?('People')
@@ -415,7 +415,7 @@ module Capybara
 
       ##
       #
-      # Checks if the page or current node has no table with the given id
+      # Checks that the page or the current node has no table with the given id
       # or caption. See {Capybara::Node::Matchers#has_table?}.
       #
       # @param (see Capybara::Node::Matchers#has_table?)
@@ -426,7 +426,7 @@ module Capybara
       end
 
       ##
-      # Asserts that the page or current node has the given text content,
+      # Asserts that the page or the current node has the given text content,
       # ignoring any HTML tags.
       #
       # @!macro text_query_params
@@ -461,7 +461,7 @@ module Capybara
       end
 
       ##
-      # Asserts that the page or current node doesn't have the given text content,
+      # Asserts that the page or the current node doesn't have the given text content,
       # ignoring any HTML tags.
       #
       # @macro text_query_params
@@ -481,19 +481,19 @@ module Capybara
       end
 
       ##
-      # Checks if the page or current node has the given text content,
+      # Checks that the page or the current node has the given text content,
       # ignoring any HTML tags.
       #
       # Whitespaces are normalized in both node's text and passed text parameter.
       # Note that whitespace isn't normalized in passed regexp as normalizing whitespace
       # in regexp isn't easy and doesn't seem to be worth it.
       #
-      # By default it will check if the text occurs at least once,
+      # By default it will check that the text occurs at least once,
       # but a different number can be specified.
       #
       #     page.has_text?('lorem ipsum', between: 2..4)
       #
-      # This will check if the text occurs from 2 to 4 times.
+      # This will check that the text occurs from 2 to 4 times.
       #
       # @macro text_query_params
       # @return [Boolean]                            Whether it exists
@@ -506,7 +506,7 @@ module Capybara
       alias_method :has_content?, :has_text?
 
       ##
-      # Checks if the page or current node does not have the given text
+      # Checks that the page or the current node does not have the given text
       # content, ignoring any HTML tags and normalizing whitespace.
       #
       # @macro text_query_params
