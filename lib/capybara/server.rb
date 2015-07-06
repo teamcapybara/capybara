@@ -4,22 +4,47 @@ require 'rack'
 
 module Capybara
   class Server
+    class Counter
+      attr_reader :value
+
+      def initialize
+        @value = 0
+        @mutex = Mutex.new
+      end
+
+      def increment
+        @mutex.synchronize { @value += 1 }
+      end
+
+      def decrement
+        @mutex.synchronize { @value -= 1 }
+      end
+    end
+
     class Middleware
       attr_accessor :error
 
       def initialize(app)
         @app = app
+        @counter = Counter.new
+      end
+
+      def pending_requests?
+        @counter.value > 0
       end
 
       def call(env)
         if env["PATH_INFO"] == "/__identify__"
           [200, {}, [@app.object_id.to_s]]
         else
+          @counter.increment
           begin
             @app.call(env)
           rescue *Capybara.server_errors => e
             @error = e unless @error
             raise e
+          ensure
+            @counter.decrement
           end
         end
       end
@@ -60,6 +85,12 @@ module Capybara
       end
     rescue SystemCallError
       return false
+    end
+
+    def wait_for_pending_requests
+      Timeout.timeout(60) { sleep(0.01) while @middleware.pending_requests? }
+    rescue Timeout::Error
+      raise "Requests did not finish in 60 seconds"
     end
 
     def boot
