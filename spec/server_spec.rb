@@ -113,4 +113,30 @@ RSpec.describe Capybara::Server do
     expect(Net::HTTP).to receive(:start).and_raise(SystemCallError.allocate)
     expect(server.responsive?).to eq false
   end
+
+  it "can detect and wait for pending requests" do
+    done = false
+    app = proc do |env|
+      sleep 0.2
+      done = true
+      [200, {}, ["Hello Server!"]]
+    end
+    server = Capybara::Server.new(app).boot
+
+    # Start request, but don't wait for it to finish
+    expect {
+      Timeout.timeout(0.1) {
+        Net::HTTP.start(server.host, server.port) { |http| http.get('/') }
+      }
+    }.to raise_error(Timeout::Error)
+
+    expect(server).to be_pending_requests
+    expect(done).to be false
+
+    server.wait_for_pending_requests
+
+    # Ensure server was allowed to finish
+    expect(done).to be true
+    expect(server).not_to be_pending_requests
+  end
 end
