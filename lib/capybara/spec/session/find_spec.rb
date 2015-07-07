@@ -58,11 +58,20 @@ Capybara::SpecHelper.spec '#find' do
   end
 
   context "with frozen time", :requires => [:js] do
-    it "raises an error suggesting that Capybara is stuck in time" do
-      @session.visit('/with_js')
-      now = Time.now
-      allow(Time).to receive(:now).and_return(now)
-      expect { @session.find('//isnotthere') }.to raise_error(Capybara::FrozenInTime)
+    if defined?(Process::CLOCK_MONOTONIC)
+      it "will time out even if time is frozen" do
+        @session.visit('/with_js')
+        now = Time.now
+        allow(Time).to receive(:now).and_return(now)
+        expect { @session.find('//isnotthere') }.to raise_error(Capybara::ElementNotFound)
+      end
+    else
+      it "raises an error suggesting that Capybara is stuck in time" do
+        @session.visit('/with_js')
+        now = Time.now
+        allow(Time).to receive(:now).and_return(now)
+        expect { @session.find('//isnotthere') }.to raise_error(Capybara::FrozenInTime)
+      end
     end
   end
 

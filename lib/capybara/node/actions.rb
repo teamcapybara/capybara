@@ -21,7 +21,7 @@ module Capybara
       #
       # @param [String] locator         text, id, title or nested image's alt attribute
       # @param options
-      # @option options [String] :href    The value the href attribute must equal
+      # @option options [String, Regexp] :href    The value the href attribute must equal
       #
       def click_link(locator, options={})
         find(:link, locator, options).click

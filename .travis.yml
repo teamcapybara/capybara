@@ -16,6 +16,9 @@ matrix:
       rvm: 2.2
     - gemfile: gemfiles/Gemfile.beta-versions
       rvm: jruby-9.0.0.0.pre1
+    - gemfile: Gemfile
+      rvm: 2.2
+      env: CAPYBARA_CHROME=true
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
       rvm: 2.2
@@ -24,15 +27,17 @@ matrix:
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
-
+    - RUBYOPT='-Ku'
 before_install:
-  - CHROMEDRIVER_VERSION=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
-  - CHROMEDRIVER_URL="http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip"
-  - FILE=`mktemp`; wget "$CHROMEDRIVER_URL" -qO $FILE && sudo unzip $FILE chromedriver -d /usr/local/bin; rm $FILE; sudo chmod 777 /usr/local/bin/chromedriver
-  - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-  - sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-  - sudo apt-get update
-  - sudo apt-get install google-chrome-stable --force-yes
+  - if [ $CAPYBARA_CHROME ]; then
+      CHROMEDRIVER_VERSION=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE);
+      CHROMEDRIVER_URL="http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip";
+      FILE=`mktemp`; wget "$CHROMEDRIVER_URL" -qO $FILE && sudo unzip $FILE chromedriver -d /usr/local/bin; rm $FILE; sudo chmod 777 /usr/local/bin/chromedriver;
+      wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -;
+      sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list';
+      sudo apt-get update;
+      sudo apt-get install google-chrome-stable --force-yes;
+    fi
   - sudo chmod 1777 /dev/shm
   - sudo apt-get install awesome -y
 before_script:

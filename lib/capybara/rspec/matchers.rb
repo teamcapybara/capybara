@@ -130,9 +130,9 @@ module Capybara
 
       def matches?(window)
         @window = window
-        start_time = Time.now
+        start_time = Capybara::Helpers.monotonic_time
         while window.exists?
-          return false if (Time.now - start_time) > @wait_time
+          return false if (Capybara::Helpers.monotonic_time - start_time) > @wait_time
           sleep 0.05
         end
         true
@@ -205,7 +205,7 @@ module Capybara
     # @example
     #   expect(window).to become_closed(wait: 0.8)
     # @param options [Hash] optional param
-    # @option options [Numeric] :wait (Capybara.default_wait_time) wait time
+    # @option options [Numeric] :wait (Capybara.default_max_wait_time) Maximum wait time
     def become_closed(options = {})
       BecomeClosed.new(options)
     end

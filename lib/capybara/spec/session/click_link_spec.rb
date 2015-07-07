@@ -84,6 +84,28 @@ Capybara::SpecHelper.spec '#click_link' do
     end
   end
 
+  context "with a regex :href option given"  do
+    it "should find a link matching an all-matching regex pattern" do
+      @session.click_link('labore', :href => /.+/)
+      expect(@session).to have_content('Bar')
+    end
+
+    it "should find a link matching an exact regex pattern" do
+      @session.click_link('labore', :href => /\/with_simple_html/)
+      expect(@session).to have_content('Bar') 
+    end
+    
+    it "should find a link matching a partial regex pattern" do
+      @session.click_link('labore', :href => /\/with_simple/)
+      expect(@session).to have_content('Bar')
+    end
+    
+    it "should raise an error if no link's href matched the pattern" do
+      expect { @session.click_link('labore', :href => /invalid_pattern/) }.to raise_error(Capybara::ElementNotFound)
+      expect { @session.click_link('labore', :href => /.+d+/) }.to raise_error(Capybara::ElementNotFound)
+    end
+  end
+
   it "should follow relative links" do
     @session.visit('/')
     @session.click_link('Relative')
@@ -127,6 +149,12 @@ Capybara::SpecHelper.spec '#click_link' do
   end
 
   it "should follow link on URL+anchor links for a different page" do
+    @session.click_link('Anchor on different page')
+    expect(@session).to have_content('Bar')
+  end
+
+  it "should follow link on anchor if the path has regex special characters" do
+    @session.visit('/with.*html')
     @session.click_link('Anchor on different page')
     expect(@session).to have_content('Bar')
   end

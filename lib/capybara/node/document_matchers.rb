@@ -9,7 +9,7 @@ module Capybara
       #     @param string [String]           The string that title should include
       #   @overload $0(regexp, options = {})
       #     @param regexp [Regexp]           The regexp that title should match to
-      #   @option options [Numeric] :wait (Capybara.default_wait_time) Time that Capybara will wait for title to eq/match given string/regexp argument
+      #   @option options [Numeric] :wait (Capybara.default_max_wait_time) Maximum time that Capybara will wait for title to eq/match given string/regexp argument
       # @raise [Capybara::ExpectationNotMet] if the assertion hasn't succeeded during wait time
       # @return [true]
       #

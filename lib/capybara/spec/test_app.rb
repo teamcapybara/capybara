@@ -1,4 +1,5 @@
 require 'sinatra/base'
+require 'tilt/erb'
 require 'rack'
 require 'yaml'
 
@@ -125,6 +126,10 @@ class TestApp < Sinatra::Base
 
   get '/load_error' do
     raise LoadError
+  end
+
+  get '/with.*html' do
+    erb :with_html
   end
 
   get '/:view' do |view|

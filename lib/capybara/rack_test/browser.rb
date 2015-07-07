@@ -27,7 +27,7 @@ class Capybara::RackTest::Browser
   end
 
   def follow(method, path, attributes = {})
-    return if path.gsub(/^#{request_path}/, '').start_with?('#') || path.downcase.start_with?('javascript:')
+    return if path.gsub(/^#{Regexp.escape(request_path)}/, '').start_with?('#') || path.downcase.start_with?('javascript:')
     process_and_follow_redirects(method, path, attributes, {'HTTP_REFERER' => current_url})
   end
 
@@ -96,7 +96,12 @@ class Capybara::RackTest::Browser
   end
 
   def title
-    dom.xpath("//title").text
+    if dom.respond_to? :title
+      dom.title
+    else
+      #old versions of nokogiri don't have #title - remove in 3.0
+      dom.xpath('/html/head/title | /html/title').first.text
+    end
   end
 
 protected
