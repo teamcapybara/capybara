@@ -106,8 +106,10 @@ module Capybara
       node.synchronize do
         children = if selector.format == :css
           node.find_css(self.css)
-        else
+        elsif selector.format == :xpath
           node.find_xpath(self.xpath(exact))
+        elsif selector.format == :dynamic
+          @expression.call(node)
         end.map do |child|
           if node.is_a?(Capybara::Node::Base)
             Capybara::Node::Element.new(node.session, child, node, self)
