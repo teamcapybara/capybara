@@ -149,7 +149,7 @@ end
 
 Capybara.add_selector(:link) do
   xpath { |locator| XPath::HTML.link(locator) }
-  filter(:href) do |node, href| 
+  filter(:href) do |node, href|
     if href.is_a? Regexp
       node[:href].match href
     else
@@ -216,7 +216,14 @@ Capybara.add_selector(:select) do
   end
   filter(:with_options) { |node, options| options.all? { |option| node.first(:option, option, minimum: 0) } }
   filter(:selected) do |node, selected|
-    actual = node.all(:xpath, './/option').select { |option| option.selected? }.map { |option| option.text }
+    actual = begin
+      node.all(:css, 'option:checked')
+    rescue Capybara::CapybaraError
+      raise
+    rescue
+      # CSS :checked probably not supported by driver/browser, fallback to get all options
+      node.all(:xpath, './/option')
+    end.select { |option| option.selected? }.map { |option| option.text }
     [selected].flatten.sort == actual.sort
   end
   filter(:disabled, default: false, boolean: true) { |node, value| not(value ^ node.disabled?) }
