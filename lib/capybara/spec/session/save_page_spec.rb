@@ -79,5 +79,13 @@ Capybara::SpecHelper.spec '#save_page' do
       expect(result).to include('<html')
       expect(result).not_to include("http://example.com")
     end
+
+    it "executes successfully even if the page is missing a <head>" do
+      @session.visit("/with_simple_html")
+      path = @session.save_page
+
+      result = File.read(path)
+      expect(result).to include("Bar")
+    end
   end
 end

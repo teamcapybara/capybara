@@ -189,7 +189,7 @@ Capybara::SpecHelper.spec '#assert_no_text' do
       @session.visit('/with_js')
       @session.click_link('Click me')
       @session.find(:css, '#reload-list').click
-      @session.find(:css, '#the-list').assert_no_text('Foo Bar', :wait => 0.4)
+      @session.find(:css, '#the-list').assert_no_text('Foo Bar', :wait => 0.3)
     end
   end
 end

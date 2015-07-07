@@ -36,6 +36,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   end
 
   def select_option
+    return if disabled?
     if select_node['multiple'] != 'multiple'
       select_node.find_xpath(".//option[@selected]").each { |node| node.native.remove_attribute("selected") }
     end

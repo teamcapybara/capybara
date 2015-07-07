@@ -167,7 +167,7 @@ describe 'some stuff which requires js', :js => true do
 end
 ```
 
-Finally, Capybara also comes with a built in DSL for creating descriptive acceptance tests:
+Capybara also comes with a built in DSL for creating descriptive acceptance tests:
 
 ```ruby
 feature "Signing in" do
@@ -202,6 +202,20 @@ end
 `feature` is in fact just an alias for `describe ..., :type => :feature`,
 `background` is an alias for `before`, `scenario` for `it`, and
 `given`/`given!` aliases for `let`/`let!`, respectively.
+
+Finally, Capybara matchers are supported in view specs:
+
+```ruby
+RSpec.describe "todos/show.html.erb", type: :view do
+  it "displays the todo title" do
+    assign :todo, Todo.new(title: "Buy milk")
+
+    render
+
+    expect(rendered).to have_css("header h1", text: "Buy milk")
+  end
+end
+```
 
 ## Using Capybara with Test::Unit
 
@@ -709,7 +723,7 @@ looking for that content for a brief time. You can adjust how long this period
 is (the default is 2 seconds):
 
 ```ruby
-Capybara.default_wait_time = 5
+Capybara.default_max_wait_time = 5
 ```
 
 Be aware that because of this behaviour, the following two statements are **not**
@@ -935,7 +949,8 @@ additional info about how the underlying driver can be configured.
   since we're not using Rails' integration testing.
 
 * Freezing time: It's common practice to mock out the Time so that features
-  that depend on the current Date work as expected. This can be problematic,
+  that depend on the current Date work as expected. This can be problematic on
+  ruby/platform combinations that don't support access to a monotonic process clock,
   since Capybara's Ajax timing uses the system time, resulting in Capybara
   never timing out and just hanging when a failure occurs. It's still possible to
   use gems which allow you to travel in time, rather than freeze time.

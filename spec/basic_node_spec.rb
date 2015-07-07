@@ -9,6 +9,7 @@ RSpec.describe Capybara do
             <title>simple_node</title>
           </head>
           <body>
+            <svg><title>not document title</title></svg>
             <div id="page">
               <div id="content">
                 <h1 data="fantastic">Totally awesome</h1>

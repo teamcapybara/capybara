@@ -9,7 +9,7 @@ module Capybara
       #
       # If the driver is capable of executing JavaScript, +find+ will wait for a set amount of time
       # and continuously retry finding the element until either the element is found or the time
-      # expires. The length of time +find+ will wait is controlled through {Capybara.default_wait_time}
+      # expires. The length of time +find+ will wait is controlled through {Capybara.default_max_wait_time}
       # and defaults to 2 seconds.
       #
       # +find+ takes the same options as +all+.
@@ -166,7 +166,13 @@ module Capybara
       # @return [Capybara::Node::Element]            The found element or nil
       #
       def first(*args)
+        if Capybara.wait_on_first_by_default
+          options = if args.last.is_a?(Hash) then args.pop.dup else {} end
+          args.push({minimum: 1}.merge(options))
+        end
         all(*args).first
+      rescue Capybara::ExpectationNotMet
+        nil
       end
     end
   end

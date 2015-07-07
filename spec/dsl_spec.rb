@@ -116,20 +116,20 @@ RSpec.describe Capybara::DSL do
 
   describe '#using_wait_time' do
     before do
-      @previous_wait_time = Capybara.default_wait_time
+      @previous_wait_time = Capybara.default_max_wait_time
     end
 
     after do
-      Capybara.default_wait_time = @previous_wait_time
+      Capybara.default_max_wait_time = @previous_wait_time
     end
 
     it "should switch the wait time and switch it back" do
       in_block = nil
       Capybara.using_wait_time 6 do
-        in_block = Capybara.default_wait_time
+        in_block = Capybara.default_max_wait_time
       end
       expect(in_block).to eq(6)
-      expect(Capybara.default_wait_time).to eq(@previous_wait_time)
+      expect(Capybara.default_max_wait_time).to eq(@previous_wait_time)
     end
 
     it "should ensure wait time is reset" do
@@ -138,7 +138,7 @@ RSpec.describe Capybara::DSL do
           raise "hell"
         end
       end.to raise_error
-      expect(Capybara.default_wait_time).to eq(@previous_wait_time)
+      expect(Capybara.default_max_wait_time).to eq(@previous_wait_time)
     end
   end
 
