@@ -114,6 +114,7 @@ module Capybara
       # Select this node if is an option element inside a select tag
       #
       def select_option
+        warn "Attempt to select disabled option: #{value || text}" if disabled?
         synchronize { base.select_option }
       end
 
