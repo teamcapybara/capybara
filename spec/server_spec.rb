@@ -124,11 +124,10 @@ RSpec.describe Capybara::Server do
     server = Capybara::Server.new(app).boot
 
     # Start request, but don't wait for it to finish
-    expect {
-      Timeout.timeout(0.1) {
-        Net::HTTP.start(server.host, server.port) { |http| http.get('/') }
-      }
-    }.to raise_error(Timeout::Error)
+    socket = TCPSocket.new(server.host, server.port)
+    socket.write "GET / HTTP/1.0\r\n\r\n"
+    socket.close
+    sleep 0.1
 
     expect(server).to be_pending_requests
     expect(done).to be false
