@@ -89,7 +89,7 @@ module Capybara
     end
 
     def wait_for_pending_requests
-      Timeout.timeout(60) { @server_thread.join(0.01) while pending_requests? }
+      Timeout.timeout(60) { sleep(0.01) while pending_requests? }
     rescue Timeout::Error
       raise "Requests did not finish in 60 seconds"
     end
