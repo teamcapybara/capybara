@@ -200,6 +200,13 @@ Capybara::SpecHelper.spec '#has_text?' do
       end
     end
   end
+
+  it "should raise an error if an invalid option is passed" do
+    @session.visit('/with_html')
+    expect do
+      expect(@session).to have_text('Lorem', exact: true)
+    end.to raise_error(ArgumentError)
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_text?' do

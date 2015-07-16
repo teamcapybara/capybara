@@ -11,15 +11,6 @@ module Capybara
         @search_regexp = Capybara::Helpers.to_regexp(@expected_text)
         @options ||= {}
         assert_valid_keys
-
-        # this is needed to not break existing tests that may use keys supported by `Query` but not supported by `TextQuery`
-        # can be removed in next minor version (> 2.4)
-        invalid_keys = @options.keys - (COUNT_KEYS + [:wait])
-        unless invalid_keys.empty?
-          invalid_names = invalid_keys.map(&:inspect).join(", ")
-          valid_names = valid_keys.map(&:inspect).join(", ")
-          warn "invalid keys #{invalid_names}, should be one of #{valid_names}"
-        end
       end
 
       def resolve_for(node)
@@ -49,7 +40,7 @@ module Capybara
       private
 
       def valid_keys
-        Capybara::Query::VALID_KEYS # can be changed to COUNT_KEYS + [:wait] in next minor version (> 2.4)
+        COUNT_KEYS + [:wait]
       end
     end
   end
