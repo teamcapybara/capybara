@@ -149,4 +149,9 @@ Capybara::SpecHelper.spec "#all" do
       end
     end
   end
+
+  it "should have #find_all as an alias" do
+    expect(Capybara::Node::Finders.instance_method(:all)).to eq Capybara::Node::Finders.instance_method(:find_all)
+    expect(@session.find_all('//p').size).to eq(3)
+  end
 end

@@ -153,6 +153,7 @@ module Capybara
           result
         end
       end
+      alias_method :find_all, :all
 
       ##
       #
