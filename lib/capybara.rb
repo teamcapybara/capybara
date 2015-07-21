@@ -328,6 +328,7 @@ module Capybara
 
   self.default_driver = nil
   self.current_driver = nil
+  self.server_host = nil
 
   module Driver; end
   module RackTest; end
