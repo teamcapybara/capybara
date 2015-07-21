@@ -962,6 +962,10 @@ additional info about how the underlying driver can be configured.
   set `default_url_options` to match the Rails default of
   `www.example.com`.
 
+* Server errors will only be raised in the session that initiates the server thread. If you
+  are testing for specific server errors and using multiple sessions make sure to test for the
+  errors using the initial session (usually :default)
+
 ## Development
 
 To set up a development environment, simply do:
