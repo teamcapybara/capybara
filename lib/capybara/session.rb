@@ -380,7 +380,11 @@ module Capybara
     #   `within_frame` or `within_window` methods
     # @raise [ArgumentError]               if both or neither arguments were provided
     #
-    def switch_to_window(window = nil)
+    def switch_to_window(window = nil, options= {})
+      if window.is_a? Hash
+        options = window
+        window = nil
+      end
       block_given = block_given?
       if window && block_given
         raise ArgumentError, "`switch_to_window` can take either a block or a window, not both"
@@ -395,20 +399,23 @@ module Capybara
         driver.switch_to_window(window.handle)
         window
       else
-        original_window_handle = driver.current_window_handle
-        begin
-          driver.window_handles.each do |handle|
-            driver.switch_to_window handle
-            if yield
-              return Window.new(self, handle)
+        wait_time = Capybara::Query.new(options).wait
+        document.synchronize(wait_time, errors: [Capybara::WindowError]) do
+          original_window_handle = driver.current_window_handle
+          begin
+            driver.window_handles.each do |handle|
+              driver.switch_to_window handle
+              if yield
+                return Window.new(self, handle)
+              end
             end
+          rescue => e
+            driver.switch_to_window(original_window_handle)
+            raise e
+          else
+            driver.switch_to_window(original_window_handle)
+            raise Capybara::WindowError, "Could not find a window matching block/lambda"
           end
-        rescue => e
-          driver.switch_to_window(original_window_handle)
-          raise e
-        else
-          driver.switch_to_window(original_window_handle)
-          raise Capybara::WindowError, "Could not find a window matching block/lambda"
         end
       end
     end

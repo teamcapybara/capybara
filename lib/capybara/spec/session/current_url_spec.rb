@@ -62,13 +62,13 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
     should_be_on 1
   end
 
-  it "is unaffected by posting through a relative form" do
+  it "is unaffected by posting through a relative form", focus: true do
     visit_host_links
     @session.click_button("Relative Host")
     should_be_on 0
   end
 
-  it "is affected by posting through an absolute form" do
+  it "is affected by posting through an absolute form", focus: true do
     visit_host_links
     @session.click_button("Absolute Host")
     should_be_on 1

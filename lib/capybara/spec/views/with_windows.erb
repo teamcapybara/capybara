@@ -11,14 +11,14 @@
 
       $('#openWindowWithTimeout').click(function(){
         setTimeout(function(){
-          window.open('/popup_one', 'firstPopup');
+          window.open('/popup_one', 'timeoutPopup');
         }, 600);
         return false;
       });
 
       $('#openWindowWithLongerTimeout').click(function(){
         setTimeout(function(){
-          window.open('/popup_one', 'firstPopup');
+          window.open('/popup_one', 'longerTimeoutPopup');
         }, 1400);
         return false;
       });

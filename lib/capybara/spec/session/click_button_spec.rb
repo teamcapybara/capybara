@@ -11,8 +11,8 @@ Capybara::SpecHelper.spec '#click_button' do
 
   it "casts to string" do
     @session.click_button(:'Relative Action')
-    expect(@session.current_path).to eq('/relative')
     expect(extract_results(@session)['relative']).to eq('Relative Action')
+    expect(@session.current_path).to eq('/relative')
   end
 
   context "with multiple values with the same name" do
@@ -23,20 +23,19 @@ Capybara::SpecHelper.spec '#click_button' do
     end
   end
 
-  context "with a form that has a relative url as an action", focus: true do
+  context "with a form that has a relative url as an action" do
     it "should post to the correct url" do
       @session.click_button('Relative Action')
-      sleep(0.2)
-      expect(@session.current_path).to eq('/relative')
       expect(extract_results(@session)['relative']).to eq('Relative Action')
+      expect(@session.current_path).to eq('/relative')
     end
   end
 
-  context "with a form that has no action specified", focus: true do
+  context "with a form that has no action specified" do
     it "should post to the correct url" do
       @session.click_button('No Action')
-      expect(@session.current_path).to eq('/form')
       expect(extract_results(@session)['no_action']).to eq('No Action')
+      expect(@session.current_path).to eq('/form')
     end
   end
 
@@ -350,8 +349,8 @@ Capybara::SpecHelper.spec '#click_button' do
   context "with formaction attribute on button" do
     it "should submit to the formaction attribute" do
       @session.click_button('Formaction button')
-      expect(@session.current_path).to eq '/form'
       @results = extract_results(@session)
+      expect(@session.current_path).to eq '/form'
       expect(@results['which_form']).to eq 'formaction form'
     end
   end
@@ -359,8 +358,8 @@ Capybara::SpecHelper.spec '#click_button' do
   context "with formmethod attribute on button" do
     it "should submit to the formethod attribute" do
       @session.click_button('Formmethod button')
-      expect(@session.current_path).to eq '/form/get'
       @results = extract_results(@session)
+      expect(@session.current_path).to eq '/form/get'
       expect(@results['which_form']).to eq 'formaction form'
     end
   end

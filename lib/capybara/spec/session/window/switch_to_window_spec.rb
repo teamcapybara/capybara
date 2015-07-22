@@ -111,4 +111,11 @@ Capybara::SpecHelper.spec '#switch_to_window', requires: [:windows] do
       expect(@session.current_window).to eq(original)
     end
   end
+
+  it "should wait for window to appear" do
+    @session.find(:css, '#openWindowWithTimeout').click
+    expect do
+      @session.switch_to_window { @session.title == 'Title of the first popup'}
+    end.not_to raise_error(Capybara::WindowError)
+  end
 end
