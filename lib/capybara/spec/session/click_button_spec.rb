@@ -23,15 +23,16 @@ Capybara::SpecHelper.spec '#click_button' do
     end
   end
 
-  context "with a form that has a relative url as an action" do
+  context "with a form that has a relative url as an action", focus: true do
     it "should post to the correct url" do
       @session.click_button('Relative Action')
+      sleep(0.2)
       expect(@session.current_path).to eq('/relative')
       expect(extract_results(@session)['relative']).to eq('Relative Action')
     end
   end
 
-  context "with a form that has no action specified" do
+  context "with a form that has no action specified", focus: true do
     it "should post to the correct url" do
       @session.click_button('No Action')
       expect(@session.current_path).to eq('/form')
@@ -110,7 +111,7 @@ Capybara::SpecHelper.spec '#click_button' do
         expect(@results['pets']).to include('dog', 'hamster')
         expect(@results['pets']).not_to include('cat')
       end
-      
+
       it "should default checkbox value to 'on' if none specififed" do
         expect(@results['valueless_checkbox']).to eq('on')
       end
@@ -134,11 +135,11 @@ Capybara::SpecHelper.spec '#click_button' do
       it "should not serialize a select tag without options" do
         expect(@results['tendency']).to be_nil
       end
-      
+
       it "should convert lf to cr/lf in submitted textareas" do
         expect(@results['newline']).to eq("\r\nNew line after and before textarea tag\r\n")
       end
-      
+
       it "should not submit disabled fields" do
         expect(@results['disabled_text_field']).to be_nil
         expect(@results['disabled_textarea']).to be_nil
@@ -254,7 +255,7 @@ Capybara::SpecHelper.spec '#click_button' do
       expect(extract_results(@session)['first_name']).to eq('John')
     end
   end
-  
+
 
   context "with value given on an image button" do
     it "should submit the associated form" do
