@@ -1,3 +1,5 @@
+require "capybara/spec/test_app"
+
 Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
   before :all do
     @servers = 2.times.map { Capybara::Server.new(TestApp.clone).boot }
@@ -11,6 +13,9 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
   end
 
   def should_be_on server_index, path="/host", scheme="http"
+    #This delay is to give fully async drivers (selenium w/chromedriver) time for the browser
+    #to get to its destination - should be removed when we have a waiting current_url matcher
+    sleep 0.1  # remove and adjust tests when a waiting current_url/path matcher is implemented
     # Check that we are on /host on the given server
     s = @servers[server_index]
     expect(@session.current_url.chomp('?')).to eq("#{scheme}://#{s.host}:#{s.port}#{path}")
@@ -62,13 +67,13 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
     should_be_on 1
   end
 
-  it "is unaffected by posting through a relative form", focus: true do
+  it "is unaffected by posting through a relative form" do
     visit_host_links
     @session.click_button("Relative Host")
     should_be_on 0
   end
 
-  it "is affected by posting through an absolute form", focus: true do
+  it "is affected by posting through an absolute form" do
     visit_host_links
     @session.click_button("Absolute Host")
     should_be_on 1

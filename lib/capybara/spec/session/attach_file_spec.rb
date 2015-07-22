@@ -74,7 +74,7 @@ Capybara::SpecHelper.spec "#attach_file" do
 
     it "should not send anything when attaching no files to a multiple upload field" do
       @session.click_button('Upload Empty Multiple')
-      expect(@session.body).to include("Successfully ignored empty file field")
+      expect(@session).to have_content("Successfully ignored empty file field")
     end
   end
 

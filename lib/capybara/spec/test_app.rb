@@ -129,11 +129,11 @@ class TestApp < Sinatra::Base
   end
 
   get '/with.*html' do
-    erb :with_html
+    erb :with_html, locals: { referrer: request.referrer }
   end
 
   get '/:view' do |view|
-    erb view.to_sym
+    erb view.to_sym, locals: { referrer: request.referrer }
   end
 
   post '/form' do

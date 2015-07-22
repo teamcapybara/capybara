@@ -92,14 +92,14 @@ Capybara::SpecHelper.spec '#click_link' do
 
     it "should find a link matching an exact regex pattern" do
       @session.click_link('labore', :href => /\/with_simple_html/)
-      expect(@session).to have_content('Bar') 
+      expect(@session).to have_content('Bar')
     end
-    
+
     it "should find a link matching a partial regex pattern" do
       @session.click_link('labore', :href => /\/with_simple/)
       expect(@session).to have_content('Bar')
     end
-    
+
     it "should raise an error if no link's href matched the pattern" do
       expect { @session.click_link('labore', :href => /invalid_pattern/) }.to raise_error(Capybara::ElementNotFound)
       expect { @session.click_link('labore', :href => /.+d+/) }.to raise_error(Capybara::ElementNotFound)
@@ -122,8 +122,9 @@ Capybara::SpecHelper.spec '#click_link' do
     expect(@session).to have_content('You landed')
   end
 
-  it "should follow redirects" do
+  it "should follow redirects back to itself" do
     @session.click_link('BackToMyself')
+    expect(@session).to have_css('#referrer', text: /\/with_html$/)
     expect(@session).to have_content('This is a test')
   end
 

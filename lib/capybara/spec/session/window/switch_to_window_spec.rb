@@ -46,6 +46,7 @@ Capybara::SpecHelper.spec '#switch_to_window', requires: [:windows] do
   context "with block" do
     before(:each) do
       @session.find(:css, '#openTwoWindows').click
+      sleep(0.2) # wait for the windows to open
     end
 
     it "should be able to switch to current window" do

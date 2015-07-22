@@ -386,8 +386,8 @@ Capybara::SpecHelper.spec '#click_button' do
 
   it "should follow redirects" do
     @session.click_button('Go FAR')
-    expect(@session.current_url).to match(%r{/landed$})
     expect(@session).to have_content('You landed')
+    expect(@session.current_url).to match(%r{/landed$})
   end
 
   it "should post pack to the same URL when no action given" do

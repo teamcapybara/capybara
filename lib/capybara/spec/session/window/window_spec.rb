@@ -114,7 +114,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
       expect(@session.evaluate_script("[window.outerWidth, window.outerHeight];")).to eq([width-10, height-10])
     end
 
-    it 'should stay on current window if invoked not for current window' do
+    it 'should stay on current window if invoked not for current window', requires: [:windows, :js] do
 
       @other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
