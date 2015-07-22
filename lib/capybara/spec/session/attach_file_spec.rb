@@ -59,8 +59,8 @@ Capybara::SpecHelper.spec "#attach_file" do
     it "should not break when using HTML5 multiple file input" do
       @session.attach_file "Multiple Documents", @test_file_path
       @session.click_button('Upload Multiple')
-      expect(@session.body).to include("1 | ")#number of files
       expect(@session).to have_content(File.read(@test_file_path))
+      expect(@session.body).to include("1 | ")#number of files
     end
 
     it  "should not break when using HTML5 multiple file input uploading multiple files" do
