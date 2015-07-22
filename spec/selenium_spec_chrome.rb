@@ -1,6 +1,8 @@
 require 'spec_helper'
 require 'selenium-webdriver'
 
+Selenium::WebDriver::Chrome.driver_path = '/home/travis/chromedriver' if ENV['TRAVIS']
+
 Capybara.register_driver :selenium_chrome do |app|
   args = ENV['TRAVIS'] ? ['no-sandbox' ] : []
   Capybara::Selenium::Driver.new(app, :browser => :chrome, :args => args)

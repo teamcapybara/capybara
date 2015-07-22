@@ -17,7 +17,7 @@ Capybara::SpecHelper.spec '#accept_confirm', :requires => [:modals] do
     expect(message).to eq('Confirm opened')
   end
 
-  it "should work with nested modals", focus: true do
+  it "should work with nested modals" do
     expect {
       @session.dismiss_confirm 'Are you really sure?' do
         @session.accept_confirm 'Are you sure?' do
