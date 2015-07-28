@@ -63,7 +63,7 @@ module Capybara
       @mode = mode
       @app = app
       if Capybara.run_server and @app and driver.needs_server?
-        @server = Capybara::Server.new(@app).boot
+        @server = Capybara::Server.new(@app, driver).boot
       else
         @server = nil
       end

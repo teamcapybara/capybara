@@ -22,7 +22,7 @@ module Capybara
     attr_accessor :asset_host, :app_host, :run_server, :default_host, :always_include_port
     attr_accessor :server_port, :exact, :match, :exact_options, :visible_text_only
     attr_accessor :default_selector, :default_wait_time, :ignore_hidden_elements
-    attr_accessor :save_and_open_page_path, :automatic_reload, :raise_server_errors
+    attr_accessor :save_and_open_page_path, :automatic_reload, :raise_server_errors, :use_proxy_protocol
     attr_writer :default_driver, :current_driver, :javascript_driver, :session_name, :server_host
     attr_accessor :app
 
@@ -46,6 +46,7 @@ module Capybara
     # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: true)
     # [automatic_reload = Boolean]        Whether to automatically reload elements as Capybara is waiting (Default: true)
     # [save_and_open_page_path = String]  Where to put pages saved through save_and_open_page (Default: Dir.pwd)
+    # [use_proxy_protocol = Boolean]      Use the proxy protocol to send requests to capybara's proxy server instead of normal web server. Using the proxy server stubs all requests and allows you to use subdomains (Default: false)
     #
     # === DSL Options
     #
@@ -134,6 +135,23 @@ module Capybara
 
     ##
     #
+    # Register a proc that Capybara will use to start a proxy server which will receive any requests from the browser.
+    # The proxy method is used in case the browser supports proxy servers.
+    #
+    # By default, Capybara will setup it's internal proxy.
+    #
+    # @yield [app, port]                      This block receives a rack app and port and should run a Rack handler
+    #
+    def proxy_server(&block)
+      if block_given?
+        @proxy_server = block
+      else
+        @proxy_server
+      end
+    end
+
+    ##
+    #
     # Wraps the given string, which should contain an HTML document or fragment
     # in a {Capybara::Node::Simple} which exposes all {Capybara::Node::Matchers} and
     # {Capybara::Node::Finders}. This allows you to query any string containing
@@ -171,6 +189,19 @@ module Capybara
     def run_default_server(app, port)
       require 'rack/handler/webrick'
       Rack::Handler::WEBrick.run(app, :Host => server_host, :Port => port, :AccessLog => [], :Logger => WEBrick::Log::new(nil, 0))
+    end
+
+    ##
+    #
+    # Runs Capybara's default proxy server for the given application and port
+    # under most circumstances you should not have to call this method
+    # manually.
+    #
+    # @param [Rack Application] app    The rack application to run
+    # @param [Fixnum] port              The port to run the application on
+    #
+    def run_default_proxy_server(app, port)
+      Capybara::ProxyServer.run(app, :Host => server_host, :Port => port, :AccessLog => [], :Logger => WEBrick::Log::new(nil, 0))
     end
 
     ##
@@ -322,6 +353,7 @@ module Capybara
   require 'capybara/dsl'
   require 'capybara/window'
   require 'capybara/server'
+  require 'capybara/proxy_server'
   require 'capybara/selector'
   require 'capybara/result'
   require 'capybara/version'
@@ -357,6 +389,7 @@ Capybara.configure do |config|
   config.always_include_port = false
   config.run_server = true
   config.server {|app, port| Capybara.run_default_server(app, port)}
+  config.proxy_server {|app, port| Capybara.run_default_proxy_server(app, port)}
   config.default_selector = :css
   config.default_wait_time = 2
   config.ignore_hidden_elements = true
