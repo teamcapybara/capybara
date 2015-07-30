@@ -20,7 +20,6 @@ module Capybara
         end
       rescue => err
         $stderr.puts err
-        $stderr.puts err.backtrace.join("\n")
       end
     end
 
@@ -89,7 +88,6 @@ module Capybara
       end
     rescue => err
       $stderr.puts err
-      $stderr.puts err.backtrace.join("\n")
     end
 
     private
