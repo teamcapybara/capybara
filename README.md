@@ -378,6 +378,9 @@ any Javascript errors that happen within the page.
 *A complete reference is available at
 [rubydoc.info](http://rubydoc.info/github/jnicklas/capybara/master)*.
 
+**Note: By default Capybara will only locate visible elements. This is because
+ a real user would not be able to interact with non-visible elements.**
+
 **Note**: All searches in Capybara are *case sensitive*. This is because
 Capybara heavily uses XPath, which doesn't support case insensitivity.
 
@@ -472,7 +475,7 @@ You can also find specific elements, in order to manipulate them:
 
 ```ruby
 find_field('First Name').value
-find_link('Hello').visible?
+find_link('Hello', :visible => :all).visible?
 find_button('Send').click
 
 find(:xpath, "//table/tr").click
