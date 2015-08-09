@@ -100,6 +100,22 @@ RSpec.describe Capybara::Session do
         expect(@session).to have_selector(:css, '.change_event_triggered', :match => :one)
       end
     end
+
+    describe "#path" do
+      before :each do
+        @session.visit('/with_js')
+      end
+
+      it "returns xpath" do
+        element = @session.find(:css, '#with_focus_event')
+        expect(element.path).to eq('/html/body/p[5]/input')
+      end
+
+      it "returns xpath which points to itself" do
+        element = @session.find(:css, '#with_focus_event')
+        expect(@session.find(:xpath, element.path)).to eq(element)
+      end
+    end
   end
 end
 

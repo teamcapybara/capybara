@@ -133,6 +133,34 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     native == other.native
   end
 
+  def path
+    path = parents
+    path.unshift self
+
+    result = []
+    while node = path.shift
+      parent = path.first
+
+      if parent
+        siblings = parent.find_xpath(node.tag_name)
+        if siblings.size == 1
+          result.unshift node.tag_name
+        else
+          index = siblings.index(node)
+          result.unshift "#{node.tag_name}[#{index+1}]"
+        end
+      else
+        result.unshift node.tag_name
+      end
+    end
+
+    '/' + result.join('/')
+  end
+
+  def parents
+    find_xpath('ancestor::*').reverse
+  end
+
 private
 
   # a reference to the select node if this is an option node
