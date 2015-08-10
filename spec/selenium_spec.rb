@@ -103,16 +103,16 @@ RSpec.describe Capybara::Session do
 
     describe "#path" do
       before :each do
-        @session.visit('/with_js')
+        @session.visit('/path')
       end
 
       it "returns xpath" do
-        element = @session.find(:css, '#with_focus_event')
-        expect(element.path).to eq('/html/body/p[5]/input')
+        element = @session.find(:link, 'Second Link')
+        expect(element.path).to eq('/html/body/div[2]/a[1]')
       end
 
       it "returns xpath which points to itself" do
-        element = @session.find(:css, '#with_focus_event')
+        element = @session.find(:link, 'Second Link')
         expect(@session.find(:xpath, element.path)).to eq(element)
       end
     end
