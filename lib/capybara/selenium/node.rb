@@ -134,7 +134,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def path
-    path = parents
+    path = find_xpath('ancestor::*').reverse
     path.unshift self
 
     result = []
@@ -155,10 +155,6 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     end
 
     '/' + result.join('/')
-  end
-
-  def parents
-    find_xpath('ancestor::*').reverse
   end
 
 private
