@@ -70,7 +70,7 @@ module Capybara
     #
     # @param [Symbol] name                    The name of the new driver
     # @yield [app]                            This block takes a rack app and returns a Capybara driver
-    # @yieldparam [<Rack>] app                The rack application that this driver runs agains. May be nil.
+    # @yieldparam [<Rack>] app                The rack application that this driver runs against. May be nil.
     # @yieldreturn [Capybara::Driver::Base]   A Capybara driver instance
     #
     def register_driver(name, &block)
