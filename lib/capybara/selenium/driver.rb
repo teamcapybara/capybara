@@ -6,11 +6,23 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   }
   SPECIAL_OPTIONS = [:browser]
 
-  attr_reader :app, :options
+  attr_reader :app, :options, :proxy
 
   def browser
     unless @browser
-      @browser = Selenium::WebDriver.for(options[:browser], options.reject { |key,val| SPECIAL_OPTIONS.include?(key) })
+      @proxy = Capybara.proxy_server && Capybara.proxy_server.create_proxy unless options.has_key?(:proxy)
+      if @proxy
+        case options[:browser]
+        when :firefox
+          options[:proxy] ||=@proxy.selenium_proxy
+        when :chrome
+          options[:proxy] ||= @proxy.selenium_proxy
+        end
+      end
+      reset_proxy!
+
+      @browser = Selenium::WebDriver.for(options[:browser],
+        options.reject { |key,val| SPECIAL_OPTIONS.include?(key) } )
 
       main = Process.pid
       at_exit do
@@ -112,8 +124,20 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         retry
       end
     end
+    reset_proxy!
   end
 
+  def reset_proxy!
+    if @proxy
+      @proxy.clear_blacklist
+      @proxy.clear_rewrites
+      if Capybara.default_whitelist_urls
+        @proxy.whitelist(Capybara.default_whitelist_urls, 404)
+      else
+        @proxy.clear_whitelist
+      end
+    end
+  end
   ##
   #
   # Webdriver supports frame name, id, index(zero-based) or {Capybara::Node::Element} to find iframe
@@ -233,7 +257,9 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   rescue Errno::ECONNREFUSED
     # Browser must have already gone
   ensure
+    @proxy.close if @proxy
     @browser = nil
+    @proxy = nil
   end
 
   def invalid_element_errors

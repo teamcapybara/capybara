@@ -40,6 +40,10 @@ before_install:
     fi
   - sudo chmod 1777 /dev/shm
   - sudo apt-get install awesome -y
+  - curl -k -L -O https://github.com/lightbody/browsermob-proxy/releases/download/browsermob-proxy-2.0.0/browsermob-proxy-2.0.0-bin.zip
+  - unzip browsermob-proxy-2.0.0-bin.zip
+  - ls -tal
+  - export BROWSERMOB_PROXY_HOME=`pwd`/browsermob-proxy-2.0.0
 before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start

@@ -25,6 +25,7 @@ module Capybara
     attr_accessor :save_and_open_page_path, :wait_on_first_by_default, :automatic_reload, :raise_server_errors, :server_errors
     attr_writer :default_driver, :current_driver, :javascript_driver, :session_name, :server_host
     attr_accessor :app
+    attr_accessor :run_proxy, :default_whitelist_urls
 
     ##
     #
@@ -228,6 +229,23 @@ module Capybara
       @server_host || '127.0.0.1'
     end
 
+
+    def proxy_server
+      if @proxy_server.nil? && run_proxy
+        begin
+          require 'browsermob-proxy'
+        rescue LoadError => e
+          if e.message =~/browsermob-proxy/
+            raise LoadError, "Capybara's selenium driver is unable to load 'browsermob-proxy', please install the gem and add `gem 'browsermob-proxy'` to your Gemfile if you are using bundler."
+          else
+            raise e
+          end
+        end
+        @proxy_server ||= BrowserMob::Proxy::Server.new("#{ENV['BROWSERMOB_PROXY_HOME']}/bin/browsermob-proxy", log: true)
+        @proxy_server.start()
+      end
+      @proxy_server
+    end
     ##
     #
     # Yield a block using a specific wait time
@@ -386,6 +404,8 @@ Capybara.configure do |config|
   config.server_errors = [StandardError]
   config.visible_text_only = false
   config.wait_on_first_by_default = false
+  config.run_proxy = true
+  config.default_whitelist_urls = nil
 end
 
 Capybara.register_driver :rack_test do |app|
