@@ -137,7 +137,7 @@ RSpec.describe Capybara::DSL do
         Capybara.using_wait_time 6 do
           raise "hell"
         end
-      end.to raise_error
+      end.to raise_error(RuntimeError, "hell")
       expect(Capybara.default_max_wait_time).to eq(@previous_wait_time)
     end
   end
@@ -218,6 +218,17 @@ RSpec.describe Capybara::DSL do
       called = false
       Capybara.using_session(:administrator) { called = true }
       expect(called).to eq(true)
+    end
+
+    it "should be nestable" do
+      Capybara.using_session(:outer) do
+        expect(Capybara.session_name).to eq(:outer)
+        Capybara.using_session(:inner) do
+          expect(Capybara.session_name).to eq(:inner)
+        end
+        expect(Capybara.session_name).to eq(:outer)
+      end
+      expect(Capybara.session_name).to eq(:default)
     end
   end
 

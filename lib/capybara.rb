@@ -275,10 +275,11 @@ module Capybara
     # Yield a block using a specific session name.
     #
     def using_session(name)
+      previous_session_name = self.session_name
       self.session_name = name
       yield
     ensure
-      self.session_name = :default
+      self.session_name = previous_session_name
     end
 
     ##
