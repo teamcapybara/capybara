@@ -102,18 +102,11 @@ RSpec.describe Capybara::Session do
     end
 
     describe "#path" do
-      before :each do
-        @session.visit('/path')
-      end
-
       it "returns xpath" do
+        # this is here because it is testing for an XPath that is specific to the algorithm used in the selenium driver
+        @session.visit('/path')
         element = @session.find(:link, 'Second Link')
         expect(element.path).to eq('/html/body/div[2]/a[1]')
-      end
-
-      it "returns xpath which points to itself" do
-        element = @session.find(:link, 'Second Link')
-        expect(@session.find(:xpath, element.path)).to eq(element)
       end
     end
   end

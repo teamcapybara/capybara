@@ -67,7 +67,7 @@ Capybara::SpecHelper.spec "node" do
       @session.find('//textarea[1]').set("some <em>html</em> here")
       expect(@session.find('//textarea[1]').value).to eq("some <em>html</em> here")
     end
-    
+
     it "defaults to 'on' for checkbox" do
       @session.visit('/form')
       expect(@session.find('//input[@id="valueless_checkbox"]').value).to eq('on')
@@ -76,7 +76,7 @@ Capybara::SpecHelper.spec "node" do
     it "defaults to 'on' for radio buttons" do
       @session.visit('/form')
       expect(@session.find('//input[@id="valueless_radio"]').value).to eq('on')
-    end    
+    end
   end
 
   describe "#set" do
@@ -97,7 +97,7 @@ Capybara::SpecHelper.spec "node" do
       @session.first('//input[@readonly]').set('changed')
       expect(@session.first('//input[@readonly]').value).to eq('should not change')
     end
-    
+
     it "should raise if the text field is readonly" do
       expect(@session.first('//input[@readonly]').set('changed')).to raise_error(Capybara::ReadOnlyElementError)
     end if Capybara::VERSION.to_f > 3.0
@@ -202,6 +202,19 @@ Capybara::SpecHelper.spec "node" do
     end
   end
 
+  describe "#path" do
+    # Testing for specific XPaths here doesn't make sense since there
+    # are many that can refer to the same element
+    before :each do
+      @session.visit('/path')
+    end
+
+    it "returns xpath which points to itself" do
+      element = @session.find(:link, 'Second Link')
+      expect(@session.find(:xpath, element.path)).to eq(element)
+    end
+  end
+
   describe "#trigger", :requires => [:js, :trigger] do
     it "should allow triggering of custom JS events" do
       @session.visit('/with_js')
@@ -228,14 +241,14 @@ Capybara::SpecHelper.spec "node" do
       expect(@session.find(:css, '.hidden_until_hover', :visible => false)).to be_visible
     end
   end
-  
+
   describe '#click' do
     it "should not follow a link if no href" do
       @session.find(:css, '#link_placeholder').click
       expect(@session.current_url).to match(%r{/with_html$})
     end
   end
-  
+
   describe '#double_click', :requires => [:js] do
     it "should double click an element" do
       @session.visit('/with_js')
@@ -250,28 +263,28 @@ Capybara::SpecHelper.spec "node" do
       @session.find(:css, '#click-test').right_click
       expect(@session.find(:css, '#has-been-right-clicked')).to be
     end
-  end  
-  
+  end
+
   describe '#send_keys', requires: [:send_keys] do
     it "should send a string of keys to an element" do
       @session.visit('/form')
       @session.find(:css, '#address1_city').send_keys('Oceanside')
       expect(@session.find(:css, '#address1_city').value).to eq 'Oceanside'
     end
-    
+
     it "should send special characters" do
       @session.visit('/form')
       @session.find(:css, '#address1_city').send_keys('Ocean', :space, 'sie', :left, 'd')
       expect(@session.find(:css, '#address1_city').value).to eq 'Ocean side'
     end
-    
+
     it "should allow for multiple simultaneous keys" do
       @session.visit('/form')
       @session.find(:css, '#address1_city').send_keys([:shift, 'o'], 'ceanside')
       expect(@session.find(:css, '#address1_city').value).to eq 'Oceanside'
     end
-    
-    it "should generate key events", requires: [:send_keys, :js] do 
+
+    it "should generate key events", requires: [:send_keys, :js] do
       @session.visit('/with_js')
       @session.find(:css, '#with-key-events').send_keys([:shift,'t'], [:shift,'w'])
       expect(@session.find(:css, '#key-events-output')).to have_text('keydown:16 keydown:84 keydown:16 keydown:87')
