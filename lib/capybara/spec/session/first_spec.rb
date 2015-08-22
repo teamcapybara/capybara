@@ -86,7 +86,7 @@ Capybara::SpecHelper.spec '#first' do
     end
   end
 
-  context "with Capybara.first_default_waiting", requires: [:js] do
+  context "with Capybara.wait_on_first_by_default", requires: [:js] do
     before do
       @session.visit('/with_js')
     end

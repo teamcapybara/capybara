@@ -100,7 +100,7 @@ Capybara::SpecHelper.spec "#fill_in" do
   end
 
   it "should throw an exception if a hash containing 'with' is not provided" do
-    expect {@session.fill_in 'Name', 'ignu'}.to raise_error
+    expect {@session.fill_in 'Name', 'ignu'}.to raise_error(RuntimeError, /with/)
   end
 
   it "should wait for asynchronous load", :requires => [:js] do
