@@ -348,7 +348,8 @@ module Capybara
   require 'capybara/query'
   require 'capybara/queries/text_query'
   require 'capybara/queries/title_query'
-
+  require 'capybara/queries/current_path_query'
+  
   require 'capybara/node/finders'
   require 'capybara/node/matchers'
   require 'capybara/node/actions'
