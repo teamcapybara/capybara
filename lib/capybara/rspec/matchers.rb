@@ -123,6 +123,41 @@ module Capybara
       alias_method :failure_message_for_should_not, :failure_message_when_negated
     end
 
+    class HaveCurrentPath < Matcher
+      attr_reader :current_path
+
+      attr_reader :failure_message, :failure_message_when_negated
+
+      def initialize(*args)
+        @args = args
+
+        # are set just for backwards compatability
+        @current_path = args.first
+      end
+
+      def matches?(actual)
+        wrap(actual).assert_current_path(*@args)
+      rescue Capybara::ExpectationNotMet => e
+        @failure_message = e.message
+        return false
+      end
+
+      def does_not_match?(actual)
+        wrap(actual).assert_no_current_path(*@args)
+      rescue Capybara::ExpectationNotMet => e
+        @failure_message_when_negated = e.message
+        return false
+      end
+
+      def description
+        "have current path #{current_path.inspect}"
+      end
+
+      # RSpec 2 compatibility:
+      alias_method :failure_message_for_should, :failure_message
+      alias_method :failure_message_for_should_not, :failure_message_when_negated
+    end
+
     class BecomeClosed
       def initialize(options)
         @wait_time = Capybara::Query.new(options).wait
@@ -170,6 +205,10 @@ module Capybara
 
     def have_title(title, options = {})
       HaveTitle.new(title, options)
+    end
+
+    def have_current_path(path, options = {})
+      HaveCurrentPath.new(path, options)
     end
 
     def have_link(locator, options={})

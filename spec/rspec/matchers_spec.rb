@@ -74,7 +74,7 @@ RSpec.describe Capybara::RSpecMatchers do
           end.to raise_error(/expected not to find css "h1"/)
         end
       end
-      
+
       it "supports compounding" do
         expect("<h1>Text</h1><h2>Text</h2>").to have_css('h1').and have_css('h2')
         expect("<h1>Text</h1><h2>Text</h2>").to have_css('h3').or have_css('h1')
@@ -141,7 +141,7 @@ RSpec.describe Capybara::RSpecMatchers do
           end.to raise_error(%r(expected not to find xpath "//h1"))
         end
       end
-      
+
       it "supports compounding" do
         expect("<h1>Text</h1><h2>Text</h2>").to have_xpath('//h1').and have_xpath('//h2')
         expect("<h1>Text</h1><h2>Text</h2>").to have_xpath('//h3').or have_xpath('//h1')
@@ -247,7 +247,7 @@ RSpec.describe Capybara::RSpecMatchers do
         end
       end
     end
-    
+
     it "supports compounding" do
       expect("<h1>Text</h1><h2>Text</h2>").to have_selector('//h1').and have_selector('//h2')
       expect("<h1>Text</h1><h2>Text</h2>").to have_selector('//h3').or have_selector('//h1')
@@ -336,7 +336,7 @@ RSpec.describe Capybara::RSpecMatchers do
         end
       end
     end
-    
+
     it "supports compounding" do
       expect("<h1>Text</h1><h2>And</h2>").to have_content('Text').and have_content('And')
       expect("<h1>Text</h1><h2>Or</h2>").to have_content('XYZ').or have_content('Or')
@@ -470,7 +470,7 @@ RSpec.describe Capybara::RSpecMatchers do
         end
       end
     end
-    
+
     it "supports compounding" do
       expect("<h1>Text</h1><h2>And</h2>").to have_text('Text').and have_text('And')
       expect("<h1>Text</h1><h2>Or</h2>").to have_text('Not here').or have_text('Or')
@@ -493,7 +493,7 @@ RSpec.describe Capybara::RSpecMatchers do
         expect(html).to have_link('No such Link')
       end.to raise_error(/expected to find link "No such Link"/)
     end
-    
+
     it "supports compounding" do
       expect(html).to have_link('Just a link').and have_link('Another link')
       expect(html).to have_link('Not a link').or have_link('Another link')
@@ -559,9 +559,55 @@ RSpec.describe Capybara::RSpecMatchers do
         end
       end
     end
-    
+
     it "supports compounding" do
       expect("<title>I compound</title>").to have_title('I dont compound').or have_title('I compound')
+    end if RSpec::Version::STRING.to_f >= 3.0
+  end
+
+  describe "have_current_path matcher" do
+    it "gives proper description" do
+      expect(have_current_path('http://www.example.com').description).to eq("have current path \"http://www.example.com\"")
+    end
+
+    context "on a page or node" do
+      it "passes if there is such a current path" do
+        visit('/with_js')
+        expect(page).to have_current_path('/with_js')
+      end
+
+      it "fails if there is no such current_path" do
+        visit('/with_js')
+        expect do
+          expect(page).to have_current_path('/not_with_js')
+        end.to raise_error('expected "/with_js" to equal "/not_with_js"')
+      end
+
+      context 'with wait' do
+        before(:each) do
+          @session = TestSessions::Selenium
+          @session.visit('/with_js')
+        end
+
+        it 'waits if wait time is more than timeout' do
+          @session.click_link("Change page")
+          using_wait_time 0 do
+            expect(@session).to have_current_path('/with_html', wait: 1)
+          end
+        end
+
+        it "doesn't wait if wait time is less than timeout" do
+          @session.click_link("Change page")
+          using_wait_time 0 do
+            expect(@session).not_to have_current_path('/with_html')
+          end
+        end
+      end
+    end
+
+    it "supports compounding" do
+      visit('/with_html')
+      expect(page).to have_current_path('/not_with_html').or have_current_path('/with_html')
     end if RSpec::Version::STRING.to_f >= 3.0
   end
 
@@ -581,7 +627,7 @@ RSpec.describe Capybara::RSpecMatchers do
         expect(html).to have_button('No such Button')
       end.to raise_error(/expected to find button "No such Button"/)
     end
-    
+
     it "supports compounding" do
       expect(html).to have_button('Not this button').or have_button('A button')
     end if RSpec::Version::STRING.to_f >= 3.0
@@ -597,7 +643,7 @@ RSpec.describe Capybara::RSpecMatchers do
     it "gives proper description for a given value" do
       expect(have_field('Text field', with: 'some value').description).to eq("have field \"Text field\" with value \"some value\"")
     end
-    
+
     it "passes if there is such a field" do
       expect(html).to have_field('Text field')
     end
@@ -626,7 +672,7 @@ RSpec.describe Capybara::RSpecMatchers do
       end
       expect(html).to have_field('Text field', with: Foo.new)
     end
-    
+
     it "supports compounding" do
       expect(html).to have_field('Not this one').or have_field('Text field')
     end if RSpec::Version::STRING.to_f >= 3.0
@@ -641,7 +687,7 @@ RSpec.describe Capybara::RSpecMatchers do
     it "gives proper description" do
       expect(have_checked_field('it is checked').description).to eq("have field \"it is checked\" that is checked")
     end
-    
+
     context "with should" do
       it "passes if there is such a field and it is checked" do
         expect(html).to have_checked_field('it is checked')
@@ -675,7 +721,7 @@ RSpec.describe Capybara::RSpecMatchers do
         expect(html).not_to have_checked_field('no such field')
       end
     end
-    
+
     it "supports compounding" do
       expect(html).to have_checked_field('not this one').or have_checked_field('it is checked')
     end if RSpec::Version::STRING.to_f >= 3.0
@@ -724,7 +770,7 @@ RSpec.describe Capybara::RSpecMatchers do
         expect(html).not_to have_unchecked_field('no such field')
       end
     end
-    
+
     it "supports compounding" do
       expect(html).to have_unchecked_field('it is checked').or have_unchecked_field('unchecked field')
     end if RSpec::Version::STRING.to_f >= 3.0
@@ -736,7 +782,7 @@ RSpec.describe Capybara::RSpecMatchers do
     it "gives proper description" do
       expect(have_select('Select Box').description).to eq("have select box \"Select Box\"")
     end
-    
+
     it "gives proper description for a given selected value" do
       expect(have_select('Select Box', selected: 'some value').description).to eq("have select box \"Select Box\" with \"some value\" selected")
     end
@@ -750,7 +796,7 @@ RSpec.describe Capybara::RSpecMatchers do
         expect(html).to have_select('No such Select box')
       end.to raise_error(/expected to find select box "No such Select box"/)
     end
-    
+
     it "supports compounding" do
       expect(html).to have_select('Not this one').or have_select('Select Box')
     end if RSpec::Version::STRING.to_f >= 3.0
@@ -772,7 +818,7 @@ RSpec.describe Capybara::RSpecMatchers do
         expect(html).to have_table('No such Table')
       end.to raise_error(/expected to find table "No such Table"/)
     end
-    
+
     it "supports compounding" do
       expect(html).to have_table('nope').or have_table('Lovely table')
     end if RSpec::Version::STRING.to_f >= 3.0

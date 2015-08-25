@@ -1,3 +1,5 @@
+require 'capybara/session/matchers'
+
 module Capybara
 
   ##
@@ -24,6 +26,8 @@ module Capybara
   # When using capybara/dsl, the Session is initialized automatically for you.
   #
   class Session
+    include Capybara::SessionMatchers
+
     NODE_METHODS = [
       :all, :first, :attach_file, :text, :check, :choose,
       :click_link_or_button, :click_button, :click_link, :field_labeled,
@@ -48,7 +52,8 @@ module Capybara
       :windows, :open_new_window, :switch_to_window, :within_window, :window_opened_by,
       :save_page, :save_and_open_page, :save_screenshot,
       :save_and_open_screenshot, :reset_session!, :response_headers,
-      :status_code, :current_scope
+      :status_code, :current_scope,
+      :assert_current_path, :assert_no_current_path, :has_current_path?, :has_no_current_path?
     ] + DOCUMENT_METHODS
     MODAL_METHODS = [
       :accept_alert, :accept_confirm, :dismiss_confirm, :accept_prompt,
