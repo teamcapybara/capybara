@@ -302,7 +302,7 @@ After/teardown blocks):
 
 ```ruby
 Capybara.current_driver = :webkit # temporarily select different driver
-... tests ...
+# tests here
 Capybara.use_default_driver       # switch back to default driver
 ```
 

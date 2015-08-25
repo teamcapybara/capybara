@@ -154,13 +154,14 @@ module Capybara
       #
       # Send Keystrokes to the Element
       #
-      # @param [String, Symbol, Array]
+      # @overload send_keys(keys, ...)
+      #   @param [String, Symbol, Array<String,Symbol>] keys
       #
       # Examples:
       #
       #     element.send_keys "foo"                     #=> value: 'foo'
       #     element.send_keys "tet", :left, "s"   #=> value: 'test'
-      #     element.send_keys [:control, 'a'], :space   #=> value: ' '
+      #     element.send_keys [:control, 'a'], :space   #=> value: ' ' - assuming ctrl-a selects all contents
       #
       # Symbols supported for keys
       # :cancel
