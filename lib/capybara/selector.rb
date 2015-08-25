@@ -116,6 +116,7 @@ Capybara.add_selector(:field) do
   filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
   filter(:disabled, default: false, boolean: true) { |node, value| not(value ^ node.disabled?) }
+  filter(:readonly, boolean: true) { |node, value| not(value ^ node[:readonly]) }
   filter(:with) { |node, with| node.value == with.to_s }
   filter(:type) do |node, type|
     if ['textarea', 'select'].include?(type)
@@ -149,7 +150,7 @@ end
 
 Capybara.add_selector(:link) do
   xpath { |locator| XPath::HTML.link(locator) }
-  filter(:href) do |node, href| 
+  filter(:href) do |node, href|
     if href.is_a? Regexp
       node[:href].match href
     else

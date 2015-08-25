@@ -61,4 +61,21 @@ Capybara::SpecHelper.spec '#find_field' do
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
+
+
+  context 'with :readonly option' do
+    it "should find readonly fields when true" do
+      expect(@session.find_field('form[readonly_test]', readonly: true)[:id]).to eq 'readonly'
+    end
+
+    it "should not find readonly fields when false" do
+      expect(@session.find_field('form[readonly_test]', readonly: false)[:id]).to eq 'not_readonly'
+    end
+
+    it "should ignore readonly by default" do
+      expect do
+        @session.find_field('form[readonly_test]')
+      end.to raise_error(Capybara::Ambiguous, /found 2 elements/)
+    end
+  end
 end

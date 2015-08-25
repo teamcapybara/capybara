@@ -35,7 +35,7 @@ Capybara::SpecHelper.spec '#assert_current_path' do
   end
 end
 
-Capybara::SpecHelper.spec '#assert_no_current_path?', focus: true do
+Capybara::SpecHelper.spec '#assert_no_current_path?' do
   before do
     @session.visit('/with_js')
   end
