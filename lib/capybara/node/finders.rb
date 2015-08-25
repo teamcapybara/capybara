@@ -7,10 +7,12 @@ module Capybara
       # Find an {Capybara::Node::Element} based on the given arguments. +find+ will raise an error if the element
       # is not found.
       #
-      # If the driver is capable of executing JavaScript, +find+ will wait for a set amount of time
-      # and continuously retry finding the element until either the element is found or the time
-      # expires. The length of time +find+ will wait is controlled through {Capybara.default_max_wait_time}
-      # and defaults to 2 seconds.
+      # @!macro waiting_behavior
+      #   If the driver is capable of executing JavaScript, +$0+ will wait for a set amount of time
+      #   and continuously retry finding the element until either the element is found or the time
+      #   expires. The length of time +find+ will wait is controlled through {Capybara.default_max_wait_time}
+      #   and defaults to 2 seconds.
+      #   @option options [false, Numeric] wait (Capybara.default_max_wait_time) Maximum time to wait for matching element to appear.
       #
       # +find+ takes the same options as +all+.
       #
@@ -19,8 +21,8 @@ module Capybara
       #     page.find('li', :text => 'Quox').click_link('Delete')
       #
       # @param (see Capybara::Node::Finders#all)
+      #
       # @option options [Boolean] match        The matching strategy to use.
-      # @option options [false, Numeric] wait  How long to wait for the element to appear.
       #
       # @return [Capybara::Node::Element]      The found element
       # @raise  [Capybara::ElementNotFound]    If the element can't be found before time expires
@@ -48,7 +50,15 @@ module Capybara
       #
       # Find a form field on the page. The field can be found by its name, id or label text.
       #
+      # @macro waiting_behavior
+      #
       # @param [String] locator             Which field to find
+      #
+      # @option options [Boolean] checked  Only match checked field?
+      # @option options [Boolean] unchecked   Only match unchecked field?
+      # @option options [Boolean] disabled (false)  Only match disabled field?
+      # @option options [String] with   Value of field to match on
+      # @option options [String] type   Type of field to match on
       # @return [Capybara::Node::Element]   The found element
       #
       def find_field(locator, options={})
@@ -60,7 +70,10 @@ module Capybara
       #
       # Find a link on the page. The link can be found by its id or text.
       #
+      # @macro waiting_behavior
+      #
       # @param [String] locator             Which link to find
+      # @option options [String,Regexp] href        Value to match against the links href
       # @return [Capybara::Node::Element]   The found element
       #
       def find_link(locator, options={})
@@ -71,7 +84,10 @@ module Capybara
       #
       # Find a button on the page. The button can be found by its id, name or value.
       #
+      # @macro waiting_behavior
+      #
       # @param [String] locator             Which button to find
+      # @option options [Boolean] disabled (false)  Only match disabled button?
       # @return [Capybara::Node::Element]   The found element
       #
       def find_button(locator, options={})
@@ -82,7 +98,10 @@ module Capybara
       #
       # Find a element on the page, given its id.
       #
+      # @macro waiting_behavior
+      #
       # @param [String] id                  Which element to find
+      #
       # @return [Capybara::Node::Element]   The found element
       #
       def find_by_id(id, options={})
@@ -117,8 +136,9 @@ module Capybara
       #     page.all('#menu li', :visible => true)
       #
       # By default if no elements are found, an empty array is returned;
-      # however, expectations can be set on the number of elements to be
-      # found using:
+      # however, expectations can be set on the number of elements to be found which
+      # will trigger Capybara's waiting behavior for the expectations to match.The
+      # expectations can be set using
       #
       #     page.assert_selector('p#foo', :count => 4)
       #     page.assert_selector('p#foo', :maximum => 10)
@@ -143,6 +163,7 @@ module Capybara
       #   @option options [Integer] minimum          Minimum number of matches that are expected to be found
       #   @option options [Range]   between          Number of matches found must be within the given range
       #   @option options [Boolean] exact            Control whether `is` expressions in the given XPath match exactly or partially
+      #   @option options [Integer] wait (Capybara.default_max_wait_time)  The time to wait for element count expectations to become true
       # @return [Capybara::Result]                   A collection of found elements
       #
       def all(*args)
@@ -158,7 +179,11 @@ module Capybara
       ##
       #
       # Find the first element on the page matching the given selector
-      # and options, or nil if no element matches.
+      # and options, or nil if no element matches.  By default no waiting
+      # behavior occurs, however if {Capybara.wait_on_first_by_default} is set to true
+      # it will trigger Capybara's waiting behavior for a minimum of 1 matching element to be found and
+      # return the first.  Waiting behavior can also be triggered by passing in any of the count
+      # expectation options.
       #
       # @overload first([kind], locator, options)
       #   @param [:css, :xpath] kind                 The type of selector
