@@ -60,7 +60,7 @@ RSpec.describe Capybara::Session do
         @session.driver.options[:respect_data_method] = false
       end
     end
-    
+
     describe "#fill_in" do
       it "should warn that :fill_options are not supported" do
         expect_any_instance_of(Capybara::Node::Element).to receive(:warn)
@@ -121,7 +121,7 @@ RSpec.describe Capybara::RackTest::Driver do
 
       @driver.visit('/redirect')
       expect(@driver.response.header['Location']).to be_nil
-      expect(@driver.browser.current_url).to match %r{/landed$}
+      expect(@driver.current_url).to match %r{/landed$}
     end
 
     it "is possible to not follow redirects" do
@@ -129,7 +129,7 @@ RSpec.describe Capybara::RackTest::Driver do
 
       @driver.visit('/redirect')
       expect(@driver.response.header['Location']).to match %r{/redirect_again$}
-      expect(@driver.browser.current_url).to match %r{/redirect$}
+      expect(@driver.current_url).to match %r{/redirect$}
     end
   end
 
@@ -177,9 +177,9 @@ module CSSHandlerIncludeTester
 end
 include CSSHandlerIncludeTester
 
-RSpec.describe  Capybara::RackTest::CSSHandlers do  
+RSpec.describe  Capybara::RackTest::CSSHandlers do
   it "should not be extended by global includes" do
     expect(Capybara::RackTest::CSSHandlers.new).not_to respond_to(:dont_extend_css_handler)
   end
 end
-  
+

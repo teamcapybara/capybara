@@ -68,7 +68,6 @@ RSpec.describe Capybara::Session do
       it "supports a blockless mode" do
         @session.visit('/with_js')
         @session.click_link('Open alert')
-        expect(@session.driver.browser.switch_to.alert).to be_kind_of Selenium::WebDriver::Alert
         @session.accept_alert
         expect{@session.driver.browser.switch_to.alert}.to raise_error("No alert is present")
       end
