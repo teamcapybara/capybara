@@ -5,6 +5,7 @@ rvm:
   - 2.1
   - 2.2
   - jruby-19mode
+  - jruby-9.0.0.0
   - rbx-2
 gemfile:
   - Gemfile
@@ -14,16 +15,12 @@ matrix:
       rvm: 1.9.3
     - gemfile: gemfiles/Gemfile.beta-versions
       rvm: 2.2
-    - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: jruby-9.0.0.0.pre1
     - gemfile: Gemfile
       rvm: 2.2
       env: CAPYBARA_CHROME=true
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: 2.2
-    - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: jruby-9.0.0.0.pre1
+    - rvm: jruby-9.0.0.0
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
