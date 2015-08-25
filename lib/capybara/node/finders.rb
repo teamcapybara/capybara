@@ -83,8 +83,11 @@ module Capybara
 
       ##
       #
-      # Find a button on the page. The button can be found by its id, name or value.
-      #
+      # Find a button on the page.
+      # This can be any \<input> element of type submit, reset, image, button or it can be a
+      # \<button> element. All buttons can be found by their id, value, or title. \<button> elements can also be found
+      # by their text content, and image \<input> elements by their alt attribute
+
       # @macro waiting_behavior
       #
       # @param [String] locator             Which button to find

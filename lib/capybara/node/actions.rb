@@ -20,8 +20,7 @@ module Capybara
       # alt text inside the link.
       #
       # @param [String] locator         text, id, title or nested image's alt attribute
-      # @param options
-      # @option options [String, Regexp] :href    The value the href attribute must equal
+      # @param options                  See {Capybara::Node::Finders#find_link}
       #
       def click_link(locator, options={})
         find(:link, locator, options).click
@@ -29,10 +28,13 @@ module Capybara
 
       ##
       #
-      # Finds a button by id, text, value or title and clicks it.
+      # Finds a button on the page and clicks it.
+      # This can be any \<input> element of type submit, reset, image, button or it can be a
+      # \<button> element. All buttons can be found by their id, value, or title. \<button> elements can also be found
+      # by their text content, and image \<input> elements by their alt attribute
       #
-      # @param [String] locator      Text, id, value or title of button
-      #
+      # @param [String] locator      Which button to find
+      # @param options     See {Capybara::Node::Finders#find_button}
       def click_button(locator, options={})
         find(:button, locator, options).click
       end
