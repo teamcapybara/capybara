@@ -1,10 +1,10 @@
 # Version 2.5.0
-Release date: unreleased
+Release date: 2015-08-25
 
 ### Fixed
 * Error message now raised correctly when invalid options passed to 'have_text'/'have_content' [Tom Walpole]
 * Rack-test driver correctly gets document title when elements on the page have nested title elements (SVG) [Tom Walpole]
-* 'save_page' no longer errors when using Capybara.asset_host if the page has no <head> element [Travis Grathwell]
+* 'save_page' no longer errors when using Capybara.asset_host if the page has no \<head> element [Travis Grathwell]
 * rack-test driver will ignore clicks on links with href starting with '#' or 'javascript:'
 
 ### Added
