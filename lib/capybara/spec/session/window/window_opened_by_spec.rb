@@ -41,10 +41,11 @@ Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
 
   context 'without :wait option' do
     it 'should raise error if default_max_wait_time is less than timeout' do
+      button = @session.find(:css, '#openWindowWithTimeout')
       Capybara.using_wait_time 0.4 do
         expect do
           @session.window_opened_by do
-            @session.find(:css, '#openWindowWithTimeout').click
+            button.click
           end
         end.to raise_error(Capybara::WindowError, zero_windows_message)
       end
@@ -54,9 +55,10 @@ Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
     end
 
     it 'should find window if default_max_wait_time is more than timeout' do
+      button = @session.find(:css, '#openWindowWithTimeout')
       Capybara.using_wait_time 1.5 do
         window = @session.window_opened_by do
-          @session.find(:css, '#openWindowWithTimeout').click
+          button.click
         end
         expect(window).to be_instance_of(Capybara::Window)
       end
@@ -64,9 +66,10 @@ Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
   end
 
   it 'should raise error when two windows have been opened by block' do
+    button = @session.find(:css, '#openTwoWindows')
     expect do
       @session.window_opened_by do
-        @session.find(:css, '#openTwoWindows').click
+        button.click
       end
     end.to raise_error(Capybara::WindowError, two_windows_message)
     @session.document.synchronize(2, errors: [Capybara::CapybaraError]) do
@@ -75,9 +78,10 @@ Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
   end
 
   it 'should raise error when no windows were opened by block' do
+    button = @session.find(:css, '#doesNotOpenWindows')
     expect do
       @session.window_opened_by do
-        @session.find(:css, '#doesNotOpenWindows').click
+        button.click
       end
     end.to raise_error(Capybara::WindowError, zero_windows_message)
   end
