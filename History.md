@@ -1,22 +1,41 @@
 # Version 2.5.0
 Release date: unreleased
 
-### Added
+### Fixed
+* Error message now raised correctly when invalid options passed to 'have_text'/'have_content' [Tom Walpole]
+* Rack-test driver correctly gets document title when elements on the page have nested title elements (SVG) [Tom Walpole]
+* 'save_page' no longer errors when using Capybara.asset_host if the page has no <head> element [Travis Grathwell]
+* rack-test driver will ignore clicks on links with href starting with '#' or 'javascript:'
 
+### Added
+* has_current_path? and associated asserts/matchers added [Tom Walpole]
+* Implement Node#path in selenium driver [Soutaro Matsumoto]
+* 'using_session' is now nestable [Tom Walpole]
+* 'switch_to_window' will now use waiting behavior for a matching window to appear [Tom Walpole]
+* Capybara.default_wait_time deprecated in favor of Capybara.default_max_wait_time to more clearly explain its purpose [Paul Pettengill]
+* Warning when attempting to select a disabled option
+* Capybara matchers are now available in RSpec view specs by default [Joshua Clayton]
+* 'have_link' and 'click_link' now accept Regexp for href matching [Yaniv Savir]
+* 'find_all' as an alias of 'all' due to collision with RSpec
+* Capybara.wait_on_first_by_default setting (default is false)
+  If set to true 'first' will use Capybaras waiting behavior to wait for at least one element to appear by default
+* Capybara waiting behavior uses the monotonic clock if supported to ease restrictions on freezing time in tests [Dmitry Maksyoma, Tom Walpole]
+* Capybara.server_errors setting that allows to configure what type of errors will be raised from the server thread [Tom Walpole]
+* Node#send_keys to allow for sending keypresses directly to elements [Tom Walpole]
 * 'formmethod' attribute support in RackTest driver [Emilia Andrzejewska]
 * Clear field using backspaces in Selenium driver by using `:fill_options => { :clear => :backspace }` [Joe Lencioni]
 
 #Version 2.4.4
 Release date: 2014-10-13
 
-###Fixed
+### Fixed
 * Test for visit behavior updated [Phil Baker]
 * Removed concurrency prevention in favor of a note in the README - due to load order issues
 
 # Version 2.4.3
 Relase date: 2014-09-21
 
-###Fixed
+### Fixed
 * Update concurrency prevention to match Rails 4.2 behavior
 
 # Version 2.4.2
@@ -39,7 +58,7 @@ Release date: 2014-07-03
 * have_title matcher now supports :wait option [Andrey Botalov]
 * More descriptive have_text error messages [Andrey Botalov]
 * New modal API ('accept_alert', 'accept_confirm', 'dismiss_confirm', 'accept_prompt', 'dismiss_prompt') - [Mike Pack, Thomas Walpole]
-* Warning when attempting to set contents of a readonly element 
+* Warning when attempting to set contents of a readonly element
 * Suport for and/or compounding of Capybara's RSpec matchers for RSpec 3 [Thomas Walpole]
 * :fill_options option for 'fill_in' method that propagates to 'set' to allow for driver specific modification of how fields are filled in [Gabriel Sobrinho, Thomas Walpole]
 * Improved selector/filter description in failure messages [Thomas Walpole]
