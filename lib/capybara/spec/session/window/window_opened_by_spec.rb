@@ -18,9 +18,10 @@ Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
     it 'should raise error if value of :wait is less than timeout' do
       # So large value is used as `driver.window_handles` takes up to 800 ms on Travis
       Capybara.using_wait_time 2 do
+        button=@session.find(:css, '#openWindowWithLongerTimeout')
         expect do
           @session.window_opened_by(wait: 0.8) do
-            @session.find(:css, '#openWindowWithLongerTimeout').click
+            button.click
           end
         end.to raise_error(Capybara::WindowError, zero_windows_message)
       end
@@ -30,9 +31,10 @@ Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
     end
 
     it 'should find window if value of :wait is more than timeout' do
+      button = @session.find(:css, '#openWindowWithTimeout')
       Capybara.using_wait_time 0.1 do
         window = @session.window_opened_by(wait: 1.5) do
-          @session.find(:css, '#openWindowWithTimeout').click
+          button.click
         end
         expect(window).to be_instance_of(Capybara::Window)
       end
