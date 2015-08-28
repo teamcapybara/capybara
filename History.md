@@ -1,3 +1,6 @@
+#Version 2.6.0
+Relase date: unreleased
+
 # Version 2.5.0
 Release date: 2015-08-25
 
