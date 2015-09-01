@@ -15,7 +15,6 @@ Release date: 2015-08-25
 * Implement Node#path in selenium driver [Soutaro Matsumoto]
 * 'using_session' is now nestable [Tom Walpole]
 * 'switch_to_window' will now use waiting behavior for a matching window to appear [Tom Walpole]
-* Capybara.default_wait_time deprecated in favor of Capybara.default_max_wait_time to more clearly explain its purpose [Paul Pettengill]
 * Warning when attempting to select a disabled option
 * Capybara matchers are now available in RSpec view specs by default [Joshua Clayton]
 * 'have_link' and 'click_link' now accept Regexp for href matching [Yaniv Savir]
@@ -27,6 +26,9 @@ Release date: 2015-08-25
 * Node#send_keys to allow for sending keypresses directly to elements [Tom Walpole]
 * 'formmethod' attribute support in RackTest driver [Emilia Andrzejewska]
 * Clear field using backspaces in Selenium driver by using `:fill_options => { :clear => :backspace }` [Joe Lencioni]
+
+### Deprecated
+* Capybara.default_wait_time deprecated in favor of Capybara.default_max_wait_time to more clearly explain its purpose [Paul Pettengill]
 
 #Version 2.4.4
 Release date: 2014-10-13
