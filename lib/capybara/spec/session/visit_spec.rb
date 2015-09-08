@@ -79,6 +79,25 @@ Capybara::SpecHelper.spec '#visit' do
     end
   end
 
+  context "with Capybara.app_host set" do
+    it "should override server", requires: [:server] do
+      another_session = Capybara::Session.new(@session.mode, @session.app.dup)
+      Capybara.app_host = "http://#{@session.server.host}:#{@session.server.port}"
+      another_session.visit('/foo')
+      expect(another_session).to have_content("Another World")
+      expect(another_session.current_url).to start_with(Capybara.app_host)
+      expect(URI.parse(another_session.current_url).port).not_to eq another_session.server.port
+      expect(URI.parse(another_session.current_url).port).to eq @session.server.port
+    end
+
+    it "should append relative path", requires: [:server] do
+      Capybara.app_host = "http://#{@session.server.host}:#{@session.server.port}/redirect/0"
+      @session.visit('/times')
+      expect(@session).to have_content('redirection complete')
+    end
+  end
+
+
   it "should send no referer when visiting a page" do
     @session.visit '/get_referer'
     expect(@session).to have_content 'No referer'
