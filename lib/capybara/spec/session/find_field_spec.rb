@@ -21,8 +21,14 @@ Capybara::SpecHelper.spec '#find_field' do
 
   it "should warn if filter option is invalid" do
     expect_any_instance_of(Kernel).to receive(:warn).
-      with('Invalid value nil passed to filter disabled')
-    @session.find_field('Dog', disabled: nil)
+      with('Invalid value nil passed to filter checked - ignoring')
+    @session.find_field('form_terms_of_use', checked: nil)
+  end
+
+  it "should default filter option if invalid and default specified" do
+    expect_any_instance_of(Kernel).to receive(:warn).
+      with('Invalid value "abc" passed to filter disabled - defaulting to false')
+    @session.find_field('Dog', disabled: 'abc')
   end
 
   it "should be aliased as 'field_labeled' for webrat compatibility" do
@@ -53,6 +59,11 @@ Capybara::SpecHelper.spec '#find_field' do
       expect do
         @session.find_field("Disabled Checkbox", :disabled => false)
       end.to raise_error(Capybara::ElementNotFound)
+    end
+
+    it "should ignore the disabled state when nil" do
+      expect(@session.find_field('Dog', disabled: nil)[:disabled]).to be_nil
+      expect(@session.find_field("Disabled Checkbox", disabled: nil)[:disabled]).to be
     end
 
     it "should not find disabled fields by default" do
