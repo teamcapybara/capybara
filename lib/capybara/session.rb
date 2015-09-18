@@ -204,7 +204,7 @@ module Capybara
     #
     # Will actually navigate to `http://google.com:4567/test`.
     #
-    # @param [#to_s] url     The URL to navigate to. The parameter will be cast to a String.
+    # @param [#to_s] visit_uri     The URL to navigate to. The parameter will be cast to a String.
     #
     def visit(visit_uri)
       raise_server_error!
