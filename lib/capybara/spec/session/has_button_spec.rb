@@ -24,6 +24,14 @@ Capybara::SpecHelper.spec '#has_button?' do
   it "should be false for disabled buttons if :disabled => false" do
     expect(@session).not_to have_button('Disabled button', :disabled => false)
   end
+
+  it "should be true for disabled buttons if :disabled => :all" do
+    expect(@session).to have_button('Disabled button', :disabled => :all)
+  end
+
+  it "should be true for enabled buttons if :disabled => :all" do
+    expect(@session).to have_button('med', :disabled => :all)
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_button?' do

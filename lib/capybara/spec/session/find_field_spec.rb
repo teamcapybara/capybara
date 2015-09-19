@@ -60,6 +60,14 @@ Capybara::SpecHelper.spec '#find_field' do
         @session.find_field("Disabled Checkbox")
       end.to raise_error(Capybara::ElementNotFound)
     end
+
+    it "should find disabled fields when :all" do
+      expect(@session.find_field("Disabled Checkbox", :disabled => :all)[:name]).to eq("form[disabled_checkbox]")
+    end
+
+    it "should find enabled fields when :all" do
+      expect(@session.find_field('Dog', :disabled => :all).value).to eq('dog')
+    end
   end
 
 

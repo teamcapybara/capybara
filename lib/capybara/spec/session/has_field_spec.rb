@@ -142,6 +142,14 @@ Capybara::SpecHelper.spec '#has_checked_field?' do
     expect(@session).not_to have_checked_field('Disabled Checkbox', :disabled => false)
   end
 
+  it "should be true for disabled checkboxes if :disabled => :all" do
+    expect(@session).to have_checked_field('Disabled Checkbox', :disabled => :all)
+  end
+
+  it "should be true for enabled checkboxes if :disabled => :all" do
+    expect(@session).to have_checked_field('gender_female', :disabled => :all)
+  end
+
   it "should be true after an unchecked checkbox is checked" do
     @session.check('form_pets_cat')
     expect(@session).to have_checked_field('form_pets_cat')

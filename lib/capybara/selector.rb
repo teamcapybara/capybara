@@ -20,7 +20,11 @@ module Capybara
         if @options.has_key?(:valid_values) && !Array(@options[:valid_values]).include?(value)
           warn "Invalid value #{value.inspect} passed to filter #{@name}"
         end
-        @block.call(node, value)
+        if @options.has_key?(:skip_if) && value == @options[:skip_if]
+          true
+        else
+          @block.call(node, value)
+        end
       end
     end
 
@@ -115,7 +119,7 @@ Capybara.add_selector(:field) do
   xpath { |locator| XPath::HTML.field(locator) }
   filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
-  filter(:disabled, default: false, boolean: true) { |node, value| not(value ^ node.disabled?) }
+  filter(:disabled, default: false, valid_values: [true, false, :all], skip_if: :all) { |node, value| not(value ^ node.disabled?) }
   filter(:readonly, boolean: true) { |node, value| not(value ^ node[:readonly]) }
   filter(:with) { |node, with| node.value == with.to_s }
   filter(:type) do |node, type|
@@ -131,7 +135,7 @@ Capybara.add_selector(:field) do
     desc << " with value #{options[:with].to_s.inspect}" if options.has_key?(:with)
     states << 'checked' if options[:checked] || (options.has_key?(:unchecked) && !options[:unchecked])
     states << 'not checked' if options[:unchecked] || (options.has_key?(:checked) && !options[:checked])
-    states << 'disabled' if options[:disabled]
+    states << 'disabled' if options[:disabled] == true
     desc << " that is #{states.join(' and ')}" unless states.empty?
     desc
   end
@@ -162,15 +166,15 @@ end
 
 Capybara.add_selector(:button) do
   xpath { |locator| XPath::HTML.button(locator) }
-  filter(:disabled, default: false, boolean: true) { |node, value| not(value ^ node.disabled?) }
-  describe { |options| " that is disabled" if options[:disabled] }
+  filter(:disabled, default: false, valid_values: [true, false, :all], skip_if: :all) { |node, value| not(value ^ node.disabled?) }
+  describe { |options| " that is disabled" if options[:disabled] == true }
 end
 
 Capybara.add_selector(:fillable_field) do
   label "field"
   xpath { |locator| XPath::HTML.fillable_field(locator) }
-  filter(:disabled, default: false, boolean: true) { |node, value| not(value ^ node.disabled?) }
-  describe { |options| " that is disabled" if options[:disabled] }
+  filter(:disabled, default: false, valid_values: [true, false, :all], skip_if: :all) { |node, value| not(value ^ node.disabled?) }
+  describe { |options| " that is disabled" if options[:disabled] == true }
 end
 
 Capybara.add_selector(:radio_button) do
@@ -179,13 +183,13 @@ Capybara.add_selector(:radio_button) do
   filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
   filter(:option)  { |node, value|  node.value == value.to_s }
-  filter(:disabled, default: false, boolean: true) { |node, value| not(value ^ node.disabled?) }
+  filter(:disabled, default: false, valid_values: [true, false, :all], skip_if: :all) { |node, value| not(value ^ node.disabled?) }
   describe do |options|
     desc, states = "", []
     desc << " with value #{options[:option].inspect}" if options[:option]
     states << 'checked' if options[:checked] || (options.has_key?(:unchecked) && !options[:unchecked])
     states << 'not checked' if options[:unchecked] || (options.has_key?(:checked) && !options[:checked])
-    states << 'disabled' if options[:disabled]
+    states << 'disabled' if options[:disabled] == true
     desc << " that is #{states.join(' and ')}" unless states.empty?
     desc
   end
@@ -196,13 +200,13 @@ Capybara.add_selector(:checkbox) do
   filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
   filter(:option)  { |node, value|  node.value == value.to_s }
-  filter(:disabled, default: false, boolean: true) { |node, value| not(value ^ node.disabled?) }
+  filter(:disabled, default: false, valid_values: [true, false, :all], skip_if: :all) { |node, value| not(value ^ node.disabled?) }
   describe do |options|
     desc, states = "", []
     desc << " with value #{options[:option].inspect}" if options[:option]
     states << 'checked' if options[:checked] || (options.has_key?(:unchecked) && !options[:unchecked])
     states << 'not checked' if options[:unchecked] || (options.has_key?(:checked) && !options[:checked])
-    states << 'disabled' if options[:disabled]
+    states << 'disabled' if options[:disabled] == true
     desc << " that is #{states.join(' and ')}" unless states.empty?
     desc
   end
@@ -220,13 +224,13 @@ Capybara.add_selector(:select) do
     actual = node.all(:xpath, './/option').select { |option| option.selected? }.map { |option| option.text }
     [selected].flatten.sort == actual.sort
   end
-  filter(:disabled, default: false, boolean: true) { |node, value| not(value ^ node.disabled?) }
+  filter(:disabled, default: false, valid_values: [true, false, :all], skip_if: :all) { |node, value| not(value ^ node.disabled?) }
   describe do |options|
     desc = ""
     desc << " with options #{options[:options].inspect}" if options[:options]
     desc << " with at least options #{options[:with_options].inspect}" if options[:with_options]
     desc << " with #{options[:selected].inspect} selected" if options[:selected]
-    desc << " that is disabled" if options[:disabled]
+    desc << " that is disabled" if options[:disabled] == true
     desc
   end
 end
@@ -238,8 +242,8 @@ end
 Capybara.add_selector(:file_field) do
   label "file field"
   xpath { |locator| XPath::HTML.file_field(locator) }
-  filter(:disabled, default: false, boolean: true) { |node, value| not(value ^ node.disabled?) }
-  describe { |options| " that is disabled" if options[:disabled] }
+  filter(:disabled, default: false, valid_values: [true, false, :all], skip_if: :all) { |node, value| not(value ^ node.disabled?) }
+  describe { |options| " that is disabled" if options[:disabled] == true}
 end
 
 Capybara.add_selector(:table) do

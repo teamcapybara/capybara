@@ -56,7 +56,10 @@ module Capybara
       #
       # @option options [Boolean] checked  Match checked field?
       # @option options [Boolean] unchecked   Match unchecked field?
-      # @option options [Boolean] disabled (false)  Match disabled field?
+      # @option options [Boolean, Symbol] disabled (false)  Match disabled field?
+      #                                                     * true - only finds a disabled field
+      #                                                     * false - only finds an enabled field
+      #                                                     * :all - finds either an enabled or disabled field
       # @option options [Boolean] readonly Match readonly field?
       # @option options [String] with   Value of field to match on
       # @option options [String] type   Type of field to match on
@@ -91,7 +94,10 @@ module Capybara
       # @macro waiting_behavior
       #
       # @param [String] locator             Which button to find
-      # @option options [Boolean] disabled (false)  Match disabled button?
+      # @option options [Boolean, Symbol] disabled (false)  Match disabled button?
+      #                                                     * true - only finds a disabled button
+      #                                                     * false - only finds an enabled button
+      #                                                     * :all - finds either an enabled or disabled button
       # @return [Capybara::Node::Element]   The found element
       #
       def find_button(locator, options={})
