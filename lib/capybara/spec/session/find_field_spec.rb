@@ -21,7 +21,7 @@ Capybara::SpecHelper.spec '#find_field' do
 
   it "should warn if filter option is invalid" do
     expect_any_instance_of(Kernel).to receive(:warn).
-      with('Invalid value nil passed to filter disabled')
+      with('Invalid value nil passed to filter disabled - defaulting to false')
     @session.find_field('Dog', disabled: nil)
   end
 
