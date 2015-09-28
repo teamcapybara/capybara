@@ -16,4 +16,15 @@ Capybara::SpecHelper.spec '#accept_confirm', :requires => [:modals] do
     end
     expect(message).to eq('Confirm opened')
   end
+
+  it "should work with nested modals", focus: true do
+    expect {
+      @session.dismiss_confirm 'Are you really sure?' do
+        @session.accept_confirm 'Are you sure?' do
+          @session.click_link('Open check twice')
+        end
+      end
+    }.not_to raise_error
+    expect(@session).to have_xpath("//a[@id='open-twice' and @confirmed='false']")
+  end
 end
