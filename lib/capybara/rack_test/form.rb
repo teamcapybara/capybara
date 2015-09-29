@@ -23,7 +23,7 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
       xpath=xpath.union(x.anywhere(*form_element_types).where(x.attr(:form) == native[:id])) if native[:id]
       xpath.where(~x.attr(:disabled))
     end.to_s
-    
+
     native.xpath(form_elements_xpath).map do |field|
       case field.name
       when 'input'
@@ -87,6 +87,36 @@ private
   end
 
   def merge_param!(params, key, value)
-    Rack::Utils.normalize_params(params, key, value)
+    normalize_params(params, key, value)
+  end
+
+  def normalize_params(params, name, v = nil)
+    name =~ %r([\[\]]*([^\[\]]+)\]*)
+    k = $1 || ''
+    after = $' || ''
+
+    return if k.empty?
+
+    if after == ""
+      params[k] = v
+    elsif after == "[]"
+      params[k] ||= []
+      raise TypeError unless params[k].is_a?(Array)
+      params[k] << v
+    elsif after =~ %r(^\[\]\[([^\[\]]+)\]$) || after =~ %r(^\[\](.+)$)
+      child_key = $1
+      params[k] ||= []
+      raise TypeError unless params[k].is_a?(Array)
+      if params[k].last.is_a?(Hash) && !params[k].last.key?(child_key)
+        normalize_params(params[k].last, child_key, v)
+      else
+        params[k] << normalize_params({}, child_key, v)
+      end
+    else
+      params[k] ||= {}
+      params[k] = normalize_params(params[k], after, v)
+    end
+
+    return params
   end
 end
