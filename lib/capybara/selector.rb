@@ -226,12 +226,22 @@ Capybara.add_selector(:select) do
   label "select box"
   xpath { |locator| XPath::HTML.select(locator) }
   filter(:options) do |node, options|
-    actual = node.all(:xpath, './/option').map { |option| option.text }
+    if node.visible?
+      actual = node.all(:xpath, './/option').map { |option| option.text }
+    else
+      actual = node.all(:xpath, './/option', visible: false).map { |option| option.text(:all) }
+    end
     options.sort == actual.sort
   end
-  filter(:with_options) { |node, options| options.all? { |option| node.first(:option, option, minimum: 0) } }
+  filter(:with_options) do |node, options|
+    finder_settings = { minimum: 0 }
+    if !node.visible?
+      finder_settings[:visible] = false
+    end
+    options.all? { |option| node.first(:option, option, finder_settings) }
+  end
   filter(:selected) do |node, selected|
-    actual = node.all(:xpath, './/option').select { |option| option.selected? }.map { |option| option.text }
+    actual = node.all(:xpath, './/option', visible: false).select { |option| option.selected? }.map { |option| option.text(:all) }
     [selected].flatten.sort == actual.sort
   end
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }

@@ -59,6 +59,11 @@ Capybara::SpecHelper.spec '#has_select?' do
         'Boxerbriefs', 'Briefs', 'Commando', "Frenchman's Pantalons", 'Long Johns'
       ])
     end
+
+    it "should be true even when the selected option invisible, regardless of the select's visibility" do
+      expect(@session).to have_select('Icecream', :visible => false, :selected => 'Chocolate')
+      expect(@session).to have_select('Sorbet', :selected => 'Vanilla')
+    end
   end
 
   context 'with exact options' do
@@ -74,6 +79,11 @@ Capybara::SpecHelper.spec '#has_select?' do
       expect(@session).not_to have_select('Region', :options => ['Norway', 'Sweden'])
       expect(@session).not_to have_select('Region', :options => ['Norway', 'Norway', 'Norway'])
     end
+
+    it" should be true even when the options are invisible, if the select itself is invisible" do
+      expect(@session).to have_select("Icecream", :visible => false, :options => ['Chocolate', 'Vanilla', 'Strawberry'])
+    end
+
   end
 
   context 'with partial options' do
@@ -86,6 +96,10 @@ Capybara::SpecHelper.spec '#has_select?' do
       expect(@session).not_to have_select('Locale', :with_options => ['Uruguayan'])
       expect(@session).not_to have_select('Does not exist', :with_options => ['John'])
       expect(@session).not_to have_select('Region', :with_options => ['Norway', 'Sweden', 'Finland', 'Latvia'])
+    end
+
+    it" should be true even when the options are invisible, if the select itself is invisible" do
+      expect(@session).to have_select("Icecream", :visible => false, :with_options => ['Vanilla', 'Strawberry'])
     end
   end
 end
