@@ -191,6 +191,26 @@ New line after and before textarea tag
     </select>
   </p>
 
+  <!-- invisible select and options -->
+  <p style="display: none">
+    <label for="form_icecream">Icecream</label>
+    <select name="form[icecream]" id="form_icecream">
+      <option selected="selected">Chocolate</option>
+      <option>Vanilla</option>
+      <option>Strawberry</option>
+    </select>
+  </p>
+
+  <!-- visible select with invisible selected option (which some browsers may treat as visible) -->
+  <p>
+    <label for="form_sorbet">Sorbet</label>
+    <select name="form[sorbet]" id="form_sorbet">
+      <option>Chocolate</option>
+      <option selected="selected" style="display: none">Vanilla</option>
+      <option>Strawberry</option>
+    </select>
+  </p>
+
   <p>
     <span>First address<span>
     <label for='address1_street'>Street</label>
