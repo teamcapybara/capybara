@@ -18,7 +18,7 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
     params = {}
 
     form_element_types=[:input, :select, :textarea]
-    form_elements_xpath=XPath.generate do |x| 
+    form_elements_xpath=XPath.generate do |x|
       xpath=x.descendant(*form_element_types).where(~x.attr(:form))
       xpath=xpath.union(x.anywhere(*form_element_types).where(x.attr(:form) == native[:id])) if native[:id]
       xpath.where(~x.attr(:disabled))
@@ -31,7 +31,7 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
           if field['checked']
             node=Capybara::RackTest::Node.new(self.driver, field)
             merge_param!(params, field['name'].to_s, node.value.to_s)
-          end          
+          end
         elsif %w(submit image).include? field['type']
           # TO DO identify the click button here (in document order, rather
           # than leaving until the end of the params)
@@ -91,6 +91,8 @@ private
   end
 
   def normalize_params(params, name, v = nil)
+    # This code is copied from Rack -  Rack 2 removed this from Rack::Util and replaced it with
+    # pluggable query parsers
     name =~ %r([\[\]]*([^\[\]]+)\]*)
     k = $1 || ''
     after = $' || ''
