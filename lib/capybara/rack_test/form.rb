@@ -15,7 +15,7 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
   end
 
   def params(button)
-    params = {}
+    params = make_params
 
     form_element_types=[:input, :select, :textarea]
     form_elements_xpath=XPath.generate do |x|
@@ -67,7 +67,8 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
       end
     end
     merge_param!(params, button[:name], button[:value] || "") if button[:name]
-    params
+
+    params.to_params_hash
   end
 
   def submit(button)
@@ -82,43 +83,29 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
 
 private
 
+  class ParamsHash < Hash
+    def to_params_hash
+      self
+    end
+  end
+
   def method
     self[:method] =~ /post/i ? :post : :get
   end
 
   def merge_param!(params, key, value)
-    normalize_params(params, key, value)
+    if Rack::Utils.respond_to?(:default_query_parser)
+      Rack::Utils.default_query_parser.normalize_params(params, key, value, Rack::Utils.param_depth_limit)
+    else
+      Rack::Utils.normalize_params(params, key, value)
+    end
   end
 
-  def normalize_params(params, name, v = nil)
-    # This code is copied from Rack -  Rack 2 removed this from Rack::Util and replaced it with
-    # pluggable query parsers
-    name =~ %r([\[\]]*([^\[\]]+)\]*)
-    k = $1 || ''
-    after = $' || ''
-
-    return if k.empty?
-
-    if after == ""
-      params[k] = v
-    elsif after == "[]"
-      params[k] ||= []
-      raise TypeError unless params[k].is_a?(Array)
-      params[k] << v
-    elsif after =~ %r(^\[\]\[([^\[\]]+)\]$) || after =~ %r(^\[\](.+)$)
-      child_key = $1
-      params[k] ||= []
-      raise TypeError unless params[k].is_a?(Array)
-      if params[k].last.is_a?(Hash) && !params[k].last.key?(child_key)
-        normalize_params(params[k].last, child_key, v)
-      else
-        params[k] << normalize_params({}, child_key, v)
-      end
+  def make_params
+    if Rack::Utils.respond_to?(:default_query_parser)
+      Rack::Utils.default_query_parser.make_params
     else
-      params[k] ||= {}
-      params[k] = normalize_params(params[k], after, v)
+      ParamsHash.new
     end
-
-    return params
   end
 end
