@@ -14,7 +14,8 @@ module Capybara
       end
 
       def resolve_for(node)
-        @actual_text = Capybara::Helpers.normalize_whitespace(node.text(@type))
+        @node = node
+        @actual_text = text(node, @type)
         @count = @actual_text.scan(@search_regexp).size
       end
 
@@ -31,6 +32,16 @@ module Capybara
           message << " but found #{@count} #{Capybara::Helpers.declension('time', 'times', @count)}"
         end
         message << " in #{@actual_text.inspect}"
+
+        if @node and visible?
+          invisible_text = text(@node, :all)
+          invisible_count = invisible_text.scan(@search_regexp).size - @count
+          if invisible_count > 0
+            message << ". (However, it was found #{invisible_count} time#{'s' if invisible_count != 1} in invisible text.)"
+          end
+        end
+
+        message
       end
 
       def negative_failure_message
@@ -42,6 +53,15 @@ module Capybara
       def valid_keys
         COUNT_KEYS + [:wait]
       end
+
+      def visible?
+        @type == :visible or (@type.nil? and Capybara.ignore_hidden_elements)
+      end
+
+      def text(node, query_type)
+        Capybara::Helpers.normalize_whitespace(node.text(query_type))
+      end
+
     end
   end
 end
