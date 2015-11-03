@@ -140,7 +140,16 @@ module Capybara
     # in a {Capybara::Node::Simple} which exposes all {Capybara::Node::Matchers},
     # {Capybara::Node::Finders} and {Capybara::Node::DocumentMatchers}. This allows you to query
     # any string containing HTML in the exact same way you would query the current document in a Capybara
-    # session. For example:
+    # session.
+    #
+    # Example: A single element
+    #
+    #     node = Capybara.string('<a href="foo">bar</a>')
+    #     anchor = node.first('a')
+    #     anchor[:href] #=> 'foo'
+    #     anchor.text #=> 'bar'
+    #
+    # Example: Multiple elements
     #
     #     node = Capybara.string <<-HTML
     #       <ul>
