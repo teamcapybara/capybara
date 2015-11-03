@@ -55,36 +55,31 @@ Capybara::SpecHelper.spec '#save_page' do
 
     it "prepends base tag with value from asset_host to the head" do
       @session.visit("/with_js")
-      path = @session.save_page
 
-      result = File.read(path)
+      result = File.read(@session.save_page)
       expect(result).to include("<head><base href='http://example.com' />")
     end
 
     it "doesn't prepend base tag to pages when asset_host is nil" do
       Capybara.asset_host = nil
       @session.visit("/with_js")
-      path = @session.save_page
 
-      result = File.read(path)
-      expect(result).to include('<html')
+      result = File.read(@session.save_page)
+      expect(result).to include("<html")
       expect(result).not_to include("http://example.com")
     end
 
-    it "doesn't prepend base tag to pages which already have it" do
+    it "overrides existing href attribute" do
       @session.visit("/with_base_tag")
-      path = @session.save_page
 
-      result = File.read(path)
-      expect(result).to include('<html')
-      expect(result).not_to include("http://example.com")
+      result = File.read(@session.save_page)
+      expect(result).to include("href=\"http://example.com\"")
     end
 
     it "executes successfully even if the page is missing a <head>" do
       @session.visit("/with_simple_html")
-      path = @session.save_page
 
-      result = File.read(path)
+      result = File.read(@session.save_page)
       expect(result).to include("Bar")
     end
   end

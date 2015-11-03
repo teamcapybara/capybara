@@ -18,6 +18,7 @@ module Capybara
     class << self
       def configure(config)
         config.filter_run_excluding :requires => method(:filter).to_proc
+        config.filter_run_including :focus => true
         config.before { Capybara::SpecHelper.reset! }
         config.after { Capybara::SpecHelper.reset! }
       end
