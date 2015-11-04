@@ -1,3 +1,4 @@
+
 Capybara::SpecHelper.spec "node" do
   before do
     @session.visit('/with_html')
@@ -320,8 +321,7 @@ Capybara::SpecHelper.spec "node" do
         expect do
           expect(node).to have_text('has been reloaded')
         end.to raise_error do |error|
-          be_an_invalid_element_error = @session.driver.invalid_element_errors.map { |e| be_a(e) }.reduce { |m, m1| m.or m1 }
-          expect(error).to be_an_invalid_element_error
+          expect(error).to be_an_invalid_element_error(@session)
         end
       end
       after { Capybara.automatic_reload = true }
@@ -358,16 +358,15 @@ Capybara::SpecHelper.spec "node" do
         @session.click_link('Fetch new list!')
         sleep(0.3)
 
-        be_an_invalid_element_error = @session.driver.invalid_element_errors.map { |e| be_a(e) }.reduce { |m, m1| m.or m1 }
         expect do
           expect(node).to have_text('Foo')
         end.to raise_error { |error|
-          expect(error).to be_an_invalid_element_error
+          expect(error).to be_an_invalid_element_error(@session)
         }
         expect do
           expect(node).to have_text('Bar')
         end.to raise_error { |error|
-          expect(error).to be_an_invalid_element_error
+          expect(error).to be_an_invalid_element_error(@session)
         }
       end
 
@@ -379,5 +378,9 @@ Capybara::SpecHelper.spec "node" do
         expect(node.text).to eq('has been reloaded')
       end
     end
+  end
+
+  def be_an_invalid_element_error(session)
+    satisfy { |error| session.driver.invalid_element_errors.any? { |e| error.is_a? e } }
   end
 end
