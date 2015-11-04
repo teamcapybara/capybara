@@ -317,7 +317,12 @@ Capybara::SpecHelper.spec "node" do
         node = @session.find(:css, '#reload-me')
         @session.click_link('Reload!')
         sleep(0.3)
-        expect { node.text.to == 'has been reloaded' }.to raise_error
+        expect do
+          expect(node).to have_text('has been reloaded')
+        end.to raise_error do |error|
+          be_an_invalid_element_error = @session.driver.invalid_element_errors.map { |e| be_a(e) }.reduce { |m, m1| m.or m1 }
+          expect(error).to be_an_invalid_element_error
+        end
       end
       after { Capybara.automatic_reload = true }
     end
@@ -347,13 +352,23 @@ Capybara::SpecHelper.spec "node" do
         expect(node.find(:css, 'a').text).to eq('has been reloaded')
       end
 
-      it "should not reload nodes which haven't been found" do
+      it "should not reload nodes which haven't been found with reevaluateable queries" do
         @session.visit('/with_js')
         node = @session.all(:css, '#the-list li')[1]
         @session.click_link('Fetch new list!')
         sleep(0.3)
-        expect { node.text.to == 'Foo' }.to raise_error
-        expect { node.text.to == 'Bar' }.to raise_error
+
+        be_an_invalid_element_error = @session.driver.invalid_element_errors.map { |e| be_a(e) }.reduce { |m, m1| m.or m1 }
+        expect do
+          expect(node).to have_text('Foo')
+        end.to raise_error { |error|
+          expect(error).to be_an_invalid_element_error
+        }
+        expect do
+          expect(node).to have_text('Bar')
+        end.to raise_error { |error|
+          expect(error).to be_an_invalid_element_error
+        }
       end
 
       it "should reload nodes with options" do
