@@ -19,7 +19,7 @@ module Capybara
         @count = @actual_text.scan(@search_regexp).size
       end
 
-      def failure_message
+      def failure_message(check_invisible = true)
         description =
           if @expected_text.is_a?(Regexp)
             "text matching #{@expected_text.inspect}"
@@ -33,11 +33,11 @@ module Capybara
         end
         message << " in #{@actual_text.inspect}"
 
-        if @node and visible?
+        if @node and visible? and check_invisible
           invisible_text = text(@node, :all)
-          invisible_count = invisible_text.scan(@search_regexp).size - @count
-          if invisible_count > 0
-            message << ". (However, it was found #{invisible_count} time#{'s' if invisible_count != 1} in invisible text.)"
+          invisible_count = invisible_text.scan(@search_regexp).size
+          if invisible_count != @count
+            message << ". (However, it was found #{invisible_count} time#{'s' if invisible_count != 1} including invisible text.)"
           end
         end
 
@@ -45,7 +45,7 @@ module Capybara
       end
 
       def negative_failure_message
-        failure_message.sub(/(to find)/, 'not \1')
+        failure_message(false).sub(/(to find)/, 'not \1')
       end
 
       private
@@ -55,7 +55,8 @@ module Capybara
       end
 
       def visible?
-        @type == :visible or (@type.nil? and Capybara.ignore_hidden_elements)
+        @type == :visible or
+            (@type.nil? and (Capybara.ignore_hidden_elements or Capybara.visible_text_only))
       end
 
       def text(node, query_type)
