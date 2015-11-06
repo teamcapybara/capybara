@@ -90,6 +90,16 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
     !@browser.nil?
   end
 
+  def with_options(override_options)
+    original_options = @options
+    @options = @options.merge(override_options)
+
+    yield(self)
+
+    ensure
+      @options = original_options
+  end
+
   def get(*args, &block); browser.get(*args, &block); end
   def post(*args, &block); browser.post(*args, &block); end
   def put(*args, &block); browser.put(*args, &block); end
