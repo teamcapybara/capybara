@@ -26,7 +26,7 @@ GitHub): http://groups.google.com/group/ruby-capybara
     - [Selenium](#selenium)
     - [Capybara-webkit](#capybara-webkit)
     - [Poltergeist](#poltergeist)
-- [The DSL](#The_DSL)
+- [The DSL](#the-dsl)
     - [Navigating](#navigating)
     - [Clicking links and buttons](#clicking-links-and-buttons)
     - [Interacting with forms](#interacting-with-forms)
