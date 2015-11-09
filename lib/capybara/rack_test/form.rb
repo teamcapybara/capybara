@@ -73,8 +73,8 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
 
   def submit(button)
     action = (button && button['formaction']) || native['action']
-    requset_method = (button && button['formmethod']) || method
-    driver.submit(requset_method, action.to_s, params(button))
+    method = (button && button['formmethod']) || request_method
+    driver.submit(method, action.to_s, params(button))
   end
 
   def multipart?
@@ -89,7 +89,7 @@ private
     end
   end
 
-  def method
+  def request_method
     self[:method] =~ /post/i ? :post : :get
   end
 
