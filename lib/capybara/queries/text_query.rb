@@ -19,7 +19,17 @@ module Capybara
         @count = @actual_text.scan(@search_regexp).size
       end
 
-      def failure_message(check_invisible = true)
+      def failure_message
+        build_message(true)
+      end
+
+      def negative_failure_message
+        build_message(false).sub(/(to find)/, 'not \1')
+      end
+
+      private
+
+      def build_message(check_invisible)
         description =
           if @expected_text.is_a?(Regexp)
             "text matching #{@expected_text.inspect}"
@@ -43,12 +53,6 @@ module Capybara
 
         message
       end
-
-      def negative_failure_message
-        failure_message(false).sub(/(to find)/, 'not \1')
-      end
-
-      private
 
       def valid_keys
         COUNT_KEYS + [:wait]
