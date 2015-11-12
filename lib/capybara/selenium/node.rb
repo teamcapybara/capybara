@@ -23,7 +23,18 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     end
   end
 
-  def set(value, fill_options={})
+  ##
+  #
+  # Set the value of the form element to the given value.
+  #
+  # @param [String] value    The new value
+  # @param [Hash{}] options  Driver specific options for how to set the value
+  # @option options [Symbol,Array] :clear (nil) The method used to clear the previous value <br/>
+  #   nil => clear via javascript <br/>
+  #   :none =>  append the new value to the existing value <br/>
+  #   :backspace => send backspace keystrokes to clear the field <br/>
+  #   Array => an array of keys to send before the value being set, e.g. [[:command, 'a'], :backspace]
+  def set(value, options={})
     tag_name = self.tag_name
     type = self[:type]
     if (Array === value) && !self[:multiple]
@@ -42,10 +53,14 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       elsif value.to_s.empty?
         native.clear
       else
-        if fill_options[:clear] == :backspace
+        if options[:clear] == :backspace
           # Clear field by sending the correct number of backspace keys.
           backspaces = [:backspace] * self.value.to_s.length
           native.send_keys(*(backspaces + [value.to_s]))
+        elsif options[:clear] == :none
+          native.send_keys(value.to_s)
+        elsif options[:clear].is_a? Array
+          native.send_keys(*options[:clear], value.to_s)
         else
           # Clear field by JavaScript assignment of the value property.
           # Script can change a readonly element which user input cannot, so
