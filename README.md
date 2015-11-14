@@ -1,5 +1,7 @@
 # Capybara
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jnicklas/capybara?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://secure.travis-ci.org/jnicklas/capybara.png)](http://travis-ci.org/jnicklas/capybara)
 [![Dependency Status](https://gemnasium.com/jnicklas/capybara.png)](https://gemnasium.com/jnicklas/capybara)
 [![Code Climate](https://codeclimate.com/github/jnicklas/capybara.png)](https://codeclimate.com/github/jnicklas/capybara)
