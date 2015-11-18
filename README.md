@@ -1,6 +1,6 @@
 # Capybara
 
-[![Build Status](https://secure.travis-ci.org/jnicklas/capybara.png)](http://travis-ci.org/jnicklas/capybara)
+[![Build Status](https://secure.travis-ci.org/jnicklas/capybara.png)](https://travis-ci.org/jnicklas/capybara)
 [![Dependency Status](https://gemnasium.com/jnicklas/capybara.png)](https://gemnasium.com/jnicklas/capybara)
 [![Code Climate](https://codeclimate.com/github/jnicklas/capybara.png)](https://codeclimate.com/github/jnicklas/capybara)
 
@@ -367,7 +367,7 @@ Capybara.javascript_driver = :webkit
 
 ### Poltergeist
 
-[Poltergeist](https://github.com/jonleighton/poltergeist) is another
+[Poltergeist](https://github.com/teampoltergeist/poltergeist) is another
 headless driver which integrates Capybara with
 [PhantomJS](http://phantomjs.org/). It is truly headless, so doesn't
 require Xvfb to run on your CI server. It will also detect and report
@@ -682,7 +682,7 @@ your test code to be invisible to Capybara.
 
 Cucumber handles this by using truncation instead of transactions, i.e. they
 empty out the entire database after each test. You can get the same behaviour
-by using a gem such as [database_cleaner](https://github.com/bmabey/database_cleaner).
+by using a gem such as [database_cleaner](https://github.com/DatabaseCleaner/database_cleaner).
 
 It is also possible to force your ORM to use the same transaction for all
 threads.  This may have thread safety implications and could cause strange
@@ -957,7 +957,7 @@ additional info about how the underlying driver can be configured.
   since Capybara's Ajax timing uses the system time, resulting in Capybara
   never timing out and just hanging when a failure occurs. It's still possible to
   use gems which allow you to travel in time, rather than freeze time.
-  One such gem is [Timecop](http://github.com/travisjeffery/timecop).
+  One such gem is [Timecop](https://github.com/travisjeffery/timecop).
 
 * When using Rack::Test, beware if attempting to visit absolute URLs. For
   example, a session might not be shared between visits to `posts_path`
