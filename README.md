@@ -754,7 +754,6 @@ You can mix the DSL into any context by including <tt>Capybara::DSL</tt>:
 
 
 ```ruby
-require 'capybara'
 require 'capybara/dsl'
 
 Capybara.default_driver = :webkit
