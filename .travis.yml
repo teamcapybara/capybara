@@ -1,17 +1,19 @@
 language: ruby
 sudo: false
 rvm:
-  - 1.9.3
   - 2.0.0
   - 2.1
   - 2.2
-  - jruby-19mode
   - jruby-9.0.3.0
   - rbx-2
 gemfile:
   - Gemfile
 matrix:
   include:
+    - gemfile: gemfiles/Gemfile.ruby-19
+      rvm: 1.9.3
+    - gemfile: gemfiles/Gemfile.ruby-19
+      rvm: jruby-19mode
     - gemfile: gemfiles/Gemfile.base-versions
       rvm: 1.9.3
     - gemfile: gemfiles/Gemfile.beta-versions
