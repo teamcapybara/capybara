@@ -70,13 +70,25 @@ feature "given and given! aliases to let and let!" do
   end
 end
 
-feature "if xscenario aliases to pending then" do
-  xscenario "this test should be 'temporarily disabled with xscenario'" do
-  end
-end
-
 feature "Capybara's feature DSL with driver", :driver => :culerity do
   scenario "switches driver" do
     expect(Capybara.current_driver).to eq(:culerity)
+  end
+end
+
+if RSpec::Core::Version::STRING.to_f >= 3.0
+  xfeature "if xfeature aliases to pending then" do
+    scenario "this should be 'temporarily disabled with xfeature'" do; end
+    scenario "this also should be 'temporarily disabled with xfeature'" do; end
+  end
+
+  ffeature "if ffeature aliases focused tag then" do
+    scenario "scenario inside this feature has metatag focus tag" do |example|
+      expect(example.metadata[:focus]).to eq true
+    end
+
+    scenario "other scenarios also has metatag focus tag " do |example|
+      expect(example.metadata[:focus]).to eq true
+    end
   end
 end

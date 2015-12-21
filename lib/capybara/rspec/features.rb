@@ -9,6 +9,8 @@ if RSpec::Core::Version::STRING.to_f >= 3.0
 
   RSpec.configure do |config|
     config.alias_example_group_to :feature, :capybara_feature => true, :type => :feature
+    config.alias_example_group_to :xfeature, :capybara_feature => true, :type => :feature, :skip => "Temporarily disabled with xfeature"
+    config.alias_example_group_to :ffeature, :capybara_feature => true, :type => :feature, :focus => true
     config.alias_example_to :scenario
     config.alias_example_to :xscenario, :skip => "Temporarily disabled with xscenario"
     config.alias_example_to :fscenario, :focus => true
