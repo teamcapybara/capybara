@@ -401,11 +401,16 @@ The visit method only takes a single parameter, the request method is **always**
 GET.
 
 You can get the [current path](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#current_path-instance_method)
-of the browsing session for test assertions:
+of the browsing session, and test it using the [`have_current_path`](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/RSpecMatchers#have_current_path-instance_method) matcher:
 
 ```ruby
-expect(current_path).to eq(post_comments_path(post))
+expect(page).to have_current_path(post_comments_path(post))
 ```
+
+**Note**: You can also assert the current path by testing the value of
+`current_path` directly. However, using the `have_current_path` matcher is
+safer since it uses Capybara's [waiting behaviour](#asynchronous-javascript-ajax-and-friends)
+to ensure that preceding actions (such as a `click_link`) have completed.
 
 ### Clicking links and buttons
 
