@@ -1,4 +1,3 @@
-require 'capybara'
 require 'capybara/dsl'
 
 Capybara.app = Rack::Builder.new do

@@ -1,4 +1,4 @@
-require 'capybara'
+require 'capybara/dsl'
 require 'capybara/rspec/matchers'
 
 World(Capybara::DSL)

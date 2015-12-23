@@ -1,4 +1,3 @@
-require 'capybara'
 require 'capybara/dsl'
 require 'rspec/core'
 require 'capybara/rspec/matchers'

@@ -337,7 +337,6 @@ module Capybara
 
   require 'capybara/helpers'
   require 'capybara/session'
-  require 'capybara/dsl'
   require 'capybara/window'
   require 'capybara/server'
   require 'capybara/selector'
