@@ -2,6 +2,7 @@
 Relase date: unreleased
 
 ### Fixed
+* Fixed circular require [David Rodríguez]
 * Capybara::RackTest::Form no longer overrides Object#method [David Rodriguez]
 * options and with_options filter for :select selector have more intuitive visibility behavior [Nathan]
 * Test for nested modal API method support [Tom Walpole]
