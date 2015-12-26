@@ -133,7 +133,11 @@ Load RSpec 2.x support by adding the following line (typically to your
 require 'capybara/rspec'
 ```
 
-If you are using Rails, put your Capybara specs in `spec/features`.
+If you are using Rails, put your Capybara specs in `spec/features` (only works
+if [you have it configured in
+rpsec](https://www.relishapp.com/rspec/rspec-rails/docs/upgrade#file-type-inference-disabled))
+and if you have your Capybara specs in a different directory, then tag the
+example groups with `:type => :feature`.
 
 If you are not using Rails, tag all the example groups in which you want to use
 Capybara with `:type => :feature`.
