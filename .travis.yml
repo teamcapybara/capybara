@@ -2,9 +2,8 @@ language: ruby
 sudo: false
 rvm:
   - 2.0.0
-  - 2.1
   - 2.2
-  - 2.3
+  - 2.3.0
   - jruby-9.0.3.0
   - rbx-2
 gemfile:
@@ -18,7 +17,7 @@ matrix:
     - gemfile: gemfiles/Gemfile.base-versions
       rvm: 1.9.3
     - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: 2.3
+      rvm: 2.3.0
     - gemfile: Gemfile
       rvm: 2.2
       env: CAPYBARA_CHROME=true
