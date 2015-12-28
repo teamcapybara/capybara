@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency("rack", [">= 1.0.0"])
   s.add_runtime_dependency("rack-test", [">= 0.5.4"])
   s.add_runtime_dependency("xpath", ["~> 2.0"])
+  s.add_runtime_dependency("addressable")
 
   s.add_development_dependency("selenium-webdriver", ["~> 2.0"])
   s.add_development_dependency("sinatra", [">= 0.9.4"])

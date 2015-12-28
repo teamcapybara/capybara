@@ -12,6 +12,16 @@ Capybara::SpecHelper.spec '#has_current_path?' do
     expect(@session).not_to have_current_path(/monkey/)
   end
 
+  it "should handle non-escaped query options" do
+    @session.click_link("Non-escaped query options")
+    expect(@session).to have_current_path("/with_html?options[]=things")
+  end
+
+  it "should handle escaped query options" do
+    @session.click_link("Escaped query options")
+    expect(@session).to have_current_path("/with_html?options%5B%5D=things")
+  end
+
   it "should wait for current_path", :requires => [:js] do
     @session.click_link("Change page")
     expect(@session).to have_current_path("/with_html")
