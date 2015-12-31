@@ -927,7 +927,7 @@ Whatever is returned from the block should conform to the API described by
 Capybara::Driver::Base, it does not however have to inherit from this class.
 Gems can use this API to add their own drivers to Capybara.
 
-The [Selenium wiki](http://code.google.com/p/selenium/wiki/RubyBindings) has
+The [Selenium wiki](https://github.com/SeleniumHQ/selenium/wiki/Ruby-Bindings) has
 additional info about how the underlying driver can be configured.
 
 ## Gotchas:
