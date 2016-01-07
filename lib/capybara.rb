@@ -37,24 +37,24 @@ module Capybara
     #
     # === Configurable options
     #
-    # [app_host = String]                 The default host to use when giving a relative URL to visit  
-    # [always_include_port = Boolean]     Whether the Rack server's port should automatically be inserted into every visited URL (Default: false)  
-    # [asset_host = String]               Where dynamic assets are hosted - will be prepended to relative asset locations if present (Default: nil)  
-    # [run_server = Boolean]              Whether to start a Rack server for the given Rack app (Default: true)  
-    # [raise_server_errors = Boolean]     Should errors raised in the server be raised in the tests? (Default: true)  
-    # [server_errors = Array\<Class\>]    Error classes that should be raised in the tests if they are raised in the server and Capybara.raise_server_errors is true (Default: [StandardError])  
-    # [default_selector = :css/:xpath]    Methods which take a selector use the given type by default (Default: :css)  
-    # [default_max_wait_time = Numeric]   The maximum number of seconds to wait for asynchronous processes to finish (Default: 2)  
-    # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: true)  
-    # [automatic_reload = Boolean]        Whether to automatically reload elements as Capybara is waiting (Default: true)  
-    # [save_and_open_page_path = String]  Where to put pages saved through save_and_open_page (Default: Dir.pwd)  
-    # [wait_on_first_by_default = Boolean]   Whether Node#first defaults to Capybara waiting behavior for at least 1 element to match (Default: false) 
+    # [app_host = String]                 The default host to use when giving a relative URL to visit
+    # [always_include_port = Boolean]     Whether the Rack server's port should automatically be inserted into every visited URL (Default: false)
+    # [asset_host = String]               Where dynamic assets are hosted - will be prepended to relative asset locations if present (Default: nil)
+    # [run_server = Boolean]              Whether to start a Rack server for the given Rack app (Default: true)
+    # [raise_server_errors = Boolean]     Should errors raised in the server be raised in the tests? (Default: true)
+    # [server_errors = Array\<Class\>]    Error classes that should be raised in the tests if they are raised in the server and Capybara.raise_server_errors is true (Default: [StandardError])
+    # [default_selector = :css/:xpath]    Methods which take a selector use the given type by default (Default: :css)
+    # [default_max_wait_time = Numeric]   The maximum number of seconds to wait for asynchronous processes to finish (Default: 2)
+    # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: true)
+    # [automatic_reload = Boolean]        Whether to automatically reload elements as Capybara is waiting (Default: true)
+    # [save_and_open_page_path = String]  Where to put pages saved through save_and_open_page (Default: Dir.pwd)
+    # [wait_on_first_by_default = Boolean]   Whether Node#first defaults to Capybara waiting behavior for at least 1 element to match (Default: false)
     # === DSL Options
     #
     # when using capybara/dsl, the following options are also available:
     #
-    # [default_driver = Symbol]           The name of the driver to use by default. (Default: :rack_test)  
-    # [javascript_driver = Symbol]        The name of a driver to use for JavaScript enabled tests. (Default: :selenium)  
+    # [default_driver = Symbol]           The name of the driver to use by default. (Default: :rack_test)
+    # [javascript_driver = Symbol]        The name of a driver to use for JavaScript enabled tests. (Default: :selenium)
     #
     def configure
       yield self
@@ -107,6 +107,23 @@ module Capybara
     #
     def add_selector(name, &block)
       Capybara::Selector.add(name, &block)
+    end
+
+    ##
+    #
+    # Modify a selector previously craeated by {Capybara.add_selector}.
+    # For example modifying the :button selector to also find divs styled
+    # to look like buttons might look like this
+    #
+    #     Capybara.modfiy_selector(:button) do
+    #       xpath { |locator| XPath::HTML.button(locator).or(XPath::css('div.btn')[XPath::string.n.is(locator)]) }
+    #     end
+    #
+    # @param [Symbol] name    The name of the selector to modify
+    # @yield                  A block executed in the context of the existing {Capybara::Selector}
+    #
+    def modify_selector(name, &block)
+      Capybara::Selector.update(name, &block)
     end
 
     def drivers
@@ -305,13 +322,13 @@ module Capybara
         end
       end
     end
-    
+
     # @deprecated Use default_max_wait_time instead
     def default_wait_time
       deprecate('default_wait_time', 'default_max_wait_time', true)
       default_max_wait_time
     end
-    
+
     # @deprecated Use default_max_wait_time= instead
     def default_wait_time=(t)
       deprecate('default_wait_time=', 'default_max_wait_time=')
@@ -357,7 +374,7 @@ module Capybara
   require 'capybara/queries/text_query'
   require 'capybara/queries/title_query'
   require 'capybara/queries/current_path_query'
-  
+
   require 'capybara/node/finders'
   require 'capybara/node/matchers'
   require 'capybara/node/actions'

@@ -49,6 +49,10 @@ module Capybara
         all[name.to_sym] = Capybara::Selector.new(name.to_sym, &block)
       end
 
+      def update(name, &block)
+        all[name.to_sym].instance_eval(&block)
+      end
+
       def remove(name)
         all.delete(name.to_sym)
       end
@@ -65,15 +69,19 @@ module Capybara
     end
 
     def xpath(&block)
-      @format = :xpath
-      @xpath = block if block
+      if block
+        @format = :xpath
+        @xpath, @css = block, nil
+      end
       @xpath
     end
 
     # Same as xpath, but wrap in XPath.css().
     def css(&block)
-      @format = :css
-      @css = block if block
+      if block
+        @format = :css
+        @css, @xpath = block, nil
+      end
       @css
     end
 
