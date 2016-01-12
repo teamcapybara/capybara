@@ -109,19 +109,11 @@ module Capybara
         assert_no_selector :xpath, "/html/body/*" if driver.browser_initialized?
         @touched = false
       end
-      wait_for_server_requests
+      @server.wait_for_pending_requests if @server
       raise_server_error!
     end
     alias_method :cleanup!, :reset!
     alias_method :reset_session!, :reset!
-
-    ##
-    #
-    # Wait for any pending server requests to finish
-    #
-    def wait_for_server_requests
-      @server.wait_for_pending_requests if @server
-    end
 
     ##
     #
