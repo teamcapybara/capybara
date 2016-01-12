@@ -129,13 +129,11 @@ RSpec.describe Capybara::Server do
     socket.close
     sleep 0.1
 
-    expect(server).to be_pending_requests
     expect(done).to be false
 
     server.wait_for_pending_requests
 
     # Ensure server was allowed to finish
     expect(done).to be true
-    expect(server).not_to be_pending_requests
   end
 end

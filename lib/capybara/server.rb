@@ -7,8 +7,8 @@ module Capybara
     class Counter
       attr_reader :value
 
-      def initialize(value=0)
-        @value = value
+      def initialize
+        @value = 0
         @mutex = Mutex.new
       end
 
@@ -24,9 +24,13 @@ module Capybara
     class Middleware
       attr_accessor :error
 
-      def initialize(app, counter=Counter.new)
+      def initialize(app)
         @app = app
-        @counter = counter
+        @counter = Counter.new
+      end
+
+      def pending_requests?
+        @counter.value > 0
       end
 
       def call(env)
@@ -56,8 +60,7 @@ module Capybara
 
     def initialize(app, port=Capybara.server_port, host=Capybara.server_host)
       @app = app
-      @counter = Counter.new
-      @middleware = Middleware.new(@app, @counter)
+      @middleware = Middleware.new(@app)
       @server_thread = nil # suppress warnings
       @host, @port = host, port
       @port ||= Capybara::Server.ports[@app.object_id]
@@ -84,12 +87,8 @@ module Capybara
       return false
     end
 
-    def pending_requests?
-      @counter.value > 0
-    end
-
     def wait_for_pending_requests
-      Timeout.timeout(60) { sleep(0.01) while pending_requests? }
+      Timeout.timeout(60) { sleep(0.01) while @middleware.pending_requests? }
     rescue Timeout::Error
       raise "Requests did not finish in 60 seconds"
     end
