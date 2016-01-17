@@ -10,13 +10,13 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 1.9.3"
   s.license = "MIT"
 
-  s.authors = ["Jonas Nicklas"]
-  s.email = ["jonas.nicklas@gmail.com"]
+  s.authors = ["Thomas Walpole", "Jonas Nicklas"]
+  s.email = ["twalpole@gmail.com", "jonas.nicklas@gmail.com"]
   s.description = "Capybara is an integration testing tool for rack based web applications. It simulates how a user would interact with a website"
 
   s.files = Dir.glob("{lib,spec}/**/*") + %w(README.md History.md License.txt)
 
-  s.homepage = "http://github.com/jnicklas/capybara"
+  s.homepage = "https://github.com/jnicklas/capybara"
   s.require_paths = ["lib"]
   s.rubygems_version = "1.3.6"
   s.summary = "Capybara aims to simplify the process of integration testing Rack applications, such as Rails, Sinatra or Merb"

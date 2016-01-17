@@ -1,7 +1,8 @@
-#Version 2.6.0
-Relase date: unreleased
+# Version 2.6.0
+Relase date: 2016-01-17
 
 ### Fixed
+* Fixed path escaping issue with current_path matchers [Tom Walpole, Luke Rollans] (Issue #1611)
 * Fixed circular require [David Rodríguez]
 * Capybara::RackTest::Form no longer overrides Object#method [David Rodriguez]
 * options and with_options filter for :select selector have more intuitive visibility behavior [Nathan]
@@ -9,6 +10,7 @@ Relase date: unreleased
 
 
 ### Added
+* Capybara.modify_selector [Tom Walpole]
 * xfeature and ffeature aliases added when using RSpec [Filip Bartuzi]
 * Selenium driver supports a :clear option to #set to handle different strategies for clearing a field [Tom Walpole]
 * Support the use of rack 2.0 with the rack_test driver [Travis Grathwell, Tom Walpole]
