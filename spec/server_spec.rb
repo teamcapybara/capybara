@@ -1,5 +1,20 @@
 require 'spec_helper'
 
+def https_server
+  require 'webrick/https'
+  lambda do |app, port|
+    opts = {
+      :Port => port,
+      :SSLEnable => true,
+      :SSLCertName => [['CN', WEBrick::Utils::getservername]],
+      :AccessLog => [],
+      :Logger => WEBrick::Log.new(nil, 0)
+    }
+
+    Rack::Handler::WEBrick.run(app, opts)
+  end
+end
+
 RSpec.describe Capybara::Server do
 
   it "should spool up a rack server" do
@@ -112,5 +127,21 @@ RSpec.describe Capybara::Server do
     server = Capybara::Server.new(app)
     expect(Net::HTTP).to receive(:start).and_raise(SystemCallError.allocate)
     expect(server.responsive?).to eq false
+  end
+
+  it "is #responsive? when starts http server" do
+    app = lambda { [200, {}, ['Hello, world']] }
+    server = Capybara::Server.new(app).boot
+    expect(server.responsive?).to be true
+  end
+
+  it "is #responsive? when starts https server" do
+    Capybara.server(&https_server)
+    app = lambda { [200, {}, ['Hello, world']] }
+    server = Capybara::Server.new(app)
+
+    Timeout.timeout(2) { server.boot } rescue Timeout::Error
+
+    expect(server.responsive?).to be true
   end
 end
