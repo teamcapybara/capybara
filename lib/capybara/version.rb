@@ -1,3 +1,3 @@
 module Capybara
-  VERSION = '2.6.0.dev'
+  VERSION = '2.6.0'
 end
