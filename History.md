@@ -1,3 +1,6 @@
+# Version 2.7.0
+Release date: unreleased
+
 # Version 2.6.0
 Relase date: 2016-01-17
 
