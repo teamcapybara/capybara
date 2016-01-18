@@ -71,23 +71,102 @@ RSpec.describe Capybara::Server do
     expect(@res2.body).to include('Hello Second Server')
   end
 
-  it "should use the server if it already running" do
-    @app1 = proc { |env| [200, {}, ["Hello Server!"]]}
-    @app2 = proc { |env| [200, {}, ["Hello Second Server!"]]}
+  context "When Capybara.reuse_server is true" do
+    before do
+      @old_reuse_server = Capybara.reuse_server
+      Capybara.reuse_server = true
+    end
 
-    @server1a = Capybara::Server.new(@app1).boot
-    @server1b = Capybara::Server.new(@app1).boot
-    @server2a = Capybara::Server.new(@app2).boot
-    @server2b = Capybara::Server.new(@app2).boot
+    after do
+      Capybara.reuse_server = @old_reuse_server
+    end
 
-    @res1 = Net::HTTP.start(@server1b.host, @server1b.port) { |http| http.get('/') }
-    expect(@res1.body).to include('Hello Server')
+    it "should use the existing server if it already running" do
+      @app = proc { |env| [200, {}, ["Hello Server!"]]}
 
-    @res2 = Net::HTTP.start(@server2b.host, @server2b.port) { |http| http.get('/') }
-    expect(@res2.body).to include('Hello Second Server')
+      @server1 = Capybara::Server.new(@app).boot
+      @server2 = Capybara::Server.new(@app).boot
 
-    expect(@server1a.port).to eq(@server1b.port)
-    expect(@server2a.port).to eq(@server2b.port)
+      res = Net::HTTP.start(@server1.host, @server1.port) { |http| http.get('/') }
+      expect(res.body).to include('Hello Server')
+
+      res = Net::HTTP.start(@server2.host, @server2.port) { |http| http.get('/') }
+      expect(res.body).to include('Hello Server')
+
+      expect(@server1.port).to eq(@server2.port)
+    end
+
+    it "detects and waits for all reused server sessions pending requests" do
+      done = false
+
+      app = proc do |env|
+        request = Rack::Request.new(env)
+        sleep request.params['wait_time'].to_f
+        done = true
+        [200, {}, ["Hello Server!"]]
+      end
+
+      server1 = Capybara::Server.new(app).boot
+      server2 = Capybara::Server.new(app).boot
+
+      start_request(server1, 0.5)
+      start_request(server2, 1.0)
+
+      expect {
+        server1.wait_for_pending_requests
+      }.to change{done}.from(false).to(true)
+      expect(server2.instance_variable_get('@middleware').pending_requests?).to eq(false)
+    end
+
+  end
+
+  context "When Capybara.reuse_server is false" do
+    before do
+      @old_reuse_server = Capybara.reuse_server
+      Capybara.reuse_server = false
+    end
+
+    after do
+      Capybara.reuse_server = @old_reuse_server
+    end
+
+    it "should not reuse an already running server" do
+      @app = proc { |env| [200, {}, ["Hello Server!"]]}
+
+      @server1 = Capybara::Server.new(@app).boot
+      @server2 = Capybara::Server.new(@app).boot
+
+      res = Net::HTTP.start(@server1.host, @server1.port) { |http| http.get('/') }
+      expect(res.body).to include('Hello Server')
+
+      res = Net::HTTP.start(@server2.host, @server2.port) { |http| http.get('/') }
+      expect(res.body).to include('Hello Server')
+
+      expect(@server1.port).not_to eq(@server2.port)
+    end
+
+    it "detects and waits for only one sessions pending requests" do
+      done = false
+
+      app = proc do |env|
+        request = Rack::Request.new(env)
+        sleep request.params['wait_time'].to_f
+        done = true
+        [200, {}, ["Hello Server!"]]
+      end
+
+      server1 = Capybara::Server.new(app).boot
+      server2 = Capybara::Server.new(app).boot
+
+      start_request(server1, 0.5)
+      start_request(server2, 1.0)
+
+      expect {
+        server1.wait_for_pending_requests
+      }.to change{done}.from(false).to(true)
+      expect(server2.instance_variable_get('@middleware').pending_requests?).to eq(true)
+    end
+
   end
 
   it "should raise server errors when the server errors before the timeout" do
@@ -112,5 +191,13 @@ RSpec.describe Capybara::Server do
     server = Capybara::Server.new(app)
     expect(Net::HTTP).to receive(:start).and_raise(SystemCallError.allocate)
     expect(server.responsive?).to eq false
+  end
+
+  def start_request(server, wait_time)
+    # Start request, but don't wait for it to finish
+    socket = TCPSocket.new(server.host, server.port)
+    socket.write "GET /?wait_time=#{wait_time.to_s} HTTP/1.0\r\n\r\n"
+    socket.close
+    sleep 0.1
   end
 end

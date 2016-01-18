@@ -5,21 +5,46 @@ require 'rack'
 module Capybara
   class Server
     class Middleware
+      class Counter
+        attr_reader :value
+
+        def initialize
+          @value = 0
+          @mutex = Mutex.new
+        end
+
+        def increment
+          @mutex.synchronize { @value += 1 }
+        end
+
+        def decrement
+          @mutex.synchronize { @value -= 1 }
+        end
+      end
+
       attr_accessor :error
 
       def initialize(app)
         @app = app
+        @counter = Counter.new
+      end
+
+      def pending_requests?
+        @counter.value > 0
       end
 
       def call(env)
         if env["PATH_INFO"] == "/__identify__"
           [200, {}, [@app.object_id.to_s]]
         else
+          @counter.increment
           begin
             @app.call(env)
           rescue *Capybara.server_errors => e
             @error = e unless @error
             raise e
+          ensure
+            @counter.decrement
           end
         end
       end
@@ -38,7 +63,7 @@ module Capybara
       @middleware = Middleware.new(@app)
       @server_thread = nil # suppress warnings
       @host, @port = host, port
-      @port ||= Capybara::Server.ports[@app.object_id]
+      @port ||= Capybara::Server.ports[Capybara.reuse_server ? @app.object_id : @middleware.object_id]
       @port ||= find_available_port
     end
 
@@ -62,9 +87,15 @@ module Capybara
       return false
     end
 
+    def wait_for_pending_requests
+      Timeout.timeout(60) { sleep(0.01) while @middleware.pending_requests? }
+    rescue Timeout::Error
+      raise "Requests did not finish in 60 seconds"
+    end
+
     def boot
       unless responsive?
-        Capybara::Server.ports[@app.object_id] = @port
+        Capybara::Server.ports[Capybara.reuse_server ? @app.object_id : @middleware.object_id] = @port
 
         @server_thread = Thread.new do
           Capybara.server.call(@middleware, @port)
