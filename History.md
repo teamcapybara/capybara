@@ -15,7 +15,7 @@ Relase date: 2016-01-17
 * Selenium driver supports a :clear option to #set to handle different strategies for clearing a field [Tom Walpole]
 * Support the use of rack 2.0 with the rack_test driver [Travis Grathwell, Tom Walpole]
 * Disabled option for default selectors now supports true, false, or :all [Jillian Rosile, Tom Walpole]
-* Modal API methods now default wait time to Capybara.max_default_wait_time [Tom Walpole]
+* Modal API methods now default wait time to Capybara.default_max_wait_time [Tom Walpole]
 
 # Version 2.5.0
 Release date: 2015-08-25
