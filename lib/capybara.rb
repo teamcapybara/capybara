@@ -23,7 +23,7 @@ module Capybara
     attr_accessor :server_port, :exact, :match, :exact_options, :visible_text_only
     attr_accessor :default_selector, :default_max_wait_time, :ignore_hidden_elements
     attr_accessor :save_and_open_page_path, :wait_on_first_by_default, :automatic_reload
-    attr_accessor :reuse_server, :raise_server_errors, :server_errors
+    attr_accessor :reuse_server, :raise_server_errors, :server_errors, :cookie_tracking
     attr_writer :default_driver, :current_driver, :javascript_driver, :session_name, :server_host
     attr_accessor :app
 
@@ -51,6 +51,7 @@ module Capybara
     # [save_and_open_page_path = String]  Where to put pages saved through save_and_open_page (Default: Dir.pwd)
     # [wait_on_first_by_default = Boolean]   Whether Node#first defaults to Capybara waiting behavior for at least 1 element to match (Default: false)
     # [reuse_server = Boolean]  Reuse the server thread between multiple sessions using the same app object (Default: true)
+    # [cookie_tracking = Boolean]  Use a cookie to track the session a request is coming from (Default: false)
     # === DSL Options
     #
     # when using capybara/dsl, the following options are also available:
@@ -347,6 +348,11 @@ module Capybara
       @reuse_server = bool
     end
 
+    def cookie_tracking=(bool)
+      warn "Capybara.cookie_tracking == true is a BETA feature and may change in a future versions" if bool
+      @cookie_tracking = bool
+    end
+
     def deprecate(method, alternate_method, once=false)
       @deprecation_notified ||= {}
       warn "DEPRECATED: ##{method} is deprecated, please use ##{alternate_method} instead" unless once and @deprecation_notified[method]
@@ -420,6 +426,7 @@ Capybara.configure do |config|
   config.visible_text_only = false
   config.wait_on_first_by_default = false
   config.reuse_server = true
+  config.cookie_tracking = false
 end
 
 Capybara.register_driver :rack_test do |app|
