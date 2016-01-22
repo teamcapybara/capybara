@@ -1,6 +1,14 @@
 module Capybara
   module SessionMatchers
     ##
+    # Checks if page status equals given `code`.
+    # @return [Boolean]
+    #
+    def has_status_code?(code)
+      driver.status_code == code
+    end
+
+    ##
     # Asserts that the page has the given path.
     # By default this will compare against the path+query portion of the full url
     #
