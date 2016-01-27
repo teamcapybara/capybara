@@ -1,3 +1,9 @@
+# Version 2.6.1
+Release data: 2016-01-27
+
+### Fixed
+* Add missing require for addressable [Jorge Bejar]
+
 # Version 2.6.0
 Relase date: 2016-01-17
 
