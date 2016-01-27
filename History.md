@@ -1,5 +1,11 @@
+#Version 2.6.2
+Relase date: 2016-01-27
+
+### Fixed
+* support for more than just addressable 2.4.0 [Thomas Walpole]
+
 # Version 2.6.1
-Release data: 2016-01-27
+Release date: 2016-01-27
 
 ### Fixed
 * Add missing require for addressable [Jorge Bejar]
