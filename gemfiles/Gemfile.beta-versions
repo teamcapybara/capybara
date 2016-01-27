@@ -5,4 +5,4 @@ gemspec :path => '..'
 
 gem 'xpath', github: 'jnicklas/xpath'
 gem 'rack', github: 'rack/rack'
-gem 'sinatra', github: 'sinatra/sinatra', branch: '2.2.0-alpha'
+gem 'sinatra', github: 'sinatra/sinatra', branch: 'master'
