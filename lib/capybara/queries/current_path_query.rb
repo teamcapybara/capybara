@@ -1,3 +1,5 @@
+require 'addressable'
+
 module Capybara
   # @api private
   module Queries
