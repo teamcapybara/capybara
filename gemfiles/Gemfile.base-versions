@@ -12,5 +12,6 @@ gem 'rspec', '= 2.2.0'
 gem 'cucumber', '= 0.10.5'
 gem 'tins', '= 1.6.0'  # 1.7.0 requires ruby 2.0
 gem 'mime-types', '<3.0' # 3.0 require ruby 2.0
+gem 'addressable', '< 2.4.0' # 2.4.0 allows require 'addressable' previous don't
 # We cannot test against older versions of selenium-webdriver without
 # installing older compatible Firefox versions.

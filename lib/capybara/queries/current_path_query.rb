@@ -1,4 +1,4 @@
-require 'addressable'
+require 'addressable/uri'
 
 module Capybara
   # @api private
@@ -17,16 +17,16 @@ module Capybara
           session.current_url
         else
           if options[:only_path]
-            Addressable::URI.parse(session.current_url).path
+            ::Addressable::URI.parse(session.current_url).path
           else
-            Addressable::URI.parse(session.current_url).request_uri
+            ::Addressable::URI.parse(session.current_url).request_uri
           end
         end
 
         if @expected_path.is_a? Regexp
           @actual_path.match(@expected_path)
         else
-          Addressable::URI.parse(@expected_path) == Addressable::URI.parse(@actual_path)
+          ::Addressable::URI.parse(@expected_path) == Addressable::URI.parse(@actual_path)
         end
       end
 
