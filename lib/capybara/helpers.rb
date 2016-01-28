@@ -129,7 +129,7 @@ module Capybara
 
     if defined?(Process::CLOCK_MONOTONIC)
       def monotonic_time
-       Process.clock_gettime Process::CLOCK_MONOTONIC
+        Process.clock_gettime Process::CLOCK_MONOTONIC
       end
     else
       def monotonic_time
