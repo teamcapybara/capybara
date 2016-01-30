@@ -29,7 +29,7 @@ module Capybara
       # @raise  [Capybara::ElementNotFound]    If the element can't be found before time expires
       #
       def find(*args)
-        query = Capybara::Query.new(*args)
+        query = Capybara::Queries::SelectorQuery.new(*args)
         synchronize(query.wait) do
           if query.match == :smart or query.match == :prefer_exact
             result = query.resolve_for(self, true)
@@ -178,7 +178,7 @@ module Capybara
       # @return [Capybara::Result]                   A collection of found elements
       #
       def all(*args)
-        query = Capybara::Query.new(*args)
+        query = Capybara::Queries::SelectorQuery.new(*args)
         synchronize(query.wait) do
           result = query.resolve_for(self)
           raise Capybara::ExpectationNotMet, result.failure_message unless result.matches_count?

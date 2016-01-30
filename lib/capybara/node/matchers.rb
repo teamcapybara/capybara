@@ -58,6 +58,36 @@ module Capybara
 
       ##
       #
+      # Checks if the current node matches given selector
+      # Usage is identical to Capybara::Node::Matchers#has_selector?
+      #
+      # @param (see Capybara::Node::Finders#has_selector?)
+      # @return [Boolean]
+      #
+      def match_selector?(*args)
+        assert_match_selector(*args)
+      rescue Capybara::ExpectationNotMet
+        return false
+      end
+
+
+      ##
+      #
+      # Checks if the current node does not match given selector
+      # Usage is identical to Capybara::Node::Matchers#has_selector?
+      #
+      # @param (see Capybara::Node::Finders#has_selector?)
+      # @return [Boolean]
+      #
+      def not_match_selector?(*args)
+        assert_not_match_selector(*args)
+      rescue Capybara::ExpectationNotMet
+        return false
+      end
+
+
+      ##
+      #
       # Asserts that a given selector is on the page or current node.
       #
       #     page.assert_selector('p#foo')
@@ -90,7 +120,7 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]      If the selector does not exist
       #
       def assert_selector(*args)
-        query = Capybara::Query.new(*args)
+        query = Capybara::Queries::SelectorQuery.new(*args)
         synchronize(query.wait) do
           result = query.resolve_for(self)
           matches_count = Capybara::Helpers.matches_count?(result.size, query.options)
@@ -118,7 +148,7 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]      If the selector exists
       #
       def assert_no_selector(*args)
-        query = Capybara::Query.new(*args)
+        query = Capybara::Queries::SelectorQuery.new(*args)
         synchronize(query.wait) do
           result = query.resolve_for(self)
           matches_count = Capybara::Helpers.matches_count?(result.size, query.options)
@@ -129,6 +159,45 @@ module Capybara
         return true
       end
       alias_method :refute_selector, :assert_no_selector
+
+      ##
+      #
+      # Asserts that the current_node matches a given selector
+      #
+      #     node.assert_match_selector('p#foo')
+      #     node.assert_match_selector(:xpath, '//p[@id="foo"]')
+      #     node.assert_match_selector(:foo)
+      #
+      # It also accepts all options that {Capybara::Node::Finders#all} accepts,
+      # such as :text and :visible.
+      #
+      #     node.assert_match_selector('li', :text => 'Horse', :visible => true)
+      #
+      # @param (see Capybara::Node::Finders#all)
+      # @raise [Capybara::ExpectationNotMet]      If the selector does not match
+      #
+      def assert_match_selector(*args)
+        query = Capybara::Queries::MatchQuery.new(*args)
+        synchronize(query.wait) do
+          result = query.resolve_for(self.parent)
+          unless result.include? self
+            raise Capybara::ExpectationNotMet, "Item does not match the provided selector"
+          end
+        end
+        return true
+      end
+
+      def assert_not_match_selector(*args)
+        query = Capybara::Queries::MatchQuery.new(*args)
+        synchronize(query.wait) do
+          result = query.resolve_for(self.parent)
+          if result.include? self
+            raise Capybara::ExpectationNotMet, 'Item matched the provided selector'
+          end
+        end
+        return true
+      end
+      alias_method :refute_match_selector, :assert_not_match_selector
 
       ##
       #
