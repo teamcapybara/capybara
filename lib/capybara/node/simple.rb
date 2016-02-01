@@ -115,7 +115,7 @@ module Capybara
       # @return [Boolean]     Whether the element is checked
       #
       def checked?
-        native[:checked]
+        native.has_attribute?('checked')
       end
 
       ##
@@ -124,7 +124,7 @@ module Capybara
       #
       # @return [Boolean]     Whether the element is disabled
       def disabled?
-        native[:disabled]
+        native.has_attribute?('disabled')
       end
 
       ##
@@ -134,7 +134,7 @@ module Capybara
       # @return [Boolean]     Whether the element is selected
       #
       def selected?
-        native[:selected]
+        native.has_attribute?('selected')
       end
 
       def synchronize(seconds=nil)

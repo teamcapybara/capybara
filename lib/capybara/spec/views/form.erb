@@ -154,6 +154,10 @@ New line after and before textarea tag
   </p>
 
   <p>
+    <input type="checkbox" id="no_attr_value_checked" value="1" checked/>
+  </p>
+
+  <p>
     <input type="checkbox" value="dog" name="form[pets][]" id="form_pets_dog" checked="checked"/>
     <label for="form_pets_dog">Dog</label>
     <input type="checkbox" value="cat" name="form[pets][]" id="form_pets_cat"/>
@@ -291,6 +295,16 @@ New line after and before textarea tag
       </select>
     </label>
   </p>
+
+  <p>
+    <label for="form_disabled_select2">
+      Disabled Select 2
+      <select name="form[disabled_select2]" id="form_disabled_select2" disabled>
+        <option value="Should not see me" selected="selected">Should not see me</option>
+      </select>
+    </label>
+  </p>
+
 
   <p>
     <label for="form_disabled_file">

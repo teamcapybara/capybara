@@ -1,6 +1,10 @@
 # Version 2.7.0
 Release date: unreleased
 
+### Fixed
+* Element#visible?/checked?/disabled?/selected? Now return boolean
+  as expected when using the rack_test driver [Thomas Walpole]
+
 #Version 2.6.2
 Relase date: 2016-01-27
 
