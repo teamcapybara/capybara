@@ -117,7 +117,7 @@ module Capybara
     # For example modifying the :button selector to also find divs styled
     # to look like buttons might look like this
     #
-    #     Capybara.modfiy_selector(:button) do
+    #     Capybara.modify_selector(:button) do
     #       xpath { |locator| XPath::HTML.button(locator).or(XPath::css('div.btn')[XPath::string.n.is(locator)]) }
     #     end
     #

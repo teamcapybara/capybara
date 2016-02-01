@@ -29,7 +29,7 @@ RSpec.describe Capybara do
       end
     end
 
-    describe "modfiy_selector" do
+    describe "modify_selector" do
       it "allows modifying a selector" do
         el = string.find(:custom_selector, 'a')
         expect(el.tag_name).to eq 'div'
