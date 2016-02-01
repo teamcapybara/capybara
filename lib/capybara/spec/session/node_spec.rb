@@ -159,6 +159,13 @@ Capybara::SpecHelper.spec "node" do
       expect(@session.find('//select[@id="form_disabled_select"]/option')).to be_disabled
       expect(@session.find('//select[@id="form_title"]/option[1]')).not_to be_disabled
     end
+
+    it "should be boolean" do
+      @session.visit('/form')
+      expect(@session.find('//select[@id="form_disabled_select"]/option').disabled?).to be true
+      expect(@session.find('//select[@id="form_disabled_select2"]/option').disabled?).to be true
+      expect(@session.find('//select[@id="form_title"]/option[1]').disabled?).to be false
+    end
   end
 
   describe "#visible?" do
@@ -171,6 +178,12 @@ Capybara::SpecHelper.spec "node" do
       expect(@session.find('//div[@id="hidden_attr"]')).not_to be_visible
       expect(@session.find('//a[@id="hidden_attr_via_ancestor"]')).not_to be_visible
     end
+
+    it "should be boolean" do
+      Capybara.ignore_hidden_elements = false
+      expect(@session.first('//a').visible?).to be true
+      expect(@session.find('//div[@id="hidden"]').visible?).to be false
+    end
   end
 
   describe "#checked?" do
@@ -180,6 +193,13 @@ Capybara::SpecHelper.spec "node" do
       expect(@session.find('//input[@id="gender_male"]')).not_to be_checked
       expect(@session.first('//h1')).not_to be_checked
     end
+
+    it "should be boolean" do
+      @session.visit('/form')
+      expect(@session.find('//input[@id="gender_female"]').checked?).to be true
+      expect(@session.find('//input[@id="gender_male"]').checked?).to be false
+      expect(@session.find('//input[@id="no_attr_value_checked"]').checked?).to be true
+    end
   end
 
   describe "#selected?" do
@@ -188,6 +208,13 @@ Capybara::SpecHelper.spec "node" do
       expect(@session.find('//option[@value="en"]')).to be_selected
       expect(@session.find('//option[@value="sv"]')).not_to be_selected
       expect(@session.first('//h1')).not_to be_selected
+    end
+
+    it "should be boolean" do
+      @session.visit('/form')
+      expect(@session.find('//option[@value="en"]').selected?).to be true
+      expect(@session.find('//option[@value="sv"]').selected?).to be false
+      expect(@session.first('//h1').selected?).to be false
     end
   end
 
