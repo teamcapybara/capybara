@@ -147,6 +147,7 @@ Capybara.add_selector(:field) do
       node[:type] == type
     end
   end
+  filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
   describe do |options|
     desc, states = "", []
     desc << " of type #{options[:type].inspect}" if options[:type]
@@ -155,6 +156,8 @@ Capybara.add_selector(:field) do
     states << 'not checked' if options[:unchecked] || (options.has_key?(:checked) && !options[:checked])
     states << 'disabled' if options[:disabled] == true
     desc << " that is #{states.join(' and ')}" unless states.empty?
+    desc << " with the multiple attribute" if options[:multiple] == true
+    desc << " without the multiple attribute" if options[:multiple] === false
     desc
   end
 end
@@ -192,7 +195,14 @@ Capybara.add_selector(:fillable_field) do
   label "field"
   xpath { |locator| XPath::HTML.fillable_field(locator) }
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
-  describe { |options| " that is disabled" if options[:disabled] == true }
+  filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
+  describe do |options|
+    desc = ""
+    desc << " that is disabled" if options[:disabled] == true
+    desc << " with the multiple attribute" if options[:multiple] == true
+    desc << " without the multiple attribute" if options[:multiple] === false
+    desc
+  end
 end
 
 Capybara.add_selector(:radio_button) do
@@ -253,12 +263,15 @@ Capybara.add_selector(:select) do
     [selected].flatten.sort == actual.sort
   end
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
+  filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
   describe do |options|
     desc = ""
     desc << " with options #{options[:options].inspect}" if options[:options]
     desc << " with at least options #{options[:with_options].inspect}" if options[:with_options]
     desc << " with #{options[:selected].inspect} selected" if options[:selected]
     desc << " that is disabled" if options[:disabled] == true
+    desc << " that allows multiple selection" if options[:multiple] == true
+    desc << " that only allows single selection" if options[:multiple] === false
     desc
   end
 end
@@ -271,7 +284,14 @@ Capybara.add_selector(:file_field) do
   label "file field"
   xpath { |locator| XPath::HTML.file_field(locator) }
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
-  describe { |options| " that is disabled" if options[:disabled] == true}
+  filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
+  describe do |options|
+    desc = ""
+    desc << " that is disabled" if options[:disabled] == true
+    desc << " that allows multiple files" if options[:multiple] == true
+    desc << " that only allows a single file" if options[:multiple] === false
+    desc
+  end
 end
 
 Capybara.add_selector(:table) do

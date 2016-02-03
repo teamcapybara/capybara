@@ -5,6 +5,9 @@ Release date: unreleased
 * Element#visible?/checked?/disabled?/selected? Now return boolean
   as expected when using the rack_test driver [Thomas Walpole]
 
+### Added
+* multiple filter added to relevant selectors [Thomas Walpole]
+
 #Version 2.6.2
 Relase date: 2016-01-27
 
@@ -21,44 +24,44 @@ Release date: 2016-01-27
 Relase date: 2016-01-17
 
 ### Fixed
-* Fixed path escaping issue with current_path matchers [Tom Walpole, Luke Rollans] (Issue #1611)
+* Fixed path escaping issue with current_path matchers [Thomas Walpole, Luke Rollans] (Issue #1611)
 * Fixed circular require [David Rodríguez]
 * Capybara::RackTest::Form no longer overrides Object#method [David Rodriguez]
 * options and with_options filter for :select selector have more intuitive visibility behavior [Nathan]
-* Test for nested modal API method support [Tom Walpole]
+* Test for nested modal API method support [Thomas Walpole]
 
 
 ### Added
-* Capybara.modify_selector [Tom Walpole]
+* Capybara.modify_selector [Thomas Walpole]
 * xfeature and ffeature aliases added when using RSpec [Filip Bartuzi]
-* Selenium driver supports a :clear option to #set to handle different strategies for clearing a field [Tom Walpole]
-* Support the use of rack 2.0 with the rack_test driver [Travis Grathwell, Tom Walpole]
-* Disabled option for default selectors now supports true, false, or :all [Jillian Rosile, Tom Walpole]
-* Modal API methods now default wait time to Capybara.default_max_wait_time [Tom Walpole]
+* Selenium driver supports a :clear option to #set to handle different strategies for clearing a field [Thomas Walpole]
+* Support the use of rack 2.0 with the rack_test driver [Travis Grathwell, Thomas Walpole]
+* Disabled option for default selectors now supports true, false, or :all [Jillian Rosile, Thomas Walpole]
+* Modal API methods now default wait time to Capybara.default_max_wait_time [Thomas Walpole]
 
 # Version 2.5.0
 Release date: 2015-08-25
 
 ### Fixed
-* Error message now raised correctly when invalid options passed to 'have_text'/'have_content' [Tom Walpole]
-* Rack-test driver correctly gets document title when elements on the page have nested title elements (SVG) [Tom Walpole]
+* Error message now raised correctly when invalid options passed to 'have_text'/'have_content' [Thomas Walpole]
+* Rack-test driver correctly gets document title when elements on the page have nested title elements (SVG) [Thomas Walpole]
 * 'save_page' no longer errors when using Capybara.asset_host if the page has no \<head> element [Travis Grathwell]
 * rack-test driver will ignore clicks on links with href starting with '#' or 'javascript:'
 
 ### Added
-* has_current_path? and associated asserts/matchers added [Tom Walpole]
+* has_current_path? and associated asserts/matchers added [Thomas Walpole]
 * Implement Node#path in selenium driver [Soutaro Matsumoto]
-* 'using_session' is now nestable [Tom Walpole]
-* 'switch_to_window' will now use waiting behavior for a matching window to appear [Tom Walpole]
+* 'using_session' is now nestable [Thomas Walpole]
+* 'switch_to_window' will now use waiting behavior for a matching window to appear [Thomas Walpole]
 * Warning when attempting to select a disabled option
 * Capybara matchers are now available in RSpec view specs by default [Joshua Clayton]
 * 'have_link' and 'click_link' now accept Regexp for href matching [Yaniv Savir]
 * 'find_all' as an alias of 'all' due to collision with RSpec
 * Capybara.wait_on_first_by_default setting (default is false)
   If set to true 'first' will use Capybaras waiting behavior to wait for at least one element to appear by default
-* Capybara waiting behavior uses the monotonic clock if supported to ease restrictions on freezing time in tests [Dmitry Maksyoma, Tom Walpole]
-* Capybara.server_errors setting that allows to configure what type of errors will be raised from the server thread [Tom Walpole]
-* Node#send_keys to allow for sending keypresses directly to elements [Tom Walpole]
+* Capybara waiting behavior uses the monotonic clock if supported to ease restrictions on freezing time in tests [Dmitry Maksyoma, Thomas Walpole]
+* Capybara.server_errors setting that allows to configure what type of errors will be raised from the server thread [Thomas Walpole]
+* Node#send_keys to allow for sending keypresses directly to elements [Thomas Walpole]
 * 'formmethod' attribute support in RackTest driver [Emilia Andrzejewska]
 * Clear field using backspaces in Selenium driver by using `:fill_options => { :clear => :backspace }` [Joe Lencioni]
 

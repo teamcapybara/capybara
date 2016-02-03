@@ -102,6 +102,24 @@ Capybara::SpecHelper.spec '#has_select?' do
       expect(@session).to have_select("Icecream", :visible => false, :with_options => ['Vanilla', 'Strawberry'])
     end
   end
+
+  context 'with multiple option' do
+    it "should find multiple selects if true" do
+      expect(@session).to have_select('form_languages', multiple: true)
+      expect(@session).not_to have_select('form_other_title', multiple: true)
+    end
+
+    it "should not find multiple selects if false" do
+      expect(@session).not_to have_select('form_languages', multiple: false)
+      expect(@session).to have_select('form_other_title', multiple: false)
+    end
+
+    it "should find both if not specified" do
+      expect(@session).to have_select('form_languages')
+      expect(@session).to have_select('form_other_title')
+    end
+  end
+
 end
 
 Capybara::SpecHelper.spec '#has_no_select?' do
