@@ -82,6 +82,26 @@ module Capybara
 
     ##
     #
+    # Register a new server for Capybara.
+    #
+    #     Capybara.register_server :webrick do |app, port, host|
+    #       require 'rack/handler/webrick'
+    #       Rack::Handler::WEBrick.run(app, ...)
+    #     end
+    #
+    # @param [Symbol] name                    The name of the new driver
+    # @yield [app, port, host]                This block takes a rack app and a port and returns a rack server listening on that port
+    # @yieldparam [<Rack>] app                The rack application that this server will contain.
+    # @yieldparam port                        The port number the server should listen on
+    # @yieldparam host                        The host/ip to bind to
+    # @yieldreturn [Capybara::Driver::Base]   A Capybara driver instance
+    #
+    def register_server(name, &block)
+      servers[name.to_sym] = block
+    end
+
+    ##
+    #
     # Add a new selector to Capybara. Selectors can be used by various methods in Capybara
     # to find certain elements on the page in a more convenient way. For example adding a
     # selector to find certain table rows might look like this:
@@ -133,24 +153,45 @@ module Capybara
       @drivers ||= {}
     end
 
+    def servers
+      @servers ||= {}
+    end
+
     ##
     #
     # Register a proc that Capybara will call to run the Rack application.
     #
-    #     Capybara.server do |app, port|
+    #     Capybara.server do |app, port, host|
     #       require 'rack/handler/mongrel'
     #       Rack::Handler::Mongrel.run(app, :Port => port)
     #     end
     #
     # By default, Capybara will try to run webrick.
     #
-    # @yield [app, port]                      This block receives a rack app and port and should run a Rack handler
+    # @yield [app, port, host]      This block receives a rack app, port, and host/ip and should run a Rack handler
     #
     def server(&block)
       if block_given?
         @server = block
       else
         @server
+      end
+    end
+
+    ##
+    #
+    # Set the server to use.
+    #
+    #     Capybara.server = :webrick
+    #
+    # @param [Symbol] name     Name of the server type to use
+    # @see register_server
+    #
+    def server=(name)
+      @server = if name.respond_to? :call
+        name
+      else
+        servers[name.to_sym]
       end
     end
 
@@ -200,8 +241,7 @@ module Capybara
     # @param [Fixnum] port              The port to run the application on
     #
     def run_default_server(app, port)
-      require 'rack/handler/webrick'
-      Rack::Handler::WEBrick.run(app, :Host => server_host, :Port => port, :AccessLog => [], :Logger => WEBrick::Log::new(nil, 0))
+      servers[:webrick].call(app, port, server_host)
     end
 
     ##
@@ -405,10 +445,23 @@ module Capybara
   require 'capybara/selenium/driver'
 end
 
+Capybara.register_server :webrick do |app, port, host|
+  require 'rack/handler/webrick'
+  Rack::Handler::WEBrick.run(app, :Host => host, :Port => port, :AccessLog => [], :Logger => WEBrick::Log::new(nil, 0))
+end
+
+Capybara.register_server :puma do |app, port, host|
+  require 'puma'
+  Puma::Server.new(app).tap do |s|
+    s.add_tcp_listener host, port
+  end.run.join
+end
+
 Capybara.configure do |config|
   config.always_include_port = false
   config.run_server = true
   config.server {|app, port| Capybara.run_default_server(app, port)}
+  #config.server = :webrick
   config.default_selector = :css
   config.default_max_wait_time = 2
   config.ignore_hidden_elements = true
@@ -430,3 +483,4 @@ end
 Capybara.register_driver :selenium do |app|
   Capybara::Selenium::Driver.new(app)
 end
+
