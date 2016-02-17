@@ -41,6 +41,7 @@ Capybara::SpecHelper.spec '#has_field' do
     it "should be true if a field with the given type is on the page" do
       expect(@session).to have_field('First Name', :type => 'text')
       expect(@session).to have_field('Html5 Email', :type => 'email')
+      expect(@session).to have_field('Html5 Multiple Email', :type => 'email')
       expect(@session).to have_field('Html5 Tel', :type => 'tel')
       expect(@session).to have_field('Description', :type => 'textarea')
       expect(@session).to have_field('Languages', :type => 'select')
@@ -49,9 +50,20 @@ Capybara::SpecHelper.spec '#has_field' do
     it "should be false if the given field is not on the page" do
       expect(@session).not_to have_field('First Name', :type => 'textarea')
       expect(@session).not_to have_field('Html5 Email', :type => 'tel')
+      expect(@session).not_to have_field('Html5 Multiple Email', :type => 'tel')
       expect(@session).not_to have_field('Description', :type => '')
       expect(@session).not_to have_field('Description', :type => 'email')
       expect(@session).not_to have_field('Languages', :type => 'textarea')
+    end
+  end
+
+  context 'with multiple' do
+    it "should be true if a field with the multiple attribute is on the page" do
+      expect(@session).to have_field('Html5 Multiple Email', multiple: true)
+    end
+
+    it "should be false if a field without the multiple attribute is not on the page" do
+      expect(@session).not_to have_field('Html5 Multiple Email', multiple: false)
     end
   end
 end
