@@ -135,7 +135,7 @@ require 'capybara/rspec'
 
 If you are using Rails, put your Capybara specs in `spec/features` (only works
 if [you have it configured in
-rspec](https://www.relishapp.com/rspec/rspec-rails/docs/upgrade#file-type-inference-disabled))
+RSpec](https://www.relishapp.com/rspec/rspec-rails/docs/upgrade#file-type-inference-disabled))
 and if you have your Capybara specs in a different directory, then tag the
 example groups with `:type => :feature`.
 
@@ -735,7 +735,7 @@ The former would immediately fail because the content has not yet been removed.
 Only the latter would wait for the asynchronous process to remove the content
 from the page.
 
-Capybara's Rspec matchers, however, are smart enough to handle either form.
+Capybara's RSpec matchers, however, are smart enough to handle either form.
 The two following statements are functionally equivalent:
 
 ```ruby
