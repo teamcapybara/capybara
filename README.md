@@ -735,7 +735,7 @@ The former would immediately fail because the content has not yet been removed.
 Only the latter would wait for the asynchronous process to remove the content
 from the page.
 
-Capybara's Rspec matchers, however, are smart enough to handle either form.
+Capybara's RSpec matchers, however, are smart enough to handle either form.
 The two following statements are functionally equivalent:
 
 ```ruby
