@@ -135,7 +135,7 @@ require 'capybara/rspec'
 
 If you are using Rails, put your Capybara specs in `spec/features` (only works
 if [you have it configured in
-rpsec](https://www.relishapp.com/rspec/rspec-rails/docs/upgrade#file-type-inference-disabled))
+RSpec](https://www.relishapp.com/rspec/rspec-rails/docs/upgrade#file-type-inference-disabled))
 and if you have your Capybara specs in a different directory, then tag the
 example groups with `:type => :feature`.
 
