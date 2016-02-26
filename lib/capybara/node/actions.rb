@@ -150,6 +150,11 @@ module Capybara
       # @param [String] locator       Which field to attach the file to
       # @param [String] path          The path of the file that will be attached, or an array of paths
       #
+      # @option options [Symbol] match     The matching strategy to use (:one, :first, :prefer_exact, :smart)
+      # @option options [Boolean] exact    Match the exact locator name or accept a partial match
+      # @option options [Fixnum] wait      If using a Javascript driver, number of seconds during which the element will be searched for.
+      # @option options [Boolean] multiple Match field which allows multiple file selection
+      #
       def attach_file(locator, path, options={})
         Array(path).each do |p|
           raise Capybara::FileNotFound, "cannot attach file, #{p} does not exist" unless File.exist?(p.to_s)
