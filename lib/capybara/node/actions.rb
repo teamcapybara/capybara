@@ -150,10 +150,10 @@ module Capybara
       # @param [String] locator       Which field to attach the file to
       # @param [String] path          The path of the file that will be attached, or an array of paths
       #
-      # @option options [Symbol] match (:smart)     The matching strategy to use (:one, :first, :prefer_exact, :smart).
-      # @option options [Boolean] exact (true)    Match the exact label name/contents or accept a partial match.
+      # @option options [Symbol] match (Capybara.match)     The matching strategy to use (:one, :first, :prefer_exact, :smart).
+      # @option options [Boolean] exact (Capybara.exact)    Match the exact label name/contents or accept a partial match.
       # @option options [Fixnum] wait (Capybara.default_max_wait_time)      If using a Javascript driver, maximum number of seconds during which the element will be searched for.
-      # @option options [Boolean] multiple (true) Match field which allows multiple file selection
+      # @option options [Boolean] multiple Match field which allows multiple file selection
       #
       def attach_file(locator, path, options={})
         Array(path).each do |p|
