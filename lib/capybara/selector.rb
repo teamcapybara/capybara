@@ -149,7 +149,7 @@ Capybara.add_selector(:field) do
   end
   filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
   describe do |options|
-    desc, states = "", []
+    desc, states = String.new, []
     desc << " of type #{options[:type].inspect}" if options[:type]
     desc << " with value #{options[:with].to_s.inspect}" if options.has_key?(:with)
     states << 'checked' if options[:checked] || (options.has_key?(:unchecked) && !options[:unchecked])
@@ -197,7 +197,7 @@ Capybara.add_selector(:fillable_field) do
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
   filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
   describe do |options|
-    desc = ""
+    desc = String.new
     desc << " that is disabled" if options[:disabled] == true
     desc << " with the multiple attribute" if options[:multiple] == true
     desc << " without the multiple attribute" if options[:multiple] === false
@@ -213,7 +213,7 @@ Capybara.add_selector(:radio_button) do
   filter(:option)  { |node, value|  node.value == value.to_s }
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
   describe do |options|
-    desc, states = "", []
+    desc, states = String.new, []
     desc << " with value #{options[:option].inspect}" if options[:option]
     states << 'checked' if options[:checked] || (options.has_key?(:unchecked) && !options[:unchecked])
     states << 'not checked' if options[:unchecked] || (options.has_key?(:checked) && !options[:checked])
@@ -230,7 +230,7 @@ Capybara.add_selector(:checkbox) do
   filter(:option)  { |node, value|  node.value == value.to_s }
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
   describe do |options|
-    desc, states = "", []
+    desc, states = String.new, []
     desc << " with value #{options[:option].inspect}" if options[:option]
     states << 'checked' if options[:checked] || (options.has_key?(:unchecked) && !options[:unchecked])
     states << 'not checked' if options[:unchecked] || (options.has_key?(:checked) && !options[:checked])
@@ -265,7 +265,7 @@ Capybara.add_selector(:select) do
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
   filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
   describe do |options|
-    desc = ""
+    desc = String.new
     desc << " with options #{options[:options].inspect}" if options[:options]
     desc << " with at least options #{options[:with_options].inspect}" if options[:with_options]
     desc << " with #{options[:selected].inspect} selected" if options[:selected]
@@ -286,7 +286,7 @@ Capybara.add_selector(:file_field) do
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
   filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
   describe do |options|
-    desc = ""
+    desc = String.new
     desc << " that is disabled" if options[:disabled] == true
     desc << " that allows multiple files" if options[:multiple] == true
     desc << " that only allows a single file" if options[:multiple] === false

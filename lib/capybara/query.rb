@@ -32,7 +32,7 @@ module Capybara
     def label; selector.label or selector.name; end
 
     def description
-      @description = "#{label} #{locator.inspect}"
+      @description = String.new("#{label} #{locator.inspect}")
       @description << " with text #{options[:text].inspect}" if options[:text]
       @description << selector.description(options)
       @description

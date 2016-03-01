@@ -96,7 +96,7 @@ module Capybara
     # @option [Integer] minimum     Count should have been larger than or equal to this value
     #
     def failure_message(description, options={})
-      message = "expected to find #{description}"
+      message = String.new("expected to find #{description}")
       if options[:count]
         message << " #{options[:count]} #{declension('time', 'times', options[:count])}"
       elsif options[:between]
