@@ -4,6 +4,7 @@ Release date: unreleased
 ### Fixed
 * Element#visible?/checked?/disabled?/selected? Now return boolean
   as expected when using the rack_test driver [Thomas Walpole]
+* The rack_test driver now considers \<input type="hidden"> elements as non-visible [Thomas Walpole]
 
 ### Added
 * multiple filter added to relevant selectors [Thomas Walpole]
