@@ -99,6 +99,8 @@ module Capybara
       # @return [Boolean]     Whether the element is visible
       #
       def visible?(check_ancestors = true)
+        return false if (tag_name == 'input') && (native[:type]=="hidden")
+
         if check_ancestors
           #check size because oldest supported nokogiri doesnt support xpath boolean() function
           native.xpath("./ancestor-or-self::*[contains(@style, 'display:none') or contains(@style, 'display: none') or @hidden or name()='script' or name()='head']").size() == 0
