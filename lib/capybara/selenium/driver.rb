@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "uri"
 
 class Capybara::Selenium::Driver < Capybara::Driver::Base

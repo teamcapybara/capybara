@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Capybara::SpecHelper.spec "#attach_file" do
   before do
     @test_file_path = File.expand_path('../fixtures/test_file.txt', File.dirname(__FILE__))

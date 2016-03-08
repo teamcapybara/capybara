@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Capybara::SpecHelper.spec '#click_button' do
   before do
     @session.visit('/form')

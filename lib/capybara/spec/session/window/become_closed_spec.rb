@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Capybara::SpecHelper.spec '#become_closed', requires: [:windows, :js] do
   before(:each) do
     @window = @session.current_window

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Capybara::SpecHelper.spec '#has_text?' do
   it "should be true if the given text is on the page at least once" do
     @session.visit('/with_html')

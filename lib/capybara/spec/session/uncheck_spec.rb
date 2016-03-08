@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Capybara::SpecHelper.spec "#uncheck" do
   before do
     @session.visit('/form')

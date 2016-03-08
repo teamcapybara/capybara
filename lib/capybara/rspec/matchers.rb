@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Capybara
   module RSpecMatchers
     class Matcher

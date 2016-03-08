@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'launchy'
 
 Capybara::SpecHelper.spec '#save_and_open_page' do

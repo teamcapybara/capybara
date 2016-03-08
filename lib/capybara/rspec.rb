@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'capybara/dsl'
 require 'rspec/core'
 require 'capybara/rspec/matchers'

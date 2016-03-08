@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Capybara::RackTest::Node < Capybara::Driver::Node
   def all_text
     Capybara::Helpers.normalize_whitespace(native.text)

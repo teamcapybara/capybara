@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "rspec"
 require "capybara"
 require "capybara/rspec" # Required here instead of in rspec_spec to avoid RSpec deprecation warning

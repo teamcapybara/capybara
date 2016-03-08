@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Capybara::SpecHelper.spec '#assert_title' do
   before do
     @session.visit('/with_js')

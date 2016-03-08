@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Capybara::SpecHelper.spec '#windows', requires: [:windows] do
   before(:each) do
     @window = @session.current_window

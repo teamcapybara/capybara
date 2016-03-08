@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Capybara::SpecHelper.spec '#text' do
   it "should print the text of the page" do
     @session.visit('/with_simple_html')

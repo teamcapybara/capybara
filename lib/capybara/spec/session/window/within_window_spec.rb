@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
   before(:each) do
     @window = @session.current_window
@@ -132,9 +133,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
 
   context "with string" do
     it "should warn" do
-      expect(@session).to receive(:warn).with("DEPRECATION WARNING: Passing string argument "\
-        "to #within_window is deprecated. Pass window object or lambda. "\
-        "(called from #{__FILE__}:138)").and_call_original
+      expect(@session).to receive(:warn).with(/DEPRECATION WARNING/).and_call_original
       @session.within_window('firstPopup') {}
     end
 

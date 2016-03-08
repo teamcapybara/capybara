@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Capybara::Selenium::Node < Capybara::Driver::Node
   def visible_text
     # Selenium doesn't normalize Unicode whitespace.

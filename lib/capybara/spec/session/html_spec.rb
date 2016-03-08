@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Capybara::SpecHelper.spec '#html' do
   it "should return the unmodified page body" do
     @session.visit('/')

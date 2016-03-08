@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'timeout'
 require 'nokogiri'
 require 'xpath'

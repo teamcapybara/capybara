@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Capybara::RackTest::Form < Capybara::RackTest::Node
   # This only needs to inherit from Rack::Test::UploadedFile because Rack::Test checks for
   # the class specifically when determining whether to construct the request as multipart.

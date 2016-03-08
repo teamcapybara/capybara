@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Capybara::Driver::Base
   def current_url
     raise NotImplementedError

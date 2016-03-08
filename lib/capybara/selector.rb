@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Capybara
   class Selector
     class Filter

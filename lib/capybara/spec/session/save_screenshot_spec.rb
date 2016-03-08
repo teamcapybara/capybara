@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Capybara::SpecHelper.spec '#save_screenshot', requires: [:screenshot] do
   before do
     @session.visit '/foo'

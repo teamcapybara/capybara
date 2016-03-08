@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Capybara::RackTest::CSSHandlers < BasicObject
   include ::Kernel
   

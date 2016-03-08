@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Capybara::SpecHelper.spec '#visit' do
   it "should fetch a response from the driver with a relative url" do
     @session.visit('/')

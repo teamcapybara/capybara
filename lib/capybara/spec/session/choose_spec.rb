@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Capybara::SpecHelper.spec "#choose" do
   before do
     @session.visit('/form')
