@@ -7,7 +7,9 @@ Release date: unreleased
 * The rack_test driver now considers \<input type="hidden"> elements as non-visible [Thomas Walpole]
 
 ### Added
-* multiple filter added to relevant selectors [Thomas Walpole]
+* :multiple filter added to relevant selectors [Thomas Walpole]
+* Provided server registrations for :webrick and :puma. Capybara.server = :puma for testing with Rails 5 [Thomas Walpole]
+* Deprecate passing a block to Capybara::Server user Capybara::register_server instead [Thomas Walpole]
 
 #Version 2.6.2
 Relase date: 2016-01-27
