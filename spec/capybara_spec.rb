@@ -34,9 +34,35 @@ RSpec.describe Capybara do
     end
   end
 
-  describe ".server" do
+  describe '.register_server' do
+    before do
+      Capybara.reuse_server = false
+      @old_server = Capybara.server
+    end
+
     after do
-      Capybara.server {|app, port| Capybara.run_default_server(app, port)}
+      Capybara.server(&@old_server)
+      Capybara.reuse_server = true
+    end
+
+    it "should add a new server" do
+      Capybara.register_server :blob do |app, port, host|
+        Rack::Handler::WEBrick.run(app, :Host => host, :Port => port, :AccessLog => [], :Logger => WEBrick::Log::new(nil, 0))
+      end
+      Capybara.server = :blob
+      session = Capybara::Session.new(:selenium, TestApp.dup)
+      session.visit('/')
+      expect(session.body).to include("Hello world!")
+    end
+  end
+
+  describe ".server" do
+    before do
+      @old_server = Capybara.server
+    end
+
+    after do
+      Capybara.server(&@old_server)
     end
 
     it "should default to a proc that calls run_default_server" do

@@ -99,7 +99,7 @@ module Capybara
         Capybara::Server.ports[Capybara.reuse_server ? @app.object_id : @middleware.object_id] = @port
 
         @server_thread = Thread.new do
-          Capybara.server.call(@middleware, @port)
+          Capybara.server.call(@middleware, @port, @host)
         end
 
         Timeout.timeout(60) { @server_thread.join(0.1) until responsive? }
