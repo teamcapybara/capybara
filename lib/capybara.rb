@@ -172,6 +172,7 @@ module Capybara
     #
     def server(&block)
       if block_given?
+        warn "DEPRECATED: Passing a block to Capybara::server is deprecated, please use Capybara::register_server instead"
         @server = block
       else
         @server
@@ -445,6 +446,10 @@ module Capybara
   require 'capybara/selenium/driver'
 end
 
+Capybara.register_server :default do |app, port, host|
+  Capybara.run_default_server(app, port)
+end
+
 Capybara.register_server :webrick do |app, port, host|
   require 'rack/handler/webrick'
   Rack::Handler::WEBrick.run(app, :Host => host, :Port => port, :AccessLog => [], :Logger => WEBrick::Log::new(nil, 0))
@@ -460,8 +465,7 @@ end
 Capybara.configure do |config|
   config.always_include_port = false
   config.run_server = true
-  config.server {|app, port| Capybara.run_default_server(app, port)}
-  #config.server = :webrick
+  config.server = :default
   config.default_selector = :css
   config.default_max_wait_time = 2
   config.ignore_hidden_elements = true
