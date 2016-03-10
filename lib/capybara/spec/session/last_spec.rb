@@ -19,10 +19,6 @@ Capybara::SpecHelper.spec '#last' do
     expect(@session.last(@xpath).value).to eq('John')
   end
 
-  it "should find last in a list" do
-    expect(@session.last(:xpath, "//h2[contains(@class, 'head')]"))
-  end
-
   context "with css selectors" do
     it "should find the last element using the given selector" do
       expect(@session.last(:css, 'h1').text).to eq('This is a test')
