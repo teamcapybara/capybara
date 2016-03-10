@@ -30,7 +30,7 @@ module Capybara
     include Capybara::SessionMatchers
 
     NODE_METHODS = [
-      :all, :first, :attach_file, :text, :check, :choose,
+      :all, :first, :last, :attach_file, :text, :check, :choose,
       :click_link_or_button, :click_button, :click_link, :field_labeled,
       :fill_in, :find, :find_all, :find_button, :find_by_id, :find_field, :find_link,
       :has_content?, :has_text?, :has_css?, :has_no_content?, :has_no_text?,
