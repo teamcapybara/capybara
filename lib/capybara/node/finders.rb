@@ -211,6 +211,31 @@ module Capybara
       rescue Capybara::ExpectationNotMet
         nil
       end
+
+      ##
+      #
+      # Find the last element on the page matching the given selector
+      # and options, or nil if no element matches.  By default no waiting
+      # behavior occurs, however if {Capybara.wait_on_first_by_default} is set to true
+      # it will trigger Capybara's waiting behavior for a minimum of 1 matching element to be found and
+      # return the last.  Waiting behavior can also be triggered by passing in any of the count
+      # expectation options.
+      #
+      # @overload last([kind], locator, options)
+      #   @param [:css, :xpath] kind                 The type of selector
+      #   @param [String] locator                    The selector
+      #   @param [Hash] options                      Additional options; see {#all}
+      # @return [Capybara::Node::Element]            The found element or nil
+      #
+      def last(*args)
+        if Capybara.wait_on_first_by_default
+          options = if args.last.is_a?(Hash) then args.pop.dup else {} end
+          args.push({minimum: 1}.merge(options))
+        end
+        all(*args).last
+      rescue Capybara::ExpectationNotMet
+        nil
+      end
     end
   end
 end

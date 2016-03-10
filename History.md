@@ -10,6 +10,8 @@ Release date: unreleased
 * :multiple filter added to relevant selectors [Thomas Walpole]
 * Provided server registrations for :webrick and :puma. Capybara.server = :puma for testing with Rails 5 [Thomas Walpole]
 * Deprecate passing a block to Capybara::server user Capybara::register_server instead [Thomas Walpole]
+* Added Session#last. This acts similar to Session#first, except it returns the last node matching the given criteria [Tim Mee]
+
 
 #Version 2.6.2
 Relase date: 2016-01-27
@@ -61,7 +63,7 @@ Release date: 2015-08-25
 * 'have_link' and 'click_link' now accept Regexp for href matching [Yaniv Savir]
 * 'find_all' as an alias of 'all' due to collision with RSpec
 * Capybara.wait_on_first_by_default setting (default is false)
-  If set to true 'first' will use Capybaras waiting behavior to wait for at least one element to appear by default
+  If set to true 'first' and 'last' will use Capybaras waiting behavior to wait for at least one element to appear by default
 * Capybara waiting behavior uses the monotonic clock if supported to ease restrictions on freezing time in tests [Dmitry Maksyoma, Thomas Walpole]
 * Capybara.server_errors setting that allows to configure what type of errors will be raised from the server thread [Thomas Walpole]
 * Node#send_keys to allow for sending keypresses directly to elements [Thomas Walpole]
