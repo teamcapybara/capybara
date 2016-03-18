@@ -14,7 +14,7 @@ module Capybara
       private
 
       def valid_keys
-        [:text, :visible, :exact, :wait] + @selector.custom_filters.keys
+        VALID_KEYS + @selector.custom_filters.keys
       end
     end
   end

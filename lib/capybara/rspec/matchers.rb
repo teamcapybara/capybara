@@ -195,14 +195,14 @@ module Capybara
       end
 
       def matches?(actual)
-        actual.assert_match_selector(*@args)
+        actual.assert_matches_selector(*@args)
       rescue Capybara::ExpectationNotMet => e
         @failure_message = e.message
         return false
       end
 
       def does_not_match?(actual)
-        actual.assert_not_match_selector(*@args)
+        actual.assert_not_matches_selector(*@args)
       rescue Capybara::ExpectationNotMet => e
         @failure_message_when_negated = e.message
         return false

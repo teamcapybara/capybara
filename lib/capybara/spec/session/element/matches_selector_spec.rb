@@ -7,13 +7,13 @@ Capybara::SpecHelper.spec '#match_xpath?' do
   it "should be true if the element matches the given selector" do
     expect(@element).to match_selector(:xpath, "//span")
     expect(@element).to match_selector(:css, 'span.number')
-    expect(@element.match_selector?(:css, 'span.number')).to be true
+    expect(@element.matches_selector?(:css, 'span.number')).to be true
   end
 
   it "should be false if the element does not match the given selector" do
     expect(@element).not_to match_selector(:xpath, "//div")
     expect(@element).not_to match_selector(:css, "span.not_a_number")
-    expect(@element.match_selector?(:css, "span.not_a_number")).to be false
+    expect(@element.matches_selector?(:css, "span.not_a_number")).to be false
   end
 
   it "should use default selector" do
@@ -30,7 +30,7 @@ Capybara::SpecHelper.spec '#match_xpath?' do
   end
 end
 
-Capybara::SpecHelper.spec '#not_match_selector?' do
+Capybara::SpecHelper.spec '#not_matches_selector?' do
   before do
     @session.visit('/with_html')
     @element = @session.find(:css, "span", text: 42)
@@ -39,13 +39,13 @@ Capybara::SpecHelper.spec '#not_match_selector?' do
   it "should be false if the given selector matches the element" do
     expect(@element).not_to not_match_selector(:xpath, "//span")
     expect(@element).not_to not_match_selector(:css, "span.number")
-    expect(@element.not_match_selector?(:css, "span.number")).to be false
+    expect(@element.not_matches_selector?(:css, "span.number")).to be false
   end
 
   it "should be true if the given selector does not match the element" do
     expect(@element).to not_match_selector(:xpath, "//abbr")
     expect(@element).to not_match_selector(:css, "p a#doesnotexist")
-    expect(@element.not_match_selector?(:css, "p a#doesnotexist")).to be true
+    expect(@element.not_matches_selector?(:css, "p a#doesnotexist")).to be true
   end
 
   it "should use default selector" do

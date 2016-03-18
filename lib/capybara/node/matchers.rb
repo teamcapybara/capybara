@@ -64,8 +64,8 @@ module Capybara
       # @param (see Capybara::Node::Finders#has_selector?)
       # @return [Boolean]
       #
-      def match_selector?(*args)
-        assert_match_selector(*args)
+      def matches_selector?(*args)
+        assert_matches_selector(*args)
       rescue Capybara::ExpectationNotMet
         return false
       end
@@ -79,8 +79,8 @@ module Capybara
       # @param (see Capybara::Node::Finders#has_selector?)
       # @return [Boolean]
       #
-      def not_match_selector?(*args)
-        assert_not_match_selector(*args)
+      def not_matches_selector?(*args)
+        assert_not_matches_selector(*args)
       rescue Capybara::ExpectationNotMet
         return false
       end
@@ -164,19 +164,19 @@ module Capybara
       #
       # Asserts that the current_node matches a given selector
       #
-      #     node.assert_match_selector('p#foo')
-      #     node.assert_match_selector(:xpath, '//p[@id="foo"]')
-      #     node.assert_match_selector(:foo)
+      #     node.assert_matches_selector('p#foo')
+      #     node.assert_matches_selector(:xpath, '//p[@id="foo"]')
+      #     node.assert_matches_selector(:foo)
       #
       # It also accepts all options that {Capybara::Node::Finders#all} accepts,
       # such as :text and :visible.
       #
-      #     node.assert_match_selector('li', :text => 'Horse', :visible => true)
+      #     node.assert_matches_selector('li', :text => 'Horse', :visible => true)
       #
       # @param (see Capybara::Node::Finders#all)
       # @raise [Capybara::ExpectationNotMet]      If the selector does not match
       #
-      def assert_match_selector(*args)
+      def assert_matches_selector(*args)
         query = Capybara::Queries::MatchQuery.new(*args)
         synchronize(query.wait) do
           result = query.resolve_for(self.parent)
@@ -187,7 +187,7 @@ module Capybara
         return true
       end
 
-      def assert_not_match_selector(*args)
+      def assert_not_matches_selector(*args)
         query = Capybara::Queries::MatchQuery.new(*args)
         synchronize(query.wait) do
           result = query.resolve_for(self.parent)
@@ -197,7 +197,7 @@ module Capybara
         end
         return true
       end
-      alias_method :refute_match_selector, :assert_not_match_selector
+      alias_method :refute_matches_selector, :assert_not_matches_selector
 
       ##
       #
