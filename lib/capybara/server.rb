@@ -65,7 +65,7 @@ module Capybara
       @server_thread = nil # suppress warnings
       @host, @port = host, port
       @port ||= Capybara::Server.ports[Capybara.reuse_server ? @app.object_id : @middleware.object_id]
-      @port ||= find_available_port
+      @port ||= find_available_port(host)
     end
 
     def reset_error!
@@ -112,8 +112,8 @@ module Capybara
 
   private
 
-    def find_available_port
-      server = TCPServer.new('127.0.0.1', 0)
+    def find_available_port(host)
+      server = TCPServer.new(host, 0)
       server.addr[1]
     ensure
       server.close if server
