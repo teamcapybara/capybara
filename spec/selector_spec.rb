@@ -18,6 +18,18 @@ RSpec.describe Capybara do
               <p class="b">Some Content</p>
               <p class="b"></p>
             </div>
+            <input type="checkbox"/>
+            <input type="radio"/>
+            <input type="text"/>
+            <input type="file"/>
+            <a href="#">link</a>
+            <fieldset></fieldset>
+            <select>
+              <option value="a">A</option>
+            </select>
+            <table>
+              <tr><td></td></tr>
+            </table
           </body>
         </html>
       STRING
@@ -48,6 +60,29 @@ RSpec.describe Capybara do
         expect(string).to have_selector(:custom_selector, 'b', count: 1)
         expect(string).to have_selector(:custom_selector, 'b', not_empty: false, count: 1)
         expect(string).to have_selector(:custom_selector, 'b', not_empty: :all, count: 2)
+      end
+    end
+
+    describe "builtin selectors with nil locators" do
+      it "devolves to just finding element types" do
+        selectors = {
+          field: ".//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')]",
+          fieldset: ".//fieldset",
+          link: ".//a[./@href]",
+          link_or_button: ".//a[./@href] | .//input[./@type = 'submit' or ./@type = 'reset' or ./@type = 'image' or ./@type = 'button'] | .//button" ,
+          fillable_field: ".//*[self::input | self::textarea][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'radio' or ./@type = 'checkbox' or ./@type = 'hidden' or ./@type = 'file')]",
+          radio_button: ".//input[./@type = 'radio']",
+          checkbox: ".//input[./@type = 'checkbox']",
+          select: ".//select",
+          option: ".//option",
+          file_field: ".//input[./@type = 'file']",
+          table: ".//table"
+        }
+        selectors.each do |selector, xpath|
+          results = string.all(selector,nil).to_a.map &:native
+          expect(results.size).to be > 0
+          expect(results).to eq string.all(:xpath, xpath).to_a.map(&:native)
+        end
       end
     end
   end

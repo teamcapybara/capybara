@@ -119,6 +119,17 @@ module Capybara
     def describe &block
       @description = block
     end
+
+    private
+
+    def locate_field(xpath, locator)
+      locate_field = xpath[XPath.attr(:id).equals(locator) |
+                           XPath.attr(:name).equals(locator) |
+                           XPath.attr(:placeholder).equals(locator) |
+                           XPath.attr(:id).equals(XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for))]
+      locate_field += XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(xpath)
+      locate_field
+    end
   end
 end
 
@@ -135,7 +146,11 @@ Capybara.add_selector(:id) do
 end
 
 Capybara.add_selector(:field) do
-  xpath { |locator| XPath::HTML.field(locator) }
+  xpath do |locator|
+    xpath = XPath.descendant(:input, :textarea, :select)[~XPath.attr(:type).one_of('submit', 'image', 'hidden')]
+    xpath = locate_field(xpath, locator.to_s) unless locator.nil?
+    xpath
+  end
   filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
@@ -164,18 +179,26 @@ Capybara.add_selector(:field) do
 end
 
 Capybara.add_selector(:fieldset) do
-  xpath { |locator| XPath::HTML.fieldset(locator) }
-end
-
-Capybara.add_selector(:link_or_button) do
-  label "link or button"
-  xpath { |locator| XPath::HTML.link_or_button(locator) }
-  filter(:disabled, default: false, boolean: true) { |node, value| node.tag_name == "a" or not(value ^ node.disabled?) }
-  describe { |options| " that is disabled" if options[:disabled] }
+  xpath do |locator|
+    xpath = XPath.descendant(:fieldset)
+    xpath = xpath[XPath.attr(:id).equals(locator.to_s) | XPath.child(:legend)[XPath.string.n.is(locator.to_s)]] unless locator.nil?
+    xpath
+  end
 end
 
 Capybara.add_selector(:link) do
-  xpath { |locator| XPath::HTML.link(locator) }
+  xpath do |locator|
+    xpath = XPath.descendant(:a)[XPath.attr(:href)]
+    unless locator.nil?
+      locator = locator.to_s
+      xpath = xpath[XPath.attr(:id).equals(locator) |
+                    XPath.string.n.is(locator) |
+                    XPath.attr(:title).is(locator) |
+                    XPath.descendant(:img)[XPath.attr(:alt).is(locator)]]
+    end
+    xpath
+  end
+
   filter(:href) do |node, href|
     if href.is_a? Regexp
       node[:href].match href
@@ -183,20 +206,53 @@ Capybara.add_selector(:link) do
       node.first(:xpath, XPath.axis(:self)[XPath.attr(:href).equals(href.to_s)], minimum: 0)
     end
   end
+
   describe { |options| " with href #{options[:href].inspect}" if options[:href] }
 end
 
 Capybara.add_selector(:button) do
-  xpath { |locator| XPath::HTML.button(locator) }
+  xpath do |locator|
+    input_btn_xpath = XPath.descendant(:input)[XPath.attr(:type).one_of('submit', 'reset', 'image', 'button')]
+    btn_xpath = XPath.descendant(:button)
+    image_btn_xpath = XPath.descendant(:input)[XPath.attr(:type).equals('image')]
+
+    unless locator.nil?
+      locator = locator.to_s
+      input_btn_xpath = input_btn_xpath[XPath.attr(:id).equals(locator) | XPath.attr(:value).is(locator) | XPath.attr(:title).is(locator)]
+      btn_xpath = btn_xpath[XPath.attr(:id).equals(locator) | XPath.attr(:value).is(locator) | XPath.string.n.is(locator) | XPath.attr(:title).is(locator)]
+      image_btn_xpath = image_btn_xpath[XPath.attr(:alt).is(locator)]
+    end
+
+    input_btn_xpath + btn_xpath + image_btn_xpath
+  end
+
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
+
   describe { |options| " that is disabled" if options[:disabled] == true }
+end
+
+Capybara.add_selector(:link_or_button) do
+  label "link or button"
+  xpath do |locator|
+    self.class.all.values_at(:link, :button).map {|selector| selector.xpath.call(locator)}.reduce(:+)
+  end
+
+  filter(:disabled, default: false, boolean: true) { |node, value| node.tag_name == "a" or not(value ^ node.disabled?) }
+
+  describe { |options| " that is disabled" if options[:disabled] }
 end
 
 Capybara.add_selector(:fillable_field) do
   label "field"
-  xpath { |locator| XPath::HTML.fillable_field(locator) }
+  xpath do |locator|
+    xpath = XPath.descendant(:input, :textarea)[~XPath.attr(:type).one_of('submit', 'image', 'radio', 'checkbox', 'hidden', 'file')]
+    xpath = locate_field(xpath, locator.to_s) unless locator.nil?
+    xpath
+  end
+
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
   filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
+
   describe do |options|
     desc = String.new
     desc << " that is disabled" if options[:disabled] == true
@@ -208,11 +264,17 @@ end
 
 Capybara.add_selector(:radio_button) do
   label "radio button"
-  xpath { |locator| XPath::HTML.radio_button(locator) }
+  xpath do |locator|
+    xpath = XPath.descendant(:input)[XPath.attr(:type).equals('radio')]
+    xpath = locate_field(xpath, locator.to_s) unless locator.nil?
+    xpath
+  end
+
   filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
   filter(:option)  { |node, value|  node.value == value.to_s }
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
+
   describe do |options|
     desc, states = String.new, []
     desc << " with value #{options[:option].inspect}" if options[:option]
@@ -225,11 +287,17 @@ Capybara.add_selector(:radio_button) do
 end
 
 Capybara.add_selector(:checkbox) do
-  xpath { |locator| XPath::HTML.checkbox(locator) }
+  xpath do |locator|
+    xpath = XPath.descendant(:input)[XPath.attr(:type).equals('checkbox')]
+    xpath = locate_field(xpath, locator.to_s) unless locator.nil?
+    xpath
+  end
+
   filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
   filter(:option)  { |node, value|  node.value == value.to_s }
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
+
   describe do |options|
     desc, states = String.new, []
     desc << " with value #{options[:option].inspect}" if options[:option]
@@ -243,7 +311,12 @@ end
 
 Capybara.add_selector(:select) do
   label "select box"
-  xpath { |locator| XPath::HTML.select(locator) }
+  xpath do |locator|
+    xpath = XPath.descendant(:select)
+    xpath = locate_field(xpath, locator.to_s) unless locator.nil?
+    xpath
+  end
+
   filter(:options) do |node, options|
     if node.visible?
       actual = node.all(:xpath, './/option').map { |option| option.text }
@@ -265,6 +338,7 @@ Capybara.add_selector(:select) do
   end
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
   filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
+
   describe do |options|
     desc = String.new
     desc << " with options #{options[:options].inspect}" if options[:options]
@@ -278,14 +352,24 @@ Capybara.add_selector(:select) do
 end
 
 Capybara.add_selector(:option) do
-  xpath { |locator| XPath::HTML.option(locator) }
+  xpath do |locator|
+    xpath = XPath.descendant(:option)
+    xpath = xpath[XPath.string.n.is(locator.to_s)] unless locator.nil?
+    xpath
+  end
 end
 
 Capybara.add_selector(:file_field) do
   label "file field"
-  xpath { |locator| XPath::HTML.file_field(locator) }
+  xpath do |locator|
+    xpath = XPath.descendant(:input)[XPath.attr(:type).equals('file')]
+    xpath = locate_field(xpath, locator.to_s) unless locator.nil?
+    xpath
+  end
+
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
   filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
+
   describe do |options|
     desc = String.new
     desc << " that is disabled" if options[:disabled] == true
@@ -296,5 +380,9 @@ Capybara.add_selector(:file_field) do
 end
 
 Capybara.add_selector(:table) do
-  xpath { |locator| XPath::HTML.table(locator) }
+  xpath do |locator|
+    xpath = XPath.descendant(:table)
+    xpath = xpath[XPath.attr(:id).equals(locator.to_s) | XPath.descendant(:caption).is(locator.to_s)] unless locator.nil?
+    xpath
+  end
 end

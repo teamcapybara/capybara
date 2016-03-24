@@ -5,6 +5,7 @@ Release date: unreleased
 * Element#visible?/checked?/disabled?/selected? Now return boolean
   as expected when using the rack_test driver [Thomas Walpole]
 * The rack_test driver now considers \<input type="hidden"> elements as non-visible [Thomas Walpole]
+* A nil locator passed to the built-in html type selectors now behaves consistently, and finds all elements of the correct type [Thomas Walpole]
 
 ### Added
 * :multiple filter added to relevant selectors [Thomas Walpole]
