@@ -37,7 +37,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency("cucumber", [">= 0.10.5"])
   s.add_development_dependency("rake", ["< 11.0"])
   s.add_development_dependency("pry")
-  s.add_development_dependency("byebug")
 
   if RUBY_ENGINE == 'rbx' then
     s.add_development_dependency("racc")

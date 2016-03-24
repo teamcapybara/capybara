@@ -357,6 +357,16 @@ Capybara.add_selector(:option) do
     xpath = xpath[XPath.string.n.is(locator.to_s)] unless locator.nil?
     xpath
   end
+
+  filter(:disabled, boolean: true) { |node, value| not(value ^ node.disabled?) }
+  filter(:selected, boolean: true) { |node, value| not(value ^ node.selected?) }
+
+  describe do |options|
+    desc = String.new
+    desc << " that is#{' not' unless options[:disabled]} disabled" if options.has_key?(:disabled)
+    desc << " that is#{' not' unless options[:selected]} selected" if options.has_key?(:selected)
+    desc
+  end
 end
 
 Capybara.add_selector(:file_field) do

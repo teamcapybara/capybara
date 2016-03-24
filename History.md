@@ -12,6 +12,7 @@ Release date: unreleased
 * :multiple filter added to relevant selectors [Thomas Walpole]
 * Provided server registrations for :webrick and :puma. Capybara.server = :puma for testing with Rails 5 [Thomas Walpole]
 * Deprecate passing a block to Capybara::server user Capybara::register_server instead [Thomas Walpole]
+* :option selector supports :selected and :disabled filters [Thomas Walpole]
 
 #Version 2.6.2
 Relase date: 2016-01-27

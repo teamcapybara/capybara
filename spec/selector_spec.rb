@@ -26,6 +26,8 @@ RSpec.describe Capybara do
             <fieldset></fieldset>
             <select>
               <option value="a">A</option>
+              <option value="b" disabled>B</option>
+              <option value="c" selected>C</option>
             </select>
             <table>
               <tr><td></td></tr>
@@ -63,25 +65,41 @@ RSpec.describe Capybara do
       end
     end
 
-    describe "builtin selectors with nil locators" do
-      it "devolves to just finding element types" do
-        selectors = {
-          field: ".//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')]",
-          fieldset: ".//fieldset",
-          link: ".//a[./@href]",
-          link_or_button: ".//a[./@href] | .//input[./@type = 'submit' or ./@type = 'reset' or ./@type = 'image' or ./@type = 'button'] | .//button" ,
-          fillable_field: ".//*[self::input | self::textarea][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'radio' or ./@type = 'checkbox' or ./@type = 'hidden' or ./@type = 'file')]",
-          radio_button: ".//input[./@type = 'radio']",
-          checkbox: ".//input[./@type = 'checkbox']",
-          select: ".//select",
-          option: ".//option",
-          file_field: ".//input[./@type = 'file']",
-          table: ".//table"
-        }
-        selectors.each do |selector, xpath|
-          results = string.all(selector,nil).to_a.map &:native
-          expect(results.size).to be > 0
-          expect(results).to eq string.all(:xpath, xpath).to_a.map(&:native)
+    describe "builtin selectors" do
+      context "when locator is nil" do
+        it "devolves to just finding element types" do
+          selectors = {
+            field: ".//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')]",
+            fieldset: ".//fieldset",
+            link: ".//a[./@href]",
+            link_or_button: ".//a[./@href] | .//input[./@type = 'submit' or ./@type = 'reset' or ./@type = 'image' or ./@type = 'button'] | .//button" ,
+            fillable_field: ".//*[self::input | self::textarea][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'radio' or ./@type = 'checkbox' or ./@type = 'hidden' or ./@type = 'file')]",
+            radio_button: ".//input[./@type = 'radio']",
+            checkbox: ".//input[./@type = 'checkbox']",
+            select: ".//select",
+            option: ".//option",
+            file_field: ".//input[./@type = 'file']",
+            table: ".//table"
+          }
+          selectors.each do |selector, xpath|
+            results = string.all(selector,nil).to_a.map &:native
+            expect(results.size).to be > 0
+            expect(results).to eq string.all(:xpath, xpath).to_a.map(&:native)
+          end
+        end
+      end
+
+      describe ":option selector" do
+        it "finds disabled options" do
+          expect(string.find(:option, disabled: true).value).to eq 'b'
+        end
+
+        it "finds selected options" do
+          expect(string.find(:option, selected: true).value).to eq 'c'
+        end
+
+        it "finds not selected and not disabled options" do
+          expect(string.find(:option, disabled: false, selected: false).value).to eq 'a'
         end
       end
     end
