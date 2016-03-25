@@ -2,7 +2,7 @@
 module Capybara
   module RSpecMatchers
     class Matcher
-      include ::RSpec::Matchers::Composable if defined?(::RSpec::Expectations::Version) && RSpec::Expectations::Version::STRING.to_f >= 3.0
+      include ::RSpec::Matchers::Composable if defined?(::RSpec::Expectations::Version) && (Gem::Version.new(RSpec::Expectations::Version::STRING) >= Gem::Version.new('3.0'))
 
       def wrap(actual)
         if actual.respond_to?("has_selector?")
@@ -39,7 +39,7 @@ module Capybara
       end
 
       def query
-        @query ||= Capybara::Query.new(*@args)
+        @query ||= Capybara::Queries::SelectorQuery.new(*@args)
       end
 
       # RSpec 2 compatibility:
@@ -161,7 +161,7 @@ module Capybara
 
     class BecomeClosed
       def initialize(options)
-        @wait_time = Capybara::Query.new(options).wait
+        @wait_time = Capybara::Queries::SelectorQuery.new(options).wait
       end
 
       def matches?(window)
@@ -187,16 +187,66 @@ module Capybara
       alias_method :failure_message_for_should_not, :failure_message_when_negated
     end
 
+    class MatchSelector < Matcher
+      attr_reader :failure_message, :failure_message_when_negated
+
+      def initialize(*args)
+        @args = args
+      end
+
+      def matches?(actual)
+        actual.assert_matches_selector(*@args)
+      rescue Capybara::ExpectationNotMet => e
+        @failure_message = e.message
+        return false
+      end
+
+      def does_not_match?(actual)
+        actual.assert_not_matches_selector(*@args)
+      rescue Capybara::ExpectationNotMet => e
+        @failure_message_when_negated = e.message
+        return false
+      end
+
+      def description
+        "match #{query.description}"
+      end
+
+      def query
+        @query ||= Capybara::Queries::MatchQuery.new(*@args)
+      end
+
+      # RSpec 2 compatibility:
+      alias_method :failure_message_for_should, :failure_message
+      alias_method :failure_message_for_should_not, :failure_message_when_negated
+    end
+
     def have_selector(*args)
       HaveSelector.new(*args)
     end
+
+    def match_selector(*args)
+      MatchSelector.new(*args)
+    end
+    # defined_negated_matcher was added in RSpec 3.1 - it's syntactic sugar only since a user can do
+    # expect(page).not_to match_selector, so not sure we really need to support not_match_selector for prior to RSpec 3.1
+    ::RSpec::Matchers.define_negated_matcher :not_match_selector, :match_selector if defined?(::RSpec::Expectations::Version) && (Gem::Version.new(RSpec::Expectations::Version::STRING) >= Gem::Version.new('3.1'))
+
 
     def have_xpath(xpath, options={})
       HaveSelector.new(:xpath, xpath, options)
     end
 
+    def match_xpath(xpath, options={})
+      MatchSelector.new(:xpath, xpath, options)
+    end
+
     def have_css(css, options={})
       HaveSelector.new(:css, css, options)
+    end
+
+    def match_css(css, options={})
+      MatchSelector.new(:css, css, options)
     end
 
     def have_text(*args)

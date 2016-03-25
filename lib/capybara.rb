@@ -419,10 +419,12 @@ module Capybara
   require 'capybara/version'
 
   require 'capybara/queries/base_query'
-  require 'capybara/query'
+  require 'capybara/queries/selector_query'
   require 'capybara/queries/text_query'
   require 'capybara/queries/title_query'
   require 'capybara/queries/current_path_query'
+  require 'capybara/queries/match_query'
+  require 'capybara/query'
 
   require 'capybara/node/finders'
   require 'capybara/node/matchers'
