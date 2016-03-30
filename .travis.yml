@@ -29,6 +29,7 @@ env:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
 
 addons:
+  firefox: latest
   apt:
     sources:
       - google-chrome
