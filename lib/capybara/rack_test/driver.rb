@@ -66,11 +66,11 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
   def find_xpath(selector)
     browser.find(:xpath, selector)
   end
-  
+
   def find_css(selector)
     browser.find(:css,selector)
   end
-  
+
   def html
     browser.html
   end
@@ -78,17 +78,13 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
   def dom
     browser.dom
   end
-  
+
   def title
     browser.title
   end
 
   def reset!
     @browser = nil
-  end
-
-  def browser_initialized?
-    !@browser.nil?
   end
 
   def get(*args, &block); browser.get(*args, &block); end

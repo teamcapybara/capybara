@@ -107,7 +107,6 @@ module Capybara
     def reset!
       if @touched
         driver.reset!
-        assert_no_selector :xpath, "/html/body/*" if driver.browser_initialized?
         @touched = false
       end
       @server.wait_for_pending_requests if @server

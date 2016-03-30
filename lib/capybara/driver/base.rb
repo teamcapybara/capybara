@@ -91,8 +91,8 @@ class Capybara::Driver::Base
   def no_such_window_error
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#no_such_window_error'
   end
-  
-  
+
+
   ##
   #
   # Execute the block, and then accept the modal opened.
@@ -133,9 +133,5 @@ class Capybara::Driver::Base
 
   def needs_server?
     false
-  end
-
-  def browser_initialized?
-    true
   end
 end
