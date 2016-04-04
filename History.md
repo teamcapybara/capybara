@@ -7,13 +7,18 @@ Release date: unreleased
 * The rack_test driver now considers \<input type="hidden"> elements as non-visible [Thomas Walpole]
 * A nil locator passed to the built-in html type selectors now behaves consistently, and finds elements of the expected types [Thomas Walpole]
 * Capybara::Server now searches for available ports on the same interface it binds to [Aaron Stone]
+* Selenium Driver handles system modals that appear when page is unloading [Thomas Walpole]
+* Warning output if unused parameters are passed to a selector query [Thomas Walpole]
 
 ### Added
+* Capybara now waits for requests to Capybaras server to complete while restting the session [John Hawthorn, Thomas Walpole]
+* Capybara.reuse_server option to allow disabling of sharing server instance between sessions [Thomas Walpole]
 * :multiple filter added to relevant selectors [Thomas Walpole]
 * Provided server registrations for :webrick and :puma. Capybara.server = :puma for testing with Rails 5 [Thomas Walpole]
 * Deprecate passing a block to Capybara::server user Capybara::register_server instead [Thomas Walpole]
 * :option selector supports :selected and :disabled filters [Thomas Walpole]
 * Element#matches_selector? and associated matchers (match_selector, match_css, etc) for comparing an element to a selector [Thomas Walpole]
+* Deprecated Driver#browser_initialized? - Driver#reset! is required to be synchronous [Jonas Nicklas, Thomas Walpole]
 
 #Version 2.6.2
 Relase date: 2016-01-27
