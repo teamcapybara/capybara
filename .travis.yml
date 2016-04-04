@@ -3,13 +3,15 @@ sudo: false
 rvm:
   - 2.0.0
   - 2.2
-  - 2.3.0
   - jruby-9.0.3.0
   - rbx-2
 gemfile:
   - Gemfile
 matrix:
   include:
+    - gemfile: Gemfile
+      rvm: 2.3.0
+      env: WINDOW_TEST=true
     - gemfile: gemfiles/Gemfile.ruby-19
       rvm: 1.9.3
     - gemfile: gemfiles/Gemfile.ruby-19
