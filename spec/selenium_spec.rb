@@ -12,11 +12,14 @@ module TestSessions
   Selenium = Capybara::Session.new(:selenium_focus, TestApp)
 end
 
-Capybara::SpecHelper.run_specs TestSessions::Selenium, "selenium", :capybara_skip => [
+skipped_tests = [
   :response_headers,
   :status_code,
   :trigger
 ]
+skipped_tests << :windows if ENV['TRAVIS'] && !ENV['WINDOW_TEST']
+
+Capybara::SpecHelper.run_specs TestSessions::Selenium, "selenium", :capybara_skip => skipped_tests
 
 RSpec.describe Capybara::Session do
   context 'with selenium driver' do

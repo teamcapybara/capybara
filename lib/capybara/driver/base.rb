@@ -91,8 +91,8 @@ class Capybara::Driver::Base
   def no_such_window_error
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#no_such_window_error'
   end
-  
-  
+
+
   ##
   #
   # Execute the block, and then accept the modal opened.
@@ -135,7 +135,9 @@ class Capybara::Driver::Base
     false
   end
 
+  # @deprecated This method is being removed
   def browser_initialized?
+    warn "DEPRECATED: #browser_initialized? is deprecated and will be removed in the next version of Capybara"
     true
   end
 end
