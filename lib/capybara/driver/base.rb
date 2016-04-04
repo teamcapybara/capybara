@@ -134,4 +134,10 @@ class Capybara::Driver::Base
   def needs_server?
     false
   end
+
+  # @deprecated This method is being removed
+  def browser_initialized?
+    warn "DEPRECATED: #browser_initialized? is deprecated and will be removed in the next version of Capybara"
+    true
+  end
 end

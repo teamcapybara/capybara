@@ -263,6 +263,11 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     Selenium::WebDriver::Error::NoSuchWindowError
   end
 
+  # @deprecated This method is being removed
+  def browser_initialized?
+    super && !@browser.nil?
+  end
+
   private
 
   def within_given_window(handle)
