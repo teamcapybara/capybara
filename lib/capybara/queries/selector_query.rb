@@ -11,13 +11,15 @@ module Capybara
         @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
 
         if args[0].is_a?(Symbol)
-          @selector = Selector.all[args[0]]
-          @locator = args[1]
+          @selector = Selector.all[args.shift]
+          @locator = args.shift
         else
           @selector = Selector.all.values.find { |s| s.match?(args[0]) }
-          @locator = args[0]
+          @locator = args.shift
         end
         @selector ||= Selector.all[Capybara.default_selector]
+
+        warn "Unused parameters passed to #{self.class.name} : #{args.to_s}" unless args.empty?
 
         # for compatibility with Capybara 2.0
         if Capybara.exact_options and @selector == Selector.all[:option]

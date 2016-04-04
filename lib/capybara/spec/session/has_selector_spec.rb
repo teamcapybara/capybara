@@ -67,6 +67,11 @@ Capybara::SpecHelper.spec '#has_selector?' do
       expect(@session).to have_selector("//p//a", :text => /re[dab]i/i, :count => 1)
       expect(@session).not_to have_selector("//p//a", :text => /Red$/)
     end
+
+    it "should warn when extra parameters passed" do
+      expect_any_instance_of(Kernel).to receive(:warn).with(/extra/)
+      expect(@session).to have_selector(:css, "p a#foo", 'extra')
+    end
   end
 end
 
