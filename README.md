@@ -353,6 +353,22 @@ able to start using Selenium right away.
 same transaction as your tests, causing data not to be shared between your test
 and test server, see "Transactions and database setup" below.
 
+### Selenium with chromedriver2
+The :profile option has been renamed to :prefs in chromedriver2 and has different [semantics](https://code.google.com/p/selenium/wiki/RubyBindings).
+
+```ruby
+Capybara.register_driver :selenium do |app|
+  prefs = {
+    :download => {
+      :default_directory => "#{Rails.root}/tmp/"
+    }
+  }
+
+  Capybara::Selenium::Driver.new(app, :browser => :chrome, :prefs => prefs)
+end  
+```
+
+
 ### Capybara-webkit
 
 The [capybara-webkit driver](https://github.com/thoughtbot/capybara-webkit) is for true headless
