@@ -12,7 +12,7 @@ Capybara.app = Rack::Builder.new do
   end
 end.to_app
 
-Capybara.save_and_open_page_path = Rails.root.join('tmp/capybara')
+Capybara.save_path = Rails.root.join('tmp/capybara')
 
 # Override default rack_test driver to respect data-method attributes.
 Capybara.register_driver :rack_test do |app|

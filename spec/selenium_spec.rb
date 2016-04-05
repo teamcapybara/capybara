@@ -114,7 +114,7 @@ RSpec.describe Capybara::Session do
     end
 
     context "#fill_in with { clear: Array } fill_options" do
-      it 'should pass the array through to the element', tw: true do
+      it 'should pass the array through to the element' do
         #this is mainly for use with [[:ctrl, 'a'], :backspace] - however since that is platform dependant I'm testing with something less useful
         @session.visit('/form')
         @session.fill_in('form_first_name', :with => 'Harry',

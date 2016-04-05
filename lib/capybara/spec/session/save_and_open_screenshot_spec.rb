@@ -26,8 +26,8 @@ Capybara::SpecHelper.spec '#save_and_open_screenshot' do
     @session.save_and_open_screenshot(custom_path)
 
     expect(@session.driver).to have_received(:save_screenshot).
-      with(custom_path, {})
-    expect(Launchy).to have_received(:open).with(custom_path)
+      with(/#{custom_path}$/, {})
+    expect(Launchy).to have_received(:open).with(/#{custom_path}$/)
   end
 
   context 'when launchy cannot be required' do

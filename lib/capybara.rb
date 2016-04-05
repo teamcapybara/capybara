@@ -23,9 +23,10 @@ module Capybara
     attr_accessor :asset_host, :app_host, :run_server, :default_host, :always_include_port
     attr_accessor :server_port, :exact, :match, :exact_options, :visible_text_only
     attr_accessor :default_selector, :default_max_wait_time, :ignore_hidden_elements
-    attr_accessor :save_and_open_page_path, :wait_on_first_by_default, :automatic_reload
+    attr_accessor :save_path, :wait_on_first_by_default, :automatic_reload
     attr_accessor :reuse_server, :raise_server_errors, :server_errors
     attr_writer :default_driver, :current_driver, :javascript_driver, :session_name, :server_host
+    attr_reader :save_and_open_page_path
     attr_accessor :app
 
     ##
@@ -49,7 +50,7 @@ module Capybara
     # [default_max_wait_time = Numeric]   The maximum number of seconds to wait for asynchronous processes to finish (Default: 2)
     # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: true)
     # [automatic_reload = Boolean]        Whether to automatically reload elements as Capybara is waiting (Default: true)
-    # [save_and_open_page_path = String]  Where to put pages saved through save_and_open_page (Default: Dir.pwd)
+    # [save_path = String]  Where to put pages saved through save_(page|screenshot), save_and_open_(page|screenshot) (Default: Dir.pwd)
     # [wait_on_first_by_default = Boolean]   Whether Node#first defaults to Capybara waiting behavior for at least 1 element to match (Default: false)
     # [reuse_server = Boolean]  Reuse the server thread between multiple sessions using the same app object (Default: true)
     # === DSL Options
@@ -377,6 +378,12 @@ module Capybara
     def default_wait_time=(t)
       deprecate('default_wait_time=', 'default_max_wait_time=')
       self.default_max_wait_time = t
+    end
+
+    def save_and_open_page_path=(path)
+      warn "DEPRECATED: #save_and_open_page_path is deprecated, please use #save_path instead. \m"\
+           "Note: behavior is slightly different with relative paths - see documentation" unless path.nil?
+      @save_and_open_page_path = path
     end
 
     def included(base)
