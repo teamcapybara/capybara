@@ -114,9 +114,9 @@ RSpec.describe Capybara::Server do
       start_request(server2, 1.0)
 
       expect {
-        server1.wait_for_pending_requests
+        server1.wait_for_pending_requests(nil)
       }.to change{done}.from(false).to(true)
-      expect(server2.instance_variable_get('@middleware').pending_requests?).to eq(false)
+      expect(server2.instance_variable_get('@middleware').pending_requests?(nil)).to eq(false)
     end
 
   end
@@ -163,9 +163,9 @@ RSpec.describe Capybara::Server do
       start_request(server2, 1.0)
 
       expect {
-        server1.wait_for_pending_requests
+        server1.wait_for_pending_requests(nil)
       }.to change{done}.from(false).to(true)
-      expect(server2.instance_variable_get('@middleware').pending_requests?).to eq(true)
+      expect(server2.instance_variable_get('@middleware').pending_requests?(nil)).to eq(true)
     end
 
   end

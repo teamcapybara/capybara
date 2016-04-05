@@ -80,6 +80,39 @@ Capybara::SpecHelper.spec '#reset_session!' do
     end
   end
 
+  context "When cookie_tracking is true" do
+    before do
+      @cookie_tracking = Capybara.cookie_tracking
+      Capybara.cookie_tracking = true
+    end
+
+    after do
+      Capybara.cookie_tracking = @cookie_tracking
+    end
+
+    it "raises any standard errors caught inside the server during a second session", requires: [:server] do
+      Capybara.using_driver(@session.mode) do
+        Capybara.using_session(:another_session) do
+          @another_session = Capybara.current_session
+          quietly { @another_session.visit("/error") }
+
+          expect do
+            @session.visit('/foo')
+          end.not_to raise_error
+
+          expect do
+            @another_session.reset_session!
+          end.to raise_error(TestApp::TestAppError)
+          @another_session.visit("/")
+          expect(@another_session.current_path).to eq("/")
+        end
+
+      end
+    end
+
+
+  end
+
   it "raises configured errors caught inside the server", :requires => [:server] do
     prev_errors = Capybara.server_errors
 

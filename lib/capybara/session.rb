@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'capybara/session/matchers'
+require 'addressable'
 
 module Capybara
 
@@ -109,7 +110,7 @@ module Capybara
         driver.reset!
         @touched = false
       end
-      @server.wait_for_pending_requests if @server
+      @server.wait_for_pending_requests(self.object_id) if server
       raise_server_error!
     end
     alias_method :cleanup!, :reset!
@@ -120,9 +121,9 @@ module Capybara
     # Raise errors encountered in the server
     #
     def raise_server_error!
-      raise @server.error if Capybara.raise_server_errors and @server and @server.error
+      raise @server.error(self.object_id) if Capybara.raise_server_errors and @server and @server.error(self.object_id)
     ensure
-      @server.reset_error! if @server
+      @server.reset_error!(self.object_id) if @server
     end
 
     ##
@@ -178,7 +179,10 @@ module Capybara
     # @return [String] Fully qualified URL of the current page
     #
     def current_url
-      driver.current_url
+      uri = Addressable::URI.parse(driver.current_url)
+      new_query_values = (uri.query_values || {}).delete_if { |k,v| k == "capybara_session_id"}
+      uri.query_values = (new_query_values.empty? ? nil : new_query_values)
+      uri.to_s
     end
 
     ##
@@ -229,6 +233,11 @@ module Capybara
       end
 
       visit_uri = uri_base.merge(visit_uri) unless uri_base.nil?
+
+      if @server && Capybara.cookie_tracking
+        visit_uri = Addressable::URI.parse(visit_uri.to_s)
+        visit_uri.query_values=({'capybara_session_id' => self.object_id}.merge(visit_uri.query_values || {}))
+      end
 
       driver.visit(visit_uri.to_s)
     end
