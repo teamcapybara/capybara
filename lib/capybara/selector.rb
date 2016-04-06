@@ -31,24 +31,19 @@ module Capybara
       @label = nil
       @failure_message = nil
       @description = nil
+      @format = nil
+      @expression = nil
       instance_eval(&block)
     end
 
     def xpath(&block)
-      if block
-        @format = :xpath
-        @xpath, @css = block, nil
-      end
-      @xpath
+      @format, @expression = :xpath, block if block
+      format == :xpath ? @expression : nil
     end
 
-    # Same as xpath, but wrap in XPath.css().
     def css(&block)
-      if block
-        @format = :css
-        @css, @xpath = block, nil
-      end
-      @css
+      @format, @expression = :css, block if block
+      format == :css ? @expression : nil
     end
 
     def match(&block)
@@ -66,10 +61,10 @@ module Capybara
     end
 
     def call(locator)
-      if @format==:css
-        @css.call(locator)
+      if format
+        @expression.call(locator)
       else
-        @xpath.call(locator)
+        warn "Selector has no format"
       end
     end
 
