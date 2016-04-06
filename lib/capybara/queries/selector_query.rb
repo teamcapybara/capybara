@@ -74,7 +74,8 @@ module Capybara
         end
       end
 
-      def exact?
+      def exact?(exact = nil)
+        return !!exact unless exact.nil?
         if options.has_key?(:exact)
           @options[:exact]
         else
@@ -91,8 +92,7 @@ module Capybara
       end
 
       def xpath(exact=nil)
-        exact = self.exact? if exact == nil
-        if @expression.respond_to?(:to_xpath) and exact
+        if @expression.respond_to?(:to_xpath) and self.exact?(exact)
           @expression.to_xpath(:exact)
         else
           @expression.to_s
@@ -108,8 +108,10 @@ module Capybara
         node.synchronize do
           children = if selector.format == :css
             node.find_css(self.css)
-          else
+          elsif selector.format == :xpath
             node.find_xpath(self.xpath(exact))
+          elsif selector.format == :dynamic
+            @expression.call(node, self.exact?(exact))
           end.map do |child|
             if node.is_a?(Capybara::Node::Base)
               Capybara::Node::Element.new(node.session, child, node, self)
