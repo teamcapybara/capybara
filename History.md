@@ -20,7 +20,8 @@ Release date: unreleased
 * Element#matches_selector? and associated matchers (match_selector, match_css, etc) for comparing an element to a selector [Thomas Walpole]
 * Deprecated Driver#browser_initialized? - Driver#reset! is required to be synchronous [Jonas Nicklas, Thomas Walpole]
 * Deprecated Capybara.save_and_open_page_path in favor of Capybara.save_path with slightly different behavior when using relative paths with
-  save_page/save_screenshot
+  save_page/save_screenshot [Thomas Walpole]
+* :label selector [Thomas Walpole]
 
 #Version 2.6.2
 Relase date: 2016-01-27
