@@ -354,6 +354,27 @@ Capybara.add_selector(:file_field) do
   end
 end
 
+Capybara.add_selector(:label) do
+  label "label"
+  xpath do |locator|
+    xpath = XPath.descendant(:label)
+    xpath = xpath[XPath.string.n.is(locator.to_s) | XPath.attr(:id).equals(locator.to_s)] unless locator.nil?
+    xpath
+  end
+
+  filter(:for) do |node, field_or_value|
+    if field_or_value.is_a? Capybara::Node::Element
+      if field_or_value[:id] && (field_or_value[:id] == node[:for])
+        true
+      else
+        field_or_value.find_xpath('./ancestor::label[1]').include? node
+      end
+    else
+      node[:for] == field_or_value.to_s
+    end
+  end
+end
+
 Capybara.add_selector(:table) do
   xpath do |locator|
     xpath = XPath.descendant(:table)
