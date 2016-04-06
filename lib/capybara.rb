@@ -381,8 +381,8 @@ module Capybara
     end
 
     def save_and_open_page_path=(path)
-      warn "DEPRECATED: #save_and_open_page_path is deprecated, please use #save_path instead. \m"\
-           "Note: behavior is slightly different with relative paths - see documentation" unless path.nil?
+      warn "DEPRECATED: #save_and_open_page_path is deprecated, please use #save_path instead. \n"\
+           "Note: Behavior is slightly different with relative paths - see documentation" unless path.nil?
       @save_and_open_page_path = path
     end
 

@@ -362,7 +362,7 @@ Capybara.add_selector(:label) do
       if field_or_value[:id] && (field_or_value[:id] == node[:for])
         true
       else
-        field_or_value.find_xpath('./ancestor::label[1]').include? node
+        field_or_value.find_xpath('./ancestor::label[1]').include? node.base
       end
     else
       node[:for] == field_or_value.to_s
