@@ -1,5 +1,5 @@
 # Version 2.7.0
-Release date: unreleased
+Release date: 2016-04-07
 
 ### Fixed
 * Element#visible?/checked?/disabled?/selected? Now return boolean
