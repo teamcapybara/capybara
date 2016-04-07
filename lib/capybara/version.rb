@@ -1,4 +1,4 @@
 # frozen_string_literal: true
 module Capybara
-  VERSION = '2.7.0.dev'
+  VERSION = '2.7.0'
 end
