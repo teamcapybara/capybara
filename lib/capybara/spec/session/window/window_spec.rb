@@ -86,8 +86,12 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
   end
 
   describe '#size' do
+    def win_size
+      @session.evaluate_script("[window.outerWidth || window.innerWidth, window.outerHeight || window.innerHeight]")
+    end
+
     it 'should return size of whole window', requires: [:windows, :js] do
-      expect(@session.current_window.size).to eq @session.evaluate_script("[window.outerWidth, window.outerHeight];")
+      expect(@session.current_window.size).to eq win_size
     end
 
     it 'should switch to original window if invoked not for current window' do
@@ -96,7 +100,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
       end
       size =
         @session.within_window @other_window do
-          @session.evaluate_script("[window.outerWidth, window.outerHeight];")
+          win_size
         end
       expect(@other_window.size).to eq(size)
       expect(@session.current_window).to eq(@window)
@@ -106,9 +110,9 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
   describe '#resize_to' do
     it 'should be able to resize window', requires: [:windows, :js] do
 
-      width, height = @session.evaluate_script("[window.outerWidth, window.outerHeight];")
+      width, height = @session.current_window.size
       @session.current_window.resize_to(width-10, height-10)
-      expect(@session.evaluate_script("[window.outerWidth, window.outerHeight];")).to eq([width-10, height-10])
+      expect(@session.current_window.size).to eq([width-10, height-10])
     end
 
     it 'should stay on current window if invoked not for current window', requires: [:windows, :js] do
@@ -120,36 +124,46 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
       expect(@session.current_window).to eq(@window)
 
       # #size returns values larger than availWidth, availHeight with Chromedriver
-      # expect(@other_window.size).to eq([400, 300])
       @session.within_window(@other_window) do
-        expect(@session.evaluate_script("[window.outerWidth, window.outerHeight]")).to eq([400,300])
+        expect(@session.current_window.size).to eq([400,300])
+        # expect(@session.evaluate_script("[window.outerWidth, window.outerHeight]")).to eq([400,300])
       end
     end
   end
 
   describe '#maximize' do
     it 'should be able to maximize window', requires: [:windows, :js] do
-      screen_width, screen_height = @session.evaluate_script("[window.screen.availWidth, window.screen.availHeight];")
-      window = @session.current_window
-      window.resize_to(screen_width-100, screen_height-100)
-      expect(@session.evaluate_script("[window.outerWidth, window.outerHeight];")).to eq([screen_width-100, screen_height-100])
-      window.maximize
+      start_width, start_height = 400, 300
+      @session.current_window.resize_to(start_width, start_height)
+      sleep 0.5
+
+      @session.current_window.maximize
       sleep 0.5  # The timing on maximize is finicky on Travis -- wait a bit for maximize to occur
-      expect(@session.evaluate_script("[window.outerWidth, window.outerHeight];")).to eq([screen_width, screen_height])
+
+      max_width, max_height = @session.current_window.size
+
+      #maximize behavior is window manage dependant, so just make sure it increases in size
+      expect(max_width).to be > start_width
+      expect(max_height).to be > start_height
     end
 
     it 'should stay on current window if invoked not for current window', requires: [:windows, :js] do
+      cur_window_size = @session.current_window.size
       @other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
+
+      @other_window.resize_to(400,300)
+      sleep 0.5
       @other_window.maximize
       sleep 0.5 # The timing on maximize is finicky on Travis -- wait a bit for maximize to occur
+
       expect(@session.current_window).to eq(@window)
-      # #size returns values larger than availWidth, availHeight with Chromedriver
-      # expect(@other_window.size).to eq(@session.evaluate_script("[window.screen.availWidth, window.screen.availHeight];"))
-      @session.within_window(@other_window) do
-        expect(@session.evaluate_script("[window.outerWidth, window.outerHeight]")).to eq(@session.evaluate_script("[window.screen.availWidth, window.screen.availHeight];"))
-      end
+      expect(@session.current_window.size).to eq(cur_window_size)
+
+      ow_width, ow_height = @other_window.size
+      expect(ow_width).to be > 400
+      expect(ow_height).to be > 300
     end
   end
 end
