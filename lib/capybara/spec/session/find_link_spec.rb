@@ -30,4 +30,10 @@ Capybara::SpecHelper.spec '#find_link' do
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
+
+  context "without locator" do
+    it "should use options" do
+      expect(@session.find_link(href: '#anchor').text).to eq "Normal Anchor"
+    end
+  end
 end

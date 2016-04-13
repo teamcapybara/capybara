@@ -51,22 +51,26 @@ module Capybara
       #
       # Find a form field on the page. The field can be found by its name, id or label text.
       #
-      # @macro waiting_behavior
+      # @overload find_field([locator], options={})
+      #   @param [String] locator             name, id, placeholder or text of associated label element
       #
-      # @param [String] locator             Which field to find
+      #   @macro waiting_behavior
       #
-      # @option options [Boolean] checked  Match checked field?
-      # @option options [Boolean] unchecked   Match unchecked field?
-      # @option options [Boolean, Symbol] disabled (false)  Match disabled field?
-      #                                                     * true - only finds a disabled field
-      #                                                     * false - only finds an enabled field
-      #                                                     * :all - finds either an enabled or disabled field
-      # @option options [Boolean] readonly Match readonly field?
-      # @option options [String] with   Value of field to match on
-      # @option options [String] type   Type of field to match on
+      #
+      #   @option options [Boolean] checked  Match checked field?
+      #   @option options [Boolean] unchecked   Match unchecked field?
+      #   @option options [Boolean, Symbol] disabled (false)  Match disabled field?
+      #                                                       * true - only finds a disabled field
+      #                                                       * false - only finds an enabled field
+      #                                                       * :all - finds either an enabled or disabled field
+      #   @option options [Boolean] readonly Match readonly field?
+      #   @option options [String] with   Value of field to match on
+      #   @option options [String] type   Type of field to match on
       # @return [Capybara::Node::Element]   The found element
       #
-      def find_field(locator, options={})
+
+      def find_field(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         find(:field, locator, options)
       end
       alias_method :field_labeled, :find_field
@@ -75,13 +79,16 @@ module Capybara
       #
       # Find a link on the page. The link can be found by its id or text.
       #
-      # @macro waiting_behavior
+      # @overload find_link([locator], options={})
+      #   @param [String] locator            id, title, text, or alt of enclosed img element
       #
-      # @param [String] locator             Which link to find
-      # @option options [String,Regexp] href        Value to match against the links href
+      #   @macro waiting_behavior
+      #
+      #   @option options [String,Regexp] href        Value to match against the links href
       # @return [Capybara::Node::Element]   The found element
       #
-      def find_link(locator, options={})
+      def find_link(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         find(:link, locator, options)
       end
 
@@ -91,17 +98,22 @@ module Capybara
       # This can be any \<input> element of type submit, reset, image, button or it can be a
       # \<button> element. All buttons can be found by their id, value, or title. \<button> elements can also be found
       # by their text content, and image \<input> elements by their alt attribute
-
-      # @macro waiting_behavior
       #
-      # @param [String] locator             Which button to find
-      # @option options [Boolean, Symbol] disabled (false)  Match disabled button?
-      #                                                     * true - only finds a disabled button
-      #                                                     * false - only finds an enabled button
-      #                                                     * :all - finds either an enabled or disabled button
+      # @overload find_button([locator], options={})
+      #   @param [String] locator            id, value, title, text content, alt of image
+      #
+      #   @overload find_button(options={})
+      #
+      #   @macro waiting_behavior
+      #
+      #   @option options [Boolean, Symbol] disabled (false)  Match disabled button?
+      #                                                       * true - only finds a disabled button
+      #                                                       * false - only finds an enabled button
+      #                                                       * :all - finds either an enabled or disabled button
       # @return [Capybara::Node::Element]   The found element
       #
-      def find_button(locator, options={})
+      def find_button(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         find(:button, locator, options)
       end
 
@@ -111,7 +123,7 @@ module Capybara
       #
       # @macro waiting_behavior
       #
-      # @param [String] id                  Which element to find
+      # @param [String] id                  id of element
       #
       # @return [Capybara::Node::Element]   The found element
       #
