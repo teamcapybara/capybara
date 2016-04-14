@@ -179,4 +179,11 @@ Capybara::SpecHelper.spec '#click_link' do
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
+
+  context "without locator" do
+    it "uses options" do
+      @session.click_link(href: '/foo')
+      expect(@session).to have_content('Another World')
+    end
+  end
 end

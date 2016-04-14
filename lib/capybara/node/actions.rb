@@ -7,10 +7,19 @@ module Capybara
       #
       # Finds a button or link by id, text or value and clicks it. Also looks at image
       # alt text inside the link.
+      # @!macro waiting_behavior
+      #   If the driver is capable of executing JavaScript, +$0+ will wait for a set amount of time
+      #   and continuously retry finding the element until either the element is found or the time
+      #   expires. The length of time +find+ will wait is controlled through {Capybara.default_max_wait_time}
       #
-      # @param [String] locator      Text, id or value of link or button
+      #   @option options [false, Numeric] wait (Capybara.default_max_wait_time) Maximum time to wait for matching element to appear.
       #
-      def click_link_or_button(locator, options={})
+      # @overload click_link_or_button([locator], options)
+      #
+      #   @param [String] locator      Text, id or value of link or button
+      #
+      def click_link_or_button(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         find(:link_or_button, locator, options).click
       end
       alias_method :click_on, :click_link_or_button
@@ -20,10 +29,14 @@ module Capybara
       # Finds a link by id, text or title and clicks it. Also looks at image
       # alt text inside the link.
       #
-      # @param [String] locator         text, id, title or nested image's alt attribute
-      # @param options                  See {Capybara::Node::Finders#find_link}
+      # @macro waiting_behavior
       #
-      def click_link(locator, options={})
+      # @overload click_link([locator], options)
+      #   @param [String] locator         text, id, title or nested image's alt attribute
+      #   @param options                  See {Capybara::Node::Finders#find_link}
+      #
+      def click_link(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         find(:link, locator, options).click
       end
 
@@ -34,9 +47,13 @@ module Capybara
       # \<button> element. All buttons can be found by their id, value, or title. \<button> elements can also be found
       # by their text content, and image \<input> elements by their alt attribute
       #
-      # @param [String] locator      Which button to find
-      # @param options     See {Capybara::Node::Finders#find_button}
-      def click_button(locator, options={})
+      # @macro waiting_behavior
+      #
+      # @overload click_button([locator], options)
+      #   @param [String] locator      Which button to find
+      #   @param options     See {Capybara::Node::Finders#find_button}
+      def click_button(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         find(:button, locator, options).click
       end
 
@@ -47,10 +64,13 @@ module Capybara
       #
       #     page.fill_in 'Name', :with => 'Bob'
       #
+      # @macro waiting_behavior
+      #
       # @param [String] locator                 Which field to fill in
       # @param [Hash] options
-      # @option options [String] :with     The value to fill in - required
-      # @option options [Hash] :fill_options Driver specific options regarding how to fill fields
+      # @option options [String] :with          The value to fill in - required
+      # @option options [Hash] :fill_options    Driver specific options regarding how to fill fields
+      # @option options [Boolean] :multiple      Match fields that can have multiple values?
       #
       def fill_in(locator, options={})
         raise "Must pass a hash containing 'with'" if not options.is_a?(Hash) or not options.has_key?(:with)
@@ -66,9 +86,15 @@ module Capybara
       #
       #     page.choose('Male')
       #
-      # @param [String] locator           Which radio button to choose
+      # @macro waiting_behavior
+      #
+      # @overload choose([locator], options)
+      #   @param [String] locator           Which radio button to choose
+      #
+      #   @option options [String] :option  Value of the radio_button to choose
       #
       def choose(locator, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         find(:radio_button, locator, options).set(true)
       end
 
@@ -79,9 +105,15 @@ module Capybara
       #
       #     page.check('German')
       #
-      # @param [String] locator           Which check box to check
+      # @macro waiting_behavior
+      #
+      # @overload check([locator], options)
+      #   @param [String] locator           Which check box to check
+      #
+      #   @option options [String] :option  Value of the checkbox to select
       #
       def check(locator, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         find(:checkbox, locator, options).set(true)
       end
 
@@ -92,9 +124,15 @@ module Capybara
       #
       #     page.uncheck('German')
       #
-      # @param [String] locator           Which check box to uncheck
+      # @macro waiting_behavior
+      #
+      # @overload uncheck([locator], options)
+      #   @param [String] locator           Which check box to uncheck
+      #
+      #   @option options [String] :option  Value of the checkbox to deselect
       #
       def uncheck(locator, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         find(:checkbox, locator, options).set(false)
       end
 
@@ -108,6 +146,8 @@ module Capybara
       # The select box can be found via its name, id or label text. The option can be found by its text.
       #
       #     page.select 'March', :from => 'Month'
+      #
+      # @macro waiting_behavior
       #
       # @param [String] value                   Which option to select
       # @option options [String] :from  The id, name or label of the select box
@@ -129,6 +169,8 @@ module Capybara
       #
       #     page.unselect 'March', :from => 'Month'
       #
+      # @macro waiting_behavior
+      #
       # @param [String] value                   Which option to unselect
       # @param [Hash{:from => String}] options  The id, name or label of the select box
       #
@@ -148,12 +190,13 @@ module Capybara
       #
       #     page.attach_file(locator, '/path/to/file.png')
       #
+      # @macro waiting_behavior
+      #
       # @param [String] locator       Which field to attach the file to
       # @param [String] path          The path of the file that will be attached, or an array of paths
       #
       # @option options [Symbol] match (Capybara.match)     The matching strategy to use (:one, :first, :prefer_exact, :smart).
       # @option options [Boolean] exact (Capybara.exact)    Match the exact label name/contents or accept a partial match.
-      # @option options [Fixnum] wait (Capybara.default_max_wait_time)      If using a Javascript driver, maximum number of seconds during which the element will be searched for.
       # @option options [Boolean] multiple Match field which allows multiple file selection
       #
       def attach_file(locator, path, options={})

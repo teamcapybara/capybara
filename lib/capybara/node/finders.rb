@@ -66,6 +66,7 @@ module Capybara
       #   @option options [Boolean] readonly Match readonly field?
       #   @option options [String] with   Value of field to match on
       #   @option options [String] type   Type of field to match on
+      #   @option options [Boolean] multiple      Match fields that can have multiple values?
       # @return [Capybara::Node::Element]   The found element
       #
 
