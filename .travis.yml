@@ -1,5 +1,6 @@
 language: ruby
-sudo: false
+sudo: required
+dist: trusty
 rvm:
   - 2.0.0
   - 2.2
