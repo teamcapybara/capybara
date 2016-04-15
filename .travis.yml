@@ -3,7 +3,7 @@ sudo: false
 rvm:
   - 2.0.0
   - 2.2
-  - jruby-9.0.3.0
+  - jruby-9.0.5.0
   - rbx-3
 gemfile:
   - Gemfile
