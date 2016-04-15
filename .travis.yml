@@ -21,10 +21,9 @@ matrix:
       rvm: 1.9.3
     - gemfile: gemfiles/Gemfile.beta-versions
       rvm: 2.3.0
-    # disabled until google-chrome-stable is usable on travis again
-    # - gemfile: Gemfile
-    #   rvm: 2.2
-    #   env: CAPYBARA_CHROME=true
+    - gemfile: Gemfile
+      rvm: 2.3.0
+      env: CAPYBARA_CHROME=true
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
     - rvm: jruby-9.0.5.0
@@ -35,15 +34,11 @@ env:
 
 addons:
   firefox: latest
-  # removed until google-chrome-stable is usable on travis again
-  # apt:
-  #   sources:
-  #     - google-chrome
-  #   packages:
-  #     - google-chrome-stable
-  #     - awesome
   apt:
+    sources:
+      - google-chrome
     packages:
+      - google-chrome-stable
       - awesome
 
 before_install:
