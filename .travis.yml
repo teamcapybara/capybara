@@ -15,8 +15,6 @@ matrix:
       env: WINDOW_TEST=true
     - gemfile: gemfiles/Gemfile.ruby-19
       rvm: 1.9.3
-    - gemfile: gemfiles/Gemfile.ruby-19
-      rvm: jruby-19mode
     - gemfile: gemfiles/Gemfile.base-versions
       rvm: 1.9.3
     - gemfile: gemfiles/Gemfile.beta-versions
