@@ -71,7 +71,6 @@ Capybara::SpecHelper.spec '#find_field' do
     end
   end
 
-
   context 'with :readonly option' do
     it "should find readonly fields when true" do
       expect(@session.find_field('form[readonly_test]', readonly: true)[:id]).to eq 'readonly'
@@ -85,6 +84,12 @@ Capybara::SpecHelper.spec '#find_field' do
       expect do
         @session.find_field('form[readonly_test]')
       end.to raise_error(Capybara::Ambiguous, /found 2 elements/)
+    end
+  end
+
+  context 'with no locator', locator: true do
+    it 'should use options to find the field' do
+      expect(@session.find_field(with: 'dog')['id']).to eq "form_pets_dog"
     end
   end
 end

@@ -52,4 +52,10 @@ Capybara::SpecHelper.spec '#find_button' do
       expect(@session.find_button('Disabled button', :disabled => :all).value).to eq("Disabled button")
     end
   end
+
+  context "without locator" do
+    it "should use options" do
+      expect(@session.find_button(disabled: true).value).to eq("Disabled button")
+    end
+  end
 end
