@@ -80,6 +80,30 @@ RSpec.describe Capybara::Session do
         end
       end
     end
+
+    describe "#click" do
+      context "on a label" do
+        it "should toggle the associated checkbox" do
+          @session.visit("/form")
+          expect(@session).to have_unchecked_field('form_pets_cat')
+          @session.find(:label, 'Cat').click
+          expect(@session).to have_checked_field('form_pets_cat')
+          @session.find(:label, 'Cat').click
+          expect(@session).to have_unchecked_field('form_pets_cat')
+          @session.find(:label, 'McLaren').click
+          expect(@session).to have_checked_field('form_cars_mclaren', visible: :hidden)
+        end
+
+        it "should toggle the associated radio" do
+          @session.visit("/form")
+          expect(@session).to have_unchecked_field('gender_male')
+          @session.find(:label, 'Male').click
+          expect(@session).to have_checked_field('gender_male')
+          @session.find(:label, 'Female').click
+          expect(@session).to have_unchecked_field('gender_male')
+        end
+      end
+    end
   end
 end
 

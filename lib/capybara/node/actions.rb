@@ -114,7 +114,17 @@ module Capybara
       #
       def check(locator, options={})
         locator, options = nil, locator if locator.is_a? Hash
-        find(:checkbox, locator, options).set(true)
+        begin
+          find(:checkbox, locator, options).set(true)
+        rescue Capybara::ElementNotFound => e
+          begin
+            cbox = find(:checkbox, locator, options.merge({wait: 0, visible: :all}))
+            label = find(:label, for: cbox, wait: 0)
+            label.click if !cbox.checked?
+          rescue
+            raise e
+          end
+        end
       end
 
       ##
@@ -133,7 +143,17 @@ module Capybara
       #
       def uncheck(locator, options={})
         locator, options = nil, locator if locator.is_a? Hash
-        find(:checkbox, locator, options).set(false)
+        begin
+          find(:checkbox, locator, options).set(false)
+        rescue Capybara::ElementNotFound => e
+          begin
+            cbox = find(:checkbox, locator, options.merge({wait: 0, visible: :all}))
+            label = find(:label, for: cbox, wait: 0)
+            label.click if cbox.checked?
+          rescue
+            raise e
+          end
+        end
       end
 
       ##

@@ -368,6 +368,11 @@ Capybara.add_selector(:label) do
       node[:for] == field_or_value.to_s
     end
   end
+
+  describe do |options|
+    desc = String.new
+    desc << " for #{options[:for]}" if options[:for]
+  end
 end
 
 Capybara.add_selector(:table) do

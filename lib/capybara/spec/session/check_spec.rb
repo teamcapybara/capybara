@@ -111,4 +111,31 @@ Capybara::SpecHelper.spec "#check" do
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
+
+  context "when checkbox hidden", hidden: true do
+    it "should check via clicking the label with :for attribute if possible" do
+      expect(@session.find(:checkbox, 'form_cars_tesla', unchecked: true, visible: :hidden)).to be
+      @session.check('form_cars_tesla')
+      @session.click_button('awesome')
+      expect(extract_results(@session)['cars']).to include('tesla')
+    end
+
+    it "should check via clicking the wrapping label if possible" do
+      expect(@session.find(:checkbox, 'form_cars_mclaren', unchecked: true, visible: :hidden)).to be
+      @session.check('form_cars_mclaren')
+      @session.click_button('awesome')
+      expect(extract_results(@session)['cars']).to include('mclaren')
+    end
+
+    it "should not click the label if unneeded" do
+      expect(@session.find(:checkbox, 'form_cars_jaguar', checked: true, visible: :hidden)).to be
+      @session.check('form_cars_jaguar')
+      @session.click_button('awesome')
+      expect(extract_results(@session)['cars']).to include('jaguar')
+    end
+
+    it "should raise original error when no label available" do
+      expect { @session.check('form_cars_ariel') }.to raise_error(Capybara::ElementNotFound, 'Unable to find checkbox "form_cars_ariel"')
+    end
+  end
 end
