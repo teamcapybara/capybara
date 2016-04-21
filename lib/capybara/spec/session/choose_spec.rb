@@ -66,4 +66,12 @@ Capybara::SpecHelper.spec "#choose" do
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
+
+  context "with hidden radio buttons", hidden: true do
+    it "should select by clicking the link if available" do
+      @session.choose("party_democrat")
+      @session.click_button('awesome')
+      expect(extract_results(@session)['party']).to eq('democrat')
+    end
+  end
 end

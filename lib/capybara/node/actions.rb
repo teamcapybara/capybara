@@ -95,7 +95,17 @@ module Capybara
       #
       def choose(locator, options={})
         locator, options = nil, locator if locator.is_a? Hash
-        find(:radio_button, locator, options).set(true)
+        begin
+          find(:radio_button, locator, options).set(true)
+        rescue Capybara::ElementNotFound => e
+          begin
+            radio = find(:radio_button, locator, options.merge({wait: 0, visible: :hidden}))
+            label = find(:label, for: radio, wait: 0, visible: true)
+            label.click unless radio.checked?
+          rescue
+            raise e
+          end
+        end
       end
 
       ##
@@ -118,9 +128,9 @@ module Capybara
           find(:checkbox, locator, options).set(true)
         rescue Capybara::ElementNotFound => e
           begin
-            cbox = find(:checkbox, locator, options.merge({wait: 0, visible: :all}))
-            label = find(:label, for: cbox, wait: 0)
-            label.click if !cbox.checked?
+            cbox = find(:checkbox, locator, options.merge({wait: 0, visible: :hidden}))
+            label = find(:label, for: cbox, wait: 0, visible: true)
+            label.click unless cbox.checked?
           rescue
             raise e
           end
@@ -147,8 +157,8 @@ module Capybara
           find(:checkbox, locator, options).set(false)
         rescue Capybara::ElementNotFound => e
           begin
-            cbox = find(:checkbox, locator, options.merge({wait: 0, visible: :all}))
-            label = find(:label, for: cbox, wait: 0)
+            cbox = find(:checkbox, locator, options.merge({wait: 0, visible: :hidden}))
+            label = find(:label, for: cbox, wait: 0, visible: true)
             label.click if cbox.checked?
           rescue
             raise e
