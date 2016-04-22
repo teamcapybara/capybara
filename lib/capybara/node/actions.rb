@@ -79,6 +79,9 @@ module Capybara
         find(:fillable_field, locator, options).set(with, fill_options)
       end
 
+      # @!macro click_label
+      #   @option options [Boolean] :click_label (true) Attempt to click the label to toggle state if element is non-visible.
+
       ##
       #
       # Find a radio button and mark it as checked. The radio button can be found
@@ -86,18 +89,20 @@ module Capybara
       #
       #     page.choose('Male')
       #
-      # @macro waiting_behavior
-      #
       # @overload choose([locator], options)
       #   @param [String] locator           Which radio button to choose
       #
       #   @option options [String] :option  Value of the radio_button to choose
-      #
+      #   @macro waiting_behavior
+      #   @macro click_label
       def choose(locator, options={})
         locator, options = nil, locator if locator.is_a? Hash
+        allow_click_label = options.delete(:click_label) { true }
+
         begin
           find(:radio_button, locator, options).set(true)
         rescue Capybara::ElementNotFound => e
+          raise unless allow_click_label
           begin
             radio = find(:radio_button, locator, options.merge({wait: 0, visible: :hidden}))
             label = find(:label, for: radio, wait: 0, visible: true)
@@ -115,18 +120,22 @@ module Capybara
       #
       #     page.check('German')
       #
-      # @macro waiting_behavior
       #
       # @overload check([locator], options)
       #   @param [String] locator           Which check box to check
       #
       #   @option options [String] :option  Value of the checkbox to select
+      #   @macro click_label
+      #   @macro waiting_behavior
       #
       def check(locator, options={})
         locator, options = nil, locator if locator.is_a? Hash
+        allow_click_label = options.delete(:click_label) { true }
+
         begin
           find(:checkbox, locator, options).set(true)
         rescue Capybara::ElementNotFound => e
+          raise unless allow_click_label
           begin
             cbox = find(:checkbox, locator, options.merge({wait: 0, visible: :hidden}))
             label = find(:label, for: cbox, wait: 0, visible: true)
@@ -144,18 +153,22 @@ module Capybara
       #
       #     page.uncheck('German')
       #
-      # @macro waiting_behavior
       #
       # @overload uncheck([locator], options)
       #   @param [String] locator           Which check box to uncheck
       #
       #   @option options [String] :option  Value of the checkbox to deselect
+      #   @macro click_label
+      #   @macro waiting_behavior
       #
       def uncheck(locator, options={})
         locator, options = nil, locator if locator.is_a? Hash
+        allow_click_label = options.delete(:click_label) { true }
+
         begin
           find(:checkbox, locator, options).set(false)
         rescue Capybara::ElementNotFound => e
+          raise unless allow_click_label
           begin
             cbox = find(:checkbox, locator, options.merge({wait: 0, visible: :hidden}))
             label = find(:label, for: cbox, wait: 0, visible: true)
