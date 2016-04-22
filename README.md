@@ -44,6 +44,7 @@ GitHub): http://groups.google.com/group/ruby-capybara
 - [Asynchronous JavaScript (Ajax and friends)](#asynchronous-javascript-ajax-and-friends)
 - [Using the DSL elsewhere](#using-the-dsl-elsewhere)
 - [Calling remote servers](#calling-remote-servers)
+- [Named sessions](#named-sessions)
 - [Using the sessions manually](#using-the-sessions-manually)
 - [XPath, CSS and selectors](#xpath-css-and-selectors)
 - [Beware the XPath // trap](#beware-the-xpath--trap)
@@ -817,6 +818,26 @@ remote application:
 ```ruby
 Capybara.run_server = false
 ```
+
+## <a name="named-sessions"></a>Named sessions
+
+Capybara manages named sessions (:default if not specified) and multiple sessions using the same driver and test app instance can be interacted with.
+A new session will be created using the current driver if a session with the given name using the current driver and test app instance is not found.
+
+To perform operations in a different session and then revent to the previous session
+
+```ruby
+Capybara.using_session("Bob's session") do
+   #do something in Bob's browser session
+end
+ #reverts to previous session
+```
+
+To permanently switch the current session to a different session
+
+```ruby
+Capybara.session_name = "some other session"
+````
 
 ## <a name="using-the-sessions-manually"></a>Using the sessions manually
 
