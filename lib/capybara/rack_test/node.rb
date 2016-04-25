@@ -60,6 +60,16 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
         ((tag_name == 'button') and type.nil? or type == "submit")
       associated_form = form
       Capybara::RackTest::Form.new(driver, associated_form).submit(self) if associated_form
+    elsif (tag_name == 'label')
+      labelled_control = if native[:for]
+        find_xpath("//input[@id='#{native[:for]}']").first
+      else
+        find_xpath(".//input").first
+      end
+
+      if labelled_control && (labelled_control.checkbox? || labelled_control.radio?)
+        labelled_control.set(!labelled_control.checked?)
+      end
     end
   end
 
@@ -182,6 +192,8 @@ private
   def attribute_is_not_blank?(attribute)
     self[attribute] && !self[attribute].empty?
   end
+
+protected
 
   def checkbox?
     input_field? && type == 'checkbox'

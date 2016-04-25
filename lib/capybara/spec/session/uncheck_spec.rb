@@ -38,4 +38,35 @@ Capybara::SpecHelper.spec "#uncheck" do
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
+
+  context "when checkbox hidden" do
+    it "should uncheck via clicking the label with :for attribute if possible" do
+      expect(@session.find(:checkbox, 'form_cars_jaguar', checked: true, visible: :hidden)).to be
+      @session.uncheck('form_cars_jaguar')
+      @session.click_button('awesome')
+      expect(extract_results(@session)['cars']).not_to include('jaguar')
+    end
+
+    it "should uncheck via clicking the wrapping label if possible" do
+      expect(@session.find(:checkbox, 'form_cars_koenigsegg', checked: true, visible: :hidden)).to be
+      @session.uncheck('form_cars_koenigsegg')
+      @session.click_button('awesome')
+      expect(extract_results(@session)['cars']).not_to include('koenigsegg')
+    end
+
+    it "should not click the label if unneeded" do
+      expect(@session.find(:checkbox, 'form_cars_tesla', unchecked: true, visible: :hidden)).to be
+      @session.uncheck('form_cars_tesla')
+      @session.click_button('awesome')
+      expect(extract_results(@session)['cars']).not_to include('tesla')
+    end
+
+    it "should raise original error when no label available" do
+      expect { @session.uncheck('form_cars_ariel') }.to raise_error(Capybara::ElementNotFound, 'Unable to find checkbox "form_cars_ariel"')
+    end
+
+    it "should raise error if not allowed to click label" do
+      expect{@session.uncheck('form_cars_jaguar', click_label: false)}.to raise_error(Capybara::ElementNotFound, 'Unable to find checkbox "form_cars_jaguar"')
+    end
+  end
 end
