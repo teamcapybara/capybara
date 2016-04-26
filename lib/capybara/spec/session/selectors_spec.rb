@@ -32,4 +32,18 @@ Capybara::SpecHelper.spec Capybara::Selector do
       end
     end
   end
+
+  describe "locate_field selectors" do
+    it "can find specifically by id" do
+      expect(@session.find(:field, id: 'customer_email').value).to eq "ben@ben.com"
+    end
+
+    it "can find specifically by name" do
+      expect(@session.find(:field, name: 'form[other_title]')['id']).to eq "form_other_title"
+    end
+
+    it "can find specifically by placeholder" do
+      expect(@session.find(:field, placeholder: 'FirstName')['id']).to eq "form_first_name"
+    end
+  end
 end

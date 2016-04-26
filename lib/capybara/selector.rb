@@ -102,6 +102,20 @@ module Capybara
       locate_field += XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(xpath)
       locate_field
     end
+
+    FilterSet.add(:locate_field) do
+      filter(:id) { |node, id| node['id'] == id }
+      filter(:name) { |node, name| node['name'] == name }
+      filter(:placeholder) { |node, placeholder| node['placeholder'] == placeholder }
+
+      describe do |options|
+        desc = String.new
+        [:id, :name, :placeholder].each do |opt|
+          desc << " with #{opt.to_s} #{options[opt]}" if options.has_key?(opt)
+        end
+        desc
+      end
+    end
   end
 end
 
@@ -123,6 +137,9 @@ Capybara.add_selector(:field) do
     xpath = locate_field(xpath, locator.to_s) unless locator.nil?
     xpath
   end
+
+  filter_set(:locate_field)
+
   filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
@@ -222,6 +239,8 @@ Capybara.add_selector(:fillable_field) do
     xpath
   end
 
+  filter_set(:locate_field)
+
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
   filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
 
@@ -241,6 +260,8 @@ Capybara.add_selector(:radio_button) do
     xpath = locate_field(xpath, locator.to_s) unless locator.nil?
     xpath
   end
+
+  filter_set(:locate_field)
 
   filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
@@ -265,6 +286,8 @@ Capybara.add_selector(:checkbox) do
     xpath
   end
 
+  filter_set(:locate_field)
+
   filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
   filter(:option)  { |node, value|  node.value == value.to_s }
@@ -288,6 +311,8 @@ Capybara.add_selector(:select) do
     xpath = locate_field(xpath, locator.to_s) unless locator.nil?
     xpath
   end
+
+  filter_set(:locate_field)
 
   filter(:options) do |node, options|
     if node.visible?
@@ -348,6 +373,8 @@ Capybara.add_selector(:file_field) do
     xpath = locate_field(xpath, locator.to_s) unless locator.nil?
     xpath
   end
+
+  filter_set(:locate_field)
 
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
   filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
