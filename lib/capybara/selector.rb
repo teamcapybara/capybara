@@ -1,10 +1,10 @@
 # frozen_string_literal: true
-require 'capybara/selector/filter'
+require 'capybara/selector/filter_set'
 
 module Capybara
   class Selector
 
-    attr_reader :name, :custom_filters, :format
+    attr_reader :name, :format
 
     class << self
       def all
@@ -26,7 +26,7 @@ module Capybara
 
     def initialize(name, &block)
       @name = name
-      @custom_filters = {}
+      @filter_set = FilterSet.add(name){}
       @match = nil
       @label = nil
       @failure_message = nil
@@ -34,6 +34,10 @@ module Capybara
       @format = nil
       @expression = nil
       instance_eval(&block)
+    end
+
+    def custom_filters
+      @filter_set.filters
     end
 
     def xpath(&block)
@@ -57,7 +61,7 @@ module Capybara
     end
 
     def description(options={})
-      (@description && @description.call(options)).to_s
+      @filter_set.description(options)
     end
 
     def call(locator)
@@ -73,11 +77,19 @@ module Capybara
     end
 
     def filter(name, options={}, &block)
-      @custom_filters[name] = Filter.new(name, block, options)
+      custom_filters[name] = Filter.new(name, block, options)
+    end
+
+    def filter_set(name)
+      f_set = FilterSet.all[name]
+      f_set.filters.each do | name, filter |
+        custom_filters[name] = filter
+      end
+      f_set.descriptions.each { |desc| @filter_set.describe &desc }
     end
 
     def describe &block
-      @description = block
+      @filter_set.describe &block
     end
 
     private

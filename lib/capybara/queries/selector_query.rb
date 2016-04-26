@@ -4,7 +4,7 @@ module Capybara
     class SelectorQuery < Queries::BaseQuery
       attr_accessor :selector, :locator, :options, :expression, :find, :negative
 
-      VALID_KEYS = [:text, :visible, :between, :count, :maximum, :minimum, :exact, :match, :wait]
+      VALID_KEYS = [:text, :visible, :between, :count, :maximum, :minimum, :exact, :match, :wait, :filter_set]
       VALID_MATCH = [:first, :smart, :prefer_exact, :one]
 
       def initialize(*args)
@@ -49,7 +49,7 @@ module Capybara
           when :visible then return false unless node.visible?
           when :hidden then return false if node.visible?
         end
-        selector.custom_filters.each do |name, filter|
+        query_filters.each do |name, filter|
           if options.has_key?(name)
             return false unless filter.matches?(node, options[name])
           elsif filter.default?
@@ -124,7 +124,20 @@ module Capybara
       private
 
       def valid_keys
-        COUNT_KEYS + [:text, :visible, :exact, :match, :wait] + @selector.custom_filters.keys
+       vk = COUNT_KEYS + [:text, :visible, :exact, :match, :wait, :filter_set]
+       vk + custom_keys
+      end
+
+      def query_filters
+        if options.has_key?(:filter_set)
+          Capybara::Selector::FilterSet.all[options[:filter_set]].filters
+        else
+          @selector.custom_filters
+        end
+      end
+
+      def custom_keys
+        query_filters.keys
       end
 
       def assert_valid_keys
