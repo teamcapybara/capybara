@@ -1,10 +1,10 @@
 language: ruby
-sudo: false
+dist: trusty
+sudo: required
 rvm:
   - 2.0.0
   - 2.2
-  - jruby-9.0.3.0
-  - rbx-2
+  - rbx-3.26
 gemfile:
   - Gemfile
 matrix:
@@ -14,8 +14,6 @@ matrix:
       env: WINDOW_TEST=true
     - gemfile: gemfiles/Gemfile.ruby-19
       rvm: 1.9.3
-    - gemfile: gemfiles/Gemfile.ruby-19
-      rvm: jruby-19mode
     - gemfile: gemfiles/Gemfile.base-versions
       rvm: 1.9.3
     - gemfile: gemfiles/Gemfile.beta-versions
@@ -25,7 +23,6 @@ matrix:
       env: CAPYBARA_CHROME=true
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
-    - rvm: jruby-9.0.3.0
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
