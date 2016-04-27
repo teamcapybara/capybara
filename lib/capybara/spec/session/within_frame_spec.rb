@@ -40,7 +40,7 @@ Capybara::SpecHelper.spec '#within_frame', :requires => [:frames] do
       @session.within_frame 'childFrame' do
         @session.within_frame 'grandchildFrame1' do end
         @session.within_frame 'grandchildFrame2' do end
-      end    
+      end
     end
   end
   it "should reset scope when changing frames" do
@@ -48,6 +48,16 @@ Capybara::SpecHelper.spec '#within_frame', :requires => [:frames] do
       @session.within_frame 'parentFrame' do
         expect(@session.has_selector?(:css, "iframe#childFrame")).to be true
       end
+    end
+  end
+
+  it "works if the frame is closed", :requires => [:frames, :js] do
+    @session.within_frame 'parentFrame' do
+      @session.within_frame 'childFrame' do
+        @session.click_link 'Close Window'
+      end
+      expect(@session).to have_selector(:css, 'body#parentBody')
+      expect(@session).not_to have_selector(:css, '#childFrame')
     end
   end
 end

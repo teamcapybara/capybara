@@ -143,23 +143,16 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   #
   def within_frame(frame_handle)
     frame_handle = frame_handle.native if frame_handle.is_a?(Capybara::Node::Base)
-    if !browser.switch_to.respond_to?(:parent_frame)
-      # Selenium Webdriver < 2.43 doesnt support moving back to the parent
-      @frame_handles[browser.window_handle] ||= []
-      @frame_handles[browser.window_handle] << frame_handle
-    end
+    @frame_handles[browser.window_handle] ||= []
+    @frame_handles[browser.window_handle] << frame_handle
     browser.switch_to.frame(frame_handle)
     yield
   ensure
-    if browser.switch_to.respond_to?(:parent_frame)
-      browser.switch_to.parent_frame
-    else
-      # There doesnt appear to be any way in Selenium Webdriver < 2.43 to move back to a parent frame
-      # other than going back to the root and then reiterating down
-      @frame_handles[browser.window_handle].pop
-      browser.switch_to.default_content
-      @frame_handles[browser.window_handle].each { |fh| browser.switch_to.frame(fh) }
-    end
+    # would love to use browser.switch_to.parent_frame here
+    # but it has an issue if the current frame is removed from within it
+    @frame_handles[browser.window_handle].pop
+    browser.switch_to.default_content
+    @frame_handles[browser.window_handle].each { |fh| browser.switch_to.frame(fh) }
   end
 
   def current_window_handle
