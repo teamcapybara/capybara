@@ -80,10 +80,10 @@ module Capybara
       custom_filters[name] = Filter.new(name, block, options)
     end
 
-    def filter_set(name)
+    def filter_set(name, filters_to_use = nil)
       f_set = FilterSet.all[name]
       f_set.filters.each do | name, filter |
-        custom_filters[name] = filter
+        custom_filters[name] = filter if filters_to_use.nil? || filters_to_use.include?(name)
       end
       f_set.descriptions.each { |desc| @filter_set.describe &desc }
     end
@@ -102,20 +102,6 @@ module Capybara
       locate_field += XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(xpath)
       locate_field
     end
-
-    FilterSet.add(:locate_field) do
-      filter(:id) { |node, id| node['id'] == id }
-      filter(:name) { |node, name| node['name'] == name }
-      filter(:placeholder) { |node, placeholder| node['placeholder'] == placeholder }
-
-      describe do |options|
-        desc = String.new
-        [:id, :name, :placeholder].each do |opt|
-          desc << " with #{opt.to_s} #{options[opt]}" if options.has_key?(opt)
-        end
-        desc
-      end
-    end
   end
 end
 
@@ -131,6 +117,30 @@ Capybara.add_selector(:id) do
   xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
 end
 
+Capybara::Selector::FilterSet.add(:_field) do
+  filter(:id) { |node, id| node['id'] == id }
+  filter(:name) { |node, name| node['name'] == name }
+  filter(:placeholder) { |node, placeholder| node['placeholder'] == placeholder }
+  filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
+  filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
+  filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
+  filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
+
+  describe do |options|
+    desc, states = String.new, []
+    [:id, :name, :placeholder].each do |opt|
+      desc << " with #{opt.to_s} #{options[opt]}" if options.has_key?(opt)
+    end
+    states << 'checked' if options[:checked] || (options[:unchecked] === false)
+    states << 'not checked' if options[:unchecked] || (options[:checked] === false)
+    states << 'disabled' if options[:disabled] == true
+    desc << " that is #{states.join(' and ')}" unless states.empty?
+    desc << " with the multiple attribute" if options[:multiple] == true
+    desc << " without the multiple attribute" if options[:multiple] === false
+    desc
+  end
+end
+
 Capybara.add_selector(:field) do
   xpath do |locator|
     xpath = XPath.descendant(:input, :textarea, :select)[~XPath.attr(:type).one_of('submit', 'image', 'hidden')]
@@ -138,11 +148,8 @@ Capybara.add_selector(:field) do
     xpath
   end
 
-  filter_set(:locate_field)
+  filter_set(:_field)
 
-  filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
-  filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
-  filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
   filter(:readonly, boolean: true) { |node, value| not(value ^ node[:readonly]) }
   filter(:with) { |node, with| node.value == with.to_s }
   filter(:type) do |node, type|
@@ -152,17 +159,11 @@ Capybara.add_selector(:field) do
       node[:type] == type
     end
   end
-  filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
+  # filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
   describe do |options|
     desc, states = String.new, []
     desc << " of type #{options[:type].inspect}" if options[:type]
     desc << " with value #{options[:with].to_s.inspect}" if options.has_key?(:with)
-    states << 'checked' if options[:checked] || (options.has_key?(:unchecked) && !options[:unchecked])
-    states << 'not checked' if options[:unchecked] || (options.has_key?(:checked) && !options[:checked])
-    states << 'disabled' if options[:disabled] == true
-    desc << " that is #{states.join(' and ')}" unless states.empty?
-    desc << " with the multiple attribute" if options[:multiple] == true
-    desc << " without the multiple attribute" if options[:multiple] === false
     desc
   end
 end
@@ -226,7 +227,7 @@ Capybara.add_selector(:link_or_button) do
     self.class.all.values_at(:link, :button).map {|selector| selector.xpath.call(locator)}.reduce(:+)
   end
 
-  filter(:disabled, default: false, boolean: true) { |node, value| node.tag_name == "a" or not(value ^ node.disabled?) }
+  filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| node.tag_name == "a" or not(value ^ node.disabled?) }
 
   describe { |options| " that is disabled" if options[:disabled] }
 end
@@ -239,18 +240,7 @@ Capybara.add_selector(:fillable_field) do
     xpath
   end
 
-  filter_set(:locate_field)
-
-  filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
-  filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
-
-  describe do |options|
-    desc = String.new
-    desc << " that is disabled" if options[:disabled] == true
-    desc << " with the multiple attribute" if options[:multiple] == true
-    desc << " without the multiple attribute" if options[:multiple] === false
-    desc
-  end
+  filter_set(:_field, [:id, :name, :placeholder, :disabled, :multiple])
 end
 
 Capybara.add_selector(:radio_button) do
@@ -261,20 +251,13 @@ Capybara.add_selector(:radio_button) do
     xpath
   end
 
-  filter_set(:locate_field)
+  filter_set(:_field, [:id, :name, :checked, :unchecked, :disabled])
 
-  filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
-  filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
   filter(:option)  { |node, value|  node.value == value.to_s }
-  filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
 
   describe do |options|
-    desc, states = String.new, []
+    desc = String.new
     desc << " with value #{options[:option].inspect}" if options[:option]
-    states << 'checked' if options[:checked] || (options.has_key?(:unchecked) && !options[:unchecked])
-    states << 'not checked' if options[:unchecked] || (options.has_key?(:checked) && !options[:checked])
-    states << 'disabled' if options[:disabled] == true
-    desc << " that is #{states.join(' and ')}" unless states.empty?
     desc
   end
 end
@@ -286,20 +269,13 @@ Capybara.add_selector(:checkbox) do
     xpath
   end
 
-  filter_set(:locate_field)
+  filter_set(:_field, [:id, :name, :checked, :unchecked, :disabled])
 
-  filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
-  filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
   filter(:option)  { |node, value|  node.value == value.to_s }
-  filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
 
   describe do |options|
-    desc, states = String.new, []
+    desc = String.new
     desc << " with value #{options[:option].inspect}" if options[:option]
-    states << 'checked' if options[:checked] || (options.has_key?(:unchecked) && !options[:unchecked])
-    states << 'not checked' if options[:unchecked] || (options.has_key?(:checked) && !options[:checked])
-    states << 'disabled' if options[:disabled] == true
-    desc << " that is #{states.join(' and ')}" unless states.empty?
     desc
   end
 end
@@ -312,7 +288,7 @@ Capybara.add_selector(:select) do
     xpath
   end
 
-  filter_set(:locate_field)
+  filter_set(:_field, [:id, :name, :placeholder, :disabled, :multiple])
 
   filter(:options) do |node, options|
     if node.visible?
@@ -333,17 +309,12 @@ Capybara.add_selector(:select) do
     actual = node.all(:xpath, './/option', visible: false).select { |option| option.selected? }.map { |option| option.text(:all) }
     [selected].flatten.sort == actual.sort
   end
-  filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
-  filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
 
   describe do |options|
     desc = String.new
     desc << " with options #{options[:options].inspect}" if options[:options]
     desc << " with at least options #{options[:with_options].inspect}" if options[:with_options]
     desc << " with #{options[:selected].inspect} selected" if options[:selected]
-    desc << " that is disabled" if options[:disabled] == true
-    desc << " that allows multiple selection" if options[:multiple] == true
-    desc << " that only allows single selection" if options[:multiple] === false
     desc
   end
 end
@@ -374,18 +345,7 @@ Capybara.add_selector(:file_field) do
     xpath
   end
 
-  filter_set(:locate_field)
-
-  filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
-  filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
-
-  describe do |options|
-    desc = String.new
-    desc << " that is disabled" if options[:disabled] == true
-    desc << " that allows multiple files" if options[:multiple] == true
-    desc << " that only allows a single file" if options[:multiple] === false
-    desc
-  end
+  filter_set(:_field, [:id, :name, :disabled, :multiple])
 end
 
 Capybara.add_selector(:label) do
@@ -411,6 +371,7 @@ Capybara.add_selector(:label) do
   describe do |options|
     desc = String.new
     desc << " for #{options[:for]}" if options[:for]
+    desc
   end
 end
 
