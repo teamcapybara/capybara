@@ -3,6 +3,7 @@ Release date: Unreleased
 
 ### Fixed
 * Issue where within_Frame would fail with Selenium if the frame is removed from within itself [Thomas Walpole]
+* Reset sessions in reverse order so sessions with active servers are reset last - Issue #1692 [Jonas Nicklas, Thomas Walpole]
 
 # Version 2.7.0
 Release date: 2016-04-07
