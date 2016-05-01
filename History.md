@@ -7,7 +7,7 @@ Release date: Unreleased
 * 'check', 'uncheck', and 'choose' will now click the associated label if the checkbox/radio button is not visible
 
 #Version 2.7.1
-Release date: Unreleased
+Release date: 2016-05-01
 
 ### Fixed
 * Issue where within_Frame would fail with Selenium if the frame is removed from within itself [Thomas Walpole]
