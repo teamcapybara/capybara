@@ -1,5 +1,5 @@
 #Version 2.7.1
-Release date: Unreleased
+Release date: 2016-05-01
 
 ### Fixed
 * Issue where within_Frame would fail with Selenium if the frame is removed from within itself [Thomas Walpole]
