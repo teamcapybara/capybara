@@ -327,7 +327,8 @@ module Capybara
     # as cookies.
     #
     def reset_sessions!
-      session_pool.each { |mode, session| session.reset! }
+      #reset in reverse so sessions that started servers are reset last
+      session_pool.reverse_each { |mode, session| session.reset! }
     end
     alias_method :reset!, :reset_sessions!
 
