@@ -67,6 +67,9 @@ module Capybara
       #   @option options [String] with   Value of field to match on
       #   @option options [String] type   Type of field to match on
       #   @option options [Boolean] multiple      Match fields that can have multiple values?
+      #   @option options [String] id             Match fields that match the id attribute
+      #   @option options [String] name           Match fields that match the name attribute
+      #   @option options [String] placeholder    Match fields that match the placeholder attribute
       # @return [Capybara::Node::Element]   The found element
       #
 
