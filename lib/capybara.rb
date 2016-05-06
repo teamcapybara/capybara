@@ -20,7 +20,8 @@ module Capybara
   class ReadOnlyElementError < CapybaraError; end
 
   class << self
-    attr_accessor :asset_host, :app_host, :run_server, :default_host, :always_include_port
+    attr_reader :app_host, :default_host
+    attr_accessor :asset_host, :run_server, :always_include_port
     attr_accessor :server_port, :exact, :match, :exact_options, :visible_text_only
     attr_accessor :default_selector, :default_max_wait_time, :ignore_hidden_elements
     attr_accessor :save_path, :wait_on_first_by_default, :automatic_reload
@@ -40,7 +41,7 @@ module Capybara
     #
     # === Configurable options
     #
-    # [app_host = String]                 The default host to use when giving a relative URL to visit
+    # [app_host = String/nil]             The default host to use when giving a relative URL to visit, must be a valid URL e.g. http://www.example.com
     # [always_include_port = Boolean]     Whether the Rack server's port should automatically be inserted into every visited URL (Default: false)
     # [asset_host = String]               Where dynamic assets are hosted - will be prepended to relative asset locations if present (Default: nil)
     # [run_server = Boolean]              Whether to start a Rack server for the given Rack app (Default: true)
@@ -385,6 +386,16 @@ module Capybara
       warn "DEPRECATED: #save_and_open_page_path is deprecated, please use #save_path instead. \n"\
            "Note: Behavior is slightly different with relative paths - see documentation" unless path.nil?
       @save_and_open_page_path = path
+    end
+
+    def app_host=(url)
+      raise ArgumentError.new("Capybara.app_host should be set to a url (http://www.example.com)") unless url.nil? || (url =~ URI::regexp)
+      @app_host = url
+    end
+
+    def default_host=(url)
+      raise ArgumentError.new("Capybara.default_host should be set to a url (http://www.example.com)") unless url.nil? || (url =~ URI::regexp)
+      @default_host = url
     end
 
     def included(base)
