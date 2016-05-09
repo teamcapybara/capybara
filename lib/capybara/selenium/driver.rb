@@ -27,6 +27,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def initialize(app, options={})
     begin
       require 'selenium-webdriver'
+      Selenium::WebDriver::Remote::Capabilities::DEFAULTS["unexpectedAlertBehaviour"] = "ignore"
     rescue LoadError => e
       if e.message =~ /selenium-webdriver/
         raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
