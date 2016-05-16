@@ -77,6 +77,40 @@ RSpec.describe Capybara do
       expect(Capybara.server).to eq(server)
     end
   end
+
+  describe 'app_host' do
+    after do
+      Capybara.app_host = nil
+    end
+
+    it "should warn if not a valid URL" do
+      expect { Capybara.app_host = "www.example.com" }.to raise_error(ArgumentError, /Capybara\.app_host should be set to a url/)
+    end
+
+    it "should not warn if a valid URL" do
+      expect { Capybara.app_host = "http://www.example.com" }.not_to raise_error
+    end
+
+    it "should not warn if nil" do
+      expect { Capybara.app_host = nil }.not_to raise_error
+    end
+  end
+
+  describe 'default_host' do
+    around do |test|
+      old_default = Capybara.default_host
+      test.run
+      Capybara.default_host = old_default
+    end
+
+    it "should warn if not a valid URL" do
+      expect { Capybara.default_host = "www.example.com" }.to raise_error(ArgumentError, /Capybara\.default_host should be set to a url/)
+    end
+
+    it "should not warn if a valid URL" do
+      expect { Capybara.default_host = "http://www.example.com" }.not_to raise_error
+    end
+  end
 end
 
 RSpec.describe Capybara::Session do
