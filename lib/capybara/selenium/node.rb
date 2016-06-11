@@ -84,7 +84,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def select_option
-    native.click unless selected?
+    native.click unless selected? || disabled?
   end
 
   def unselect_option
