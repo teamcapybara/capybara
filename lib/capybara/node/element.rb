@@ -284,6 +284,26 @@ module Capybara
 
       ##
       #
+      # Whether or not the element is readonly.
+      #
+      # @return [Boolean]     Whether the element is readonly
+      #
+      def readonly?
+        synchronize { base.readonly? }
+      end
+
+      ##
+      #
+      # Whether or not the element supports multiple results.
+      #
+      # @return [Boolean]     Whether the element supports multiple results.
+      #
+      def multiple?
+        synchronize { base.multiple? }
+      end
+
+      ##
+      #
       # An XPath expression describing where on the page the element can be found
       #
       # @return [String]      An XPath expression

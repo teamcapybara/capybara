@@ -124,7 +124,7 @@ Capybara::Selector::FilterSet.add(:_field) do
   filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
   filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
-  filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
+  filter(:multiple, boolean: true) { |node, value| !(value ^ node.multiple?) }
 
   describe do |options|
     desc, states = String.new, []
@@ -150,7 +150,7 @@ Capybara.add_selector(:field) do
 
   filter_set(:_field)
 
-  filter(:readonly, boolean: true) { |node, value| not(value ^ node[:readonly]) }
+  filter(:readonly, boolean: true) { |node, value| not(value ^ node.readonly?) }
   filter(:with) { |node, with| node.value == with.to_s }
   filter(:type) do |node, type|
     if ['textarea', 'select'].include?(type)
@@ -159,7 +159,6 @@ Capybara.add_selector(:field) do
       node[:type] == type
     end
   end
-  # filter(:multiple, boolean: true) { |node, value| !(value ^ node[:multiple]) }
   describe do |options|
     desc, states = String.new, []
     desc << " of type #{options[:type].inspect}" if options[:type]

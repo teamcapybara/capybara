@@ -42,23 +42,23 @@ module Capybara
       def click
         raise NotImplementedError
       end
-      
+
       def right_click
         raise NotImplementedError
       end
-      
+
       def double_click
         raise NotImplementedError
       end
-      
+
       def send_keys(*args)
         raise NotImplementedError
       end
-      
+
       def hover
         raise NotImplementedError
       end
-      
+
       def drag_to(element)
         raise NotImplementedError
       end
@@ -81,6 +81,14 @@ module Capybara
 
       def disabled?
         raise NotImplementedError
+      end
+
+      def readonly?
+        !!self[:readonly]
+      end
+
+      def multiple?
+        !!self[:multiple]
       end
 
       def path

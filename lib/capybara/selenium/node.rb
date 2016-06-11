@@ -17,7 +17,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def value
-    if tag_name == "select" and self[:multiple] and not self[:multiple] == "false"
+    if tag_name == "select" and multiple?
       native.find_elements(:xpath, ".//option").select { |n| n.selected? }.map { |n| n[:value] || n.text }
     else
       native[:value]
@@ -38,7 +38,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def set(value, options={})
     tag_name = self.tag_name
     type = self[:type]
-    if (Array === value) && !self[:multiple]
+    if (Array === value) && !multiple?
       raise ArgumentError.new "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"
     end
     if tag_name == 'input' and type == 'radio'
@@ -131,12 +131,21 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     selected = native.selected?
     selected and selected != "false"
   end
+  alias :checked? :selected?
 
   def disabled?
     !native.enabled?
   end
 
-  alias :checked? :selected?
+  def readonly?
+    readonly = self[:readonly]
+    readonly and readonly != "false"
+  end
+
+  def multiple?
+    multiple = self[:multiple]
+    multiple and multiple != "false"
+  end
 
   def find_xpath(locator)
     native.find_elements(:xpath, locator).map { |n| self.class.new(driver, n) }
@@ -175,11 +184,6 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
 private
-  def readonly?
-    readonly = self[:readonly]
-    readonly and readonly != "false"
-  end
-
   # a reference to the select node if this is an option node
   def select_node
     find_xpath('./ancestor::select').first
