@@ -413,12 +413,9 @@ Capybara::SpecHelper.spec '#click_button' do
     @session.visit('/form')
     @session.fill_in('address1_city', :with =>'Paris')
     @session.fill_in('address1_street', :with =>'CDG')
-    @session.fill_in('address1_street', :with =>'CDG')
-    @session.select("France", :from => 'address1_country')
 
     @session.fill_in('address2_city', :with => 'Mikolaiv')
     @session.fill_in('address2_street', :with => 'PGS')
-    @session.select("Ukraine", :from => 'address2_country')
 
     @session.click_button "awesome"
 
