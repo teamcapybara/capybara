@@ -196,6 +196,14 @@ RSpec.describe Capybara::DSL do
     end
   end
 
+  describe '#all_sessions' do
+    it "returns all sessions that Capybara knows about" do
+      this_session = Capybara.current_session
+      other_session = Capybara.using_session(:administrator) { Capybara.current_session }
+      expect(Capybara.all_sessions).to include(this_session, other_session)
+    end
+  end
+
   describe "#using_session" do
     it "should change the session name for the duration of the block" do
       expect(Capybara.session_name).to eq(:default)
