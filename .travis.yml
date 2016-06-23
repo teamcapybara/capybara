@@ -31,7 +31,7 @@ env:
 
 
 addons:
-  firefox: latest
+  firefox: 46.0.1
   apt:
     sources:
       - google-chrome
