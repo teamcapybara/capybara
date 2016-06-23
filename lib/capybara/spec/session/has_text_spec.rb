@@ -80,7 +80,7 @@ Capybara::SpecHelper.spec '#has_text?' do
     expect(@session).to have_text(:all, 'Some of this text is hidden!')
   end
 
-  it "should be true if `Capybara.ignore_hidden_elements = true` and text is invisible." do
+  it "should be true if `Capybara.ignore_hidden_elements = false` and text is invisible." do
     Capybara.ignore_hidden_elements = false
     @session.visit('/with_html')
     expect(@session).to have_text('Some of this text is hidden!')
@@ -280,7 +280,7 @@ Capybara::SpecHelper.spec '#has_no_text?' do
     expect(@session).not_to have_no_text(:all, 'Some of this text is hidden!')
   end
 
-  it "should be false if `Capybara.ignore_hidden_elements = true` and text is invisible." do
+  it "should be false if `Capybara.ignore_hidden_elements = false` and text is invisible." do
     Capybara.ignore_hidden_elements = false
     @session.visit('/with_html')
     expect(@session).not_to have_no_text('Some of this text is hidden!')
