@@ -23,8 +23,9 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     elsif tag_name == 'input' and type == 'checkbox'
       click if value ^ native.attribute('checked').to_s.eql?("true")
     elsif tag_name == 'input' and type == 'file'
+      path_names = value.to_s.empty? ? [] : YAML::load(value.to_s)
       resynchronize do
-        native.send_keys(value.to_s)
+        native.send_keys(*path_names)
       end
     elsif tag_name == 'textarea' or tag_name == 'input'
       resynchronize do
