@@ -12,6 +12,9 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   end
 
   def set(value)
+    if (Array === value) && !self[:multiple]
+      raise ArgumentError.new "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"
+    end
     if tag_name == 'input' and type == 'radio'
       other_radios_xpath = XPath.generate { |x| x.anywhere(:input)[x.attr(:name).equals(self[:name])] }.to_s
       driver.dom.xpath(other_radios_xpath).each { |node| node.remove_attribute("checked") }
@@ -29,7 +32,17 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
         # Firefox, allowing no input
         value = value[0...self[:maxlength].to_i]
       end
-      native['value'] = value.to_s
+      if Array === value #Assert multiple attribute is present
+        value.each do |v|
+          new_native = native.clone
+          new_native.remove_attribute('value')
+          native.add_next_sibling(new_native)
+          new_native['value'] = v.to_s
+        end
+        native.remove
+      else
+        native['value'] = value.to_s
+      end
     elsif tag_name == "textarea"
       native.content = value.to_s
     end
