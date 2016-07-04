@@ -7,7 +7,16 @@ class TestApp < Sinatra::Base
   set :static, true
 
   get '/' do
-    'Hello world! <a href="with_html">Relative</a>'
+    <<END_OF_BODY
+Hello world! <a href="with_html">Relative</a>
+<pre>
+Some
+  Preformatted
+  
+  Text
+is indented
+</pre>
+END_OF_BODY
   end
 
   get '/foo' do
@@ -127,9 +136,11 @@ class TestApp < Sinatra::Base
 
   post '/upload_multiple' do
     begin
-      buffer = []
-      buffer << "Content-type: #{params[:form][:multiple_documents][0][:type]}"
-      buffer << "File content: #{params[:form][:multiple_documents][0][:tempfile].read}"
+      buffer = ["#{params[:form][:multiple_documents].size}"]
+      params[:form][:multiple_documents].each do |doc|
+        buffer << "Content-type: #{doc[:type]}"
+        buffer << "File content: #{doc[:tempfile].read}"
+      end
       buffer.join(' | ')
     rescue
       'No files uploaded'
