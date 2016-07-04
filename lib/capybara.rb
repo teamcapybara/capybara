@@ -297,7 +297,7 @@ module Capybara
     # @return [String]    The IP address bound by default server
     #
     def server_host
-      @server_host || '127.0.0.1'
+      @server_host || 'localhost'
     end
 
     ##
