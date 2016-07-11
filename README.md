@@ -45,7 +45,6 @@ GitHub): http://groups.google.com/group/ruby-capybara
 - [Using the DSL elsewhere](#using-the-dsl-elsewhere)
 - [Calling remote servers](#calling-remote-servers)
 - [Using sessions](#using-sessions)
-- [Using the sessions manually](#using-the-sessions-manually)
 - [XPath, CSS and selectors](#xpath-css-and-selectors)
 - [Beware the XPath // trap](#beware-the-xpath--trap)
 - [Configuring and adding drivers](#configuring-and-adding-drivers)
@@ -821,11 +820,11 @@ Capybara.run_server = false
 
 ## <a name="using-sessions"></a>Using sessions
 
-Capybara manages named sessions (:default if not specified) and multiple sessions using the same driver and test app instance can be interacted with.
+Capybara manages named sessions (:default if not specified) allowing multiple sessions using the same driver and test app instance to be interacted with.
 A new session will be created using the current driver if a session with the given name using the current driver and test app instance is not found.
 
 ### Named the sessions
-To perform operations in a different session and then revent to the previous session
+To perform operations in a different session and then revert to the previous session
 
 ```ruby
 Capybara.using_session("Bob's session") do
