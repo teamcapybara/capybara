@@ -823,7 +823,7 @@ Capybara.run_server = false
 Capybara manages named sessions (:default if not specified) allowing multiple sessions using the same driver and test app instance to be interacted with.
 A new session will be created using the current driver if a session with the given name using the current driver and test app instance is not found.
 
-### Named the sessions
+### Named sessions
 To perform operations in a different session and then revert to the previous session
 
 ```ruby
@@ -839,7 +839,7 @@ To permanently switch the current session to a different session
 Capybara.session_name = "some other session"
 ````
 
-### <a name="using-the-sessions-manually"></a>Using the sessions manually
+### <a name="using-sessions-manually"></a>Using sessions manually
 
 For ultimate control, you can instantiate and use a
 [Session](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session)
