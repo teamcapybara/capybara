@@ -11,24 +11,23 @@ gemfile:
 matrix:
   include:
     - gemfile: Gemfile
-      rvm: 2.3.0
+      rvm: 2.3.1
       env: WINDOW_TEST=true
+    - gemfile: Gemfile
+      rvm: 2.3.1
+      env: CAPYBARA_CHROME=true
     - gemfile: gemfiles/Gemfile.ruby-19
       rvm: 1.9.3
     - gemfile: gemfiles/Gemfile.base-versions
       rvm: 1.9.3
     - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: 2.3.0
-    - gemfile: Gemfile
-      rvm: 2.3.0
-      env: CAPYBARA_CHROME=true
+      rvm: 2.4.0-preview1
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
     - rvm: jruby-9.0.5.0
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
-
 
 addons:
   firefox: latest
