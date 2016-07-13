@@ -3,6 +3,8 @@ Release date: Unreleased
 
 ### Fixed
 * Issue with modals present when closing the page using selenium - Issue #1696 [Jonas Nicklas, Thomas Walpole]
+* Server errors raised in test code have the cause set to an explanatory exception
+  in rubies that support Exception#cause rather than a confusing ExpectationNotMet - Issue #1719 [Thomas Walpole]
 
 ### Added
 * 'check', 'uncheck', and 'choose' will now click the associated label if the checkbox/radio button is not visible [Thomas Walpole]

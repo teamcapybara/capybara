@@ -408,6 +408,19 @@ Capybara::SpecHelper.spec "node" do
       end
     end
   end
+  
+  context "when #synchronize raises server errors" do
+    it "sets an explanatory exception as the cause of server exceptions", :requires => [:server, :js] do
+      skip "This version of ruby doesn't support exception causes" unless Exception.instance_methods.include? :cause
+      quietly { @session.visit("/error") }
+      expect do
+        @session.find(:css, 'span')
+      end.to raise_error(TestApp::TestAppError) do |e|
+        expect(e.cause).to be_a Capybara::CapybaraError 
+        expect(e.cause.message).to match /Your application server raised an error/
+      end
+    end
+  end
 
   def be_an_invalid_element_error(session)
     satisfy { |error| session.driver.invalid_element_errors.any? { |e| error.is_a? e } }

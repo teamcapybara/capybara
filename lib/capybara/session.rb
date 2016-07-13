@@ -120,7 +120,14 @@ module Capybara
     # Raise errors encountered in the server
     #
     def raise_server_error!
-      raise @server.error if Capybara.raise_server_errors and @server and @server.error
+      if Capybara.raise_server_errors and @server and @server.error
+        # Force an explanation for the error being raised as the exception cause
+        begin
+          raise CapybaraError, "Your application server raised an error - It has been raised in your test code because Capybara.raise_server_errors == true"
+        rescue CapybaraError
+          raise @server.error
+        end
+      end
     ensure
       @server.reset_error! if @server
     end
