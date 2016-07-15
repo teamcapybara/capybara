@@ -48,8 +48,12 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#status_code'
   end
 
-  def within_frame(frame_handle)
-    raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#within_frame'
+  ##
+  #
+  # @param frame [Capybara::Node::Element, :parent, :top]  The iframe element to switch to
+  #
+  def switch_to_frame(frame)
+    raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#switch_to_frame'
   end
 
   def current_window_handle

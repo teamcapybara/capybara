@@ -11,6 +11,7 @@ Release date: Unreleased
 * Raise error if Capybara.app_host/default_host are specified incorrectly [Thomas Walpole]
 * Capybara::Selector::FilterSet allows for sharing filter definitions between selectors [Thomas Walpole]
 * Remove need to pass nil locator in most node actions when locator is not needed [Thomas Walpole]
+* New frames API for drivers - Issue #1365 [Thomas Walpole]
 
 #Version 2.7.1
 Release date: 2016-05-01
