@@ -29,9 +29,9 @@ Capybara::SpecHelper.spec "node" do
 
   describe "#parent" do
     it "should be deprecated" do
-      expect_any_instance_of(Kernel).to receive(:warn).with(/^DEPRECATED:/)
       @node = @session.find(:css, '#first')
-      expect(@node.parent).to eq(@node.session.document)
+      expect(@node).to receive(:warn).with(/^DEPRECATED:/)
+      expect(@node.parent).to eq(@node.query_scope)
     end
   end
 
