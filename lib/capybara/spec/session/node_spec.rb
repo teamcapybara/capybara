@@ -19,11 +19,19 @@ Capybara::SpecHelper.spec "node" do
     expect(@session.find(:css, '#second')).to have_no_css('h1')
   end
 
+  describe "#query_scope" do
+    it "should have a reference to the element the query was evaluated on if there is one" do
+      @node = @session.find(:css, '#first')
+      expect(@node.query_scope).to eq(@node.session.document)
+      expect(@node.find(:css, '#foo').query_scope).to eq(@node)
+    end
+  end
+
   describe "#parent" do
-    it "should have a reference to its parent if there is one" do
+    it "should be deprecated" do
+      expect_any_instance_of(Kernel).to receive(:warn).with(/^DEPRECATED:/)
       @node = @session.find(:css, '#first')
       expect(@node.parent).to eq(@node.session.document)
-      expect(@node.find(:css, '#foo').parent).to eq(@node)
     end
   end
 
@@ -408,7 +416,7 @@ Capybara::SpecHelper.spec "node" do
       end
     end
   end
-  
+
   context "when #synchronize raises server errors" do
     it "sets an explanatory exception as the cause of server exceptions", :requires => [:server, :js] do
       skip "This version of ruby doesn't support exception causes" unless Exception.instance_methods.include? :cause
@@ -416,7 +424,7 @@ Capybara::SpecHelper.spec "node" do
       expect do
         @session.find(:css, 'span')
       end.to raise_error(TestApp::TestAppError) do |e|
-        expect(e.cause).to be_a Capybara::CapybaraError 
+        expect(e.cause).to be_a Capybara::CapybaraError
         expect(e.cause.message).to match /Your application server raised an error/
       end
     end

@@ -23,9 +23,9 @@ module Capybara
     #
     class Element < Base
 
-      def initialize(session, base, parent, query)
+      def initialize(session, base, query_scope, query)
         super(session, base)
-        @parent = parent
+        @query_scope = query_scope
         @query = query
       end
 
@@ -340,7 +340,7 @@ module Capybara
       def reload
         if @allow_reload
           begin
-            reloaded = parent.reload.first(@query.name, @query.locator, @query.options)
+            reloaded = query_scope.reload.first(@query.name, @query.locator, @query.options)
             @base = reloaded.base if reloaded
           rescue => e
             raise e unless catch_error?(e)

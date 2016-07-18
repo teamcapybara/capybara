@@ -179,7 +179,7 @@ module Capybara
       def assert_matches_selector(*args)
         query = Capybara::Queries::MatchQuery.new(*args)
         synchronize(query.wait) do
-          result = query.resolve_for(self.parent)
+          result = query.resolve_for(self.query_scope)
           unless result.include? self
             raise Capybara::ExpectationNotMet, "Item does not match the provided selector"
           end
@@ -190,7 +190,7 @@ module Capybara
       def assert_not_matches_selector(*args)
         query = Capybara::Queries::MatchQuery.new(*args)
         synchronize(query.wait) do
-          result = query.resolve_for(self.parent)
+          result = query.resolve_for(self.query_scope)
           if result.include? self
             raise Capybara::ExpectationNotMet, 'Item matched the provided selector'
           end

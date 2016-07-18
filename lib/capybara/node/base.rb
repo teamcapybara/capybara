@@ -23,7 +23,7 @@ module Capybara
     #     session.has_css?('#foobar')               # from Capybara::Node::Matchers
     #
     class Base
-      attr_reader :session, :base, :parent
+      attr_reader :session, :base, :query_scope
 
       include Capybara::Node::Finders
       include Capybara::Node::Actions
@@ -106,6 +106,12 @@ module Capybara
       # @api private
       def find_xpath(xpath)
         base.find_xpath(xpath)
+      end
+
+      # @deprecated Use query_scope instead
+      def parent
+        warn "DEPRECATED: #parent is deprecated in favor of #query_scope - Note: #parent was not the elements parent in the document so it's most likely not what you wanted anyway"
+        query_scope
       end
 
     protected
