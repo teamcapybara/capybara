@@ -131,29 +131,22 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     end
   end
 
-  ##
-  #
-  # Webdriver supports frame name, id, index(zero-based) or {Capybara::Node::Element} to find iframe
-  #
-  # @overload within_frame(index)
-  #   @param [Integer] index                 index of a frame
-  # @overload within_frame(name_or_id)
-  #   @param [String] name_or_id             name or id of a frame
-  # @overload within_frame(element)
-  #   @param [Capybara::Node::Base] a_node   frame element
-  #
-  def within_frame(frame_handle)
-    frame_handle = frame_handle.native if frame_handle.is_a?(Capybara::Node::Base)
-    @frame_handles[browser.window_handle] ||= []
-    @frame_handles[browser.window_handle] << frame_handle
-    browser.switch_to.frame(frame_handle)
-    yield
-  ensure
-    # would love to use browser.switch_to.parent_frame here
-    # but it has an issue if the current frame is removed from within it
-    @frame_handles[browser.window_handle].pop
-    browser.switch_to.default_content
-    @frame_handles[browser.window_handle].each { |fh| browser.switch_to.frame(fh) }
+  def switch_to_frame(frame)
+    case frame
+    when :top
+      @frame_handles[browser.window_handle] = []
+      browser.switch_to.default_content
+    when :parent
+      # would love to use browser.switch_to.parent_frame here
+      # but it has an issue if the current frame is removed from within it
+      @frame_handles[browser.window_handle].pop
+      browser.switch_to.default_content
+      @frame_handles[browser.window_handle].each { |fh| browser.switch_to.frame(fh) }
+    else
+      @frame_handles[browser.window_handle] ||= []
+      @frame_handles[browser.window_handle] << frame.native
+      browser.switch_to.frame(frame.native)
+    end
   end
 
   def current_window_handle

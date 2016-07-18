@@ -327,18 +327,48 @@ module Capybara
 
     ##
     #
-    # Execute the given block within the given iframe using given frame name or index.
-    # May be supported by not all drivers. Drivers that support it, may provide additional options.
+    # Execute the given block within the given iframe using given frame, frame name/id or index.
+    # May not be supported by all drivers.
     #
+    # @overload within_frame(element)
+    #   @param [Capybara::Node::Element]  frame element
+    # @overload within_frame(name)
+    #   @param [String] name           name/id of a frame
     # @overload within_frame(index)
     #   @param [Integer] index         index of a frame
-    # @overload within_frame(name)
-    #   @param [String] name           name of a frame
     #
-    def within_frame(frame_handle)
+    def within_frame(locator)
       scopes.push(nil)
-      driver.within_frame(frame_handle) do
-        yield
+
+      #support older driver frame api for now
+      frame = case locator
+      when Capybara::Node::Element
+        locator
+      when String
+        find(:xpath, XPath.descendant(:iframe)[XPath.attr(:id).equals(locator) | XPath.attr(:name).equals(locator)].to_xpath(:exact))
+      when Integer
+        all(:css, 'iframe', minimum: locator+1)[locator]
+      else
+        raise ArgumentError
+      end
+
+      begin
+        driver.switch_to_frame(frame)
+        begin
+          yield
+        ensure
+          driver.switch_to_frame(:parent)
+        end
+      rescue Capybara::NotSupportedByDriverError
+        # Support older driver frame API for now
+        if driver.respond_to?(:within_frame)
+          warn "Your driver (#{driver.class.name}) is using an older version of Capybara's frame API - please update your driver"
+          driver.within_frame(frame) do
+            yield
+          end
+        else
+          raise
+        end
       end
     ensure
       scopes.pop
