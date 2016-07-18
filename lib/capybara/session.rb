@@ -345,9 +345,9 @@ module Capybara
       when Capybara::Node::Element
         locator
       when String
-        find(:xpath, XPath.descendant(:iframe)[XPath.attr(:id).equals(locator) | XPath.attr(:name).equals(locator)].to_xpath(:exact))
+        find(:frame, locator)
       when Integer
-        all(:css, 'iframe', minimum: locator+1)[locator]
+        all(:frame, minimum: locator+1)[locator]
       else
         raise ArgumentError
       end
