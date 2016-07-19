@@ -37,6 +37,14 @@ Capybara::SpecHelper.spec '#assert_text' do
     expect(@session.assert_text('Some of this text is hidden!')).to eq(true)
   end
 
+  it "should raise error with an helpful message if the requested text is present but invisible." do
+    @session.visit('/with_html')
+    el = @session.find(:css, '#hidden-text')
+    expect do
+      el.assert_text(:visible, 'Some of this text is hidden!')
+    end.to raise_error(Capybara::ExpectationNotMet, /However, it was found 1 time including invisible text/)
+  end
+
   it "should be true if the text in the page matches given regexp" do
     @session.visit('/with_html')
     expect(@session.assert_text(/Lorem/)).to eq(true)
@@ -164,6 +172,14 @@ Capybara::SpecHelper.spec '#assert_no_text' do
     expect do
       el.assert_no_text(:all, 'Some of this text is hidden!')
     end.to raise_error(Capybara::ExpectationNotMet, 'expected not to find text "Some of this text is hidden!" in "Some of this text is hidden!"')
+  end
+
+  it "should raise error if :all given and text is invisible." do
+    @session.visit('/with_html')
+    el = @session.find(:css, '#some-hidden-text', visible: false)
+    expect do
+      el.assert_no_text(:visible, 'hidden')
+    end.to raise_error(Capybara::ExpectationNotMet, 'expected not to find text "hidden" in "Some of this text is not hidden"')
   end
 
   it "should be true if the text in the page doesn't match given regexp" do

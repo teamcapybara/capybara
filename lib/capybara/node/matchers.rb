@@ -501,7 +501,7 @@ module Capybara
       #
       # @!macro text_query_params
       #   @overload $0(type, text, options = {})
-      #     @param [:all, :visible] type               Whether to check for only visible or all text
+      #     @param [:all, :visible] type               Whether to check for only visible or all text. If this parameter is missing or nil then we use the value of `Capybara.ignore_hidden_elements`, which defaults to `true`, corresponding to `:visible`.
       #     @param [String, Regexp] text               The string/regexp to check for. If it's a string, text is expected to include it. If it's a regexp, text is expected to match it.
       #     @option options [Integer] :count (nil)     Number of times the text is expected to occur
       #     @option options [Integer] :minimum (nil)   Minimum number of times the text is expected to occur
