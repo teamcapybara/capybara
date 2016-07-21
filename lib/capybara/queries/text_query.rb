@@ -5,6 +5,7 @@ module Capybara
     class TextQuery < BaseQuery
       def initialize(*args)
         @type = (args.first.is_a?(Symbol) || args.first.nil?) ? args.shift : nil
+        @type = (Capybara.ignore_hidden_elements or Capybara.visible_text_only) ? :visible : :all if @type.nil?
         @expected_text, @options = args
         unless @expected_text.is_a?(Regexp)
           @expected_text = Capybara::Helpers.normalize_whitespace(@expected_text)
@@ -30,7 +31,7 @@ module Capybara
 
       private
 
-      def build_message(check_invisible)
+      def build_message(report_on_invisible)
         description =
           if @expected_text.is_a?(Regexp)
             "text matching #{@expected_text.inspect}"
@@ -44,13 +45,25 @@ module Capybara
         end
         message << " in #{@actual_text.inspect}"
 
-        if @node and visible? and check_invisible
+        details_message = []
+
+        if @node and !@expected_text.is_a? Regexp
+          insensitive_regexp = Regexp.new(@expected_text, Regexp::IGNORECASE)
+          insensitive_count = @actual_text.scan(insensitive_regexp).size
+          if insensitive_count != @count
+            details_message << "it was found #{insensitive_count} #{Capybara::Helpers.declension("time", "times", insensitive_count)} using a case insensitive search"
+          end
+        end
+
+        if @node and check_visible_text? and report_on_invisible
           invisible_text = text(@node, :all)
           invisible_count = invisible_text.scan(@search_regexp).size
           if invisible_count != @count
-            message << ". (However, it was found #{invisible_count} time#{'s' if invisible_count != 1} including invisible text.)"
+            details_message << ". it was found #{invisible_count} #{Capybara::Helpers.declension("time", "times", invisible_count)} including non-visible text"
           end
         end
+
+        message << ". (However, #{details_message.join(' and ')}.)" unless details_message.empty?
 
         message
       end
@@ -59,15 +72,13 @@ module Capybara
         COUNT_KEYS + [:wait]
       end
 
-      def visible?
-        @type == :visible or
-            (@type.nil? and (Capybara.ignore_hidden_elements or Capybara.visible_text_only))
+      def check_visible_text?
+        @type == :visible
       end
 
       def text(node, query_type)
         Capybara::Helpers.normalize_whitespace(node.text(query_type))
       end
-
     end
   end
 end

@@ -37,12 +37,19 @@ Capybara::SpecHelper.spec '#assert_text' do
     expect(@session.assert_text('Some of this text is hidden!')).to eq(true)
   end
 
-  it "should raise error with an helpful message if the requested text is present but invisible." do
+  it "should raise error with a helpful message if the requested text is present but invisible" do
     @session.visit('/with_html')
     el = @session.find(:css, '#hidden-text')
     expect do
       el.assert_text(:visible, 'Some of this text is hidden!')
-    end.to raise_error(Capybara::ExpectationNotMet, /However, it was found 1 time including invisible text/)
+    end.to raise_error(Capybara::ExpectationNotMet, /it was found 1 time including non-visible text/)
+  end
+
+  it "should raise error with a helpful message if the requested text is present but with incorrect case" do
+    @session.visit('/with_html')
+    expect do
+      @session.assert_text('Text With Whitespace')
+    end.to raise_error(Capybara::ExpectationNotMet, /it was found 1 time using a case insensitive search/)
   end
 
   it "should be true if the text in the page matches given regexp" do
