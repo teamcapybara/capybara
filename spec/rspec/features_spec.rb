@@ -6,11 +6,11 @@ RSpec.configuration.before(:each, { file_path: "./spec/rspec/features_spec.rb" }
   @in_filtered_hook = true
 end
 
-feature "Capybara's feature DSL" do    
+feature "Capybara's feature DSL" do
   background do
     @in_background = true
   end
-  
+
   def current_example(context)
     RSpec.respond_to?(:current_example) ? RSpec.current_example : context.example
   end
@@ -20,7 +20,7 @@ feature "Capybara's feature DSL" do
     expect(page).to have_content('Hello world!')
   end
 
-  scenario "preserves description" do 
+  scenario "preserves description" do
     expect(current_example(self).metadata[:full_description])
       .to eq("Capybara's feature DSL preserves description")
   end
