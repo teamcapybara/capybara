@@ -384,7 +384,7 @@ end
 
 Capybara.add_selector(:frame) do
   xpath do |locator|
-    xpath = XPath.descendant(:iframe)
+    xpath = XPath.descendant(:iframe) + XPath.descendant(:frame)
     xpath = xpath[XPath.attr(:id).equals(locator.to_s) | XPath.attr(:name).equals(locator)] unless locator.nil?
     xpath
   end
