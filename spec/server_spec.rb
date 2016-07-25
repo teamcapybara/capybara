@@ -116,7 +116,7 @@ RSpec.describe Capybara::Server do
       expect {
         server1.wait_for_pending_requests
       }.to change{done}.from(false).to(true)
-      expect(server2.instance_variable_get('@middleware').pending_requests?).to eq(false)
+      expect(server2.send(:pending_requests?)).to eq(false)
     end
 
   end
@@ -165,7 +165,7 @@ RSpec.describe Capybara::Server do
       expect {
         server1.wait_for_pending_requests
       }.to change{done}.from(false).to(true)
-      expect(server2.instance_variable_get('@middleware').pending_requests?).to eq(true)
+      expect(server2.send(:pending_requests?)).to eq(true)
     end
 
   end
