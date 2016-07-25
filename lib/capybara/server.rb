@@ -61,7 +61,6 @@ module Capybara
 
     def initialize(app, port=Capybara.server_port, host=Capybara.server_host)
       @app = app
-      @middleware = Middleware.new(@app)
       @server_thread = nil # suppress warnings
       @host, @port = host, port
       @port ||= Capybara::Server.ports[port_key]
@@ -69,20 +68,20 @@ module Capybara
     end
 
     def reset_error!
-      @middleware.error = nil
+      middleware.error = nil
     end
 
     def error
-      @middleware.error
+      middleware.error
     end
 
     def responsive?
       return false if @server_thread && @server_thread.join(0)
 
-      res = Net::HTTP.start(host, @port) { |http| http.get('/__identify__') }
+      res = Net::HTTP.start(host, port) { |http| http.get('/__identify__') }
 
       if res.is_a?(Net::HTTPSuccess) or res.is_a?(Net::HTTPRedirection)
-        return res.body == @app.object_id.to_s
+        return res.body == app.object_id.to_s
       end
     rescue SystemCallError
       return false
@@ -96,10 +95,10 @@ module Capybara
 
     def boot
       unless responsive?
-        Capybara::Server.ports[port_key] = @port
+        Capybara::Server.ports[port_key] = port
 
         @server_thread = Thread.new do
-          Capybara.server.call(@middleware, @port, @host)
+          Capybara.server.call(middleware, port, host)
         end
 
         Timeout.timeout(60) { @server_thread.join(0.1) until responsive? }
@@ -112,12 +111,16 @@ module Capybara
 
   private
 
+    def middleware
+      @middleware ||= Middleware.new(app)
+    end
+
     def port_key
-      Capybara.reuse_server ? @app.object_id : @middleware.object_id
+      Capybara.reuse_server ? app.object_id : middleware.object_id
     end
 
     def pending_requests?
-      @middleware.pending_requests?
+      middleware.pending_requests?
     end
 
     def find_available_port(host)
@@ -126,6 +129,5 @@ module Capybara
     ensure
       server.close if server
     end
-
   end
 end
