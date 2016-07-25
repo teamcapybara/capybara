@@ -64,7 +64,7 @@ module Capybara
       @middleware = Middleware.new(@app)
       @server_thread = nil # suppress warnings
       @host, @port = host, port
-      @port ||= Capybara::Server.ports[Capybara.reuse_server ? @app.object_id : @middleware.object_id]
+      @port ||= Capybara::Server.ports[port_key]
       @port ||= find_available_port(host)
     end
 
@@ -89,14 +89,14 @@ module Capybara
     end
 
     def wait_for_pending_requests
-      Timeout.timeout(60) { sleep(0.01) while @middleware.pending_requests? }
+      Timeout.timeout(60) { sleep(0.01) while pending_requests? }
     rescue Timeout::Error
       raise "Requests did not finish in 60 seconds"
     end
 
     def boot
       unless responsive?
-        Capybara::Server.ports[Capybara.reuse_server ? @app.object_id : @middleware.object_id] = @port
+        Capybara::Server.ports[port_key] = @port
 
         @server_thread = Thread.new do
           Capybara.server.call(@middleware, @port, @host)
@@ -111,6 +111,14 @@ module Capybara
     end
 
   private
+
+    def port_key
+      Capybara.reuse_server ? @app.object_id : @middleware.object_id
+    end
+
+    def pending_requests?
+      @middleware.pending_requests?
+    end
 
     def find_available_port(host)
       server = TCPServer.new(host, 0)
