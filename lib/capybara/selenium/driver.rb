@@ -11,6 +11,11 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def browser
     unless @browser
+      if options[:browser].to_s == "firefox"
+        options[:desired_capabilities] ||= Selenium::WebDriver::Remote::Capabilities.firefox
+        options[:desired_capabilities].merge!({ unexpectedAlertBehaviour: "ignore" })
+      end
+
       @browser = Selenium::WebDriver.for(options[:browser], options.reject { |key,val| SPECIAL_OPTIONS.include?(key) })
 
       main = Process.pid
@@ -27,7 +32,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def initialize(app, options={})
     begin
       require 'selenium-webdriver'
-      Selenium::WebDriver::Remote::Capabilities::DEFAULTS["unexpectedAlertBehaviour"] = "ignore"
     rescue LoadError => e
       if e.message =~ /selenium-webdriver/
         raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
