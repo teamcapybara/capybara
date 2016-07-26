@@ -109,10 +109,9 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
 
   describe '#resize_to' do
     it 'should be able to resize window', requires: [:windows, :js] do
-
       width, height = @session.current_window.size
-      @session.current_window.resize_to(width-10, height-10)
-      expect(@session.current_window.size).to eq([width-10, height-10])
+      @session.current_window.resize_to(width-100, height-100)
+      expect(@session.current_window.size).to eq([width-100, height-100])
     end
 
     it 'should stay on current window if invoked not for current window', requires: [:windows, :js] do

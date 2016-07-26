@@ -2,10 +2,13 @@
 require 'spec_helper'
 require "selenium-webdriver"
 
+Selenium::WebDriver::Firefox.driver_path = '/home/travis/geckodriver' if ENV['TRAVIS'] && ENV['GECKODRIVER']
+
 Capybara.register_driver :selenium_focus do |app|
-  profile = Selenium::WebDriver::Firefox::Profile.new
-  profile["focusmanager.testmode"] = true
-  Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile)
+  # profile = Selenium::WebDriver::Firefox::Profile.new
+  # profile["focusmanager.testmode"] = true
+  # Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile)
+  Capybara::Selenium::Driver.new(app, browser: :firefox)
 end
 
 module TestSessions

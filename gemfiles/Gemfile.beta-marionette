@@ -1,0 +1,10 @@
+source "https://rubygems.org"
+
+gem 'bundler', '~> 1.1'
+gemspec :path => '..'
+
+gem 'xpath', github: 'jnicklas/xpath'
+
+git 'https://github.com/SeleniumHQ/selenium.git' do
+  gem 'selenium-webdriver'
+end

@@ -219,6 +219,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def accept_modal(type, options={}, &blk)
+    options = options.dup
     yield if block_given?
     modal = find_modal(options)
     modal.send_keys options[:with] if options[:with]
