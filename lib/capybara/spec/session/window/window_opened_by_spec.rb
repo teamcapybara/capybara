@@ -3,6 +3,7 @@ Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
   before(:each) do
     @window = @session.current_window
     @session.visit('/with_windows')
+    expect(@session).to have_css('body.loaded')
   end
   after(:each) do
     (@session.windows - [@window]).each do |w|
@@ -73,7 +74,7 @@ Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
     expect do
       @session.window_opened_by do
         button.click
-        sleep 0.1 # It's possible for window_opened_by to be fullfilled before the second window opens
+        sleep 1 # It's possible for window_opened_by to be fullfilled before the second window opens
       end
     end.to raise_error(Capybara::WindowError, two_windows_message)
     @session.document.synchronize(2, errors: [Capybara::CapybaraError]) do

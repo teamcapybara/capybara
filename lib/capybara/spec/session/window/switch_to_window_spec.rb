@@ -3,7 +3,9 @@ Capybara::SpecHelper.spec '#switch_to_window', requires: [:windows] do
   before(:each) do
     @window = @session.current_window
     @session.visit('/with_windows')
+    expect(@session).to have_css('body.loaded')
   end
+
   after(:each) do
     (@session.windows - [@window]).each do |w|
       @session.switch_to_window w
@@ -47,7 +49,7 @@ Capybara::SpecHelper.spec '#switch_to_window', requires: [:windows] do
   context "with block" do
     before(:each) do
       @session.find(:css, '#openTwoWindows').click
-      sleep(0.2) # wait for the windows to open
+      sleep(1) # wait for the windows to open
     end
 
     it "should be able to switch to current window" do
@@ -117,7 +119,7 @@ Capybara::SpecHelper.spec '#switch_to_window', requires: [:windows] do
   it "should wait for window to appear" do
     @session.find(:css, '#openWindowWithTimeout').click
     expect do
-      @session.switch_to_window { @session.title == 'Title of the first popup'}
+      @session.switch_to_window(wait: 5) { @session.title == 'Title of the first popup'}
     end.not_to raise_error
   end
 end
