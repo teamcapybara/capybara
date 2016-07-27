@@ -23,29 +23,29 @@ Capybara::SpecHelper.spec "#check" do
 
   describe "checking" do
     it "should not change an already checked checkbox" do
-      expect(@session.find(:xpath, "//input[@id='form_pets_dog']")['checked']).to be_truthy
+      expect(@session.find(:xpath, "//input[@id='form_pets_dog']")).to be_checked
       @session.check('form_pets_dog')
-      expect(@session.find(:xpath, "//input[@id='form_pets_dog']")['checked']).to be_truthy
+      expect(@session.find(:xpath, "//input[@id='form_pets_dog']")).to be_checked
     end
 
     it "should check an unchecked checkbox" do
-      expect(@session.find(:xpath, "//input[@id='form_pets_cat']")['checked']).to be_falsey
+      expect(@session.find(:xpath, "//input[@id='form_pets_cat']")).not_to be_checked
       @session.check('form_pets_cat')
-      expect(@session.find(:xpath, "//input[@id='form_pets_cat']")['checked']).to be_truthy
+      expect(@session.find(:xpath, "//input[@id='form_pets_cat']")).to be_checked
     end
   end
 
   describe "unchecking" do
     it "should not change an already unchecked checkbox" do
-      expect(@session.find(:xpath, "//input[@id='form_pets_cat']")['checked']).to be_falsey
+      expect(@session.find(:xpath, "//input[@id='form_pets_cat']")).not_to be_checked
       @session.uncheck('form_pets_cat')
-      expect(@session.find(:xpath, "//input[@id='form_pets_cat']")['checked']).to be_falsey
+      expect(@session.find(:xpath, "//input[@id='form_pets_cat']")).not_to be_checked
     end
 
     it "should uncheck a checked checkbox" do
-      expect(@session.find(:xpath, "//input[@id='form_pets_dog']")['checked']).to be_truthy
+      expect(@session.find(:xpath, "//input[@id='form_pets_dog']")).to be_checked
       @session.uncheck('form_pets_dog')
-      expect(@session.find(:xpath, "//input[@id='form_pets_dog']")['checked']).to be_falsey
+      expect(@session.find(:xpath, "//input[@id='form_pets_dog']")).not_to be_checked
     end
   end
 
