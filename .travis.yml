@@ -27,6 +27,9 @@ matrix:
       rvm: 2.3.1
       addons:
         firefox: latest-beta
+        apt:
+          packages:
+            - awesome
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.beta-marionette
