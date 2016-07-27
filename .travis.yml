@@ -16,6 +16,12 @@ matrix:
     - gemfile: gemfiles/Gemfile.rspec-34
       rvm: 2.3.1
       env: CAPYBARA_CHROME=true
+      apt:
+        sources:
+          - google-chrome
+        packages:
+          - google-chrome-stable
+          - awesome
     - gemfile: gemfiles/Gemfile.ruby-19
       rvm: 1.9.3
     - gemfile: gemfiles/Gemfile.base-versions
@@ -41,10 +47,7 @@ env:
 addons:
   firefox: latest
   apt:
-    sources:
-      - google-chrome
     packages:
-      - google-chrome-stable
       - awesome
 
 before_install:
