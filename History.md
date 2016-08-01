@@ -8,7 +8,7 @@ Release date: Unreleased
 * background/given/given! RSoec aliases will work if RSpec config.shared_context_metadata_behavior == :apply_to_host_groups [Thomas Walpole]
 * Fixed setting of unexpectedAlertError now that Selenium will be freezing the Capabilities::DEFAULTS [Thomas Walpole]
 ### Added
-* 'check', 'uncheck', and 'choose' will now click the associated label if the checkbox/radio button is not visible [Thomas Walpole]
+* 'check', 'uncheck', and 'choose' can now optionally click the associated label if the checkbox/radio button is not visible [Thomas Walpole]
 * Raise error if Capybara.app_host/default_host are specified incorrectly [Thomas Walpole]
 * Capybara::Selector::FilterSet allows for sharing filter definitions between selectors [Thomas Walpole]
 * Remove need to pass nil locator in most node actions when locator is not needed [Thomas Walpole]

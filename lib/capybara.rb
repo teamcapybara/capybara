@@ -24,7 +24,7 @@ module Capybara
     attr_accessor :asset_host, :run_server, :always_include_port
     attr_accessor :server_port, :exact, :match, :exact_options, :visible_text_only
     attr_accessor :default_selector, :default_max_wait_time, :ignore_hidden_elements
-    attr_accessor :save_path, :wait_on_first_by_default, :automatic_reload
+    attr_accessor :save_path, :wait_on_first_by_default, :automatic_label_click, :automatic_reload
     attr_accessor :reuse_server, :raise_server_errors, :server_errors
     attr_writer :default_driver, :current_driver, :javascript_driver, :session_name, :server_host
     attr_reader :save_and_open_page_path
@@ -53,6 +53,7 @@ module Capybara
     # [automatic_reload = Boolean]        Whether to automatically reload elements as Capybara is waiting (Default: true)
     # [save_path = String]  Where to put pages saved through save_(page|screenshot), save_and_open_(page|screenshot) (Default: Dir.pwd)
     # [wait_on_first_by_default = Boolean]   Whether Node#first defaults to Capybara waiting behavior for at least 1 element to match (Default: false)
+    # [automatic_label_click = Boolean]   Whether Node#choose, Node#check, Node#uncheck will attempt to click the associated label element if the checkbox/radio button are non-visible (Default: false)
     # [reuse_server = Boolean]  Reuse the server thread between multiple sessions using the same app object (Default: true)
     # === DSL Options
     #
@@ -498,6 +499,7 @@ Capybara.configure do |config|
   config.server_errors = [StandardError]
   config.visible_text_only = false
   config.wait_on_first_by_default = false
+  config.automatic_label_click = false
   config.reuse_server = true
 end
 

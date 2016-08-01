@@ -113,33 +113,60 @@ Capybara::SpecHelper.spec "#check" do
   end
 
   context "when checkbox hidden" do
-    it "should check via clicking the label with :for attribute if possible" do
-      expect(@session.find(:checkbox, 'form_cars_tesla', unchecked: true, visible: :hidden)).to be
-      @session.check('form_cars_tesla')
-      @session.click_button('awesome')
-      expect(extract_results(@session)['cars']).to include('tesla')
+    context "with Capybara.automatic_label_click == true" do
+      around do |spec|
+        old_click_label, Capybara.automatic_label_click = Capybara.automatic_label_click, true
+        spec.run
+        Capybara.automatic_label_click = old_click_label
+      end
+
+      it "should check via clicking the label with :for attribute if possible" do
+        expect(@session.find(:checkbox, 'form_cars_tesla', unchecked: true, visible: :hidden)).to be
+        @session.check('form_cars_tesla')
+        @session.click_button('awesome')
+        expect(extract_results(@session)['cars']).to include('tesla')
+      end
+
+      it "should check via clicking the wrapping label if possible" do
+        expect(@session.find(:checkbox, 'form_cars_mclaren', unchecked: true, visible: :hidden)).to be
+        @session.check('form_cars_mclaren')
+        @session.click_button('awesome')
+        expect(extract_results(@session)['cars']).to include('mclaren')
+      end
+
+      it "should not click the label if unneeded" do
+        expect(@session.find(:checkbox, 'form_cars_jaguar', checked: true, visible: :hidden)).to be
+        @session.check('form_cars_jaguar')
+        @session.click_button('awesome')
+        expect(extract_results(@session)['cars']).to include('jaguar')
+      end
+
+      it "should raise original error when no label available" do
+        expect { @session.check('form_cars_ariel') }.to raise_error(Capybara::ElementNotFound, 'Unable to find checkbox "form_cars_ariel"')
+      end
+
+      it "should raise error if not allowed to click label" do
+        expect{@session.check('form_cars_mclaren', allow_label_click: false)}.to raise_error(Capybara::ElementNotFound, 'Unable to find checkbox "form_cars_mclaren"')
+      end
     end
 
-    it "should check via clicking the wrapping label if possible" do
-      expect(@session.find(:checkbox, 'form_cars_mclaren', unchecked: true, visible: :hidden)).to be
-      @session.check('form_cars_mclaren')
-      @session.click_button('awesome')
-      expect(extract_results(@session)['cars']).to include('mclaren')
-    end
+    context "with Capybara.automatic_label_click == false" do
+      around do |spec|
+        old_label_click, Capybara.automatic_label_click = Capybara.automatic_label_click, false
+        spec.run
+        Capybara.automatic_label_click = old_label_click
+      end
 
-    it "should not click the label if unneeded" do
-      expect(@session.find(:checkbox, 'form_cars_jaguar', checked: true, visible: :hidden)).to be
-      @session.check('form_cars_jaguar')
-      @session.click_button('awesome')
-      expect(extract_results(@session)['cars']).to include('jaguar')
-    end
+      it "should raise error if checkbox not visible" do
+        expect{@session.check('form_cars_mclaren')}.to raise_error(Capybara::ElementNotFound, 'Unable to find checkbox "form_cars_mclaren"')
+      end
 
-    it "should raise original error when no label available" do
-      expect { @session.check('form_cars_ariel') }.to raise_error(Capybara::ElementNotFound, 'Unable to find checkbox "form_cars_ariel"')
-    end
-
-    it "should raise error if not allowed to click label" do
-      expect{@session.check('form_cars_mclaren', click_label: false)}.to raise_error(Capybara::ElementNotFound, 'Unable to find checkbox "form_cars_mclaren"')
+      it "should check via the label if allow_label_click == true" do
+        expect(@session.find(:checkbox, 'form_cars_tesla', unchecked: true, visible: :hidden)).to be
+        @session.check('form_cars_tesla', allow_label_click: true)
+        @session.click_button('awesome')
+        expect(extract_results(@session)['cars']).to include('tesla')
+      end
     end
   end
 end
