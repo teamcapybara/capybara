@@ -57,15 +57,15 @@ module Capybara
       #   @macro waiting_behavior
       #
       #
-      #   @option options [Boolean] checked  Match checked field?
-      #   @option options [Boolean] unchecked   Match unchecked field?
+      #   @option options [Boolean] checked       Match checked field?
+      #   @option options [Boolean] unchecked     Match unchecked field?
       #   @option options [Boolean, Symbol] disabled (false)  Match disabled field?
       #                                                       * true - only finds a disabled field
       #                                                       * false - only finds an enabled field
       #                                                       * :all - finds either an enabled or disabled field
-      #   @option options [Boolean] readonly Match readonly field?
-      #   @option options [String] with   Value of field to match on
-      #   @option options [String] type   Type of field to match on
+      #   @option options [Boolean] readonly      Match readonly field?
+      #   @option options [String, Regexp] with   Value of field to match on
+      #   @option options [String] type           Type of field to match on
       #   @option options [Boolean] multiple      Match fields that can have multiple values?
       #   @option options [String] id             Match fields that match the id attribute
       #   @option options [String] name           Match fields that match the name attribute

@@ -15,6 +15,7 @@ Release date: Unreleased
 * New frames API for drivers - Issue #1365 [Thomas Walpole]
 * Deprecated Element#parent in favor of Element#query_scope to better indicate what it is [Thomas Walpole]
 * Improved error messages for have_text matcher [Alex Chaffee, Thomas Walpole]
+* The `:with` option for the field selector now accepts a regular expression for matching the field value[Uwe Kubosch]
 
 #Version 2.7.1
 Release date: 2016-05-01

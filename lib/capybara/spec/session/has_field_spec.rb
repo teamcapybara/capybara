@@ -16,6 +16,7 @@ Capybara::SpecHelper.spec '#has_field' do
   context 'with value' do
     it "should be true if a field with the given value is on the page" do
       expect(@session).to have_field('First Name', :with => 'John')
+      expect(@session).to have_field('First Name', :with => /^Joh/)
       expect(@session).to have_field('Phone', :with => '+1 555 7021')
       expect(@session).to have_field('Street', :with => 'Sesame street 66')
       expect(@session).to have_field('Description', :with => 'Descriptive text goes here')
@@ -23,6 +24,7 @@ Capybara::SpecHelper.spec '#has_field' do
 
     it "should be false if the given field is not on the page" do
       expect(@session).not_to have_field('First Name', :with => 'Peter')
+      expect(@session).not_to have_field('First Name', :with => /eter$/)
       expect(@session).not_to have_field('Wrong Name', :with => 'John')
       expect(@session).not_to have_field('Description', :with => 'Monkey')
     end
@@ -30,11 +32,13 @@ Capybara::SpecHelper.spec '#has_field' do
     it "should be true after the field has been filled in with the given value" do
       @session.fill_in('First Name', :with => 'Jonas')
       expect(@session).to have_field('First Name', :with => 'Jonas')
+      expect(@session).to have_field('First Name', :with => /ona/)
     end
 
     it "should be false after the field has been filled in with a different value" do
       @session.fill_in('First Name', :with => 'Jonas')
       expect(@session).not_to have_field('First Name', :with => 'John')
+      expect(@session).not_to have_field('First Name', :with => /John|Paul|George|Ringo/)
     end
   end
 
