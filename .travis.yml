@@ -46,7 +46,7 @@ env:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
 
 addons:
-  firefox: latest
+  firefox: 47.0.1
   apt:
     packages:
       - awesome
