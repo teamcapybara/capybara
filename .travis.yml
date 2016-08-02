@@ -58,7 +58,7 @@ before_install:
       FILE=`mktemp`; wget "$CHROMEDRIVER_URL" -qO $FILE && unzip $FILE chromedriver -d ~; rm $FILE; chmod 777 ~/chromedriver;
     fi
   - if [ $GECKODRIVER ]; then
-      GECKODRIVER_URL="https://github.com/mozilla/geckodriver/releases/download/v0.9.0/geckodriver-v0.9.0-linux64.tar.gz";
+      GECKODRIVER_URL="https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-linux64.tar.gz";
       FILE=`mktemp`; wget "$GECKODRIVER_URL" -qO $FILE && tar xz -C ~ -f $FILE geckodriver; rm $FILE; chmod 777 ~/geckodriver;
     fi
 before_script:
