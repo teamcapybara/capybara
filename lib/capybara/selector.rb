@@ -95,10 +95,13 @@ module Capybara
     private
 
     def locate_field(xpath, locator)
-      locate_field = xpath[XPath.attr(:id).equals(locator) |
-                           XPath.attr(:name).equals(locator) |
-                           XPath.attr(:placeholder).equals(locator) |
-                           XPath.attr(:id).equals(XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for))]
+      attr_matchers =  XPath.attr(:id).equals(locator) |
+                       XPath.attr(:name).equals(locator) |
+                       XPath.attr(:placeholder).equals(locator) |
+                       XPath.attr(:id).equals(XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for))
+      attr_matchers |= XPath.attr(:'aria-label').is(locator) if Capybara.enable_aria_label
+
+      locate_field = xpath[attr_matchers]
       locate_field += XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(xpath)
       locate_field
     end
@@ -182,10 +185,12 @@ Capybara.add_selector(:link) do
     xpath = XPath.descendant(:a)[XPath.attr(:href)]
     unless locator.nil?
       locator = locator.to_s
-      xpath = xpath[XPath.attr(:id).equals(locator) |
-                    XPath.string.n.is(locator) |
-                    XPath.attr(:title).is(locator) |
-                    XPath.descendant(:img)[XPath.attr(:alt).is(locator)]]
+      matchers = XPath.attr(:id).equals(locator) |
+                 XPath.string.n.is(locator) |
+                 XPath.attr(:title).is(locator) |
+                 XPath.descendant(:img)[XPath.attr(:alt).is(locator)]
+      matchers |= XPath.attr(:'aria-label').is(locator) if Capybara.enable_aria_label
+      xpath = xpath[matchers]
     end
     xpath
   end
@@ -209,9 +214,16 @@ Capybara.add_selector(:button) do
 
     unless locator.nil?
       locator = locator.to_s
-      input_btn_xpath = input_btn_xpath[XPath.attr(:id).equals(locator) | XPath.attr(:value).is(locator) | XPath.attr(:title).is(locator)]
-      btn_xpath = btn_xpath[XPath.attr(:id).equals(locator) | XPath.attr(:value).is(locator) | XPath.string.n.is(locator) | XPath.attr(:title).is(locator)]
-      image_btn_xpath = image_btn_xpath[XPath.attr(:alt).is(locator)]
+      locator_matches = XPath.attr(:id).equals(locator) | XPath.attr(:value).is(locator) | XPath.attr(:title).is(locator)
+      locator_matches |= XPath.attr(:'aria-label').is(locator) if Capybara.enable_aria_label
+
+      input_btn_xpath = input_btn_xpath[locator_matches]
+
+      btn_xpath = btn_xpath[locator_matches | XPath.string.n.is(locator)]
+
+      alt_matches = XPath.attr(:alt).is(locator)
+      alt_matches |= XPath.attr(:'aria-label').is(locator) if Capybara.enable_aria_label
+      image_btn_xpath = image_btn_xpath[alt_matches]
     end
 
     input_btn_xpath + btn_xpath + image_btn_xpath

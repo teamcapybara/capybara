@@ -22,7 +22,7 @@ module Capybara
   class << self
     attr_reader :app_host, :default_host
     attr_accessor :asset_host, :run_server, :always_include_port
-    attr_accessor :server_port, :exact, :match, :exact_options, :visible_text_only
+    attr_accessor :server_port, :exact, :match, :exact_options, :visible_text_only, :enable_aria_label
     attr_accessor :default_selector, :default_max_wait_time, :ignore_hidden_elements
     attr_accessor :save_path, :wait_on_first_by_default, :automatic_label_click, :automatic_reload
     attr_accessor :reuse_server, :raise_server_errors, :server_errors
@@ -54,6 +54,7 @@ module Capybara
     # [save_path = String]  Where to put pages saved through save_(page|screenshot), save_and_open_(page|screenshot) (Default: Dir.pwd)
     # [wait_on_first_by_default = Boolean]   Whether Node#first defaults to Capybara waiting behavior for at least 1 element to match (Default: false)
     # [automatic_label_click = Boolean]   Whether Node#choose, Node#check, Node#uncheck will attempt to click the associated label element if the checkbox/radio button are non-visible (Default: false)
+    # [enable_aria_label = Boolean]  Whether fields, links, and buttons will match against aria-label attribute (Default: false)
     # [reuse_server = Boolean]  Reuse the server thread between multiple sessions using the same app object (Default: true)
     # === DSL Options
     #
@@ -500,6 +501,7 @@ Capybara.configure do |config|
   config.visible_text_only = false
   config.wait_on_first_by_default = false
   config.automatic_label_click = false
+  config.enable_aria_label = false
   config.reuse_server = true
 end
 
