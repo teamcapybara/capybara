@@ -6,7 +6,7 @@ Capybara::SpecHelper.spec '#first' do
 
   it "should find the first element using the given locator" do
     expect(@session.first('//h1').text).to eq('This is a test')
-    expect(@session.first("//input[@id='test_field']")[:value]).to eq('monkey')
+    expect(@session.first("//input[@id='test_field']").value).to eq('monkey')
   end
 
   it "should return nil when nothing was found" do
@@ -22,14 +22,14 @@ Capybara::SpecHelper.spec '#first' do
   context "with css selectors" do
     it "should find the first element using the given selector" do
       expect(@session.first(:css, 'h1').text).to eq('This is a test')
-      expect(@session.first(:css, "input[id='test_field']")[:value]).to eq('monkey')
+      expect(@session.first(:css, "input[id='test_field']").value).to eq('monkey')
     end
   end
 
   context "with xpath selectors" do
     it "should find the first element using the given locator" do
       expect(@session.first(:xpath, '//h1').text).to eq('This is a test')
-      expect(@session.first(:xpath, "//input[@id='test_field']")[:value]).to eq('monkey')
+      expect(@session.first(:xpath, "//input[@id='test_field']").value).to eq('monkey')
     end
   end
 
@@ -37,7 +37,7 @@ Capybara::SpecHelper.spec '#first' do
     before { Capybara.default_selector = :css }
     it "should find the first element using the given locator" do
       expect(@session.first('h1').text).to eq('This is a test')
-      expect(@session.first("input[id='test_field']")[:value]).to eq('monkey')
+      expect(@session.first("input[id='test_field']").value).to eq('monkey')
     end
   end
 

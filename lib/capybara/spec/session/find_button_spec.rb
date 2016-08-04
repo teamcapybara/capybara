@@ -21,7 +21,7 @@ Capybara::SpecHelper.spec '#find_button' do
 
   context "with :exact option" do
     it "should accept partial matches when false" do
-      expect(@session.find_button('What an Awesome', :exact => false)[:value]).to eq("awesome")
+      expect(@session.find_button('What an Awesome', :exact => false).value).to eq("awesome")
     end
 
     it "should not accept partial matches when true" do

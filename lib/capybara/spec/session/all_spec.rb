@@ -7,7 +7,7 @@ Capybara::SpecHelper.spec "#all" do
   it "should find all elements using the given locator" do
     expect(@session.all('//p').size).to eq(3)
     expect(@session.all('//h1').first.text).to eq('This is a test')
-    expect(@session.all("//input[@id='test_field']").first[:value]).to eq('monkey')
+    expect(@session.all("//input[@id='test_field']").first.value).to eq('monkey')
   end
 
   it "should return an empty array when nothing was found" do
@@ -28,7 +28,7 @@ Capybara::SpecHelper.spec "#all" do
   context "with css selectors" do
     it "should find all elements using the given selector" do
       expect(@session.all(:css, 'h1').first.text).to eq('This is a test')
-      expect(@session.all(:css, "input[id='test_field']").first[:value]).to eq('monkey')
+      expect(@session.all(:css, "input[id='test_field']").first.value).to eq('monkey')
     end
 
     it "should find all elements when given a list of selectors" do
@@ -39,7 +39,7 @@ Capybara::SpecHelper.spec "#all" do
   context "with xpath selectors" do
     it "should find the first element using the given locator" do
       expect(@session.all(:xpath, '//h1').first.text).to eq('This is a test')
-      expect(@session.all(:xpath, "//input[@id='test_field']").first[:value]).to eq('monkey')
+      expect(@session.all(:xpath, "//input[@id='test_field']").first.value).to eq('monkey')
     end
   end
 
@@ -47,7 +47,7 @@ Capybara::SpecHelper.spec "#all" do
     before { Capybara.default_selector = :css }
     it "should find the first element using the given locator" do
       expect(@session.all('h1').first.text).to eq('This is a test')
-      expect(@session.all("input[id='test_field']").first[:value]).to eq('monkey')
+      expect(@session.all("input[id='test_field']").first.value).to eq('monkey')
     end
   end
 

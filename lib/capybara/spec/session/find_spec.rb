@@ -10,7 +10,7 @@ Capybara::SpecHelper.spec '#find' do
 
   it "should find the first element using the given locator" do
     expect(@session.find('//h1').text).to eq('This is a test')
-    expect(@session.find("//input[@id='test_field']")[:value]).to eq('monkey')
+    expect(@session.find("//input[@id='test_field']").value).to eq('monkey')
   end
 
   it "should find the first element using the given locator and options" do
@@ -79,7 +79,7 @@ Capybara::SpecHelper.spec '#find' do
   context "with css selectors" do
     it "should find the first element using the given locator" do
       expect(@session.find(:css, 'h1').text).to eq('This is a test')
-      expect(@session.find(:css, "input[id='test_field']")[:value]).to eq('monkey')
+      expect(@session.find(:css, "input[id='test_field']").value).to eq('monkey')
     end
 
     it "should support pseudo selectors" do
@@ -90,7 +90,7 @@ Capybara::SpecHelper.spec '#find' do
   context "with xpath selectors" do
     it "should find the first element using the given locator" do
       expect(@session.find(:xpath, '//h1').text).to eq('This is a test')
-      expect(@session.find(:xpath, "//input[@id='test_field']")[:value]).to eq('monkey')
+      expect(@session.find(:xpath, "//input[@id='test_field']").value).to eq('monkey')
     end
   end
 
@@ -197,7 +197,7 @@ Capybara::SpecHelper.spec '#find' do
     before { Capybara.default_selector = :css }
     it "should find the first element using the given locator" do
       expect(@session.find('h1').text).to eq('This is a test')
-      expect(@session.find("input[id='test_field']")[:value]).to eq('monkey')
+      expect(@session.find("input[id='test_field']").value).to eq('monkey')
     end
     after { Capybara.default_selector = :xpath }
   end
