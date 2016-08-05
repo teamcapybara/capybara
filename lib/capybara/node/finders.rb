@@ -33,14 +33,14 @@ module Capybara
         synchronize(query.wait) do
           if query.match == :smart or query.match == :prefer_exact
             result = query.resolve_for(self, true)
-            result = query.resolve_for(self, false) if result.size == 0 && !query.exact?
+            result = query.resolve_for(self, false) if result.empty? && !query.exact?
           else
             result = query.resolve_for(self)
           end
           if query.match == :one or query.match == :smart and result.size > 1
             raise Capybara::Ambiguous.new("Ambiguous match, found #{result.size} elements matching #{query.description}")
           end
-          if result.size == 0
+          if result.empty?
             raise Capybara::ElementNotFound.new("Unable to find #{query.description}")
           end
           result.first

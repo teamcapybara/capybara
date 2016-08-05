@@ -63,4 +63,29 @@ RSpec.describe Capybara::Result do
       el.text == 'Gamma'
     end).to eq(2)
   end
+
+  it 'supports all modes of []' do
+    expect(result[1].text).to eq 'Beta'
+    expect(result[0,2].map &:text).to eq ['Alpha', 'Beta']
+    expect(result[1..3].map &:text).to eq ['Beta', 'Gamma', 'Delta']
+    expect(result[-1].text).to eq 'Delta'
+  end
+
+  #Not a great test but it indirectly tests what is needed
+  it "should evaluate filters lazily" do
+    #Not processed until accessed
+    expect(result.instance_variable_get('@result_cache').size).to be 0
+
+    #Only one retrieved when needed
+    result.first
+    expect(result.instance_variable_get('@result_cache').size).to be 1
+
+    #works for indexed access
+    result[2]
+    expect(result.instance_variable_get('@result_cache').size).to be 3
+
+    #All cached when converted to array
+    result.to_a
+    expect(result.instance_variable_get('@result_cache').size).to eq 4
+  end
 end

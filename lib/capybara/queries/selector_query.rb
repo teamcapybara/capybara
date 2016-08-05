@@ -45,15 +45,19 @@ module Capybara
           regexp = options[:text].is_a?(Regexp) ? options[:text] : Regexp.escape(options[:text].to_s)
           return false if not node.text(visible).match(regexp)
         end
+
         case visible
           when :visible then return false unless node.visible?
           when :hidden then return false if node.visible?
         end
-        query_filters.each do |name, filter|
+
+        query_filters.all? do |name, filter|
           if options.has_key?(name)
-            return false unless filter.matches?(node, options[name])
+            filter.matches?(node, options[name])
           elsif filter.default?
-            return false unless filter.matches?(node, filter.default)
+            filter.matches?(node, filter.default)
+          else
+            true
           end
         end
       end
