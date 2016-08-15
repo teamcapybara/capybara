@@ -8,6 +8,21 @@ Capybara::SpecHelper.spec '#find_field' do
     expect(@session.find_field('Dog').value).to eq('dog')
     expect(@session.find_field('form_description').text).to eq('Descriptive text goes here')
     expect(@session.find_field('Region')[:name]).to eq('form[region]')
+
+  end
+
+  context "aria_label attribute with Capybara.enable_aria_label" do
+    it "should find when true" do
+      Capybara.enable_aria_label = true
+      expect(@session.find_field('Unlabelled Input')[:name]).to eq('form[which_form]')
+      # expect(@session.find_field('Emergency Number')[:id]).to eq('html5_tel')
+    end
+
+    it "should not find when false" do
+      Capybara.enable_aria_label = false
+      expect { @session.find_field('Unlabelled Input') }.to raise_error(Capybara::ElementNotFound)
+      # expect { @session.find_field('Emergency Number') }.to raise_error(Capybara::ElementNotFound)
+    end
   end
 
   it "casts to string" do

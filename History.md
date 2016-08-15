@@ -7,6 +7,7 @@ Release date: Unreleased
   in rubies that support Exception#cause rather than a confusing ExpectationNotMet - Issue #1719 [Thomas Walpole]
 * background/given/given! RSoec aliases will work if RSpec config.shared_context_metadata_behavior == :apply_to_host_groups [Thomas Walpole]
 * Fixed setting of unexpectedAlertError now that Selenium will be freezing the Capabilities::DEFAULTS [Thomas Walpole]
+
 ### Added
 * 'check', 'uncheck', and 'choose' can now optionally click the associated label if the checkbox/radio button is not visible [Thomas Walpole]
 * Raise error if Capybara.app_host/default_host are specified incorrectly [Thomas Walpole]
@@ -15,7 +16,8 @@ Release date: Unreleased
 * New frames API for drivers - Issue #1365 [Thomas Walpole]
 * Deprecated Element#parent in favor of Element#query_scope to better indicate what it is [Thomas Walpole]
 * Improved error messages for have_text matcher [Alex Chaffee, Thomas Walpole]
-* The `:with` option for the field selector now accepts a regular expression for matching the field value[Uwe Kubosch]
+* The `:with` option for the field selector now accepts a regular expression for matching the field value [Uwe Kubosch]
+* Support matching on aria-label attribute when finding fields/links/buttons - Issue #1528 [Thomas Walpole]
 
 #Version 2.7.1
 Release date: 2016-05-01
