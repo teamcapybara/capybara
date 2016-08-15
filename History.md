@@ -18,6 +18,7 @@ Release date: Unreleased
 * Improved error messages for have_text matcher [Alex Chaffee, Thomas Walpole]
 * The `:with` option for the field selector now accepts a regular expression for matching the field value [Uwe Kubosch]
 * Support matching on aria-label attribute when finding fields/links/buttons - Issue #1528 [Thomas Walpole]
+* Optimize Capybara::Result to only apply fields as necessary in common use-case of `.all[idx]` [Thomas Walpole]
 
 #Version 2.7.1
 Release date: 2016-05-01

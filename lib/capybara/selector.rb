@@ -158,6 +158,7 @@ Capybara.add_selector(:field) do
     with.is_a?(Regexp) ? node.value =~ with : node.value == with.to_s
   end
   filter(:type) do |node, type|
+    type = type.to_s
     if ['textarea', 'select'].include?(type)
       node.tag_name == type
     else
