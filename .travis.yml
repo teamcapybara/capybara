@@ -41,6 +41,7 @@ matrix:
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.beta-marionette
     - rvm: jruby-9.0.5.0
+    - rvm: rbx-3.26
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
