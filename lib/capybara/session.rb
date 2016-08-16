@@ -362,7 +362,6 @@ module Capybara
       rescue Capybara::NotSupportedByDriverError
         # Support older driver frame API for now
         if driver.respond_to?(:within_frame)
-          warn "Your driver (#{driver.class.name}) is using an older version of Capybara's frame API - please update your driver"
           driver.within_frame(frame) do
             yield
           end
