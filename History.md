@@ -1,5 +1,5 @@
 # Version 2.8.0
-Release date: Unreleased
+Release date: 2016-08-16
 
 ### Fixed
 * Issue with modals present when closing the page using selenium - Issue #1696 [Jonas Nicklas, Thomas Walpole]
