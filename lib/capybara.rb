@@ -128,7 +128,6 @@ module Capybara
     # @yieldparam [<Rack>] app                The rack application that this server will contain.
     # @yieldparam port                        The port number the server should listen on
     # @yieldparam host                        The host/ip to bind to
-    # @yieldreturn [Capybara::Driver::Base]   A Capybara driver instance
     #
     def register_server(name, &block)
       servers[name.to_sym] = block
@@ -192,8 +191,6 @@ module Capybara
       @servers ||= {}
     end
 
-    ##
-    #
     # Wraps the given string, which should contain an HTML document or fragment
     # in a {Capybara::Node::Simple} which exposes all {Capybara::Node::Matchers},
     # {Capybara::Node::Finders} and {Capybara::Node::DocumentMatchers}. This allows you to query
