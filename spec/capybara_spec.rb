@@ -12,15 +12,6 @@ RSpec.describe Capybara do
       Capybara.default_max_wait_time = 5
       expect(Capybara.default_max_wait_time).to eq(5)
     end
-
-    it "should be accesible as the deprecated default_wait_time" do
-      expect(Capybara.send(:config)).to receive(:warn).ordered.with('DEPRECATED: #default_wait_time= is deprecated, please use #default_max_wait_time= instead')
-      expect(Capybara.send(:config)).to receive(:warn).ordered.with('DEPRECATED: #default_wait_time is deprecated, please use #default_max_wait_time instead')
-      @previous_default_time = Capybara.default_max_wait_time
-      Capybara.default_wait_time = 5
-      expect(Capybara.default_wait_time).to eq(5)
-      expect(Capybara.default_max_wait_time).to eq(5)
-    end
   end
 
   describe '.register_driver' do
