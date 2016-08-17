@@ -6,7 +6,6 @@ Capybara::SpecHelper.spec '#save_page' do
   end
 
   after do
-    Capybara.save_and_open_page_path = nil
     Capybara.save_path = nil
     Dir.glob("capybara-*.html").each do |file|
       FileUtils.rm(file)
@@ -102,22 +101,6 @@ Capybara::SpecHelper.spec '#save_page' do
 
       result = File.read(path)
       expect(result).to include("Bar")
-    end
-  end
-
-  context "with deprecated save_and_open_page_path" do
-    it "can store files in a specified directory" do
-      Capybara.save_and_open_page_path = alternative_path
-      @session.save_page
-      path = Dir.glob(alternative_path + "/capybara-*.html").first
-      expect(File.read(path)).to include("Another World")
-    end
-
-    it "returns an absolute path in given directory" do
-      Capybara.save_and_open_page_path = alternative_path
-      result = @session.save_page
-      path = File.expand_path(Dir.glob(alternative_path + "/capybara-*.html").first, alternative_path)
-      expect(result).to eq(path)
     end
   end
 end

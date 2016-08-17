@@ -6,7 +6,6 @@ Capybara::SpecHelper.spec '#save_screenshot', requires: [:screenshot] do
   end
 
   after do
-    Capybara.save_and_open_page_path = nil
     Capybara.save_path = nil
     FileUtils.rm_rf alternative_path
   end
