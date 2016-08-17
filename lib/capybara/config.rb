@@ -80,18 +80,6 @@ module Capybara
       @javascript_driver || :selenium
     end
 
-    # @deprecated Use default_max_wait_time instead
-    def default_wait_time
-      deprecate('default_wait_time', 'default_max_wait_time', true)
-      default_max_wait_time
-    end
-
-    # @deprecated Use default_max_wait_time= instead
-    def default_wait_time=(t)
-      deprecate('default_wait_time=', 'default_max_wait_time=')
-      self.default_max_wait_time = t
-    end
-
     def deprecate(method, alternate_method, once=false)
       @deprecation_notified ||= {}
       warn "DEPRECATED: ##{method} is deprecated, please use ##{alternate_method} instead" unless once and @deprecation_notified[method]
