@@ -418,29 +418,11 @@ module Capybara
     # @overload within_frame(index)
     #   @param [Integer] index         index of a frame (0 based)
     def within_frame(*args)
-      frame = _find_frame(*args)
-
+      switch_to_frame(_find_frame(*args))
       begin
-        switch_to_frame(frame)
-        begin
-          yield
-        ensure
-          switch_to_frame(:parent)
-        end
-      rescue Capybara::NotSupportedByDriverError
-        # Support older driver frame API for now
-        if driver.respond_to?(:within_frame)
-          begin
-            scopes.push(:frame)
-            driver.within_frame(frame) do
-              yield
-            end
-          ensure
-            scopes.pop
-          end
-        else
-          raise
-        end
+        yield
+      ensure
+        switch_to_frame(:parent)
       end
     end
 
@@ -915,20 +897,18 @@ module Capybara
     end
 
     def _find_frame(*args)
-      within(document) do  # Previous 2.x versions ignored current scope when finding frames - consider changing in 3.0
-        case args[0]
-        when Capybara::Node::Element
-          args[0]
-        when String, Hash
-          find(:frame, *args)
-        when Symbol
-          find(*args)
-        when Integer
-          idx = args[0]
-          all(:frame, minimum: idx+1)[idx]
-        else
-          raise TypeError
-        end
+      case args[0]
+      when Capybara::Node::Element
+        args[0]
+      when String, Hash
+        find(:frame, *args)
+      when Symbol
+        find(*args)
+      when Integer
+        idx = args[0]
+        all(:frame, minimum: idx+1)[idx]
+      else
+        raise TypeError
       end
     end
 
