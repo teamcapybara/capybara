@@ -108,12 +108,6 @@ module Capybara
         base.find_xpath(xpath)
       end
 
-      # @deprecated Use query_scope instead
-      def parent
-        warn "DEPRECATED: #parent is deprecated in favor of #query_scope - Note: #parent was not the elements parent in the document so it's most likely not what you wanted anyway"
-        query_scope
-      end
-
       # @api private
       def session_options
         session.config
