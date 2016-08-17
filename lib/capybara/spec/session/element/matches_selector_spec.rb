@@ -103,4 +103,4 @@ Capybara::SpecHelper.spec '#not_matches_selector?' do
     expect(@element.not_matches_xpath?("//span", text: "42")).to be false
     expect(@element.not_matches_xpath?("//span", text: "Doesnotexist")).to be true
   end
-end if Gem::Version.new(RSpec::Expectations::Version::STRING) >= Gem::Version.new('3.1')
+end

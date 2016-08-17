@@ -36,25 +36,6 @@ matrix:
     - gemfile: Gemfile
       rvm: 2.4.2
       env: HEADLESS=true
-    - gemfile: gemfiles/Gemfile.ruby-20
-      env:
-        - CAPYBARA_LEGACY_FF=true
-      rvm: 2.0.0
-      addons:
-        firefox: 47.0.1
-        apt:
-          packages:
-            - awesome
-    - gemfile: gemfiles/Gemfile.base-versions
-      env:
-        - CAPYBARA_LEGACY_FF=true
-        - SKIP_WINDOW=true
-      rvm: 1.9.3
-      addons:
-        firefox: 47.0.1
-        apt:
-          packages:
-            - awesome
     - gemfile: gemfiles/Gemfile.beta-versions
       rvm: 2.3.5
       env: CAPYBARA_FF=true
