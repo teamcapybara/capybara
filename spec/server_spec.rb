@@ -172,10 +172,11 @@ RSpec.describe Capybara::Server do
 
   it "should raise server errors when the server errors before the timeout" do
     begin
-      Capybara.server do
+      Capybara.register_server :kaboom do
         sleep 0.1
         raise 'kaboom'
       end
+      Capybara.server = :kaboom
 
       expect do
         Capybara::Server.new(proc {|e|}).boot
@@ -183,7 +184,7 @@ RSpec.describe Capybara::Server do
     ensure
       # TODO refactor out the defaults so it's reliant on unset state instead of
       # a one-time call in capybara.rb
-      Capybara.server {|app, port| Capybara.run_default_server(app, port)}
+      Capybara.server = :default
     end
   end
 
