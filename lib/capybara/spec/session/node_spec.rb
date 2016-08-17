@@ -27,14 +27,6 @@ Capybara::SpecHelper.spec "node" do
     end
   end
 
-  describe "#parent" do
-    it "should be deprecated" do
-      @node = @session.find(:css, '#first')
-      expect(@node).to receive(:warn).with(/^DEPRECATED:/)
-      expect(@node.parent).to eq(@node.query_scope)
-    end
-  end
-
   describe "#text" do
     it "should extract node texts" do
       expect(@session.all('//a')[0].text).to eq('labore')
