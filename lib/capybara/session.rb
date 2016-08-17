@@ -475,9 +475,7 @@ module Capybara
     #   `within_frame` methods
     # @raise [ArgumentError]               if both or neither arguments were provided
     #
-    def switch_to_window(window = nil, options= {}, &window_locator)
-      options, window = window, nil if window.is_a? Hash
-
+    def switch_to_window(window = nil, **options, &window_locator)
       block_given = block_given?
       if window && block_given
         raise ArgumentError, "`switch_to_window` can take either a block or a window, not both"
@@ -660,9 +658,8 @@ module Capybara
     #   @return [String]  the message shown in the modal
     #   @raise [Capybara::ModalNotFound]  if modal dialog hasn't been found
     #
-    #
-    def accept_alert(text_or_options=nil, options={}, &blk)
-      accept_modal(:alert, text_or_options, options, &blk)
+    def accept_alert(text=nil, **options, &blk)
+      accept_modal(:alert, text, options, &blk)
     end
 
     ##
@@ -671,8 +668,8 @@ module Capybara
     #
     # @macro modal_params
     #
-    def accept_confirm(text_or_options=nil, options={}, &blk)
-      accept_modal(:confirm, text_or_options, options, &blk)
+    def accept_confirm(text=nil, **options, &blk)
+      accept_modal(:confirm, text, options, &blk)
     end
 
     ##
@@ -681,8 +678,8 @@ module Capybara
     #
     # @macro modal_params
     #
-    def dismiss_confirm(text_or_options=nil, options={}, &blk)
-      dismiss_modal(:confirm, text_or_options, options, &blk)
+    def dismiss_confirm(text=nil, **options, &blk)
+      dismiss_modal(:confirm, text, options, &blk)
     end
 
     ##
@@ -692,8 +689,8 @@ module Capybara
     # @macro modal_params
     # @option options [String] :with   Response to provide to the prompt
     #
-    def accept_prompt(text_or_options=nil, options={}, &blk)
-      accept_modal(:prompt, text_or_options, options, &blk)
+    def accept_prompt(text=nil, **options, &blk)
+      accept_modal(:prompt, text, options, &blk)
     end
 
     ##
@@ -702,8 +699,8 @@ module Capybara
     #
     # @macro modal_params
     #
-    def dismiss_prompt(text_or_options=nil, options={}, &blk)
-      dismiss_modal(:prompt, text_or_options, options, &blk)
+    def dismiss_prompt(text=nil, **options, &blk)
+      dismiss_modal(:prompt, text, options, &blk)
     end
 
     ##
@@ -750,7 +747,7 @@ module Capybara
     # @param [String] path    the path to where it should be saved
     # @param [Hash] options   a customizable set of options
     # @return [String]        the path to which the file was saved
-    def save_screenshot(path = nil, options = {})
+    def save_screenshot(path = nil, **options)
       path = prepare_path(path, 'png')
       driver.save_screenshot(path, options)
       path
@@ -767,7 +764,7 @@ module Capybara
     # @param [String] path    the path to where it should be saved
     # @param [Hash] options   a customizable set of options
     #
-    def save_and_open_screenshot(path = nil, options = {})
+    def save_and_open_screenshot(path = nil, **options)
       path = save_screenshot(path, options)
       open_file(path)
     end
@@ -856,7 +853,6 @@ module Capybara
       options[:wait] ||= config.default_max_wait_time
       options
     end
-
 
     def open_file(path)
       begin

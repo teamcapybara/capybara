@@ -18,7 +18,7 @@ module Capybara
     # @raise [Capybara::ExpectationNotMet] if the assertion hasn't succeeded during wait time
     # @return [true]
     #
-    def assert_current_path(path, options={})
+    def assert_current_path(path, **options)
       _verify_current_path(path,options) { |query| raise Capybara::ExpectationNotMet, query.failure_message unless query.resolves_for?(self) }
     end
 
@@ -32,7 +32,7 @@ module Capybara
     # @raise [Capybara::ExpectationNotMet] if the assertion hasn't succeeded during wait time
     # @return [true]
     #
-    def assert_no_current_path(path, options={})
+    def assert_no_current_path(path, **options)
       _verify_current_path(path,options) { |query| raise Capybara::ExpectationNotMet, query.negative_failure_message if query.resolves_for?(self) }
     end
 
@@ -45,7 +45,7 @@ module Capybara
     # @macro current_path_query_params
     # @return [Boolean]
     #
-    def has_current_path?(path, options={})
+    def has_current_path?(path, **options)
       assert_current_path(path, options)
     rescue Capybara::ExpectationNotMet
       return false
@@ -60,7 +60,7 @@ module Capybara
     # @macro current_path_query_params
     # @return [Boolean]
     #
-    def has_no_current_path?(path, options={})
+    def has_no_current_path?(path, **options)
       assert_no_current_path(path, options)
     rescue Capybara::ExpectationNotMet
       return false

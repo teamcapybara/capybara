@@ -10,11 +10,6 @@ RSpec.configure do |config|
   config.include Capybara::RSpecMatchers, :type => :feature
   config.include Capybara::RSpecMatchers, :type => :view
 
-  # A work-around to support accessing the current example that works in both
-  # RSpec 2 and RSpec 3.
-  fetch_current_example = RSpec.respond_to?(:current_example) ?
-    proc { RSpec.current_example } : proc { |context| context.example }
-
   # The before and after blocks must run instantaneously, because Capybara
   # might not actually be used in all examples where it's included.
   config.after do
@@ -26,7 +21,7 @@ RSpec.configure do |config|
 
   config.before do
     if self.class.include?(Capybara::DSL)
-      example = fetch_current_example.call(self)
+      example = RSpec.current_example
       Capybara.current_driver = Capybara.javascript_driver if example.metadata[:js]
       Capybara.current_driver = example.metadata[:driver] if example.metadata[:driver]
     end

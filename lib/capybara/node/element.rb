@@ -94,9 +94,7 @@ module Capybara
       # @param [Hash{}] options  Driver specific options for how to set the value
       #
       # @return [Capybara::Node::Element]  The element
-      def set(value, options={})
-        options ||= {}
-
+      def set(value, **options)
         raise Capybara::ReadOnlyElementError, "Attempt to set readonly element with value: #{value}" if readonly?
 
         driver_supports_options = (base.method(:set).arity != 1)

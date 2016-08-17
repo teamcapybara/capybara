@@ -20,8 +20,7 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The element clicked
       #
-      def click_link_or_button(locator=nil, options={})
-        locator, options = nil, locator if locator.is_a? Hash
+      def click_link_or_button(locator=nil, **options)
         find(:link_or_button, locator, options).click
       end
       alias_method :click_on, :click_link_or_button
@@ -38,8 +37,7 @@ module Capybara
       #   @param options                  See {Capybara::Node::Finders#find_link}
       #
       # @return [Capybara::Node::Element]  The element clicked
-      def click_link(locator=nil, options={})
-        locator, options = nil, locator if locator.is_a? Hash
+      def click_link(locator=nil, **options)
         find(:link, locator, options).click
       end
 
@@ -56,8 +54,7 @@ module Capybara
       #   @param [String] locator      Which button to find
       #   @param options     See {Capybara::Node::Finders#find_button}
       # @return [Capybara::Node::Element]  The element clicked
-      def click_button(locator=nil, options={})
-        locator, options = nil, locator if locator.is_a? Hash
+      def click_button(locator=nil, **options)
         find(:button, locator, options).click
       end
 
@@ -83,11 +80,7 @@ module Capybara
       #   @option options [String, Array<String>] :class    Match fields that match the class(es) provided
       #
       # @return [Capybara::Node::Element]  The element filled_in
-      def fill_in(locator, options={})
-        locator, options = nil, locator if locator.is_a? Hash
-        raise "Must pass a hash containing 'with'" if not options.is_a?(Hash) or not options.has_key?(:with)
-        with = options.delete(:with)
-        fill_options = options.delete(:fill_options)
+      def fill_in(locator=nil, with:, fill_options: {}, **options)
         options[:with] = options.delete(:currently_with) if options.has_key?(:currently_with)
         find(:fillable_field, locator, options).set(with, fill_options)
       end
@@ -113,8 +106,8 @@ module Capybara
       #   @macro label_click
       #
       # @return [Capybara::Node::Element]  The element chosen or the label clicked
-      def choose(locator, options={})
-        _check_with_label(:radio_button, true, locator, options)
+      def choose(locator=nil, **options)
+        _check_with_label(:radio_button, true, locator, **options)
       end
 
       ##
@@ -136,8 +129,8 @@ module Capybara
       #   @macro waiting_behavior
       #
       # @return [Capybara::Node::Element]  The element checked or the label clicked
-      def check(locator, options={})
-        _check_with_label(:checkbox, true, locator, options)
+      def check(locator, **options)
+        _check_with_label(:checkbox, true, locator, **options)
       end
 
       ##
@@ -159,8 +152,8 @@ module Capybara
       #   @macro waiting_behavior
       #
       # @return [Capybara::Node::Element]  The element unchecked or the label clicked
-      def uncheck(locator, options={})
-        _check_with_label(:checkbox, false, locator, options)
+      def uncheck(locator=nil, **options)
+        _check_with_label(:checkbox, false, locator, **options)
       end
 
       ##
@@ -180,9 +173,8 @@ module Capybara
       # @option options [String] :from  The id, name or label of the select box
       #
       # @return [Capybara::Node::Element]  The option element selected
-      def select(value, options={})
-        if options.has_key?(:from)
-          from = options.delete(:from)
+      def select(value=nil, from: nil, **options)
+        if from
           find(:select, from, options).find(:option, value, options).select_option
         else
           find(:option, value, options).select_option
@@ -203,9 +195,8 @@ module Capybara
       # @param [Hash{:from => String}] options  The id, name or label of the select box
       #
       # @return [Capybara::Node::Element]  The option element unselected
-      def unselect(value, options={})
-        if options.has_key?(:from)
-          from = options.delete(:from)
+      def unselect(value=nil, from: nil, **options)
+        if from
           find(:select, from, options).find(:option, value, options).unselect_option
         else
           find(:option, value, options).unselect_option
@@ -233,8 +224,7 @@ module Capybara
       # @option options [true, Hash] make_visible   A Hash of CSS styles to change before attempting to attach the file, if `true` { opacity: 1, display: 'block', visibility: 'visible' } is used (may not be supported by all drivers)
       #
       # @return [Capybara::Node::Element]  The file field element
-      def attach_file(locator, path, options={})
-        locator, path, options = nil, locator, path if path.is_a? Hash
+      def attach_file(locator=nil, path, **options)
         Array(path).each do |p|
           raise Capybara::FileNotFound, "cannot attach file, #{p} does not exist" unless File.exist?(p.to_s)
         end
@@ -290,12 +280,8 @@ module Capybara
         end
       end
 
-
-      def _check_with_label(selector, checked, locator, options)
-        locator, options = nil, locator if locator.is_a? Hash
-        allow_label_click = options.delete(:allow_label_click) { session_options.automatic_label_click }
-
-        synchronize(Capybara::Queries::BaseQuery.wait(options, session_options.default_max_wait_time)) do
+      def _check_with_label(selector, checked, locator, allow_label_click: session_options.automatic_label_click, **options)
+        synchronize(Capybara::Queries::BaseQuery::wait(options, session_options.default_max_wait_time)) do
           begin
             el = find(selector, locator, options)
             el.set(checked)

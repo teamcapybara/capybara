@@ -64,9 +64,8 @@ module Capybara
 
       private
 
-      def add_filter(name, filter_class, *types_and_options, &block)
-        options = types_and_options.last.is_a?(Hash) ? types_and_options.pop.dup : {}
-        types_and_options.each { |k| options[k] = true}
+      def add_filter(name, filter_class, *types, **options, &block)
+        types.each { |k| options[k] = true}
         filters[name] = filter_class.new(name, block, options)
       end
     end

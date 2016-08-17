@@ -3,15 +3,13 @@ module Capybara
   # @api private
   module Queries
     class TextQuery < BaseQuery
-      def initialize(*args)
-        @type = (args.first.is_a?(Symbol) || args.first.nil?) ? args.shift : nil
-        # @type = (Capybara.ignore_hidden_elements or Capybara.visible_text_only) ? :visible : :all if @type.nil?
-        @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
+      def initialize(type=nil, expected_text, session_options:, **options)
+        @type = type
+        @type = (Capybara.ignore_hidden_elements or Capybara.visible_text_only) ? :visible : :all if @type.nil?
+        @expected_text = expected_text
+        @options = options
         super(@options)
-
-        @type = (session_options.ignore_hidden_elements or session_options.visible_text_only) ? :visible : :all if @type.nil?
-
-        @expected_text = args.shift
+        self.session_options = session_options
         unless @expected_text.is_a?(Regexp)
           @expected_text = Capybara::Helpers.normalize_whitespace(@expected_text)
         end

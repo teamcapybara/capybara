@@ -13,7 +13,7 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
   }
   attr_reader :app, :options
 
-  def initialize(app, options={})
+  def initialize(app, **options)
     raise ArgumentError, "rack-test requires a rack application, but none was given" unless app
     @session = nil
     @app = app

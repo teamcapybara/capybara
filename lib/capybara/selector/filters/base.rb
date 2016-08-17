@@ -3,7 +3,7 @@ module Capybara
   class Selector
     module Filters
       class Base
-        def initialize(name, block, options={})
+        def initialize(name, block, **options)
           @name = name
           @block = block
           @options = options

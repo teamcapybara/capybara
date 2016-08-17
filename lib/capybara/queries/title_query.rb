@@ -3,7 +3,7 @@ module Capybara
   # @api private
   module Queries
     class TitleQuery < BaseQuery
-      def initialize(expected_title, options = {})
+      def initialize(expected_title, **options)
         @expected_title = expected_title
         @options = options
         super(@options)
