@@ -152,10 +152,4 @@ class Capybara::Driver::Base
   def session_options
     (@session && @session.config) || Capybara.session_options
   end
-
-  # @deprecated This method is being removed
-  def browser_initialized?
-    warn "DEPRECATED: #browser_initialized? is deprecated and will be removed in the next version of Capybara"
-    true
-  end
 end

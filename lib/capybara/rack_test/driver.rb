@@ -92,11 +92,6 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
     @browser = nil
   end
 
-  # @deprecated This method is being removed
-  def browser_initialized?
-    super && !@browser.nil?
-  end
-
   def get(*args, &block); browser.get(*args, &block); end
   def post(*args, &block); browser.post(*args, &block); end
   def put(*args, &block); browser.put(*args, &block); end
