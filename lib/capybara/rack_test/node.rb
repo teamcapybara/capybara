@@ -185,11 +185,7 @@ private
       end
       native.remove
     else
-      if readonly?
-        warn "Attempt to set readonly element with value: #{value} \n *This will raise an exception in a future version of Capybara"
-      else
-        native['value'] = value.to_s
-      end
+      native['value'] = value.to_s
     end
   end
 
