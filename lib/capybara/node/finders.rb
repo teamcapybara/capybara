@@ -123,8 +123,7 @@ module Capybara
       # @return [Capybara::Node::Element]   The found element
       #
 
-      def find_field(locator=nil, options={}, &optional_filter_block)
-        locator, options = nil, locator if locator.is_a? Hash
+      def find_field(locator=nil, **options, &optional_filter_block)
         find(:field, locator, options, &optional_filter_block)
       end
       alias_method :field_labeled, :find_field
@@ -145,8 +144,7 @@ module Capybara
       #   @option options [String, Array<String>] class    Match links that match the class(es) provided
       # @return [Capybara::Node::Element]   The found element
       #
-      def find_link(locator=nil, options={}, &optional_filter_block)
-        locator, options = nil, locator if locator.is_a? Hash
+      def find_link(locator=nil, **options, &optional_filter_block)
         find(:link, locator, options, &optional_filter_block)
       end
 
@@ -174,8 +172,7 @@ module Capybara
       #   @option options [String, Array<String>] class    Match buttons that match the class(es) provided
       # @return [Capybara::Node::Element]   The found element
       #
-      def find_button(locator=nil, options={}, &optional_filter_block)
-        locator, options = nil, locator if locator.is_a? Hash
+      def find_button(locator=nil, **options, &optional_filter_block)
         find(:button, locator, options, &optional_filter_block)
       end
 
@@ -189,7 +186,7 @@ module Capybara
       #
       # @return [Capybara::Node::Element]   The found element
       #
-      def find_by_id(id, options={}, &optional_filter_block)
+      def find_by_id(id, **options, &optional_filter_block)
         find(:id, id, options, &optional_filter_block)
       end
 
@@ -286,12 +283,11 @@ module Capybara
       #   @param [Hash] options                      Additional options; see {#all}
       # @return [Capybara::Node::Element]            The found element or nil
       #
-      def first(*args, &optional_filter_block)
+      def first(*args, **options, &optional_filter_block)
         if session_options.wait_on_first_by_default
-          options = if args.last.is_a?(Hash) then args.pop.dup else {} end
-          args.push({minimum: 1}.merge(options))
+          options = {minimum: 1}.merge(options)
         end
-        all(*args, &optional_filter_block).first
+        all(*args, **options, &optional_filter_block).first
       rescue Capybara::ExpectationNotMet
         nil
       end

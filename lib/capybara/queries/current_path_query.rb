@@ -5,7 +5,7 @@ module Capybara
   # @api private
   module Queries
     class CurrentPathQuery < BaseQuery
-      def initialize(expected_path, options = {})
+      def initialize(expected_path, **options)
         super(options)
         @expected_path = expected_path
         warn "DEPRECATED: The :only_path option is deprecated in favor of the :ignore_query option" if options.has_key?(:only_path)

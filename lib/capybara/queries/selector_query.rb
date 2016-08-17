@@ -7,11 +7,11 @@ module Capybara
       VALID_KEYS = COUNT_KEYS + [:text, :id, :class, :visible, :exact, :exact_text, :match, :wait, :filter_set]
       VALID_MATCH = [:first, :smart, :prefer_exact, :one]
 
-      def initialize(*args, &filter_block)
+      def initialize(*args, session_options:, **options, &filter_block)
         @resolved_node = nil
-        @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
+        @options = options.dup
         super(@options)
-
+        self.session_options = session_options
         @filter_block = filter_block
 
         if args[0].is_a?(Symbol)
@@ -27,6 +27,7 @@ module Capybara
 
         warn "Unused parameters passed to #{self.class.name} : #{args}" unless args.empty?
 
+        # TODO: make this better somehow
         # for compatibility with Capybara 2.0
         if session_options.exact_options and @selector == Selector.all[:option]
           @options[:exact] = true
