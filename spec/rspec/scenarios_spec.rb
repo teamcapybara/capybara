@@ -6,11 +6,9 @@ RSpec.configuration.before(:each, { file_path: "./spec/rspec/scenarios_spec.rb" 
   @in_filtered_hook = true
 end
 
-if RSpec::Core::Version::STRING.to_f >= 3.0
-  feature "if fscenario aliases focused tag then" do
-    fscenario "scenario should have focused meta tag" do |example|
-      expect(example.metadata[:focus]).to eq true
-    end
+feature "if fscenario aliases focused tag then" do
+  fscenario "scenario should have focused meta tag" do |example|
+    expect(example.metadata[:focus]).to eq true
   end
 end
 

@@ -102,25 +102,13 @@ Capybara::SpecHelper.spec "node" do
       expect(@session.first('//input').value).to eq('')
     end
 
-    it "should not set if the text field is readonly" do
-      expect(@session.first('//input[@readonly]').value).to eq('should not change')
-      @session.first('//input[@readonly]').set('changed')
-      expect(@session.first('//input[@readonly]').value).to eq('should not change')
+    it "should raise if the text field is readonly" do
+      expect { @session.first('//input[@readonly]').set('changed') }.to raise_error(Capybara::ReadOnlyElementError)
     end
 
     it "should raise if the text field is readonly" do
-      expect(@session.first('//input[@readonly]').set('changed')).to raise_error(Capybara::ReadOnlyElementError)
-    end if Capybara::VERSION.to_f > 3.0
-
-    it "should not set if the textarea is readonly" do
-      expect(@session.first('//textarea[@readonly]').value).to eq('textarea should not change')
-      @session.first('//textarea[@readonly]').set('changed')
-      expect(@session.first('//textarea[@readonly]').value).to eq('textarea should not change')
+      expect { @session.first('//textarea[@readonly]').set('changed') }.to raise_error(Capybara::ReadOnlyElementError)
     end
-
-    it "should raise if the text field is readonly" do
-      expect(@session.first('//textarea[@readonly]').set('changed')).to raise_error(Capybara::ReadOnlyElementError)
-    end if Capybara::VERSION.to_f > 3.0
 
     context "with a contenteditable element", requires: [:js] do
       it 'should allow me to change the contents' do

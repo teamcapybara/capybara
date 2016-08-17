@@ -3,12 +3,7 @@ require 'capybara/dsl'
 
 Capybara.app = Rack::Builder.new do
   map "/" do
-    if Gem::Version.new(Rails.version) >= Gem::Version.new("3.0")
-      run Rails.application
-    else # Rails 2
-      use Rails::Rack::Static
-      run ActionController::Dispatcher.new
-    end
+    run Rails.application
   end
 end.to_app
 

@@ -71,14 +71,12 @@ GitHub): http://groups.google.com/group/ruby-capybara
 
 ## <a name="setup"></a>Setup
 
-Capybara requires Ruby 1.9.3 or later. To install, add this line to your
+Capybara requires Ruby 2.0.0 or later. To install, add this line to your
 `Gemfile` and run `bundle install`:
 
 ```ruby
 gem 'capybara'
 ```
-
-**Note:** If using Ruby < 2.0 you will also need to limit the version of rack to < 2.0
 
 If the application that you are testing is a Rails app, add this line to your test helper file:
 

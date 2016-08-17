@@ -26,7 +26,7 @@ module Capybara
     def initialize(elements, query)
       @elements = elements
       @result_cache = []
-      @results_enum = lazy_select_elements { |node| query.matches_filters?(node) }
+      @results_enum = @elements.lazy_select_elements { |node| query.matches_filters?(node) }
       @query = query
     end
 
@@ -138,14 +138,8 @@ module Capybara
       # https://github.com/jruby/jruby/issues/4212
       if RUBY_PLATFORM == 'java'
         @elements.select(&block).to_enum  # non-lazy evaluation
-      elsif @elements.respond_to? :lazy  #Ruby 2.0+
-        @elements.lazy.select(&block)
       else
-        Enumerator.new do |yielder|
-          @elements.each do |val|
-            yielder.yield(val) if block.call(val)
-          end
-        end
+        @elements.lazy.select(&block)
       end
     end
   end
