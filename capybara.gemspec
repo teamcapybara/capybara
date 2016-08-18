@@ -7,7 +7,7 @@ require 'capybara/version'
 Gem::Specification.new do |s|
   s.name = "capybara"
   s.version = Capybara::VERSION
-  s.required_ruby_version = ">= 2.0.0"
+  s.required_ruby_version = ">= 2.2.0"
   s.license = "MIT"
 
   s.authors = ["Thomas Walpole", "Jonas Nicklas"]
