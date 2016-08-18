@@ -152,12 +152,7 @@ module Capybara
       #
       # @return [String]     The title of the document
       def title
-        if native.respond_to? :title
-          native.title
-        else
-          #old versions of nokogiri don't have #title - remove in 3.0
-          native.xpath('/html/head/title | /html/title').first.text
-        end
+        native.title
       end
 
       def inspect

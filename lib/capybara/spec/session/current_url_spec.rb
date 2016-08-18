@@ -14,11 +14,11 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
   end
 
   def should_be_on server_index, path="/host", scheme="http"
-    #This delay is to give fully async drivers (selenium w/chromedriver) time for the browser
-    #to get to its destination - should be removed when we have a waiting current_url matcher
-    sleep 0.1  # remove and adjust tests when a waiting current_url/path matcher is implemented
     # Check that we are on /host on the given server
     s = @servers[server_index]
+
+    expect(@session).to have_current_path("#{scheme}://#{s.host}:#{s.port}#{path}", url: true)
+
     expect(@session.current_url.chomp('?')).to eq("#{scheme}://#{s.host}:#{s.port}#{path}")
     expect(@session.current_host).to eq("#{scheme}://#{s.host}") # no port
     expect(@session.current_path).to eq(path)
