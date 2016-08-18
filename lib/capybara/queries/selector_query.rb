@@ -26,7 +26,7 @@ module Capybara
           @options[:exact] = true
         end
 
-        @expression = @selector.call(@locator)
+        @expression = @selector.call(@locator, @options)
 
         warn_exact_usage
 
@@ -150,7 +150,7 @@ module Capybara
       end
 
       def custom_keys
-        query_filters.keys
+        query_filters.keys + @selector.expression_filters
       end
 
       def assert_valid_keys

@@ -45,5 +45,11 @@ Capybara::SpecHelper.spec Capybara::Selector do
     it "can find specifically by placeholder" do
       expect(@session.find(:field, placeholder: 'FirstName')['id']).to eq "form_first_name"
     end
+
+    it "can find by type" do
+      expect(@session.find(:field, 'Confusion', type: 'checkbox')['id']).to eq 'confusion_checkbox'
+      expect(@session.find(:field, 'Confusion', type: 'text')['id']).to eq 'confusion_text'
+      expect(@session.find(:field, 'Confusion', type: 'textarea')['id']).to eq 'confusion_textarea'
+    end
   end
 end
