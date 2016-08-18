@@ -85,6 +85,11 @@ Capybara::SpecHelper.spec '#find' do
     it "should support pseudo selectors" do
       expect(@session.find(:css, 'input:disabled').value).to eq('This is disabled')
     end
+
+    it "should support escaping characters" do
+      expect(@session.find(:css, '#\31 escape\.me').text).to eq('needs escaping')
+      expect(@session.find(:css, '.\32 escape').text).to eq('needs escaping')
+    end
   end
 
   context "with xpath selectors" do

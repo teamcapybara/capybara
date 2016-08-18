@@ -18,10 +18,9 @@ Gem::Specification.new do |s|
 
   s.homepage = "https://github.com/teamcapybara/capybara"
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.3.6"
   s.summary = "Capybara aims to simplify the process of integration testing Rack applications, such as Rails, Sinatra or Merb"
 
-  s.add_runtime_dependency("nokogiri", [">= 1.6.7"])
+  s.add_runtime_dependency("nokogiri", [">= 1.6.8"])
   s.add_runtime_dependency("mime-types", [">= 2.0"])
   s.add_runtime_dependency("rack", [">= 1.6.0"])
   s.add_runtime_dependency("rack-test", [">= 0.6.3"])
@@ -32,8 +31,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency("sinatra", [">= 1.4.0"])
   s.add_development_dependency("rspec", [">= 3.4.0"])
   s.add_development_dependency("launchy", [">= 2.0.4"])
-  s.add_development_dependency("yard", [">= 0.5.8"])
-  s.add_development_dependency("fuubar", [">= 0.0.1"])
+  s.add_development_dependency("yard", [">= 0.9.0"])
+  s.add_development_dependency("fuubar", [">= 1.0.0"])
   s.add_development_dependency("cucumber", [">= 2.3.0"])
   s.add_development_dependency("rake")
   s.add_development_dependency("puma")
