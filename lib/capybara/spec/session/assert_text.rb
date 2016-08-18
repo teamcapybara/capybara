@@ -50,6 +50,9 @@ Capybara::SpecHelper.spec '#assert_text' do
     expect do
       @session.assert_text('Text With Whitespace')
     end.to raise_error(Capybara::ExpectationNotMet, /it was found 1 time using a case insensitive search/)
+    expect do
+      @session.assert_text('[]')
+    end.to raise_error(Capybara::ExpectationNotMet, /expected to find text "\[\]"/)
   end
 
   it "should be true if the text in the page matches given regexp" do
