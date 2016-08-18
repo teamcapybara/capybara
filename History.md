@@ -1,3 +1,9 @@
+#Version 2.8.1
+Release data: unreleased
+
+###Fixed
+* Fixed error message from have_text when text is not found but contains regex special characters [Ryunosuke Sato]
+
 # Version 2.8.0
 Release date: 2016-08-16
 

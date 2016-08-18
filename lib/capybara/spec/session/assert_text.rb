@@ -52,6 +52,13 @@ Capybara::SpecHelper.spec '#assert_text' do
     end.to raise_error(Capybara::ExpectationNotMet, /it was found 1 time using a case insensitive search/)
   end
 
+  it "should raise the correct error if requested text is missing but contains regex special characters" do
+    @session.visit('/with_html')
+    expect do
+      @session.assert_text('[]*.')
+    end.to raise_error(Capybara::ExpectationNotMet, /expected to find text "\[\]\*\."/)
+  end
+
   it "should be true if the text in the page matches given regexp" do
     @session.visit('/with_html')
     expect(@session.assert_text(/Lorem/)).to eq(true)

@@ -48,7 +48,7 @@ module Capybara
         details_message = []
 
         if @node and !@expected_text.is_a? Regexp
-          insensitive_regexp = Regexp.new(@expected_text, Regexp::IGNORECASE)
+          insensitive_regexp = Capybara::Helpers.to_regexp(@expected_text, Regexp::IGNORECASE)
           insensitive_count = @actual_text.scan(insensitive_regexp).size
           if insensitive_count != @count
             details_message << "it was found #{insensitive_count} #{Capybara::Helpers.declension("time", "times", insensitive_count)} using a case insensitive search"
