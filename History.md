@@ -11,7 +11,7 @@ Release date: 2016-08-16
 * Issue with modals present when closing the page using selenium - Issue #1696 [Jonas Nicklas, Thomas Walpole]
 * Server errors raised in test code have the cause set to an explanatory exception
   in rubies that support Exception#cause rather than a confusing ExpectationNotMet - Issue #1719 [Thomas Walpole]
-* background/given/given! RSoec aliases will work if RSpec config.shared_context_metadata_behavior == :apply_to_host_groups [Thomas Walpole]
+* background/given/given! RSpec aliases will work if RSpec config.shared_context_metadata_behavior == :apply_to_host_groups [Thomas Walpole]
 * Fixed setting of unexpectedAlertError now that Selenium will be freezing the Capabilities::DEFAULTS [Thomas Walpole]
 
 ### Added
