@@ -13,7 +13,13 @@ through an external gem.
 **Need help?** Ask on the mailing list (please do not open an issue on
 GitHub): http://groups.google.com/group/ruby-capybara
 
-**Note: Firefox 48** If you're using Firefox with selenium-webdrvier, stay on Firefox 47.0.1 and selenium-webdriver 2.53.4.  Firefox 48 requires geckodriver and is not supported without selenium-webdriver 3 which currently has multiple issues and is feature incomplete
+**Note: Firefox 48** If you're using Firefox with selenium-webdriver, 
+it is recommended that you use [Firefox ESR](https://www.mozilla.org/en-US/firefox/organizations/)
+or Firefox 47.0.1. Firefox 48+ requires [geckodriver](https://github.com/mozilla/geckodriver/releases). 
+To [use geckodriver in Selenium 2](https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver#Ruby_3), 
+you can register a driver with a desired capability of `marionette: true`. This is set to true by
+default in Selenium 3, so to use the legacy Firefox driver, register a driver with a desired capability of `marionette: false`.
+Geckodriver still has multiple issues and is feature incomplete.
 
 ## Table of contents
 
