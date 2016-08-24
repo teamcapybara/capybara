@@ -31,7 +31,7 @@ module Capybara
       def find(*args)
         query = Capybara::Queries::SelectorQuery.new(*args)
         synchronize(query.wait) do
-          if query.match == :smart or query.match == :prefer_exact
+          if (query.match == :smart or query.match == :prefer_exact) and query.supports_exact?
             result = query.resolve_for(self, true)
             result = query.resolve_for(self, false) if result.empty? && !query.exact?
           else

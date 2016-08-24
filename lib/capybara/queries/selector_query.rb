@@ -27,6 +27,9 @@ module Capybara
         end
 
         @expression = @selector.call(@locator)
+
+        warn_exact_usage(@expression.to_s)
+
         assert_valid_keys
       end
 
@@ -79,6 +82,7 @@ module Capybara
       end
 
       def exact?
+        return false if !supports_exact?
         if options.has_key?(:exact)
           @options[:exact]
         else
@@ -125,6 +129,11 @@ module Capybara
         end
       end
 
+      # @api private
+      def supports_exact?
+        @expression.respond_to? :to_xpath
+      end
+
       private
 
       def valid_keys
@@ -149,6 +158,13 @@ module Capybara
         unless VALID_MATCH.include?(match)
           raise ArgumentError, "invalid option #{match.inspect} for :match, should be one of #{VALID_MATCH.map(&:inspect).join(", ")}"
         end
+      end
+
+      def warn_exact_usage(expression)
+        if options.has_key?(:exact) && !supports_exact?
+          warn "The :exact option only has an effect on queries using the XPath#is method. Using it with the query \"#{expression}\" has no effect."
+        end
+        expression
       end
     end
   end
