@@ -28,7 +28,7 @@ module Capybara
 
         @expression = @selector.call(@locator)
 
-        warn_exact_usage(@expression.to_s)
+        warn_exact_usage
 
         assert_valid_keys
       end
@@ -160,11 +160,10 @@ module Capybara
         end
       end
 
-      def warn_exact_usage(expression)
+      def warn_exact_usage
         if options.has_key?(:exact) && !supports_exact?
-          warn "The :exact option only has an effect on queries using the XPath#is method. Using it with the query \"#{expression}\" has no effect."
+          warn "The :exact option only has an effect on queries using the XPath#is method. Using it with the query \"#{expression.to_s}\" has no effect."
         end
-        expression
       end
     end
   end
