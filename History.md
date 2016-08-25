@@ -1,5 +1,5 @@
 #Version 2.8.1
-Release data: 2016-08-25
+Release date: 2016-08-25
 
 ###Fixed
 * Fixed error message from have_text when text is not found but contains regex special characters [Ryunosuke Sato]
