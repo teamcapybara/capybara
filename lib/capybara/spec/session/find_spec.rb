@@ -235,6 +235,12 @@ Capybara::SpecHelper.spec '#find' do
       Capybara.exact = false
       @session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("est_fiel")])
     end
+
+    it "warns when the option has no effect" do
+      expect_any_instance_of(Kernel).to receive(:warn).
+        with('The :exact option only has an effect on queries using the XPath#is method. Using it with the query "#test_field" has no effect.')
+      @session.find(:css, '#test_field', exact: true)
+    end
   end
 
   context "with :match option" do
@@ -292,7 +298,7 @@ Capybara::SpecHelper.spec '#find' do
         end
         it "raises an error if there is no match" do
           expect do
-            @session.find(:css, ".does-not-exist", :match => :smart, :exact => false)
+            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("does-not-exist")], :match => :smart, :exact => false)
           end.to raise_error(Capybara::ElementNotFound)
         end
       end
@@ -319,7 +325,7 @@ Capybara::SpecHelper.spec '#find' do
         end
         it "raises an error if there is no match" do
           expect do
-            @session.find(:css, ".does-not-exist", :match => :smart, :exact => true)
+            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("does-not-exist")], :match => :smart, :exact => true)
           end.to raise_error(Capybara::ElementNotFound)
         end
       end
@@ -345,7 +351,7 @@ Capybara::SpecHelper.spec '#find' do
         end
         it "raises an error if there is no match" do
           expect do
-            @session.find(:css, ".does-not-exist", :match => :prefer_exact, :exact => false)
+            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("does-not-exist")], :match => :prefer_exact, :exact => false)
           end.to raise_error(Capybara::ElementNotFound)
         end
       end
@@ -371,7 +377,7 @@ Capybara::SpecHelper.spec '#find' do
         end
         it "raises an error if there is no match" do
           expect do
-            @session.find(:css, ".does-not-exist", :match => :prefer_exact, :exact => true)
+            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("does-not-exist")], :match => :prefer_exact, :exact => true)
           end.to raise_error(Capybara::ElementNotFound)
         end
       end
