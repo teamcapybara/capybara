@@ -146,11 +146,11 @@ module Capybara
     # @param [Hash] options            The options of the query used to generate the description
     # @return [String]                 Description of the selector when used with the options passed
     #
-    def description(options={})
+    def description(**options)
       @filter_set.description(options)
     end
 
-    def call(locator, options={})
+    def call(locator, **options)
       if format
         # @expression.call(locator, options.select {|k,v| @expression_filters.include?(k)})
         @expression.call(locator, options)
@@ -185,15 +185,11 @@ module Capybara
     #   @option options :skip_if        Value of the filter that will cause it to be skipped
     #
     def filter(name, *types_and_options, &block)
-      options = types_and_options.last.is_a?(Hash) ? types_and_options.pop.dup : {}
-      types_and_options.each { |k| options[k] = true }
-      custom_filters[name] = Filters::NodeFilter.new(name, block, options)
+      add_filter(name, Filter, *types_and_options, &block)
     end
 
     def expression_filter(name, *types_and_options, &block)
-      options = types_and_options.last.is_a?(Hash) ? types_and_options.pop.dup : {}
-      types_and_options.each { |k| options[k] = true }
-      custom_filters[name] = Filters::ExpressionFilter.new(name, block, options)
+      add_filter(name, ExpressionFilter, *types_and_options, &block)
     end
 
     def filter_set(name, filters_to_use = nil)
@@ -232,8 +228,13 @@ module Capybara
 
     private
 
-    def locate_field(xpath, locator, options={})
-      locate_xpath = xpath #need to save original xpath for the label wrap
+    def add_filter(name, filter_class, *types, **options, &block)
+      types.each { |k| options[k] = true}
+      custom_filters[name] = filter_class.new(name, block, options)
+    end
+
+    def locate_field(xpath, locator, **options)
+      locate_field = xpath #need to save original xpath for the label wrap
       if locator
         locator = locator.to_s
         attr_matchers =  XPath.attr(:id).equals(locator).or(
