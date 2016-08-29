@@ -1,110 +1,21 @@
 # frozen_string_literal: true
-require 'capybara/selector/filter_set'
+require 'capybara/selector/selector'
 
-module Capybara
-  class Selector
+Capybara::Selector::FilterSet.add(:_field) do
+  filter(:checked, :boolean) { |node, value| not(value ^ node.checked?) }
+  filter(:unchecked, :boolean) { |node, value| (value ^ node.checked?) }
+  filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
+  filter(:multiple, :boolean) { |node, value| !(value ^ node.multiple?) }
 
-    attr_reader :name, :format
-
-    class << self
-      def all
-        @selectors ||= {}
-      end
-
-      def add(name, &block)
-        all[name.to_sym] = Capybara::Selector.new(name.to_sym, &block)
-      end
-
-      def update(name, &block)
-        all[name.to_sym].instance_eval(&block)
-      end
-
-      def remove(name)
-        all.delete(name.to_sym)
-      end
-    end
-
-    def initialize(name, &block)
-      @name = name
-      @filter_set = FilterSet.add(name){}
-      @match = nil
-      @label = nil
-      @failure_message = nil
-      @description = nil
-      @format = nil
-      @expression = nil
-      instance_eval(&block)
-    end
-
-    def custom_filters
-      @filter_set.filters
-    end
-
-    def xpath(&block)
-      @format, @expression = :xpath, block if block
-      format == :xpath ? @expression : nil
-    end
-
-    def css(&block)
-      @format, @expression = :css, block if block
-      format == :css ? @expression : nil
-    end
-
-    def match(&block)
-      @match = block if block
-      @match
-    end
-
-    def label(label=nil)
-      @label = label if label
-      @label
-    end
-
-    def description(options={})
-      @filter_set.description(options)
-    end
-
-    def call(locator)
-      if format
-        @expression.call(locator)
-      else
-        warn "Selector has no format"
-      end
-    end
-
-    def match?(locator)
-      @match and @match.call(locator)
-    end
-
-    def filter(name, options={}, &block)
-      custom_filters[name] = Filter.new(name, block, options)
-    end
-
-    def filter_set(name, filters_to_use = nil)
-      f_set = FilterSet.all[name]
-      f_set.filters.each do | name, filter |
-        custom_filters[name] = filter if filters_to_use.nil? || filters_to_use.include?(name)
-      end
-      f_set.descriptions.each { |desc| @filter_set.describe &desc }
-    end
-
-    def describe &block
-      @filter_set.describe &block
-    end
-
-    private
-
-    def locate_field(xpath, locator)
-      attr_matchers =  XPath.attr(:id).equals(locator) |
-                       XPath.attr(:name).equals(locator) |
-                       XPath.attr(:placeholder).equals(locator) |
-                       XPath.attr(:id).equals(XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for))
-      attr_matchers |= XPath.attr(:'aria-label').is(locator) if Capybara.enable_aria_label
-
-      locate_field = xpath[attr_matchers]
-      locate_field += XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(xpath)
-      locate_field
-    end
+  describe do |options|
+    desc, states = String.new, []
+    states << 'checked' if options[:checked] || (options[:unchecked] === false)
+    states << 'not checked' if options[:unchecked] || (options[:checked] === false)
+    states << 'disabled' if options[:disabled] == true
+    desc << " that is #{states.join(' and ')}" unless states.empty?
+    desc << " with the multiple attribute" if options[:multiple] == true
+    desc << " without the multiple attribute" if options[:multiple] === false
+    desc
   end
 end
 
@@ -120,53 +31,29 @@ Capybara.add_selector(:id) do
   xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
 end
 
-Capybara::Selector::FilterSet.add(:_field) do
-  filter(:id) { |node, id| node['id'] == id }
-  filter(:name) { |node, name| node['name'] == name }
-  filter(:placeholder) { |node, placeholder| node['placeholder'] == placeholder }
-  filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
-  filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
-  filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
-  filter(:multiple, boolean: true) { |node, value| !(value ^ node.multiple?) }
-
-  describe do |options|
-    desc, states = String.new, []
-    [:id, :name, :placeholder].each do |opt|
-      desc << " with #{opt.to_s} #{options[opt]}" if options.has_key?(opt)
-    end
-    states << 'checked' if options[:checked] || (options[:unchecked] === false)
-    states << 'not checked' if options[:unchecked] || (options[:checked] === false)
-    states << 'disabled' if options[:disabled] == true
-    desc << " that is #{states.join(' and ')}" unless states.empty?
-    desc << " with the multiple attribute" if options[:multiple] == true
-    desc << " without the multiple attribute" if options[:multiple] === false
-    desc
-  end
-end
-
 Capybara.add_selector(:field) do
-  xpath do |locator|
+  xpath(:id, :name, :placeholder, :type) do |locator, options|
     xpath = XPath.descendant(:input, :textarea, :select)[~XPath.attr(:type).one_of('submit', 'image', 'hidden')]
-    xpath = locate_field(xpath, locator.to_s) unless locator.nil?
-    xpath
+    if options[:type]
+      type=options[:type].to_s
+      if ['textarea', 'select'].include?(type)
+        xpath = XPath.descendant(type.to_sym)
+      else
+        xpath = xpath[XPath.attr(:type).equals(type)]
+      end
+    end
+    locate_field(xpath, locator, options)
   end
 
-  filter_set(:_field)
+  filter_set(:_field) # checked/unchecked/disabled/multiple
 
-  filter(:readonly, boolean: true) { |node, value| not(value ^ node.readonly?) }
+  filter(:readonly, :boolean) { |node, value| not(value ^ node.readonly?) }
   filter(:with) do |node, with|
     with.is_a?(Regexp) ? node.value =~ with : node.value == with.to_s
   end
-  filter(:type) do |node, type|
-    type = type.to_s
-    if ['textarea', 'select'].include?(type)
-      node.tag_name == type
-    else
-      node[:type] == type
-    end
-  end
   describe do |options|
-    desc, states = String.new, []
+    desc = String.new
+    (expression_filters - [:type]).each { |ef| desc << " with #{ef.to_s} #{options[ef]}" if options.has_key?(ef) }
     desc << " of type #{options[:type].inspect}" if options[:type]
     desc << " with value #{options[:with].to_s.inspect}" if options.has_key?(:with)
     desc
@@ -174,15 +61,17 @@ Capybara.add_selector(:field) do
 end
 
 Capybara.add_selector(:fieldset) do
-  xpath do |locator|
+  xpath(:id, :legend) do |locator, options|
     xpath = XPath.descendant(:fieldset)
     xpath = xpath[XPath.attr(:id).equals(locator.to_s) | XPath.child(:legend)[XPath.string.n.is(locator.to_s)]] unless locator.nil?
+    xpath = xpath[XPath.attr(:id).equals(options[:id])] if options[:id]
+    xpath = xpath[XPath.child(:legend)[XPath.string.n.is(options[:legend])]] if options[:legend]
     xpath
   end
 end
 
 Capybara.add_selector(:link) do
-  xpath do |locator|
+  xpath(:id, :title, :alt) do |locator, options={}|
     xpath = XPath.descendant(:a)[XPath.attr(:href)]
     unless locator.nil?
       locator = locator.to_s
@@ -193,6 +82,9 @@ Capybara.add_selector(:link) do
       matchers |= XPath.attr(:'aria-label').is(locator) if Capybara.enable_aria_label
       xpath = xpath[matchers]
     end
+    xpath = xpath[XPath.attr(:id).equals(options[:id])] if options[:id]
+    xpath = xpath[XPath.attr(:title).equals(options[:title])] if options[:title]
+    xpath = xpath[XPath.descendant(:img)[XPath.attr(:alt).equals(options[:alt])]] if options[:alt]
     xpath
   end
 
@@ -208,7 +100,7 @@ Capybara.add_selector(:link) do
 end
 
 Capybara.add_selector(:button) do
-  xpath do |locator|
+  xpath(:id, :value, :title) do |locator, options={}|
     input_btn_xpath = XPath.descendant(:input)[XPath.attr(:type).one_of('submit', 'reset', 'image', 'button')]
     btn_xpath = XPath.descendant(:button)
     image_btn_xpath = XPath.descendant(:input)[XPath.attr(:type).equals('image')]
@@ -227,82 +119,95 @@ Capybara.add_selector(:button) do
       image_btn_xpath = image_btn_xpath[alt_matches]
     end
 
-    input_btn_xpath + btn_xpath + image_btn_xpath
+    res_xpath = input_btn_xpath + btn_xpath + image_btn_xpath
+
+    (expression_filters & options.keys).inject(res_xpath) { |xpath, ef| xpath[XPath.attr(ef).equals(options[ef])] }
+
+    res_xpath
   end
 
-  filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
+  filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
 
-  describe { |options| " that is disabled" if options[:disabled] == true }
+  describe do |options|
+    desc = String.new
+    desc << " that is disabled" if options[:disabled] == true
+    expression_filters.each { |ef| desc << " with #{ef.to_s} #{options[ef]}" if options.has_key?(ef) }
+    desc
+  end
 end
 
 Capybara.add_selector(:link_or_button) do
   label "link or button"
-  xpath do |locator|
-    self.class.all.values_at(:link, :button).map {|selector| selector.xpath.call(locator)}.reduce(:+)
+  xpath do |locator, options|
+    self.class.all.values_at(:link, :button).map {|selector| selector.xpath.call(locator, options)}.reduce(:+)
   end
 
-  filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| node.tag_name == "a" or not(value ^ node.disabled?) }
+  filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| node.tag_name == "a" or not(value ^ node.disabled?) }
 
   describe { |options| " that is disabled" if options[:disabled] }
 end
 
 Capybara.add_selector(:fillable_field) do
   label "field"
-  xpath do |locator|
+  xpath(:id, :name, :placeholder) do |locator, options|
     xpath = XPath.descendant(:input, :textarea)[~XPath.attr(:type).one_of('submit', 'image', 'radio', 'checkbox', 'hidden', 'file')]
-    xpath = locate_field(xpath, locator.to_s) unless locator.nil?
-    xpath
+    locate_field(xpath, locator, options)
   end
 
-  filter_set(:_field, [:id, :name, :placeholder, :disabled, :multiple])
+  filter_set(:_field, [:disabled, :multiple])
+
+  describe do |options|
+    desc = String.new
+    expression_filters.each { |ef| desc << " with #{ef.to_s} #{options[ef]}" if options.has_key?(ef) }
+    desc
+  end
 end
 
 Capybara.add_selector(:radio_button) do
   label "radio button"
-  xpath do |locator|
+  xpath(:id, :name) do |locator, options|
     xpath = XPath.descendant(:input)[XPath.attr(:type).equals('radio')]
-    xpath = locate_field(xpath, locator.to_s) unless locator.nil?
-    xpath
+    locate_field(xpath, locator, options)
   end
 
-  filter_set(:_field, [:id, :name, :checked, :unchecked, :disabled])
+  filter_set(:_field, [:checked, :unchecked, :disabled])
 
   filter(:option)  { |node, value|  node.value == value.to_s }
 
   describe do |options|
     desc = String.new
     desc << " with value #{options[:option].inspect}" if options[:option]
+    expression_filters.each { |ef| desc << " with #{ef.to_s} #{options[ef]}" if options.has_key?(ef) }
     desc
   end
 end
 
 Capybara.add_selector(:checkbox) do
-  xpath do |locator|
+  xpath(:id, :name) do |locator, options|
     xpath = XPath.descendant(:input)[XPath.attr(:type).equals('checkbox')]
-    xpath = locate_field(xpath, locator.to_s) unless locator.nil?
-    xpath
+    locate_field(xpath, locator, options)
   end
 
-  filter_set(:_field, [:id, :name, :checked, :unchecked, :disabled])
+  filter_set(:_field, [:checked, :unchecked, :disabled])
 
   filter(:option)  { |node, value|  node.value == value.to_s }
 
   describe do |options|
     desc = String.new
     desc << " with value #{options[:option].inspect}" if options[:option]
+    expression_filters.each { |ef| desc << " with #{ef.to_s} #{options[ef]}" if options.has_key?(ef) }
     desc
   end
 end
 
 Capybara.add_selector(:select) do
   label "select box"
-  xpath do |locator|
+  xpath(:id, :name, :placeholder) do |locator, options|
     xpath = XPath.descendant(:select)
-    xpath = locate_field(xpath, locator.to_s) unless locator.nil?
-    xpath
+    locate_field(xpath, locator, options)
   end
 
-  filter_set(:_field, [:id, :name, :placeholder, :disabled, :multiple])
+  filter_set(:_field, [:disabled, :multiple])
 
   filter(:options) do |node, options|
     if node.visible?
@@ -329,6 +234,7 @@ Capybara.add_selector(:select) do
     desc << " with options #{options[:options].inspect}" if options[:options]
     desc << " with at least options #{options[:with_options].inspect}" if options[:with_options]
     desc << " with #{options[:selected].inspect} selected" if options[:selected]
+    expression_filters.each { |ef| desc << " with #{ef.to_s} #{options[ef]}" if options.has_key?(ef) }
     desc
   end
 end
@@ -340,8 +246,8 @@ Capybara.add_selector(:option) do
     xpath
   end
 
-  filter(:disabled, boolean: true) { |node, value| not(value ^ node.disabled?) }
-  filter(:selected, boolean: true) { |node, value| not(value ^ node.selected?) }
+  filter(:disabled, :boolean) { |node, value| not(value ^ node.disabled?) }
+  filter(:selected, :boolean) { |node, value| not(value ^ node.selected?) }
 
   describe do |options|
     desc = String.new
@@ -353,13 +259,18 @@ end
 
 Capybara.add_selector(:file_field) do
   label "file field"
-  xpath do |locator|
+  xpath(:id, :name) do |locator, options|
     xpath = XPath.descendant(:input)[XPath.attr(:type).equals('file')]
-    xpath = locate_field(xpath, locator.to_s) unless locator.nil?
-    xpath
+    locate_field(xpath, locator, options)
   end
 
-  filter_set(:_field, [:id, :name, :disabled, :multiple])
+  filter_set(:_field, [:disabled, :multiple])
+
+  describe do |options|
+    desc = String.new
+    expression_filters.each { |ef| desc << " with #{ef.to_s} #{options[ef]}" if options.has_key?(ef) }
+    desc
+  end
 end
 
 Capybara.add_selector(:label) do
@@ -390,17 +301,34 @@ Capybara.add_selector(:label) do
 end
 
 Capybara.add_selector(:table) do
-  xpath do |locator|
+  xpath(:id, :caption) do |locator, options|
     xpath = XPath.descendant(:table)
     xpath = xpath[XPath.attr(:id).equals(locator.to_s) | XPath.descendant(:caption).is(locator.to_s)] unless locator.nil?
+    xpath = xpath[XPath.attr(:id).equals(options[:id])] if options[:id]
+    xpath = xpath[XPath.descendant(:caption).equals(options[:caption])] if options[:caption]
     xpath
+  end
+
+  describe do |options|
+    desc = String.new
+    desc << " with id #{options[:id]}" if options[:id]
+    desc << " with caption #{options[:caption]}" if options[:caption]
+    desc
   end
 end
 
 Capybara.add_selector(:frame) do
-  xpath do |locator|
+  xpath(:id, :name) do |locator, options|
     xpath = XPath.descendant(:iframe) + XPath.descendant(:frame)
     xpath = xpath[XPath.attr(:id).equals(locator.to_s) | XPath.attr(:name).equals(locator)] unless locator.nil?
+    [:id, :name].each { |ef| xpath = xpath[XPath.attr(ef).equals(options[ef])] if options[ef] }
     xpath
+  end
+
+  describe do |options|
+    desc = String.new
+    desc << " with id #{options[:id]}" if options[:id]
+    desc << " with name #{options[:name]}" if options[:name]
+    desc
   end
 end
