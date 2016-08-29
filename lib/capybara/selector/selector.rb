@@ -77,7 +77,9 @@ module Capybara
       @match and @match.call(locator)
     end
 
-    def filter(name, options={}, &block)
+    def filter(name, *types_and_options, &block)
+      options = types_and_options.last.is_a?(Hash) ? types_and_options.pop.dup : {}
+      types_and_options.each { |k| options[k] = true}
       custom_filters[name] = Filter.new(name, block, options)
     end
 

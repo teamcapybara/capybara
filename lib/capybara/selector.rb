@@ -2,10 +2,10 @@
 require 'capybara/selector/selector'
 
 Capybara::Selector::FilterSet.add(:_field) do
-  filter(:checked, boolean: true) { |node, value| not(value ^ node.checked?) }
-  filter(:unchecked, boolean: true) { |node, value| (value ^ node.checked?) }
-  filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
-  filter(:multiple, boolean: true) { |node, value| !(value ^ node.multiple?) }
+  filter(:checked, :boolean) { |node, value| not(value ^ node.checked?) }
+  filter(:unchecked, :boolean) { |node, value| (value ^ node.checked?) }
+  filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
+  filter(:multiple, :boolean) { |node, value| !(value ^ node.multiple?) }
 
   describe do |options|
     desc, states = String.new, []
@@ -47,7 +47,7 @@ Capybara.add_selector(:field) do
 
   filter_set(:_field) # checked/unchecked/disabled/multiple
 
-  filter(:readonly, boolean: true) { |node, value| not(value ^ node.readonly?) }
+  filter(:readonly, :boolean) { |node, value| not(value ^ node.readonly?) }
   filter(:with) do |node, with|
     with.is_a?(Regexp) ? node.value =~ with : node.value == with.to_s
   end
@@ -126,7 +126,7 @@ Capybara.add_selector(:button) do
     res_xpath
   end
 
-  filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
+  filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
 
   describe do |options|
     desc = String.new
@@ -142,7 +142,7 @@ Capybara.add_selector(:link_or_button) do
     self.class.all.values_at(:link, :button).map {|selector| selector.xpath.call(locator, options)}.reduce(:+)
   end
 
-  filter(:disabled, default: false, boolean: true, skip_if: :all) { |node, value| node.tag_name == "a" or not(value ^ node.disabled?) }
+  filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| node.tag_name == "a" or not(value ^ node.disabled?) }
 
   describe { |options| " that is disabled" if options[:disabled] }
 end
@@ -246,8 +246,8 @@ Capybara.add_selector(:option) do
     xpath
   end
 
-  filter(:disabled, boolean: true) { |node, value| not(value ^ node.disabled?) }
-  filter(:selected, boolean: true) { |node, value| not(value ^ node.selected?) }
+  filter(:disabled, :boolean) { |node, value| not(value ^ node.disabled?) }
+  filter(:selected, :boolean) { |node, value| not(value ^ node.selected?) }
 
   describe do |options|
     desc = String.new
