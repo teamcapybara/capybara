@@ -8,8 +8,12 @@ module Capybara
       attr_reader :options
 
       def wait
-        if @options.has_key?(:wait)
-          @options[:wait] || 0
+        self.class.wait(options)
+      end
+
+      def self.wait(options)
+        if options.has_key?(:wait)
+          options[:wait] || 0
         else
           Capybara.default_max_wait_time
         end
