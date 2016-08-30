@@ -53,65 +53,6 @@ module Capybara
 
     ##
     #
-    # Checks if the given count matches the given count options.
-    # Defaults to true if no options are specified. If multiple
-    # options are provided, it tests that all conditions are met;
-    # however, if :count is supplied, all other options are ignored.
-    #
-    # @param [Integer] count     The actual number. Should be coercible via Integer()
-    # @option [Range] between    Count must be within the given range
-    # @option [Integer] count    Count must be exactly this
-    # @option [Integer] maximum  Count must be smaller than or equal to this value
-    # @option [Integer] minimum  Count must be larger than or equal to this value
-    #
-    def matches_count?(count, options={})
-      return (Integer(options[:count]) == count)     if options[:count]
-      return false if options[:maximum] && (Integer(options[:maximum]) < count)
-      return false if options[:minimum] && (Integer(options[:minimum]) > count)
-      return false if options[:between] && !(options[:between] === count)
-      return true
-    end
-
-    ##
-    #
-    # Checks if a count of 0 is valid for the given options hash.
-    # Returns false if options hash does not specify any count options.
-    #
-    def expects_none?(options={})
-      if [:count, :maximum, :minimum, :between].any? { |k| options.has_key? k }
-        matches_count?(0,options)
-      else
-        false
-      end
-    end
-
-    ##
-    #
-    # Generates a failure message given a description of the query and count
-    # options.
-    #
-    # @param [String] description   Description of a query
-    # @option [Range] between       Count should have been within the given range
-    # @option [Integer] count       Count should have been exactly this
-    # @option [Integer] maximum     Count should have been smaller than or equal to this value
-    # @option [Integer] minimum     Count should have been larger than or equal to this value
-    #
-    def failure_message(description, options={})
-      message = String.new("expected to find #{description}")
-      if options[:count]
-        message << " #{options[:count]} #{declension('time', 'times', options[:count])}"
-      elsif options[:between]
-        message << " between #{options[:between].first} and #{options[:between].last} times"
-      elsif options[:maximum]
-        message << " at most #{options[:maximum]} #{declension('time', 'times', options[:maximum])}"
-      elsif options[:minimum]
-        message << " at least #{options[:minimum]} #{declension('time', 'times', options[:minimum])}"
-      end
-      message
-    end
-
-    ##
-    #
     # A poor man's `pluralize`. Given two declensions, one singular and one
     # plural, as well as a count, this will pick the correct declension. This
     # way we can generate grammatically correct error message.

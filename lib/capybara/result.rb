@@ -85,7 +85,7 @@ module Capybara
     end
 
     def failure_message
-      message = Capybara::Helpers.failure_message(@query.description, @query.options)
+      message = @query.failure_message
       if count > 0
         message << ", found #{count} #{Capybara::Helpers.declension("match", "matches", count)}: " << full_results.map(&:text).map(&:inspect).join(", ")
       else

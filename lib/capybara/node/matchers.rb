@@ -123,7 +123,7 @@ module Capybara
         query = Capybara::Queries::SelectorQuery.new(*args)
         synchronize(query.wait) do
           result = query.resolve_for(self)
-          unless result.matches_count? && ((!result.empty?) || Capybara::Helpers.expects_none?(query.options))
+          unless result.matches_count? && ((!result.empty?) || query.expects_none?)
             raise Capybara::ExpectationNotMet, result.failure_message
           end
         end
@@ -150,7 +150,7 @@ module Capybara
         query = Capybara::Queries::SelectorQuery.new(*args)
         synchronize(query.wait) do
           result = query.resolve_for(self)
-          if result.matches_count? && ((!result.empty?) || Capybara::Helpers.expects_none?(query.options))
+          if result.matches_count? && ((!result.empty?) || query.expects_none?)
             raise Capybara::ExpectationNotMet, result.negative_failure_message
           end
         end
@@ -520,8 +520,7 @@ module Capybara
         query = Capybara::Queries::TextQuery.new(*args)
         synchronize(query.wait) do
           count = query.resolve_for(self)
-          matches_count = Capybara::Helpers.matches_count?(count, query.options)
-          unless matches_count && ((count > 0) || Capybara::Helpers.expects_none?(query.options))
+          unless query.matches_count?(count) && ((count > 0) || query.expects_none?)
             raise Capybara::ExpectationNotMet, query.failure_message
           end
         end
@@ -540,8 +539,7 @@ module Capybara
         query = Capybara::Queries::TextQuery.new(*args)
         synchronize(query.wait) do
           count = query.resolve_for(self)
-          matches_count = Capybara::Helpers.matches_count?(count, query.options)
-          if matches_count && ((count > 0) || Capybara::Helpers.expects_none?(query.options))
+          if query.matches_count?(count) && ((count > 0) || query.expects_none?)
             raise Capybara::ExpectationNotMet, query.negative_failure_message
           end
         end
