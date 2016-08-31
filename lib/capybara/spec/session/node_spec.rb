@@ -134,12 +134,19 @@ Capybara::SpecHelper.spec "node" do
       expect(@session.find(:css,'#blank_content_editable').text).to eq('WYSIWYG')
     end
 
+    it 'should allow me to change the contents of a contenteditable without =true', :requires => [:js] do
+      @session.visit('/with_js')
+      @session.find(:css,'#sleek_content_editable').set('WYSIWYG')
+      expect(@session.find(:css,'#existing_content_editable_child').text).to eq('WYSIWYG')
+    end
+
     it 'should allow me to change the contents of a contenteditable elements child', :requires => [:js] do
       pending "Selenium doesn't like editing nested contents"
       @session.visit('/with_js')
       @session.find(:css,'#existing_content_editable_child').set('WYSIWYG')
       expect(@session.find(:css,'#existing_content_editable_child').text).to eq('WYSIWYG')
     end
+
   end
 
   describe "#tag_name" do
