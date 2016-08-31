@@ -83,23 +83,15 @@ module Capybara
 
       def exact?
         return false if !supports_exact?
-        if options.has_key?(:exact)
-          @options[:exact]
-        else
-          Capybara.exact
-        end
+        options.fetch(:exact, Capybara.exact)
       end
 
       def match
-        if options.has_key?(:match)
-          @options[:match]
-        else
-          Capybara.match
-        end
+        options.fetch(:match, Capybara.match)
       end
 
       def xpath(exact=nil)
-        exact = self.exact? if exact == nil
+        exact = self.exact? if exact.nil?
         if @expression.respond_to?(:to_xpath) and exact
           @expression.to_xpath(:exact)
         else

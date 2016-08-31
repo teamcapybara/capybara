@@ -12,11 +12,7 @@ module Capybara
       end
 
       def self.wait(options)
-        if options.has_key?(:wait)
-          options[:wait] || 0
-        else
-          Capybara.default_max_wait_time
-        end
+        options.fetch(:wait, Capybara.default_max_wait_time) || 0
       end
 
       private
