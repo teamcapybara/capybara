@@ -22,24 +22,25 @@ module Capybara
       end
 
       def failure_message
-        build_message(true)
+        super << build_message(true)
       end
 
       def negative_failure_message
-        build_message(false).sub(/(to find)/, 'not \1')
+        super << build_message(false)
+      end
+
+      def description
+        if @expected_text.is_a?(Regexp)
+          "text matching #{@expected_text.inspect}"
+        else
+          "text #{@expected_text.inspect}"
+        end
       end
 
       private
 
       def build_message(report_on_invisible)
-        description =
-          if @expected_text.is_a?(Regexp)
-            "text matching #{@expected_text.inspect}"
-          else
-            "text #{@expected_text.inspect}"
-          end
-
-        message = Capybara::Helpers.failure_message(description, @options)
+        message = String.new()
         unless (COUNT_KEYS & @options.keys).empty?
           message << " but found #{@count} #{Capybara::Helpers.declension('time', 'times', @count)}"
         end
