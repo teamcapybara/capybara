@@ -81,6 +81,9 @@ RSpec.describe Capybara::Result do
     expect(result.instance_variable_get('@result_cache').size).to be 1
 
     #works for indexed access
+    result[0]
+    expect(result.instance_variable_get('@result_cache').size).to be 1
+
     result[2]
     expect(result.instance_variable_get('@result_cache').size).to be 3
 

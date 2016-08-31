@@ -45,7 +45,7 @@ module Capybara
     end
 
     def [](*args)
-      if (args.size == 1) && ((idx = args[0]).is_a? Integer) && (idx > 0)
+      if (args.size == 1) && ((idx = args[0]).is_a? Integer) && (idx >= 0)
         @result_cache << @results_enum.next while @result_cache.size <= idx
         @result_cache[idx]
       else
@@ -61,24 +61,41 @@ module Capybara
     end
 
     def matches_count?
-      return Integer(@query.options[:count]) == count if @query.options[:count]
-
-      return false if @query.options[:between] && !(@query.options[:between] === count)
+      # Only check filters for as many elements as necessary to determine result
+      if @query.options[:count]
+        count_opt = Integer(@query.options[:count])
+        loop do
+          break if @result_cache.size > count_opt
+          @result_cache << @results_enum.next
+        end
+        return @result_cache.size == count_opt
+      end
 
       if @query.options[:minimum]
+        min_opt = Integer(@query.options[:minimum])
         begin
-          @result_cache << @results_enum.next while @result_cache.size < Integer(@query.options[:minimum])
+          @result_cache << @results_enum.next while @result_cache.size < min_opt
         rescue StopIteration
           return false
         end
       end
 
       if @query.options[:maximum]
+        max_opt = Integer(@query.options[:maximum])
         begin
-          @result_cache << @results_enum.next while @result_cache.size <= Integer(@query.options[:maximum])
+          @result_cache << @results_enum.next while @result_cache.size <= max_opt
           return false
         rescue StopIteration
         end
+      end
+
+      if @query.options[:between]
+        max =  Integer(@query.options[:between].max)
+        loop do
+          break if @result_cache.size > max
+          @result_cache << @results_enum.next
+        end
+        return false unless (@query.options[:between] === @result_cache.size)
       end
 
       return true
@@ -105,9 +122,7 @@ module Capybara
     private
 
     def full_results
-      loop do
-        @result_cache << @results_enum.next
-      end
+      loop { @result_cache << @results_enum.next }
       @result_cache
     end
 
