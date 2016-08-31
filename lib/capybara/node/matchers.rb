@@ -588,6 +588,20 @@ module Capybara
       def ==(other)
         self.eql?(other) || (other.respond_to?(:base) && base == other.base)
       end
+
+
+      [:xpath?, :css?, :link?, :button?, :field?, :checked_field?, :unchecked_field?, :select?, :table?, ].each do |method_base|
+        ["has_#{method_base}", "has_no_#{method_base}"].each do |method_name|
+          alias_method "#{method_name}_without_options_verification", method_name
+          define_method method_name do |locator, options={}|
+            unless options.is_a?(Hash)
+              options={}
+              warn "WARNING: ##{__method__} options should be a Hash - Ignoring the passed in options."
+            end
+            send "#{method_name}_without_options_verification", locator, options
+          end
+        end
+      end
     end
   end
 end

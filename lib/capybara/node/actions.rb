@@ -261,6 +261,20 @@ module Capybara
         end
         find(:file_field, locator, options).set(path)
       end
+
+
+      (self.instance_methods - [:fill_in]).each do |method_name|
+        alias_name = "#{method_name}_without_options_verification".to_sym
+        alias_method alias_name, method_name
+        define_method method_name do |*args|
+          if args.length==self.method(alias_name).arity.abs &&
+             !args.last.is_a?(Hash)
+             args.pop
+             warn "WARNING: ##{__method__} options should be a Hash - Ignoring the passed in options."
+          end
+          send alias_name, *args
+        end
+      end
     end
   end
 end
