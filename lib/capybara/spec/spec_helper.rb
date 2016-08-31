@@ -6,15 +6,6 @@ require "capybara/rspec" # Required here instead of in rspec_spec to avoid RSpec
 require "capybara/spec/test_app"
 require "nokogiri"
 
-# Alias be_truthy/be_falsey if not already defined to be able to use in RSpec 2 and 3
-unless RSpec::Matchers.method_defined?(:be_truthy)
-  RSpec::Matchers.module_eval do
-    alias be_truthy be_true
-    alias be_falsey be_false
-    alias be_falsy be_false
-  end
-end
-
 module Capybara
   module SpecHelper
     class << self
