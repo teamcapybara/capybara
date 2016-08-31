@@ -161,7 +161,7 @@ module Capybara
 
     class BecomeClosed
       def initialize(options)
-        @wait_time = Capybara::Queries::SelectorQuery.new(options).wait
+        @wait_time = Capybara::Queries::BaseQuery.wait(options)
       end
 
       def matches?(window)

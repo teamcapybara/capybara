@@ -439,7 +439,7 @@ module Capybara
         driver.switch_to_window(window.handle)
         window
       else
-        wait_time = Capybara::Queries::SelectorQuery.new(options).wait
+        wait_time = Capybara::Queries::BaseQuery.wait(options)
         document.synchronize(wait_time, errors: [Capybara::WindowError]) do
           original_window_handle = driver.current_window_handle
           begin
@@ -536,7 +536,7 @@ module Capybara
       old_handles = driver.window_handles
       block.call
 
-      wait_time = Capybara::Queries::SelectorQuery.new(options).wait
+      wait_time = Capybara::Queries::BaseQuery.wait(options)
       document.synchronize(wait_time, errors: [Capybara::WindowError]) do
         opened_handles = (driver.window_handles - old_handles)
         if opened_handles.size != 1
