@@ -17,10 +17,6 @@ module Capybara
         end
       end
 
-      # RSpec 2 compatibility:
-      def failure_message_for_should; failure_message end
-      def failure_message_for_should_not; failure_message_when_negated end
-
       private
 
       def wrap_matches?(actual)
@@ -199,10 +195,6 @@ module Capybara
       def failure_message_when_negated
         "expected #{@window.inspect} not to become closed after #{@wait_time} seconds"
       end
-
-      # RSpec 2 compatibility:
-      alias_method :failure_message_for_should, :failure_message
-      alias_method :failure_message_for_should_not, :failure_message_when_negated
     end
 
     # RSpec matcher for whether the element(s) matching a given selector exist
