@@ -2,32 +2,12 @@
 require 'spec_helper'
 require "selenium-webdriver"
 
-Selenium::WebDriver::Firefox.driver_path = '/home/travis/geckodriver' if ENV['TRAVIS'] && ENV['GECKODRIVER']
+RSpec.shared_examples "Capybara::Session" do |session, mode|
+  let(:session) {session}
 
-Capybara.register_driver :selenium_focus do |app|
-  # profile = Selenium::WebDriver::Firefox::Profile.new
-  # profile["focusmanager.testmode"] = true
-  # Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile)
-  Capybara::Selenium::Driver.new(app, browser: :firefox)
-end
-
-module TestSessions
-  Selenium = Capybara::Session.new(:selenium_focus, TestApp)
-end
-
-skipped_tests = [
-  :response_headers,
-  :status_code,
-  :trigger
-]
-skipped_tests << :windows if ENV['TRAVIS'] && !ENV['WINDOW_TEST']
-
-Capybara::SpecHelper.run_specs TestSessions::Selenium, "selenium", :capybara_skip => skipped_tests
-
-RSpec.describe Capybara::Session do
   context 'with selenium driver' do
     before do
-      @session = TestSessions::Selenium
+      @session = session
     end
 
     describe '#driver' do
@@ -38,7 +18,7 @@ RSpec.describe Capybara::Session do
 
     describe '#mode' do
       it "should remember the mode" do
-        expect(@session.mode).to eq(:selenium_focus)
+        expect(@session.mode).to eq(mode)
       end
     end
 
@@ -61,11 +41,13 @@ RSpec.describe Capybara::Session do
       end
 
       it "should have return code 1 when running selenium_driver_rspec_failure.rb" do
+        ENV['SELENIUM_BROWSER'] = @session.driver.options[:browser].to_s
         `rspec spec/fixtures/selenium_driver_rspec_failure.rb`
         expect($?.exitstatus).to eq(1)
       end
 
       it "should have return code 0 when running selenium_driver_rspec_success.rb" do
+        ENV['SELENIUM_BROWSER'] = @session.driver.options[:browser].to_s
         `rspec spec/fixtures/selenium_driver_rspec_success.rb`
         expect($?.exitstatus).to eq(0)
       end
@@ -76,7 +58,7 @@ RSpec.describe Capybara::Session do
         @session.visit('/with_js')
         @session.click_link('Open alert')
         @session.accept_alert
-        expect{@session.driver.browser.switch_to.alert}.to raise_error("No alert is present")
+        expect{@session.driver.browser.switch_to.alert}.to raise_error(Selenium::WebDriver::Error::NoAlertPresentError)
       end
     end
 
@@ -136,19 +118,3 @@ RSpec.describe Capybara::Session do
     end
   end
 end
-
-RSpec.describe Capybara::Selenium::Driver do
-  before do
-    @driver = Capybara::Selenium::Driver.new(TestApp, browser: :firefox)
-  end
-
-  describe '#quit' do
-    it "should reset browser when quit" do
-      expect(@driver.browser).to be
-      @driver.quit
-      #access instance variable directly so we don't create a new browser instance
-      expect(@driver.instance_variable_get(:@browser)).to be_nil
-    end
-  end
-end
-

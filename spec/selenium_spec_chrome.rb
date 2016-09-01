@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 require 'selenium-webdriver'
-
-Selenium::WebDriver::Chrome.driver_path = '/home/travis/chromedriver' if ENV['TRAVIS']
+require 'shared_selenium_session'
 
 Capybara.register_driver :selenium_chrome do |app|
   args = ENV['TRAVIS'] ? ['no-sandbox' ] : []
@@ -18,3 +17,7 @@ Capybara::SpecHelper.run_specs TestSessions::Chrome, "selenium_chrome", :capybar
   :status_code,
   :trigger
   ] unless ENV['TRAVIS'] && (RUBY_PLATFORM == 'java')
+
+RSpec.describe "Capybara::Session with chrome" do
+  include_examples  "Capybara::Session", TestSessions::Chrome, :selenium_chrome
+end

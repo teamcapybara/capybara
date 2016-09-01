@@ -30,15 +30,22 @@ matrix:
     - gemfile: gemfiles/Gemfile.beta-versions
       rvm: 2.4.0-preview1
     - gemfile: gemfiles/Gemfile.beta-marionette
-      env:
-        - GECKODRIVER=true
-          SELENIUM_BETA=true
-
+      env: GECKODRIVER=true
       rvm: 2.3.1
       addons:
         firefox: latest-beta
         apt:
           packages:
+            - awesome
+    - gemfile: gemfiles/Gemfile.beta-marionette
+      env: CAPYBARA_CHROME=true
+      rvm: 2.3.1
+      addons:
+        apt:
+          sources:
+            - google-chrome
+          packages:
+            - google-chrome-stable
             - awesome
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
@@ -56,20 +63,24 @@ addons:
       - awesome
 
 before_install:
+  - mkdir -p ~/drivers; export PATH=~/drivers:$PATH;
   - if [ $CAPYBARA_CHROME ]; then
       CHROMEDRIVER_VERSION=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE);
       CHROMEDRIVER_URL="http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip";
-      FILE=`mktemp`; wget "$CHROMEDRIVER_URL" -qO $FILE && unzip $FILE chromedriver -d ~; rm $FILE; chmod 777 ~/chromedriver;
+      FILE=`mktemp`; wget "$CHROMEDRIVER_URL" -qO $FILE && unzip $FILE chromedriver -d ~/drivers; rm $FILE; chmod 777 ~/drivers/chromedriver;
+      ~/drivers/chromedriver --version;
     fi
   - if [ $GECKODRIVER ]; then
       GECKODRIVER_URL="https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-linux64.tar.gz";
-      FILE=`mktemp`; wget "$GECKODRIVER_URL" -qO $FILE && tar xz -C ~ -f $FILE geckodriver; rm $FILE; chmod 777 ~/geckodriver;
+      FILE=`mktemp`; wget "$GECKODRIVER_URL" -qO $FILE && tar xz -C ~/drivers -f $FILE geckodriver; rm $FILE; chmod 777 ~/drivers/geckodriver;
+      ~/drivers/geckodriver --version;
     fi
-  - if [ $SELENIUM_BETA ]; then
-      cd ..; git clone --depth 1 https://github.com/SeleniumHQ/selenium.git;
+  - if [[ $BUNDLE_GEMFILE =~ Gemfile.beta-marionette$ ]]; then
+      pushd ..;
+      git clone --depth 1 https://github.com/SeleniumHQ/selenium.git;
       cd selenium; ./go //rb:gem:build;
-      cd ../capybara;
-      bundle config local.selenium-webdriver $HOME/selenium/build/rb;
+      popd;
+      bundle config local.selenium-webdriver ../selenium/build/rb;
     fi
 before_script:
   - export DISPLAY=:99.0

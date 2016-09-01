@@ -6,9 +6,11 @@ require 'yard'
 desc "Run all examples"
 RSpec::Core::RakeTask.new(:spec) do |t|
   t.rspec_opts = %w[--color]
+  # When we drop RSpec 2.x support we can rename spec_chrome.rb and implement this properly
+  # t.exclude_pattern = './spec/*{_chrome_spec.rb}'
 end
 
-RSpec::Core::RakeTask.new(:spec_with_chrome) do |t|
+RSpec::Core::RakeTask.new(:all) do |t|
   t.rspec_opts = %w[--color]
   # jruby buffers the progress formatter so travis doesn't see output often enough
   t.rspec_opts << '--format documentation' if RUBY_PLATFORM=='java'
