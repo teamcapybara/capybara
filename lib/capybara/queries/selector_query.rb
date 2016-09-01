@@ -4,7 +4,7 @@ module Capybara
     class SelectorQuery < Queries::BaseQuery
       attr_accessor :selector, :locator, :options, :expression, :find, :negative
 
-      VALID_KEYS = [:text, :visible, :between, :count, :maximum, :minimum, :exact, :match, :wait, :filter_set]
+      VALID_KEYS = COUNT_KEYS + [:text, :visible, :exact, :match, :wait, :filter_set]
       VALID_MATCH = [:first, :smart, :prefer_exact, :one]
 
       def initialize(*args)
@@ -129,8 +129,7 @@ module Capybara
       private
 
       def valid_keys
-       vk = COUNT_KEYS + [:text, :visible, :exact, :match, :wait, :filter_set]
-       vk + custom_keys
+        VALID_KEYS + custom_keys
       end
 
       def query_filters
