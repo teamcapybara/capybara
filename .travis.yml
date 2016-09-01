@@ -30,7 +30,10 @@ matrix:
     - gemfile: gemfiles/Gemfile.beta-versions
       rvm: 2.4.0-preview1
     - gemfile: gemfiles/Gemfile.beta-marionette
-      env: GECKODRIVER=true
+      env:
+        - GECKODRIVER=true
+          SELENIUM_BETA=true
+
       rvm: 2.3.1
       addons:
         firefox: latest-beta
@@ -61,6 +64,12 @@ before_install:
   - if [ $GECKODRIVER ]; then
       GECKODRIVER_URL="https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-linux64.tar.gz";
       FILE=`mktemp`; wget "$GECKODRIVER_URL" -qO $FILE && tar xz -C ~ -f $FILE geckodriver; rm $FILE; chmod 777 ~/geckodriver;
+    fi
+  - if [ $SELENIUM_BETA ]; then
+      cd ..; git clone --depth 1 https://github.com/SeleniumHQ/selenium.git;
+      cd selenium; ./go //rb:gem:build;
+      cd ../capybara;
+      bundle config local.selenium-webdriver $HOME/selenium/build/rb;
     fi
 before_script:
   - export DISPLAY=:99.0
