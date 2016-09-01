@@ -5,6 +5,8 @@ gemspec :path => '..'
 
 gem 'xpath', github: 'jnicklas/xpath'
 
-git 'https://github.com/SeleniumHQ/selenium.git' do
-  gem 'selenium-webdriver'
-end
+gem 'selenium-webdriver', :path => '../../selenium/build/rb'
+# git 'https://github.com/SeleniumHQ/selenium.git' do
+#   gem 'selenium-webdriver'
+# end
+# gem 'selenium-webdriver'

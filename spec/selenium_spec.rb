@@ -62,12 +62,12 @@ RSpec.describe Capybara::Session do
 
       it "should have return code 1 when running selenium_driver_rspec_failure.rb" do
         `rspec spec/fixtures/selenium_driver_rspec_failure.rb`
-        expect($?.exitstatus).to be 1
+        expect($?.exitstatus).to eq(1)
       end
 
       it "should have return code 0 when running selenium_driver_rspec_success.rb" do
         `rspec spec/fixtures/selenium_driver_rspec_success.rb`
-        expect($?.exitstatus).to be 0
+        expect($?.exitstatus).to eq(0
       end
     end
 
