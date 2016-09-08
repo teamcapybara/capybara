@@ -64,16 +64,18 @@ module Capybara
       #
       #     page.fill_in 'Name', :with => 'Bob'
       #
-      # @macro waiting_behavior
       #
-      # @param [String] locator                 Which field to fill in
-      # @param [Hash] options
-      # @option options [String] :with          The value to fill in - required
-      # @option options [Hash] :fill_options    Driver specific options regarding how to fill fields
-      # @option options [Boolean] :multiple      Match fields that can have multiple values?
-      # @option options [String] id             Match fields that match the id attribute
-      # @option options [String] name           Match fields that match the name attribute
-      # @option options [String] placeholder    Match fields that match the placeholder attribute
+      # @overload fill_in([locator], options={})
+      #   @param [String] locator                 Which field to fill in
+      #   @param [Hash] options
+      #   @macro waiting_behavior
+      #   @option options [String] :with          The value to fill in - required
+      #   @option options [Hash] :fill_options    Driver specific options regarding how to fill fields
+      #   @option options [Boolean] :multiple      Match fields that can have multiple values?
+      #   @option options [String] :id             Match fields that match the id attribute
+      #   @option options [String] :name           Match fields that match the name attribute
+      #   @option options [String] :placeholder    Match fields that match the placeholder attribute
+      #   @option options [String, Array<String>] :class    Match links that match the class(es) provided
       #
       def fill_in(locator, options={})
         locator, options = nil, locator if locator.is_a? Hash
@@ -97,8 +99,9 @@ module Capybara
       #   @param [String] locator           Which radio button to choose
       #
       #   @option options [String] :option  Value of the radio_button to choose
-      #   @option options [String] id             Match fields that match the id attribute
-      #   @option options [String] name           Match fields that match the name attribute
+      #   @option options [String] :id             Match fields that match the id attribute
+      #   @option options [String] :name           Match fields that match the name attribute
+      #   @option options [String, Array<String>] :class    Match links that match the class(es) provided
       #   @macro waiting_behavior
       #   @macro label_click
       def choose(locator, options={})
@@ -133,6 +136,7 @@ module Capybara
       #   @option options [String] :option  Value of the checkbox to select
       #   @option options [String] id       Match fields that match the id attribute
       #   @option options [String] name     Match fields that match the name attribute
+      #   @option options [String, Array<String>] :class    Match links that match the class(es) provided
       #   @macro label_click
       #   @macro waiting_behavior
       #
@@ -168,6 +172,7 @@ module Capybara
       #   @option options [String] :option  Value of the checkbox to deselect
       #   @option options [String] id       Match fields that match the id attribute
       #   @option options [String] name     Match fields that match the name attribute
+      #   @option options [String, Array<String>] :class    Match links that match the class(es) provided
       #   @macro label_click
       #   @macro waiting_behavior
       #
@@ -253,6 +258,7 @@ module Capybara
       # @option options [Boolean] multiple Match field which allows multiple file selection
       # @option options [String] id             Match fields that match the id attribute
       # @option options [String] name           Match fields that match the name attribute
+      # @option options [String, Array<String>] :class    Match links that match the class(es) provided
       #
       def attach_file(locator, path, options={})
         locator, path, options = nil, locator, path if path.is_a? Hash

@@ -51,5 +51,7 @@ else
     RSpec.describe(*args, &block)
   end
 
-  RSpec.configuration.include Capybara::Features, :capybara_feature => true
+  RSpec.configure do |config|
+    config.include(Capybara::Features, :capybara_feature => true)
+  end
 end

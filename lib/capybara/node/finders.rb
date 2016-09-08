@@ -70,6 +70,7 @@ module Capybara
       #   @option options [String] id             Match fields that match the id attribute
       #   @option options [String] name           Match fields that match the name attribute
       #   @option options [String] placeholder    Match fields that match the placeholder attribute
+      #   @option options [String, Array<String>] Match fields that match the class(es) passed
       # @return [Capybara::Node::Element]   The found element
       #
 
@@ -89,6 +90,10 @@ module Capybara
       #   @macro waiting_behavior
       #
       #   @option options [String,Regexp] href        Value to match against the links href
+      #   @option options [String] id                 Match links with the id provided
+      #   @option options [String] title              Match links with the title provided
+      #   @option options [String] alt                Match links with a contained img element whose alt matches
+      #   @option options [String, Array<String>] class    Match links that match the class(es) provided
       # @return [Capybara::Node::Element]   The found element
       #
       def find_link(locator=nil, options={})
@@ -114,6 +119,10 @@ module Capybara
       #                                                       * true - only finds a disabled button
       #                                                       * false - only finds an enabled button
       #                                                       * :all - finds either an enabled or disabled button
+      #   @option options [String] id                 Match buttons with the id provided
+      #   @option options [String] title              Match buttons with the title provided
+      #   @option options [String] value              Match buttons with the value provided
+      #   @option options [String, Array<String>] class    Match links that match the class(es) provided
       # @return [Capybara::Node::Element]   The found element
       #
       def find_button(locator=nil, options={})

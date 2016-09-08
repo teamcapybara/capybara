@@ -51,5 +51,11 @@ Capybara::SpecHelper.spec Capybara::Selector do
       expect(@session.find(:field, 'Confusion', type: 'text')['id']).to eq 'confusion_text'
       expect(@session.find(:field, 'Confusion', type: 'textarea')['id']).to eq 'confusion_textarea'
     end
+
+    it "can find by class" do
+      expect(@session.find(:field, class: 'confusion-checkbox')['id']).to eq 'confusion_checkbox'
+      expect(@session).to have_selector(:field, class: 'confusion', count: 3)
+      expect(@session.find(:field, class: ['confusion','confusion-textarea'])['id']).to eq 'confusion_textarea'
+    end
   end
 end
