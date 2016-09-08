@@ -157,14 +157,15 @@ module Capybara
 
     ##
     #
-    #  Define a non-expression filter for use with this selector
-    #  @overload filter(name, *types, options={}, &block)
-    #  @param [Symbol] name            The filter name
-    #  @param [Array<Symbol>] types    The types of the filter - currently valid types are [:boolean]
-    #  @param [Hash] options ({})      Options of the filter
-    #  @option options [Array<>] :valid_values Valid values for this filter
-    #  @option options :default        The default value of the filter (if any)
-    #  @option options :skip_if        Value of the filter that will cause it to be skipped
+    # Define a non-expression filter for use with this selector
+    #
+    # @overload filter(name, *types, options={}, &block)
+    #   @param [Symbol] name            The filter name
+    #   @param [Array<Symbol>] types    The types of the filter - currently valid types are [:boolean]
+    #   @param [Hash] options ({})      Options of the filter
+    #   @option options [Array<>] :valid_values Valid values for this filter
+    #   @option options :default        The default value of the filter (if any)
+    #   @option options :skip_if        Value of the filter that will cause it to be skipped
     #
     def filter(name, *types_and_options, &block)
       options = types_and_options.last.is_a?(Hash) ? types_and_options.pop.dup : {}

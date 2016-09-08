@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require 'capybara/selector/selector'
-
 Capybara::Selector::FilterSet.add(:_field) do
   filter(:checked, :boolean) { |node, value| not(value ^ node.checked?) }
   filter(:unchecked, :boolean) { |node, value| (value ^ node.checked?) }
@@ -19,18 +18,40 @@ Capybara::Selector::FilterSet.add(:_field) do
   end
 end
 
+#
+# @locator An XPath expression
+#
 Capybara.add_selector(:xpath) do
   xpath { |xpath| xpath }
 end
 
+#
+# @locator A CSS selector
+#
 Capybara.add_selector(:css) do
   css { |css| css }
 end
 
+#
+# @locator The id of the element to match
+#
 Capybara.add_selector(:id) do
   xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
 end
 
+#
+# @locator Matches against the id, name, or placeholder
+# @filter [String] :id  Matches the id attribute
+# @filter [String] :name  Matches the name attribute
+# @filter [String] :placeholder  Matches the placeholder attribute
+# @filter [String] :type Matches the type attribute of the field or element type for 'textarea' and 'select'
+# @filter [Boolean] :readonly
+# @filter [String] :with  Matches the current value of the field
+# @filter [String, Array<String>] :class  Matches the class(es) provided
+# @filter [Boolean] :checked Match checked fields?
+# @filter [Boolean] :unchecked Match unchecked fields?
+# @filter [Boolean] :disabled Match disabled field?
+# @filter [Boolean] :multiple Match fields that accept multiple values
 Capybara.add_selector(:field) do
   xpath(:id, :name, :placeholder, :type, :class) do |locator, options|
     xpath = XPath.descendant(:input, :textarea, :select)[~XPath.attr(:type).one_of('submit', 'image', 'hidden')]
@@ -61,6 +82,13 @@ Capybara.add_selector(:field) do
   end
 end
 
+#
+# @locator Matches id or contents of wrapped legend
+#
+# @filter [String] :id Matches id attribute
+# @filter [String] :legend Matches contents of wrapped legend
+# @filter [String, Array<String>] :class Matches the class(es) provided
+#
 Capybara.add_selector(:fieldset) do
   xpath(:id, :legend, :class) do |locator, options|
     xpath = XPath.descendant(:fieldset)
@@ -71,7 +99,15 @@ Capybara.add_selector(:fieldset) do
     xpath
   end
 end
-
+#
+# @locator Matches the id or title attributes, or the string content of the link, or the alt attribute of a contained img element
+#
+# @filter [String] :id  Matches the id attribute
+# @filter [String] :title Matches the title attribute
+# @filter [String] :alt Matches the alt attribute of a contained img element
+# @filter [String] :class Matches the class(es) provided
+# @filter [String, Regexp] :href  Matches the normalized href of the link
+#
 Capybara.add_selector(:link) do
   xpath(:id, :title, :alt, :class) do |locator, options={}|
     xpath = XPath.descendant(:a)[XPath.attr(:href)]
