@@ -4,10 +4,15 @@
     <% @selectors.each do |name, selector| %>
       <li>
         <h3>:<%= name %></h3>
+        <div class="docstring">
+          <div class="discussion">
+            <p><%= h(selector.docstring) %></p>
+          </div>
+        </div>
         <div class="tags">
           <p class="inline">Locator:</p>
           <% if locator=selector.tag('locator') %>
-            <p class="inline"><%= locator.text %></p>
+            <p class="inline"><%= h locator.text %></p>
           <% end %>
           <% if selector.has_tag?('filter') %>
             <p>Filters:</p>
@@ -16,11 +21,11 @@
               <li>
                 <span class="name"><%= filter.name %></span>
                 <% if filter.types  %>
-                <span class="type">(<tt><%= filter.types.join(', ') %></tt>)</span>
+                <span class="type">(<tt><%= h(filter.types.join(', ')) %></tt>)</span>
                 <% end %>
                 <% if filter.text %>
                 —
-                <div class="inline"><p><%= filter.text %></p></div>
+                <div class="inline"><p><%= h filter.text %></p></div>
                 <% end %>
               </li>
               <% end %>

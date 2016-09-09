@@ -2,7 +2,6 @@ require 'rubygems'
 require 'rspec/core/rake_task'
 require 'cucumber/rake/task'
 require 'yard'
-require_relative './.yard/yard_extensions'
 
 desc "Run all examples"
 RSpec::Core::RakeTask.new(:spec) do |t|

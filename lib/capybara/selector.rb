@@ -18,6 +18,9 @@ Capybara::Selector::FilterSet.add(:_field) do
   end
 end
 
+##
+#
+# Select elements by XPath expression
 #
 # @locator An XPath expression
 #
@@ -25,6 +28,9 @@ Capybara.add_selector(:xpath) do
   xpath { |xpath| xpath }
 end
 
+##
+#
+# Select elements by CSS selector
 #
 # @locator A CSS selector
 #
@@ -32,13 +38,18 @@ Capybara.add_selector(:css) do
   css { |css| css }
 end
 
+##
+#
+# Select element by id
 #
 # @locator The id of the element to match
 #
 Capybara.add_selector(:id) do
   xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
 end
-
+##
+#
+# Select field elements (input [not of type submit, image, or hidden], textarea, select)
 #
 # @locator Matches against the id, name, or placeholder
 # @filter [String] :id  Matches the id attribute
@@ -82,6 +93,9 @@ Capybara.add_selector(:field) do
   end
 end
 
+##
+#
+# Select fieldset elements
 #
 # @locator Matches id or contents of wrapped legend
 #
@@ -99,6 +113,10 @@ Capybara.add_selector(:fieldset) do
     xpath
   end
 end
+
+##
+#
+# Find links ( <a> elements with an href attribute )
 #
 # @locator Matches the id or title attributes, or the string content of the link, or the alt attribute of a contained img element
 #
@@ -136,6 +154,10 @@ Capybara.add_selector(:link) do
   describe { |options| " with href #{options[:href].inspect}" if options[:href] }
 end
 
+##
+#
+#  Find buttons ( input [of type submit, reset, image, button] or button elements )
+#
 Capybara.add_selector(:button) do
   xpath(:id, :value, :title, :class) do |locator, options={}|
     input_btn_xpath = XPath.descendant(:input)[XPath.attr(:type).one_of('submit', 'reset', 'image', 'button')]
@@ -173,6 +195,10 @@ Capybara.add_selector(:button) do
   end
 end
 
+##
+#
+# Find links or buttons
+#
 Capybara.add_selector(:link_or_button) do
   label "link or button"
   xpath do |locator, options|
@@ -184,6 +210,10 @@ Capybara.add_selector(:link_or_button) do
   describe { |options| " that is disabled" if options[:disabled] }
 end
 
+##
+#
+# Find text fillable fields ( textarea, input [not of type submit, image, radio, checkbox, hidden, file] )
+#
 Capybara.add_selector(:fillable_field) do
   label "field"
   xpath(:id, :name, :placeholder, :class) do |locator, options|
@@ -200,6 +230,10 @@ Capybara.add_selector(:fillable_field) do
   end
 end
 
+##
+#
+# Find radio buttons
+#
 Capybara.add_selector(:radio_button) do
   label "radio button"
   xpath(:id, :name, :class) do |locator, options|
@@ -219,6 +253,10 @@ Capybara.add_selector(:radio_button) do
   end
 end
 
+##
+#
+# Find checkboxes
+#
 Capybara.add_selector(:checkbox) do
   xpath(:id, :name, :class) do |locator, options|
     xpath = XPath.descendant(:input)[XPath.attr(:type).equals('checkbox')]
@@ -237,6 +275,10 @@ Capybara.add_selector(:checkbox) do
   end
 end
 
+##
+#
+# Find select elements
+#
 Capybara.add_selector(:select) do
   label "select box"
   xpath(:id, :name, :placeholder, :class) do |locator, options|
@@ -276,6 +318,10 @@ Capybara.add_selector(:select) do
   end
 end
 
+##
+#
+# Find option elements
+#
 Capybara.add_selector(:option) do
   xpath do |locator|
     xpath = XPath.descendant(:option)
@@ -294,6 +340,10 @@ Capybara.add_selector(:option) do
   end
 end
 
+##
+#
+# Find file input elements
+#
 Capybara.add_selector(:file_field) do
   label "file field"
   xpath(:id, :name, :class) do |locator, options|
@@ -310,6 +360,10 @@ Capybara.add_selector(:file_field) do
   end
 end
 
+##
+#
+# Find label elements
+#
 Capybara.add_selector(:label) do
   label "label"
   xpath do |locator|
@@ -337,6 +391,10 @@ Capybara.add_selector(:label) do
   end
 end
 
+##
+#
+# Find table elements
+#
 Capybara.add_selector(:table) do
   xpath(:id, :caption, :class) do |locator, options|
     xpath = XPath.descendant(:table)
@@ -354,6 +412,10 @@ Capybara.add_selector(:table) do
   end
 end
 
+##
+#
+# Find frame/iframe elements
+#
 Capybara.add_selector(:frame) do
   xpath(:id, :name, :class) do |locator, options|
     xpath = XPath.descendant(:iframe) + XPath.descendant(:frame)
