@@ -42,7 +42,8 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
               if (value = field['value']).to_s.empty?
                 NilUploadedFile.new
               else
-                content_type = MIME::Types.type_for(value).first.to_s
+                types = MIME::Types.type_for(value)
+                content_type = types.sort_by.with_index { |type, idx| [type.obsolete? ? 1 : 0, idx] }.first.to_s
                 Rack::Test::UploadedFile.new(value, content_type)
               end
             merge_param!(params, field['name'].to_s, file)

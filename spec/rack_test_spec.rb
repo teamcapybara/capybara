@@ -79,6 +79,14 @@ RSpec.describe Capybara::Session do
           expect(@session.html).to include('Successfully ignored empty file field.')
         end
       end
+
+      it "should not submit an obsolete mime type" do
+        @test_jpg_file_path = File.expand_path('fixtures/capybara.csv', File.dirname(__FILE__))
+        @session.visit("/form")
+        @session.attach_file "form_document", @test_jpg_file_path
+        @session.click_button('Upload Single')
+        expect(@session).to have_content("Content-type: text/csv")
+      end
     end
 
     describe "#click" do
