@@ -8,7 +8,7 @@ Release date: unreleased
 * `:class` option to many of the built-in selectors [Thomas Walpole]
 * Removed need to specify value when creating `:boolean` filter type in custom selectors [Thomas Walpole]
 * Filters can now be implemented through the XPath/CSS expressions in custom selectors [Thomas Walpole]
-
+* `Element#matches_xpath?` and `Element#matches_css?` [Thomas Walpole]
 
 #Version 2.8.1
 Release date: 2016-08-25
