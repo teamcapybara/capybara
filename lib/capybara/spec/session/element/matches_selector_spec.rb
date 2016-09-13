@@ -1,4 +1,4 @@
-Capybara::SpecHelper.spec '#match_xpath?' do
+Capybara::SpecHelper.spec '#match_selector?' do
   before do
     @session.visit('/with_html')
     @element = @session.find('//span', text: '42')
@@ -27,6 +27,20 @@ Capybara::SpecHelper.spec '#match_xpath?' do
       expect(@element).to match_selector("//span", :text => "42")
       expect(@element).not_to match_selector("//span", :text => "Doesnotexist")
     end
+  end
+
+  it "should have css sugar" do
+    expect(@element.matches_css?('span.number')).to be true
+    expect(@element.matches_css?('span.not_a_number')).to be false
+    expect(@element.matches_css?('span.number', text: "42")).to be true
+    expect(@element.matches_css?('span.number', text: "Nope")).to be false
+  end
+
+  it "should have xpath sugar" do
+    expect(@element.matches_xpath?("//span")).to be true
+    expect(@element.matches_xpath?("//div")).to be false
+    expect(@element.matches_xpath?("//span", text: '42')).to be true
+    expect(@element.matches_xpath?("//span", text: 'Nope')).to be false
   end
 end
 
@@ -59,5 +73,19 @@ Capybara::SpecHelper.spec '#not_matches_selector?' do
       expect(@element).not_to not_match_selector(:css, "span.number", :text => "42")
       expect(@element).to not_match_selector(:css, "span.number", :text => "Doesnotexist")
     end
+  end
+
+  it "should have CSS sugar" do
+    expect(@element.not_matches_css?("span.number")).to be false
+    expect(@element.not_matches_css?("p a#doesnotexist")).to be true
+    expect(@element.not_matches_css?("span.number", :text => "42")).to be false
+    expect(@element.not_matches_css?("span.number", :text => "Doesnotexist")).to be true
+  end
+
+  it "should have xpath sugar" do
+    expect(@element.not_matches_xpath?("//span")).to be false
+    expect(@element.not_matches_xpath?("//div")).to be true
+    expect(@element.not_matches_xpath?("//span", :text => "42")).to be false
+    expect(@element.not_matches_xpath?("//span", :text => "Doesnotexist")).to be true
   end
 end if Gem::Version.new(RSpec::Expectations::Version::STRING) >= Gem::Version.new('3.1')

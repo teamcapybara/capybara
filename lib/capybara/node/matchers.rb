@@ -59,7 +59,6 @@ module Capybara
       ##
       #
       # Checks if the current node matches given selector
-      # Usage is identical to Capybara::Node::Matchers#has_selector?
       #
       # @param (see Capybara::Node::Finders#has_selector?)
       # @return [Boolean]
@@ -70,6 +69,27 @@ module Capybara
         return false
       end
 
+      ##
+      #
+      # Checks if the current node matches given XPath expression
+      #
+      # @param [String, XPath::Expression] xpath The XPath expression to match against the current code
+      # @return [Boolean]
+      #
+      def matches_xpath?(xpath, options={})
+        matches_selector?(:xpath, xpath, options)
+      end
+
+      ##
+      #
+      # Checks if the current node matches given CSS selector
+      #
+      # @param [String] css The CSS selector to match against the current code
+      # @return [Boolean]
+      #
+      def matches_css?(css, options={})
+        matches_selector?(:css, css, options)
+      end
 
       ##
       #
@@ -85,6 +105,27 @@ module Capybara
         return false
       end
 
+      ##
+      #
+      # Checks if the current node does not match given XPath expression
+      #
+      # @param [String, XPath::Expression] xpath The XPath expression to match against the current code
+      # @return [Boolean]
+      #
+      def not_matches_xpath?(xpath, options={})
+        not_matches_selector?(:xpath, xpath, options)
+      end
+
+      ##
+      #
+      # Checks if the current node does not match given CSS selector
+      #
+      # @param [String] css The CSS selector to match against the current code
+      # @return [Boolean]
+      #
+      def not_matches_css?(css, options={})
+        not_matches_selector?(:css, css, options)
+      end
 
       ##
       #
