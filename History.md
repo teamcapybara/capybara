@@ -1,3 +1,15 @@
+#Version 2.9.0
+Release date: unreleased
+
+### Fixed
+* Issue with rack-test driver and obselete mime-types when using `#attach_file` - Issue #1756 [Thomas Walpole]
+
+### Added
+* `:class` option to many of the built-in selectors [Thomas Walpole]
+* Removed need to specify value when creating `:boolean` filter type in custom selectors [Thomas Walpole]
+* Filters can now be implemented through the XPath/CSS expressions in custom selectors [Thomas Walpole]
+
+
 #Version 2.8.1
 Release date: 2016-08-25
 
