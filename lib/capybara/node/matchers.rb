@@ -44,7 +44,7 @@ module Capybara
 
       ##
       #
-      # Checks if a given selector is not on the page or a descendant of thecurrent node.
+      # Checks if a given selector is not on the page or a descendant of the current node.
       # Usage is identical to Capybara::Node::Matchers#has_selector?
       #
       # @param (see Capybara::Node::Finders#has_selector?)
