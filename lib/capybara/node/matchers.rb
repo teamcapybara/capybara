@@ -5,7 +5,7 @@ module Capybara
 
       ##
       #
-      # Checks if a given selector is on the page or current node.
+      # Checks if a given selector is on the page or a descendant of the current node.
       #
       #     page.has_selector?('p#foo')
       #     page.has_selector?(:xpath, './/p[@id="foo"]')
@@ -44,7 +44,7 @@ module Capybara
 
       ##
       #
-      # Checks if a given selector is not on the page or current node.
+      # Checks if a given selector is not on the page or a descendant of thecurrent node.
       # Usage is identical to Capybara::Node::Matchers#has_selector?
       #
       # @param (see Capybara::Node::Finders#has_selector?)
@@ -129,7 +129,7 @@ module Capybara
 
       ##
       #
-      # Asserts that a given selector is on the page or current node.
+      # Asserts that a given selector is on the page or a descendant of the current node.
       #
       #     page.assert_selector('p#foo')
       #     page.assert_selector(:xpath, './/p[@id="foo"]')
@@ -173,7 +173,7 @@ module Capybara
 
       ##
       #
-      # Asserts that a given selector is not on the page or current node.
+      # Asserts that a given selector is not on the page or a descendant of the current node.
       # Usage is identical to Capybara::Node::Matchers#assert_selector
       #
       # Query options such as :count, :minimum, :maximum, and :between are
@@ -240,7 +240,7 @@ module Capybara
 
       ##
       #
-      # Checks if a given XPath expression is on the page or current node.
+      # Checks if a given XPath expression is on the page or a descendant of the current node.
       #
       #     page.has_xpath?('.//p[@id="foo"]')
       #
@@ -273,7 +273,7 @@ module Capybara
 
       ##
       #
-      # Checks if a given XPath expression is not on the page or current node.
+      # Checks if a given XPath expression is not on the page or a descendant of the current node.
       # Usage is identical to Capybara::Node::Matchers#has_xpath?
       #
       # @param (see Capybara::Node::Finders#has_xpath?)
@@ -285,7 +285,7 @@ module Capybara
 
       ##
       #
-      # Checks if a given CSS selector is on the page or current node.
+      # Checks if a given CSS selector is on the page or a descendant of the current node.
       #
       #     page.has_css?('p#foo')
       #
@@ -312,7 +312,7 @@ module Capybara
 
       ##
       #
-      # Checks if a given CSS selector is not on the page or current node.
+      # Checks if a given CSS selector is not on the page or a descendant of the current node.
       # Usage is identical to Capybara::Node::Matchers#has_css?
       #
       # @param (see Capybara::Node::Finders#has_css?)
