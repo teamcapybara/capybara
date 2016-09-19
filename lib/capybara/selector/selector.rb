@@ -234,7 +234,7 @@ module Capybara
     end
 
     def locate_field(xpath, locator, **options)
-      locate_field = xpath #need to save original xpath for the label wrap
+      locate_xpath = xpath #need to save original xpath for the label wrap
       if locator
         locator = locator.to_s
         attr_matchers =  XPath.attr(:id).equals(locator).or(
