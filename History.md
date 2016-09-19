@@ -1,5 +1,5 @@
 #Version 2.9.0
-Release date: unreleased
+Release date: 2016-09-19
 
 ### Fixed
 * Issue with rack-test driver and obselete mime-types when using `#attach_file` - Issue #1756 [Thomas Walpole]
