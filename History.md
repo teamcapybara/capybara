@@ -1,3 +1,9 @@
+#Version 2.9.1
+Release date: unreleased
+
+### Fixed
+* allow_label_click option did not work in some cases with Poltergeist - Issue #1762 [Thomas Walpole]
+
 #Version 2.9.0
 Release date: 2016-09-19
 
