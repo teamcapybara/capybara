@@ -161,11 +161,20 @@ Capybara::SpecHelper.spec "#check" do
         expect{@session.check('form_cars_mclaren')}.to raise_error(Capybara::ElementNotFound, 'Unable to find checkbox "form_cars_mclaren"')
       end
 
-      it "should check via the label if allow_label_click == true" do
-        expect(@session.find(:checkbox, 'form_cars_tesla', unchecked: true, visible: :hidden)).to be
-        @session.check('form_cars_tesla', allow_label_click: true)
-        @session.click_button('awesome')
-        expect(extract_results(@session)['cars']).to include('tesla')
+      context "with allow_label_click == true" do
+        it "should check via the label if input is hidden" do
+          expect(@session.find(:checkbox, 'form_cars_tesla', unchecked: true, visible: :hidden)).to be
+          @session.check('form_cars_tesla', allow_label_click: true)
+          @session.click_button('awesome')
+          expect(extract_results(@session)['cars']).to include('tesla')
+        end
+
+        it "should check via the label if input is moved off the left edge of the page" do
+          expect(@session.find(:checkbox, 'form_cars_pagani', unchecked: true, visible: :all)).to be
+          @session.check('form_cars_pagani', allow_label_click: true)
+          @session.click_button('awesome')
+          expect(extract_results(@session)['cars']).to include('pagani')
+        end
       end
     end
   end

@@ -28,7 +28,7 @@ matrix:
     - gemfile: gemfiles/Gemfile.base-versions
       rvm: 1.9.3
     - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: 2.4.0-preview1
+      rvm: 2.4.0-preview2
     - gemfile: gemfiles/Gemfile.beta-marionette
       env: GECKODRIVER=true
       rvm: 2.3.1

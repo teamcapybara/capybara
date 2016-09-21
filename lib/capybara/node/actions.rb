@@ -109,11 +109,12 @@ module Capybara
         allow_label_click = options.delete(:allow_label_click) { Capybara.automatic_label_click }
 
         begin
-          find(:radio_button, locator, options).set(true)
-        rescue Capybara::ElementNotFound => e
-          raise unless allow_label_click
+          radio = find(:radio_button, locator, options)
+          radio.set(true)
+        rescue => e
+          raise unless allow_label_click && catch_error?(e)
           begin
-            radio = find(:radio_button, locator, options.merge({wait: 0, visible: :hidden}))
+            radio ||= find(:radio_button, locator, options.merge({wait: 0, visible: :all}))
             label = find(:label, for: radio, wait: 0, visible: true)
             label.click unless radio.checked?
           rescue
@@ -145,11 +146,12 @@ module Capybara
         allow_label_click = options.delete(:allow_label_click) { Capybara.automatic_label_click }
 
         begin
-          find(:checkbox, locator, options).set(true)
-        rescue Capybara::ElementNotFound => e
-          raise unless allow_label_click
+          cbox = find(:checkbox, locator, options)
+          cbox.set(true)
+        rescue => e
+          raise unless allow_label_click && catch_error?(e)
           begin
-            cbox = find(:checkbox, locator, options.merge({wait: 0, visible: :hidden}))
+            cbox ||= find(:checkbox, locator, options.merge({wait: 0, visible: :all}))
             label = find(:label, for: cbox, wait: 0, visible: true)
             label.click unless cbox.checked?
           rescue
@@ -181,11 +183,12 @@ module Capybara
         allow_label_click = options.delete(:allow_label_click) { Capybara.automatic_label_click }
 
         begin
-          find(:checkbox, locator, options).set(false)
-        rescue Capybara::ElementNotFound => e
-          raise unless allow_label_click
+          cbox = find(:checkbox, locator, options)
+          cbox.set(false)
+        rescue => e
+          raise unless allow_label_click && catch_error?(e)
           begin
-            cbox = find(:checkbox, locator, options.merge({wait: 0, visible: :hidden}))
+            cbox ||= find(:checkbox, locator, options.merge({wait: 0, visible: :all}))
             label = find(:label, for: cbox, wait: 0, visible: true)
             label.click if cbox.checked?
           rescue
