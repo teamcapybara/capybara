@@ -4,7 +4,7 @@ module Capybara
     class SelectorQuery < Queries::BaseQuery
       attr_accessor :selector, :locator, :options, :expression, :find, :negative
 
-      VALID_KEYS = COUNT_KEYS + [:text, :visible, :exact, :match, :wait, :filter_set]
+      VALID_KEYS = COUNT_KEYS + [:text, :id, :class, :visible, :exact, :match, :wait, :filter_set]
       VALID_MATCH = [:first, :smart, :prefer_exact, :one]
 
       def initialize(*args)
@@ -39,6 +39,8 @@ module Capybara
       def description
         @description = String.new("#{label} #{locator.inspect}")
         @description << " with text #{options[:text].inspect}" if options[:text]
+        @description << " with id #{options[:id]}" if options[:id]
+        @description << " with classes #{Array(options[:class]).join(',')}]" if options[:class]
         @description << selector.description(options)
         @description
       end
@@ -92,15 +94,16 @@ module Capybara
 
       def xpath(exact=nil)
         exact = self.exact? if exact.nil?
-        if @expression.respond_to?(:to_xpath) and exact
+        expr = if @expression.respond_to?(:to_xpath) and exact
           @expression.to_xpath(:exact)
         else
           @expression.to_s
         end
+        filtered_xpath(expr)
       end
 
       def css
-        @expression
+        filtered_css(@expression)
       end
 
       # @api private
@@ -141,7 +144,7 @@ module Capybara
       end
 
       def custom_keys
-        query_filters.keys + @selector.expression_filters
+        @custom_keys ||= query_filters.keys + @selector.expression_filters
       end
 
       def assert_valid_keys
@@ -149,6 +152,32 @@ module Capybara
         unless VALID_MATCH.include?(match)
           raise ArgumentError, "invalid option #{match.inspect} for :match, should be one of #{VALID_MATCH.map(&:inspect).join(", ")}"
         end
+      end
+
+      def filtered_xpath(expr)
+        if options.has_key?(:id) || options.has_key?(:class)
+          expr = "(#{expr})"
+          expr = "#{expr}[#{XPath.attr(:id) == options[:id]}]" if options.has_key?(:id) && !custom_keys.include?(:id)
+          if options.has_key?(:class) && !custom_keys.include?(:class)
+            class_xpath = Array(options[:class]).map do |klass|
+              "contains(concat(' ',normalize-space(@class),' '),' #{klass} ')"
+            end.join(" and ")
+            expr = "#{expr}[#{class_xpath}]"
+          end
+        end
+        expr
+      end
+
+      def filtered_css(expr)
+        if options.has_key?(:id) || options.has_key?(:class)
+          css_selectors = expr.split(',').map(&:rstrip)
+          expr = css_selectors.map do |sel|
+           sel += "##{Capybara::Selector::CSS.escape(options[:id])}" if options.has_key?(:id) && !custom_keys.include?(:id)
+           sel += Array(options[:class]).map { |k| ".#{Capybara::Selector::CSS.escape(k)}"}.join if options.has_key?(:class) && !custom_keys.include?(:class)
+           sel
+          end.join(", ")
+        end
+        expr
       end
 
       def warn_exact_usage

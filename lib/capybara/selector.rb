@@ -65,7 +65,7 @@ end
 # @filter [Boolean] :disabled Match disabled field?
 # @filter [Boolean] :multiple Match fields that accept multiple values
 Capybara.add_selector(:field) do
-  xpath(:id, :name, :placeholder, :type, :class) do |locator, options|
+  xpath(:name, :placeholder, :type) do |locator, options|
     xpath = XPath.descendant(:input, :textarea, :select)[~XPath.attr(:type).one_of('submit', 'image', 'hidden')]
     if options[:type]
       type=options[:type].to_s
@@ -105,12 +105,10 @@ end
 # @filter [String, Array<String>] :class Matches the class(es) provided
 #
 Capybara.add_selector(:fieldset) do
-  xpath(:id, :legend, :class) do |locator, options|
+  xpath(:legend) do |locator, options|
     xpath = XPath.descendant(:fieldset)
     xpath = xpath[XPath.attr(:id).equals(locator.to_s) | XPath.child(:legend)[XPath.string.n.is(locator.to_s)]] unless locator.nil?
-    xpath = xpath[XPath.attr(:id).equals(options[:id])] if options[:id]
     xpath = xpath[XPath.child(:legend)[XPath.string.n.is(options[:legend])]] if options[:legend]
-    xpath = xpath[find_by_attr(:class, options[:class])]
     xpath
   end
 end
@@ -128,7 +126,7 @@ end
 # @filter [String, Regexp] :href  Matches the normalized href of the link
 #
 Capybara.add_selector(:link) do
-  xpath(:id, :title, :alt, :class) do |locator, options={}|
+  xpath(:title, :alt) do |locator, options={}|
     xpath = XPath.descendant(:a)[XPath.attr(:href)]
     unless locator.nil?
       locator = locator.to_s
@@ -139,7 +137,7 @@ Capybara.add_selector(:link) do
       matchers |= XPath.attr(:'aria-label').is(locator) if Capybara.enable_aria_label
       xpath = xpath[matchers]
     end
-    xpath = [:id, :title, :class].inject(xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
+    xpath = [:title].inject(xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
     xpath = xpath[XPath.descendant(:img)[XPath.attr(:alt).equals(options[:alt])]] if options[:alt]
     xpath
   end
@@ -167,7 +165,7 @@ end
 # @filter [String] :value Matches the value of an input button
 #
 Capybara.add_selector(:button) do
-  xpath(:id, :value, :title, :class) do |locator, options={}|
+  xpath(:value, :title) do |locator, options={}|
     input_btn_xpath = XPath.descendant(:input)[XPath.attr(:type).one_of('submit', 'reset', 'image', 'button')]
     btn_xpath = XPath.descendant(:button)
     image_btn_xpath = XPath.descendant(:input)[XPath.attr(:type).equals('image')]
@@ -233,7 +231,7 @@ end
 #
 Capybara.add_selector(:fillable_field) do
   label "field"
-  xpath(:id, :name, :placeholder, :class) do |locator, options|
+  xpath(:name, :placeholder) do |locator, options|
     xpath = XPath.descendant(:input, :textarea)[~XPath.attr(:type).one_of('submit', 'image', 'radio', 'checkbox', 'hidden', 'file')]
     locate_field(xpath, locator, options)
   end
@@ -267,7 +265,7 @@ end
 #
 Capybara.add_selector(:radio_button) do
   label "radio button"
-  xpath(:id, :name, :class) do |locator, options|
+  xpath(:name) do |locator, options|
     xpath = XPath.descendant(:input)[XPath.attr(:type).equals('radio')]
     locate_field(xpath, locator, options)
   end
@@ -298,7 +296,7 @@ end
 # @filter [String] :option Match the value
 #
 Capybara.add_selector(:checkbox) do
-  xpath(:id, :name, :class) do |locator, options|
+  xpath(:name) do |locator, options|
     xpath = XPath.descendant(:input)[XPath.attr(:type).equals('checkbox')]
     locate_field(xpath, locator, options)
   end
@@ -332,7 +330,7 @@ end
 #
 Capybara.add_selector(:select) do
   label "select box"
-  xpath(:id, :name, :placeholder, :class) do |locator, options|
+  xpath(:name, :placeholder) do |locator, options|
     xpath = XPath.descendant(:select)
     locate_field(xpath, locator, options)
   end
@@ -408,7 +406,7 @@ end
 #
 Capybara.add_selector(:file_field) do
   label "file field"
-  xpath(:id, :name, :class) do |locator, options|
+  xpath(:name) do |locator, options|
     xpath = XPath.descendant(:input)[XPath.attr(:type).equals('file')]
     locate_field(xpath, locator, options)
   end
@@ -466,17 +464,15 @@ end
 # @filter [String, Array<String>] :class  Matches the class(es) provided
 #
 Capybara.add_selector(:table) do
-  xpath(:id, :caption, :class) do |locator, options|
+  xpath(:caption) do |locator, options|
     xpath = XPath.descendant(:table)
     xpath = xpath[XPath.attr(:id).equals(locator.to_s) | XPath.descendant(:caption).is(locator.to_s)] unless locator.nil?
     xpath = xpath[XPath.descendant(:caption).equals(options[:caption])] if options[:caption]
-    xpath = [:id, :class].inject(xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
     xpath
   end
 
   describe do |options|
     desc = String.new
-    desc << " with id #{options[:id]}" if options[:id]
     desc << " with caption #{options[:caption]}" if options[:caption]
     desc
   end
@@ -492,7 +488,7 @@ end
 # @filter [String, Array<String>] :class  Matches the class(es) provided
 #
 Capybara.add_selector(:frame) do
-  xpath(:id, :name, :class) do |locator, options|
+  xpath(:name) do |locator, options|
     xpath = XPath.descendant(:iframe) + XPath.descendant(:frame)
     xpath = xpath[XPath.attr(:id).equals(locator.to_s) | XPath.attr(:name).equals(locator)] unless locator.nil?
     xpath = expression_filters.inject(xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
@@ -501,7 +497,6 @@ Capybara.add_selector(:frame) do
 
   describe do |options|
     desc = String.new
-    desc << " with id #{options[:id]}" if options[:id]
     desc << " with name #{options[:name]}" if options[:name]
     desc
   end

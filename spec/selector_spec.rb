@@ -18,10 +18,13 @@ RSpec.describe Capybara do
               <p class="b">Some Content</p>
               <p class="b"></p>
             </div>
-            <input type="checkbox"/>
+            <div id="#special">
+            </div>
+            <input id="2checkbox" class="2checkbox" type="checkbox"/>
             <input type="radio"/>
-            <input type="text"/>
-            <input type="file"/>
+            <label for="my_text_input">My Text Input</label>
+            <input type="text" name="form[my_text_input]" placeholder="my text" id="my_text_input"/>
+            <input type="file" id="file" class=".special file"/>
             <a href="#">link</a>
             <fieldset></fieldset>
             <select>
@@ -41,6 +44,10 @@ RSpec.describe Capybara do
       Capybara.add_selector :custom_selector do
         css { |css_class| "div.#{css_class}" }
         filter(:not_empty, boolean: true, default: true, skip_if: :all) { |node, value| value ^ (node.text == '') }
+      end
+
+      Capybara.add_selector :custom_css_selector do
+        css { |selector| selector }
       end
     end
 
@@ -86,6 +93,75 @@ RSpec.describe Capybara do
             expect(results.size).to be > 0
             expect(results).to eq string.all(:xpath, xpath).to_a.map(&:native)
           end
+        end
+      end
+
+      context "with :id option", twtw: true do
+        it "works with compound css selectors" do
+          expect(string.all(:custom_css_selector, "div, h1", id: 'page').size).to eq 1
+          expect(string.all(:custom_css_selector, "h1, div", id: 'page').size).to eq 1
+        end
+
+        it "works with 'special' characters" do
+          expect(string.find(:custom_css_selector, "div", id: "#special")[:id]).to eq '#special'
+          expect(string.find(:custom_css_selector, "input", id: "2checkbox")[:id]).to eq '2checkbox'
+        end
+      end
+
+      context "with :class option", twtw: true do
+        it "works with compound css selectors" do
+          expect(string.all(:custom_css_selector, "div, h1", class: 'a').size).to eq 2
+          expect(string.all(:custom_css_selector, "h1, div", class: 'a').size).to eq 2
+        end
+
+        it "works with 'special' characters" do
+          expect(string.find(:custom_css_selector, "input", class: ".special")[:id]).to eq 'file'
+          expect(string.find(:custom_css_selector, "input", class: "2checkbox")[:id]).to eq '2checkbox'
+        end
+      end
+
+      # :css, :xpath, :id, :field, :fieldset, :link, :button, :link_or_button, :fillable_field, :radio_button, :checkbox, :select,
+      # :option, :file_field, :label, :table, :frame
+
+      describe ":css selector" do
+        it "finds by CSS locator" do
+          expect(string.find(:css, "input#my_text_input")[:name]).to eq 'form[my_text_input]'
+        end
+      end
+
+      describe ":xpath selector" do
+        it "finds by XPath locator" do
+          expect(string.find(:xpath, './/input[@id="my_text_input"]')[:name]).to eq 'form[my_text_input]'
+        end
+      end
+
+      describe ":id selector" do
+        it "finds by locator" do
+          expect(string.find(:id, "my_text_input")[:name]).to eq 'form[my_text_input]'
+        end
+      end
+
+      describe ":field selector" do
+        it "finds by locator" do
+          expect(string.find(:field, 'My Text Input')[:id]).to eq 'my_text_input'
+          expect(string.find(:field, 'my_text_input')[:id]).to eq 'my_text_input'
+          expect(string.find(:field, 'form[my_text_input]')[:id]).to eq 'my_text_input'
+        end
+
+        it "finds by id" do
+          expect(string.find(:field, id: 'my_text_input')[:name]).to eq 'form[my_text_input]'
+        end
+
+        it "finds by name" do
+          expect(string.find(:field, name: 'form[my_text_input]')[:id]).to eq 'my_text_input'
+        end
+
+        it "finds by placeholder" do
+          expect(string.find(:field, placeholder: 'my text')[:id]).to eq 'my_text_input'
+        end
+
+        it "finds by type" do
+          expect(string.find(:field, type: 'file')[:id]).to eq 'file'
         end
       end
 
