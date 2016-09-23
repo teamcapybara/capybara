@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'capybara/selector/filter_set'
+require 'capybara/selector/css'
 require 'xpath'
 
 #Patch XPath to allow a nil condition in where
@@ -201,7 +202,7 @@ module Capybara
         locate_xpath += XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(xpath)
       end
 
-      locate_xpath = [:id, :name, :placeholder, :class].inject(locate_xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
+      locate_xpath = [:name, :placeholder].inject(locate_xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
       locate_xpath
     end
 

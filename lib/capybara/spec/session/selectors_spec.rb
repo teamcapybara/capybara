@@ -33,7 +33,7 @@ Capybara::SpecHelper.spec Capybara::Selector do
     end
   end
 
-  describe "locate_field selectors" do
+  describe "field selectors" do
     it "can find specifically by id" do
       expect(@session.find(:field, id: 'customer_email').value).to eq "ben@ben.com"
     end
