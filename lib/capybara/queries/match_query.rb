@@ -1,8 +1,6 @@
 module Capybara
   module Queries
     class MatchQuery < Capybara::Queries::SelectorQuery
-      VALID_KEYS = [:text, :visible, :exact, :wait]
-
       def visible
         if options.has_key?(:visible)
           super
@@ -14,7 +12,7 @@ module Capybara
       private
 
       def valid_keys
-        VALID_KEYS + @selector.custom_filters.keys
+        super - COUNT_KEYS
       end
     end
   end

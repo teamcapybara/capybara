@@ -42,6 +42,12 @@ Capybara::SpecHelper.spec '#match_selector?' do
     expect(@element.matches_xpath?("//span", text: '42')).to be true
     expect(@element.matches_xpath?("//span", text: 'Nope')).to be false
   end
+
+  it 'should accept selector filters' do
+    @session.visit('/form')
+    cbox = @session.find(:css, '#form_pets_dog')
+    expect(cbox.matches_selector?(:checkbox, id: 'form_pets_dog', option: 'dog', name: 'form[pets][]', checked: true)).to be true
+  end
 end
 
 Capybara::SpecHelper.spec '#not_matches_selector?' do

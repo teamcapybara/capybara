@@ -96,7 +96,7 @@ RSpec.describe Capybara do
         end
       end
 
-      context "with :id option", twtw: true do
+      context "with :id option" do
         it "works with compound css selectors" do
           expect(string.all(:custom_css_selector, "div, h1", id: 'page').size).to eq 1
           expect(string.all(:custom_css_selector, "h1, div", id: 'page').size).to eq 1
@@ -109,7 +109,7 @@ RSpec.describe Capybara do
         end
       end
 
-      context "with :class option", twtw: true do
+      context "with :class option" do
         it "works with compound css selectors" do
           expect(string.all(:custom_css_selector, "div, h1", class: 'a').size).to eq 2
           expect(string.all(:custom_css_selector, "h1, div", class: 'a').size).to eq 2
