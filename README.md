@@ -781,7 +781,7 @@ module MyModule
   include Capybara::DSL
 
   def login!
-    within("//form[@id='session']") do
+    within(:xpath, "//form[@id='session']") do
       fill_in 'Email', :with => 'user@example.com'
       fill_in 'Password', :with => 'password'
     end
@@ -852,7 +852,7 @@ manually.
 require 'capybara'
 
 session = Capybara::Session.new(:webkit, my_rack_app)
-session.within("//form[@id='session']") do
+session.within("form#session") do
   session.fill_in 'Email', :with => 'user@example.com'
   session.fill_in 'Password', :with => 'password'
 end
