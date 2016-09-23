@@ -103,6 +103,7 @@ RSpec.describe Capybara do
         end
 
         it "works with 'special' characters" do
+          skip "We support old Nokogiris but they have their limits" if Gem::Version.new(Nokogiri::VERSION) < Gem::Version.new('1.6.8')
           expect(string.find(:custom_css_selector, "div", id: "#special")[:id]).to eq '#special'
           expect(string.find(:custom_css_selector, "input", id: "2checkbox")[:id]).to eq '2checkbox'
         end
@@ -115,6 +116,7 @@ RSpec.describe Capybara do
         end
 
         it "works with 'special' characters" do
+          skip "We support old Nokogiris but they have their limits" if Gem::Version.new(Nokogiri::VERSION) < Gem::Version.new('1.6.8')
           expect(string.find(:custom_css_selector, "input", class: ".special")[:id]).to eq 'file'
           expect(string.find(:custom_css_selector, "input", class: "2checkbox")[:id]).to eq '2checkbox'
         end
