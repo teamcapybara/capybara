@@ -7,8 +7,9 @@ module Capybara
       VALID_KEYS = COUNT_KEYS + [:text, :id, :class, :visible, :exact, :match, :wait, :filter_set]
       VALID_MATCH = [:first, :smart, :prefer_exact, :one]
 
-      def initialize(*args)
+      def initialize(*args, &filter_block)
         @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
+        @filter_block = filter_block
 
         if args[0].is_a?(Symbol)
           @selector = Selector.all.fetch(args.shift) do |selector_type|
@@ -45,6 +46,7 @@ module Capybara
         @description << " with id #{options[:id]}" if options[:id]
         @description << " with classes #{Array(options[:class]).join(',')}]" if options[:class]
         @description << selector.description(options)
+        @description << " that also matches the custom filter block" if @filter_block
         @description
       end
 
@@ -59,7 +61,7 @@ module Capybara
           when :hidden then return false if node.visible?
         end
 
-        query_filters.all? do |name, filter|
+        res = query_filters.all? do |name, filter|
           if options.has_key?(name)
             filter.matches?(node, options[name])
           elsif filter.default?
@@ -68,6 +70,9 @@ module Capybara
             true
           end
         end
+
+        res &&= @filter_block.call(node) unless @filter_block.nil?
+        res
       end
 
       def visible

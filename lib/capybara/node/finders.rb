@@ -28,8 +28,8 @@ module Capybara
       # @return [Capybara::Node::Element]      The found element
       # @raise  [Capybara::ElementNotFound]    If the element can't be found before time expires
       #
-      def find(*args)
-        query = Capybara::Queries::SelectorQuery.new(*args)
+      def find(*args, &optional_filter_block)
+        query = Capybara::Queries::SelectorQuery.new(*args, &optional_filter_block)
         synchronize(query.wait) do
           if (query.match == :smart or query.match == :prefer_exact) and query.supports_exact?
             result = query.resolve_for(self, true)
@@ -74,9 +74,9 @@ module Capybara
       # @return [Capybara::Node::Element]   The found element
       #
 
-      def find_field(locator=nil, options={})
+      def find_field(locator=nil, options={}, &optional_filter_block)
         locator, options = nil, locator if locator.is_a? Hash
-        find(:field, locator, options)
+        find(:field, locator, options, &optional_filter_block)
       end
       alias_method :field_labeled, :find_field
 
@@ -96,9 +96,9 @@ module Capybara
       #   @option options [String, Array<String>] class    Match links that match the class(es) provided
       # @return [Capybara::Node::Element]   The found element
       #
-      def find_link(locator=nil, options={})
+      def find_link(locator=nil, options={}, &optional_filter_block)
         locator, options = nil, locator if locator.is_a? Hash
-        find(:link, locator, options)
+        find(:link, locator, options, &optional_filter_block)
       end
 
       ##
@@ -125,9 +125,9 @@ module Capybara
       #   @option options [String, Array<String>] class    Match links that match the class(es) provided
       # @return [Capybara::Node::Element]   The found element
       #
-      def find_button(locator=nil, options={})
+      def find_button(locator=nil, options={}, &optional_filter_block)
         locator, options = nil, locator if locator.is_a? Hash
-        find(:button, locator, options)
+        find(:button, locator, options, &optional_filter_block)
       end
 
       ##
@@ -140,11 +140,12 @@ module Capybara
       #
       # @return [Capybara::Node::Element]   The found element
       #
-      def find_by_id(id, options={})
-        find(:id, id, options)
+      def find_by_id(id, options={}, &optional_filter_block)
+        find(:id, id, options, &optional_filter_block)
       end
 
       ##
+      # @!method all([kind = Capybara.default_selector], locator = nil, options = {})
       #
       # Find all elements on the page matching the given selector
       # and options.
@@ -184,26 +185,29 @@ module Capybara
       # See {Capybara::Helpers#matches_count?} for additional information about
       # count matching.
       #
-      # @overload all([kind], locator, options)
-      #   @param [:css, :xpath] kind                 The type of selector
-      #   @param [String] locator                    The selector
-      #   @option options [String, Regexp] text      Only find elements which contain this text or match this regexp
-      #   @option options [Boolean, Symbol] visible  Only find elements with the specified visibility:
+      # @param [Symbol] kind                       Optional selector type (:css, :xpath, :field, etc.) - Defaults to Capybara.default_selector
+      # @param [String] locator                    The selector
+      # @option options [String, Regexp] text      Only find elements which contain this text or match this regexp
+      # @option options [Boolean, Symbol] visible  Only find elements with the specified visibility:
       #                                              * true - only finds visible elements.
       #                                              * false - finds invisible _and_ visible elements.
       #                                              * :all - same as false; finds visible and invisible elements.
       #                                              * :hidden - only finds invisible elements.
       #                                              * :visible - same as true; only finds visible elements.
-      #   @option options [Integer] count            Exact number of matches that are expected to be found
-      #   @option options [Integer] maximum          Maximum number of matches that are expected to be found
-      #   @option options [Integer] minimum          Minimum number of matches that are expected to be found
-      #   @option options [Range]   between          Number of matches found must be within the given range
-      #   @option options [Boolean] exact            Control whether `is` expressions in the given XPath match exactly or partially
-      #   @option options [Integer] wait (Capybara.default_max_wait_time)  The time to wait for element count expectations to become true
+      # @option options [Integer] count            Exact number of matches that are expected to be found
+      # @option options [Integer] maximum          Maximum number of matches that are expected to be found
+      # @option options [Integer] minimum          Minimum number of matches that are expected to be found
+      # @option options [Range]   between          Number of matches found must be within the given range
+      # @option options [Boolean] exact            Control whether `is` expressions in the given XPath match exactly or partially
+      # @option options [Integer] wait (Capybara.default_max_wait_time)  The time to wait for element count expectations to become true
+      # @overload all([kind = Capybara.default_selector], locator = nil, options = {})
+      # @overload all([kind = Capybara.default_selector], locator = nil, options = {}, &filter_block)
+      #   @yieldparam element [Capybara::Node::Element]  The element being considered for inclusion in the results
+      #   @yieldreturn [Boolean]                     Should the element be considered in the results?
       # @return [Capybara::Result]                   A collection of found elements
       #
-      def all(*args)
-        query = Capybara::Queries::SelectorQuery.new(*args)
+      def all(*args, &optional_filter_block)
+        query = Capybara::Queries::SelectorQuery.new(*args, &optional_filter_block)
         synchronize(query.wait) do
           result = query.resolve_for(self)
           raise Capybara::ExpectationNotMet, result.failure_message unless result.matches_count?
@@ -227,15 +231,16 @@ module Capybara
       #   @param [Hash] options                      Additional options; see {#all}
       # @return [Capybara::Node::Element]            The found element or nil
       #
-      def first(*args)
+      def first(*args, &optional_filter_block)
         if Capybara.wait_on_first_by_default
           options = if args.last.is_a?(Hash) then args.pop.dup else {} end
           args.push({minimum: 1}.merge(options))
         end
-        all(*args).first
+        all(*args, &optional_filter_block).first
       rescue Capybara::ExpectationNotMet
         nil
       end
+
     end
   end
 end

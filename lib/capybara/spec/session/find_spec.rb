@@ -399,6 +399,10 @@ Capybara::SpecHelper.spec '#find' do
     end
   end
 
+  it "supports a custom filter block" do
+    expect(@session.find(:css, 'input'){|node| node.disabled? }[:name]).to eq('disabled_text')
+  end
+
   context "within a scope" do
     before do
       @session.visit('/with_scope')
