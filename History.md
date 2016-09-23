@@ -1,9 +1,9 @@
 #Version 2.9.1
-Release date: unreleased
+Release date: 2016-09-23
 
 ### Fixed
 * allow_label_click option did not work in some cases with Poltergeist - Issue #1762 [Thomas Walpole]
-* matches_selector? should have access to all of a selectors filters [Thomas Walpole]
+* matches_selector? should have access to all of a selectors options except the count options [Thomas Walpole]
 
 #Version 2.9.0
 Release date: 2016-09-19
