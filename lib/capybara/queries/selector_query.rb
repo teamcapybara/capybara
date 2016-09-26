@@ -11,7 +11,10 @@ module Capybara
         @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
 
         if args[0].is_a?(Symbol)
-          @selector = Selector.all[args.shift]
+          @selector = Selector.all.fetch(args.shift) do |selector_type|
+            warn "Unknown selector type (:#{selector_type}), defaulting to :#{Capybara.default_selector} - This will raise an exception in a future version of Capybara"
+            nil
+          end
           @locator = args.shift
         else
           @selector = Selector.all.values.find { |s| s.match?(args[0]) }
