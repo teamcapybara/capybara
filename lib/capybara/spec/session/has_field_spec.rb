@@ -266,6 +266,11 @@ Capybara::SpecHelper.spec '#has_unchecked_field?' do
     @session.choose('gender_male')
     expect(@session).to have_unchecked_field('gender_female')
   end
+
+  it "should support locator-less usage" do
+    expect(@session.has_unchecked_field?(disabled: true, id: "form_disabled_unchecked_checkbox"))
+    expect(@session).to have_unchecked_field(disabled: true, id: "form_disabled_unchecked_checkbox" )
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_unchecked_field?' do
@@ -295,5 +300,10 @@ Capybara::SpecHelper.spec '#has_no_unchecked_field?' do
 
   it "should be true for disabled unchecked fields if :disabled => false" do
     expect(@session).to have_no_unchecked_field('Disabled Unchecked Checkbox', :disabled => false)
+  end
+
+  it "should support locator-less usage" do
+    expect(@session.has_no_unchecked_field?(disabled: false, id: "form_disabled_unchecked_checkbox")).to eq true
+    expect(@session).to have_no_unchecked_field(disabled: false, id: "form_disabled_unchecked_checkbox" )
   end
 end

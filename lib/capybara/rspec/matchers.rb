@@ -262,31 +262,38 @@ module Capybara
       HaveCurrentPath.new(path, options)
     end
 
-    def have_link(locator, options={})
+    def have_link(locator=nil, options={})
+      locator, options = nil, locator if locator.is_a? Hash
       HaveSelector.new(:link, locator, options)
     end
 
-    def have_button(locator, options={})
+    def have_button(locator=nil, options={})
+      locator, options = nil, locator if locator.is_a? Hash
       HaveSelector.new(:button, locator, options)
     end
 
-    def have_field(locator, options={})
+    def have_field(locator=nil, options={})
+      locator, options = nil, locator if locator.is_a? Hash
       HaveSelector.new(:field, locator, options)
     end
 
-    def have_checked_field(locator, options={})
+    def have_checked_field(locator=nil, options={})
+      locator, options = nil, locator if locator.is_a? Hash
       HaveSelector.new(:field, locator, options.merge(:checked => true))
     end
 
-    def have_unchecked_field(locator, options={})
+    def have_unchecked_field(locator=nil, options={})
+      locator, options = nil, locator if locator.is_a? Hash
       HaveSelector.new(:field, locator, options.merge(:unchecked => true))
     end
 
-    def have_select(locator, options={})
+    def have_select(locator=nil, options={})
+      locator, options = nil, locator if locator.is_a? Hash
       HaveSelector.new(:select, locator, options)
     end
 
-    def have_table(locator, options={})
+    def have_table(locator=nil, options={})
+      locator, options = nil, locator if locator.is_a? Hash
       HaveSelector.new(:table, locator, options)
     end
 

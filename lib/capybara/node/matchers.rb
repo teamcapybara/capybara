@@ -332,7 +332,8 @@ module Capybara
       # @option options [String, Regexp] :href    The value the href attribute must be
       # @return [Boolean]                 Whether it exists
       #
-      def has_link?(locator, options={})
+      def has_link?(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         has_selector?(:link, locator, options)
       end
 
@@ -344,7 +345,8 @@ module Capybara
       # @param (see Capybara::Node::Finders#has_link?)
       # @return [Boolean]            Whether it doesn't exist
       #
-      def has_no_link?(locator, options={})
+      def has_no_link?(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         has_no_selector?(:link, locator, options)
       end
 
@@ -356,7 +358,8 @@ module Capybara
       # @param [String] locator      The text, value or id of a button to check for
       # @return [Boolean]            Whether it exists
       #
-      def has_button?(locator, options={})
+      def has_button?(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         has_selector?(:button, locator, options)
       end
 
@@ -368,7 +371,8 @@ module Capybara
       # @param [String] locator      The text, value or id of a button to check for
       # @return [Boolean]            Whether it doesn't exist
       #
-      def has_no_button?(locator, options={})
+      def has_no_button?(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         has_no_selector?(:button, locator, options)
       end
 
@@ -394,7 +398,8 @@ module Capybara
       # @option options [String] :type           The type attribute of the field
       # @return [Boolean]                        Whether it exists
       #
-      def has_field?(locator, options={})
+      def has_field?(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         has_selector?(:field, locator, options)
       end
 
@@ -408,7 +413,8 @@ module Capybara
       # @option options [String] :type           The type attribute of the field
       # @return [Boolean]                        Whether it doesn't exist
       #
-      def has_no_field?(locator, options={})
+      def has_no_field?(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         has_no_selector?(:field, locator, options)
       end
 
@@ -421,7 +427,8 @@ module Capybara
       # @param [String] locator           The label, name or id of a checked field
       # @return [Boolean]                 Whether it exists
       #
-      def has_checked_field?(locator, options={})
+      def has_checked_field?(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         has_selector?(:field, locator, options.merge(:checked => true))
       end
 
@@ -434,7 +441,8 @@ module Capybara
       # @param [String] locator           The label, name or id of a checked field
       # @return [Boolean]                 Whether it doesn't exist
       #
-      def has_no_checked_field?(locator, options={})
+      def has_no_checked_field?(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         has_no_selector?(:field, locator, options.merge(:checked => true))
       end
 
@@ -447,7 +455,8 @@ module Capybara
       # @param [String] locator           The label, name or id of an unchecked field
       # @return [Boolean]                 Whether it exists
       #
-      def has_unchecked_field?(locator, options={})
+      def has_unchecked_field?(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         has_selector?(:field, locator, options.merge(:unchecked => true))
       end
 
@@ -460,7 +469,8 @@ module Capybara
       # @param [String] locator           The label, name or id of an unchecked field
       # @return [Boolean]                 Whether it doesn't exist
       #
-      def has_no_unchecked_field?(locator, options={})
+      def has_no_unchecked_field?(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         has_no_selector?(:field, locator, options.merge(:unchecked => true))
       end
 
@@ -492,7 +502,8 @@ module Capybara
       # @option options [String, Array] :selected    Options which should be selected
       # @return [Boolean]                            Whether it exists
       #
-      def has_select?(locator, options={})
+      def has_select?(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         has_selector?(:select, locator, options)
       end
 
@@ -504,7 +515,8 @@ module Capybara
       # @param (see Capybara::Node::Matchers#has_select?)
       # @return [Boolean]     Whether it doesn't exist
       #
-      def has_no_select?(locator, options={})
+      def has_no_select?(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         has_no_selector?(:select, locator, options)
       end
 
@@ -518,7 +530,8 @@ module Capybara
       # @param [String] locator                        The id or caption of a table
       # @return [Boolean]                              Whether it exist
       #
-      def has_table?(locator, options={})
+      def has_table?(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         has_selector?(:table, locator, options)
       end
 
@@ -530,7 +543,8 @@ module Capybara
       # @param (see Capybara::Node::Matchers#has_table?)
       # @return [Boolean]       Whether it doesn't exist
       #
-      def has_no_table?(locator, options={})
+      def has_no_table?(locator=nil, options={})
+        locator, options = nil, locator if locator.is_a? Hash
         has_no_selector?(:table, locator, options)
       end
 
