@@ -1,3 +1,10 @@
+#Version 2.9.2
+Release date: Unreleased
+
+### Fixed
+* :label built-in selector finds nested label/control by control id if the label has no 'for' attribute [Thomas Walpole]
+* Warning issued if an unknown selector type is specified
+
 #Version 2.9.1
 Release date: 2016-09-23
 
