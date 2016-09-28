@@ -12,7 +12,11 @@ Capybara::SpecHelper.spec Capybara::Selector do
       expect(@session.find(:label, for: 'form_other_title')['for']).to eq 'form_other_title'
     end
 
-    it "finds a label from nested input using :for filter" do
+    it "finds a label from nested input using :for filter with id string" do
+      expect(@session.find(:label, for: 'nested_label').text).to eq 'Nested Label'
+    end
+
+    it "finds a label from nested input using :for filter with element" do
       input = @session.find(:id, 'nested_label')
       expect(@session.find(:label, for: input).text).to eq 'Nested Label'
     end
