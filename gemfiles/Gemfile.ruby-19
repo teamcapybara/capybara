@@ -5,3 +5,5 @@ gemspec path: '..'
 
 gem 'mime-types', '< 3.0'
 gem 'xpath', :git => 'git://github.com/jnicklas/xpath.git'
+
+gem 'term-ansicolor', '< 1.4.0'

@@ -16,3 +16,5 @@ gem 'addressable', '< 2.4.0' # 2.4.0 allows require 'addressable' previous don't
 gem 'json', '< 2.0'
 # We cannot test against older versions of selenium-webdriver without
 # installing older compatible Firefox versions.
+
+gem 'term-ansicolor', '< 1.4.0'
