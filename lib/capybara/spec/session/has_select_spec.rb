@@ -121,6 +121,10 @@ Capybara::SpecHelper.spec '#has_select?' do
     end
   end
 
+  it "should support locator-less usage" do
+    expect(@session.has_select?(:with_options => ['Norway', 'Sweden'])).to eq true
+    expect(@session).to have_select(:with_options => ['London'] )
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_select?' do
@@ -210,5 +214,10 @@ Capybara::SpecHelper.spec '#has_no_select?' do
       expect(@session).to have_no_select('Does not exist', :with_options => ['John'])
       expect(@session).to have_no_select('Region', :with_options => ['Norway', 'Sweden', 'Finland', 'Latvia'])
     end
+  end
+
+  it "should support locator-less usage" do
+    expect(@session.has_no_select?(:with_options => ['Norway', 'Sweden', 'Finland', 'Latvia'])).to eq true
+    expect(@session).to have_no_select(:with_options => ['New London'] )
   end
 end
