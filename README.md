@@ -13,7 +13,7 @@ through an external gem.
 **Need help?** Ask on the mailing list (please do not open an issue on
 GitHub): http://groups.google.com/group/ruby-capybara
 
-**Note: Firefox 48** If you're using Firefox with selenium-webdriver, stay on either Firefox [45.0esr](https://ftp.mozilla.org/pub/firefox/releases/45.0esr/) or [47.0.1](https://ftp.mozilla.org/pub/firefox/releases/47.0.1/) and selenium-webdriver 2.53.4.  Firefox 48 requires geckodriver and selenium-webdriver v3, the combo of which currently has multiple issues and is feature incomplete.
+**Note: Firefox 48+** If you're using Firefox with selenium-webdriver, stay on either Firefox [45.0esr](https://ftp.mozilla.org/pub/firefox/releases/45.0esr/) or [47.0.1](https://ftp.mozilla.org/pub/firefox/releases/47.0.1/) and selenium-webdriver 2.53.4.  Firefox 48+ requires geckodriver and selenium-webdriver v3, the combo of which currently has multiple issues and is feature incomplete.
 
 ## Table of contents
 
