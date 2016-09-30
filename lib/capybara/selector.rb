@@ -157,7 +157,7 @@ end
 #
 #  Find buttons ( input [of type submit, reset, image, button] or button elements )
 #
-# @locator Matches the id, value, or title attributes, string content of a button, or the alt attribute of an image type button
+# @locator Matches the id, value, or title attributes, string content of a button, or the alt attribute of an image type button or of a descendant image of a button
 #
 # @filter [String] :id  Matches the id attribute
 # @filter [String] :title Matches the title attribute
@@ -177,7 +177,7 @@ Capybara.add_selector(:button) do
 
       input_btn_xpath = input_btn_xpath[locator_matches]
 
-      btn_xpath = btn_xpath[locator_matches | XPath.string.n.is(locator)]
+      btn_xpath = btn_xpath[locator_matches | XPath.string.n.is(locator) | XPath.descendant(:img)[XPath.attr(:alt).is(locator)]]
 
       alt_matches = XPath.attr(:alt).is(locator)
       alt_matches |= XPath.attr(:'aria-label').is(locator) if Capybara.enable_aria_label

@@ -338,6 +338,19 @@ Capybara::SpecHelper.spec '#click_button' do
       expect(extract_results(@session)['first_name']).to eq('John')
     end
   end
+
+  context "with descendant image alt given on a button defined by <button> tag" do
+    it "should submit the associated form" do
+      @session.click_button('A horse eating hay')
+      expect(extract_results(@session)['first_name']).to eq('John')
+    end
+
+    it "should work with partial matches" do
+      @session.click_button('se eating h')
+      expect(extract_results(@session)['first_name']).to eq('John')
+    end
+  end
+
   context "with a locator that doesn't exist" do
     it "should raise an error" do
       msg = "Unable to find button \"does not exist\""
