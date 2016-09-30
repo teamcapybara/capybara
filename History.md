@@ -1,3 +1,8 @@
+#Edge
+
+### Changed
+* Select `<button>` elements with descendant images with `alt` attributes matching the locator [Ian Lesperance]
+
 #Version 2.9.2
 Release date: 2016-09-29
 
