@@ -268,7 +268,7 @@ module Capybara
       # @option options [String, Regexp] :href    The value the href attribute must be
       # @return [Boolean]                 Whether it exists
       #
-      def has_link?(locator, **options, &optional_filter_block)
+      def has_link?(locator=nil, **options, &optional_filter_block)
         has_selector?(:link, locator, options, &optional_filter_block)
       end
 
@@ -280,7 +280,7 @@ module Capybara
       # @param (see Capybara::Node::Finders#has_link?)
       # @return [Boolean]            Whether it doesn't exist
       #
-      def has_no_link?(locator, **options, &optional_filter_block)
+      def has_no_link?(locator=nil, **options, &optional_filter_block)
         has_no_selector?(:link, locator, options, &optional_filter_block)
       end
 
@@ -292,7 +292,7 @@ module Capybara
       # @param [String] locator      The text, value or id of a button to check for
       # @return [Boolean]            Whether it exists
       #
-      def has_button?(locator, **options, &optional_filter_block)
+      def has_button?(locator=nil, **options, &optional_filter_block)
         has_selector?(:button, locator, options, &optional_filter_block)
       end
 
@@ -304,7 +304,7 @@ module Capybara
       # @param [String] locator      The text, value or id of a button to check for
       # @return [Boolean]            Whether it doesn't exist
       #
-      def has_no_button?(locator, **options, &optional_filter_block)
+      def has_no_button?(locator=nil, **options, &optional_filter_block)
         has_no_selector?(:button, locator, options, &optional_filter_block)
       end
 
@@ -330,7 +330,7 @@ module Capybara
       # @option options [String] :type           The type attribute of the field
       # @return [Boolean]                        Whether it exists
       #
-      def has_field?(locator, **options, &optional_filter_block)
+      def has_field?(locator=nil, **options, &optional_filter_block)
         has_selector?(:field, locator, options, &optional_filter_block)
       end
 
@@ -344,7 +344,7 @@ module Capybara
       # @option options [String] :type           The type attribute of the field
       # @return [Boolean]                        Whether it doesn't exist
       #
-      def has_no_field?(locator, **options, &optional_filter_block)
+      def has_no_field?(locator=nil, **options, &optional_filter_block)
         has_no_selector?(:field, locator, options, &optional_filter_block)
       end
 
@@ -429,7 +429,7 @@ module Capybara
       # @option options [String, Array] :with_selected  Partial set of options which should minimally be selected
       # @return [Boolean]                               Whether it exists
       #
-      def has_select?(locator, **options, &optional_filter_block)
+      def has_select?(locator=nil, **options, &optional_filter_block)
         has_selector?(:select, locator, options, &optional_filter_block)
       end
 
@@ -441,7 +441,7 @@ module Capybara
       # @param (see Capybara::Node::Matchers#has_select?)
       # @return [Boolean]     Whether it doesn't exist
       #
-      def has_no_select?(locator, **options, &optional_filter_block)
+      def has_no_select?(locator=nil, **options, &optional_filter_block)
         has_no_selector?(:select, locator, options, &optional_filter_block)
       end
 
@@ -455,7 +455,7 @@ module Capybara
       # @param [String] locator                        The id or caption of a table
       # @return [Boolean]                              Whether it exist
       #
-      def has_table?(locator, **options, &optional_filter_block)
+      def has_table?(locator=nil, **options, &optional_filter_block)
         has_selector?(:table, locator, options, &optional_filter_block)
       end
 
@@ -467,7 +467,7 @@ module Capybara
       # @param (see Capybara::Node::Matchers#has_table?)
       # @return [Boolean]       Whether it doesn't exist
       #
-      def has_no_table?(locator, **options, &optional_filter_block)
+      def has_no_table?(locator=nil, **options, &optional_filter_block)
         has_no_selector?(:table, locator, options, &optional_filter_block)
       end
 

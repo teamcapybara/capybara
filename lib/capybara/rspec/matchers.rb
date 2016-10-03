@@ -252,19 +252,19 @@ module Capybara
 
     # RSpec matcher for links
     # See {Capybara::Node::Matchers#has_link?}
-    def have_link(locator, **options, &optional_filter_block)
+    def have_link(locator=nil, **options, &optional_filter_block)
       HaveSelector.new(:link, locator, options, &optional_filter_block)
     end
 
     # RSpec matcher for buttons
     # See {Capybara::Node::Matchers#has_button?}
-    def have_button(locator, **options, &optional_filter_block)
+    def have_button(locator=nil, **options, &optional_filter_block)
       HaveSelector.new(:button, locator, options, &optional_filter_block)
     end
 
     # RSpec matcher for links
     # See {Capybara::Node::Matchers#has_field?}
-    def have_field(locator, **options, &optional_filter_block)
+    def have_field(locator=nil, **options, &optional_filter_block)
       HaveSelector.new(:field, locator, options, &optional_filter_block)
     end
 
@@ -282,13 +282,13 @@ module Capybara
 
     # RSpec matcher for select elements
     # See {Capybara::Node::Matchers#has_select?}
-    def have_select(locator, **options, &optional_filter_block)
+    def have_select(locator=nil, **options, &optional_filter_block)
       HaveSelector.new(:select, locator, options, &optional_filter_block)
     end
 
     # RSpec matcher for table elements
     # See {Capybara::Node::Matchers#has_table?}
-    def have_table(locator, **options, &optional_filter_block)
+    def have_table(locator=nil, **options, &optional_filter_block)
       HaveSelector.new(:table, locator, options, &optional_filter_block)
     end
 
