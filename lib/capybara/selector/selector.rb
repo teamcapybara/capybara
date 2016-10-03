@@ -50,6 +50,7 @@ module Capybara
       @format = nil
       @expression = nil
       @expression_filters = []
+      @default_visibility = nil
       instance_eval(&block)
     end
 
@@ -184,6 +185,27 @@ module Capybara
 
     def describe &block
       @filter_set.describe &block
+    end
+
+    ##
+    #
+    # Set the default visibility mode that shouble be used if no visibile option is passed when using the selector.
+    # If not specified will default to the behavior indicated by Capybara.ignore_hidden_elements
+    #
+    # @param [Symbol] default_visibility  Only find elements with the specified visibility:
+    #                                              * :all - finds visible and invisible elements.
+    #                                              * :hidden - only finds invisible elements.
+    #                                              * :visible - only finds visible elements.
+    def visible(default_visibility)
+      @default_visibility = default_visibility
+    end
+
+    def default_visibility
+      if @default_visibility.nil?
+        Capybara.ignore_hidden_elements
+      else
+        @default_visibility
+      end
     end
 
     private

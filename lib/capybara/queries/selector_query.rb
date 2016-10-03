@@ -76,18 +76,10 @@ module Capybara
       end
 
       def visible
-        if options.has_key?(:visible)
-          case @options[:visible]
-            when true then :visible
-            when false then :all
-            else @options[:visible]
-          end
-        else
-          if Capybara.ignore_hidden_elements
-            :visible
-          else
-            :all
-          end
+        case (vis = options.fetch(:visible){ @selector.default_visibility })
+          when true then :visible
+          when false then :all
+          else vis
         end
       end
 
