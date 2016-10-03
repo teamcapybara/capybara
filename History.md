@@ -3,6 +3,8 @@
 ### Added
 * Select `<button>` elements with descendant images with `alt` attributes matching the locator [Ian Lesperance]
 * Locator string is optional in selector based matchers [Thomas Walpole]
+* Selectors can specify their default visible setting [Thomas Walpole]
+* Selector based finders and matchers can be passed a block to further filter the result [Thomas Walpole]
 
 #Version 2.9.2
 Release date: 2016-09-29
