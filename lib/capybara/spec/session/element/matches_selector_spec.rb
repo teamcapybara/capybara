@@ -48,6 +48,13 @@ Capybara::SpecHelper.spec '#match_selector?' do
     cbox = @session.find(:css, '#form_pets_dog')
     expect(cbox.matches_selector?(:checkbox, id: 'form_pets_dog', option: 'dog', name: 'form[pets][]', checked: true)).to be true
   end
+
+  it 'should accept a custom filter block' do
+    @session.visit('/form')
+    cbox = @session.find(:css, '#form_pets_dog')
+    expect(cbox.matches_selector?(:checkbox){ |node| node[:id] == "form_pets_dog"}).to be true
+    expect(cbox.matches_selector?(:checkbox){ |node| node[:id] != "form_pets_dog"}).to be false
+  end
 end
 
 Capybara::SpecHelper.spec '#not_matches_selector?' do

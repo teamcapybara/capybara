@@ -16,8 +16,9 @@ module Capybara
     class HaveSelector < Matcher
       attr_reader :failure_message, :failure_message_when_negated
 
-      def initialize(*args)
+      def initialize(*args, &filter_block)
         @args = args
+        @filter_block = filter_block
       end
 
       def matches?(actual)
@@ -39,7 +40,7 @@ module Capybara
       end
 
       def query
-        @query ||= Capybara::Queries::SelectorQuery.new(*@args)
+        @query ||= Capybara::Queries::SelectorQuery.new(*@args, &@filter_block)
       end
 
       # RSpec 2 compatibility:
@@ -221,8 +222,8 @@ module Capybara
       alias_method :failure_message_for_should_not, :failure_message_when_negated
     end
 
-    def have_selector(*args)
-      HaveSelector.new(*args)
+    def have_selector(*args, &optional_filter_block)
+      HaveSelector.new(*args, &optional_filter_block)
     end
 
     def match_selector(*args)
@@ -233,16 +234,16 @@ module Capybara
     ::RSpec::Matchers.define_negated_matcher :not_match_selector, :match_selector if defined?(::RSpec::Expectations::Version) && (Gem::Version.new(RSpec::Expectations::Version::STRING) >= Gem::Version.new('3.1'))
 
 
-    def have_xpath(xpath, options={})
-      HaveSelector.new(:xpath, xpath, options)
+    def have_xpath(xpath, options={}, &optional_filter_block)
+      HaveSelector.new(:xpath, xpath, options, &optional_filter_block)
     end
 
     def match_xpath(xpath, options={})
       MatchSelector.new(:xpath, xpath, options)
     end
 
-    def have_css(css, options={})
-      HaveSelector.new(:css, css, options)
+    def have_css(css, options={}, &optional_filter_block)
+      HaveSelector.new(:css, css, options, &optional_filter_block)
     end
 
     def match_css(css, options={})
@@ -262,39 +263,39 @@ module Capybara
       HaveCurrentPath.new(path, options)
     end
 
-    def have_link(locator=nil, options={})
+    def have_link(locator=nil, options={}, &optional_filter_block)
       locator, options = nil, locator if locator.is_a? Hash
-      HaveSelector.new(:link, locator, options)
+      HaveSelector.new(:link, locator, options, &optional_filter_block)
     end
 
-    def have_button(locator=nil, options={})
+    def have_button(locator=nil, options={}, &optional_filter_block)
       locator, options = nil, locator if locator.is_a? Hash
-      HaveSelector.new(:button, locator, options)
+      HaveSelector.new(:button, locator, options, &optional_filter_block)
     end
 
-    def have_field(locator=nil, options={})
+    def have_field(locator=nil, options={}, &optional_filter_block)
       locator, options = nil, locator if locator.is_a? Hash
-      HaveSelector.new(:field, locator, options)
+      HaveSelector.new(:field, locator, options, &optional_filter_block)
     end
 
-    def have_checked_field(locator=nil, options={})
+    def have_checked_field(locator=nil, options={}, &optional_filter_block)
       locator, options = nil, locator if locator.is_a? Hash
-      HaveSelector.new(:field, locator, options.merge(:checked => true))
+      HaveSelector.new(:field, locator, options.merge(:checked => true), &optional_filter_block)
     end
 
-    def have_unchecked_field(locator=nil, options={})
+    def have_unchecked_field(locator=nil, options={}, &optional_filter_block)
       locator, options = nil, locator if locator.is_a? Hash
-      HaveSelector.new(:field, locator, options.merge(:unchecked => true))
+      HaveSelector.new(:field, locator, options.merge(:unchecked => true), &optional_filter_block)
     end
 
-    def have_select(locator=nil, options={})
+    def have_select(locator=nil, options={}, &optional_filter_block)
       locator, options = nil, locator if locator.is_a? Hash
-      HaveSelector.new(:select, locator, options)
+      HaveSelector.new(:select, locator, options, &optional_filter_block)
     end
 
-    def have_table(locator=nil, options={})
+    def have_table(locator=nil, options={}, &optional_filter_block)
       locator, options = nil, locator if locator.is_a? Hash
-      HaveSelector.new(:table, locator, options)
+      HaveSelector.new(:table, locator, options, &optional_filter_block)
     end
 
     ##
@@ -306,5 +307,6 @@ module Capybara
     def become_closed(options = {})
       BecomeClosed.new(options)
     end
+
   end
 end
