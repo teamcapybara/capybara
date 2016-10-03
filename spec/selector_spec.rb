@@ -25,6 +25,7 @@ RSpec.describe Capybara do
             <label for="my_text_input">My Text Input</label>
             <input type="text" name="form[my_text_input]" placeholder="my text" id="my_text_input"/>
             <input type="file" id="file" class=".special file"/>
+            <input type="hidden" id="hidden_field" value="this is hidden"/>
             <a href="#">link</a>
             <fieldset></fieldset>
             <select>
@@ -48,6 +49,18 @@ RSpec.describe Capybara do
 
       Capybara.add_selector :custom_css_selector do
         css { |selector| selector }
+      end
+    end
+
+    describe "adding a selector" do
+      it "can set default visiblity" do
+        Capybara.add_selector :hidden_field do
+          visible :hidden
+          css { |sel| 'input[type="hidden"]' }
+        end
+
+        expect(string).to have_no_css('input[type="hidden"]')
+        expect(string).to have_selector(:hidden_field)
       end
     end
 
