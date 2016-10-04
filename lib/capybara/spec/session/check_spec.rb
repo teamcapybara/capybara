@@ -15,7 +15,7 @@ Capybara::SpecHelper.spec "#check" do
     end
   end
 
-  it "should trigger associated events", :requires => [:js] do
+  it "should trigger associated events", requires: [:js] do
     @session.visit('/with_js')
     @session.check('checkbox_with_event')
     expect(@session).to have_css('#checkbox_event_triggered');
@@ -86,28 +86,28 @@ Capybara::SpecHelper.spec "#check" do
 
   context "with :exact option" do
     it "should accept partial matches when false" do
-      @session.check('Ham', :exact => false)
+      @session.check('Ham', exact:  false)
       @session.click_button('awesome')
       expect(extract_results(@session)['pets']).to include('hamster')
     end
 
     it "should not accept partial matches when true" do
       expect do
-        @session.check('Ham', :exact => true)
+        @session.check('Ham', exact:  true)
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
 
   context "with `option` option" do
     it "can check boxes by their value" do
-      @session.check('form[pets][]', :option => "cat")
+      @session.check('form[pets][]', option: "cat")
       @session.click_button('awesome')
       expect(extract_results(@session)['pets']).to include('cat')
     end
 
     it "should raise an error if option not found" do
       expect do
-        @session.check('form[pets][]', :option => "elephant")
+        @session.check('form[pets][]', option: "elephant")
       end.to raise_error(Capybara::ElementNotFound)
     end
   end

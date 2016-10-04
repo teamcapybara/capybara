@@ -8,7 +8,7 @@ Capybara::SpecHelper.spec "#save_screenshot" do
     @session.visit '/'
   end
 
-  it "should generate PNG file", :requires => [:screenshot] do
+  it "should generate PNG file", requires: [:screenshot] do
     path = @session.save_screenshot image_path
 
     magic = File.read(image_path, 4)

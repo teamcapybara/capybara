@@ -19,7 +19,7 @@ module Capybara
       #
       #     page.find('#foo').find('.bar')
       #     page.find(:xpath, '//div[contains(., "bar")]')
-      #     page.find('li', :text => 'Quox').click_link('Delete')
+      #     page.find('li', text: 'Quox').click_link('Delete')
       #
       # @param (see Capybara::Node::Finders#all)
       #
@@ -169,18 +169,18 @@ module Capybara
       # The set of found elements can further be restricted by specifying
       # options. It's possible to select elements by their text or visibility:
       #
-      #     page.all('a', :text => 'Home')
-      #     page.all('#menu li', :visible => true)
+      #     page.all('a', text: 'Home')
+      #     page.all('#menu li', visible: true)
       #
       # By default if no elements are found, an empty array is returned;
       # however, expectations can be set on the number of elements to be found which
       # will trigger Capybara's waiting behavior for the expectations to match.The
       # expectations can be set using
       #
-      #     page.assert_selector('p#foo', :count => 4)
-      #     page.assert_selector('p#foo', :maximum => 10)
-      #     page.assert_selector('p#foo', :minimum => 1)
-      #     page.assert_selector('p#foo', :between => 1..10)
+      #     page.assert_selector('p#foo', count: 4)
+      #     page.assert_selector('p#foo', maximum: 10)
+      #     page.assert_selector('p#foo', minimum: 1)
+      #     page.assert_selector('p#foo', between: 1..10)
       #
       # See {Capybara::Helpers#matches_count?} for additional information about
       # count matching.

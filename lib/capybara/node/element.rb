@@ -10,7 +10,7 @@ module Capybara
     #     session = Capybara::Session.new(:rack_test, my_app)
     #
     #     bar = session.find('#bar')              # from Capybara::Node::Finders
-    #     bar.select('Baz', :from => 'Quox')      # from Capybara::Node::Actions
+    #     bar.select('Baz', from: 'Quox')      # from Capybara::Node::Actions
     #
     # {Capybara::Node::Element} also has access to HTML attributes and other properties of the
     # element:

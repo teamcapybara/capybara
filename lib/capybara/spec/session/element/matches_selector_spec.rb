@@ -24,8 +24,8 @@ Capybara::SpecHelper.spec '#match_selector?' do
 
   context "with text" do
     it "should discard all matches where the given string is not contained" do
-      expect(@element).to match_selector("//span", :text => "42")
-      expect(@element).not_to match_selector("//span", :text => "Doesnotexist")
+      expect(@element).to match_selector("//span", text: "42")
+      expect(@element).not_to match_selector("//span", text: "Doesnotexist")
     end
   end
 
@@ -83,22 +83,22 @@ Capybara::SpecHelper.spec '#not_matches_selector?' do
 
   context "with text" do
     it "should discard all matches where the given string is contained" do
-      expect(@element).not_to not_match_selector(:css, "span.number", :text => "42")
-      expect(@element).to not_match_selector(:css, "span.number", :text => "Doesnotexist")
+      expect(@element).not_to not_match_selector(:css, "span.number", text: "42")
+      expect(@element).to not_match_selector(:css, "span.number", text: "Doesnotexist")
     end
   end
 
   it "should have CSS sugar" do
     expect(@element.not_matches_css?("span.number")).to be false
     expect(@element.not_matches_css?("p a#doesnotexist")).to be true
-    expect(@element.not_matches_css?("span.number", :text => "42")).to be false
-    expect(@element.not_matches_css?("span.number", :text => "Doesnotexist")).to be true
+    expect(@element.not_matches_css?("span.number", text: "42")).to be false
+    expect(@element.not_matches_css?("span.number", text: "Doesnotexist")).to be true
   end
 
   it "should have xpath sugar" do
     expect(@element.not_matches_xpath?("//span")).to be false
     expect(@element.not_matches_xpath?("//div")).to be true
-    expect(@element.not_matches_xpath?("//span", :text => "42")).to be false
-    expect(@element.not_matches_xpath?("//span", :text => "Doesnotexist")).to be true
+    expect(@element.not_matches_xpath?("//span", text: "42")).to be false
+    expect(@element.not_matches_xpath?("//span", text: "Doesnotexist")).to be true
   end
 end if Gem::Version.new(RSpec::Expectations::Version::STRING) >= Gem::Version.new('3.1')

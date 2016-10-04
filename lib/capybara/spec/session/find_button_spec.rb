@@ -33,24 +33,24 @@ Capybara::SpecHelper.spec '#find_button' do
 
   context "with :exact option" do
     it "should accept partial matches when false" do
-      expect(@session.find_button('What an Awesome', :exact => false).value).to eq("awesome")
+      expect(@session.find_button('What an Awesome', exact:  false).value).to eq("awesome")
     end
 
     it "should not accept partial matches when true" do
       expect do
-        @session.find_button('What an Awesome', :exact => true)
+        @session.find_button('What an Awesome', exact:  true)
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
 
   context "with :disabled option" do
     it "should find disabled buttons when true" do
-      expect(@session.find_button('Disabled button', :disabled => true).value).to eq("Disabled button")
+      expect(@session.find_button('Disabled button', disabled: true).value).to eq("Disabled button")
     end
 
     it "should not find disabled buttons when false" do
       expect do
-        @session.find_button('Disabled button', :disabled => false)
+        @session.find_button('Disabled button', disabled: false)
       end.to raise_error(Capybara::ElementNotFound)
     end
 
@@ -61,7 +61,7 @@ Capybara::SpecHelper.spec '#find_button' do
     end
 
     it "should find disabled buttons when :all" do
-      expect(@session.find_button('Disabled button', :disabled => :all).value).to eq("Disabled button")
+      expect(@session.find_button('Disabled button', disabled: :all).value).to eq("Disabled button")
     end
   end
 

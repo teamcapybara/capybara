@@ -15,50 +15,50 @@ Capybara::SpecHelper.spec '#has_field' do
 
   context 'with value' do
     it "should be true if a field with the given value is on the page" do
-      expect(@session).to have_field('First Name', :with => 'John')
-      expect(@session).to have_field('First Name', :with => /^Joh/)
-      expect(@session).to have_field('Phone', :with => '+1 555 7021')
-      expect(@session).to have_field('Street', :with => 'Sesame street 66')
-      expect(@session).to have_field('Description', :with => 'Descriptive text goes here')
+      expect(@session).to have_field('First Name', with: 'John')
+      expect(@session).to have_field('First Name', with: /^Joh/)
+      expect(@session).to have_field('Phone', with: '+1 555 7021')
+      expect(@session).to have_field('Street', with: 'Sesame street 66')
+      expect(@session).to have_field('Description', with: 'Descriptive text goes here')
     end
 
     it "should be false if the given field is not on the page" do
-      expect(@session).not_to have_field('First Name', :with => 'Peter')
-      expect(@session).not_to have_field('First Name', :with => /eter$/)
-      expect(@session).not_to have_field('Wrong Name', :with => 'John')
-      expect(@session).not_to have_field('Description', :with => 'Monkey')
+      expect(@session).not_to have_field('First Name', with: 'Peter')
+      expect(@session).not_to have_field('First Name', with: /eter$/)
+      expect(@session).not_to have_field('Wrong Name', with: 'John')
+      expect(@session).not_to have_field('Description', with: 'Monkey')
     end
 
     it "should be true after the field has been filled in with the given value" do
-      @session.fill_in('First Name', :with => 'Jonas')
-      expect(@session).to have_field('First Name', :with => 'Jonas')
-      expect(@session).to have_field('First Name', :with => /ona/)
+      @session.fill_in('First Name', with: 'Jonas')
+      expect(@session).to have_field('First Name', with: 'Jonas')
+      expect(@session).to have_field('First Name', with: /ona/)
     end
 
     it "should be false after the field has been filled in with a different value" do
-      @session.fill_in('First Name', :with => 'Jonas')
-      expect(@session).not_to have_field('First Name', :with => 'John')
-      expect(@session).not_to have_field('First Name', :with => /John|Paul|George|Ringo/)
+      @session.fill_in('First Name', with: 'Jonas')
+      expect(@session).not_to have_field('First Name', with: 'John')
+      expect(@session).not_to have_field('First Name', with: /John|Paul|George|Ringo/)
     end
   end
 
   context 'with type' do
     it "should be true if a field with the given type is on the page" do
-      expect(@session).to have_field('First Name', :type => 'text')
-      expect(@session).to have_field('Html5 Email', :type => 'email')
-      expect(@session).to have_field('Html5 Multiple Email', :type => 'email')
-      expect(@session).to have_field('Html5 Tel', :type => 'tel')
-      expect(@session).to have_field('Description', :type => 'textarea')
-      expect(@session).to have_field('Languages', :type => 'select')
+      expect(@session).to have_field('First Name', type: 'text')
+      expect(@session).to have_field('Html5 Email', type: 'email')
+      expect(@session).to have_field('Html5 Multiple Email', type: 'email')
+      expect(@session).to have_field('Html5 Tel', type: 'tel')
+      expect(@session).to have_field('Description', type: 'textarea')
+      expect(@session).to have_field('Languages', type: 'select')
     end
 
     it "should be false if the given field is not on the page" do
-      expect(@session).not_to have_field('First Name', :type => 'textarea')
-      expect(@session).not_to have_field('Html5 Email', :type => 'tel')
-      expect(@session).not_to have_field('Html5 Multiple Email', :type => 'tel')
-      expect(@session).not_to have_field('Description', :type => '')
-      expect(@session).not_to have_field('Description', :type => 'email')
-      expect(@session).not_to have_field('Languages', :type => 'textarea')
+      expect(@session).not_to have_field('First Name', type: 'textarea')
+      expect(@session).not_to have_field('Html5 Email', type: 'tel')
+      expect(@session).not_to have_field('Html5 Multiple Email', type: 'tel')
+      expect(@session).not_to have_field('Description', type: '')
+      expect(@session).not_to have_field('Description', type: 'email')
+      expect(@session).not_to have_field('Languages', type: 'textarea')
     end
   end
 
@@ -88,44 +88,44 @@ Capybara::SpecHelper.spec '#has_no_field' do
 
   context 'with value' do
     it "should be false if a field with the given value is on the page" do
-      expect(@session).not_to have_no_field('First Name', :with => 'John')
-      expect(@session).not_to have_no_field('Phone', :with => '+1 555 7021')
-      expect(@session).not_to have_no_field('Street', :with => 'Sesame street 66')
-      expect(@session).not_to have_no_field('Description', :with => 'Descriptive text goes here')
+      expect(@session).not_to have_no_field('First Name', with: 'John')
+      expect(@session).not_to have_no_field('Phone', with: '+1 555 7021')
+      expect(@session).not_to have_no_field('Street', with: 'Sesame street 66')
+      expect(@session).not_to have_no_field('Description', with: 'Descriptive text goes here')
     end
 
     it "should be true if the given field is not on the page" do
-      expect(@session).to have_no_field('First Name', :with => 'Peter')
-      expect(@session).to have_no_field('Wrong Name', :with => 'John')
-      expect(@session).to have_no_field('Description', :with => 'Monkey')
+      expect(@session).to have_no_field('First Name', with: 'Peter')
+      expect(@session).to have_no_field('Wrong Name', with: 'John')
+      expect(@session).to have_no_field('Description', with: 'Monkey')
     end
 
     it "should be false after the field has been filled in with the given value" do
-      @session.fill_in('First Name', :with => 'Jonas')
-      expect(@session).not_to have_no_field('First Name', :with => 'Jonas')
+      @session.fill_in('First Name', with: 'Jonas')
+      expect(@session).not_to have_no_field('First Name', with: 'Jonas')
     end
 
     it "should be true after the field has been filled in with a different value" do
-      @session.fill_in('First Name', :with => 'Jonas')
-      expect(@session).to have_no_field('First Name', :with => 'John')
+      @session.fill_in('First Name', with: 'Jonas')
+      expect(@session).to have_no_field('First Name', with: 'John')
     end
   end
 
   context 'with type' do
     it "should be false if a field with the given type is on the page" do
-      expect(@session).not_to have_no_field('First Name', :type => 'text')
-      expect(@session).not_to have_no_field('Html5 Email', :type => 'email')
-      expect(@session).not_to have_no_field('Html5 Tel', :type => 'tel')
-      expect(@session).not_to have_no_field('Description', :type => 'textarea')
-      expect(@session).not_to have_no_field('Languages', :type => 'select')
+      expect(@session).not_to have_no_field('First Name', type: 'text')
+      expect(@session).not_to have_no_field('Html5 Email', type: 'email')
+      expect(@session).not_to have_no_field('Html5 Tel', type: 'tel')
+      expect(@session).not_to have_no_field('Description', type: 'textarea')
+      expect(@session).not_to have_no_field('Languages', type: 'select')
     end
 
     it "should be true if the given field is not on the page" do
-      expect(@session).to have_no_field('First Name', :type => 'textarea')
-      expect(@session).to have_no_field('Html5 Email', :type => 'tel')
-      expect(@session).to have_no_field('Description', :type => '')
-      expect(@session).to have_no_field('Description', :type => 'email')
-      expect(@session).to have_no_field('Languages', :type => 'textarea')
+      expect(@session).to have_no_field('First Name', type: 'textarea')
+      expect(@session).to have_no_field('Html5 Email', type: 'tel')
+      expect(@session).to have_no_field('Description', type: '')
+      expect(@session).to have_no_field('Description', type: 'email')
+      expect(@session).to have_no_field('Languages', type: 'textarea')
     end
   end
 end
@@ -138,8 +138,8 @@ Capybara::SpecHelper.spec '#has_checked_field?' do
     expect(@session).to have_checked_field('Hamster')
   end
 
-  it "should be true for disabled checkboxes if :disabled => true" do
-    expect(@session).to have_checked_field('Disabled Checkbox', :disabled => true)
+  it "should be true for disabled checkboxes if disabled: true" do
+    expect(@session).to have_checked_field('Disabled Checkbox', disabled: true)
   end
 
   it "should be false if an unchecked field is on the page" do
@@ -155,16 +155,16 @@ Capybara::SpecHelper.spec '#has_checked_field?' do
     expect(@session).not_to have_checked_field('Disabled Checkbox')
   end
 
-  it "should be false for disabled checkboxes if :disabled => false" do
-    expect(@session).not_to have_checked_field('Disabled Checkbox', :disabled => false)
+  it "should be false for disabled checkboxes if disabled: false" do
+    expect(@session).not_to have_checked_field('Disabled Checkbox', disabled: false)
   end
 
-  it "should be true for disabled checkboxes if :disabled => :all" do
-    expect(@session).to have_checked_field('Disabled Checkbox', :disabled => :all)
+  it "should be true for disabled checkboxes if disabled: :all" do
+    expect(@session).to have_checked_field('Disabled Checkbox', disabled: :all)
   end
 
-  it "should be true for enabled checkboxes if :disabled => :all" do
-    expect(@session).to have_checked_field('gender_female', :disabled => :all)
+  it "should be true for enabled checkboxes if disabled: :all" do
+    expect(@session).to have_checked_field('gender_female', disabled: :all)
   end
 
   it "should be true after an unchecked checkbox is checked" do
@@ -196,8 +196,8 @@ Capybara::SpecHelper.spec '#has_no_checked_field?' do
     expect(@session).not_to have_no_checked_field('Hamster')
   end
 
-  it "should be false for disabled checkboxes if :disabled => true" do
-    expect(@session).not_to have_no_checked_field('Disabled Checkbox', :disabled => true)
+  it "should be false for disabled checkboxes if disabled: true" do
+    expect(@session).not_to have_no_checked_field('Disabled Checkbox', disabled: true)
   end
 
   it "should be true if an unchecked field is on the page" do
@@ -213,8 +213,8 @@ Capybara::SpecHelper.spec '#has_no_checked_field?' do
     expect(@session).to have_no_checked_field('Disabled Checkbox')
   end
 
-  it "should be true for disabled checkboxes if :disabled => false" do
-    expect(@session).to have_no_checked_field('Disabled Checkbox', :disabled => false)
+  it "should be true for disabled checkboxes if disabled: false" do
+    expect(@session).to have_no_checked_field('Disabled Checkbox', disabled: false)
   end
 end
 
@@ -231,8 +231,8 @@ Capybara::SpecHelper.spec '#has_unchecked_field?' do
     expect(@session).to have_unchecked_field('Male')
   end
 
-  it "should be true for disabled unchecked fields if :disabled => true" do
-    expect(@session).to have_unchecked_field('Disabled Unchecked Checkbox', :disabled => true)
+  it "should be true for disabled unchecked fields if disabled: true" do
+    expect(@session).to have_unchecked_field('Disabled Unchecked Checkbox', disabled: true)
   end
 
   it "should be false if no field is on the page" do
@@ -243,8 +243,8 @@ Capybara::SpecHelper.spec '#has_unchecked_field?' do
     expect(@session).not_to have_unchecked_field('Disabled Unchecked Checkbox')
   end
 
-  it "should be false for disabled unchecked fields if :disabled => false" do
-    expect(@session).not_to have_unchecked_field('Disabled Unchecked Checkbox', :disabled => false)
+  it "should be false for disabled unchecked fields if disabled: false" do
+    expect(@session).not_to have_unchecked_field('Disabled Unchecked Checkbox', disabled: false)
   end
 
   it "should be false after an unchecked checkbox is checked" do
@@ -286,8 +286,8 @@ Capybara::SpecHelper.spec '#has_no_unchecked_field?' do
     expect(@session).not_to have_no_unchecked_field('Male')
   end
 
-  it "should be false for disabled unchecked fields if :disabled => true" do
-    expect(@session).not_to have_no_unchecked_field('Disabled Unchecked Checkbox', :disabled => true)
+  it "should be false for disabled unchecked fields if disabled: true" do
+    expect(@session).not_to have_no_unchecked_field('Disabled Unchecked Checkbox', disabled: true)
   end
 
   it "should be true if no field is on the page" do
@@ -298,8 +298,8 @@ Capybara::SpecHelper.spec '#has_no_unchecked_field?' do
     expect(@session).to have_no_unchecked_field('Disabled Unchecked Checkbox')
   end
 
-  it "should be true for disabled unchecked fields if :disabled => false" do
-    expect(@session).to have_no_unchecked_field('Disabled Unchecked Checkbox', :disabled => false)
+  it "should be true for disabled unchecked fields if disabled: false" do
+    expect(@session).to have_no_unchecked_field('Disabled Unchecked Checkbox', disabled: false)
   end
 
   it "should support locator-less usage" do

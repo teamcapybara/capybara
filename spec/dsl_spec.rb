@@ -6,7 +6,7 @@ class TestClass
   include Capybara::DSL
 end
 
-Capybara::SpecHelper.run_specs TestClass.new, "DSL", :capybara_skip => [
+Capybara::SpecHelper.run_specs TestClass.new, "DSL", capybara_skip: [
   :js,
   :modals,
   :screenshot,

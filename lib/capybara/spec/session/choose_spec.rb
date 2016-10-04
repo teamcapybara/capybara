@@ -41,28 +41,28 @@ Capybara::SpecHelper.spec "#choose" do
 
   context "with :exact option" do
     it "should accept partial matches when false" do
-      @session.choose("Mal", :exact => false)
+      @session.choose("Mal", exact:  false)
       @session.click_button('awesome')
       expect(extract_results(@session)['gender']).to eq('male')
     end
 
     it "should not accept partial matches when true" do
       expect do
-        @session.choose("Mal", :exact => true)
+        @session.choose("Mal", exact:  true)
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
 
   context "with `option` option" do
     it "can check radio buttons by their value" do
-      @session.choose('form[gender]', :option => "male")
+      @session.choose('form[gender]', option: "male")
       @session.click_button('awesome')
       expect(extract_results(@session)['gender']).to eq("male")
     end
 
     it "should raise an error if option not found" do
       expect do
-        @session.choose('form[gender]', :option => "hermaphrodite")
+        @session.choose('form[gender]', option: "hermaphrodite")
       end.to raise_error(Capybara::ElementNotFound)
     end
   end

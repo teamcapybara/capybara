@@ -17,9 +17,9 @@ module Capybara
     #
     #     session = Capybara::Session.new(:rack_test, my_app)
     #     session.visit('/')
-    #     session.fill_in('Foo', :with => 'Bar')    # from Capybara::Node::Actions
+    #     session.fill_in('Foo', with: 'Bar')    # from Capybara::Node::Actions
     #     bar = session.find('#bar')                # from Capybara::Node::Finders
-    #     bar.select('Baz', :from => 'Quox')        # from Capybara::Node::Actions
+    #     bar.select('Baz', from: 'Quox')        # from Capybara::Node::Actions
     #     session.has_css?('#foobar')               # from Capybara::Node::Matchers
     #
     class Base

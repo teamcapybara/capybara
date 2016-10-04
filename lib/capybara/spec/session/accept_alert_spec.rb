@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-Capybara::SpecHelper.spec '#accept_alert', :requires => [:modals] do
+Capybara::SpecHelper.spec '#accept_alert', requires: [:modals] do
   before do
     @session.visit('/with_js')
   end
@@ -10,14 +10,14 @@ Capybara::SpecHelper.spec '#accept_alert', :requires => [:modals] do
     end
     expect(@session).to have_xpath("//a[@id='open-alert' and @opened='true']")
   end
-  
+
   it "should accept the alert if the text matches" do
     @session.accept_alert 'Alert opened' do
       @session.click_link('Open alert')
     end
     expect(@session).to have_xpath("//a[@id='open-alert' and @opened='true']")
   end
-  
+
   it "should not accept the alert if the text doesnt match" do
     expect do
       @session.accept_alert 'Incorrect Text' do
@@ -47,7 +47,7 @@ Capybara::SpecHelper.spec '#accept_alert', :requires => [:modals] do
       end
       expect(message).to eq('Delayed alert opened')
     end
-    
+
     it "should allow to adjust the delay" do
       @session.accept_alert wait: 4 do
         @session.click_link('Open slow alert')

@@ -19,7 +19,7 @@ Capybara::SpecHelper.spec '#assert_title' do
     end.to raise_error(Capybara::ExpectationNotMet, 'expected "with_js" to match /w[a-z]{10}_js/')
   end
 
-  it "should wait for title", :requires => [:js] do
+  it "should wait for title", requires: [:js] do
     @session.click_link("Change title")
     expect(@session.assert_title("changed title")).to eq(true)
   end
@@ -59,7 +59,7 @@ Capybara::SpecHelper.spec '#assert_no_title' do
     @session.assert_no_title(/monkey/)
   end
 
-  it "should wait for title to disappear", :requires => [:js] do
+  it "should wait for title to disappear", requires: [:js] do
     @session.click_link("Change title")
     expect(@session.assert_no_title('with_js')).to eq(true)
   end

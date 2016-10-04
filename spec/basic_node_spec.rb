@@ -69,13 +69,13 @@ RSpec.describe Capybara do
     end
 
     it "allows using matchers with text option" do
-      expect(string).to have_css('h1', :text => 'Totally awesome')
-      expect(string).not_to have_css('h1', :text => 'Not so awesome')
+      expect(string).to have_css('h1', text: 'Totally awesome')
+      expect(string).not_to have_css('h1', text: 'Not so awesome')
     end
 
     it "allows finding only visible nodes" do
-      expect(string.all(:css, '#secret', :visible => true)).to be_empty
-      expect(string.all(:css, '#secret', :visible => false).size).to eq(1)
+      expect(string.all(:css, '#secret', visible: true)).to be_empty
+      expect(string.all(:css, '#secret', visible: false).size).to eq(1)
     end
 
     it "allows finding elements and extracting text from them" do
@@ -101,7 +101,7 @@ RSpec.describe Capybara do
 
     it "allows finding elements and checking if they are visible" do
       expect(string.find('//h1')).to be_visible
-      expect(string.find(:css, "#secret", :visible => false)).not_to be_visible
+      expect(string.find(:css, "#secret", visible: false)).not_to be_visible
     end
 
     it "allows finding elements and checking if they are disabled" do

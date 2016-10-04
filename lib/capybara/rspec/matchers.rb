@@ -280,12 +280,12 @@ module Capybara
 
     def have_checked_field(locator=nil, options={}, &optional_filter_block)
       locator, options = nil, locator if locator.is_a? Hash
-      HaveSelector.new(:field, locator, options.merge(:checked => true), &optional_filter_block)
+      HaveSelector.new(:field, locator, options.merge(checked: true), &optional_filter_block)
     end
 
     def have_unchecked_field(locator=nil, options={}, &optional_filter_block)
       locator, options = nil, locator if locator.is_a? Hash
-      HaveSelector.new(:field, locator, options.merge(:unchecked => true), &optional_filter_block)
+      HaveSelector.new(:field, locator, options.merge(unchecked: true), &optional_filter_block)
     end
 
     def have_select(locator=nil, options={}, &optional_filter_block)

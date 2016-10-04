@@ -13,7 +13,7 @@ Capybara::SpecHelper.spec '#has_title?' do
     expect(@session).not_to have_title(/monkey/)
   end
 
-  it "should wait for title", :requires => [:js] do
+  it "should wait for title", requires: [:js] do
     @session.click_link("Change title")
     expect(@session).to have_title("changed title")
   end
@@ -37,7 +37,7 @@ Capybara::SpecHelper.spec '#has_no_title?' do
     expect(@session).to have_no_title(/monkey/)
   end
 
-  it "should wait for title to disappear", :requires => [:js] do
+  it "should wait for title to disappear", requires: [:js] do
     @session.click_link("Change title")
     expect(@session).to have_no_title('with_js')
   end

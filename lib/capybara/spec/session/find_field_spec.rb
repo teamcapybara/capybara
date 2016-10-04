@@ -49,24 +49,24 @@ Capybara::SpecHelper.spec '#find_field' do
 
   context "with :exact option" do
     it "should accept partial matches when false" do
-      expect(@session.find_field("Explanation", :exact => false)[:name]).to eq("form[name_explanation]")
+      expect(@session.find_field("Explanation", exact:  false)[:name]).to eq("form[name_explanation]")
     end
 
     it "should not accept partial matches when true" do
       expect do
-        @session.find_field("Explanation", :exact => true)
+        @session.find_field("Explanation", exact:  true)
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
 
   context "with :disabled option" do
     it "should find disabled fields when true" do
-      expect(@session.find_field("Disabled Checkbox", :disabled => true)[:name]).to eq("form[disabled_checkbox]")
+      expect(@session.find_field("Disabled Checkbox", disabled: true)[:name]).to eq("form[disabled_checkbox]")
     end
 
     it "should not find disabled fields when false" do
       expect do
-        @session.find_field("Disabled Checkbox", :disabled => false)
+        @session.find_field("Disabled Checkbox", disabled: false)
       end.to raise_error(Capybara::ElementNotFound)
     end
 
@@ -77,11 +77,11 @@ Capybara::SpecHelper.spec '#find_field' do
     end
 
     it "should find disabled fields when :all" do
-      expect(@session.find_field("Disabled Checkbox", :disabled => :all)[:name]).to eq("form[disabled_checkbox]")
+      expect(@session.find_field("Disabled Checkbox", disabled: :all)[:name]).to eq("form[disabled_checkbox]")
     end
 
     it "should find enabled fields when :all" do
-      expect(@session.find_field('Dog', :disabled => :all).value).to eq('dog')
+      expect(@session.find_field('Dog', disabled: :all).value).to eq('dog')
     end
   end
 
