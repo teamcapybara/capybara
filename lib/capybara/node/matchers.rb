@@ -466,7 +466,7 @@ module Capybara
       end
 
       def assert_not_matches_selector(*args, &optional_filter_block)
-        query = Capybara::Queries::MatchQuery.new(*args)
+        query = Capybara::Queries::MatchQuery.new(*args, &optional_filter_block)
         synchronize(query.wait) do
           result = query.resolve_for(self.query_scope)
           if result.include? self
@@ -509,7 +509,7 @@ module Capybara
       # @return [Boolean]
       #
       def matches_css?(css, options={}, &optional_filter_block)
-        matches_selector?(:css, css, options)
+        matches_selector?(:css, css, options, &optional_filter_block)
       end
 
       ##
