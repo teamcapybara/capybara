@@ -1,17 +1,18 @@
-#Edge
+#2.10.0
+Release date: 2016-10-05
 
 ### Added
 * Select `<button>` elements with descendant images with `alt` attributes matching the locator [Ian Lesperance]
 * Locator string is optional in selector based matchers [Thomas Walpole]
 * Selectors can specify their default visible setting [Thomas Walpole]
-* Selector based finders and matchers can be passed a block to further filter the result [Thomas Walpole]
+* Selector based finders and matchers can be passed a block to filter the results within the retry behavior [Thomas Walpole]
 
 #Version 2.9.2
 Release date: 2016-09-29
 
 ### Fixed
 * :label built-in selector finds nested label/control by control id if the label has no 'for' attribute [Thomas Walpole]
-* Warning issued if an unknown selector type is specified
+* Warning issued if an unknown selector type is specified [Thomas Walpole]
 
 #Version 2.9.1
 Release date: 2016-09-23
