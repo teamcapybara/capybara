@@ -6,6 +6,9 @@ Capybara::Selector::FilterSet.add(:_field) do
   filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
   filter(:multiple, :boolean) { |node, value| !(value ^ node.multiple?) }
 
+  expression_filter(:name) { |xpath, val| xpath[XPath.attr(:name).equals(val)] }
+  expression_filter(:placeholder) { |xpath, val| xpath[XPath.attr(:placeholder).equals(val)] }
+
   describe do |options|
     desc, states = String.new, []
     states << 'checked' if options[:checked] || (options[:unchecked] == false)
@@ -65,21 +68,21 @@ end
 # @filter [Boolean] :disabled Match disabled field?
 # @filter [Boolean] :multiple Match fields that accept multiple values
 Capybara.add_selector(:field) do
-  xpath(:name, :placeholder, :type) do |locator, options|
+  xpath do |locator, options|
     xpath = XPath.descendant(:input, :textarea, :select)[~XPath.attr(:type).one_of('submit', 'image', 'hidden')]
-    if options[:type]
-      type=options[:type].to_s
-      if ['textarea', 'select'].include?(type)
-        xpath = XPath.descendant(type.to_sym)
-      else
-        xpath = xpath[XPath.attr(:type).equals(type)]
-      end
-    end
-    xpath=locate_field(xpath, locator, options)
-    xpath
+    locate_field(xpath, locator, options)
   end
 
-  filter_set(:_field) # checked/unchecked/disabled/multiple
+  expression_filter(:type) do |expr, type|
+    type = type.to_s
+    if ['textarea', 'select'].include?(type)
+      expr.axis(:self, type.to_sym)
+    else
+      expr[XPath.attr(:type).equals(type)]
+    end
+  end
+
+  filter_set(:_field) # checked/unchecked/disabled/multiple/name/placeholder
 
   filter(:readonly, :boolean) { |node, value| not(value ^ node.readonly?) }
   filter(:with) do |node, with|
@@ -87,7 +90,7 @@ Capybara.add_selector(:field) do
   end
   describe do |options|
     desc = String.new
-    (expression_filters - [:type]).each { |ef| desc << " with #{ef} #{options[ef]}" if options.has_key?(ef) }
+    (expression_filters.keys - [:type]).each { |ef| desc << " with #{ef} #{options[ef]}" if options.has_key?(ef) }
     desc << " of type #{options[:type].inspect}" if options[:type]
     desc << " with value #{options[:with].to_s.inspect}" if options.has_key?(:with)
     desc
@@ -198,7 +201,7 @@ Capybara.add_selector(:button) do
 
     res_xpath = input_btn_xpath + btn_xpath + image_btn_xpath
 
-    res_xpath = expression_filters.inject(res_xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
+    res_xpath = expression_filters.keys.inject(res_xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
 
     res_xpath
   end
@@ -244,20 +247,21 @@ end
 #
 Capybara.add_selector(:fillable_field) do
   label "field"
-  xpath(:name, :placeholder, :type) do |locator, options|
+  xpath do |locator, options|
     xpath = XPath.descendant(:input, :textarea)[~XPath.attr(:type).one_of('submit', 'image', 'radio', 'checkbox', 'hidden', 'file')]
-    if options[:type]
-      type=options[:type].to_s
-      if ['textarea'].include?(type)
-        xpath = XPath.descendant(type.to_sym)
-      else
-        xpath = xpath[XPath.attr(:type).equals(type)]
-      end
-    end
     locate_field(xpath, locator, options)
   end
 
-  filter_set(:_field, [:disabled, :multiple])
+  expression_filter(:type) do |expr, type|
+    type = type.to_s
+    if ['textarea'].include?(type)
+      expr.axis(:self, type.to_sym)
+    else
+      expr[XPath.attr(:type).equals(type)]
+    end
+  end
+
+  filter_set(:_field, [:disabled, :multiple, :name, :placeholder])
 
   filter(:with) do |node, with|
     with.is_a?(Regexp) ? node.value =~ with : node.value == with.to_s
@@ -286,12 +290,12 @@ end
 #
 Capybara.add_selector(:radio_button) do
   label "radio button"
-  xpath(:name) do |locator, options|
+  xpath do |locator, options|
     xpath = XPath.descendant(:input)[XPath.attr(:type).equals('radio')]
     locate_field(xpath, locator, options)
   end
 
-  filter_set(:_field, [:checked, :unchecked, :disabled])
+  filter_set(:_field, [:checked, :unchecked, :disabled, :name])
 
   filter(:option)  { |node, value|  node.value == value.to_s }
 
@@ -317,12 +321,12 @@ end
 # @filter [String] :option Match the value
 #
 Capybara.add_selector(:checkbox) do
-  xpath(:name) do |locator, options|
+  xpath do |locator, options|
     xpath = XPath.descendant(:input)[XPath.attr(:type).equals('checkbox')]
     locate_field(xpath, locator, options)
   end
 
-  filter_set(:_field, [:checked, :unchecked, :disabled])
+  filter_set(:_field, [:checked, :unchecked, :disabled, :name])
 
   filter(:option)  { |node, value|  node.value == value.to_s }
 
@@ -351,12 +355,12 @@ end
 #
 Capybara.add_selector(:select) do
   label "select box"
-  xpath(:name, :placeholder) do |locator, options|
+  xpath do |locator, options|
     xpath = XPath.descendant(:select)
     locate_field(xpath, locator, options)
   end
 
-  filter_set(:_field, [:disabled, :multiple])
+  filter_set(:_field, [:disabled, :multiple, :name, :placeholder])
 
   filter(:options) do |node, options|
     if node.visible?
@@ -429,12 +433,12 @@ end
 #
 Capybara.add_selector(:file_field) do
   label "file field"
-  xpath(:name) do |locator, options|
+  xpath do |locator, options|
     xpath = XPath.descendant(:input)[XPath.attr(:type).equals('file')]
     locate_field(xpath, locator, options)
   end
 
-  filter_set(:_field, [:disabled, :multiple])
+  filter_set(:_field, [:disabled, :multiple, :name])
 
   describe do |options|
     desc = String.new
@@ -518,7 +522,7 @@ Capybara.add_selector(:frame) do
   xpath(:name) do |locator, options|
     xpath = XPath.descendant(:iframe) + XPath.descendant(:frame)
     xpath = xpath[XPath.attr(:id).equals(locator.to_s) | XPath.attr(:name).equals(locator)] unless locator.nil?
-    xpath = expression_filters.inject(xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
+    xpath = expression_filters.keys.inject(xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
     xpath
   end
 

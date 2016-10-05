@@ -81,7 +81,7 @@ module Capybara
           when :hidden then return false if node.visible?
         end
 
-        res = query_filters.all? do |name, filter|
+        res = node_filters.all? do |name, filter|
           if options.has_key?(name)
             filter.matches?(node, options[name])
           elsif filter.default?
@@ -114,16 +114,17 @@ module Capybara
 
       def xpath(exact=nil)
         exact = self.exact? if exact.nil?
-        expr = if @expression.respond_to?(:to_xpath) and exact
-          @expression.to_xpath(:exact)
+        expr = apply_expression_filters(@expression)
+        expr = if expr.respond_to?(:to_xpath) and exact
+          expr.to_xpath(:exact)
         else
-          @expression.to_s
+          expr.to_s
         end
         filtered_xpath(expr)
       end
 
       def css
-        filtered_css(@expression)
+        filtered_css(apply_expression_filters(@expression))
       end
 
       # @api private
@@ -155,16 +156,22 @@ module Capybara
         VALID_KEYS + custom_keys
       end
 
-      def query_filters
+      def node_filters
         if options.has_key?(:filter_set)
-          Capybara::Selector::FilterSet.all[options[:filter_set]].filters
+          ::Capybara::Selector::FilterSet.all[options[:filter_set]].node_filters
         else
-          @selector.custom_filters
+          @selector.node_filters
         end
       end
 
+      def expression_filters
+        filters = @selector.expression_filters
+        filters.merge ::Capybara::Selector::FilterSet.all[options[:filter_set]].expression_filters if options.has_key?(:filter_set)
+        filters
+      end
+
       def custom_keys
-        @custom_keys ||= query_filters.keys + @selector.expression_filters
+        @custom_keys ||= node_filters.keys + expression_filters.keys
       end
 
       def assert_valid_keys
@@ -198,6 +205,18 @@ module Capybara
           end.join(", ")
         end
         expr
+      end
+
+      def apply_expression_filters(expr)
+        expression_filters.inject(expr) do |memo, (name, ef)|
+          if options.has_key?(name)
+            ef.apply_filter(memo, options[name])
+          elsif ef.default?
+            ef.apply_filter(memo, ef.default)
+          else
+            memo
+          end
+        end
       end
 
       def warn_exact_usage
