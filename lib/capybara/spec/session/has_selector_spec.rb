@@ -31,41 +31,41 @@ Capybara::SpecHelper.spec '#has_selector?' do
 
   context "with count" do
     it "should be true if the content is on the page the given number of times" do
-      expect(@session).to have_selector("//p", :count => 3)
-      expect(@session).to have_selector("//p//a[@id='foo']", :count => 1)
-      expect(@session).to have_selector("//p[contains(.,'est')]", :count => 1)
+      expect(@session).to have_selector("//p", count: 3)
+      expect(@session).to have_selector("//p//a[@id='foo']", count: 1)
+      expect(@session).to have_selector("//p[contains(.,'est')]", count: 1)
     end
 
     it "should be false if the content is on the page the given number of times" do
-      expect(@session).not_to have_selector("//p", :count => 6)
-      expect(@session).not_to have_selector("//p//a[@id='foo']", :count => 2)
-      expect(@session).not_to have_selector("//p[contains(.,'est')]", :count => 5)
+      expect(@session).not_to have_selector("//p", count: 6)
+      expect(@session).not_to have_selector("//p//a[@id='foo']", count: 2)
+      expect(@session).not_to have_selector("//p[contains(.,'est')]", count: 5)
     end
 
     it "should be false if the content isn't on the page at all" do
-      expect(@session).not_to have_selector("//abbr", :count => 2)
-      expect(@session).not_to have_selector("//p//a[@id='doesnotexist']", :count => 1)
+      expect(@session).not_to have_selector("//abbr", count: 2)
+      expect(@session).not_to have_selector("//p//a[@id='doesnotexist']", count: 1)
     end
   end
 
   context "with text" do
     it "should discard all matches where the given string is not contained" do
-      expect(@session).to have_selector("//p//a", :text => "Redirect", :count => 1)
-      expect(@session).not_to have_selector("//p", :text => "Doesnotexist")
+      expect(@session).to have_selector("//p//a", text: "Redirect", count: 1)
+      expect(@session).not_to have_selector("//p", text: "Doesnotexist")
     end
 
     it "should respect visibility setting" do
-      expect(@session).to have_selector(:id, "hidden-text", :text => "Some of this text is hidden!", :visible => false)
-      expect(@session).not_to have_selector(:id, "hidden-text", :text => "Some of this text is hidden!", :visible => true)
+      expect(@session).to have_selector(:id, "hidden-text", text: "Some of this text is hidden!", visible: false)
+      expect(@session).not_to have_selector(:id, "hidden-text", text: "Some of this text is hidden!", visible: true)
       Capybara.ignore_hidden_elements = false
-      expect(@session).to have_selector(:id, "hidden-text", :text => "Some of this text is hidden!", :visible => false)
+      expect(@session).to have_selector(:id, "hidden-text", text: "Some of this text is hidden!", visible: false)
       Capybara.visible_text_only = true
-      expect(@session).not_to have_selector(:id, "hidden-text", :text => "Some of this text is hidden!", :visible => true)
+      expect(@session).not_to have_selector(:id, "hidden-text", text: "Some of this text is hidden!", visible: true)
     end
 
     it "should discard all matches where the given regexp is not matched" do
-      expect(@session).to have_selector("//p//a", :text => /re[dab]i/i, :count => 1)
-      expect(@session).not_to have_selector("//p//a", :text => /Red$/)
+      expect(@session).to have_selector("//p//a", text: /re[dab]i/i, count: 1)
+      expect(@session).not_to have_selector("//p//a", text: /Red$/)
     end
 
     it "should warn when extra parameters passed" do
@@ -107,32 +107,32 @@ Capybara::SpecHelper.spec '#has_no_selector?' do
 
   context "with count" do
     it "should be false if the content is on the page the given number of times" do
-      expect(@session).not_to have_no_selector("//p", :count => 3)
-      expect(@session).not_to have_no_selector("//p//a[@id='foo']", :count => 1)
-      expect(@session).not_to have_no_selector("//p[contains(.,'est')]", :count => 1)
+      expect(@session).not_to have_no_selector("//p", count: 3)
+      expect(@session).not_to have_no_selector("//p//a[@id='foo']", count: 1)
+      expect(@session).not_to have_no_selector("//p[contains(.,'est')]", count: 1)
     end
 
     it "should be true if the content is on the page the wrong number of times" do
-      expect(@session).to have_no_selector("//p", :count => 6)
-      expect(@session).to have_no_selector("//p//a[@id='foo']", :count => 2)
-      expect(@session).to have_no_selector("//p[contains(.,'est')]", :count => 5)
+      expect(@session).to have_no_selector("//p", count: 6)
+      expect(@session).to have_no_selector("//p//a[@id='foo']", count: 2)
+      expect(@session).to have_no_selector("//p[contains(.,'est')]", count: 5)
     end
 
     it "should be true if the content isn't on the page at all" do
-      expect(@session).to have_no_selector("//abbr", :count => 2)
-      expect(@session).to have_no_selector("//p//a[@id='doesnotexist']", :count => 1)
+      expect(@session).to have_no_selector("//abbr", count: 2)
+      expect(@session).to have_no_selector("//p//a[@id='doesnotexist']", count: 1)
     end
   end
 
   context "with text" do
     it "should discard all matches where the given string is contained" do
-      expect(@session).not_to have_no_selector("//p//a", :text => "Redirect", :count => 1)
-      expect(@session).to have_no_selector("//p", :text => "Doesnotexist")
+      expect(@session).not_to have_no_selector("//p//a", text: "Redirect", count: 1)
+      expect(@session).to have_no_selector("//p", text: "Doesnotexist")
     end
 
     it "should discard all matches where the given regexp is matched" do
-      expect(@session).not_to have_no_selector("//p//a", :text => /re[dab]i/i, :count => 1)
-      expect(@session).to have_no_selector("//p//a", :text => /Red$/)
+      expect(@session).not_to have_no_selector("//p//a", text: /re[dab]i/i, count: 1)
+      expect(@session).to have_no_selector("//p//a", text: /Red$/)
     end
   end
 end

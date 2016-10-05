@@ -20,7 +20,7 @@ module Capybara
   # +current_path, and so on. It also delegate a number of methods to a Capybara::Document, representing
   # the current HTML document. This allows interaction:
   #
-  #     session.fill_in('q', :with => 'Capybara')
+  #     session.fill_in('q', with: 'Capybara')
   #     session.click_button('Search')
   #     expect(session).to have_content('Capybara')
   #
@@ -264,7 +264,7 @@ module Capybara
     # to the given element.
     #
     #     within(:xpath, '//div[@id="delivery-address"]') do
-    #       fill_in('Street', :with => '12 Main Street')
+    #       fill_in('Street', with: '12 Main Street')
     #     end
     #
     # Just as with `find`, if multiple elements match the selector given to
@@ -275,13 +275,13 @@ module Capybara
     # assumed to be of the type set in Capybara.default_selector.
     #
     #     within('div#delivery-address') do
-    #       fill_in('Street', :with => '12 Main Street')
+    #       fill_in('Street', with: '12 Main Street')
     #     end
     #
     # Note that a lot of uses of `within` can be replaced more succinctly with
     # chaining:
     #
-    #     find('div#delivery-address').fill_in('Street', :with => '12 Main Street')
+    #     find('div#delivery-address').fill_in('Street', with: '12 Main Street')
     #
     # @overload within(*find_args)
     #   @param (see Capybara::Node::Finders#all)

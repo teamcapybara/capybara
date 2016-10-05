@@ -96,14 +96,14 @@ Capybara::SpecHelper.spec "#attach_file" do
 
   context "with :exact option" do
     it "should set a file path by partial label when false" do
-      @session.attach_file "Imag", __FILE__, :exact => false
+      @session.attach_file "Imag", __FILE__, exact:  false
       @session.click_button('awesome')
       expect(extract_results(@session)['image']).to eq(File.basename(__FILE__))
     end
 
     it "not allow partial matches when true" do
       expect do
-        @session.attach_file "Imag", __FILE__, :exact => true
+        @session.attach_file "Imag", __FILE__, exact:  true
       end.to raise_error(Capybara::ElementNotFound)
     end
   end

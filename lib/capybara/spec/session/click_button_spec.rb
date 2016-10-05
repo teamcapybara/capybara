@@ -4,7 +4,7 @@ Capybara::SpecHelper.spec '#click_button' do
     @session.visit('/form')
   end
 
-  it "should wait for asynchronous load", :requires => [:js] do
+  it "should wait for asynchronous load", requires: [:js] do
     @session.visit('/with_js')
     @session.click_link('Click me')
     @session.click_button('New Here')
@@ -427,8 +427,8 @@ Capybara::SpecHelper.spec '#click_button' do
     @session.fill_in('address1_city', :with =>'Paris')
     @session.fill_in('address1_street', :with =>'CDG')
 
-    @session.fill_in('address2_city', :with => 'Mikolaiv')
-    @session.fill_in('address2_street', :with => 'PGS')
+    @session.fill_in('address2_city', with: 'Mikolaiv')
+    @session.fill_in('address2_street', with: 'PGS')
 
     @session.click_button "awesome"
 
@@ -446,13 +446,13 @@ Capybara::SpecHelper.spec '#click_button' do
 
   context "with :exact option" do
     it "should accept partial matches when false" do
-      @session.click_button('What an Awesome', :exact => false)
+      @session.click_button('What an Awesome', exact:  false)
       expect(extract_results(@session)['first_name']).to eq('John')
     end
 
     it "should not accept partial matches when true" do
       expect do
-        @session.click_button('What an Awesome', :exact => true)
+        @session.click_button('What an Awesome', exact:  true)
       end.to raise_error(Capybara::ElementNotFound)
     end
   end

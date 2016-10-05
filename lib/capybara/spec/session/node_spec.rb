@@ -10,7 +10,7 @@ Capybara::SpecHelper.spec "node" do
     @form = @session.find(:css, '#get-form')
     expect(@form).to have_field('Middle Name')
     expect(@form).to have_no_field('Languages')
-    @form.fill_in('Middle Name', :with => 'Monkey')
+    @form.fill_in('Middle Name', with: 'Monkey')
     @form.click_button('med')
     expect(extract_results(@session)['middle_name']).to eq('Monkey')
   end
@@ -96,7 +96,7 @@ Capybara::SpecHelper.spec "node" do
       expect(@session.first('//input').value).to eq('gorilla')
     end
 
-    it "should fill the field even if the caret was not at the end", :requires => [:js] do
+    it "should fill the field even if the caret was not at the end", requires: [:js] do
       @session.execute_script("var el = document.getElementById('test_field'); el.focus(); el.setSelectionRange(0, 0);")
       @session.first('//input').set('')
       expect(@session.first('//input').value).to eq('')
@@ -122,19 +122,19 @@ Capybara::SpecHelper.spec "node" do
       expect(@session.first('//textarea[@readonly]').set('changed')).to raise_error(Capybara::ReadOnlyElementError)
     end if Capybara::VERSION.to_f > 3.0
 
-    it 'should allow me to change the contents of a contenteditable element', :requires => [:js] do
+    it 'should allow me to change the contents of a contenteditable element', requires: [:js] do
       @session.visit('/with_js')
       @session.find(:css,'#existing_content_editable').set('WYSIWYG')
       expect(@session.find(:css,'#existing_content_editable').text).to eq('WYSIWYG')
     end
 
-    it 'should allow me to set the contents of a contenteditable element', :requires => [:js] do
+    it 'should allow me to set the contents of a contenteditable element', requires: [:js] do
       @session.visit('/with_js')
       @session.find(:css,'#blank_content_editable').set('WYSIWYG')
       expect(@session.find(:css,'#blank_content_editable').text).to eq('WYSIWYG')
     end
 
-    it 'should allow me to change the contents of a contenteditable elements child', :requires => [:js] do
+    it 'should allow me to change the contents of a contenteditable elements child', requires: [:js] do
       pending "Selenium doesn't like editing nested contents"
       @session.visit('/with_js')
       @session.find(:css,'#existing_content_editable_child').set('WYSIWYG')
@@ -253,7 +253,7 @@ Capybara::SpecHelper.spec "node" do
     end
   end
 
-  describe "#trigger", :requires => [:js, :trigger] do
+  describe "#trigger", requires: [:js, :trigger] do
     it "should allow triggering of custom JS events" do
       @session.visit('/with_js')
       @session.find(:css, '#with_focus_event').trigger(:focus)
@@ -261,7 +261,7 @@ Capybara::SpecHelper.spec "node" do
     end
   end
 
-  describe '#drag_to', :requires => [:js, :drag] do
+  describe '#drag_to', requires: [:js, :drag] do
     it "should drag and drop an object" do
       @session.visit('/with_js')
       element = @session.find('//div[@id="drag"]')
@@ -271,12 +271,12 @@ Capybara::SpecHelper.spec "node" do
     end
   end
 
-  describe '#hover', :requires => [:hover] do
+  describe '#hover', requires: [:hover] do
     it "should allow hovering on an element" do
       @session.visit('/with_hover')
-      expect(@session.find(:css,'.hidden_until_hover', :visible => false)).not_to be_visible
+      expect(@session.find(:css,'.hidden_until_hover', visible: false)).not_to be_visible
       @session.find(:css,'.wrapper').hover
-      expect(@session.find(:css, '.hidden_until_hover', :visible => false)).to be_visible
+      expect(@session.find(:css, '.hidden_until_hover', visible: false)).to be_visible
     end
   end
 
@@ -287,7 +287,7 @@ Capybara::SpecHelper.spec "node" do
     end
   end
 
-  describe '#double_click', :requires => [:js] do
+  describe '#double_click', requires: [:js] do
     it "should double click an element" do
       @session.visit('/with_js')
       @session.find(:css, '#click-test').double_click
@@ -295,7 +295,7 @@ Capybara::SpecHelper.spec "node" do
     end
   end
 
-  describe '#right_click', :requires => [:js] do
+  describe '#right_click', requires: [:js] do
     it "should right click an element" do
       @session.visit('/with_js')
       @session.find(:css, '#click-test').right_click
@@ -329,7 +329,7 @@ Capybara::SpecHelper.spec "node" do
     end
   end
 
-  describe '#reload', :requires => [:js] do
+  describe '#reload', requires: [:js] do
     context "without automatic reload" do
       before { Capybara.automatic_reload = false }
       it "should reload the current context of the node" do
@@ -409,7 +409,7 @@ Capybara::SpecHelper.spec "node" do
 
       it "should reload nodes with options" do
         @session.visit('/with_js')
-        node = @session.find(:css, 'em', :text => "reloaded")
+        node = @session.find(:css, 'em', text: "reloaded")
         @session.click_link('Reload!')
         sleep(1)
         expect(node.text).to eq('has been reloaded')
@@ -418,7 +418,7 @@ Capybara::SpecHelper.spec "node" do
   end
 
   context "when #synchronize raises server errors" do
-    it "sets an explanatory exception as the cause of server exceptions", :requires => [:server, :js] do
+    it "sets an explanatory exception as the cause of server exceptions", requires: [:server, :js] do
       skip "This version of ruby doesn't support exception causes" unless Exception.instance_methods.include? :cause
       quietly { @session.visit("/error") }
       expect do

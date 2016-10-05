@@ -33,12 +33,12 @@ Capybara::SpecHelper.spec '#find_link' do
 
   context "with :exact option" do
     it "should accept partial matches when false" do
-      expect(@session.find_link('abo', :exact => false).text).to eq("labore")
+      expect(@session.find_link('abo', exact:  false).text).to eq("labore")
     end
 
     it "should not accept partial matches when true" do
       expect do
-        @session.find_link('abo', :exact => true)
+        @session.find_link('abo', exact:  true)
       end.to raise_error(Capybara::ElementNotFound)
     end
   end

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-Capybara::SpecHelper.spec '#accept_confirm', :requires => [:modals] do
+Capybara::SpecHelper.spec '#accept_confirm', requires: [:modals] do
   before do
     @session.visit('/with_js')
   end

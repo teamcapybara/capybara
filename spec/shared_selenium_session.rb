@@ -62,37 +62,37 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
     end
 
-    context "#fill_in with { :clear => :backspace } fill_option", :requires => [:js] do
+    context "#fill_in with { :clear => :backspace } fill_option", requires: [:js] do
       it 'should fill in a field, replacing an existing value' do
         @session.visit('/form')
-        @session.fill_in('form_first_name', :with => 'Harry',
+        @session.fill_in('form_first_name', with: 'Harry',
                           fill_options: { clear: :backspace} )
         expect(@session.find(:fillable_field, 'form_first_name').value).to eq('Harry')
       end
 
       it 'should only trigger onchange once' do
         @session.visit('/with_js')
-        @session.fill_in('with_change_event', :with => 'some value',
-                         :fill_options => { :clear => :backspace })
+        @session.fill_in('with_change_event', with: 'some value',
+                         fill_options: { :clear => :backspace })
         # click outside the field to trigger the change event
         @session.find(:css, 'body').click
-        expect(@session.find(:css, '.change_event_triggered', :match => :one)).to have_text 'some value'
+        expect(@session.find(:css, '.change_event_triggered', match: :one)).to have_text 'some value'
       end
 
       it 'should trigger change when clearing field' do
         @session.visit('/with_js')
-        @session.fill_in('with_change_event', :with => '',
-                         :fill_options => { :clear => :backspace })
+        @session.fill_in('with_change_event', with: '',
+                         fill_options: { :clear => :backspace })
         # click outside the field to trigger the change event
         @session.find(:css, 'body').click
-        expect(@session).to have_selector(:css, '.change_event_triggered', :match => :one)
+        expect(@session).to have_selector(:css, '.change_event_triggered', match: :one)
       end
     end
 
     context "#fill_in with { clear: :none } fill_options" do
       it 'should append to content in a field' do
         @session.visit('/form')
-        @session.fill_in('form_first_name', :with => 'Harry',
+        @session.fill_in('form_first_name', with: 'Harry',
                           fill_options: { clear: :none} )
         expect(@session.find(:fillable_field, 'form_first_name').value).to eq('JohnHarry')
       end
@@ -102,7 +102,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       it 'should pass the array through to the element' do
         #this is mainly for use with [[:ctrl, 'a'], :backspace] - however since that is platform dependant I'm testing with something less useful
         @session.visit('/form')
-        @session.fill_in('form_first_name', :with => 'Harry',
+        @session.fill_in('form_first_name', with: 'Harry',
                           fill_options: { clear: [[:shift, 'abc'], :backspace] } )
         expect(@session.find(:fillable_field, 'form_first_name').value).to eq('JohnABHarry')
       end

@@ -23,7 +23,7 @@ Capybara::SpecHelper.spec '#has_current_path?' do
     expect(@session).to have_current_path("/with_html?options%5B%5D=things")
   end
 
-  it "should wait for current_path", :requires => [:js] do
+  it "should wait for current_path", requires: [:js] do
     @session.click_link("Change page")
     expect(@session).to have_current_path("/with_html")
   end
@@ -68,7 +68,7 @@ Capybara::SpecHelper.spec '#has_no_current_path?' do
     expect(@session).to have_no_current_path(/monkey/)
   end
 
-  it "should wait for current_path to disappear", :requires => [:js] do
+  it "should wait for current_path to disappear", requires: [:js] do
     @session.click_link("Change page")
     expect(@session).to have_no_current_path('/with_js')
   end

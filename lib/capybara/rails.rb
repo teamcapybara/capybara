@@ -16,5 +16,5 @@ Capybara.save_path = Rails.root.join('tmp/capybara')
 
 # Override default rack_test driver to respect data-method attributes.
 Capybara.register_driver :rack_test do |app|
-  Capybara::RackTest::Driver.new(app, :respect_data_method => true)
+  Capybara::RackTest::Driver.new(app, respect_data_method: true)
 end

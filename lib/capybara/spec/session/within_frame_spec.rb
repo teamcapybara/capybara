@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-Capybara::SpecHelper.spec '#within_frame', :requires => [:frames] do
+Capybara::SpecHelper.spec '#within_frame', requires: [:frames] do
   before(:each) do
     @session.visit('/within_frames')
   end
@@ -58,7 +58,7 @@ Capybara::SpecHelper.spec '#within_frame', :requires => [:frames] do
     end
   end
 
-  it "works if the frame is closed", :requires => [:frames, :js] do
+  it "works if the frame is closed", requires: [:frames, :js] do
     @session.within_frame 'parentFrame' do
       @session.within_frame 'childFrame' do
         @session.click_link 'Close Window'

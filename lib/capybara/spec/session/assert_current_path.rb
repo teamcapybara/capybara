@@ -12,7 +12,7 @@ Capybara::SpecHelper.spec '#assert_current_path' do
     expect { @session.assert_current_path(/w[a-z]{3}_js/) }.not_to raise_error
   end
 
-  it "should wait for current_path", :requires => [:js] do
+  it "should wait for current_path", requires: [:js] do
     @session.click_link("Change page")
     expect { @session.assert_current_path("/with_html") }.not_to raise_error
   end
@@ -49,7 +49,7 @@ Capybara::SpecHelper.spec '#assert_no_current_path?' do
     expect{@session.assert_no_current_path(/monkey/)}.not_to raise_error
   end
 
-  it "should wait for current_path to disappear", :requires => [:js] do
+  it "should wait for current_path to disappear", requires: [:js] do
     @session.click_link("Change page")
     expect{@session.assert_no_current_path('/with_js')}.not_to raise_error
   end

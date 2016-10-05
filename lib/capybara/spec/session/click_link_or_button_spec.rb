@@ -24,7 +24,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
     expect(extract_results(@session)['first_name']).to eq('John')
   end
 
-  it "should wait for asynchronous load", :requires => [:js] do
+  it "should wait for asynchronous load", requires: [:js] do
     @session.visit('/with_js')
     @session.click_link('Click me')
     @session.click_link_or_button('Has been clicked')
@@ -40,7 +40,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
     context "when `true`" do
       it "clicks on approximately matching link" do
         @session.visit('/with_html')
-        @session.click_link_or_button('abore', :exact => false)
+        @session.click_link_or_button('abore', exact:  false)
         expect(@session).to have_content('Bar')
       end
 
@@ -56,7 +56,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
         @session.visit('/with_html')
         msg = "Unable to find link or button \"abore\""
         expect do
-          @session.click_link_or_button('abore', :exact => true)
+          @session.click_link_or_button('abore', exact:  true)
         end.to raise_error(Capybara::ElementNotFound, msg)
       end
 
@@ -65,7 +65,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
         msg = "Unable to find link or button \"awe\""
 
         expect do
-          @session.click_link_or_button('awe', :exact => true)
+          @session.click_link_or_button('awe', exact:  true)
         end.to raise_error(Capybara::ElementNotFound, msg)
       end
     end
@@ -85,7 +85,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
     it "ignores disabled buttons when false" do
       @session.visit('/form')
       expect do
-        @session.click_link_or_button('Disabled button', :disabled => false)
+        @session.click_link_or_button('Disabled button', disabled: false)
       end.to raise_error(Capybara::ElementNotFound)
     end
 
@@ -105,7 +105,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
     it "does nothing when button is disabled" do
       @session.visit('/form')
       expect do
-        @session.click_link_or_button('Disabled button', :disabled => false)
+        @session.click_link_or_button('Disabled button', disabled: false)
       end.to raise_error(Capybara::ElementNotFound)
     end
 

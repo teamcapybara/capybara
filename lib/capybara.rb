@@ -225,7 +225,7 @@ module Capybara
     #     HTML
     #
     #     node.find('#projects').text # => 'Projects'
-    #     node.has_selector?('li#home', :text => 'Home')
+    #     node.has_selector?('li#home', text: 'Home')
     #     node.has_selector?('#projects')
     #     node.find('ul').find('li:first-child').text # => 'Home'
     #
@@ -475,7 +475,7 @@ end
 
 Capybara.register_server :webrick do |app, port, host|
   require 'rack/handler/webrick'
-  Rack::Handler::WEBrick.run(app, :Host => host, :Port => port, :AccessLog => [], :Logger => WEBrick::Log::new(nil, 0))
+  Rack::Handler::WEBrick.run(app, Host: host, Port: port, AccessLog: [], Logger: WEBrick::Log::new(nil, 0))
 end
 
 Capybara.register_server :puma do |app, port, host|

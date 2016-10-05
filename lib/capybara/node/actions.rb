@@ -62,7 +62,7 @@ module Capybara
       # Locate a text field or text area and fill it in with the given text
       # The field can be found via its name, id or label text.
       #
-      #     page.fill_in 'Name', :with => 'Bob'
+      #     page.fill_in 'Name', with: 'Bob'
       #
       #
       # @overload fill_in([locator], options={})
@@ -206,7 +206,7 @@ module Capybara
       # one option.
       # The select box can be found via its name, id or label text. The option can be found by its text.
       #
-      #     page.select 'March', :from => 'Month'
+      #     page.select 'March', from: 'Month'
       #
       # @macro waiting_behavior
       #
@@ -228,7 +228,7 @@ module Capybara
       # box is a multiple select, +unselect+ can be called multiple times to unselect more than
       # one option. The select box can be found via its name, id or label text.
       #
-      #     page.unselect 'March', :from => 'Month'
+      #     page.unselect 'March', from: 'Month'
       #
       # @macro waiting_behavior
       #

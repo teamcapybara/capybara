@@ -175,5 +175,5 @@ class TestApp < Sinatra::Base
 end
 
 if __FILE__ == $0
-  Rack::Handler::WEBrick.run TestApp, :Port => 8070
+  Rack::Handler::WEBrick.run TestApp, Port: 8070
 end

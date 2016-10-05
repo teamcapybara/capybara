@@ -20,7 +20,7 @@ Capybara::SpecHelper.spec '#within' do
     end
 
     it "should accept additional options" do
-      @session.within(:css, "#for_bar li", :text => 'With Simple HTML') do
+      @session.within(:css, "#for_bar li", text: 'With Simple HTML') do
         @session.click_link('Go')
       end
       expect(@session).to have_content('Bar')
@@ -114,7 +114,7 @@ Capybara::SpecHelper.spec '#within' do
     expect(extract_results(@session)['first_name']).to eq('Peter')
     @session.visit('/with_scope')
     @session.within("//li[contains(.,'Bar')]") do
-      @session.fill_in('First Name', :with => 'Dagobert')
+      @session.fill_in('First Name', with: 'Dagobert')
       @session.click_button('Go')
     end
     expect(extract_results(@session)['first_name']).to eq('Dagobert')
@@ -128,7 +128,7 @@ Capybara::SpecHelper.spec '#within_fieldset' do
 
   it "should restrict scope to a fieldset given by id" do
     @session.within_fieldset("villain_fieldset") do
-      @session.fill_in("Name", :with => 'Goldfinger')
+      @session.fill_in("Name", with: 'Goldfinger')
       @session.click_button("Create")
     end
     expect(extract_results(@session)['villain_name']).to eq('Goldfinger')
@@ -136,7 +136,7 @@ Capybara::SpecHelper.spec '#within_fieldset' do
 
   it "should restrict scope to a fieldset given by legend" do
     @session.within_fieldset("Villain") do
-      @session.fill_in("Name", :with => 'Goldfinger')
+      @session.fill_in("Name", with: 'Goldfinger')
       @session.click_button("Create")
     end
     expect(extract_results(@session)['villain_name']).to eq('Goldfinger')
@@ -150,7 +150,7 @@ Capybara::SpecHelper.spec '#within_table' do
 
   it "should restrict scope to a fieldset given by id" do
     @session.within_table("girl_table") do
-      @session.fill_in("Name", :with => 'Christmas')
+      @session.fill_in("Name", with: 'Christmas')
       @session.click_button("Create")
     end
     expect(extract_results(@session)['girl_name']).to eq('Christmas')
@@ -158,7 +158,7 @@ Capybara::SpecHelper.spec '#within_table' do
 
   it "should restrict scope to a fieldset given by legend" do
     @session.within_table("Villain") do
-      @session.fill_in("Name", :with => 'Quantum')
+      @session.fill_in("Name", with: 'Quantum')
       @session.click_button("Create")
     end
     expect(extract_results(@session)['villain_name']).to eq('Quantum')

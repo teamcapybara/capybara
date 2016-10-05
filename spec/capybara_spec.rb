@@ -47,7 +47,7 @@ RSpec.describe Capybara do
 
     it "should add a new server" do
       Capybara.register_server :blob do |app, port, host|
-        Rack::Handler::WEBrick.run(app, :Host => host, :Port => port, :AccessLog => [], :Logger => WEBrick::Log::new(nil, 0))
+        Rack::Handler::WEBrick.run(app, Host: host, Port: port, AccessLog: [], Logger: WEBrick::Log::new(nil, 0))
       end
       Capybara.server = :blob
       session = Capybara::Session.new(:selenium, TestApp.dup)

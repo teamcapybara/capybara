@@ -107,8 +107,8 @@ You can use the Capybara DSL in your steps, like so:
 ```ruby
 When /I sign in/ do
   within("#session") do
-    fill_in 'Email', :with => 'user@example.com'
-    fill_in 'Password', :with => 'password'
+    fill_in 'Email', with: 'user@example.com'
+    fill_in 'Password', with: 'password'
   end
   click_button 'Sign in'
 end
@@ -150,14 +150,14 @@ You can now write your specs like so:
 ```ruby
 describe "the signin process", :type => :feature do
   before :each do
-    User.make(:email => 'user@example.com', :password => 'password')
+    User.make(email: 'user@example.com', password: 'password')
   end
 
   it "signs me in" do
     visit '/sessions/new'
     within("#session") do
-      fill_in 'Email', :with => 'user@example.com'
-      fill_in 'Password', :with => 'password'
+      fill_in 'Email', with: 'user@example.com'
+      fill_in 'Password', with: 'password'
     end
     click_button 'Sign in'
     expect(page).to have_content 'Success'
@@ -165,12 +165,12 @@ describe "the signin process", :type => :feature do
 end
 ```
 
-Use `:js => true` to switch to the `Capybara.javascript_driver`
+Use `js: true` to switch to the `Capybara.javascript_driver`
 (`:selenium` by default), or provide a `:driver` option to switch
 to one specific driver. For example:
 
 ```ruby
-describe 'some stuff which requires js', :js => true do
+describe 'some stuff which requires js', js: true do
   it 'will use the default js driver'
   it 'will switch to one specific driver', :driver => :webkit
 end
@@ -181,26 +181,26 @@ Capybara also comes with a built in DSL for creating descriptive acceptance test
 ```ruby
 feature "Signing in" do
   background do
-    User.make(:email => 'user@example.com', :password => 'caplin')
+    User.make(email: 'user@example.com', password: 'caplin')
   end
 
   scenario "Signing in with correct credentials" do
     visit '/sessions/new'
     within("#session") do
-      fill_in 'Email', :with => 'user@example.com'
-      fill_in 'Password', :with => 'caplin'
+      fill_in 'Email', with: 'user@example.com'
+      fill_in 'Password', with: 'caplin'
     end
     click_button 'Sign in'
     expect(page).to have_content 'Success'
   end
 
-  given(:other_user) { User.make(:email => 'other@example.com', :password => 'rous') }
+  given(:other_user) { User.make(email: 'other@example.com', password: 'rous') }
 
   scenario "Signing in as another user" do
     visit '/sessions/new'
     within("#session") do
-      fill_in 'Email', :with => other_user.email
-      fill_in 'Password', :with => other_user.password
+      fill_in 'Email', with: other_user.email
+      fill_in 'Password', with: other_user.password
     end
     click_button 'Sign in'
     expect(page).to have_content 'Invalid email or password'
@@ -308,7 +308,7 @@ Capybara.default_driver = :selenium
 
 However, if you are using RSpec or Cucumber, you may instead want to consider
 leaving the faster `:rack_test` as the __default_driver__, and marking only those
-tests that require a JavaScript-capable driver using `:js => true` or
+tests that require a JavaScript-capable driver using `js: true` or
 `@javascript`, respectively.  By default, JavaScript tests are run using the
 `:selenium` driver. You can change this by setting
 `Capybara.javascript_driver`.
@@ -344,7 +344,7 @@ RackTest can be configured with a set of headers like this:
 
 ```ruby
 Capybara.register_driver :rack_test do |app|
-  Capybara::RackTest::Driver.new(app, :headers => { 'HTTP_USER_AGENT' => 'Capybara' })
+  Capybara::RackTest::Driver.new(app, headers: { 'HTTP_USER_AGENT' => 'Capybara' })
 end
 ```
 
@@ -448,14 +448,14 @@ click_on('Button Value')
 There are a number of tools for interacting with form elements:
 
 ```ruby
-fill_in('First Name', :with => 'John')
-fill_in('Password', :with => 'Seekrit')
-fill_in('Description', :with => 'Really Long Text...')
+fill_in('First Name', with: 'John')
+fill_in('Password', with: 'Seekrit')
+fill_in('Description', with: 'Really Long Text...')
 choose('A Radio Button')
 check('A Checkbox')
 uncheck('A Checkbox')
 attach_file('Image', '/path/to/image.jpg')
-select('Option', :from => 'Select Box')
+select('Option', from: 'Select Box')
 ```
 
 ### <a name="querying"></a>Querying
@@ -525,11 +525,11 @@ method. Optionally you can specify which kind of selector to use.
 
 ```ruby
 within("li#employee") do
-  fill_in 'Name', :with => 'Jimmy'
+  fill_in 'Name', with: 'Jimmy'
 end
 
 within(:xpath, "//li[@id='employee']") do
-  fill_in 'Name', :with => 'Jimmy'
+  fill_in 'Name', with: 'Jimmy'
 end
 ```
 
@@ -539,11 +539,11 @@ specific table, identified by either id or text of the table's caption tag.
 
 ```ruby
 within_fieldset('Employee') do
-  fill_in 'Name', :with => 'Jimmy'
+  fill_in 'Name', with: 'Jimmy'
 end
 
 within_table('Employee') do
-  fill_in 'Name', :with => 'Jimmy'
+  fill_in 'Name', with: 'Jimmy'
 end
 ```
 
@@ -782,8 +782,8 @@ module MyModule
 
   def login!
     within(:xpath, "//form[@id='session']") do
-      fill_in 'Email', :with => 'user@example.com'
-      fill_in 'Password', :with => 'password'
+      fill_in 'Email', with: 'user@example.com'
+      fill_in 'Password', with: 'password'
     end
     click_button 'Sign in'
   end
@@ -853,8 +853,8 @@ require 'capybara'
 
 session = Capybara::Session.new(:webkit, my_rack_app)
 session.within("form#session") do
-  session.fill_in 'Email', :with => 'user@example.com'
-  session.fill_in 'Password', :with => 'password'
+  session.fill_in 'Email', with: 'user@example.com'
+  session.fill_in 'Password', with: 'password'
 end
 session.click_button 'Sign in'
 ```

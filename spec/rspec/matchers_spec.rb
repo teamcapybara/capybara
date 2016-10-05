@@ -25,7 +25,7 @@ RSpec.describe Capybara::RSpecMatchers do
         end
 
         it "passes if matched node count equals expected count" do
-          expect("<h1>Text</h1>").to have_css('h1', :count => 1)
+          expect("<h1>Text</h1>").to have_css('h1', count: 1)
         end
 
         it "fails if matched node count does not equal expected count" do
@@ -66,12 +66,12 @@ RSpec.describe Capybara::RSpecMatchers do
         end
 
         it "passes if matched node count does not equal expected count" do
-          expect("<h1>Text</h1>").not_to have_css('h1', :count => 2)
+          expect("<h1>Text</h1>").not_to have_css('h1', count: 2)
         end
 
         it "fails if matched node count equals expected count" do
           expect do
-            expect("<h1>Text</h1>").not_to have_css('h1', :count => 1)
+            expect("<h1>Text</h1>").not_to have_css('h1', count: 1)
           end.to raise_error(/expected not to find css "h1"/)
         end
       end
@@ -220,7 +220,7 @@ RSpec.describe Capybara::RSpecMatchers do
 
       context "with should" do
         it "passes if has_selector? returns true" do
-          expect(page).to have_selector('//h1', :text => 'test')
+          expect(page).to have_selector('//h1', text: 'test')
         end
 
         it "fails if has_selector? returns false" do
@@ -231,7 +231,7 @@ RSpec.describe Capybara::RSpecMatchers do
 
         it "includes text in error message" do
           expect do
-            expect(page).to have_selector("//h1", :text => 'wrong text')
+            expect(page).to have_selector("//h1", text: 'wrong text')
           end.to raise_error(%r(expected to find xpath "//h1" with text "wrong text" but there were no matches))
         end
       end
@@ -243,7 +243,7 @@ RSpec.describe Capybara::RSpecMatchers do
 
         it "fails if has_no_selector? returns false" do
           expect do
-            expect(page).not_to have_selector(:css, 'h1', :text => 'test')
+            expect(page).not_to have_selector(:css, 'h1', text: 'test')
           end.to raise_error(%r(expected not to find css "h1" with text "test"))
         end
       end

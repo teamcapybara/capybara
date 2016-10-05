@@ -27,7 +27,7 @@ Capybara::SpecHelper.spec '#visit' do
     expect(@session).to have_content('Hello world!')
   end
 
-  it "raises any errors caught inside the server", :requires => [:server] do
+  it "raises any errors caught inside the server", requires: [:server] do
     quietly { @session.visit("/error") }
     expect do
       @session.visit("/")
@@ -65,7 +65,7 @@ Capybara::SpecHelper.spec '#visit' do
     end
   end
 
-  context "without a server", :requires => [:server] do
+  context "without a server", requires: [:server] do
     it "should respect `app_host`" do
       serverless_session = Capybara::Session.new(@session.mode, nil)
       Capybara.app_host = "http://#{@session.server.host}:#{@session.server.port}"

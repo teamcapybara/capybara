@@ -78,7 +78,7 @@ Capybara::SpecHelper.spec '#assert_text' do
     end.to raise_error(Capybara::ExpectationNotMet)
   end
 
-  it "should wait for text to appear", :requires => [:js] do
+  it "should wait for text to appear", requires: [:js] do
     @session.visit('/with_js')
     @session.click_link('Click me')
     expect(@session.assert_text('Has been clicked')).to eq(true)
@@ -98,7 +98,7 @@ Capybara::SpecHelper.spec '#assert_text' do
     end
   end
 
-  context "with wait", :requires => [:js] do
+  context "with wait", requires: [:js] do
     it "should find element if it appears before given wait duration" do
       Capybara.using_wait_time(0) do
         @session.visit('/with_js')
@@ -125,35 +125,35 @@ Capybara::SpecHelper.spec '#assert_text' do
     end
 
     it 'ignores other filters when :count is specified' do
-      o = {:count   => 5,
-           :minimum => 6,
-           :maximum => 0,
-           :between => 0..4}
+      o = {count: 5,
+           minimum: 6,
+           maximum: 0,
+           between: 0..4}
       expect { @session.assert_text('Header', o) }.not_to raise_error
     end
     context 'with no :count expectation' do
       it 'fails if :minimum is not met' do
-        o = {:minimum => 6,
-             :maximum => 5,
-             :between => 2..7}
+        o = {minimum: 6,
+             maximum: 5,
+             between: 2..7}
         expect { @session.assert_text('Header', o) }.to raise_error(Capybara::ExpectationNotMet)
       end
       it 'fails if :maximum is not met' do
-        o = {:minimum => 0,
-             :maximum => 0,
-             :between => 2..7}
+        o = {minimum: 0,
+             maximum: 0,
+             between: 2..7}
         expect { @session.assert_text('Header', o) }.to raise_error(Capybara::ExpectationNotMet)
       end
       it 'fails if :between is not met' do
-        o = {:minimum => 0,
-             :maximum => 5,
-             :between => 0..4}
+        o = {minimum: 0,
+             maximum: 5,
+             between: 0..4}
         expect { @session.assert_text('Header', o) }.to raise_error(Capybara::ExpectationNotMet)
       end
       it 'succeeds if all combineable expectations are met' do
-        o = {:minimum => 0,
-             :maximum => 5,
-             :between => 2..7}
+        o = {minimum: 0,
+             maximum: 5,
+             between: 2..7}
         expect { @session.assert_text('Header', o) }.not_to raise_error
       end
     end
@@ -215,12 +215,12 @@ Capybara::SpecHelper.spec '#assert_no_text' do
     end
   end
 
-  context "with wait", :requires => [:js] do
+  context "with wait", requires: [:js] do
     it "should not find element if it appears after given wait duration" do
       @session.visit('/with_js')
       @session.click_link('Click me')
       @session.find(:css, '#reload-list').click
-      @session.find(:css, '#the-list').assert_no_text('Foo Bar', :wait => 0.3)
+      @session.find(:css, '#the-list').assert_no_text('Foo Bar', wait: 0.3)
     end
   end
 end

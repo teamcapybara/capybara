@@ -112,7 +112,7 @@ Capybara::SpecHelper.spec '#has_text?' do
     expect(@session).to have_text(nil)
   end
 
-  it "should wait for text to appear", :requires => [:js] do
+  it "should wait for text to appear", requires: [:js] do
     @session.visit('/with_js')
     @session.click_link('Click me')
     expect(@session).to have_text("Has been clicked")
@@ -192,12 +192,12 @@ Capybara::SpecHelper.spec '#has_text?' do
     end
   end
 
-  context "with wait", :requires => [:js] do
+  context "with wait", requires: [:js] do
     it "should find element if it appears before given wait duration" do
       Capybara.using_wait_time(0.1) do
         @session.visit('/with_js')
         @session.click_link('Click me')
-        expect(@session).to have_text('Has been clicked', :wait => 0.9)
+        expect(@session).to have_text('Has been clicked', wait: 0.9)
       end
     end
   end
@@ -301,17 +301,17 @@ Capybara::SpecHelper.spec '#has_no_text?' do
     expect(@session).to have_no_text('.orem')
   end
 
-  it "should wait for text to disappear", :requires => [:js] do
+  it "should wait for text to disappear", requires: [:js] do
     @session.visit('/with_js')
     @session.click_link('Click me')
     expect(@session).to have_no_text("I changed it")
   end
 
-  context "with wait", :requires => [:js] do
+  context "with wait", requires: [:js] do
     it "should not find element if it appears after given wait duration" do
       @session.visit('/with_js')
       @session.click_link('Click me')
-      expect(@session).to have_no_text('Has been clicked', :wait => 0.1)
+      expect(@session).to have_no_text('Has been clicked', wait: 0.1)
     end
   end
 end

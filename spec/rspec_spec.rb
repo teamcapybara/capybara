@@ -29,7 +29,7 @@ RSpec.describe 'capybara/rspec', :type => :feature do
     end
   end
 
-  it "switches to the javascript driver when giving it as metadata", :js => true do
+  it "switches to the javascript driver when giving it as metadata", js: true do
     expect(Capybara.current_driver).to eq(Capybara.javascript_driver)
   end
 

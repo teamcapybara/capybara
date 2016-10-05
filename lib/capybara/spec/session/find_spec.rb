@@ -14,15 +14,15 @@ Capybara::SpecHelper.spec '#find' do
   end
 
   it "should find the first element using the given locator and options" do
-    expect(@session.find('//a', :text => 'Redirect')[:id]).to eq('red')
-    expect(@session.find(:css, 'a', :text => 'A link came first')[:title]).to eq('twas a fine link')
+    expect(@session.find('//a', text: 'Redirect')[:id]).to eq('red')
+    expect(@session.find(:css, 'a', text: 'A link came first')[:title]).to eq('twas a fine link')
   end
 
   it "should raise an error if there are multiple matches" do
     expect { @session.find('//a') }.to raise_error(Capybara::Ambiguous)
   end
 
-  it "should wait for asynchronous load", :requires => [:js] do
+  it "should wait for asynchronous load", requires: [:js] do
     @session.visit('/with_js')
     @session.click_link('Click me')
     expect(@session.find(:css, "a#has-been-clicked").text).to include('Has been clicked')
@@ -34,12 +34,12 @@ Capybara::SpecHelper.spec '#find' do
     end
   end
 
-  context "with :wait option", :requires => [:js] do
+  context "with :wait option", requires: [:js] do
     it "should not wait for asynchronous load when `false` given" do
       @session.visit('/with_js')
       @session.click_link('Click me')
       expect do
-        @session.find(:css, "a#has-been-clicked", :wait => false)
+        @session.find(:css, "a#has-been-clicked", wait: false)
       end.to raise_error(Capybara::ElementNotFound)
     end
 
@@ -47,18 +47,18 @@ Capybara::SpecHelper.spec '#find' do
       @session.visit('/with_js')
       @session.click_link('Slowly')
       expect do
-        @session.find(:css, "a#slow-clicked", :wait => 0.2)
+        @session.find(:css, "a#slow-clicked", wait: 0.2)
       end.to raise_error(Capybara::ElementNotFound)
     end
 
     it "should find element if it appears before given wait duration" do
       @session.visit('/with_js')
       @session.click_link('Click me')
-      expect(@session.find(:css, "a#has-been-clicked", :wait => 0.9).text).to include('Has been clicked')
+      expect(@session.find(:css, "a#has-been-clicked", wait: 0.9).text).to include('Has been clicked')
     end
   end
 
-  context "with frozen time", :requires => [:js] do
+  context "with frozen time", requires: [:js] do
     if defined?(Process::CLOCK_MONOTONIC)
       it "will time out even if time is frozen" do
         @session.visit('/with_js')
@@ -126,8 +126,8 @@ Capybara::SpecHelper.spec '#find' do
     end
 
     it "should find elements that match the filter" do
-      expect(@session.find(:beatle, 'Paul', :type => 'drummer').text).to eq('Paul')
-      expect(@session.find(:beatle, 'Ringo', :type => 'drummer').text).to eq('Ringo')
+      expect(@session.find(:beatle, 'Paul', type: 'drummer').text).to eq('Paul')
+      expect(@session.find(:beatle, 'Ringo', type: 'drummer').text).to eq('Ringo')
     end
 
     it "ignores filter when it is not given" do
@@ -136,8 +136,8 @@ Capybara::SpecHelper.spec '#find' do
     end
 
     it "should not find elements that don't match the filter" do
-      expect { @session.find(:beatle, 'John', :type => 'drummer') }.to raise_error(Capybara::ElementNotFound)
-      expect { @session.find(:beatle, 'George', :type => 'drummer') }.to raise_error(Capybara::ElementNotFound)
+      expect { @session.find(:beatle, 'John', type: 'drummer') }.to raise_error(Capybara::ElementNotFound)
+      expect { @session.find(:beatle, 'George', type: 'drummer') }.to raise_error(Capybara::ElementNotFound)
     end
   end
 
@@ -145,13 +145,13 @@ Capybara::SpecHelper.spec '#find' do
     before do
       Capybara.add_selector(:beatle) do
         xpath { |name| ".//li[contains(@class, 'beatle')][contains(text(), '#{name}')]" }
-        filter(:type, :default => "drummer") { |node, type| node[:class].split(/\s+/).include?(type) }
+        filter(:type, default: "drummer") { |node, type| node[:class].split(/\s+/).include?(type) }
       end
     end
 
     it "should find elements that match the filter" do
-      expect(@session.find(:beatle, 'Paul', :type => 'drummer').text).to eq('Paul')
-      expect(@session.find(:beatle, 'Ringo', :type => 'drummer').text).to eq('Ringo')
+      expect(@session.find(:beatle, 'Paul', type: 'drummer').text).to eq('Paul')
+      expect(@session.find(:beatle, 'Ringo', type: 'drummer').text).to eq('Ringo')
     end
 
     it "should use default value when filter is not given" do
@@ -160,8 +160,8 @@ Capybara::SpecHelper.spec '#find' do
     end
 
     it "should not find elements that don't match the filter" do
-      expect { @session.find(:beatle, 'John', :type => 'drummer') }.to raise_error(Capybara::ElementNotFound)
-      expect { @session.find(:beatle, 'George', :type => 'drummer') }.to raise_error(Capybara::ElementNotFound)
+      expect { @session.find(:beatle, 'John', type: 'drummer') }.to raise_error(Capybara::ElementNotFound)
+      expect { @session.find(:beatle, 'George', type: 'drummer') }.to raise_error(Capybara::ElementNotFound)
     end
   end
 
@@ -216,15 +216,15 @@ Capybara::SpecHelper.spec '#find' do
 
   context "with :exact option" do
     it "matches exactly when true" do
-      expect(@session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("test_field")], :exact => true).value).to eq("monkey")
+      expect(@session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("test_field")], exact:  true).value).to eq("monkey")
       expect do
-        @session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("est_fiel")], :exact => true)
+        @session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("est_fiel")], exact:  true)
       end.to raise_error(Capybara::ElementNotFound)
     end
 
     it "matches loosely when false" do
-      expect(@session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("test_field")], :exact => false).value).to eq("monkey")
-      expect(@session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("est_fiel")], :exact => false).value).to eq("monkey")
+      expect(@session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("test_field")], exact:  false).value).to eq("monkey")
+      expect(@session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is("est_fiel")], exact:  false).value).to eq("monkey")
     end
 
     it "defaults to `Capybara.exact`" do
@@ -247,31 +247,31 @@ Capybara::SpecHelper.spec '#find' do
     context "when set to `one`" do
       it "raises an error when multiple matches exist" do
         expect do
-          @session.find(:css, ".multiple", :match => :one)
+          @session.find(:css, ".multiple", match: :one)
         end.to raise_error(Capybara::Ambiguous)
       end
       it "raises an error even if there the match is exact and the others are inexact" do
         expect do
-          @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular")], :exact => false, :match => :one)
+          @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular")], exact:  false, match: :one)
         end.to raise_error(Capybara::Ambiguous)
       end
       it "returns the element if there is only one" do
-        expect(@session.find(:css, ".singular", :match => :one).text).to eq("singular")
+        expect(@session.find(:css, ".singular", match: :one).text).to eq("singular")
       end
       it "raises an error if there is no match" do
         expect do
-          @session.find(:css, ".does-not-exist", :match => :one)
+          @session.find(:css, ".does-not-exist", match: :one)
         end.to raise_error(Capybara::ElementNotFound)
       end
     end
 
     context "when set to `first`" do
       it "returns the first matched element" do
-        expect(@session.find(:css, ".multiple", :match => :first).text).to eq("multiple one")
+        expect(@session.find(:css, ".multiple", match: :first).text).to eq("multiple one")
       end
       it "raises an error if there is no match" do
         expect do
-          @session.find(:css, ".does-not-exist", :match => :first)
+          @session.find(:css, ".does-not-exist", match: :first)
         end.to raise_error(Capybara::ElementNotFound)
       end
     end
@@ -280,25 +280,25 @@ Capybara::SpecHelper.spec '#find' do
       context "and `exact` set to `false`" do
         it "raises an error when there are multiple exact matches" do
           expect do
-            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("multiple")], :match => :smart, :exact => false)
+            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("multiple")], match: :smart, exact:  false)
           end.to raise_error(Capybara::Ambiguous)
         end
         it "finds a single exact match when there also are inexact matches" do
-          result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular")], :match => :smart, :exact => false)
+          result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular")], match: :smart, exact:  false)
           expect(result.text).to eq("almost singular")
         end
         it "raises an error when there are multiple inexact matches" do
           expect do
-            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singul")], :match => :smart, :exact => false)
+            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singul")], match: :smart, exact:  false)
           end.to raise_error(Capybara::Ambiguous)
         end
         it "finds a single inexact match" do
-          result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular but")], :match => :smart, :exact => false)
+          result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular but")], match: :smart, exact:  false)
           expect(result.text).to eq("almost singular but not quite")
         end
         it "raises an error if there is no match" do
           expect do
-            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("does-not-exist")], :match => :smart, :exact => false)
+            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("does-not-exist")], match: :smart, exact:  false)
           end.to raise_error(Capybara::ElementNotFound)
         end
       end
@@ -306,26 +306,26 @@ Capybara::SpecHelper.spec '#find' do
       context "with `exact` set to `true`" do
         it "raises an error when there are multiple exact matches" do
           expect do
-            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("multiple")], :match => :smart, :exact => true)
+            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("multiple")], match: :smart, exact:  true)
           end.to raise_error(Capybara::Ambiguous)
         end
         it "finds a single exact match when there also are inexact matches" do
-          result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular")], :match => :smart, :exact => true)
+          result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular")], match: :smart, exact:  true)
           expect(result.text).to eq("almost singular")
         end
         it "raises an error when there are multiple inexact matches" do
           expect do
-            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singul")], :match => :smart, :exact => true)
+            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singul")], match: :smart, exact:  true)
           end.to raise_error(Capybara::ElementNotFound)
         end
         it "raises an error when there is a single inexact matches" do
           expect do
-            result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular but")], :match => :smart, :exact => true)
+            result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular but")], match: :smart, exact:  true)
           end.to raise_error(Capybara::ElementNotFound)
         end
         it "raises an error if there is no match" do
           expect do
-            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("does-not-exist")], :match => :smart, :exact => true)
+            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("does-not-exist")], match: :smart, exact:  true)
           end.to raise_error(Capybara::ElementNotFound)
         end
       end
@@ -334,50 +334,50 @@ Capybara::SpecHelper.spec '#find' do
     context "when set to `prefer_exact`" do
       context "and `exact` set to `false`" do
         it "picks the first one when there are multiple exact matches" do
-          result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("multiple")], :match => :prefer_exact, :exact => false)
+          result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("multiple")], match: :prefer_exact, exact:  false)
           expect(result.text).to eq("multiple one")
         end
         it "finds a single exact match when there also are inexact matches" do
-          result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular")], :match => :prefer_exact, :exact => false)
+          result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular")], match: :prefer_exact, exact:  false)
           expect(result.text).to eq("almost singular")
         end
         it "picks the first one when there are multiple inexact matches" do
-          result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singul")], :match => :prefer_exact, :exact => false)
+          result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singul")], match: :prefer_exact, exact:  false)
           expect(result.text).to eq("almost singular but not quite")
         end
         it "finds a single inexact match" do
-          result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular but")], :match => :prefer_exact, :exact => false)
+          result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular but")], match: :prefer_exact, exact:  false)
           expect(result.text).to eq("almost singular but not quite")
         end
         it "raises an error if there is no match" do
           expect do
-            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("does-not-exist")], :match => :prefer_exact, :exact => false)
+            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("does-not-exist")], match: :prefer_exact, exact:  false)
           end.to raise_error(Capybara::ElementNotFound)
         end
       end
 
       context "with `exact` set to `true`" do
         it "picks the first one when there are multiple exact matches" do
-          result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("multiple")], :match => :prefer_exact, :exact => true)
+          result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("multiple")], match: :prefer_exact, exact:  true)
           expect(result.text).to eq("multiple one")
         end
         it "finds a single exact match when there also are inexact matches" do
-          result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular")], :match => :prefer_exact, :exact => true)
+          result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular")], match: :prefer_exact, exact:  true)
           expect(result.text).to eq("almost singular")
         end
         it "raises an error if there are multiple inexact matches" do
           expect do
-            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singul")], :match => :prefer_exact, :exact => true)
+            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singul")], match: :prefer_exact, exact:  true)
           end.to raise_error(Capybara::ElementNotFound)
         end
         it "raises an error if there is a single inexact match" do
           expect do
-            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular but")], :match => :prefer_exact, :exact => true)
+            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular but")], match: :prefer_exact, exact:  true)
           end.to raise_error(Capybara::ElementNotFound)
         end
         it "raises an error if there is no match" do
           expect do
-            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("does-not-exist")], :match => :prefer_exact, :exact => true)
+            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("does-not-exist")], match: :prefer_exact, exact:  true)
           end.to raise_error(Capybara::ElementNotFound)
         end
       end
@@ -394,7 +394,7 @@ Capybara::SpecHelper.spec '#find' do
 
     it "raises an error when unknown option given" do
       expect do
-        @session.find(:css, ".singular", :match => :schmoo)
+        @session.find(:css, ".singular", match: :schmoo)
       end.to raise_error(ArgumentError)
     end
   end

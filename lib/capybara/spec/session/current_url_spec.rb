@@ -85,13 +85,13 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
     should_be_on 0, "/landed"
   end
 
-  it "is affected by pushState", :requires => [:js] do
+  it "is affected by pushState", requires: [:js] do
     @session.visit("/with_js")
     @session.execute_script("window.history.pushState({}, '', '/pushed')")
     expect(@session.current_path).to eq("/pushed")
   end
 
-  it "is affected by replaceState", :requires => [:js] do
+  it "is affected by replaceState", requires: [:js] do
     @session.visit("/with_js")
     @session.execute_script("window.history.replaceState({}, '', '/replaced')")
     expect(@session.current_path).to eq("/replaced")
