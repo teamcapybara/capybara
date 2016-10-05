@@ -504,6 +504,13 @@ find("#overlay").find("h1").click
 all('a').each { |a| a[:href] }
 ```
 
+If you need to find elements by additional attributes/properties you can also pass a filter block, which will be checked inside the normal waiting behavior.
+If you find yourself needing to use this a lot you may be better off adding a [custom selector](http://www.rubydoc.info/github/jnicklas/capybara/Capybara#add_selector-class_method) or [adding a filter to an existing selector](http://www.rubydoc.info/github/jnicklas/capybara/Capybara#modify_selector-class_method).
+
+```ruby
+find_field('First Name'){ |el| el['data-xyz'] == '123' }
+````
+
 **Note**: `find` will wait for an element to appear on the page, as explained in the
 Ajax section. If the element does not appear it will raise an error.
 
