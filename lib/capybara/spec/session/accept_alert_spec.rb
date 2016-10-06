@@ -18,6 +18,20 @@ Capybara::SpecHelper.spec '#accept_alert', requires: [:modals] do
     expect(@session).to have_xpath("//a[@id='open-alert' and @opened='true']")
   end
 
+  it 'should accept the alert if text contains "special" Regex characters' do
+    @session.accept_alert 'opened [*Yay?*]' do
+      @session.click_link('Open alert')
+    end
+    expect(@session).to have_xpath("//a[@id='open-alert' and @opened='true']")
+  end
+
+  it "should accept the alert if the text matches a regexp" do
+    @session.accept_alert /op.{2}ed/ do
+      @session.click_link('Open alert')
+    end
+    expect(@session).to have_xpath("//a[@id='open-alert' and @opened='true']")
+  end
+
   it "should not accept the alert if the text doesnt match" do
     expect do
       @session.accept_alert 'Incorrect Text' do
@@ -30,7 +44,7 @@ Capybara::SpecHelper.spec '#accept_alert', requires: [:modals] do
     message = @session.accept_alert do
       @session.click_link('Open alert')
     end
-    expect(message).to eq('Alert opened')
+    expect(message).to eq('Alert opened [*Yay?*]')
   end
 
   context "with an asynchronous alert" do
