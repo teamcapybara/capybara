@@ -73,6 +73,7 @@ RSpec.describe Capybara::Result do
 
   #Not a great test but it indirectly tests what is needed
   it "should evaluate filters lazily" do
+    skip 'JRuby has an issue with lazy enumerator next evaluation' if RUBY_PLATFORM == 'java'
     #Not processed until accessed
     expect(result.instance_variable_get('@result_cache').size).to be 0
 

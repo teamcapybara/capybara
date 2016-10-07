@@ -28,6 +28,11 @@ module Capybara
       @result_cache = []
       @results_enum = lazy_select_elements { |node| query.matches_filters?(node) }
       @query = query
+      # JRuby has an issue with eagerly finding next in lazy enumerators which
+      # causes a concurrency issue with network requests here
+      # https://github.com/jruby/jruby/issues/4212
+      # Just force all the results to be evaluated
+      full_results if RUBY_PLATFORM == 'java'
     end
 
     def_delegators :full_results, :size, :length, :last, :values_at, :inspect, :sample

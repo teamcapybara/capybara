@@ -2,6 +2,7 @@
 require "uri"
 
 class Capybara::Selenium::Driver < Capybara::Driver::Base
+
   DEFAULT_OPTIONS = {
     :browser => :firefox
   }
@@ -39,6 +40,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         raise e
       end
     end
+
 
     @app = app
     @browser = nil
