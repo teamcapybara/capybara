@@ -1,3 +1,11 @@
+#2.10.1
+Release date: 2016-10-08
+
+### Fixed
+* App errors are now correctly raised with the explanatory cause in JRuby [Thomas Walpole]
+* Capybara::Result optimization disabled in JRuby due to issue with lazy enumerator evaluation [Thomas Walpole]
+  See: https://github.com/jruby/jruby/issues/4212
+
 #2.10.0
 Release date: 2016-10-05
 
