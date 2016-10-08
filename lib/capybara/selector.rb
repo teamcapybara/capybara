@@ -345,6 +345,7 @@ Capybara.add_selector(:select) do
     end
     options.sort == actual.sort
   end
+
   filter(:with_options) do |node, options|
     finder_settings = { minimum: 0 }
     if !node.visible?
@@ -352,6 +353,7 @@ Capybara.add_selector(:select) do
     end
     options.all? { |option| node.first(:option, option, finder_settings) }
   end
+
   filter(:selected) do |node, selected|
     actual = node.all(:xpath, './/option', visible: false).select { |option| option.selected? }.map { |option| option.text(:all) }
     [selected].flatten.sort == actual.sort
