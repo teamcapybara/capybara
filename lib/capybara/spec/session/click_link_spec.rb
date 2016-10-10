@@ -186,4 +186,9 @@ Capybara::SpecHelper.spec '#click_link' do
       expect(@session).to have_content('Another World')
     end
   end
+
+  it "should return element clicked", twtw: true do
+    el = @session.find(:link, 'Normal Anchor')
+    expect(@session.click_link('Normal Anchor')).to eq el
+  end
 end

@@ -18,6 +18,8 @@ module Capybara
       #
       #   @param [String] locator      Text, id or value of link or button
       #
+      # @return [Capybara::Node::Element]  The element clicked
+      #
       def click_link_or_button(locator=nil, options={})
         locator, options = nil, locator if locator.is_a? Hash
         find(:link_or_button, locator, options).click
@@ -35,6 +37,7 @@ module Capybara
       #   @param [String] locator         text, id, title or nested image's alt attribute
       #   @param options                  See {Capybara::Node::Finders#find_link}
       #
+      # @return [Capybara::Node::Element]  The element clicked
       def click_link(locator=nil, options={})
         locator, options = nil, locator if locator.is_a? Hash
         find(:link, locator, options).click
@@ -52,6 +55,7 @@ module Capybara
       # @overload click_button([locator], options)
       #   @param [String] locator      Which button to find
       #   @param options     See {Capybara::Node::Finders#find_button}
+      # @return [Capybara::Node::Element]  The element clicked
       def click_button(locator=nil, options={})
         locator, options = nil, locator if locator.is_a? Hash
         find(:button, locator, options).click
@@ -77,6 +81,7 @@ module Capybara
       #   @option options [String] :placeholder    Match fields that match the placeholder attribute
       #   @option options [String, Array<String>] :class    Match links that match the class(es) provided
       #
+      # @return [Capybara::Node::Element]  The element filled_in
       def fill_in(locator, options={})
         locator, options = nil, locator if locator.is_a? Hash
         raise "Must pass a hash containing 'with'" if not options.is_a?(Hash) or not options.has_key?(:with)
@@ -104,6 +109,8 @@ module Capybara
       #   @option options [String, Array<String>] :class    Match links that match the class(es) provided
       #   @macro waiting_behavior
       #   @macro label_click
+      #
+      # @return [Capybara::Node::Element]  The element chosen or the label clicked
       def choose(locator, options={})
         locator, options = nil, locator if locator.is_a? Hash
         allow_label_click = options.delete(:allow_label_click) { Capybara.automatic_label_click }
@@ -141,6 +148,7 @@ module Capybara
       #   @macro label_click
       #   @macro waiting_behavior
       #
+      # @return [Capybara::Node::Element]  The element checked or the label clicked
       def check(locator, options={})
         locator, options = nil, locator if locator.is_a? Hash
         allow_label_click = options.delete(:allow_label_click) { Capybara.automatic_label_click }
@@ -178,6 +186,7 @@ module Capybara
       #   @macro label_click
       #   @macro waiting_behavior
       #
+      # @return [Capybara::Node::Element]  The element unchecked or the label clicked
       def uncheck(locator, options={})
         locator, options = nil, locator if locator.is_a? Hash
         allow_label_click = options.delete(:allow_label_click) { Capybara.automatic_label_click }
@@ -213,6 +222,7 @@ module Capybara
       # @param [String] value                   Which option to select
       # @option options [String] :from  The id, name or label of the select box
       #
+      # @return [Capybara::Node::Element]  The option element selected
       def select(value, options={})
         if options.has_key?(:from)
           from = options.delete(:from)
@@ -235,6 +245,7 @@ module Capybara
       # @param [String] value                   Which option to unselect
       # @param [Hash{:from => String}] options  The id, name or label of the select box
       #
+      # @return [Capybara::Node::Element]  The option element unselected
       def unselect(value, options={})
         if options.has_key?(:from)
           from = options.delete(:from)
@@ -263,6 +274,7 @@ module Capybara
       # @option options [String] name           Match fields that match the name attribute
       # @option options [String, Array<String>] :class    Match links that match the class(es) provided
       #
+      # @return [Capybara::Node::Element]  The file field element
       def attach_file(locator, path, options={})
         locator, path, options = nil, locator, path if path.is_a? Hash
         Array(path).each do |p|

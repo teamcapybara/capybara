@@ -24,6 +24,10 @@ module Capybara
         find(:xpath, '/html').text(type)
       end
 
+      ##
+      #
+      # @return [String]    The title of the document
+      #
       def title
         session.driver.title
       end

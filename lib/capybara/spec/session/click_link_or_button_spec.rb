@@ -108,6 +108,11 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
         @session.click_link_or_button('Disabled button', disabled: false)
       end.to raise_error(Capybara::ElementNotFound)
     end
+  end
 
+  it "should return the element clicked" do
+    @session.visit('/with_html')
+    link = @session.find(:link, 'labore')
+    expect(@session.click_link_or_button('labore')).to eq link
   end
 end
