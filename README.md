@@ -496,8 +496,12 @@ You can also find specific elements, in order to manipulate them:
 
 ```ruby
 find_field('First Name').value
+find_field(id: 'my_field').value
 find_link('Hello', :visible => :all).visible?
+find_link(class: ['some_class', 'some_other_class'], :visible => :all).visible?
+
 find_button('Send').click
+find_button(value: '1234').click
 
 find(:xpath, "//table/tr").click
 find("#overlay").find("h1").click
@@ -509,6 +513,7 @@ If you find yourself needing to use this a lot you may be better off adding a [c
 
 ```ruby
 find_field('First Name'){ |el| el['data-xyz'] == '123' }
+find("#img_loading"){ |img| img['complete'] == true }
 ````
 
 **Note**: `find` will wait for an element to appear on the page, as explained in the
