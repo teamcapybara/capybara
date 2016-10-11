@@ -181,4 +181,9 @@ Capybara::SpecHelper.spec "#fill_in" do
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
+
+  it "should return the element filled in" do
+    el = @session.find(:fillable_field, 'form_first_name')
+    expect(@session.fill_in('form_first_name', with: 'Harry')).to eq el
+  end
 end

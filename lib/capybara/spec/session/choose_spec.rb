@@ -86,4 +86,9 @@ Capybara::SpecHelper.spec "#choose" do
       end
     end
   end
+
+  it "should return the chosen radio button" do
+    el = @session.find(:radio_button, 'gender_male')
+    expect(@session.choose("gender_male")).to eq el
+  end
 end

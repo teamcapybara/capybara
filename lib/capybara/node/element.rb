@@ -92,6 +92,7 @@ module Capybara
       # @param [String] value    The new value
       # @param [Hash{}] options  Driver specific options for how to set the value
       #
+      # @return [Capybara::Node::Element]  The element
       def set(value, options={})
         options ||= {}
 
@@ -108,47 +109,58 @@ module Capybara
             base.set(value)
           end
         end
+        return self
       end
 
       ##
       #
       # Select this node if is an option element inside a select tag
       #
+      # @return [Capybara::Node::Element]  The element
       def select_option
         warn "Attempt to select disabled option: #{value || text}" if disabled?
         synchronize { base.select_option }
+        return self
       end
 
       ##
       #
       # Unselect this node if is an option element inside a multiple select tag
       #
+      # @return [Capybara::Node::Element]  The element
       def unselect_option
         synchronize { base.unselect_option }
+        return self
       end
 
       ##
       #
       # Click the Element
       #
+      # @return [Capybara::Node::Element]  The element
       def click
         synchronize { base.click }
+        return self
       end
 
       ##
       #
       # Right Click the Element
       #
+      # @return [Capybara::Node::Element]  The element
       def right_click
         synchronize { base.right_click }
+        return self
       end
 
       ##
       #
       # Double Click the Element
       #
+      # @return [Capybara::Node::Element]  The element
       def double_click
         synchronize { base.double_click }
+        return self
       end
 
       ##
@@ -221,16 +233,20 @@ module Capybara
       # :meta
       # :command      - alias of :meta
       #
+      # @return [Capybara::Node::Element]  The element
       def send_keys(*args)
         synchronize { base.send_keys(*args) }
+        return self
       end
 
       ##
       #
       # Hover on the Element
       #
+      # @return [Capybara::Node::Element]  The element
       def hover
         synchronize { base.hover }
+        return self
       end
 
       ##
@@ -319,8 +335,10 @@ module Capybara
       #
       # @param [String] event       The name of the event to trigger
       #
+      # @return [Capybara::Node::Element]  The element
       def trigger(event)
         synchronize { base.trigger(event) }
+        return self
       end
 
       ##
@@ -333,8 +351,10 @@ module Capybara
       #
       # @param [Capybara::Node::Element] node     The element to drag to
       #
+      # @return [Capybara::Node::Element]  The element
       def drag_to(node)
         synchronize { base.drag_to(node.base) }
+        return self
       end
 
       def reload

@@ -148,6 +148,9 @@ module Capybara
         # no op
       end
 
+      ##
+      #
+      # @return [String]     The title of the document
       def title
         if native.respond_to? :title
           native.title
