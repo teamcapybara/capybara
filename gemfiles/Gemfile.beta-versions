@@ -3,6 +3,7 @@ source "https://rubygems.org"
 gem 'bundler', '~> 1.1'
 gemspec :path => '..'
 
+gem 'pkg-config' # needed by nokogiri
 gem 'xpath', github: 'jnicklas/xpath'
 gem 'rack', github: 'rack/rack'
 gem 'sinatra', github: 'sinatra/sinatra', branch: 'master'
@@ -11,3 +12,4 @@ gem 'rspec-core', github: 'rspec/rspec-core'
 gem 'rspec-support', github: 'rspec/rspec-support'
 gem 'rspec-mocks', github: 'rspec/rspec-mocks'
 gem 'rspec-expectations', github: 'rspec/rspec-expectations'
+
