@@ -242,6 +242,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     @browser.quit if @browser
   rescue Errno::ECONNREFUSED
     # Browser must have already gone
+  rescue Selenium::WebDriver::Error::UnknownError
+    # Browser must have already disconnected
   ensure
     @browser = nil
   end
