@@ -8,11 +8,23 @@ rvm:
   - rbx-3.26
 gemfile:
   - Gemfile
+env:
+  global:
+    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+    - JAVA_OPTS=-Djava.security.egd=file:/dev/urandom
+
+addons:
+  firefox: 47.0.1
+  apt:
+    packages:
+      - awesome
+
 matrix:
   include:
     - gemfile: Gemfile
       rvm: 2.3.1
-      env: WINDOW_TEST=true
+      env:
+        - WINDOW_TEST=true
     - gemfile: gemfiles/Gemfile.rspec-34
       rvm: 2.3.1
       env: CAPYBARA_CHROME=true
@@ -27,41 +39,40 @@ matrix:
       rvm: 1.9.3
     - gemfile: gemfiles/Gemfile.base-versions
       rvm: 1.9.3
+    - gemfile: Gemfile
+      rvm: 2.3.1
+      env:
+        - WINDOW_TEST=true
+        - CAPYBARA_MARIONETTE=true
+      addons:
+        firefox: latest
+        apt:
+          packages:
+            - awesome
     - gemfile: gemfiles/Gemfile.beta-versions
       rvm: 2.4.0-preview2
-    - gemfile: gemfiles/Gemfile.beta-marionette
-      env: GECKODRIVER=true
+      addons:
+        firefox: latest-beta
+    - gemfile: gemfiles/Gemfile.edge-marionette
       rvm: 2.3.1
+      env:
+        - WINDOW_TEST=true
+        - CAPYBARA_MARIONETTE=true
       addons:
         firefox: latest-beta
         apt:
           packages:
             - awesome
-    - gemfile: gemfiles/Gemfile.beta-marionette
-      env: CAPYBARA_CHROME=true
-      rvm: 2.3.1
-      addons:
-        apt:
-          sources:
-            - google-chrome
-          packages:
-            - google-chrome-stable
-            - awesome
   allow_failures:
+    - gemfile: Gemfile
+      rvm: 2.3.1
+      env:
+        - WINDOW_TEST=true
+        - CAPYBARA_MARIONETTE=true
     - gemfile: gemfiles/Gemfile.beta-versions
-    - gemfile: gemfiles/Gemfile.beta-marionette
-    - rvm: jruby-9.1.5.0
+    - gemfile: gemfiles/Gemfile.edge-marionette
     - rvm: rbx-3.26
-env:
-  global:
-    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
-    - JAVA_OPTS=-Djava.security.egd=file:/dev/urandom
-
-addons:
-  firefox: 47.0.1
-  apt:
-    packages:
-      - awesome
+    - rvm: jruby-9.1.5.0
 
 before_install:
   - mkdir -p ~/drivers; export PATH=~/drivers:$PATH;
@@ -71,12 +82,10 @@ before_install:
       FILE=`mktemp`; wget "$CHROMEDRIVER_URL" -qO $FILE && unzip $FILE chromedriver -d ~/drivers; rm $FILE; chmod 777 ~/drivers/chromedriver;
       ~/drivers/chromedriver --version;
     fi
-  - if [ $GECKODRIVER ]; then
-      GECKODRIVER_URL="https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckodriver-v0.11.1-linux64.tar.gz";
-      FILE=`mktemp`; wget "$GECKODRIVER_URL" -qO $FILE && tar xz -C ~/drivers -f $FILE geckodriver; rm $FILE; chmod 777 ~/drivers/geckodriver;
-      ~/drivers/geckodriver --version;
-    fi
-  - if [[ $BUNDLE_GEMFILE =~ Gemfile.beta-marionette$ ]]; then
+  - GECKODRIVER_URL="https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckodriver-v0.11.1-linux64.tar.gz";
+    FILE=`mktemp`; wget "$GECKODRIVER_URL" -qO $FILE && tar xz -C ~/drivers -f $FILE geckodriver; rm $FILE; chmod 777 ~/drivers/geckodriver;
+    ~/drivers/geckodriver --version;
+  - if [[ $BUNDLE_GEMFILE =~ Gemfile.edge-marionette$ ]]; then
       pushd ..;
       git clone --depth 1 https://github.com/SeleniumHQ/selenium.git;
       cd selenium; ./go //rb:gem:build;

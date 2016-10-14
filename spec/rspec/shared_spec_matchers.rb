@@ -3,7 +3,8 @@ require 'spec_helper'
 require 'capybara/dsl'
 require 'capybara/rspec/matchers'
 
-RSpec.describe Capybara::RSpecMatchers do
+RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
+
   include Capybara::DSL
   include Capybara::RSpecMatchers
 
@@ -541,7 +542,7 @@ RSpec.describe Capybara::RSpecMatchers do
 
       context 'with wait' do
         before(:each) do
-          @session = TestSessions::Selenium
+          @session = session
           @session.visit('/with_js')
         end
 
@@ -586,7 +587,7 @@ RSpec.describe Capybara::RSpecMatchers do
 
       context 'with wait' do
         before(:each) do
-          @session = TestSessions::Selenium
+          @session = session
           @session.visit('/with_js')
         end
 

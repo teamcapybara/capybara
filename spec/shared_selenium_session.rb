@@ -41,14 +41,16 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
 
       it "should have return code 1 when running selenium_driver_rspec_failure.rb" do
-        ENV['SELENIUM_BROWSER'] = @session.driver.options[:browser].to_s
-        `rspec spec/fixtures/selenium_driver_rspec_failure.rb`
+        env = { 'SELENIUM_BROWSER' => @session.driver.options[:browser].to_s,
+                'LEGACY_FIREFOX' => (mode == :selenium_firefox ? 'TRUE' : nil) }
+        system(env, 'rspec spec/fixtures/selenium_driver_rspec_failure.rb')
         expect($?.exitstatus).to eq(1)
       end
 
       it "should have return code 0 when running selenium_driver_rspec_success.rb" do
-        ENV['SELENIUM_BROWSER'] = @session.driver.options[:browser].to_s
-        `rspec spec/fixtures/selenium_driver_rspec_success.rb`
+        env = { 'SELENIUM_BROWSER' => @session.driver.options[:browser].to_s,
+                'LEGACY_FIREFOX' => (mode == :selenium_firefox ? 'TRUE' : nil) }
+        system(env, 'rspec spec/fixtures/selenium_driver_rspec_success.rb')
         expect($?.exitstatus).to eq(0)
       end
     end

@@ -14,7 +14,8 @@ gem 'tins', '= 1.6.0'  # 1.7.0 requires ruby 2.0
 gem 'mime-types', '<3.0' # 3.0 require ruby 2.0
 gem 'addressable', '< 2.4.0' # 2.4.0 allows require 'addressable' previous don't
 gem 'json', '< 2.0'
+
 # We cannot test against older versions of selenium-webdriver without
 # installing older compatible Firefox versions.
-
+gem 'selenium-webdriver', '< 3.0.0'
 gem 'term-ansicolor', '< 1.4.0'

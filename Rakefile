@@ -3,18 +3,21 @@ require 'rspec/core/rake_task'
 require 'cucumber/rake/task'
 require 'yard'
 
-desc "Run all examples"
+desc "Run all examples with Firefox non-marionette"
 RSpec::Core::RakeTask.new(:spec) do |t|
   t.rspec_opts = %w[--color]
+  t.rspec_opts << '--format documentation' if RUBY_PLATFORM=='java'
   # When we drop RSpec 2.x support we can rename spec_chrome.rb and implement this properly
   # t.exclude_pattern = './spec/*{_chrome_spec.rb}'
+  t.pattern = './spec{,/*/**}/*{_spec.rb,_spec_firefox.rb}'
 end
 
-RSpec::Core::RakeTask.new(:all) do |t|
+RSpec::Core::RakeTask.new(:spec_marionette) do |t|
   t.rspec_opts = %w[--color]
   # jruby buffers the progress formatter so travis doesn't see output often enough
   t.rspec_opts << '--format documentation' if RUBY_PLATFORM=='java'
-  t.pattern = './spec{,/*/**}/*{_spec.rb,_spec_chrome.rb}'
+  t.pattern = './spec{,/*/**}/*{_spec.rb,_spec_marionette.rb}'
+  # t.pattern = './spec/*{_spec_legacy_firefox.rb}'
 end
 
 RSpec::Core::RakeTask.new(:spec_chrome) do |t|
@@ -36,6 +39,9 @@ end
 task :travis do |t|
   if ENV['CAPYBARA_CHROME']
     Rake::Task[:spec_chrome].invoke
+  elsif ENV['CAPYBARA_MARIONETTE']
+    Rake::Task[:spec_marionette].invoke
+    Rake::Task[:cucumber].invoke
   else
     Rake::Task[:spec].invoke
     Rake::Task[:cucumber].invoke
