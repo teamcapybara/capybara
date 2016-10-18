@@ -1,3 +1,9 @@
+#Edge
+Release data: unreleased
+
+### Fixed
+* Ignore specific error when qutting selenium driver instance - Issue #1773 [Dylan Reichstadt\, Thomas Walpole]
+
 #2.10.1
 Release date: 2016-10-08
 
