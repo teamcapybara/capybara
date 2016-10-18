@@ -40,6 +40,8 @@ module Capybara
     alias :index :find_index
 
     def each(&block)
+      return enum_for(:each) unless block_given?
+
       @result_cache.each(&block)
       loop do
         next_result = @results_enum.next

@@ -92,4 +92,30 @@ RSpec.describe Capybara::Result do
     result.to_a
     expect(result.instance_variable_get('@result_cache').size).to eq 4
   end
+
+  context '#each' do
+    it 'lazily evaluates' do
+      skip 'JRuby has an issue with lazy enumerator next evaluation' if RUBY_PLATFORM == 'java'
+      results=[]
+      result.each do |el|
+        results << el
+        expect(result.instance_variable_get('@result_cache').size).to eq results.size
+      end
+
+      expect(results.size).to eq 4
+    end
+
+    context 'without a block' do
+      it 'returns an iterator' do
+        expect(result.each).to be_a(Enumerator)
+      end
+
+      it 'lazily evaluates' do
+        skip 'JRuby has an issue with lazy enumerator next evaluation' if RUBY_PLATFORM == 'java'
+        result.each.with_index do |el, idx|
+          expect(result.instance_variable_get('@result_cache').size).to eq(idx+1)  # 0 indexing
+        end
+      end
+    end
+  end
 end
