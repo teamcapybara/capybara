@@ -47,7 +47,11 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       click if value ^ native.attribute('checked').to_s.eql?("true")
     elsif tag_name == 'input' and type == 'file'
       path_names = value.to_s.empty? ? [] : value
-      native.send_keys(*path_names)
+      if driver.options[:browser].to_s == "chrome"
+        native.send_keys(Array(path_names).join("\n"))
+      else
+        native.send_keys(*path_names)
+      end
     elsif tag_name == 'textarea' or tag_name == 'input'
       if readonly?
         warn "Attempt to set readonly element with value: #{value} \n *This will raise an exception in a future version of Capybara"

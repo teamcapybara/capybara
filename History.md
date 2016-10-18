@@ -4,6 +4,7 @@ Release date: unreleased
 ### Fixed
 * Ignore specific error when qutting selenium driver instance - Issue #1773 [Dylan Reichstadt\, Thomas Walpole]
 * Capybara::Result#each now returns an `Enumerator` when called without a block - Issue #1777 [Thomas Walpole]
+* Selenium driver with Chrome should support multiple file upload [Thomas Walpole]
 
 #2.10.1
 Release date: 2016-10-08
