@@ -8,19 +8,19 @@ Feature: Capybara's cucumber integration
     Then I should see "Hello world!"
 
   @javascript
-  Scenario: javascript tag
+  Scenario: javascript tag should use Capybara.javascript_driver
     When I visit the root page
-    Then Capybara should use the "selenium" driver
+    Then Capybara should use the "javascript_test" driver
 
-  @selenium
-  Scenario: selenium tag
+  @named_test
+  Scenario: named driver tag
     When I visit the root page
-    Then Capybara should use the "selenium" driver
+    Then Capybara should use the "named_test" driver
 
-  @selenium
+  @named_test
   Scenario Outline: selenium tag with scenario outline
     When I visit the <Page> page
-    Then Capybara should use the "selenium" driver
+    Then Capybara should use the "named_test" driver
 
     Examples:
       | Page |
