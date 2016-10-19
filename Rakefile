@@ -48,4 +48,16 @@ task :travis do |t|
   end
 end
 
+task :release do
+  version = Capybara::Poltergeist::VERSION
+  puts "Releasing #{version}, y/n?"
+  exit(1) unless STDIN.gets.chomp == 'y'
+  sh "git commit -am 'tagged #{version}' && " \
+     "git tag #{version} && " \
+     'gem build capybara.gemspec && ' \
+     "gem push capybara-#{version}.gem && " \
+     'git push && ' \
+     'git push --tags'
+end
+
 task :default => [:spec, :cucumber]
