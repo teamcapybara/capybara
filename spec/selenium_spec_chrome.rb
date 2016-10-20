@@ -12,14 +12,10 @@ module TestSessions
   Chrome = Capybara::Session.new(:selenium_chrome, TestApp)
 end
 
-skipped_tests = []
+skipped_tests = [:response_headers, :status_code, :trigger]
 skipped_tests << :windows if ENV['TRAVIS'] && !ENV['WINDOW_TEST']
 
-Capybara::SpecHelper.run_specs TestSessions::Chrome, "selenium_chrome", capybara_skip: [
-  :response_headers,
-  :status_code,
-  :trigger
-  ] unless ENV['TRAVIS'] && (RUBY_PLATFORM == 'java')
+Capybara::SpecHelper.run_specs TestSessions::Chrome, "selenium_chrome", capybara_skip: skipped_tests
 
 RSpec.describe "Capybara::Session with chrome" do
   include_examples  "Capybara::Session", TestSessions::Chrome, :selenium_chrome
