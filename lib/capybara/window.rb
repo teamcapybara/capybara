@@ -85,7 +85,7 @@ module Capybara
     # @param height [String]  the new window height in pixels
     #
     def resize_to(width, height)
-      @driver.resize_window_to(handle, width, height)
+      wait_for_stable_size { @driver.resize_window_to(handle, width, height) }
     end
 
     ##
@@ -97,7 +97,7 @@ module Capybara
     # @macro about_current
     #
     def maximize
-      @driver.maximize_window(handle)
+      wait_for_stable_size { @driver.maximize_window(handle) }
     end
 
     def eql?(other)
@@ -114,6 +114,22 @@ module Capybara
     end
 
     private
+
+    def wait_for_stable_size(seconds=Capybara.default_max_wait_time)
+      res = yield if block_given?
+      prev_size = size
+      start_time = Capybara::Helpers.monotonic_time
+      begin
+        sleep 0.05
+        cur_size = size
+        return res if cur_size == prev_size
+        prev_size = cur_size
+      end while (Capybara::Helpers.monotonic_time - start_time) < seconds
+      #TODO raise error in 3.0
+      #raise Capybara::WindowError, "Window size not stable."
+      warn "Window size not stable in #{seconds} seconds.  This will raise an exception in a future version of Capybara"
+      return res
+    end
 
     def raise_unless_current(what)
       unless current?
