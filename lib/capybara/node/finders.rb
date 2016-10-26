@@ -18,7 +18,7 @@ module Capybara
       # +find+ takes the same options as +all+.
       #
       #     page.find('#foo').find('.bar')
-      #     page.find(:xpath, '//div[contains(., "bar")]')
+      #     page.find(:xpath, './/div[contains(., "bar")]')
       #     page.find('li', text: 'Quox').click_link('Delete')
       #
       # @param (see Capybara::Node::Finders#all)
@@ -155,7 +155,7 @@ module Capybara
       # following statements are equivalent:
       #
       #     page.all(:css, 'a#person_123')
-      #     page.all(:xpath, '//a[@id="person_123"]')
+      #     page.all(:xpath, './/a[@id="person_123"]')
       #
       #
       # If the type of selector is left out, Capybara uses
@@ -164,7 +164,7 @@ module Capybara
       #     page.all("a#person_123")
       #
       #     Capybara.default_selector = :xpath
-      #     page.all('//a[@id="person_123"]')
+      #     page.all('.//a[@id="person_123"]')
       #
       # The set of found elements can further be restricted by specifying
       # options. It's possible to select elements by their text or visibility:

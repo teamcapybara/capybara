@@ -263,7 +263,7 @@ module Capybara
     # block, any command to Capybara will be handled as though it were scoped
     # to the given element.
     #
-    #     within(:xpath, '//div[@id="delivery-address"]') do
+    #     within(:xpath, './/div[@id="delivery-address"]') do
     #       fill_in('Street', with: '12 Main Street')
     #     end
     #

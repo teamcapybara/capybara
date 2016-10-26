@@ -481,9 +481,9 @@ certain elements, and working with and manipulating those elements.
 
 ```ruby
 page.has_selector?('table tr')
-page.has_selector?(:xpath, '//table/tr')
+page.has_selector?(:xpath, './/table/tr')
 
-page.has_xpath?('//table/tr')
+page.has_xpath?('.//table/tr')
 page.has_css?('table tr.foo')
 page.has_content?('foo')
 ```
@@ -495,9 +495,9 @@ You can use these with RSpec's magic matchers:
 
 ```ruby
 expect(page).to have_selector('table tr')
-expect(page).to have_selector(:xpath, '//table/tr')
+expect(page).to have_selector(:xpath, './/table/tr')
 
-expect(page).to have_xpath('//table/tr')
+expect(page).to have_xpath('.//table/tr')
 expect(page).to have_css('table tr.foo')
 expect(page).to have_content('foo')
 ```
@@ -517,7 +517,7 @@ find_link(class: ['some_class', 'some_other_class'], :visible => :all).visible?
 find_button('Send').click
 find_button(value: '1234').click
 
-find(:xpath, "//table/tr").click
+find(:xpath, ".//table/tr").click
 find("#overlay").find("h1").click
 all('a').each { |a| a[:href] }
 ```
@@ -554,7 +554,7 @@ within("li#employee") do
   fill_in 'Name', with: 'Jimmy'
 end
 
-within(:xpath, "//li[@id='employee']") do
+within(:xpath, ".//li[@id='employee']") do
   fill_in 'Name', with: 'Jimmy'
 end
 ```
@@ -807,7 +807,7 @@ module MyModule
   include Capybara::DSL
 
   def login!
-    within(:xpath, "//form[@id='session']") do
+    within(:xpath, ".//form[@id='session']") do
       fill_in 'Email', with: 'user@example.com'
       fill_in 'Password', with: 'password'
     end
@@ -892,16 +892,16 @@ and will always use CSS by default.  If you want to use XPath, you'll need to
 do:
 
 ```ruby
-within(:xpath, '//ul/li') { ... }
-find(:xpath, '//ul/li').text
-find(:xpath, '//li[contains(.//a[@href = "#"]/text(), "foo")]').value
+within(:xpath, './/ul/li') { ... }
+find(:xpath, './/ul/li').text
+find(:xpath, './/li[contains(.//a[@href = "#"]/text(), "foo")]').value
 ```
 
 Alternatively you can set the default selector to XPath:
 
 ```ruby
 Capybara.default_selector = :xpath
-find('//ul/li').text
+find('.//ul/li').text
 ```
 
 Capybara allows you to add custom selectors, which can be very useful if you

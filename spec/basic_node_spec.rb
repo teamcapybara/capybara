@@ -52,7 +52,7 @@ RSpec.describe Capybara do
 
     it "allows using custom matchers" do
       Capybara.add_selector :lifeform do
-        xpath { |name| "//option[contains(.,'#{name}')]" }
+        xpath { |name| ".//option[contains(.,'#{name}')]" }
       end
       expect(string).to have_selector(:id, "page")
       expect(string).not_to have_selector(:id, 'does-not-exist')
