@@ -4,9 +4,11 @@ require "uri"
 class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   DEFAULT_OPTIONS = {
-    :browser => :firefox
+    :browser => :firefox,
+    clear_local_storage: false,
+    clear_session_storage: false
   }
-  SPECIAL_OPTIONS = [:browser]
+  SPECIAL_OPTIONS = [:browser, :clear_local_storage, :clear_session_storage]
 
   attr_reader :app, :options
 
@@ -107,6 +109,20 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
           # can trigger an endless series of unload modals
           begin
             @browser.manage.delete_all_cookies
+            if options[:clear_session_storage]
+              if @browser.respond_to? :session_storage
+                @browser.session_storage.clear
+              else
+                warn "sessionStorage clear requested but is not available for this driver"
+              end
+            end
+            if options[:clear_local_storage]
+              if @browser.respond_to? :local_storage
+                @browser.local_storage.clear
+              else
+                warn "localStorage clear requested but is not available for this driver"
+              end
+            end
           rescue Selenium::WebDriver::Error::UnhandledError
             # delete_all_cookies fails when we've previously gone
             # to about:blank, so we rescue this error and do nothing

@@ -12,6 +12,16 @@ Capybara.register_driver :selenium_firefox do |app|
   )
 end
 
+Capybara.register_driver :selenium_firefox_cant_clear_storage do |app|
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :firefox,
+    desired_capabilities: Selenium::WebDriver::Remote::Capabilities.firefox(marionette: false),
+    clear_local_storage: true,
+    clear_session_storage: true
+  )
+end
+
 module TestSessions
   Selenium = Capybara::Session.new(:selenium_firefox, TestApp)
 end
@@ -28,6 +38,16 @@ Capybara::SpecHelper.run_specs TestSessions::Selenium, "selenium", capybara_skip
 RSpec.describe "Capybara::Session with legacy firefox" do
   include_examples  "Capybara::Session", TestSessions::Selenium, :selenium_firefox
   include_examples  Capybara::RSpecMatchers, TestSessions::Selenium, :selenium_firefox
+
+  context "storage" do
+    it "warns storage clearing isn't available" do
+      @session = Capybara::Session.new(:selenium_firefox_cant_clear_storage, TestApp)
+      expect_any_instance_of(Kernel).to receive(:warn).with('sessionStorage clear requested but is not available for this driver')
+      expect_any_instance_of(Kernel).to receive(:warn).with('localStorage clear requested but is not available for this driver')
+      @session.visit('/')
+      @session.reset!
+    end
+  end
 end
 
 RSpec.describe Capybara::Selenium::Driver do
