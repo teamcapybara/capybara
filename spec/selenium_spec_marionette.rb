@@ -12,6 +12,16 @@ Capybara.register_driver :selenium_marionette do |app|
   )
 end
 
+Capybara.register_driver :selenium_marionette_clear_storage do |app|
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :firefox,
+    desired_capabilities: Selenium::WebDriver::Remote::Capabilities.firefox(marionette: true),
+    clear_local_storage: true,
+    clear_session_storage: true
+  )
+end
+
 module TestSessions
   SeleniumMarionette = Capybara::Session.new(:selenium_marionette, TestApp)
 end
@@ -41,6 +51,30 @@ RSpec.describe Capybara::Selenium::Driver do
       @driver.quit
       #access instance variable directly so we don't create a new browser instance
       expect(@driver.instance_variable_get(:@browser)).to be_nil
+    end
+  end
+
+  context "storage" do
+    describe "#reset!" do
+      it "does not clear either storage by default" do
+        @session = TestSessions::SeleniumMarionette
+        @session.visit('/with_js')
+        @session.find(:css, '#set-storage').click
+        @session.reset!
+        @session.visit('/with_js')
+        expect(@session.driver.browser.local_storage.keys).not_to be_empty
+        expect(@session.driver.browser.session_storage.keys).not_to be_empty
+      end
+
+      it "clears storage when set" do
+        @session = Capybara::Session.new(:selenium_marionette_clear_storage, TestApp)
+        @session.visit('/with_js')
+        @session.find(:css, '#set-storage').click
+        @session.reset!
+        @session.visit('/with_js')
+        expect(@session.driver.browser.local_storage.keys).to be_empty
+        expect(@session.driver.browser.session_storage.keys).to be_empty
+      end
     end
   end
 end
