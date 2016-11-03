@@ -139,7 +139,7 @@ module Capybara
 
     def lazy_select_elements(&block)
       if @elements.respond_to? :lazy  #Ruby 2.0+
-        @elements.lazy.select &block
+        @elements.lazy.select(&block)
       else
         Enumerator.new do |yielder|
           @elements.each do |val|

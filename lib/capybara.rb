@@ -25,7 +25,8 @@ module Capybara
     attr_accessor :server_port, :exact, :match, :exact_options, :visible_text_only, :enable_aria_label
     attr_accessor :default_selector, :default_max_wait_time, :ignore_hidden_elements
     attr_accessor :save_path, :wait_on_first_by_default, :automatic_label_click, :automatic_reload
-    attr_accessor :reuse_server, :raise_server_errors, :server_errors
+    attr_reader :reuse_server
+    attr_accessor :raise_server_errors, :server_errors
     attr_writer :default_driver, :current_driver, :javascript_driver, :session_name, :server_host
     attr_reader :save_and_open_page_path
     attr_accessor :app
@@ -391,12 +392,12 @@ module Capybara
     end
 
     def app_host=(url)
-      raise ArgumentError.new("Capybara.app_host should be set to a url (http://www.example.com)") unless url.nil? || (url =~ URI::regexp)
+      raise ArgumentError.new("Capybara.app_host should be set to a url (http://www.example.com)") unless url.nil? || (url =~ URI::Parser.new.make_regexp)
       @app_host = url
     end
 
     def default_host=(url)
-      raise ArgumentError.new("Capybara.default_host should be set to a url (http://www.example.com)") unless url.nil? || (url =~ URI::regexp)
+      raise ArgumentError.new("Capybara.default_host should be set to a url (http://www.example.com)") unless url.nil? || (url =~ URI::Parser.new.make_regexp)
       @default_host = url
     end
 
