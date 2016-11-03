@@ -177,8 +177,8 @@ module Capybara
 
     def filter_set(name, filters_to_use = nil)
       f_set = FilterSet.all[name]
-      f_set.filters.each do | name, filter |
-        custom_filters[name] = filter if filters_to_use.nil? || filters_to_use.include?(name)
+      f_set.filters.each do |n, filter|
+        custom_filters[n] = filter if filters_to_use.nil? || filters_to_use.include?(n)
       end
       f_set.descriptions.each { |desc| @filter_set.describe &desc }
     end
