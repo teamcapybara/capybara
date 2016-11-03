@@ -774,7 +774,7 @@ module Capybara
 
     def default_fn(extension)
       timestamp = Time.new.strftime("%Y%m%d%H%M%S")
-      path = "capybara-#{timestamp}#{rand(10**10)}.#{extension}"
+      "capybara-#{timestamp}#{rand(10**10)}.#{extension}"
     end
 
     def scopes
