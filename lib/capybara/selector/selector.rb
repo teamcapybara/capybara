@@ -6,6 +6,7 @@ require 'xpath'
 #Patch XPath to allow a nil condition in where
 module XPath
   class Renderer
+    undef :where if method_defined?(:where)
     def where(on, condition)
       condition = condition.to_s
       if !condition.empty?
