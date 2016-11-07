@@ -6,7 +6,12 @@ require 'yaml'
 
 class TestApp < Sinatra::Base
   class TestAppError < StandardError; end
-
+  class TestAppOtherError < StandardError
+    def initialize(string1, msg)
+      @something = string1
+      @message = msg
+    end
+  end
   set :root, File.dirname(__FILE__)
   set :static, true
   set :raise_errors, true
@@ -123,6 +128,10 @@ class TestApp < Sinatra::Base
 
   get '/error' do
     raise TestAppError, "some error"
+  end
+
+  get '/other_error' do
+    raise TestAppOtherError.new("something", "other error")
   end
 
   get '/load_error' do
