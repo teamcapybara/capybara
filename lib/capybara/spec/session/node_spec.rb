@@ -428,6 +428,17 @@ Capybara::SpecHelper.spec "node" do
         expect(e.cause.message).to match /Your application server raised an error/
       end
     end
+
+    it "sets an explanatory exception as the cause of server exceptions with errors with initializers", requires: [:server, :js], twtw: true do
+      skip "This version of ruby doesn't support exception causes" unless Exception.instance_methods.include? :cause
+      quietly { @session.visit("/other_error") }
+      expect do
+        @session.find(:css, 'span')
+      end.to raise_error(TestApp::TestAppOtherError) do |e|
+        expect(e.cause).to be_a Capybara::CapybaraError
+        expect(e.cause.message).to match /Your application server raised an error/
+      end
+    end
   end
 
   def be_an_invalid_element_error(session)
