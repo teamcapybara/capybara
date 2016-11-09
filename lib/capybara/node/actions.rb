@@ -115,17 +115,19 @@ module Capybara
         locator, options = nil, locator if locator.is_a? Hash
         allow_label_click = options.delete(:allow_label_click) { Capybara.automatic_label_click }
 
-        begin
-          radio = find(:radio_button, locator, options)
-          radio.set(true)
-        rescue => e
-          raise unless allow_label_click && catch_error?(e)
+        synchronize(Capybara::Queries::BaseQuery::wait(options)) do
           begin
-            radio ||= find(:radio_button, locator, options.merge({wait: 0, visible: :all}))
-            label = find(:label, for: radio, wait: 0, visible: true)
-            label.click unless radio.checked?
-          rescue
-            raise e
+            radio = find(:radio_button, locator, options)
+            radio.set(true)
+          rescue => e
+            raise unless allow_label_click && catch_error?(e)
+            begin
+              radio ||= find(:radio_button, locator, options.merge(visible: :all))
+              label = find(:label, for: radio, visible: true)
+              label.click unless radio.checked?
+            rescue
+              raise e
+            end
           end
         end
       end
@@ -153,17 +155,19 @@ module Capybara
         locator, options = nil, locator if locator.is_a? Hash
         allow_label_click = options.delete(:allow_label_click) { Capybara.automatic_label_click }
 
-        begin
-          cbox = find(:checkbox, locator, options)
-          cbox.set(true)
-        rescue => e
-          raise unless allow_label_click && catch_error?(e)
+        synchronize(Capybara::Queries::BaseQuery::wait(options)) do
           begin
-            cbox ||= find(:checkbox, locator, options.merge({wait: 0, visible: :all}))
-            label = find(:label, for: cbox, wait: 0, visible: true)
-            label.click unless cbox.checked?
-          rescue
-            raise e
+            cbox = find(:checkbox, locator, options)
+            cbox.set(true)
+          rescue => e
+            raise unless allow_label_click && catch_error?(e)
+            begin
+              cbox ||= find(:checkbox, locator, options.merge(visible: :all))
+              label = find(:label, for: cbox, visible: true)
+              label.click unless cbox.checked?
+            rescue
+              raise e
+            end
           end
         end
       end
@@ -191,17 +195,19 @@ module Capybara
         locator, options = nil, locator if locator.is_a? Hash
         allow_label_click = options.delete(:allow_label_click) { Capybara.automatic_label_click }
 
-        begin
-          cbox = find(:checkbox, locator, options)
-          cbox.set(false)
-        rescue => e
-          raise unless allow_label_click && catch_error?(e)
+        synchronize(Capybara::Queries::BaseQuery::wait(options)) do
           begin
-            cbox ||= find(:checkbox, locator, options.merge({wait: 0, visible: :all}))
-            label = find(:label, for: cbox, wait: 0, visible: true)
-            label.click if cbox.checked?
-          rescue
-            raise e
+            cbox = find(:checkbox, locator, options)
+            cbox.set(false)
+          rescue => e
+            raise unless allow_label_click && catch_error?(e)
+            begin
+              cbox ||= find(:checkbox, locator, options.merge(visible: :all))
+              label = find(:label, for: cbox, visible: true)
+              label.click if cbox.checked?
+            rescue
+              raise e
+            end
           end
         end
       end
