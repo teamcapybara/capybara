@@ -169,6 +169,14 @@ Capybara::SpecHelper.spec "#check" do
           expect(extract_results(@session)['cars']).to include('tesla')
         end
 
+        it "should not wait the full time if label can be clicked" do
+          expect(@session.find(:checkbox, 'form_cars_tesla', unchecked: true, visible: :hidden)).to be
+          start_time = Time.now
+          @session.check('form_cars_tesla', allow_label_click: true, wait: 10)
+          end_time = Time.now
+          expect(end_time - start_time).to be < 10
+        end
+
         it "should check via the label if input is moved off the left edge of the page" do
           expect(@session.find(:checkbox, 'form_cars_pagani', unchecked: true, visible: :all)).to be
           @session.check('form_cars_pagani', allow_label_click: true)
