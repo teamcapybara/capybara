@@ -53,6 +53,9 @@ matrix:
       rvm: 2.4.0-preview2
       addons:
         firefox: latest-beta
+      env:
+        - WINDOW_TEST=true
+        - CAPYBARA_MARIONETTE=true
     - gemfile: gemfiles/Gemfile.edge-marionette
       rvm: 2.3.1
       env:
