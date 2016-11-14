@@ -1,5 +1,13 @@
 # Version 3.0.0
+
 Release date: unreleased
+
+### Added
+
+* Ruby 2.2+ required
+* RSpec 2.x no longer supported
+* Deprecated methods removed
+* `first` now raises ElementNotFound by default instead of returning nil, when no matches are found  - Issue #1507
 
 # Version 2.17.0
 Release date: 2018-01-02
@@ -244,6 +252,7 @@ Release date: 2016-10-05
 Release date: 2016-09-29
 
 ### Fixed
+
 * :label built-in selector finds nested label/control by control id if the label has no 'for' attribute [Thomas Walpole]
 * Warning issued if an unknown selector type is specified [Thomas Walpole]
 
