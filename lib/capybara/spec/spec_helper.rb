@@ -50,7 +50,7 @@ module Capybara
         @specs << [name, options, block]
       end
 
-      def run_specs(session, name, options={})
+      def run_specs(session, name, **options)
         specs = @specs
         RSpec.describe Capybara::Session, name, options do
           include Capybara::SpecHelper
