@@ -4,7 +4,7 @@ require 'delegate'
 module Capybara
   class SessionConfig
     OPTIONS = [:always_include_port, :run_server, :default_selector, :default_max_wait_time, :ignore_hidden_elements,
-               :automatic_reload, :match, :exact, :exact_text, :raise_server_errors, :visible_text_only, :wait_on_first_by_default,
+               :automatic_reload, :match, :exact, :exact_text, :raise_server_errors, :visible_text_only,
                :automatic_label_click, :enable_aria_label, :save_path, :exact_options, :asset_host, :default_host, :app_host,
                :save_and_open_page_path, :server_host, :server_port, :server_errors]
 
@@ -30,8 +30,6 @@ module Capybara
     #@!method raise_server_errors
     #  See {Capybara.configure}
     #@!method visible_text_only
-    #  See {Capybara.configure}
-    #@!method wait_on_first_by_default
     #  See {Capybara.configure}
     #@!method automatic_label_click
     #  See {Capybara.configure}

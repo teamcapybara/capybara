@@ -271,11 +271,7 @@ module Capybara
       ##
       #
       # Find the first element on the page matching the given selector
-      # and options, or nil if no element matches.  By default no waiting
-      # behavior occurs, however if {Capybara.wait_on_first_by_default} is set to true
-      # it will trigger Capybara's waiting behavior for a minimum of 1 matching element to be found and
-      # return the first.  Waiting behavior can also be triggered by passing in any of the count
-      # expectation options.
+      # and options.  Will raise an error if no matching element is found
       #
       # @overload first([kind], locator, options)
       #   @param [:css, :xpath] kind                 The type of selector
@@ -283,12 +279,11 @@ module Capybara
       #   @param [Hash] options                      Additional options; see {#all}
       # @return [Capybara::Node::Element]            The found element or nil
       #
-      def first(*args, **options, &optional_filter_block)
-        if session_options.wait_on_first_by_default
-          options = {minimum: 1}.merge(options)
-        end
+      def first(*args, allow_nil: false, **options, &optional_filter_block)
+        options = {minimum: 1}.merge(options)
         all(*args, **options, &optional_filter_block).first
-      rescue Capybara::ExpectationNotMet
+      rescue Capybara::ElementNotFound
+        raise unless allow_nil
         nil
       end
 
