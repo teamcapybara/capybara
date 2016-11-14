@@ -1,10 +1,17 @@
 #Edge
 Release date: unreleased
 
+### Added
+* Options for clearing session/local storage on reset added to the Selenium driver
+* Window size changes wait for the size to stabilize
+* Defined return value for most actions
+
 ### Fixed
 * Ignore specific error when qutting selenium driver instance - Issue #1773 [Dylan Reichstadt\, Thomas Walpole]
 * Capybara::Result#each now returns an `Enumerator` when called without a block - Issue #1777 [Thomas Walpole]
 * Selenium driver with Chrome should support multiple file upload [Thomas Walpole]
+* Fix visible: :hidden with :text option behavior
+* Server errors with initializers now re-raised properly
 
 #2.10.1
 Release date: 2016-10-08
