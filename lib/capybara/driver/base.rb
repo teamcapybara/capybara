@@ -46,7 +46,7 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#evaluate_script_asnyc'
   end
 
-  def save_screenshot(path, options={})
+  def save_screenshot(path, **options)
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#save_screenshot'
   end
 

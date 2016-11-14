@@ -69,7 +69,7 @@ end
 # @filter [Boolean] :disabled Match disabled field?
 # @filter [Boolean] :multiple Match fields that accept multiple values
 Capybara.add_selector(:field) do
-  xpath do |locator, options|
+  xpath do |locator, **options|
     xpath = XPath.descendant(:input, :textarea, :select)[~XPath.attr(:type).one_of('submit', 'image', 'hidden')]
     locate_field(xpath, locator, options)
   end
@@ -109,10 +109,10 @@ end
 # @filter [String, Array<String>] :class Matches the class(es) provided
 #
 Capybara.add_selector(:fieldset) do
-  xpath(:legend) do |locator, options|
+  xpath(:legend) do |locator, legend: nil, **options|
     xpath = XPath.descendant(:fieldset)
     xpath = xpath[XPath.attr(:id).equals(locator.to_s).or XPath.child(:legend)[XPath.string.n.is(locator.to_s)]] unless locator.nil?
-    xpath = xpath[XPath.child(:legend)[XPath.string.n.is(options[:legend])]] if options[:legend]
+    xpath = xpath[XPath.child(:legend)[XPath.string.n.is(legend)]] if legend
     xpath
   end
 end
@@ -130,9 +130,9 @@ end
 # @filter [String, Regexp,nil] :href  Matches the normalized href of the link, if nil will find <a> elements with no href attribute
 #
 Capybara.add_selector(:link) do
-  xpath(:title, :alt) do |locator, options={}|
+  xpath(:title, :alt) do |locator, href: true, **options|
     xpath = XPath.descendant(:a)
-    xpath = if options.fetch(:href, true).nil?
+    xpath = if href.nil?
       xpath[~XPath.attr(:href)]
     else
       xpath[XPath.attr(:href)]
@@ -181,7 +181,7 @@ end
 # @filter [String] :value Matches the value of an input button
 #
 Capybara.add_selector(:button) do
-  xpath(:value, :title) do |locator, options={}|
+  xpath(:value, :title) do |locator, **options|
     input_btn_xpath = XPath.descendant(:input)[XPath.attr(:type).one_of('submit', 'reset', 'image', 'button')]
     btn_xpath = XPath.descendant(:button)
     image_btn_xpath = XPath.descendant(:input)[XPath.attr(:type).equals('image')]
