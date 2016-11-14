@@ -48,21 +48,26 @@ Capybara::SpecHelper.spec '#first' do
 
     it "should find nodes regardless of whether they are invisible when false" do
       expect(@session.first(:css, "a#invisible", visible: false)).not_to be_nil
+      expect(@session.first(:css, "a#invisible", visible: false, text: 'hidden link')).not_to be_nil
       expect(@session.first(:css, "a#visible", visible: false)).not_to be_nil
     end
 
     it "should find nodes regardless of whether they are invisible when :all" do
       expect(@session.first(:css, "a#invisible", visible: :all)).not_to be_nil
+      expect(@session.first(:css, "a#invisible", visible: :all, text: 'hidden link')).not_to be_nil
       expect(@session.first(:css, "a#visible", visible: :all)).not_to be_nil
     end
 
     it "should find only hidden nodes when :hidden" do
       expect(@session.first(:css, "a#invisible", visible: :hidden)).not_to be_nil
+      expect(@session.first(:css, "a#invisible", visible: :hidden, text: 'hidden link')).not_to be_nil
+      expect(@session.first(:css, "a#invisible", visible: :hidden, text: 'not hidden link')).to be_nil
       expect(@session.first(:css, "a#visible", visible: :hidden)).to be_nil
     end
 
     it "should find only visible nodes when :visible" do
       expect(@session.first(:css, "a#invisible", visible: :visible)).to be_nil
+      expect(@session.first(:css, "a#invisible", visible: :visible, text: 'hidden link')).to be_nil
       expect(@session.first(:css, "a#visible", visible: :visible)).not_to be_nil
     end
 

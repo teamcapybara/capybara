@@ -53,7 +53,9 @@ module Capybara
       def matches_filters?(node)
         if options[:text]
           regexp = options[:text].is_a?(Regexp) ? options[:text] : Regexp.escape(options[:text].to_s)
-          return false if not node.text(visible).match(regexp)
+          text_visible = visible
+          text_visible = :all if text_visible == :hidden
+          return false if not node.text(text_visible).match(regexp)
         end
 
         case visible

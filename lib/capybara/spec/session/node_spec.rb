@@ -429,7 +429,7 @@ Capybara::SpecHelper.spec "node" do
       end
     end
 
-    it "sets an explanatory exception as the cause of server exceptions with errors with initializers", requires: [:server, :js], twtw: true do
+    it "sets an explanatory exception as the cause of server exceptions with errors with initializers", requires: [:server, :js] do
       skip "This version of ruby doesn't support exception causes" unless Exception.instance_methods.include? :cause
       quietly { @session.visit("/other_error") }
       expect do
