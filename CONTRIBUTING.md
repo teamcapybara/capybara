@@ -48,4 +48,4 @@ particular feature into Capybara.
   developing, please squash them before sending them to us.
 
 [mailing list]: http://groups.google.com/group/ruby-capybara
-[issue]: https://github.com/jnicklas/capybara/issues
+[issue]: https://github.com/teamcapybara/capybara/issues
