@@ -480,10 +480,8 @@ Capybara.register_server :webrick do |app, port, host|
 end
 
 Capybara.register_server :puma do |app, port, host|
-  require 'puma'
-  Puma::Server.new(app).tap do |s|
-    s.add_tcp_listener host, port
-  end.run.join
+  require 'rack/handler/puma'
+  Rack::Handler::Puma.run(app, Host: host, Port: port, Threads: "0:4")
 end
 
 Capybara.configure do |config|
