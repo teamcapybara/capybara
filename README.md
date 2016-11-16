@@ -1,6 +1,6 @@
 # Capybara
 
-[![Build Status](https://secure.travis-ci.org/jnicklas/capybara.svg)](https://travis-ci.org/jnicklas/capybara)
+[![Build Status](https://secure.travis-ci.org/teamcapybara/capybara.svg)](https://travis-ci.org/teamcapybara/capybara)
 [![Dependency Status](https://gemnasium.com/jnicklas/capybara.svg)](https://gemnasium.com/jnicklas/capybara)
 [![Code Climate](https://codeclimate.com/github/jnicklas/capybara.svg)](https://codeclimate.com/github/jnicklas/capybara)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jnicklas/capybara?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -27,7 +27,7 @@ end
 ```
 
 Using Firefox 48+ requires geckodriver and selenium-webdriver v3, the combo of which currently has multiple issues and is feature incomplete.
-You can read more about the missing features [here](https://github.com/jnicklas/capybara/issues/1710).
+You can read more about the missing features [here](https://github.com/teamcapybara/capybara/issues/1710).
 
 ## Table of contents
 
@@ -406,7 +406,7 @@ any Javascript errors that happen within the page.
 ## <a name="the-dsl"></a>The DSL
 
 *A complete reference is available at
-[rubydoc.info](http://rubydoc.info/github/jnicklas/capybara/master)*.
+[rubydoc.info](http://rubydoc.info/github/teamcapybara/capybara/master)*.
 
 **Note: By default Capybara will only locate visible elements. This is because
  a real user would not be able to interact with non-visible elements.**
@@ -417,7 +417,7 @@ Capybara heavily uses XPath, which doesn't support case insensitivity.
 ### <a name="navigating"></a>Navigating
 
 You can use the
-<tt>[visit](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#visit-instance_method)</tt>
+<tt>[visit](http://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Session#visit-instance_method)</tt>
 method to navigate to other pages:
 
 ```ruby
@@ -428,8 +428,8 @@ visit(post_comments_path(post))
 The visit method only takes a single parameter, the request method is **always**
 GET.
 
-You can get the [current path](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#current_path-instance_method)
-of the browsing session, and test it using the [`have_current_path`](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/RSpecMatchers#have_current_path-instance_method) matcher:
+You can get the [current path](http://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Session#current_path-instance_method)
+of the browsing session, and test it using the [`have_current_path`](http://www.rubydoc.info/github/teamcapybara/capybara/master/Capybara/RSpecMatchers#have_current_path-instance_method) matcher:
 
 ```ruby
 expect(page).to have_current_path(post_comments_path(post))
@@ -442,7 +442,7 @@ to ensure that preceding actions (such as a `click_link`) have completed.
 
 ### <a name="clicking-links-and-buttons"></a>Clicking links and buttons
 
-*Full reference: [Capybara::Node::Actions](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Actions)*
+*Full reference: [Capybara::Node::Actions](http://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Node/Actions)*
 
 You can interact with the webapp by following links and buttons. Capybara
 automatically follows any redirects, and submits forms associated with buttons.
@@ -457,7 +457,7 @@ click_on('Button Value')
 
 ### <a name="interacting-with-forms"></a>Interacting with forms
 
-*Full reference: [Capybara::Node::Actions](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Actions)*
+*Full reference: [Capybara::Node::Actions](http://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Node/Actions)*
 
 There are a number of tools for interacting with form elements:
 
@@ -474,7 +474,7 @@ select('Option', from: 'Select Box')
 
 ### <a name="querying"></a>Querying
 
-*Full reference: [Capybara::Node::Matchers](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Matchers)*
+*Full reference: [Capybara::Node::Matchers](http://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Node/Matchers)*
 
 Capybara has a rich set of options for querying the page for the existence of
 certain elements, and working with and manipulating those elements.
@@ -504,7 +504,7 @@ expect(page).to have_content('foo')
 
 ### <a name="finding"></a>Finding
 
-_Full reference: [Capybara::Node::Finders](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Finders)_
+_Full reference: [Capybara::Node::Finders](http://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Node/Finders)_
 
 You can also find specific elements, in order to manipulate them:
 
@@ -523,7 +523,7 @@ all('a').each { |a| a[:href] }
 ```
 
 If you need to find elements by additional attributes/properties you can also pass a filter block, which will be checked inside the normal waiting behavior.
-If you find yourself needing to use this a lot you may be better off adding a [custom selector](http://www.rubydoc.info/github/jnicklas/capybara/Capybara#add_selector-class_method) or [adding a filter to an existing selector](http://www.rubydoc.info/github/jnicklas/capybara/Capybara#modify_selector-class_method).
+If you find yourself needing to use this a lot you may be better off adding a [custom selector](http://www.rubydoc.info/github/teamcapybara/capybara/Capybara#add_selector-class_method) or [adding a filter to an existing selector](http://www.rubydoc.info/github/teamcapybara/capybara/Capybara#modify_selector-class_method).
 
 ```ruby
 find_field('First Name'){ |el| el['data-xyz'] == '123' }
@@ -546,7 +546,7 @@ expect(find('#navigation')).to have_button('Sign out')
 Capybara makes it possible to restrict certain actions, such as interacting with
 forms or clicking links and buttons, to within a specific area of the page. For
 this purpose you can use the generic
-<tt>[within](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#within-instance_method)</tt>
+<tt>[within](http://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Session#within-instance_method)</tt>
 method. Optionally you can specify which kind of selector to use.
 
 ```ruby
@@ -651,7 +651,7 @@ save_and_open_page
 ```
 
 You can also retrieve the current state of the DOM as a string using
-<tt>[page.html](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session#html-instance_method)</tt>.
+<tt>[page.html](http://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Session#html-instance_method)</tt>.
 
 ```ruby
 print page.html
@@ -871,7 +871,7 @@ Capybara.session_name = "some other session"
 ### <a name="using-sessions-manually"></a>Using sessions manually
 
 For ultimate control, you can instantiate and use a
-[Session](http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Session)
+[Session](http://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Session)
 manually.
 
 ```ruby
@@ -1029,5 +1029,5 @@ bundle exec rake  # run the test suite
 ```
 
 See
-[CONTRIBUTING.md](https://github.com/jnicklas/capybara/blob/master/CONTRIBUTING.md)
+[CONTRIBUTING.md](https://github.com/teamcapybara/capybara/blob/master/CONTRIBUTING.md)
 for how to send issues and pull requests.

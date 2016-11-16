@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir.glob("{lib,spec,.yard}/**/*") + %w(README.md History.md License.txt .yardopts)
 
-  s.homepage = "https://github.com/jnicklas/capybara"
+  s.homepage = "https://github.com/teamcapybara/capybara"
   s.require_paths = ["lib"]
   s.rubygems_version = "1.3.6"
   s.summary = "Capybara aims to simplify the process of integration testing Rack applications, such as Rails, Sinatra or Merb"
