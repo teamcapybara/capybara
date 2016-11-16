@@ -73,7 +73,7 @@ module Capybara
           end
         end
 
-        res &&= @filter_block.call(node) unless @filter_block.nil?
+        res &&= Capybara.using_wait_time(0){ @filter_block.call(node)} unless @filter_block.nil?
         res
       end
 
