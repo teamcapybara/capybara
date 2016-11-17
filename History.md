@@ -7,11 +7,11 @@ Release date: unreleased
 * Defined return value for most actions
 
 ### Fixed
-* Ignore specific error when qutting selenium driver instance - Issue #1773 [Dylan Reichstadt\, Thomas Walpole]
+* Ignore specific error when qutting selenium driver instance - Issue #1773 [Dylan Reichstadt, Thomas Walpole]
 * Capybara::Result#each now returns an `Enumerator` when called without a block - Issue #1777 [Thomas Walpole]
 * Selenium driver with Chrome should support multiple file upload [Thomas Walpole]
-* Fix visible: :hidden with :text option behavior
-* Server errors with initializers now re-raised properly
+* Fix visible: :hidden with :text option behavior [Thomas Walpole]
+* App exceptions with multiple parameter initializers now re-raised correctly - Issue #1785 [Michael Lutsiuk]
 
 #2.10.1
 Release date: 2016-10-08
