@@ -5,7 +5,7 @@ module Capybara
       attr_accessor :selector, :locator, :options, :expression, :find, :negative
 
       VALID_KEYS = COUNT_KEYS + [:text, :id, :class, :visible, :exact, :match, :wait, :filter_set]
-      VALID_MATCH = [:first, :smart, :prefer_exact, :one]
+      VALID_MATCH = [:first, :last, :smart, :prefer_exact, :one]
 
       def initialize(*args, &filter_block)
         @options = if args.last.is_a?(Hash) then args.pop.dup else {} end

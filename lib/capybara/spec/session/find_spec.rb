@@ -276,6 +276,17 @@ Capybara::SpecHelper.spec '#find' do
       end
     end
 
+    context "when set to `last`" do
+      it "returns the last matched element" do
+        expect(@session.find(:css, ".multiple", match: :last).text).to eq("multiple two")
+      end
+      it "raises an error if there is no match" do
+        expect do
+          @session.find(:css, ".does-not-exist", match: :last)
+        end.to raise_error(Capybara::ElementNotFound)
+      end
+    end
+
     context "when set to `smart`" do
       context "and `exact` set to `false`" do
         it "raises an error when there are multiple exact matches" do
