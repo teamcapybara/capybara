@@ -90,14 +90,11 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]      If the selector does not exist
       #
       def assert_selector(*args, &optional_filter_block)
-        query = Capybara::Queries::SelectorQuery.new(*args, &optional_filter_block)
-        synchronize(query.wait) do
-          result = query.resolve_for(self)
+        verify_selector_result(args, optional_filter_block) do |result, query|
           unless result.matches_count? && ((!result.empty?) || query.expects_none?)
             raise Capybara::ExpectationNotMet, result.failure_message
           end
         end
-        return true
       end
 
       ##
@@ -117,14 +114,11 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]      If the selector exists
       #
       def assert_no_selector(*args, &optional_filter_block)
-        query = Capybara::Queries::SelectorQuery.new(*args, &optional_filter_block)
-        synchronize(query.wait) do
-          result = query.resolve_for(self)
+        verify_selector_result(args, optional_filter_block) do |result, query|
           if result.matches_count? && ((!result.empty?) || query.expects_none?)
             raise Capybara::ExpectationNotMet, result.negative_failure_message
           end
         end
-        return true
       end
       alias_method :refute_selector, :assert_no_selector
 
@@ -455,25 +449,15 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]      If the selector does not match
       #
       def assert_matches_selector(*args, &optional_filter_block)
-        query = Capybara::Queries::MatchQuery.new(*args, &optional_filter_block)
-        synchronize(query.wait) do
-          result = query.resolve_for(self.query_scope)
-          unless result.include? self
-            raise Capybara::ExpectationNotMet, "Item does not match the provided selector"
-          end
+        verify_match_result(args, optional_filter_block) do |result|
+          raise Capybara::ExpectationNotMet, "Item does not match the provided selector" unless result.include? self
         end
-        return true
       end
 
       def assert_not_matches_selector(*args, &optional_filter_block)
-        query = Capybara::Queries::MatchQuery.new(*args, &optional_filter_block)
-        synchronize(query.wait) do
-          result = query.resolve_for(self.query_scope)
-          if result.include? self
-            raise Capybara::ExpectationNotMet, 'Item matched the provided selector'
-          end
+        verify_match_result(args, optional_filter_block) do |result|
+          raise Capybara::ExpectationNotMet, 'Item matched the provided selector' if result.include? self
         end
-        return true
       end
       alias_method :refute_matches_selector, :assert_not_matches_selector
 
@@ -573,14 +557,11 @@ module Capybara
       # @return [true]
       #
       def assert_text(*args)
-        query = Capybara::Queries::TextQuery.new(*args)
-        synchronize(query.wait) do
-          count = query.resolve_for(self)
+        verify_text(args) do |count, query|
           unless query.matches_count?(count) && ((count > 0) || query.expects_none?)
             raise Capybara::ExpectationNotMet, query.failure_message
           end
         end
-        return true
       end
 
       ##
@@ -592,14 +573,11 @@ module Capybara
       # @return [true]
       #
       def assert_no_text(*args)
-        query = Capybara::Queries::TextQuery.new(*args)
-        synchronize(query.wait) do
-          count = query.resolve_for(self)
+        verify_text(args) do |count, query|
           if query.matches_count?(count) && ((count > 0) || query.expects_none?)
             raise Capybara::ExpectationNotMet, query.negative_failure_message
           end
         end
-        return true
       end
 
       ##
@@ -643,6 +621,35 @@ module Capybara
 
       def ==(other)
         self.eql?(other) || (other.respond_to?(:base) && base == other.base)
+      end
+
+    private
+
+      def verify_selector_result(query_args, optional_filter_block, &result_block)
+        query = Capybara::Queries::SelectorQuery.new(*query_args, &optional_filter_block)
+        synchronize(query.wait) do
+          result = query.resolve_for(self)
+          result_block.call(result, query)
+        end
+        return true
+      end
+
+      def verify_match_result(query_args, optional_filter_block, &result_block)
+        query = Capybara::Queries::MatchQuery.new(*query_args, &optional_filter_block)
+        synchronize(query.wait) do
+          result = query.resolve_for(self.query_scope)
+          result_block.call(result)
+        end
+        return true
+      end
+
+      def verify_text(query_args)
+        query = Capybara::Queries::TextQuery.new(*query_args)
+        synchronize(query.wait) do
+          count = query.resolve_for(self)
+          yield(count, query)
+        end
+        return true
       end
 
     end

@@ -588,11 +588,7 @@ module Capybara
     #   @raise [Capybara::ModalNotFound]  if modal dialog hasn't been found
     #
     def accept_alert(text_or_options=nil, options={}, &blk)
-      text_or_options, options = nil, text_or_options if text_or_options.is_a?(Hash)
-      options[:text] ||= text_or_options unless text_or_options.nil?
-      options[:wait] ||= Capybara.default_max_wait_time
-
-      driver.accept_modal(:alert, options, &blk)
+      accept_modal(:alert, text_or_options, options, &blk)
     end
 
     ##
@@ -602,11 +598,7 @@ module Capybara
     # @macro modal_params
     #
     def accept_confirm(text_or_options=nil, options={}, &blk)
-      text_or_options, options = nil, text_or_options if text_or_options.is_a?(Hash)
-      options[:text] ||= text_or_options unless text_or_options.nil?
-      options[:wait] ||= Capybara.default_max_wait_time
-
-      driver.accept_modal(:confirm, options, &blk)
+      accept_modal(:confirm, text_or_options, options, &blk)
     end
 
     ##
@@ -616,11 +608,7 @@ module Capybara
     # @macro modal_params
     #
     def dismiss_confirm(text_or_options=nil, options={}, &blk)
-      text_or_options, options = nil, text_or_options if text_or_options.is_a?(Hash)
-      options[:text] ||= text_or_options unless text_or_options.nil?
-      options[:wait] ||= Capybara.default_max_wait_time
-
-      driver.dismiss_modal(:confirm, options, &blk)
+      dismiss_modal(:confirm, text_or_options, options, &blk)
     end
 
     ##
@@ -631,11 +619,7 @@ module Capybara
     # @option options [String] :with   Response to provide to the prompt
     #
     def accept_prompt(text_or_options=nil, options={}, &blk)
-      text_or_options, options = nil, text_or_options if text_or_options.is_a?(Hash)
-      options[:text] ||= text_or_options unless text_or_options.nil?
-      options[:wait] ||= Capybara.default_max_wait_time
-
-      driver.accept_modal(:prompt, options, &blk)
+      accept_modal(:prompt, text_or_options, options, &blk)
     end
 
     ##
@@ -645,11 +629,7 @@ module Capybara
     # @macro modal_params
     #
     def dismiss_prompt(text_or_options=nil, options={}, &blk)
-      text_or_options, options = nil, text_or_options if text_or_options.is_a?(Hash)
-      options[:text] ||= text_or_options unless text_or_options.nil?
-      options[:wait] ||= Capybara.default_max_wait_time
-
-      driver.dismiss_modal(:prompt, options, &blk)
+      dismiss_modal(:prompt, text_or_options, options, &blk)
     end
 
     ##
@@ -752,6 +732,22 @@ module Capybara
     end
 
   private
+    def accept_modal(type, text_or_options, options, &blk)
+      text_or_options, options = nil, text_or_options if text_or_options.is_a?(Hash)
+      options[:text] ||= text_or_options unless text_or_options.nil?
+      options[:wait] ||= Capybara.default_max_wait_time
+
+      driver.accept_modal(type, options, &blk)
+    end
+
+    def dismiss_modal(type, text_or_options, options, &blk)
+      text_or_options, options = nil, text_or_options if text_or_options.is_a?(Hash)
+      options[:text] ||= text_or_options unless text_or_options.nil?
+      options[:wait] ||= Capybara.default_max_wait_time
+
+      driver.dismiss_modal(type, options, &blk)
+    end
+
 
     def open_file(path)
       begin
