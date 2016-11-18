@@ -14,4 +14,10 @@ Capybara::SpecHelper.spec '#match_css?' do
     expect(@element).not_to match_css("p a#doesnotexist")
     expect(@element).not_to match_css("p.nosuchclass")
   end
+
+  it "should accept an optional filter block" do
+    # This would be better done with
+    expect(@element).to match_css('span') { |el| el[:class] == "number" }
+    expect(@element).not_to match_css('span') { |el| el[:class] == "not_number" }
+  end
 end

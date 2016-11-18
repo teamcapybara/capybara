@@ -29,6 +29,10 @@ Capybara::SpecHelper.spec '#has_selector?' do
     end
   end
 
+  it "should accept a filter block" do
+    expect(@session).to have_selector(:css, "a", count: 1) { |el| el[:id] == "foo" }
+  end
+
   context "with count" do
     it "should be true if the content is on the page the given number of times" do
       expect(@session).to have_selector("//p", count: 3)
@@ -103,6 +107,13 @@ Capybara::SpecHelper.spec '#has_no_selector?' do
       expect(@session).not_to have_no_selector(".//a[@id='foo']")
       expect(@session).to have_no_selector(".//a[@id='red']")
     end
+  end
+
+  it "should accept a filter block" do
+    if !defined?(::RSpec::Expectations::Version) || (Gem::Version.new(RSpec::Expectations::Version::STRING) < Gem::Version.new('3.0'))
+      skip "RSpec < 3 doesn't pass the block along to the matcher for the Builtin::Has matcher"
+    end
+    expect(@session).to have_no_selector(:css, "a#foo") { |el| el[:id] != "foo" }
   end
 
   context "with count" do

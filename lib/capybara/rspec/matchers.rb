@@ -12,14 +12,16 @@ module Capybara
         end
       end
 
-      def matches?(actual)
+      private
+
+      def wrap_matches?(actual)
         yield(wrap(actual))
       rescue Capybara::ExpectationNotMet => e
         @failure_message = e.message
         return false
       end
 
-      def does_not_match?(actual)
+      def wrap_does_not_match?(actual)
         yield(wrap(actual))
       rescue Capybara::ExpectationNotMet => e
         @failure_message_when_negated = e.message
@@ -36,11 +38,11 @@ module Capybara
       end
 
       def matches?(actual)
-        super(actual){ |el| el.assert_selector(*@args) }
+        wrap_matches?(actual){ |el| el.assert_selector(*@args, &@filter_block) }
       end
 
       def does_not_match?(actual)
-        super(actual){ |el| el.assert_no_selector(*@args) }
+        wrap_does_not_match?(actual){ |el| el.assert_no_selector(*@args, &@filter_block) }
       end
 
       def description
@@ -54,6 +56,24 @@ module Capybara
       # RSpec 2 compatibility:
       alias_method :failure_message_for_should, :failure_message
       alias_method :failure_message_for_should_not, :failure_message_when_negated
+    end
+
+    class MatchSelector < HaveSelector
+      def matches?(actual)
+        wrap_matches?(actual) { |el| el.assert_matches_selector(*@args, &@filter_block) }
+      end
+
+      def does_not_match?(actual)
+        wrap_does_not_match?(actual) { |el| el.assert_not_matches_selector(*@args, &@filter_block) }
+      end
+
+      def description
+        "match #{query.description}"
+      end
+
+      def query
+        @query ||= Capybara::Queries::MatchQuery.new(*@args)
+      end
     end
 
     class HaveText < Matcher
@@ -71,11 +91,11 @@ module Capybara
       end
 
       def matches?(actual)
-        super(actual) { |el| el.assert_text(*@args) }
+        wrap_matches?(actual) { |el| el.assert_text(*@args) }
       end
 
       def does_not_match?(actual)
-        super(actual) { |el| el.assert_no_text(*@args) }
+        wrap_does_not_match?(actual) { |el| el.assert_no_text(*@args) }
       end
 
       def description
@@ -105,11 +125,11 @@ module Capybara
       end
 
       def matches?(actual)
-        super(actual) { |el| el.assert_title(*@args) }
+        wrap_matches?(actual) { |el| el.assert_title(*@args) }
       end
 
       def does_not_match?(actual)
-        super(actual) { |el| el.assert_no_title(*@args) }
+        wrap_does_not_match?(actual) { |el| el.assert_no_title(*@args) }
       end
 
       def description
@@ -134,11 +154,11 @@ module Capybara
       end
 
       def matches?(actual)
-        super(actual) { |el| el.assert_current_path(*@args) }
+        wrap_matches?(actual) { |el| el.assert_current_path(*@args) }
       end
 
       def does_not_match?(actual)
-        super(actual) { |el| el.assert_no_current_path(*@args) }
+        wrap_does_not_match?(actual) { |el| el.assert_no_current_path(*@args) }
       end
 
       def description
@@ -178,40 +198,12 @@ module Capybara
       alias_method :failure_message_for_should_not, :failure_message_when_negated
     end
 
-    class MatchSelector < Matcher
-      attr_reader :failure_message, :failure_message_when_negated
-
-      def initialize(*args)
-        @args = args
-      end
-
-      def matches?(actual)
-        super(actual) { |el| el.assert_matches_selector(*@args) }
-      end
-
-      def does_not_match?(actual)
-        super(actual) { |el| el.assert_not_matches_selector(*@args) }
-      end
-
-      def description
-        "match #{query.description}"
-      end
-
-      def query
-        @query ||= Capybara::Queries::MatchQuery.new(*@args)
-      end
-
-      # RSpec 2 compatibility:
-      alias_method :failure_message_for_should, :failure_message
-      alias_method :failure_message_for_should_not, :failure_message_when_negated
-    end
-
     def have_selector(*args, &optional_filter_block)
       HaveSelector.new(*args, &optional_filter_block)
     end
 
-    def match_selector(*args)
-      MatchSelector.new(*args)
+    def match_selector(*args, &optional_filter_block)
+      MatchSelector.new(*args, &optional_filter_block)
     end
     # defined_negated_matcher was added in RSpec 3.1 - it's syntactic sugar only since a user can do
     # expect(page).not_to match_selector, so not sure we really need to support not_match_selector for prior to RSpec 3.1
@@ -222,16 +214,16 @@ module Capybara
       HaveSelector.new(:xpath, xpath, options, &optional_filter_block)
     end
 
-    def match_xpath(xpath, options={})
-      MatchSelector.new(:xpath, xpath, options)
+    def match_xpath(xpath, options={}, &optional_filter_block)
+      MatchSelector.new(:xpath, xpath, options, &optional_filter_block)
     end
 
     def have_css(css, options={}, &optional_filter_block)
       HaveSelector.new(:css, css, options, &optional_filter_block)
     end
 
-    def match_css(css, options={})
-      MatchSelector.new(:css, css, options)
+    def match_css(css, options={}, &optional_filter_block)
+      MatchSelector.new(:css, css, options, &optional_filter_block)
     end
 
     def have_text(*args)

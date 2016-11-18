@@ -28,4 +28,9 @@ Capybara::SpecHelper.spec '#assert_matches_selector' do
   it "should not accept count options" do
     expect { @element.assert_matches_selector(:css, '.number', count: 1) }.to raise_error(ArgumentError)
   end
+
+  it "should accept a filter block" do
+    @element.assert_matches_selector(:css, 'span') { |el| el[:class] == "number" }
+    @element.assert_not_matches_selector(:css,'span') { |el| el[:class] == "not_number" }
+  end
 end
