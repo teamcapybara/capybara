@@ -11,6 +11,20 @@ module Capybara
           Capybara.string(actual.to_s)
         end
       end
+
+      def matches?(actual)
+        yield(wrap(actual))
+      rescue Capybara::ExpectationNotMet => e
+        @failure_message = e.message
+        return false
+      end
+
+      def does_not_match?(actual)
+        yield(wrap(actual))
+      rescue Capybara::ExpectationNotMet => e
+        @failure_message_when_negated = e.message
+        return false
+      end
     end
 
     class HaveSelector < Matcher
@@ -22,17 +36,11 @@ module Capybara
       end
 
       def matches?(actual)
-        wrap(actual).assert_selector(*@args)
-      rescue Capybara::ExpectationNotMet => e
-        @failure_message = e.message
-        return false
+        super(actual){ |el| el.assert_selector(*@args) }
       end
 
       def does_not_match?(actual)
-        wrap(actual).assert_no_selector(*@args)
-      rescue Capybara::ExpectationNotMet => e
-        @failure_message_when_negated = e.message
-        return false
+        super(actual){ |el| el.assert_no_selector(*@args) }
       end
 
       def description
@@ -63,17 +71,11 @@ module Capybara
       end
 
       def matches?(actual)
-        wrap(actual).assert_text(*@args)
-      rescue Capybara::ExpectationNotMet => e
-        @failure_message = e.message
-        return false
+        super(actual) { |el| el.assert_text(*@args) }
       end
 
       def does_not_match?(actual)
-        wrap(actual).assert_no_text(*@args)
-      rescue Capybara::ExpectationNotMet => e
-        @failure_message_when_negated = e.message
-        return false
+        super(actual) { |el| el.assert_no_text(*@args) }
       end
 
       def description
@@ -103,17 +105,11 @@ module Capybara
       end
 
       def matches?(actual)
-        wrap(actual).assert_title(*@args)
-      rescue Capybara::ExpectationNotMet => e
-        @failure_message = e.message
-        return false
+        super(actual) { |el| el.assert_title(*@args) }
       end
 
       def does_not_match?(actual)
-        wrap(actual).assert_no_title(*@args)
-      rescue Capybara::ExpectationNotMet => e
-        @failure_message_when_negated = e.message
-        return false
+        super(actual) { |el| el.assert_no_title(*@args) }
       end
 
       def description
@@ -138,17 +134,11 @@ module Capybara
       end
 
       def matches?(actual)
-        wrap(actual).assert_current_path(*@args)
-      rescue Capybara::ExpectationNotMet => e
-        @failure_message = e.message
-        return false
+        super(actual) { |el| el.assert_current_path(*@args) }
       end
 
       def does_not_match?(actual)
-        wrap(actual).assert_no_current_path(*@args)
-      rescue Capybara::ExpectationNotMet => e
-        @failure_message_when_negated = e.message
-        return false
+        super(actual) { |el| el.assert_no_current_path(*@args) }
       end
 
       def description
@@ -196,17 +186,11 @@ module Capybara
       end
 
       def matches?(actual)
-        actual.assert_matches_selector(*@args)
-      rescue Capybara::ExpectationNotMet => e
-        @failure_message = e.message
-        return false
+        super(actual) { |el| el.assert_matches_selector(*@args) }
       end
 
       def does_not_match?(actual)
-        actual.assert_not_matches_selector(*@args)
-      rescue Capybara::ExpectationNotMet => e
-        @failure_message_when_negated = e.message
-        return false
+        super(actual) { |el| el.assert_not_matches_selector(*@args) }
       end
 
       def description
