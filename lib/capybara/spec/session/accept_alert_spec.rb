@@ -26,7 +26,7 @@ Capybara::SpecHelper.spec '#accept_alert', requires: [:modals] do
   end
 
   it "should accept the alert if the text matches a regexp" do
-    @session.accept_alert /op.{2}ed/ do
+    @session.accept_alert(/op.{2}ed/) do
       @session.click_link('Open alert')
     end
     expect(@session).to have_xpath("//a[@id='open-alert' and @opened='true']")

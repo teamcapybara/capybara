@@ -320,7 +320,7 @@ Capybara::SpecHelper.spec '#find' do
         end
         it "raises an error when there is a single inexact matches" do
           expect do
-            result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular but")], match: :smart, exact:  true)
+            @session.find(:xpath, XPath.descendant[XPath.attr(:class).is("almost_singular but")], match: :smart, exact:  true)
           end.to raise_error(Capybara::ElementNotFound)
         end
         it "raises an error if there is no match" do

@@ -27,6 +27,7 @@ module Capybara
         super(session, base)
         @query_scope = query_scope
         @query = query
+        @allow_reload = false
       end
 
       def allow_reload!

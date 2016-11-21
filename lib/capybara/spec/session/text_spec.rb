@@ -35,7 +35,7 @@ Capybara::SpecHelper.spec '#text' do
     Capybara.ignore_hidden_elements = false
     expect(@session.find(:id, "hidden-text").text).to eq('Some of this text is')
   end
-  
+
   it "ignores invisible text if ancestor is invisible" do
     @session.visit('/with_html')
     expect(@session.find(:id, "hidden_via_ancestor", visible: false).text).to eq('')
@@ -52,8 +52,7 @@ Capybara::SpecHelper.spec '#text' do
 
   it "should strip whitespace" do
     @session.visit('/with_html')
-    n = @session.find(:css, '#second')
-    expect(@session.find(:css, '#second').text).to match \
-      /\ADuis aute .* text with whitespace .* est laborum\.\z/
+    @session.find(:css, '#second')
+    expect(@session.find(:css, '#second').text).to match(/\ADuis aute .* text with whitespace .* est laborum\.\z/)
   end
 end

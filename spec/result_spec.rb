@@ -66,8 +66,8 @@ RSpec.describe Capybara::Result do
 
   it 'supports all modes of []' do
     expect(result[1].text).to eq 'Beta'
-    expect(result[0,2].map &:text).to eq ['Alpha', 'Beta']
-    expect(result[1..3].map &:text).to eq ['Beta', 'Gamma', 'Delta']
+    expect(result[0,2].map(&:text)).to eq ['Alpha', 'Beta']
+    expect(result[1..3].map(&:text)).to eq ['Beta', 'Gamma', 'Delta']
     expect(result[-1].text).to eq 'Delta'
   end
 

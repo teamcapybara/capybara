@@ -102,7 +102,7 @@ RSpec.describe Capybara do
             table: ".//table"
           }
           selectors.each do |selector, xpath|
-            results = string.all(selector,nil).to_a.map &:native
+            results = string.all(selector,nil).to_a.map(&:native)
             expect(results.size).to be > 0
             expect(results).to eq string.all(:xpath, xpath).to_a.map(&:native)
           end
