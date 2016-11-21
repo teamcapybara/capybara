@@ -4,6 +4,8 @@ module Capybara
     class Matcher
       include ::RSpec::Matchers::Composable if defined?(::RSpec::Expectations::Version) && (Gem::Version.new(RSpec::Expectations::Version::STRING) >= Gem::Version.new('3.0'))
 
+      attr_reader :failure_message, :failure_message_when_negated
+
       def wrap(actual)
         if actual.respond_to?("has_selector?")
           actual
@@ -11,6 +13,10 @@ module Capybara
           Capybara.string(actual.to_s)
         end
       end
+
+      # RSpec 2 compatibility:
+      def failure_message_for_should; failure_message end
+      def failure_message_for_should_not; failure_message_when_negated end
 
       private
 
@@ -30,7 +36,6 @@ module Capybara
     end
 
     class HaveSelector < Matcher
-      attr_reader :failure_message, :failure_message_when_negated
 
       def initialize(*args, &filter_block)
         @args = args
@@ -52,10 +57,6 @@ module Capybara
       def query
         @query ||= Capybara::Queries::SelectorQuery.new(*@args, &@filter_block)
       end
-
-      # RSpec 2 compatibility:
-      alias_method :failure_message_for_should, :failure_message
-      alias_method :failure_message_for_should_not, :failure_message_when_negated
     end
 
     class MatchSelector < HaveSelector
@@ -78,8 +79,6 @@ module Capybara
 
     class HaveText < Matcher
       attr_reader :type, :content, :options
-
-      attr_reader :failure_message, :failure_message_when_negated
 
       def initialize(*args)
         @args = args.dup
@@ -106,16 +105,10 @@ module Capybara
         content = Capybara::Helpers.normalize_whitespace(content) unless content.is_a? Regexp
         content.inspect
       end
-
-      # RSpec 2 compatibility:
-      alias_method :failure_message_for_should, :failure_message
-      alias_method :failure_message_for_should_not, :failure_message_when_negated
     end
 
     class HaveTitle < Matcher
       attr_reader :title
-
-      attr_reader :failure_message, :failure_message_when_negated
 
       def initialize(*args)
         @args = args
@@ -135,16 +128,10 @@ module Capybara
       def description
         "have title #{title.inspect}"
       end
-
-      # RSpec 2 compatibility:
-      alias_method :failure_message_for_should, :failure_message
-      alias_method :failure_message_for_should_not, :failure_message_when_negated
     end
 
     class HaveCurrentPath < Matcher
       attr_reader :current_path
-
-      attr_reader :failure_message, :failure_message_when_negated
 
       def initialize(*args)
         @args = args
@@ -164,10 +151,6 @@ module Capybara
       def description
         "have current path #{current_path.inspect}"
       end
-
-      # RSpec 2 compatibility:
-      alias_method :failure_message_for_should, :failure_message
-      alias_method :failure_message_for_should_not, :failure_message_when_negated
     end
 
     class BecomeClosed
@@ -192,10 +175,6 @@ module Capybara
       def failure_message_when_negated
         "expected #{@window.inspect} not to become closed after #{@wait_time} seconds"
       end
-
-      # RSpec 2 compatibility:
-      alias_method :failure_message_for_should, :failure_message
-      alias_method :failure_message_for_should_not, :failure_message_when_negated
     end
 
     def have_selector(*args, &optional_filter_block)
@@ -283,6 +262,5 @@ module Capybara
     def become_closed(options = {})
       BecomeClosed.new(options)
     end
-
   end
 end
