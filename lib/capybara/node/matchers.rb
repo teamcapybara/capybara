@@ -90,7 +90,7 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]      If the selector does not exist
       #
       def assert_selector(*args, &optional_filter_block)
-        verify_selector_result(args, optional_filter_block) do |result, query|
+        _verify_selector_result(args, optional_filter_block) do |result, query|
           unless result.matches_count? && ((!result.empty?) || query.expects_none?)
             raise Capybara::ExpectationNotMet, result.failure_message
           end
@@ -114,7 +114,7 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]      If the selector exists
       #
       def assert_no_selector(*args, &optional_filter_block)
-        verify_selector_result(args, optional_filter_block) do |result, query|
+        _verify_selector_result(args, optional_filter_block) do |result, query|
           if result.matches_count? && ((!result.empty?) || query.expects_none?)
             raise Capybara::ExpectationNotMet, result.negative_failure_message
           end
@@ -449,13 +449,13 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]      If the selector does not match
       #
       def assert_matches_selector(*args, &optional_filter_block)
-        verify_match_result(args, optional_filter_block) do |result|
+        _verify_match_result(args, optional_filter_block) do |result|
           raise Capybara::ExpectationNotMet, "Item does not match the provided selector" unless result.include? self
         end
       end
 
       def assert_not_matches_selector(*args, &optional_filter_block)
-        verify_match_result(args, optional_filter_block) do |result|
+        _verify_match_result(args, optional_filter_block) do |result|
           raise Capybara::ExpectationNotMet, 'Item matched the provided selector' if result.include? self
         end
       end
@@ -557,7 +557,7 @@ module Capybara
       # @return [true]
       #
       def assert_text(*args)
-        verify_text(args) do |count, query|
+        _verify_text(args) do |count, query|
           unless query.matches_count?(count) && ((count > 0) || query.expects_none?)
             raise Capybara::ExpectationNotMet, query.failure_message
           end
@@ -573,7 +573,7 @@ module Capybara
       # @return [true]
       #
       def assert_no_text(*args)
-        verify_text(args) do |count, query|
+        _verify_text(args) do |count, query|
           if query.matches_count?(count) && ((count > 0) || query.expects_none?)
             raise Capybara::ExpectationNotMet, query.negative_failure_message
           end
@@ -625,7 +625,7 @@ module Capybara
 
     private
 
-      def verify_selector_result(query_args, optional_filter_block, &result_block)
+      def _verify_selector_result(query_args, optional_filter_block, &result_block)
         query = Capybara::Queries::SelectorQuery.new(*query_args, &optional_filter_block)
         synchronize(query.wait) do
           result = query.resolve_for(self)
@@ -634,7 +634,7 @@ module Capybara
         return true
       end
 
-      def verify_match_result(query_args, optional_filter_block, &result_block)
+      def _verify_match_result(query_args, optional_filter_block, &result_block)
         query = Capybara::Queries::MatchQuery.new(*query_args, &optional_filter_block)
         synchronize(query.wait) do
           result = query.resolve_for(self.query_scope)
@@ -643,7 +643,7 @@ module Capybara
         return true
       end
 
-      def verify_text(query_args)
+      def _verify_text(query_args)
         query = Capybara::Queries::TextQuery.new(*query_args)
         synchronize(query.wait) do
           count = query.resolve_for(self)

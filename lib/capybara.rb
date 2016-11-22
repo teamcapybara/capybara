@@ -332,7 +332,7 @@ module Capybara
     #
     def reset_sessions!
       #reset in reverse so sessions that started servers are reset last
-      session_pool.reverse_each { |mode, session| session.reset! }
+      session_pool.reverse_each { |_mode, session| session.reset! }
     end
     alias_method :reset!, :reset_sessions!
 
@@ -470,7 +470,7 @@ module Capybara
   require 'capybara/selenium/driver'
 end
 
-Capybara.register_server :default do |app, port, host|
+Capybara.register_server :default do |app, port, _host|
   Capybara.run_default_server(app, port)
 end
 

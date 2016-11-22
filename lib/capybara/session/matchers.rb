@@ -17,13 +17,7 @@ module Capybara
     # @return [true]
     #
     def assert_current_path(path, options={})
-      query = Capybara::Queries::CurrentPathQuery.new(path, options)
-      document.synchronize(query.wait) do
-        unless query.resolves_for?(self)
-          raise Capybara::ExpectationNotMet, query.failure_message
-        end
-      end
-      return true
+      _verify_current_path(path,options) { |query| raise Capybara::ExpectationNotMet, query.failure_message unless query.resolves_for?(self) }
     end
 
     ##
@@ -34,13 +28,7 @@ module Capybara
     # @return [true]
     #
     def assert_no_current_path(path, options={})
-      query = Capybara::Queries::CurrentPathQuery.new(path, options)
-      document.synchronize(query.wait) do
-        if query.resolves_for?(self)
-          raise Capybara::ExpectationNotMet, query.negative_failure_message
-        end
-      end
-      return true
+      _verify_current_path(path,options) { |query| raise Capybara::ExpectationNotMet, query.negative_failure_message if query.resolves_for?(self) }
     end
 
     ##
@@ -65,6 +53,16 @@ module Capybara
       assert_no_current_path(path, options)
     rescue Capybara::ExpectationNotMet
       return false
+    end
+
+    private
+
+    def _verify_current_path(path, options)
+      query = Capybara::Queries::CurrentPathQuery.new(path, options)
+      document.synchronize(query.wait) do
+        yield(query)
+      end
+      return true
     end
   end
 end

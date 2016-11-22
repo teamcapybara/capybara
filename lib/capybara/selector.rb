@@ -87,7 +87,7 @@ Capybara.add_selector(:field) do
   end
   describe do |options|
     desc = String.new
-    (expression_filters - [:type]).each { |ef| desc << " with #{ef.to_s} #{options[ef]}" if options.has_key?(ef) }
+    (expression_filters - [:type]).each { |ef| desc << " with #{ef} #{options[ef]}" if options.has_key?(ef) }
     desc << " of type #{options[:type].inspect}" if options[:type]
     desc << " with value #{options[:with].to_s.inspect}" if options.has_key?(:with)
     desc
@@ -196,7 +196,7 @@ Capybara.add_selector(:button) do
   describe do |options|
     desc = String.new
     desc << " that is disabled" if options[:disabled] == true
-    expression_filters.each { |ef| desc << " with #{ef.to_s} #{options[ef]}" if options.has_key?(ef) }
+    desc << describe_all_expression_filters(options)
     desc
   end
 end
@@ -244,7 +244,7 @@ Capybara.add_selector(:fillable_field) do
 
   describe do |options|
     desc = String.new
-    expression_filters.each { |ef| desc << " with #{ef.to_s} #{options[ef]}" if options.has_key?(ef) }
+    desc << describe_all_expression_filters(options)
     desc << " with value #{options[:with].to_s.inspect}" if options.has_key?(:with)
     desc
   end
@@ -277,7 +277,7 @@ Capybara.add_selector(:radio_button) do
   describe do |options|
     desc = String.new
     desc << " with value #{options[:option].inspect}" if options[:option]
-    expression_filters.each { |ef| desc << " with #{ef.to_s} #{options[ef]}" if options.has_key?(ef) }
+    desc << describe_all_expression_filters(options)
     desc
   end
 end
@@ -308,7 +308,7 @@ Capybara.add_selector(:checkbox) do
   describe do |options|
     desc = String.new
     desc << " with value #{options[:option].inspect}" if options[:option]
-    expression_filters.each { |ef| desc << " with #{ef.to_s} #{options[ef]}" if options.has_key?(ef) }
+    desc << describe_all_expression_filters(options)
     desc
   end
 end
@@ -364,7 +364,7 @@ Capybara.add_selector(:select) do
     desc << " with options #{options[:options].inspect}" if options[:options]
     desc << " with at least options #{options[:with_options].inspect}" if options[:with_options]
     desc << " with #{options[:selected].inspect} selected" if options[:selected]
-    expression_filters.each { |ef| desc << " with #{ef.to_s} #{options[ef]}" if options.has_key?(ef) }
+    desc << describe_all_expression_filters(options)
     desc
   end
 end
@@ -417,7 +417,7 @@ Capybara.add_selector(:file_field) do
 
   describe do |options|
     desc = String.new
-    expression_filters.each { |ef| desc << " with #{ef.to_s} #{options[ef]}" if options.has_key?(ef) }
+    desc << describe_all_expression_filters(options)
     desc
   end
 end

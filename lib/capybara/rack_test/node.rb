@@ -152,7 +152,7 @@ private
     end
   end
 
-  def set_radio(value)
+  def set_radio(_value)
     other_radios_xpath = XPath.generate { |x| x.anywhere(:input)[x.attr(:name).equals(self[:name])] }.to_s
     driver.dom.xpath(other_radios_xpath).each { |node| node.remove_attribute("checked") }
     native['checked'] = 'checked'

@@ -733,19 +733,18 @@ module Capybara
 
   private
     def accept_modal(type, text_or_options, options, &blk)
-      text_or_options, options = nil, text_or_options if text_or_options.is_a?(Hash)
-      options[:text] ||= text_or_options unless text_or_options.nil?
-      options[:wait] ||= Capybara.default_max_wait_time
-
-      driver.accept_modal(type, options, &blk)
+      driver.accept_modal(type, modal_options(text_or_options, options), &blk)
     end
 
     def dismiss_modal(type, text_or_options, options, &blk)
+      driver.dismiss_modal(type, modal_options(text_or_options, options), &blk)
+    end
+
+    def modal_options(text_or_options, options)
       text_or_options, options = nil, text_or_options if text_or_options.is_a?(Hash)
       options[:text] ||= text_or_options unless text_or_options.nil?
       options[:wait] ||= Capybara.default_max_wait_time
-
-      driver.dismiss_modal(type, options, &blk)
+      options
     end
 
 

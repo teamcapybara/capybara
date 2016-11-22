@@ -19,7 +19,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         options[:desired_capabilities].merge!({ unexpectedAlertBehaviour: "ignore" })
       end
 
-      @browser = Selenium::WebDriver.for(options[:browser], options.reject { |key,val| SPECIAL_OPTIONS.include?(key) })
+      @browser = Selenium::WebDriver.for(options[:browser], options.reject { |key,_val| SPECIAL_OPTIONS.include?(key) })
 
       main = Process.pid
       at_exit do
@@ -94,7 +94,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.execute_script "return #{script}"
   end
 
-  def save_screenshot(path, options={})
+  def save_screenshot(path, _options={})
     browser.save_screenshot(path)
   end
 
@@ -236,8 +236,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.switch_to.window(handle) { yield }
   end
 
-  def accept_modal(type, options={}, &blk)
-    options = options.dup
+  def accept_modal(_type, options={})
     yield if block_given?
     modal = find_modal(options)
     modal.send_keys options[:with] if options[:with]
@@ -246,7 +245,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     message
   end
 
-  def dismiss_modal(type, options={}, &blk)
+  def dismiss_modal(_type, options={})
     yield if block_given?
     modal = find_modal(options)
     message = modal.text

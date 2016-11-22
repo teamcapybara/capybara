@@ -229,8 +229,12 @@ module Capybara
       locate_xpath
     end
 
+    def describe_all_expression_filters(opts={})
+      expression_filters.map { |ef| " with #{ef} #{opts[ef]}" if opts.has_key?(ef) }.join
+    end
+
     def find_by_attr(attribute, value)
-      finder_name = "find_by_#{attribute.to_s}_attr"
+      finder_name = "find_by_#{attribute}_attr"
       if respond_to?(finder_name, true)
         send(finder_name, value)
       else
