@@ -327,7 +327,7 @@ module Capybara
       #
       def has_no_checked_field?(locator=nil, options={}, &optional_filter_block)
         locator, options = nil, locator if locator.is_a? Hash
-        has_no_selector?(:field, locator, options.merge(checked: true))
+        has_no_selector?(:field, locator, options.merge(checked: true), &optional_filter_block)
       end
 
       ##
