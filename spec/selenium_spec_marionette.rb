@@ -52,6 +52,30 @@ RSpec.describe Capybara::Selenium::Driver do
       #access instance variable directly so we don't create a new browser instance
       expect(@driver.instance_variable_get(:@browser)).to be_nil
     end
+
+    it "ignores an error communicating with browser because it is probably already gone" do
+      allow(@driver.browser).to(
+        receive(:quit)
+        .and_raise(Selenium::WebDriver::Error::UnknownError, described_class::CONNECTION_ERROR_TEXT_MARIONETTE)
+      )
+
+      expect {
+        @driver.quit
+      }.not_to raise_error
+      expect(@driver.instance_variable_get(:@browser)).to be_nil
+    end
+
+    it "does not ignore other errors" do
+      allow(@driver.browser).to(
+        receive(:quit)
+        .and_raise(Selenium::WebDriver::Error::UnknownError, 'alarm!')
+      )
+
+      expect {
+        @driver.quit
+      }.to raise_error(Selenium::WebDriver::Error::UnknownError, 'alarm!')
+      expect(@driver.instance_variable_get(:@browser)).to be_nil
+    end
   end
 
   context "storage" do
