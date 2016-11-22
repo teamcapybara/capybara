@@ -112,24 +112,7 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The element chosen or the label clicked
       def choose(locator, options={})
-        locator, options = nil, locator if locator.is_a? Hash
-        allow_label_click = options.delete(:allow_label_click) { Capybara.automatic_label_click }
-
-        synchronize(Capybara::Queries::BaseQuery::wait(options)) do
-          begin
-            radio = find(:radio_button, locator, options)
-            radio.set(true)
-          rescue => e
-            raise unless allow_label_click && catch_error?(e)
-            begin
-              radio ||= find(:radio_button, locator, options.merge(visible: :all))
-              label = find(:label, for: radio, visible: true)
-              label.click unless radio.checked?
-            rescue
-              raise e
-            end
-          end
-        end
+        _check_with_label(:radio_button, true, locator, options)
       end
 
       ##
@@ -152,24 +135,7 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The element checked or the label clicked
       def check(locator, options={})
-        locator, options = nil, locator if locator.is_a? Hash
-        allow_label_click = options.delete(:allow_label_click) { Capybara.automatic_label_click }
-
-        synchronize(Capybara::Queries::BaseQuery::wait(options)) do
-          begin
-            cbox = find(:checkbox, locator, options)
-            cbox.set(true)
-          rescue => e
-            raise unless allow_label_click && catch_error?(e)
-            begin
-              cbox ||= find(:checkbox, locator, options.merge(visible: :all))
-              label = find(:label, for: cbox, visible: true)
-              label.click unless cbox.checked?
-            rescue
-              raise e
-            end
-          end
-        end
+        _check_with_label(:checkbox, true, locator, options)
       end
 
       ##
@@ -192,24 +158,7 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The element unchecked or the label clicked
       def uncheck(locator, options={})
-        locator, options = nil, locator if locator.is_a? Hash
-        allow_label_click = options.delete(:allow_label_click) { Capybara.automatic_label_click }
-
-        synchronize(Capybara::Queries::BaseQuery::wait(options)) do
-          begin
-            cbox = find(:checkbox, locator, options)
-            cbox.set(false)
-          rescue => e
-            raise unless allow_label_click && catch_error?(e)
-            begin
-              cbox ||= find(:checkbox, locator, options.merge(visible: :all))
-              label = find(:label, for: cbox, visible: true)
-              label.click if cbox.checked?
-            rescue
-              raise e
-            end
-          end
-        end
+        _check_with_label(:checkbox, false, locator, options)
       end
 
       ##
@@ -288,6 +237,30 @@ module Capybara
         end
         find(:file_field, locator, options).set(path)
       end
+
+    private
+
+      def _check_with_label(selector, checked, locator, options)
+        locator, options = nil, locator if locator.is_a? Hash
+        allow_label_click = options.delete(:allow_label_click) { Capybara.automatic_label_click }
+
+        synchronize(Capybara::Queries::BaseQuery::wait(options)) do
+          begin
+            el = find(selector, locator, options)
+            el.set(checked)
+          rescue => e
+            raise unless allow_label_click && catch_error?(e)
+            begin
+              el ||= find(selector, locator, options.merge(visible: :all))
+              label = find(:label, for: el, visible: true)
+              label.click unless (el.checked? == checked)
+            rescue
+              raise e
+            end
+          end
+        end
+      end
+
     end
   end
 end
