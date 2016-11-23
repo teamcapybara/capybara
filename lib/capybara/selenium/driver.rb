@@ -258,8 +258,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   rescue Errno::ECONNREFUSED
     # Browser must have already gone
   rescue Selenium::WebDriver::Error::UnknownError => e
-    raise unless e.message =~ /Error communicating with the remote browser/
-    # probably already gone
+    unless silenced_unknown_error_message?(e.message) # Most likely already gone
+      # probably already gone but not sure - so warn
+      warn "Ignoring Selenium UnknownError during driver quit: #{e.message}"
+    end
   ensure
     @browser = nil
   end
@@ -311,4 +313,11 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     end
   end
 
+  def silenced_unknown_error_message?(msg)
+    silenced_unknown_error_messages.any? { |r| msg =~ r }
+  end
+
+  def silenced_unknown_error_messages
+    [ /Error communicating with the remote browser/ ]
+  end
 end
