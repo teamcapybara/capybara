@@ -12,6 +12,7 @@ Release date: unreleased
 * Selenium driver with Chrome should support multiple file upload [Thomas Walpole]
 * Fix visible: :hidden with :text option behavior [Thomas Walpole]
 * App exceptions with multiple parameter initializers now re-raised correctly - Issue #1785 [Michael Lutsiuk]
+* Warn on selenium unknown errors rather than raising when quitting driver [Adam Pohorecki, Thomas Walpole]
 
 #2.10.1
 Release date: 2016-10-08

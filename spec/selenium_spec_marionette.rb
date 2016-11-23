@@ -52,6 +52,39 @@ RSpec.describe Capybara::Selenium::Driver do
       #access instance variable directly so we don't create a new browser instance
       expect(@driver.instance_variable_get(:@browser)).to be_nil
     end
+
+    context "with errors" do
+      before do
+        @original_browser = @driver.browser
+      end
+      after do
+        # Ensure browser is actually quit so we don't leave hanging processe
+        RSpec::Mocks.space.proxy_for(@original_browser).reset
+        @original_browser.quit
+      end
+
+      it "warns UnknownError returned during quit because the browser is probably already gone" do
+        expect_any_instance_of(Capybara::Selenium::Driver).to receive(:warn).with(/random message/)
+        allow(@driver.browser).to(
+          receive(:quit)
+          .and_raise(Selenium::WebDriver::Error::UnknownError, "random message")
+        )
+
+        expect { @driver.quit }.not_to raise_error
+        expect(@driver.instance_variable_get(:@browser)).to be_nil
+      end
+
+      it "ignores silenced UnknownError returned during quit because the browser is almost definitely already gone" do
+        expect_any_instance_of(Capybara::Selenium::Driver).not_to receive(:warn)
+        allow(@driver.browser).to(
+          receive(:quit)
+          .and_raise(Selenium::WebDriver::Error::UnknownError, "Error communicating with the remote browser")
+        )
+
+        expect { @driver.quit }.not_to raise_error
+        expect(@driver.instance_variable_get(:@browser)).to be_nil
+      end
+    end
   end
 
   context "storage" do
