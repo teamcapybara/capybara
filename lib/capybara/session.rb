@@ -125,7 +125,7 @@ module Capybara
         begin
           raise CapybaraError, "Your application server raised an error - It has been raised in your test code because Capybara.raise_server_errors == true"
         rescue CapybaraError
-          #needed to get the cuase set correctly in JRuby -- otherwise we could just do raise @server.error
+          #needed to get the cause set correctly in JRuby -- otherwise we could just do raise @server.error
           raise @server.error, @server.error.message, @server.error.backtrace
         end
       end
