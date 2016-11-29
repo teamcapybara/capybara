@@ -1,3 +1,9 @@
+#2.10.2
+Release date: unreleased
+
+### Fixed
+* App exceptions with multiple parameter initializers now re-raised correctly - Issue #1785 [Michael Lutsiuk]
+
 #2.10.1
 Release date: 2016-10-08
 
