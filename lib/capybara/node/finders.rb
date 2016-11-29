@@ -43,7 +43,7 @@ module Capybara
           if result.empty?
             raise Capybara::ElementNotFound.new("Unable to find #{query.description}")
           end
-          result.first
+          (query.match == :last) ? result.last : result.first
         end.tap(&:allow_reload!)
       end
 

@@ -222,7 +222,7 @@ module Capybara
       # @param [String] locator       Which field to attach the file to
       # @param [String] path          The path of the file that will be attached, or an array of paths
       #
-      # @option options [Symbol] match (Capybara.match)     The matching strategy to use (:one, :first, :prefer_exact, :smart).
+      # @option options [Symbol] match (Capybara.match)     The matching strategy to use (:one, :first, :last, :prefer_exact, :smart).
       # @option options [Boolean] exact (Capybara.exact)    Match the exact label name/contents or accept a partial match.
       # @option options [Boolean] multiple Match field which allows multiple file selection
       # @option options [String] id             Match fields that match the id attribute

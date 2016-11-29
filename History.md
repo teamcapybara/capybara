@@ -5,6 +5,7 @@ Release date: unreleased
 * Options for clearing session/local storage on reset added to the Selenium driver
 * Window size changes wait for the size to stabilize
 * Defined return value for most actions
+* Can specify `:last` to return the last matching node [Craig Buchek]
 
 ### Fixed
 * Ignore specific error when qutting selenium driver instance - Issue #1773 [Dylan Reichstadt, Thomas Walpole]

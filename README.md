@@ -698,16 +698,17 @@ click_link("Password", exact: false) # can be overridden
 
 Using `Capybara.match` and the equivalent `match` option, you can control how
 Capybara behaves when multiple elements all match a query. There are currently
-four different strategies built into Capybara:
+five different strategies built into Capybara:
 
 1. **first:** Just picks the first element that matches.
-2. **one:** Raises an error if more than one element matches.
-3. **smart:** If `exact` is `true`, raises an error if more than one element
+2. **last:** Just picks the last element that matches.
+3. **one:** Raises an error if more than one element matches.
+4. **smart:** If `exact` is `true`, raises an error if more than one element
    matches, just like `one`. If `exact` is `false`, it will first try to find
    an exact match. An error is raised if more than one element is found. If no
    element is found, a new search is performed which allows partial matches. If
    that search returns multiple matches, an error is raised.
-4. **prefer_exact:** If multiple matches are found, some of which are exact,
+5. **prefer_exact:** If multiple matches are found, some of which are exact,
    and some of which are not, then the first exactly matching element is
    returned.
 
