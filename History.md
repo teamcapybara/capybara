@@ -13,6 +13,7 @@ Release date: unreleased
 * Fix visible: :hidden with :text option behavior [Thomas Walpole]
 * App exceptions with multiple parameter initializers now re-raised correctly - Issue #1785 [Michael Lutsiuk]
 * Warn on selenium unknown errors rather than raising when quitting driver [Adam Pohorecki, Thomas Walpole]
+* Use Addressable::URI when parsing current_path since it's more lenient of technically invalid URLs - Issue #1801 [Marcos Duque, Thomas Walpole]
 
 #2.10.1
 Release date: 2016-10-08
