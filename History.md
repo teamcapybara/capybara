@@ -1,8 +1,9 @@
 #2.10.2
-Release date: unreleased
+Release date: 2016-11-30
 
 ### Fixed
 * App exceptions with multiple parameter initializers now re-raised correctly - Issue #1785 [Michael Lutsiuk]
+* Use Addressable::URI when parsing current_path since it's more lenient of technically invalid URLs - Issue #1801 [Marcos Duque, Thomas Walpole]
 
 #2.10.1
 Release date: 2016-10-08
