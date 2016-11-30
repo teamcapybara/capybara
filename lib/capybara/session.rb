@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'capybara/session/matchers'
+require 'addressable/uri'
 
 module Capybara
 
@@ -168,7 +169,11 @@ module Capybara
     # @return [String] Path of the current page, without any domain information
     #
     def current_path
-      path = URI.parse(current_url).path
+      # Addressable parsing is more lenient than URI
+      uri = Addressable::URI.parse(current_url)
+      # Addressable doesn't support opaque URIs - we want nil here
+      return nil if uri.scheme == "about"
+      path = uri.path
       path if path and not path.empty?
     end
 
