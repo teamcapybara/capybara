@@ -5,14 +5,19 @@ Release date: unreleased
 * Options for clearing session/local storage on reset added to the Selenium driver
 * Window size changes wait for the size to stabilize
 * Defined return value for most actions
+* Ignore specific error when qutting selenium driver instance - Issue #1773 [Dylan Reichstadt, Thomas Walpole]
+* Warn on selenium unknown errors rather than raising when quitting driver [Adam Pohorecki, Thomas Walpole]
+* Capybara::Result#each now returns an `Enumerator` when called without a block - Issue #1777 [Thomas Walpole]
 
 ### Fixed
-* Ignore specific error when qutting selenium driver instance - Issue #1773 [Dylan Reichstadt, Thomas Walpole]
-* Capybara::Result#each now returns an `Enumerator` when called without a block - Issue #1777 [Thomas Walpole]
 * Selenium driver with Chrome should support multiple file upload [Thomas Walpole]
 * Fix visible: :hidden with :text option behavior [Thomas Walpole]
+
+#2.10.2
+Release date: 2016-11-30
+
+### Fixed
 * App exceptions with multiple parameter initializers now re-raised correctly - Issue #1785 [Michael Lutsiuk]
-* Warn on selenium unknown errors rather than raising when quitting driver [Adam Pohorecki, Thomas Walpole]
 * Use Addressable::URI when parsing current_path since it's more lenient of technically invalid URLs - Issue #1801 [Marcos Duque, Thomas Walpole]
 
 #2.10.1
