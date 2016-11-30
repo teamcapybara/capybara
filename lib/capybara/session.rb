@@ -168,7 +168,8 @@ module Capybara
     # @return [String] Path of the current page, without any domain information
     #
     def current_path
-      path = URI.parse(current_url).path
+      encoded_url = URI.encode(current_url)
+      path = URI.parse(encoded_url).path
       path if path and not path.empty?
     end
 
