@@ -1,5 +1,5 @@
-#Edge
-Release date: unreleased
+#2.11.0
+Release date: 2016-12-05
 
 ### Added
 * Options for clearing session/local storage on reset added to the Selenium driver
