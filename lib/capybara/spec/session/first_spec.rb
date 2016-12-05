@@ -19,6 +19,11 @@ Capybara::SpecHelper.spec '#first' do
     expect(@session.first(@xpath).value).to eq('John')
   end
 
+  it "should warn when unused parameters are passed" do
+    expect_any_instance_of(Kernel).to receive(:warn).with(/Unused parameters passed.*unused text/)
+    @session.first(:css, '.header h2', 'unused text')
+  end
+
   context "with css selectors" do
     it "should find the first element using the given selector" do
       expect(@session.first(:css, 'h1').text).to eq('This is a test')
