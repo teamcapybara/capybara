@@ -338,22 +338,24 @@ module Capybara
     #
     # @overload within_frame(element)
     #   @param [Capybara::Node::Element]  frame element
-    # @overload within_frame(name)
-    #   @param [String] name           name/id of a frame
+    # @overload within_frame([kind = :frame], locator, options = {})
+    #   @param [Symobl] kind      Optional selector type (:css, :xpath, :field, etc.) - Defaults to :frame
+    #   @param [String] locator   The locator for the given selector kind.  For :frame this is the name/id of a frame/iframe element
     # @overload within_frame(index)
-    #   @param [Integer] index         index of a frame
-    #
-    def within_frame(locator)
+    #   @param [Integer] index         index of a frame (0 based)
+    def within_frame(*args)
       scopes.push(nil)
 
-      #support older driver frame api for now
-      frame = case locator
+      frame = case args[0]
       when Capybara::Node::Element
-        locator
-      when String
-        find(:frame, locator)
+        args[0]
+      when String, Hash
+        find(:frame, *args)
+      when Symbol
+        find(*args)
       when Integer
-        all(:frame, minimum: locator+1)[locator]
+        idx = args[0]
+        all(:frame, minimum: idx+1)[idx]
       else
         raise ArgumentError
       end

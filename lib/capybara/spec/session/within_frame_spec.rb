@@ -41,6 +41,18 @@ Capybara::SpecHelper.spec '#within_frame', requires: [:frames] do
     end
   end
 
+  it "should find the div given selector and locator" do
+    @session.within_frame(:css, '#frameOne') do
+      expect(@session.find("//*[@id='divInFrameOne']").text).to eql 'This is the text of divInFrameOne'
+    end
+  end
+
+  it "should default to the :frame selector kind when only options passed" do
+    @session.within_frame(name: 'my frame one') do
+      expect(@session.find("//*[@id='divInFrameOne']").text).to eql 'This is the text of divInFrameOne'
+    end
+  end
+
   it "should find multiple nested frames" do
     @session.within_frame 'parentFrame' do
       @session.within_frame 'childFrame' do
