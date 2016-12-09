@@ -50,7 +50,7 @@ module Capybara
     SESSION_METHODS = [
       :body, :html, :source, :current_url, :current_host, :current_path,
       :execute_script, :evaluate_script, :visit, :go_back, :go_forward,
-      :within, :within_fieldset, :within_table, :within_frame, :current_window,
+      :within, :within_fieldset, :within_table, :switch_to_frame, :within_frame, :current_window,
       :windows, :open_new_window, :switch_to_window, :within_window, :window_opened_by,
       :save_page, :save_and_open_page, :save_screenshot,
       :save_and_open_screenshot, :reset_session!, :response_headers,
@@ -333,6 +333,42 @@ module Capybara
 
     ##
     #
+    # Switch to the given frame
+    #
+    # If you use this method you are responsible for making sure you switch back to the parent frame when done in the frame changed to.
+    # Capybara::Session#within_frame is preferred over this method and should be used when possible.
+    # May not be supported by all drivers.
+    #
+    # @overload switch_to_frame(element)
+    #   @param [Capybara::Node::Element]  iframe/frame element to switch to
+    # @overload switch_to_frame(:parent)
+    #   Switch to the parent element
+    # @overload switch_to_frame(:top)
+    #   Switch to the top level document
+    #
+    def switch_to_frame(frame)
+      case frame
+      when Capybara::Node::Element
+        driver.switch_to_frame(frame)
+        scopes.push(:frame)
+      when :parent
+        raise Capybara::ScopeError, "`switch_to_frame(:parent)` cannot be called from inside a descendant frame's "\
+                                    "`within` block." if scopes.last() != :frame
+        scopes.pop
+        driver.switch_to_frame(:parent)
+      when :top
+        idx = scopes.index(:frame)
+        if idx
+          raise Capybara::ScopeError, "`switch_to_frame(:top)` cannot be called from inside a descendant frame's "\
+                                      "`within` block." if scopes.slice(idx..-1).any? {|scope| ![:frame, nil].include?(scope)}
+          scopes.slice!(idx..-1)
+          driver.switch_to_frame(:top)
+        end
+      end
+    end
+
+    ##
+    #
     # Execute the given block within the given iframe using given frame, frame name/id or index.
     # May not be supported by all drivers.
     #
@@ -344,41 +380,44 @@ module Capybara
     # @overload within_frame(index)
     #   @param [Integer] index         index of a frame (0 based)
     def within_frame(*args)
-      scopes.push(nil)
-
-      frame = case args[0]
-      when Capybara::Node::Element
-        args[0]
-      when String, Hash
-        find(:frame, *args)
-      when Symbol
-        find(*args)
-      when Integer
-        idx = args[0]
-        all(:frame, minimum: idx+1)[idx]
-      else
-        raise ArgumentError
+      frame = within(document) do  # Previous 2.x versions ignored current scope when finding frames - consider changing in 3.0
+        case args[0]
+        when Capybara::Node::Element
+          args[0]
+        when String, Hash
+          find(:frame, *args)
+        when Symbol
+          find(*args)
+        when Integer
+          idx = args[0]
+          all(:frame, minimum: idx+1)[idx]
+        else
+          raise ArgumentError
+        end
       end
 
       begin
-        driver.switch_to_frame(frame)
+        switch_to_frame(frame)
         begin
           yield
         ensure
-          driver.switch_to_frame(:parent)
+          switch_to_frame(:parent)
         end
       rescue Capybara::NotSupportedByDriverError
         # Support older driver frame API for now
         if driver.respond_to?(:within_frame)
-          driver.within_frame(frame) do
-            yield
+          begin
+            scopes.push(:frame)
+            driver.within_frame(frame) do
+              yield
+            end
+          ensure
+            scopes.pop
           end
         else
           raise
         end
       end
-    ensure
-      scopes.pop
     end
 
     ##
@@ -735,7 +774,9 @@ module Capybara
     end
 
     def current_scope
-      scopes.last || document
+      scope = scopes.last
+      scope = document if [nil, :frame].include? scope
+      scope
     end
 
   private
