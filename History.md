@@ -1,4 +1,10 @@
-#2.11.0
+#Edge
+Release date: unreleased
+
+### Added
+* Session#switch_to_frame for manually handling frame switching - Issue #1365 [Thomas Walpole]
+
+#Version 2.11.0
 Release date: 2016-12-05
 
 ### Added
@@ -13,14 +19,14 @@ Release date: 2016-12-05
 * Selenium driver with Chrome should support multiple file upload [Thomas Walpole]
 * Fix visible: :hidden with :text option behavior [Thomas Walpole]
 
-#2.10.2
+#Version 2.10.2
 Release date: 2016-11-30
 
 ### Fixed
 * App exceptions with multiple parameter initializers now re-raised correctly - Issue #1785 [Michael Lutsiuk]
 * Use Addressable::URI when parsing current_path since it's more lenient of technically invalid URLs - Issue #1801 [Marcos Duque, Thomas Walpole]
 
-#2.10.1
+#Version 2.10.1
 Release date: 2016-10-08
 
 ### Fixed
@@ -28,7 +34,7 @@ Release date: 2016-10-08
 * Capybara::Result optimization disabled in JRuby due to issue with lazy enumerator evaluation [Thomas Walpole]
   See: https://github.com/jruby/jruby/issues/4212
 
-#2.10.0
+#Version 2.10.0
 Release date: 2016-10-05
 
 ### Added
