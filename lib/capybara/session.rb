@@ -67,6 +67,7 @@ module Capybara
     attr_accessor :synchronized
 
     def initialize(mode, app=nil)
+      raise ArgumentError, "The second parameter to Session::new should be a rack app if passed." if app && !app.respond_to?(:call)
       @mode = mode
       @app = app
       if Capybara.run_server and @app and driver.needs_server?
