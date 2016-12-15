@@ -123,11 +123,16 @@ end
 # @filter [String] :title Matches the title attribute
 # @filter [String] :alt Matches the alt attribute of a contained img element
 # @filter [String] :class Matches the class(es) provided
-# @filter [String, Regexp] :href  Matches the normalized href of the link
+# @filter [String, Regexp,nil] :href  Matches the normalized href of the link, if nil will find <a> elements with no href attribute
 #
 Capybara.add_selector(:link) do
   xpath(:title, :alt) do |locator, options={}|
-    xpath = XPath.descendant(:a)[XPath.attr(:href)]
+    xpath = XPath.descendant(:a)
+    xpath = if options.fetch(:href, true).nil?
+      xpath[~XPath.attr(:href)]
+    else
+      xpath[XPath.attr(:href)]
+    end
     unless locator.nil?
       locator = locator.to_s
       matchers = XPath.attr(:id).equals(locator) |
@@ -143,14 +148,21 @@ Capybara.add_selector(:link) do
   end
 
   filter(:href) do |node, href|
-    if href.is_a? Regexp
+    case href
+    when nil
+      true
+    when Regexp
       node[:href].match href
     else
       node.first(:xpath, XPath.axis(:self)[XPath.attr(:href).equals(href.to_s)], minimum: 0)
     end
   end
 
-  describe { |options| " with href #{options[:href].inspect}" if options[:href] }
+  describe do |options|
+    desc = String.new()
+    desc << " with href #{options[:href].inspect}" if options[:href]
+    desc << " with no href attribute" if options.fetch(:href, true).nil?
+  end
 end
 
 ##

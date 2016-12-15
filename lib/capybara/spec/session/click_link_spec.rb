@@ -105,6 +105,17 @@ Capybara::SpecHelper.spec '#click_link' do
       expect { @session.click_link('labore', href: /invalid_pattern/) }.to raise_error(Capybara::ElementNotFound)
       expect { @session.click_link('labore', href: /.+d+/) }.to raise_error(Capybara::ElementNotFound)
     end
+
+    context 'href: nil' do
+      it "should not raise an error on links with no href attribute" do
+        expect { @session.click_link('No Href', href: nil) }.not_to raise_error
+      end
+
+      it "should raise an error if href attribute exists" do
+        expect { @session.click_link('Blank Href', href: nil) }.to raise_error(Capybara::ElementNotFound)
+        expect { @session.click_link('Normal Anchor', href: nil) }.to raise_error(Capybara::ElementNotFound)
+      end
+    end
   end
 
   it "should follow relative links" do
@@ -161,7 +172,7 @@ Capybara::SpecHelper.spec '#click_link' do
     expect(@session).to have_content('Bar')
   end
 
-  it "raise an error with links with no href" do
+  it "should raise an error with links with no href" do
     expect do
       @session.click_link('No Href')
     end.to raise_error(Capybara::ElementNotFound)
