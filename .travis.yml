@@ -50,7 +50,7 @@ matrix:
           packages:
             - awesome
     - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: 2.4.0-preview2
+      rvm: 2.4.0-rc1
       addons:
         firefox: latest-beta
       env:
