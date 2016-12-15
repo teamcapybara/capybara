@@ -66,6 +66,17 @@ Capybara::SpecHelper.spec "#all" do
       Capybara.ignore_hidden_elements = false
       expect(@session.all(:css, "a.simple").size).to eq(2)
     end
+
+    context "with per session config", requires: [:psc] do
+      it "should use the sessions ignore_hidden_elements", psc: true do
+        Capybara.ignore_hidden_elements = true
+        @session.config.ignore_hidden_elements = false
+        expect(Capybara.ignore_hidden_elements).to eq(true)
+        expect(@session.all(:css, "a.simple").size).to eq(2)
+        @session.config.ignore_hidden_elements = true
+        expect(@session.all(:css, "a.simple").size).to eq(1)
+      end
+    end
   end
 
   context 'with element count filters' do

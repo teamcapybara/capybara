@@ -14,8 +14,8 @@ RSpec.describe Capybara do
     end
 
     it "should be accesible as the deprecated default_wait_time" do
-      expect(Capybara).to receive(:warn).ordered.with('DEPRECATED: #default_wait_time= is deprecated, please use #default_max_wait_time= instead')
-      expect(Capybara).to receive(:warn).ordered.with('DEPRECATED: #default_wait_time is deprecated, please use #default_max_wait_time instead')
+      expect(Capybara.send(:config)).to receive(:warn).ordered.with('DEPRECATED: #default_wait_time= is deprecated, please use #default_max_wait_time= instead')
+      expect(Capybara.send(:config)).to receive(:warn).ordered.with('DEPRECATED: #default_wait_time is deprecated, please use #default_max_wait_time instead')
       @previous_default_time = Capybara.default_max_wait_time
       Capybara.default_wait_time = 5
       expect(Capybara.default_wait_time).to eq(5)
@@ -112,6 +112,18 @@ RSpec.describe Capybara do
 
     it "should not warn if a valid URL" do
       expect { Capybara.default_host = "http://www.example.com" }.not_to raise_error
+    end
+  end
+
+  describe "configure" do
+    it 'deprecates calling non configuration option methods in configure' do
+      expect_any_instance_of(Kernel).to receive(:warn).
+        with('Calling register_driver from Capybara.configure is deprecated - please call it on Capybara directly ( Capybara.register_driver(...) )')
+      Capybara.configure do |config|
+        config.register_driver(:random_name) do
+          #just a random block
+        end
+      end
     end
   end
 end

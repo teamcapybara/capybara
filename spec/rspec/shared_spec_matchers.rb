@@ -555,8 +555,8 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
 
         it "doesn't wait if wait time is less than timeout" do
           @session.click_link("Change title")
-          using_wait_time 0 do
-            expect(@session).not_to have_title('changed title')
+          using_wait_time 3 do
+            expect(@session).not_to have_title('changed title', wait: 0)
           end
         end
       end

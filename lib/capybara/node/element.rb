@@ -55,7 +55,7 @@ module Capybara
       # @return [String]              The text of the element
       #
       def text(type=nil)
-        type ||= :all unless Capybara.ignore_hidden_elements or Capybara.visible_text_only
+        type ||= :all unless session_options.ignore_hidden_elements or session_options.visible_text_only
         synchronize do
           if type == :all
             base.all_text

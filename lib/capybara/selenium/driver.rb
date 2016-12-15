@@ -320,7 +320,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     # Selenium has its own built in wait (2 seconds)for a modal to show up, so this wait is really the minimum time
     # Actual wait time may be longer than specified
     wait = Selenium::WebDriver::Wait.new(
-      timeout: (options[:wait] || Capybara.default_max_wait_time),
+      timeout: options.fetch(:wait, session_options.default_max_wait_time) || 0 ,
       ignore: Selenium::WebDriver::Error::NoAlertPresentError)
     begin
       wait.until do

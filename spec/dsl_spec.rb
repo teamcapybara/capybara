@@ -16,6 +16,7 @@ Capybara::SpecHelper.run_specs TestClass.new, "DSL", capybara_skip: [
   :server,
   :hover,
   :about_scheme,
+  :psc
 ]
 
 RSpec.describe Capybara::DSL do

@@ -139,7 +139,7 @@ Capybara.add_selector(:link) do
                  XPath.string.n.is(locator) |
                  XPath.attr(:title).is(locator) |
                  XPath.descendant(:img)[XPath.attr(:alt).is(locator)]
-      matchers |= XPath.attr(:'aria-label').is(locator) if Capybara.enable_aria_label
+      matchers |= XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
       xpath = xpath[matchers]
     end
     xpath = [:title].inject(xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
@@ -185,14 +185,14 @@ Capybara.add_selector(:button) do
     unless locator.nil?
       locator = locator.to_s
       locator_matches = XPath.attr(:id).equals(locator) | XPath.attr(:value).is(locator) | XPath.attr(:title).is(locator)
-      locator_matches |= XPath.attr(:'aria-label').is(locator) if Capybara.enable_aria_label
+      locator_matches |= XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
 
       input_btn_xpath = input_btn_xpath[locator_matches]
 
       btn_xpath = btn_xpath[locator_matches | XPath.string.n.is(locator) | XPath.descendant(:img)[XPath.attr(:alt).is(locator)]]
 
       alt_matches = XPath.attr(:alt).is(locator)
-      alt_matches |= XPath.attr(:'aria-label').is(locator) if Capybara.enable_aria_label
+      alt_matches |= XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
       image_btn_xpath = image_btn_xpath[alt_matches]
     end
 

@@ -60,18 +60,18 @@ Capybara::SpecHelper.spec '#become_closed', requires: [:windows, :js] do
   end
 
   context 'with not_to' do
-    it 'should raise error if default_max_wait_time is more than timeout' do
+    it "should not raise error if window doesn't close before default_max_wait_time" do
       @session.within_window @other_window do
-        @session.execute_script('setTimeout(function(){ window.close(); }, 700);')
+        @session.execute_script('setTimeout(function(){ window.close(); }, 1000);')
       end
-      Capybara.using_wait_time 0.4 do
+      Capybara.using_wait_time 0.3 do
         expect do
           expect(@other_window).not_to become_closed
         end
       end
     end
 
-    it 'should raise error if default_max_wait_time is more than timeout' do
+    it 'should raise error if window closes before default_max_wait_time' do
       @session.within_window @other_window do
         @session.execute_script('setTimeout(function(){ window.close(); }, 700);')
       end

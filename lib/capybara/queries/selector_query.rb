@@ -9,11 +9,13 @@ module Capybara
 
       def initialize(*args, &filter_block)
         @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
+        self.session_options = @options.delete(:session_options)
+
         @filter_block = filter_block
 
         if args[0].is_a?(Symbol)
           @selector = Selector.all.fetch(args.shift) do |selector_type|
-            warn "Unknown selector type (:#{selector_type}), defaulting to :#{Capybara.default_selector} - This will raise an exception in a future version of Capybara"
+            raise ArgumentError, "Unknown selector type (:#{selector_type})"
             nil
           end
           @locator = args.shift
@@ -21,16 +23,16 @@ module Capybara
           @selector = Selector.all.values.find { |s| s.match?(args[0]) }
           @locator = args.shift
         end
-        @selector ||= Selector.all[Capybara.default_selector]
+        @selector ||= Selector.all[session_options.default_selector]
 
         warn "Unused parameters passed to #{self.class.name} : #{args.to_s}" unless args.empty?
 
         # for compatibility with Capybara 2.0
-        if Capybara.exact_options and @selector == Selector.all[:option]
+        if session_options.exact_options and @selector == Selector.all[:option]
           @options[:exact] = true
         end
 
-        @expression = @selector.call(@locator, @options)
+        @expression = @selector.call(@locator, @options.merge(enable_aria_label: session_options.enable_aria_label))
 
         warn_exact_usage
 
@@ -89,12 +91,12 @@ module Capybara
           end
         end
 
-        res &&= Capybara.using_wait_time(0){ @filter_block.call(node)} unless @filter_block.nil?
+        res &&= node.session.using_wait_time(0){ @filter_block.call(node)} unless @filter_block.nil?
         res
       end
 
       def visible
-        case (vis = options.fetch(:visible){ @selector.default_visibility })
+        case (vis = options.fetch(:visible){ @selector.default_visibility(session_options.ignore_hidden_elements) })
           when true then :visible
           when false then :all
           else vis
@@ -103,11 +105,11 @@ module Capybara
 
       def exact?
         return false if !supports_exact?
-        options.fetch(:exact, Capybara.exact)
+        options.fetch(:exact, session_options.exact)
       end
 
       def match
-        options.fetch(:match, Capybara.match)
+        options.fetch(:match, session_options.match)
       end
 
       def xpath(exact=nil)
@@ -205,7 +207,7 @@ module Capybara
       end
 
       def exact_text
-        options.fetch(:exact_text, Capybara.exact_text)
+        options.fetch(:exact_text, session_options.exact_text)
       end
     end
   end

@@ -67,6 +67,7 @@ You can read more about the missing features [here](https://github.com/teamcapyb
 - [Beware the XPath // trap](#beware-the-xpath--trap)
 - [Configuring and adding drivers](#configuring-and-adding-drivers)
 - [Gotchas:](#gotchas)
+- ["Threadsafe" mode](#threadsafe)
 - [Development](#development)
 
 ## <a name="key-benefits"></a>Key benefits
@@ -1047,6 +1048,31 @@ additional info about how the underlying driver can be configured.
 * Server errors will only be raised in the session that initiates the server thread. If you
   are testing for specific server errors and using multiple sessions make sure to test for the
   errors using the initial session (usually :default)
+
+## <a name="threadsafe"></a>"Threadsafe" mode - BETA - may change
+
+In normal mode most of Capybara's configuration options are global settings which can cause issues
+if using multiple sessions and wanting to change a setting for only one of the sessions.  To provide
+support for this type of usage Capybara now provides a "threadsafe" mode which can be enabled by setting
+
+    Capybara.threadsafe = true
+
+This setting can only be changed before any sessions have been created.  In "threadsafe" mode the following
+behaviors of Capybara change
+
+* Most options can now be set on a session.  These can either be set at session creation time or after, and
+  default to the global options at the time of session creation.  Options which are NOT session specific are
+  `app`, `reuse_server`, `default_driver`, `javascript_driver`, and (obviously) `threadsafe`.  Any drivers and servers
+  registered through `register_driver` and `register_server` are also global.
+
+      my_session = Capybara::Session.new(:driver, some_app) do |config|
+        config.automatic_label_click = true # only set for my_session
+      end
+      my_session.config.default_max_wait_time = 10 # only set for my_session
+      Capybara.default_max_wait_time = 2 # will not change the default_max_wait in my_session
+
+* `current_driver` and `session_name` are thread specific.  This means that `using_session' and
+  `using_driver` also only affect the current thread.
 
 ## <a name="development"></a>Development
 

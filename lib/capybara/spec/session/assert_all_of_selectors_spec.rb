@@ -18,10 +18,18 @@ Capybara::SpecHelper.spec '#assert_all_of_selectors' do
     @session.assert_all_of_selectors("p a#foo", "h2#h2two", "h2#h2one" )
   end
 
-  it "should respect scopes" do
-    @session.within "//p[@id='first']" do
-      @session.assert_all_of_selectors(".//a[@id='foo']")
-      expect { @session.assert_all_of_selectors(".//a[@id='red']") }.to raise_error(Capybara::ElementNotFound)
+  context "should respect scopes" do
+    it "when used with `within`" do
+      @session.within "//p[@id='first']" do
+        @session.assert_all_of_selectors(".//a[@id='foo']")
+        expect { @session.assert_all_of_selectors(".//a[@id='red']") }.to raise_error(Capybara::ElementNotFound)
+      end
+    end
+
+    it "when called on elements" do
+      el = @session.find "//p[@id='first']"
+      el.assert_all_of_selectors(".//a[@id='foo']")
+      expect { el.assert_all_of_selectors(".//a[@id='red']") }.to raise_error(Capybara::ElementNotFound)
     end
   end
 
@@ -65,10 +73,18 @@ Capybara::SpecHelper.spec '#assert_none_of_selectors' do
     expect { @session.assert_none_of_selectors("abbr", "p a#foo") }.to raise_error(Capybara::ElementNotFound)
   end
 
-  it "should respect scopes" do
-    @session.within "//p[@id='first']" do
-      expect { @session.assert_none_of_selectors(".//a[@id='foo']") }.to raise_error(Capybara::ElementNotFound)
-      @session.assert_none_of_selectors(".//a[@id='red']")
+  context "should respect scopes" do
+    it "when used with `within`" do
+      @session.within "//p[@id='first']" do
+        expect { @session.assert_none_of_selectors(".//a[@id='foo']") }.to raise_error(Capybara::ElementNotFound)
+        @session.assert_none_of_selectors(".//a[@id='red']")
+      end
+    end
+
+    it "when called on an element" do
+      el = @session.find "//p[@id='first']"
+      expect { el.assert_none_of_selectors(".//a[@id='foo']") }.to raise_error(Capybara::ElementNotFound)
+      el.assert_none_of_selectors(".//a[@id='red']")
     end
   end
 

@@ -421,8 +421,9 @@ Capybara::SpecHelper.spec '#find' do
     end
   end
 
-  it "should warn if selector type is unknown" do
-    expect_any_instance_of(Kernel).to receive(:warn).with(/^Unknown selector type/)
-    @session.find(:unknown, '//h1')
+  it "should raise if selector type is unknown" do
+    expect do
+      @session.find(:unknown, '//h1')
+    end.to raise_error(ArgumentError)
   end
 end
