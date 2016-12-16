@@ -244,7 +244,7 @@ module Capybara
     # manually.
     #
     # @param [Rack Application] app    The rack application to run
-    # @param [Fixnum] port              The port to run the application on
+    # @param [Integer] port              The port to run the application on
     #
     def run_default_server(app, port)
       servers[:webrick].call(app, port, server_host)

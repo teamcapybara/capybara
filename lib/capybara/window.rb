@@ -71,7 +71,7 @@ module Capybara
     # Get window size.
     #
     # @macro about_current
-    # @return [Array<(Fixnum, Fixnum)>] an array with width and height
+    # @return [Array<(Integer, Integer)>] an array with width and height
     #
     def size
       @driver.window_size(handle)
