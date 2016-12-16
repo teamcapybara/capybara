@@ -108,7 +108,7 @@ Capybara::SpecHelper.spec '#find' do
     it "should use the selector when it matches the :for option" do
       Capybara.add_selector(:beatle) do
         xpath { |num| ".//*[contains(@class, 'beatle')][#{num}]" }
-        match { |value| value.is_a?(Fixnum) }
+        match { |value| value.is_a?(Integer) }
       end
       expect(@session.find(:beatle, '2').text).to eq('Paul')
       expect(@session.find(1).text).to eq('John')

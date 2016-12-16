@@ -372,7 +372,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
           end.to raise_error('expected to find text matching /No such Text/ in "Text"')
         end
 
-        it "casts Fixnum to string" do
+        it "casts Integer to string" do
           expect do
             expect("<h1>Text</h1>").to have_text(3)
           end.to raise_error(/expected to find text "3" in "Text"/)
