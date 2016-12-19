@@ -4,6 +4,9 @@ Release date: unreleased
 ### Added
 * Session#switch_to_frame for manually handling frame switching - Issue #1365 [Thomas Walpole]
 
+### Fixed
+* SeleniumDriver#reset! allows dummy frame with chrome when JS is disabled - Issue #1809
+
 #Version 2.11.0
 Release date: 2016-12-05
 
