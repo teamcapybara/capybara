@@ -100,6 +100,12 @@ Capybara::SpecHelper.spec "#fill_in" do
     expect(extract_results(@session)['password']).to eq('supasikrit')
   end
 
+  it "should fill in a field based on current value", twtw: true do
+    @session.fill_in(currently_with: 'John', with: 'Thomas')
+    @session.click_button('awesome')
+    expect(extract_results(@session)['first_name']).to eq('Thomas')
+  end
+
   it "should throw an exception if a hash containing 'with' is not provided" do
     expect {@session.fill_in 'Name', 'ignu'}.to raise_error(RuntimeError, /with/)
   end
