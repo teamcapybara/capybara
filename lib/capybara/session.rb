@@ -602,10 +602,16 @@ module Capybara
     # +evaluate_script+ whenever possible.
     #
     # @param [String] script   A string of JavaScript to execute
+    # @param args  Optional arguments that will be passed to the script.  Driver support for this is optional and types of objects supported may differ between drivers
     #
-    def execute_script(script)
+    def execute_script(script, *args)
       @touched = true
-      driver.execute_script(script)
+      if driver.method(:execute_script).arity == 1
+        raise Capybara::NotSupportedByDriverError, "The current driver does not support arguments being passed with execute_script" unless args.empty?
+        driver.execute_script(script)
+      else
+        driver.execute_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ?  arg.native : arg} )
+      end
     end
 
     ##
@@ -617,9 +623,14 @@ module Capybara
     # @param  [String] script   A string of JavaScript to evaluate
     # @return [Object]          The result of the evaluated JavaScript (may be driver specific)
     #
-    def evaluate_script(script)
+    def evaluate_script(script, *args)
       @touched = true
-      driver.evaluate_script(script)
+      if driver.method(:evaluate_script).arity == 1
+        raise Capybara::NotSupportedByDriverError, "The current driver does not support arguments being passed with execute_script" unless args.empty?
+        driver.evaluate_script(script)
+      else
+        driver.evaluate_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ?  arg.native : arg} )
+      end
     end
 
     ##
