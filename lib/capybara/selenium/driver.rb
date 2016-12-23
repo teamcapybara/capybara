@@ -86,12 +86,12 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def wait?; true; end
   def needs_server?; true; end
 
-  def execute_script(script)
-    browser.execute_script script
+  def execute_script(script, *args)
+    browser.execute_script script, *args
   end
 
-  def evaluate_script(script)
-    browser.execute_script "return #{script}"
+  def evaluate_script(script, *args)
+    browser.execute_script "return #{script}", *args
   end
 
   def save_screenshot(path, _options={})
