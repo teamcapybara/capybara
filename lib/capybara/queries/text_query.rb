@@ -10,8 +10,8 @@ module Capybara
         unless @expected_text.is_a?(Regexp)
           @expected_text = Capybara::Helpers.normalize_whitespace(@expected_text)
         end
-        @search_regexp = Capybara::Helpers.to_regexp(@expected_text)
         @options ||= {}
+        @search_regexp = Capybara::Helpers.to_regexp(@expected_text, nil, exact?)
         assert_valid_keys
       end
 
@@ -33,11 +33,15 @@ module Capybara
         if @expected_text.is_a?(Regexp)
           "text matching #{@expected_text.inspect}"
         else
-          "text #{@expected_text.inspect}"
+          "#{"exact " if exact?}text #{@expected_text.inspect}"
         end
       end
 
       private
+
+      def exact?
+        options.fetch(:exact, Capybara.exact_text)
+      end
 
       def build_message(report_on_invisible)
         message = String.new()
@@ -70,7 +74,7 @@ module Capybara
       end
 
       def valid_keys
-        COUNT_KEYS + [:wait]
+        COUNT_KEYS + [:wait, :exact]
       end
 
       def check_visible_text?

@@ -96,6 +96,18 @@ Capybara::SpecHelper.spec '#has_text?' do
     expect(@session).not_to have_text(/xxxxyzzz/)
   end
 
+  context "with exact: true option" do
+    it "should be true if text matches exactly" do
+      @session.visit('/with_html')
+      expect(@session.find(:id, "h2one")).to have_text("Header Class Test One", exact: true)
+    end
+
+    it "should be false if text doesn't match exactly" do
+      @session.visit('/with_html')
+      expect(@session.find(:id, "h2one")).not_to have_text("Header Class Test On", exact: true)
+    end
+  end
+
   it "should escape any characters that would have special meaning in a regexp" do
     @session.visit('/with_html')
     expect(@session).not_to have_text('.orem')
@@ -205,7 +217,7 @@ Capybara::SpecHelper.spec '#has_text?' do
   it "should raise an error if an invalid option is passed" do
     @session.visit('/with_html')
     expect do
-      expect(@session).to have_text('Lorem', exact: true)
+      expect(@session).to have_text('Lorem', invalid: true)
     end.to raise_error(ArgumentError)
   end
 end

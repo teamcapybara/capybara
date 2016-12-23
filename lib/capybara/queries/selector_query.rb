@@ -4,7 +4,7 @@ module Capybara
     class SelectorQuery < Queries::BaseQuery
       attr_accessor :selector, :locator, :options, :expression, :find, :negative
 
-      VALID_KEYS = COUNT_KEYS + [:text, :id, :class, :visible, :exact, :match, :wait, :filter_set]
+      VALID_KEYS = COUNT_KEYS + [:text, :id, :class, :visible, :exact, :exact_text, :match, :wait, :filter_set]
       VALID_MATCH = [:first, :smart, :prefer_exact, :one]
 
       def initialize(*args, &filter_block)
@@ -42,7 +42,8 @@ module Capybara
 
       def description
         @description = String.new("#{label} #{locator.inspect}")
-        @description << " with text #{options[:text].inspect}" if options[:text]
+        @description << " with#{" exact" if exact_text === true} text #{options[:text].inspect}" if options[:text]
+        @description << " with exact text #{options[:exact_text]}" if options[:exact_text].is_a?(String)
         @description << " with id #{options[:id]}" if options[:id]
         @description << " with classes #{Array(options[:class]).join(',')}]" if options[:class]
         @description << selector.description(options)
@@ -52,7 +53,22 @@ module Capybara
 
       def matches_filters?(node)
         if options[:text]
-          regexp = options[:text].is_a?(Regexp) ? options[:text] : Regexp.escape(options[:text].to_s)
+          regexp = if options[:text].is_a?(Regexp)
+            options[:text]
+          else
+            if exact_text === true
+              "\\A#{Regexp.escape(options[:text].to_s)}\\z"
+            else
+              Regexp.escape(options[:text].to_s)
+            end
+          end
+          text_visible = visible
+          text_visible = :all if text_visible == :hidden
+          return false if not node.text(text_visible).match(regexp)
+        end
+
+        if exact_text.is_a?(String)
+          regexp = "\\A#{Regexp.escape(options[:exact_text])}\\z"
           text_visible = visible
           text_visible = :all if text_visible == :hidden
           return false if not node.text(text_visible).match(regexp)
@@ -186,6 +202,10 @@ module Capybara
         if options.has_key?(:exact) && !supports_exact?
           warn "The :exact option only has an effect on queries using the XPath#is method. Using it with the query \"#{expression.to_s}\" has no effect."
         end
+      end
+
+      def exact_text
+        exact_text = options.fetch(:exact_text, Capybara.exact_text)
       end
     end
   end

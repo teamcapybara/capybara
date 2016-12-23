@@ -546,6 +546,7 @@ module Capybara
       #     @option options [Integer] :maximum (nil)   Maximum number of times the text is expected to occur
       #     @option options [Range]   :between (nil)   Range of times that is expected to contain number of times text occurs
       #     @option options [Numeric] :wait (Capybara.default_max_wait_time)      Maximum time that Capybara will wait for text to eq/match given string/regexp argument
+      #     @option options [Boolean] :exact (Capybara.exact_text) Whether text must be an exact match or just substring
       #   @overload $0(text, options = {})
       #     @param [String, Regexp] text               The string/regexp to check for. If it's a string, text is expected to include it. If it's a regexp, text is expected to match it.
       #     @option options [Integer] :count (nil)     Number of times the text is expected to occur
@@ -553,6 +554,7 @@ module Capybara
       #     @option options [Integer] :maximum (nil)   Maximum number of times the text is expected to occur
       #     @option options [Range]   :between (nil)   Range of times that is expected to contain number of times text occurs
       #     @option options [Numeric] :wait (Capybara.default_max_wait_time)      Maximum time that Capybara will wait for text to eq/match given string/regexp argument
+      #     @option options [Boolean] :exact (Capybara.exact_text) Whether text must be an exact match or just substring
       # @raise [Capybara::ExpectationNotMet] if the assertion hasn't succeeded during wait time
       # @return [true]
       #

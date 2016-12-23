@@ -77,6 +77,27 @@ Capybara::SpecHelper.spec '#has_selector?' do
       expect(@session).to have_selector(:css, "p a#foo", 'extra')
     end
   end
+
+  context "with exact_text" do
+    context "string" do
+      it "should only match elements that match exactly" do
+        expect(@session).to have_selector(:id, "h2one", exact_text: "Header Class Test One")
+        expect(@session).to have_no_selector(:id, "h2one", exact_text: "Header Class Test")
+      end
+    end
+
+    context "boolean" do
+      it "should only match elements that match exactly when true" do
+        expect(@session).to have_selector(:id, "h2one", text: "Header Class Test One", exact_text: true)
+        expect(@session).to have_no_selector(:id, "h2one", text: "Header Class Test", exact_text: true)
+      end
+
+      it "should match substrings when false" do
+        expect(@session).to have_selector(:id, "h2one", text: "Header Class Test One", exact_text: false)
+        expect(@session).to have_selector(:id, "h2one", text: "Header Class Test", exact_text: false)
+      end
+    end
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_selector?' do

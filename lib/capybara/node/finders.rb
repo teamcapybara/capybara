@@ -188,6 +188,7 @@ module Capybara
       # @param [Symbol] kind                       Optional selector type (:css, :xpath, :field, etc.) - Defaults to Capybara.default_selector
       # @param [String] locator                    The selector
       # @option options [String, Regexp] text      Only find elements which contain this text or match this regexp
+      # @option options [String, Boolean] exact_text (Capybara.exact_text) When String the string the elements contained text must match exactly, when Boolean controls whether the :text option must match exactly
       # @option options [Boolean, Symbol] visible  Only find elements with the specified visibility:
       #                                              * true - only finds visible elements.
       #                                              * false - finds invisible _and_ visible elements.
