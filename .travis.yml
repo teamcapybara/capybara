@@ -3,7 +3,7 @@ sudo: required
 dist: trusty
 rvm:
   - 2.0.0
-  - 2.2
+  - 2.3.3
   - jruby-9.1.5.0
   - rbx-3.26
 gemfile:
@@ -22,7 +22,7 @@ addons:
 matrix:
   include:
     - gemfile: Gemfile
-      rvm: 2.3.1
+      rvm: 2.4.0
       env:
         - WINDOW_TEST=true
     - gemfile: gemfiles/Gemfile.rspec-34
@@ -40,7 +40,7 @@ matrix:
     - gemfile: gemfiles/Gemfile.base-versions
       rvm: 1.9.3
     - gemfile: Gemfile
-      rvm: 2.3.1
+      rvm: 2.4.0
       env:
         - WINDOW_TEST=true
         - CAPYBARA_MARIONETTE=true
@@ -50,14 +50,14 @@ matrix:
           packages:
             - awesome
     - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: 2.4.0-rc1
+      rvm: 2.4.0
       addons:
         firefox: latest-beta
       env:
         - WINDOW_TEST=true
         - CAPYBARA_MARIONETTE=true
     - gemfile: gemfiles/Gemfile.edge-marionette
-      rvm: 2.3.1
+      rvm: 2.4.0
       env:
         - WINDOW_TEST=true
         - CAPYBARA_MARIONETTE=true
@@ -68,7 +68,7 @@ matrix:
             - awesome
   allow_failures:
     - gemfile: Gemfile
-      rvm: 2.3.1
+      rvm: 2.4.0
       env:
         - WINDOW_TEST=true
         - CAPYBARA_MARIONETTE=true
