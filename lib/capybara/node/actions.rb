@@ -75,6 +75,7 @@ module Capybara
       #   @macro waiting_behavior
       #   @option options [String] :with          The value to fill in - required
       #   @option options [Hash] :fill_options    Driver specific options regarding how to fill fields
+      #   @option options [String] :currently_with The current value property of the field to fill in
       #   @option options [Boolean] :multiple      Match fields that can have multiple values?
       #   @option options [String] :id             Match fields that match the id attribute
       #   @option options [String] :name           Match fields that match the name attribute
@@ -87,6 +88,7 @@ module Capybara
         raise "Must pass a hash containing 'with'" if not options.is_a?(Hash) or not options.has_key?(:with)
         with = options.delete(:with)
         fill_options = options.delete(:fill_options)
+        options[:with] = options.delete(:currently_with) if options.has_key?(:currently_with)
         find(:fillable_field, locator, options).set(with, fill_options)
       end
 
