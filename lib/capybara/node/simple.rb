@@ -103,8 +103,7 @@ module Capybara
         return false if (tag_name == 'input') && (native[:type]=="hidden")
 
         if check_ancestors
-          #check size because oldest supported nokogiri doesnt support xpath boolean() function
-          native.xpath("./ancestor-or-self::*[contains(@style, 'display:none') or contains(@style, 'display: none') or @hidden or name()='script' or name()='head']").size() == 0
+          !native.xpath("boolean(./ancestor-or-self::*[contains(@style, 'display:none') or contains(@style, 'display: none') or @hidden or name()='script' or name()='head'])")
         else
           #no need for an xpath if only checking the current element
           !(native.has_attribute?('hidden') || (native[:style] =~ /display:\s?none/) || %w(script head).include?(tag_name))
