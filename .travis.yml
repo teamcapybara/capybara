@@ -2,7 +2,6 @@ language: ruby
 sudo: required
 dist: trusty
 rvm:
-  - 2.0.0
   - 2.3.3
   - jruby-9.1.5.0
   - rbx-3.26
@@ -35,6 +34,8 @@ matrix:
           packages:
             - google-chrome-stable
             - awesome
+    - gemfile: gemfiles/Gemfile.ruby-20
+      rvm: 2.0.0
     - gemfile: gemfiles/Gemfile.ruby-19
       rvm: 1.9.3
     - gemfile: gemfiles/Gemfile.base-versions
