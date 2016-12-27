@@ -11,3 +11,4 @@ gem 'tins', '< 1.7.0'  # 1.7.0 requires ruby 2.0
 
 gem 'selenium-webdriver', '< 3.0.0' # 3.0 requires ruby 2.0
 gem 'addressable', '< 2.5.0' # 2.5 requires public_suffix which requires ruby 2.0
+gem 'nokogiri', '< 1.7.0' # 1.7 requires ruby 2.1+
