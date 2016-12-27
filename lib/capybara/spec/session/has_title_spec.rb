@@ -21,6 +21,21 @@ Capybara::SpecHelper.spec '#has_title?' do
   it "should be false if the page has not the given title" do
     expect(@session).not_to have_title('monkey')
   end
+
+  it "should default to exact: false matching" do
+    expect(@session).to have_title('with_js', exact: false)
+    expect(@session).to have_title('with_', exact: false)
+  end
+
+  it "should match exactly if exact: true option passed" do
+    expect(@session).to have_title('with_js', exact: true)
+    expect(@session).not_to have_title('with_', exact: true)
+  end
+
+  it "should match partial if exact: false option passed" do
+    expect(@session).to have_title('with_js', exact: false)
+    expect(@session).to have_title('with_', exact: false)
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_title?' do

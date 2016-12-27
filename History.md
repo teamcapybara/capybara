@@ -5,6 +5,9 @@ Release date: unreleased
 * Session#switch_to_frame for manually handling frame switching - Issue #1365 [Thomas Walpole]
 * Session#execute_script and Session#evaluate_script now accept optional arguments that will be based to the JS function.  This may not be supported
   by all drivers, and the types of arguments that may be passed is limited.  If drivers opt to support this feature they should support passing page elements.
+* :exact option for text and title matchers
+* :exact_text option for selector finders/minders
+* Capybara.exact_text setting that affects the text matchers and :text options passed to selector finders/matchers.
 
 #Version 2.11.0
 Release date: 2016-12-05

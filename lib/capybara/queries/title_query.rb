@@ -9,7 +9,7 @@ module Capybara
         unless @expected_title.is_a?(Regexp)
           @expected_title = Capybara::Helpers.normalize_whitespace(@expected_title)
         end
-        @search_regexp = Capybara::Helpers.to_regexp(@expected_title)
+        @search_regexp = Capybara::Helpers.to_regexp(@expected_title, nil, options.fetch(:exact, false))
         assert_valid_keys
       end
 
@@ -34,7 +34,7 @@ module Capybara
       end
 
       def valid_keys
-        [:wait]
+        [:wait, :exact]
       end
     end
   end

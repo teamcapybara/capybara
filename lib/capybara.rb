@@ -29,6 +29,7 @@ module Capybara
     attr_accessor :raise_server_errors, :server_errors
     attr_writer :default_driver, :current_driver, :javascript_driver, :session_name, :server_host
     attr_reader :save_and_open_page_path
+    attr_accessor :exact_text
     attr_accessor :app
 
     ##
@@ -495,6 +496,7 @@ Capybara.configure do |config|
   config.automatic_reload = true
   config.match = :smart
   config.exact = false
+  config.exact_text = false
   config.raise_server_errors = true
   config.server_errors = [StandardError]
   config.visible_text_only = false

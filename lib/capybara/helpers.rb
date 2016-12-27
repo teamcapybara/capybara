@@ -28,8 +28,14 @@ module Capybara
     # @param [String] text Text to escape
     # @return [String]     Escaped text
     #
-    def to_regexp(text, options=nil)
-      text.is_a?(Regexp) ? text : Regexp.new(Regexp.escape(normalize_whitespace(text)), options)
+    def to_regexp(text, regexp_options=nil, exact=false)
+      if text.is_a?(Regexp)
+        text
+      else
+        escaped = Regexp.escape(normalize_whitespace(text))
+        escaped = "\\A#{escaped}\\z" if exact
+        Regexp.new(escaped, regexp_options)
+      end
     end
 
     ##
