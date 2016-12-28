@@ -31,6 +31,7 @@ module Capybara
     attr_reader :save_and_open_page_path
     attr_accessor :exact_text
     attr_accessor :app
+    attr_accessor :expected_shadowed_dsl_methods
 
     ##
     #
@@ -504,6 +505,7 @@ Capybara.configure do |config|
   config.automatic_label_click = false
   config.enable_aria_label = false
   config.reuse_server = true
+  config.expected_shadowed_dsl_methods = []
 end
 
 Capybara.register_driver :rack_test do |app|

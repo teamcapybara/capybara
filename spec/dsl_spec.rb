@@ -239,9 +239,14 @@ RSpec.describe Capybara::DSL do
     end
   end
 
-  describe 'the DSL' do
+  describe 'the DSL'   do
     before do
       @session = Class.new { include Capybara::DSL }.new
+    end
+
+    module Shadower
+      def all; end
+      def within; end
     end
 
     it "should be possible to include it in another class" do
@@ -264,6 +269,37 @@ RSpec.describe Capybara::DSL do
     it "should provide a 'using_wait_time' shortcut" do
       expect(Capybara).to receive(:using_wait_time).with(6)
       @session.using_wait_time(6)
+    end
+
+    it "should warn if another module shadows its methods" do
+      expect_any_instance_of(Kernel).to receive(:warn).with(/Capybara::DSL methods \[:all, :within\] are shadowed by Shadower/)
+      @session.class.class_eval do
+        include Shadower
+      end
+    end
+
+    it "should not warn if all methods marked as expected to be shadowed" do
+      Capybara.expected_shadowed_dsl_methods = [:within, :all]
+      expect_any_instance_of(Kernel).not_to receive(:warn)
+      @session.class.class_eval do
+        include Shadower
+      end
+    end
+
+    it "should not warn about methods marked as expected" do
+      Capybara.expected_shadowed_dsl_methods = [:within]
+      expect_any_instance_of(Kernel).to receive(:warn).with(/Capybara::DSL methods \[:all\] are shadowed by Shadower/)
+      @session.class.class_eval do
+        include Shadower
+      end
+    end
+
+    it "should not warn if expected is set to nil" do
+      Capybara.expected_shadowed_dsl_methods = nil
+      expect_any_instance_of(Kernel).not_to receive(:warn)
+      @session.class.class_eval do
+        include Shadower
+      end
     end
   end
 end

@@ -480,25 +480,25 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
   end
 
   describe "have_link matcher" do
-    let(:html) { '<a href="#">Just a link</a><a href="#">Another link</a>' }
+    let(:src) { '<a href="#">Just a link</a><a href="#">Another link</a>' }
 
     it "gives proper description" do
       expect(have_link('Just a link').description).to eq("have link \"Just a link\"")
     end
 
     it "passes if there is such a button" do
-      expect(html).to have_link('Just a link')
+      expect(src).to have_link('Just a link')
     end
 
     it "fails if there is no such button" do
       expect do
-        expect(html).to have_link('No such Link')
+        expect(src).to have_link('No such Link')
       end.to raise_error(/expected to find link "No such Link"/)
     end
 
     it "supports compounding" do
-      expect(html).to have_link('Just a link').and have_link('Another link')
-      expect(html).to have_link('Not a link').or have_link('Another link')
+      expect(src).to have_link('Just a link').and have_link('Another link')
+      expect(src).to have_link('Not a link').or have_link('Another link')
     end if RSpec::Version::STRING.to_f >= 3.0
   end
 
@@ -508,21 +508,21 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     end
 
     context "on a string" do
-      let(:html) { '<title>Just a title</title>' }
+      let(:src) { '<title>Just a title</title>' }
 
       it "passes if there is such a title" do
-        expect(html).to have_title('Just a title')
+        expect(src).to have_title('Just a title')
       end
 
       it "fails if there is no such title" do
         expect do
-          expect(html).to have_title('No such title')
+          expect(src).to have_title('No such title')
         end.to raise_error('expected "Just a title" to include "No such title"')
       end
 
       it "fails if title doesn't match regexp" do
         expect do
-          expect(html).to have_title(/[[:upper:]]+[[:lower:]]+l{2}o/)
+          expect(src).to have_title(/[[:upper:]]+[[:lower:]]+l{2}o/)
         end.to raise_error('expected "Just a title" to match /[[:upper:]]+[[:lower:]]+l{2}o/')
       end
     end
@@ -614,29 +614,29 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
   end
 
   describe "have_button matcher" do
-    let(:html) { '<button>A button</button><input type="submit" value="Another button"/>' }
+    let(:src) { '<button>A button</button><input type="submit" value="Another button"/>' }
 
     it "gives proper description" do
       expect(have_button('A button').description).to eq("have button \"A button\"")
     end
 
     it "passes if there is such a button" do
-      expect(html).to have_button('A button')
+      expect(src).to have_button('A button')
     end
 
     it "fails if there is no such button" do
       expect do
-        expect(html).to have_button('No such Button')
+        expect(src).to have_button('No such Button')
       end.to raise_error(/expected to find button "No such Button"/)
     end
 
     it "supports compounding" do
-      expect(html).to have_button('Not this button').or have_button('A button')
+      expect(src).to have_button('Not this button').or have_button('A button')
     end if RSpec::Version::STRING.to_f >= 3.0
   end
 
   describe "have_field matcher" do
-    let(:html) { '<p><label>Text field<input type="text" value="some value"/></label></p>' }
+    let(:src) { '<p><label>Text field<input type="text" value="some value"/></label></p>' }
 
     it "gives proper description" do
       expect(have_field('Text field').description).to eq("have field \"Text field\"")
@@ -647,22 +647,22 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     end
 
     it "passes if there is such a field" do
-      expect(html).to have_field('Text field')
+      expect(src).to have_field('Text field')
     end
 
     it "passes if there is such a field with value" do
-      expect(html).to have_field('Text field', with: 'some value')
+      expect(src).to have_field('Text field', with: 'some value')
     end
 
     it "fails if there is no such field" do
       expect do
-        expect(html).to have_field('No such Field')
+        expect(src).to have_field('No such Field')
       end.to raise_error(/expected to find field "No such Field"/)
     end
 
     it "fails if there is such field but with false value" do
       expect do
-        expect(html).to have_field('Text field', with: 'false value')
+        expect(src).to have_field('Text field', with: 'false value')
       end.to raise_error(/expected to find field "Text field"/)
     end
 
@@ -672,16 +672,16 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
           "some value"
         end
       end
-      expect(html).to have_field('Text field', with: Foo.new)
+      expect(src).to have_field('Text field', with: Foo.new)
     end
 
     it "supports compounding" do
-      expect(html).to have_field('Not this one').or have_field('Text field')
+      expect(src).to have_field('Not this one').or have_field('Text field')
     end if RSpec::Version::STRING.to_f >= 3.0
   end
 
   describe "have_checked_field matcher" do
-    let(:html) do
+    let(:src) do
       '<label>it is checked<input type="checkbox" checked="checked"/></label>
       <label>unchecked field<input type="checkbox"/></label>'
     end
@@ -692,18 +692,18 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
 
     context "with should" do
       it "passes if there is such a field and it is checked" do
-        expect(html).to have_checked_field('it is checked')
+        expect(src).to have_checked_field('it is checked')
       end
 
       it "fails if there is such a field but it is not checked" do
         expect do
-          expect(html).to have_checked_field('unchecked field')
+          expect(src).to have_checked_field('unchecked field')
         end.to raise_error(/expected to find field "unchecked field"/)
       end
 
       it "fails if there is no such field" do
         expect do
-          expect(html).to have_checked_field('no such field')
+          expect(src).to have_checked_field('no such field')
         end.to raise_error(/expected to find field "no such field"/)
       end
     end
@@ -711,26 +711,26 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     context "with should not" do
       it "fails if there is such a field and it is checked" do
         expect do
-          expect(html).not_to have_checked_field('it is checked')
+          expect(src).not_to have_checked_field('it is checked')
         end.to raise_error(/expected not to find field "it is checked"/)
       end
 
       it "passes if there is such a field but it is not checked" do
-        expect(html).not_to have_checked_field('unchecked field')
+        expect(src).not_to have_checked_field('unchecked field')
       end
 
       it "passes if there is no such field" do
-        expect(html).not_to have_checked_field('no such field')
+        expect(src).not_to have_checked_field('no such field')
       end
     end
 
     it "supports compounding" do
-      expect(html).to have_checked_field('not this one').or have_checked_field('it is checked')
+      expect(src).to have_checked_field('not this one').or have_checked_field('it is checked')
     end if RSpec::Version::STRING.to_f >= 3.0
   end
 
   describe "have_unchecked_field matcher" do
-    let(:html) do
+    let(:src) do
       '<label>it is checked<input type="checkbox" checked="checked"/></label>
       <label>unchecked field<input type="checkbox"/></label>'
     end
@@ -741,18 +741,18 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
 
     context "with should" do
       it "passes if there is such a field and it is not checked" do
-        expect(html).to have_unchecked_field('unchecked field')
+        expect(src).to have_unchecked_field('unchecked field')
       end
 
       it "fails if there is such a field but it is checked" do
         expect do
-          expect(html).to have_unchecked_field('it is checked')
+          expect(src).to have_unchecked_field('it is checked')
         end.to raise_error(/expected to find field "it is checked"/)
       end
 
       it "fails if there is no such field" do
         expect do
-          expect(html).to have_unchecked_field('no such field')
+          expect(src).to have_unchecked_field('no such field')
         end.to raise_error(/expected to find field "no such field"/)
       end
     end
@@ -760,26 +760,26 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     context "with should not" do
       it "fails if there is such a field and it is not checked" do
         expect do
-          expect(html).not_to have_unchecked_field('unchecked field')
+          expect(src).not_to have_unchecked_field('unchecked field')
         end.to raise_error(/expected not to find field "unchecked field"/)
       end
 
       it "passes if there is such a field but it is checked" do
-        expect(html).not_to have_unchecked_field('it is checked')
+        expect(src).not_to have_unchecked_field('it is checked')
       end
 
       it "passes if there is no such field" do
-        expect(html).not_to have_unchecked_field('no such field')
+        expect(src).not_to have_unchecked_field('no such field')
       end
     end
 
     it "supports compounding" do
-      expect(html).to have_unchecked_field('it is checked').or have_unchecked_field('unchecked field')
+      expect(src).to have_unchecked_field('it is checked').or have_unchecked_field('unchecked field')
     end if RSpec::Version::STRING.to_f >= 3.0
   end
 
   describe "have_select matcher" do
-    let(:html) { '<label>Select Box<select></select></label>' }
+    let(:src) { '<label>Select Box<select></select></label>' }
 
     it "gives proper description" do
       expect(have_select('Select Box').description).to eq("have select box \"Select Box\"")
@@ -790,39 +790,39 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     end
 
     it "passes if there is such a select" do
-      expect(html).to have_select('Select Box')
+      expect(src).to have_select('Select Box')
     end
 
     it "fails if there is no such select" do
       expect do
-        expect(html).to have_select('No such Select box')
+        expect(src).to have_select('No such Select box')
       end.to raise_error(/expected to find select box "No such Select box"/)
     end
 
     it "supports compounding" do
-      expect(html).to have_select('Not this one').or have_select('Select Box')
+      expect(src).to have_select('Not this one').or have_select('Select Box')
     end if RSpec::Version::STRING.to_f >= 3.0
   end
 
   describe "have_table matcher" do
-    let(:html) { '<table><caption>Lovely table</caption></table>' }
+    let(:src) { '<table><caption>Lovely table</caption></table>' }
 
     it "gives proper description" do
       expect(have_table('Lovely table').description).to eq("have table \"Lovely table\"")
     end
 
     it "passes if there is such a select" do
-      expect(html).to have_table('Lovely table')
+      expect(src).to have_table('Lovely table')
     end
 
     it "fails if there is no such select" do
       expect do
-        expect(html).to have_table('No such Table')
+        expect(src).to have_table('No such Table')
       end.to raise_error(/expected to find table "No such Table"/)
     end
 
     it "supports compounding" do
-      expect(html).to have_table('nope').or have_table('Lovely table')
+      expect(src).to have_table('nope').or have_table('Lovely table')
     end if RSpec::Version::STRING.to_f >= 3.0
   end
 end
