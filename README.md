@@ -672,6 +672,10 @@ Or have it save and automatically open:
 save_and_open_screenshot
 ```
 
+Screenshots are saved to `Capybara.save_path`, relative to the app directory.
+If you have required `capybara/rails`, `Capybara.save_path` will default to
+`tmp/capybara`.
+
 ## <a name="matching"></a>Matching
 
 It is possible to customize how Capybara finds elements. At your disposal
