@@ -230,7 +230,7 @@ module Capybara
       # @option options [String] id             Match fields that match the id attribute
       # @option options [String] name           Match fields that match the name attribute
       # @option options [String, Array<String>] :class    Match links that match the class(es) provided
-      # @option options [Hash] style   A Hash of CSS styles to change before attempting to attach the file
+      # @option options [Hash] style   A Hash of CSS styles to change before attempting to attach the file (may not be supported by all driver)
       #
       # @return [Capybara::Node::Element]  The file field element
       def attach_file(locator, path, options={})
