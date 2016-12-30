@@ -18,7 +18,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
 
   def set(value)
     if (Array === value) && !multiple?
-      raise ArgumentError.new "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"
+      raise TypeError.new "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"
     end
 
     if radio?

@@ -67,7 +67,7 @@ module Capybara
     attr_accessor :synchronized
 
     def initialize(mode, app=nil)
-      raise ArgumentError, "The second parameter to Session::new should be a rack app if passed." if app && !app.respond_to?(:call)
+      raise TypeError, "The second parameter to Session::new should be a rack app if passed." if app && !app.respond_to?(:call)
       @mode = mode
       @app = app
       if Capybara.run_server and @app and driver.needs_server?
@@ -393,7 +393,7 @@ module Capybara
           idx = args[0]
           all(:frame, minimum: idx+1)[idx]
         else
-          raise ArgumentError
+          raise TypeError
         end
       end
 
