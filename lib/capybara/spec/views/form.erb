@@ -344,6 +344,30 @@ New line after and before textarea tag
   </p>
 
   <p>
+    <fieldset disabled="disabled">
+        <input name="form[disabled_fieldset_child]" id="form_disabled_fieldset_child"/>
+    </fieldset>
+  </p>
+
+  <p>
+    <fieldset>
+        <input name="form[enabled_fieldset_child]" id="form_enabled_fieldset_child"/>
+    </fieldset>
+  </p>
+
+  <p>
+    <select>
+      <optgroup label="Level One">
+       <option> A.1 </option>
+       <optgroup label="Level Two" disabled="disabled">
+        <option> A.B.1 </option>
+       </optgroup>
+       <option> A.2 </option>
+      </optgroup>
+    </select>
+  </p>
+
+  <p>
     <input type="button" name="form[fresh]" id="fresh_btn" value="i am fresh"/>
     <input type="submit" name="form[awesome]" id="awe123" title="What an Awesome Button" value="awesome"/>
     <input type="submit" name="form[crappy]" id="crap321" value="crappy"/>

@@ -62,6 +62,7 @@ Capybara::SpecHelper.spec '#find_field' do
   context "with :disabled option" do
     it "should find disabled fields when true" do
       expect(@session.find_field("Disabled Checkbox", disabled: true)[:name]).to eq("form[disabled_checkbox]")
+      expect(@session.find_field("form_disabled_fieldset_child", disabled: true)[:name]).to eq("form[disabled_fieldset_child]")
     end
 
     it "should not find disabled fields when false" do
