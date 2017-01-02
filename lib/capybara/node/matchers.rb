@@ -112,10 +112,8 @@ module Capybara
       #
       # @overload assert_all_of_selectors([kind = Capybara.default_selector], *locators, options = {})
       #
-      def assert_all_of_selectors(*args, &optional_filter_block)
-        options = if args.last.is_a?(Hash) then args.pop.dup else {} end
+      def assert_all_of_selectors(*args, wait: session_options.default_max_wait_time, **options, &optional_filter_block)
         selector = if args.first.is_a?(Symbol) then args.shift else session_options.default_selector end
-        wait = options.fetch(:wait, session_options.default_max_wait_time)
         synchronize(wait) do
           args.each do |locator|
             assert_selector(selector, locator, options, &optional_filter_block)
@@ -138,10 +136,8 @@ module Capybara
       #
       # @overload assert_none_of_selectors([kind = Capybara.default_selector], *locators, options = {})
       #
-      def assert_none_of_selectors(*args, &optional_filter_block)
-        options = if args.last.is_a?(Hash) then args.pop.dup else {} end
+      def assert_none_of_selectors(*args, wait: session_options.default_max_wait_time, **options, &optional_filter_block)
         selector = if args.first.is_a?(Symbol) then args.shift else session_options.default_selector end
-        wait = options.fetch(:wait, session_options.default_max_wait_time)
         synchronize(wait) do
           args.each do |locator|
             assert_no_selector(selector, locator, options, &optional_filter_block)
