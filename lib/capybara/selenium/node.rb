@@ -138,7 +138,16 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   alias :checked? :selected?
 
   def disabled?
-    !native.enabled?
+    # workaround for selenium-webdriver/geckodriver reporting elements as enabled when they are nested in disabling elements
+    if driver.options[:browser].to_s == "firefox" && driver.browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3CCapabilities)
+      if %w(option optgroup).include? tag_name
+        !native.enabled? || (find_xpath("parent::optgroup")[0] || find_xpath("parent::select")[0]).disabled?
+      else
+        !!(!native.enabled? || find_xpath("ancestor::fieldset[@disabled]")[0])
+      end
+    else
+      !native.enabled?
+    end
   end
 
   def readonly?
