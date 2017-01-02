@@ -181,6 +181,10 @@ Capybara::SpecHelper.spec "node" do
       expect(@session.find('//input[@id="form_enabled_fieldset_child"]')).not_to be_disabled
     end
 
+    it "should sees options in a disabled fieldset as disabled" do
+      @session.visit('/form')
+      expect(@session.find('//option', text: 'Disabled Child Option')).to be_disabled
+    end
 
     it "should be boolean" do
       @session.visit('/form')

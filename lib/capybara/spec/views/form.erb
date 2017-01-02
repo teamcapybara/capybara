@@ -344,14 +344,28 @@ New line after and before textarea tag
   </p>
 
   <p>
-    <fieldset disabled="disabled">
-        <input name="form[disabled_fieldset_child]" id="form_disabled_fieldset_child"/>
+    <fieldset>
+        <input name="form[enabled_fieldset_child]" id="form_enabled_fieldset_child"/>
     </fieldset>
   </p>
 
+
   <p>
-    <fieldset>
-        <input name="form[enabled_fieldset_child]" id="form_enabled_fieldset_child"/>
+    <fieldset disabled="disabled">
+      <legend>Disabled Child</legend>
+      <input name="form[disabled_fieldset_child]" id="form_disabled_fieldset_child"/>
+      <select>
+        <option>Disabled Child Option</option>
+      </select>
+    </fieldset>
+
+    <fieldset disabled="disabled">
+      <legend>Nested Disabled</legend>
+      <p>
+        <fieldset>
+          <input name="form[disabled_fieldset_descendant]" id="form_disabled_fieldset_descendant"/>
+        </fieldset>
+      </p>
     </fieldset>
   </p>
 
@@ -359,11 +373,11 @@ New line after and before textarea tag
     <select>
       <optgroup label="Level One">
        <option> A.1 </option>
-       <optgroup label="Level Two" disabled="disabled">
-        <option> A.B.1 </option>
-       </optgroup>
-       <option> A.2 </option>
       </optgroup>
+      <optgroup label="Level Two" disabled="disabled">
+       <option> A.B.1 </option>
+      </optgroup>
+      <option> A.2 </option>
     </select>
   </p>
 

@@ -93,7 +93,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     if %w(option optgroup).include? tag_name
       string_node.disabled? || (find_xpath("parent::optgroup")[0] || find_xpath("parent::select")[0]).disabled?
     else
-      !!(string_node.disabled? || ((fieldset = find_xpath("parent::fieldset")[0]) && fieldset.disabled?))
+      !!(string_node.disabled? || find_xpath("ancestor::fieldset[@disabled]")[0])
     end
   end
 
