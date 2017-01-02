@@ -107,4 +107,12 @@ Capybara::SpecHelper.spec "#attach_file" do
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
+
+  context "with :style option", requires: [:js, :es_args] do
+    it "can change the CSS style of the file input field" do
+      @session.visit('/with_js')
+      expect { @session.attach_file("hidden_file", __FILE__) }.to raise_error Capybara::ElementNotFound
+      @session.attach_file("hidden_file", __FILE__, style: { opacity: 1, display: 'block' })
+    end
+  end
 end

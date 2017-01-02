@@ -230,6 +230,7 @@ module Capybara
       # @option options [String] id             Match fields that match the id attribute
       # @option options [String] name           Match fields that match the name attribute
       # @option options [String, Array<String>] :class    Match links that match the class(es) provided
+      # @option options [Hash] style   A Hash of CSS styles to change before attempting to attach the file (may not be supported by all driver)
       #
       # @return [Capybara::Node::Element]  The file field element
       def attach_file(locator, path, options={})
@@ -237,10 +238,31 @@ module Capybara
         Array(path).each do |p|
           raise Capybara::FileNotFound, "cannot attach file, #{p} does not exist" unless File.exist?(p.to_s)
         end
+        # Allow user to update the CSS style of the file input since they are so often hidden on a page
+        if style = options.delete(:style)
+          ff = find(:file_field, locator, options.merge({visible: :all}))
+          _update_style(ff, style)
+        end
         find(:file_field, locator, options).set(path)
       end
 
     private
+      def _update_style(element, style)
+        script = <<-JS
+          var el = arguments[0];
+          var css = arguments[1];
+          for (var prop in css){
+            if (css.hasOwnProperty(prop)) {
+              el.style[prop] = css[prop]
+            }
+          }
+        JS
+        begin
+          session.execute_script(script, element, style)
+        rescue Capybara::NotSupportedByDriverError
+          warn "The :style option is not supported by the current driver - ignoring"
+        end
+      end
 
       def _check_with_label(selector, checked, locator, options)
         locator, options = nil, locator if locator.is_a? Hash

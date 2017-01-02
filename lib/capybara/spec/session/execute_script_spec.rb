@@ -11,13 +11,13 @@ Capybara::SpecHelper.spec "#execute_script", requires: [:js] do
     expect{ @session.execute_script("$('#change').text('Funky Doodle')") }.not_to raise_error
   end
 
-  it "should pass arguments to the script" do
+  it "should pass arguments to the script", requires: [:js, :es_args] do
     @session.visit('/with_js')
     @session.execute_script("document.getElementById('change').textContent = arguments[0]", "Doodle Funk")
     expect(@session).to have_css('#change', text: 'Doodle Funk')
   end
 
-  it "should support passing elements as arguments to the script" do
+  it "should support passing elements as arguments to the script", requires: [:js, :es_args] do
     @session.visit('/with_js')
     el = @session.find(:css, '#change')
     @session.execute_script("arguments[1].textContent = arguments[0]", "Doodle Funk", el)
