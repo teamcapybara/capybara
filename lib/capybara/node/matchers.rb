@@ -97,6 +97,58 @@ module Capybara
         end
       end
 
+      # Asserts that all of the provided selectors are present on the given page
+      # or descendants of the current node.  If options are provided, the assertion
+      # will check that each locator is present with those options as well (other than :wait).
+      #
+      #   page.assert_all_of_selectors(:custom, 'Tom', 'Joe', visible: all)
+      #   page.assert_all_of_selectors(:css, '#my_div', 'a.not_clicked')
+      #
+      # It accepts all options that {Capybara::Node::Finders#all} accepts,
+      # such as :text and :visible.
+      #
+      # The :wait option applies to all of the selectors as a group, so all of the locators must be present
+      # within :wait (Defaults to Capybara.default_max_wait_time) seconds.
+      #
+      # @overload assert_all_of_selectors([kind = Capybara.default_selector], *locators, options = {})
+      #
+      def assert_all_of_selectors(*args, &optional_filter_block)
+        options = if args.last.is_a?(Hash) then args.pop.dup else {} end
+        selector = if args.first.is_a?(Symbol) then args.shift else Capybara.default_selector end
+        wait = options.fetch(:wait, Capybara.default_max_wait_time)
+        synchronize(wait) do
+          args.each do |locator|
+            assert_selector(selector, locator, options, &optional_filter_block)
+          end
+        end
+      end
+
+      # Asserts that none of the provided selectors are present on the given page
+      # or descendants of the current node. If options are provided, the assertion
+      # will check that each locator is present with those options as well (other than :wait).
+      #
+      #   page.assert_none_of_selectors(:custom, 'Tom', 'Joe', visible: all)
+      #   page.assert_none_of_selectors(:css, '#my_div', 'a.not_clicked')
+      #
+      # It accepts all options that {Capybara::Node::Finders#all} accepts,
+      # such as :text and :visible.
+      #
+      # The :wait option applies to all of the selectors as a group, so none of the locators must be present
+      # within :wait (Defaults to Capybara.default_max_wait_time) seconds.
+      #
+      # @overload assert_none_of_selectors([kind = Capybara.default_selector], *locators, options = {})
+      #
+      def assert_none_of_selectors(*args, &optional_filter_block)
+        options = if args.last.is_a?(Hash) then args.pop.dup else {} end
+        selector = if args.first.is_a?(Symbol) then args.shift else Capybara.default_selector end
+        wait = options.fetch(:wait, Capybara.default_max_wait_time)
+        synchronize(wait) do
+          args.each do |locator|
+            assert_no_selector(selector, locator, options, &optional_filter_block)
+          end
+        end
+      end
+
       ##
       #
       # Asserts that a given selector is not on the page or a descendant of the current node.
