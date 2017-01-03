@@ -213,24 +213,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.switch_to.window handle
   end
 
-  # @api private
-  def find_window(locator)
-    handles = browser.window_handles
-    return locator if handles.include? locator
-
-    original_handle = browser.window_handle
-    handles.each do |handle|
-      switch_to_window(handle)
-      if (locator == browser.execute_script("return window.name") ||
-          browser.title.include?(locator) ||
-          browser.current_url.include?(locator))
-        switch_to_window(original_handle)
-        return handle
-      end
-    end
-    raise Capybara::ElementNotFound, "Could not find a window identified by #{locator}"
-  end
-
   def within_window(locator)
     handle = find_window(locator)
     browser.switch_to.window(handle) { yield }
@@ -275,6 +257,29 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def no_such_window_error
     Selenium::WebDriver::Error::NoSuchWindowError
+  end
+
+  # @api private
+  def find_window(locator)
+    handles = browser.window_handles
+    return locator if handles.include? locator
+
+    original_handle = browser.window_handle
+    handles.each do |handle|
+      switch_to_window(handle)
+      if (locator == browser.execute_script("return window.name") ||
+          browser.title.include?(locator) ||
+          browser.current_url.include?(locator))
+        switch_to_window(original_handle)
+        return handle
+      end
+    end
+    raise Capybara::ElementNotFound, "Could not find a window identified by #{locator}"
+  end
+
+  #@api private
+  def marionette?
+    (options[:browser].to_s == "firefox") && browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3CCapabilities)
   end
 
   # @deprecated This method is being removed

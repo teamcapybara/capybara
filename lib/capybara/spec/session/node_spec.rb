@@ -280,6 +280,7 @@ Capybara::SpecHelper.spec "node" do
 
   describe '#drag_to', requires: [:js, :drag] do
     it "should drag and drop an object" do
+      pending "selenium-webdriver/geckodriver doesn't support mouse move_to" if marionette?(@session)
       @session.visit('/with_js')
       element = @session.find('//div[@id="drag"]')
       target = @session.find('//div[@id="drop"]')
@@ -290,6 +291,7 @@ Capybara::SpecHelper.spec "node" do
 
   describe '#hover', requires: [:hover] do
     it "should allow hovering on an element" do
+      pending "selenium-webdriver/geckodriver doesn't support mouse move_to" if marionette?(@session)
       @session.visit('/with_hover')
       expect(@session.find(:css,'.hidden_until_hover', visible: false)).not_to be_visible
       @session.find(:css,'.wrapper').hover
@@ -306,6 +308,7 @@ Capybara::SpecHelper.spec "node" do
 
   describe '#double_click', requires: [:js] do
     it "should double click an element" do
+      pending "selenium-webdriver/geckodriver doesn't support mouse move_to" if marionette?(@session)
       @session.visit('/with_js')
       @session.find(:css, '#click-test').double_click
       expect(@session.find(:css, '#has-been-double-clicked')).to be
@@ -314,6 +317,7 @@ Capybara::SpecHelper.spec "node" do
 
   describe '#right_click', requires: [:js] do
     it "should right click an element" do
+      pending "selenium-webdriver/geckodriver doesn't support mouse move_to" if marionette?(@session)
       @session.visit('/with_js')
       @session.find(:css, '#click-test').right_click
       expect(@session.find(:css, '#has-been-right-clicked')).to be
@@ -328,18 +332,21 @@ Capybara::SpecHelper.spec "node" do
     end
 
     it "should send special characters" do
+      pending "selenium-webdriver/geckodriver doesn't support complex sets of characters" if marionette?(@session)
       @session.visit('/form')
       @session.find(:css, '#address1_city').send_keys('Ocean', :space, 'sie', :left, 'd')
       expect(@session.find(:css, '#address1_city').value).to eq 'Ocean side'
     end
 
     it "should allow for multiple simultaneous keys" do
+      pending "selenium-webdriver/geckodriver doesn't support complex sets of characters" if marionette?(@session)
       @session.visit('/form')
       @session.find(:css, '#address1_city').send_keys([:shift, 'o'], 'ceanside')
       expect(@session.find(:css, '#address1_city').value).to eq 'Oceanside'
     end
 
     it "should generate key events", requires: [:send_keys, :js] do
+      pending "selenium-webdriver/geckodriver doesn't support complex sets of characters" if marionette?(@session)
       @session.visit('/with_js')
       @session.find(:css, '#with-key-events').send_keys([:shift,'t'], [:shift,'w'])
       expect(@session.find(:css, '#key-events-output')).to have_text('keydown:16 keydown:84 keydown:16 keydown:87')

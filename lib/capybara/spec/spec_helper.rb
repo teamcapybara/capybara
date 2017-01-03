@@ -97,6 +97,10 @@ module Capybara
       expect(session).to have_xpath("//pre[@id='results']")
       YAML.load Nokogiri::HTML(session.body).xpath("//pre[@id='results']").first.inner_html.lstrip
     end
+
+    def marionette?(session)
+      session.driver.respond_to?(:marionette?) && session.driver.marionette?
+    end
   end
 end
 
