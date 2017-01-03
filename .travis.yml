@@ -4,7 +4,7 @@ dist: trusty
 rvm:
   - 2.3.3
   - jruby-9.1.5.0
-  - rbx-3.26
+  - rbx-3
 gemfile:
   - Gemfile
 env:
@@ -78,7 +78,7 @@ matrix:
         - CAPYBARA_MARIONETTE=true
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-marionette
-    - rvm: rbx-3.26
+    - rvm: rbx-3
     - rvm: jruby-9.1.5.0
     - rvm: jruby-9.1.6.0
 
