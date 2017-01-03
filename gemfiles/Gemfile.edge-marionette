@@ -6,3 +6,5 @@ gemspec :path => '..'
 gem 'xpath', github: 'jnicklas/xpath'
 
 gem 'selenium-webdriver', :path => '../../selenium/build/rb'
+gem 'rack', github: 'rack/rack'
+gem 'sinatra', github: 'sinatra/sinatra', branch: 'master'

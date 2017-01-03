@@ -54,6 +54,9 @@ matrix:
       rvm: 2.4.0
       addons:
         firefox: latest-beta
+        apt:
+          packages:
+            - awesome
       env:
         - WINDOW_TEST=true
         - CAPYBARA_MARIONETTE=true
