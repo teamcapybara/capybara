@@ -166,6 +166,7 @@ Capybara::SpecHelper.spec "node" do
     it "should see enabled options in disabled select as disabled" do
       @session.visit('/form')
       expect(@session.find('//select[@id="form_disabled_select"]/option')).to be_disabled
+      expect(@session.find('//select[@id="form_disabled_select"]/optgroup/option')).to be_disabled
       expect(@session.find('//select[@id="form_title"]/option[1]')).not_to be_disabled
     end
 
