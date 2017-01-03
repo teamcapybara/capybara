@@ -2,15 +2,22 @@
 Release date: unreleased
 
 ### Added
+
 * Session#switch_to_frame for manually handling frame switching - Issue #1365 [Thomas Walpole]
 * Session#execute_script and Session#evaluate_script now accept optional arguments that will be passed to the JS function.  This may not be supported
   by all drivers, and the types of arguments that may be passed is limited.  If drivers opt to support this feature they should support passing page elements.
 * :exact option for text and title matchers
 * :exact_text option for selector finders/minders
 * Capybara.exact_text setting that affects the text matchers and :text options passed to selector finders/matchers.
+* :style option for #attach_file that allows for convenient changing of the CSS style of a file input element before attaching the file to it.  Requires driver
+  support for passing page elements to Session#execute_script
+* assert_all_selectors/assert_none_of_selectors assertions added
+* :link selector (used by find_link/click_link) now supports finding hyperlink placeholders (no href attribute) when href: nil option is specified
 
 ### Fixed
 *  Fields inside a disabled fieldset are now correctly considered disabled in the rack-test driver
+*  Node#disabled? fixed for rack-test and selenium-webdriver using marionette w/firefox when elements are netsed in disabled fieldsets.
+*  Lazy Capybara::Results evaluation enabled for JRuby 9.1.6.0+
 
 #Version 2.11.0
 Release date: 2016-12-05
