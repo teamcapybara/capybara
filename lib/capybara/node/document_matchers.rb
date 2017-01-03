@@ -7,7 +7,7 @@ module Capybara
       #
       # @!macro title_query_params
       #   @overload $0(string, options = {})
-      #     @param string [String]           The string that title should include      #
+      #     @param string [String]           The string that title should include
       #   @overload $0(regexp, options = {})
       #     @param regexp [Regexp]           The regexp that title should match to
       #   @option options [Numeric] :wait (Capybara.default_max_wait_time) Maximum time that Capybara will wait for title to eq/match given string/regexp argument
