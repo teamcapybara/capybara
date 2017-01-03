@@ -363,7 +363,14 @@ New line after and before textarea tag
     </fieldset>
 
     <fieldset disabled="disabled">
-      <legend>Nested Disabled</legend>
+      <legend>
+        Nested Disabled
+        <input type="checkbox" name="form[disabled_fieldeset_legend_child]" id="form_disabled_fieldset_legend_child"/>
+      </legend>
+      <legend>
+        Another Legend
+        <input type="checkbox" name="form[disabled_fieldeset_second_legend_child]" id="form_disabled_fieldset_second_legend_child"/>
+      </legend>
       <p>
         <fieldset>
           <input name="form[disabled_fieldset_descendant]" id="form_disabled_fieldset_descendant"/>

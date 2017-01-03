@@ -91,9 +91,9 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
 
   def disabled?
     if %w(option optgroup).include? tag_name
-      string_node.disabled? || (find_xpath("parent::optgroup")[0] || find_xpath("parent::select")[0]).disabled?
+      string_node.disabled? || find_xpath("parent::*[self::optgroup or self::select]")[0].disabled?
     else
-      !!(string_node.disabled? || find_xpath("ancestor::fieldset[@disabled]")[0])
+      string_node.disabled? || !find_xpath("parent::fieldset[@disabled] | ancestor::*[not(self::legend) or preceding-sibling::legend][parent::fieldset[@disabled]]").empty?
     end
   end
 

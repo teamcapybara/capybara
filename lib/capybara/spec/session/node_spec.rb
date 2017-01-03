@@ -176,17 +176,25 @@ Capybara::SpecHelper.spec "node" do
       expect(@session.find('//option', text: "A.2")).not_to be_disabled
     end
 
-    it "should see inputs in a disabled fieldset as disabled" do
-      @session.visit('/form')
-      expect(@session.find('//input[@id="form_disabled_fieldset_child"]')).to be_disabled
-      expect(@session.find('//input[@id="form_enabled_fieldset_child"]')).not_to be_disabled
-    end
+    context "in a disabled fieldset" do
+      # https://html.spec.whatwg.org/#the-fieldset-element
+      it "should see elements not in first legend as disabled" do
+        @session.visit('/form')
+        expect(@session.find('//input[@id="form_disabled_fieldset_child"]')).to be_disabled
+        expect(@session.find('//input[@id="form_disabled_fieldset_second_legend_child"]')).to be_disabled
+        expect(@session.find('//input[@id="form_enabled_fieldset_child"]')).not_to be_disabled
+      end
 
-    it "should sees options in a disabled fieldset as disabled" do
-      @session.visit('/form')
-      expect(@session.find('//option', text: 'Disabled Child Option')).to be_disabled
-    end
+      it "should see elements in first legend as enabled" do
+        @session.visit('/form')
+        expect(@session.find('//input[@id="form_disabled_fieldset_legend_child"]')).not_to be_disabled
+      end
 
+      it "should sees options not in first legend as disabled" do
+        @session.visit('/form')
+        expect(@session.find('//option', text: 'Disabled Child Option')).to be_disabled
+      end
+    end
     it "should be boolean" do
       @session.visit('/form')
       expect(@session.find('//select[@id="form_disabled_select"]/option').disabled?).to be true
