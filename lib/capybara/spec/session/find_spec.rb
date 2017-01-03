@@ -104,8 +104,8 @@ Capybara::SpecHelper.spec '#find' do
     end
   end
 
-  context "with custom selector with :for option" do
-    it "should use the selector when it matches the :for option" do
+  context "with custom selector with custom `match` block" do
+    it "should use the custom selector when locator matches the block" do
       Capybara.add_selector(:beatle) do
         xpath { |num| ".//*[contains(@class, 'beatle')][#{num}]" }
         match { |value| value.is_a?(Integer) }
