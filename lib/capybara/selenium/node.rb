@@ -141,9 +141,9 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     # workaround for selenium-webdriver/geckodriver reporting elements as enabled when they are nested in disabling elements
     if driver.marionette?
       if %w(option optgroup).include? tag_name
-        !native.enabled? || (find_xpath("parent::optgroup")[0] || find_xpath("parent::select")[0]).disabled?
+        !native.enabled? || find_xpath("parent::*[self::optgroup or self::select]")[0].disabled?
       else
-        !!(!native.enabled? || find_xpath("ancestor::fieldset[@disabled]")[0])
+        !native.enabled? || !find_xpath("parent::fieldset[@disabled] | ancestor::*[not(self::legend) or preceding-sibling::legend][parent::fieldset[@disabled]]").empty?
       end
     else
       !native.enabled?
