@@ -87,11 +87,11 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def needs_server?; true; end
 
   def execute_script(script, *args)
-    browser.execute_script script, *args
+    browser.execute_script(script, *args.map { |arg| arg.is_a?(Capybara::Selenium::Node) ?  arg.native : arg} )
   end
 
   def evaluate_script(script, *args)
-    browser.execute_script "return #{script}", *args
+    browser.execute_script("return #{script}", *args.map { |arg| arg.is_a?(Capybara::Selenium::Node) ?  arg.native : arg} )
   end
 
   def save_screenshot(path, _options={})

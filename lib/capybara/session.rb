@@ -611,7 +611,7 @@ module Capybara
         raise Capybara::NotSupportedByDriverError, "The current driver does not support arguments being passed with execute_script" unless args.empty?
         driver.execute_script(script)
       else
-        driver.execute_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ?  arg.native : arg} )
+        driver.execute_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ?  arg.base : arg} )
       end
     end
 
@@ -630,7 +630,7 @@ module Capybara
         raise Capybara::NotSupportedByDriverError, "The current driver does not support arguments being passed with execute_script" unless args.empty?
         driver.evaluate_script(script)
       else
-        driver.evaluate_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ?  arg.native : arg} )
+        driver.evaluate_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ?  arg.base : arg} )
       end
     end
 
