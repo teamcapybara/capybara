@@ -280,7 +280,7 @@ module Capybara
         script = <<-JS
           var el = arguments[0];
           if (el.hasOwnProperty('capybara_style_cache')) {
-            el.style=el.capybara_style_cache;
+            el.style.cssText = el.capybara_style_cache;
             delete el.capybara_style_cache;
           }
         JS
