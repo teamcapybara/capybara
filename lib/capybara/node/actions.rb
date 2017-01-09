@@ -244,7 +244,11 @@ module Capybara
           ff = find(:file_field, locator, options.merge({visible: :all}))
           _update_style(ff, style)
           if ff.visible?
-            ff.set(path)
+            begin
+              ff.set(path)
+            ensure
+              _reset_style(ff)
+            end
           else
             raise ExpectationNotMet, "The style changes in :make_visible did not make the file input visible"
           end
@@ -257,6 +261,7 @@ module Capybara
       def _update_style(element, style)
         script = <<-JS
           var el = arguments[0];
+          el.capybara_style_cache = el.style.cssText;
           var css = arguments[1];
           for (var prop in css){
             if (css.hasOwnProperty(prop)) {
@@ -267,9 +272,24 @@ module Capybara
         begin
           session.execute_script(script, element, style)
         rescue Capybara::NotSupportedByDriverError
-          warn "The :style option is not supported by the current driver - ignoring"
+          warn "The :make_visible option is not supported by the current driver - ignoring"
         end
       end
+
+      def _reset_style(element)
+        script = <<-JS
+          var el = arguments[0];
+          if (el.hasOwnProperty('capybara_style_cache')) {
+            el.style=el.capybara_style_cache;
+            delete el.capybara_style_cache;
+          }
+        JS
+        begin
+          session.execute_script(script, element)
+        rescue
+        end
+      end
+
 
       def _check_with_label(selector, checked, locator, options)
         locator, options = nil, locator if locator.is_a? Hash

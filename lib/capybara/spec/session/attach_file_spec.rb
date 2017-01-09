@@ -130,5 +130,11 @@ Capybara::SpecHelper.spec "#attach_file" do
         @session.attach_file("hidden_file", __FILE__, make_visible: { color: 'red' })
       }.to raise_error(Capybara::ExpectationNotMet)
     end
+
+    it "resets the style when done" do
+      @session.visit('/with_js')
+      @session.attach_file("hidden_file", __FILE__, make_visible: true)
+      expect(@session.evaluate_script("arguments[0].style.display", @session.find(:css, '#hidden_file', visible: :all))).to eq 'none'
+    end
   end
 end
