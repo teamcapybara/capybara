@@ -108,11 +108,27 @@ Capybara::SpecHelper.spec "#attach_file" do
     end
   end
 
-  context "with :style option", requires: [:js, :es_args] do
-    it "can change the CSS style of the file input field" do
+  context "with :make_visible option", requires: [:js, :es_args] do
+    it "applies a default style change when true" do
       @session.visit('/with_js')
       expect { @session.attach_file("hidden_file", __FILE__) }.to raise_error Capybara::ElementNotFound
-      @session.attach_file("hidden_file", __FILE__, style: { opacity: 1, display: 'block' })
+      expect {
+        @session.attach_file("hidden_file", __FILE__, make_visible: true)
+      }.not_to raise_error
+    end
+
+    it "accepts a hash of styles to be applied" do
+      @session.visit('/with_js')
+      expect {
+        @session.attach_file("hidden_file", __FILE__, make_visible: { opacity: 1, display: 'block' })
+      }.not_to raise_error
+    end
+
+    it "raises an error when the file input is not made visible" do
+      @session.visit('/with_js')
+      expect {
+        @session.attach_file("hidden_file", __FILE__, make_visible: { color: 'red' })
+      }.to raise_error(Capybara::ExpectationNotMet)
     end
   end
 end

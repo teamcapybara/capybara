@@ -230,7 +230,7 @@ module Capybara
       # @option options [String] id             Match fields that match the id attribute
       # @option options [String] name           Match fields that match the name attribute
       # @option options [String, Array<String>] :class    Match links that match the class(es) provided
-      # @option options [Hash] style   A Hash of CSS styles to change before attempting to attach the file (may not be supported by all driver)
+      # @option options [true, Hash] make_visible   A Hash of CSS styles to change before attempting to attach the file, if `true` { opacity: 1, display: 'block', visibility: 'visible' } is used (may not be supported by all drivers)
       #
       # @return [Capybara::Node::Element]  The file field element
       def attach_file(locator, path, options={})
@@ -239,11 +239,18 @@ module Capybara
           raise Capybara::FileNotFound, "cannot attach file, #{p} does not exist" unless File.exist?(p.to_s)
         end
         # Allow user to update the CSS style of the file input since they are so often hidden on a page
-        if style = options.delete(:style)
+        if style = options.delete(:make_visible)
+          style = { opacity: 1, display: 'block', visibility: 'visible' } if style == true
           ff = find(:file_field, locator, options.merge({visible: :all}))
           _update_style(ff, style)
+          if ff.visible?
+            ff.set(path)
+          else
+            raise ExpectationNotMet, "The style changes in :make_visible did not make the file input visible"
+          end
+        else
+          find(:file_field, locator, options).set(path)
         end
-        find(:file_field, locator, options).set(path)
       end
 
     private
