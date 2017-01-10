@@ -14,8 +14,8 @@ RSpec.describe Capybara do
     end
 
     it "should be accesible as the deprecated default_wait_time" do
-      expect_any_instance_of(Kernel).to receive(:warn).once.with('DEPRECATED: #default_wait_time= is deprecated, please use #default_max_wait_time= instead')
-      expect_any_instance_of(Kernel).to receive(:warn).once.with('DEPRECATED: #default_wait_time is deprecated, please use #default_max_wait_time instead')
+      expect(Capybara).to receive(:warn).ordered.with('DEPRECATED: #default_wait_time= is deprecated, please use #default_max_wait_time= instead')
+      expect(Capybara).to receive(:warn).ordered.with('DEPRECATED: #default_wait_time is deprecated, please use #default_max_wait_time instead')
       @previous_default_time = Capybara.default_max_wait_time
       Capybara.default_wait_time = 5
       expect(Capybara.default_wait_time).to eq(5)
