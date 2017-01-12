@@ -135,7 +135,7 @@ Capybara::SpecHelper.spec "node" do
     end
 
     it 'should allow me to change the contents of a contenteditable elements child', requires: [:js] do
-      pending "Selenium doesn't like editing nested contents"
+      pending "Selenium doesn't like editing nested contents" if @session.respond_to?(:mode) && @session.mode.to_s =~ /^selenium_/
       @session.visit('/with_js')
       @session.find(:css,'#existing_content_editable_child').set('WYSIWYG')
       expect(@session.find(:css,'#existing_content_editable_child').text).to eq('WYSIWYG')
