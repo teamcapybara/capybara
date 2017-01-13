@@ -34,6 +34,12 @@ Capybara::SpecHelper.spec '#assert_current_path' do
     @session.visit('/with_js?test=test')
     expect{@session.assert_current_path('/with_js', only_path: true)}.not_to raise_error
   end
+
+  it "should not cause an exception when current_url is nil" do
+    allow_any_instance_of(Capybara::Session).to receive(:current_url) { nil }
+
+    expect{@session.assert_current_path(nil)}.not_to raise_error
+  end
 end
 
 Capybara::SpecHelper.spec '#assert_no_current_path?' do
@@ -55,6 +61,12 @@ Capybara::SpecHelper.spec '#assert_no_current_path?' do
   end
 
   it "should not raise if the page has not the given current_path" do
+    expect{@session.assert_no_current_path('/with_html')}.not_to raise_error
+  end
+
+  it "should not cause an exception when current_url is nil" do
+    allow_any_instance_of(Capybara::Session).to receive(:current_url) { nil }
+
     expect{@session.assert_no_current_path('/with_html')}.not_to raise_error
   end
 end

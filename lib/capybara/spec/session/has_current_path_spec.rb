@@ -52,6 +52,20 @@ Capybara::SpecHelper.spec '#has_current_path?' do
       expect(@session).to have_current_path('/with_js', url: true, only_path: true)
       }. to raise_error ArgumentError
   end
+
+  it "should not raise an exception if the current_url is nil" do
+    allow_any_instance_of(Capybara::Session).to receive(:current_url) { nil }
+
+    # Without only_path option
+    expect {
+      expect(@session).to have_current_path(nil)
+    }. not_to raise_exception
+
+    # With only_path option
+    expect {
+      expect(@session).to have_current_path(nil, only_path: true)
+    }. not_to raise_exception
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_current_path?' do
@@ -75,5 +89,19 @@ Capybara::SpecHelper.spec '#has_no_current_path?' do
 
   it "should be true if the page has not the given current_path" do
     expect(@session).to have_no_current_path('/with_html')
+  end
+
+  it "should not raise an exception if the current_url is nil" do
+    allow_any_instance_of(Capybara::Session).to receive(:current_url) { nil }
+
+    # Without only_path option
+    expect {
+      expect(@session).not_to have_current_path('/with_js')
+    }. not_to raise_exception
+
+    # With only_path option
+    expect {
+      expect(@session).not_to have_current_path('/with_js', only_path: true)
+    }. not_to raise_exception
   end
 end

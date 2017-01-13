@@ -173,6 +173,10 @@ module Capybara
     def current_path
       # Addressable parsing is more lenient than URI
       uri = Addressable::URI.parse(current_url)
+
+      # If current_url ends up being nil, won't be able to call .path on a NilClass.
+      return nil if uri.nil?
+
       # Addressable doesn't support opaque URIs - we want nil here
       return nil if uri.scheme == "about"
       path = uri.path

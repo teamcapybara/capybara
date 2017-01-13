@@ -17,10 +17,12 @@ module Capybara
         @actual_path = if options[:url]
           session.current_url
         else
+          uri = ::Addressable::URI.parse(session.current_url)
+
           if options[:only_path]
-            ::Addressable::URI.parse(session.current_url).path
+            uri.path unless uri.nil? # Ensure the parsed url isn't nil.
           else
-            ::Addressable::URI.parse(session.current_url).request_uri
+            uri.request_uri unless uri.nil? # Ensure the parsed url isn't nil.
           end
         end
 
