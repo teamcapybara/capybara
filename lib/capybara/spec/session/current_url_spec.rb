@@ -96,4 +96,12 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
     @session.execute_script("window.history.replaceState({}, '', '/replaced')")
     expect(@session.current_path).to eq("/replaced")
   end
+
+  it "doesn't raise exception on a nil current_url" do
+    @session.visit("/")
+    allow_any_instance_of(Capybara::Session).to receive(:current_url) { nil }
+
+    expect { @session.current_url }.not_to raise_exception
+    expect { @session.current_path }.not_to raise_exception
+  end
 end
