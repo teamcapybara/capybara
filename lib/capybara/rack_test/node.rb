@@ -31,7 +31,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
       if self[:readonly]
         warn "Attempt to set readonly element with value: #{value} \n * This will raise an exception in a future version of Capybara"
       else
-        native.content = value.to_s
+        native['_capybara_raw_value'] = value.to_s
       end
     end
   end

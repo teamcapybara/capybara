@@ -20,6 +20,7 @@ Release date: unreleased
 *  Lazy Capybara::Results evaluation enabled for JRuby 9.1.6.0+
 *  A driver returning nil for #current_url won't raise an exception when calling #current_path [Dylan Reichstadt]
 *  Support Ruby 2.4.0 unified Integer [Koichi ITO]
+*  RackTest driver no longer modifies the text content of textarea elements to behave more like a real browser [Thomas Walpole]
 
 #Version 2.11.0
 Release date: 2016-12-05

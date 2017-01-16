@@ -112,6 +112,16 @@ RSpec.describe Capybara::Session do
         end
       end
     end
+
+    describe '#text' do
+      it "should return original text content for textareas", :focus_ do
+        @session.visit('/with_html')
+        @session.find_field('normal', type: 'textarea', with: 'banana').set('hello')
+        normal = @session.find(:css, '#normal')
+        expect(normal.value).to eq 'hello'
+        expect(normal.text).to eq 'banana'
+      end
+    end
   end
 end
 
