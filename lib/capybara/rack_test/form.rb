@@ -65,7 +65,7 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
           merge_param!(params, field['name'].to_s, (option['value'] || option.text).to_s) if option
         end
       when 'textarea'
-        merge_param!(params, field['name'].to_s, field.text.to_s.gsub(/\n/, "\r\n"))
+        merge_param!(params, field['name'].to_s, field['_capybara_raw_value'].to_s.gsub(/\n/, "\r\n"))
       end
     end
     merge_param!(params, button[:name], button[:value] || "") if button[:name]

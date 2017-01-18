@@ -369,7 +369,7 @@ module Capybara
     def HTML(html)
       Nokogiri::HTML(html).tap do |document|
         document.xpath('//textarea').each do |textarea|
-          textarea.content=textarea.content.sub(/\A\n/,'')
+          textarea['_capybara_raw_value'] = textarea.content.sub(/\A\n/,'')
         end
       end
     end
