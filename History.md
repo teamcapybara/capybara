@@ -14,13 +14,14 @@ Release date: unreleased
   support for passing page elements to Session#execute_script [Thomas Walpole]
 * assert_all_selectors/assert_none_of_selectors assertions added
 * :link selector (used by find_link/click_link) now supports finding hyperlink placeholders (no href attribute) when href: nil option is specified [Thomas Walpole]
+* `within_element` as an alias of `within` due to RSpec collision
 
 ### Fixed
 *  Fields inside a disabled fieldset are now correctly considered disabled - Issue #1816 [Thomas Walpole]
 *  Lazy Capybara::Results evaluation enabled for JRuby 9.1.6.0+
 *  A driver returning nil for #current_url won't raise an exception when calling #current_path [Dylan Reichstadt]
 *  Support Ruby 2.4.0 unified Integer [Koichi ITO]
-*  RackTest driver no longer modifies the text content of textarea elements to behave more like a real browser [Thomas Walpole]
+*  RackTest driver no longer modifies the text content of textarea elements in order to behave more like a real browser [Thomas Walpole]
 
 #Version 2.11.0
 Release date: 2016-12-05

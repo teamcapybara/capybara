@@ -119,6 +119,13 @@ Capybara::SpecHelper.spec '#within' do
     end
     expect(extract_results(@session)['first_name']).to eq('Dagobert')
   end
+
+  it "should have #within_element as an alias" do
+    expect(Capybara::Session.instance_method(:within)).to eq Capybara::Session.instance_method(:within_element)
+    @session.within_element(:css, "#for_foo") do
+      expect(@session).not_to have_content('First Name')
+    end
+  end
 end
 
 Capybara::SpecHelper.spec '#within_fieldset' do
