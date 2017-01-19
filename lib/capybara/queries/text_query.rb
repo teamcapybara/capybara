@@ -61,10 +61,15 @@ module Capybara
         end
 
         if @node and check_visible_text? and report_on_invisible
-          invisible_text = text(@node, :all)
-          invisible_count = invisible_text.scan(@search_regexp).size
-          if invisible_count != @count
-            details_message << ". it was found #{invisible_count} #{Capybara::Helpers.declension("time", "times", invisible_count)} including non-visible text"
+          begin
+            raise Selenium::WebDriver::Error::UnknownError
+            invisible_text = text(@node, :all)
+            invisible_count = invisible_text.scan(@search_regexp).size
+            if invisible_count != @count
+              details_message << ". it was found #{invisible_count} #{Capybara::Helpers.declension("time", "times", invisible_count)} including non-visible text"
+            end
+          rescue
+            # An error getting the non-visible text (if element goes out of scope) should not affect the response
           end
         end
 
