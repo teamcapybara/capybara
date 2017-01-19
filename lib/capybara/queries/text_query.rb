@@ -62,7 +62,6 @@ module Capybara
 
         if @node and check_visible_text? and report_on_invisible
           begin
-            raise Selenium::WebDriver::Error::UnknownError
             invisible_text = text(@node, :all)
             invisible_count = invisible_text.scan(@search_regexp).size
             if invisible_count != @count
