@@ -103,7 +103,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
     context "#fill_in with { clear: Array } fill_options" do
       it 'should pass the array through to the element' do
         pending "selenium-webdriver/geckodriver doesn't support complex sets of characters" if @session.driver.marionette?
-        #this is mainly for use with [[:ctrl, 'a'], :backspace] - however since that is platform dependant I'm testing with something less useful
+        #this is mainly for use with [[:control, 'a'], :backspace] - however since that is platform dependant I'm testing with something less useful
         @session.visit('/form')
         @session.fill_in('form_first_name', with: 'Harry',
                           fill_options: { clear: [[:shift, 'abc'], :backspace] } )
