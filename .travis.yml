@@ -3,7 +3,7 @@ sudo: required
 dist: trusty
 rvm:
   - 2.3.3
-  - jruby-9.1.5.0
+  - jruby-9.1.6.0
   - rbx-3
 gemfile:
   - Gemfile
