@@ -75,7 +75,7 @@ matrix:
     - gemfile: gemfiles/Gemfile.edge-marionette
     - rvm: 2.4.0
     - rvm: rbx-3
-    - jruby-9.1.6.0
+    - rvm: jruby-9.1.6.0
     - env: CAPYBARA_MARIONETTE=true
     - env:
         - WINDOW_TEST=true
