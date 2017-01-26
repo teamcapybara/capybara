@@ -313,6 +313,30 @@ Capybara::SpecHelper.spec "node" do
       @session.find(:css, '#link_placeholder').click
       expect(@session.current_url).to match(%r{/with_html$})
     end
+
+    it "should be able to check a checkbox" do
+      @session.visit('form')
+      cbox = @session.find(:checkbox, 'form_terms_of_use')
+      expect(cbox).not_to be_checked
+      cbox.click
+      expect(cbox).to be_checked
+    end
+
+    it "should be able to uncheck a checkbox" do
+      @session.visit('/form')
+      cbox = @session.find(:checkbox, 'form_pets_dog')
+      expect(cbox).to be_checked
+      cbox.click
+      expect(cbox).not_to be_checked
+    end
+
+    it "should be able to select a radio button" do
+      @session.visit('/form')
+      radio = @session.find(:radio_button, 'gender_male')
+      expect(radio).not_to be_checked
+      radio.click
+      expect(radio).to be_checked
+    end
   end
 
   describe '#double_click', requires: [:js] do

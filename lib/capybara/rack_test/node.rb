@@ -17,6 +17,12 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   end
 
   def set(value)
+    return if disabled?
+    if readonly?
+      warn "Attempt to set readonly element with value: #{value} \n * This will raise an exception in a future version of Capybara"
+      return
+    end
+
     if (Array === value) && !multiple?
       raise TypeError.new "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"
     end
@@ -28,11 +34,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     elsif input_field?
       set_input(value)
     elsif textarea?
-      if self[:readonly]
-        warn "Attempt to set readonly element with value: #{value} \n * This will raise an exception in a future version of Capybara"
-      else
-        native['_capybara_raw_value'] = value.to_s
-      end
+      native['_capybara_raw_value'] = value.to_s
     end
   end
 
@@ -60,6 +62,8 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
         ((tag_name == 'button') and type.nil? or type == "submit")
       associated_form = form
       Capybara::RackTest::Form.new(driver, associated_form).submit(self) if associated_form
+    elsif (tag_name == 'input' and %w(checkbox radio).include?(type))
+      set(!checked?)
     elsif (tag_name == 'label')
       labelled_control = if native[:for]
         find_xpath("//input[@id='#{native[:for]}']").first
@@ -181,7 +185,7 @@ private
       end
       native.remove
     else
-      if self[:readonly]
+      if readonly?
         warn "Attempt to set readonly element with value: #{value} \n *This will raise an exception in a future version of Capybara"
       else
         native['value'] = value.to_s
