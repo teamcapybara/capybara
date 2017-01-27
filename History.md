@@ -1,3 +1,11 @@
+#Edge
+Release date: Unreleased
+
+### Added
+
+* Selenium driver supports returning an element from evaluate_script [Thomas Walpole]
+* rack_test driver supports click on checkboxes and radio buttons to change their states [Thomas Walpole]
+
 #Version 2.12.0
 Release date: 2017-01-22
 
