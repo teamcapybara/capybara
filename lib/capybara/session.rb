@@ -631,12 +631,14 @@ module Capybara
     #
     def evaluate_script(script, *args)
       @touched = true
-      if driver.method(:evaluate_script).arity == 1
+      result = if driver.method(:evaluate_script).arity == 1
         raise Capybara::NotSupportedByDriverError, "The current driver does not support arguments being passed with execute_script" unless args.empty?
         driver.evaluate_script(script)
       else
         driver.evaluate_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ?  arg.base : arg} )
       end
+      result = Capybara::Node::Element.new(self, result, nil, nil) if result.is_a?(Capybara::Driver::Node)
+      result
     end
 
     ##

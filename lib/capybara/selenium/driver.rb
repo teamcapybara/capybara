@@ -91,7 +91,9 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def evaluate_script(script, *args)
-    browser.execute_script("return #{script}", *args.map { |arg| arg.is_a?(Capybara::Selenium::Node) ?  arg.native : arg} )
+    result = browser.execute_script("return #{script}", *args.map { |arg| arg.is_a?(Capybara::Selenium::Node) ?  arg.native : arg} )
+    result = Capybara::Selenium::Node.new(self, result) if result.is_a? Selenium::WebDriver::Element
+    result
   end
 
   def save_screenshot(path, _options={})

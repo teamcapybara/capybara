@@ -119,5 +119,13 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         expect(element.path).to eq('/html/body/div[2]/a[1]')
       end
     end
+
+    describe "#evaluate_script" do
+      it "can return elements" do
+        @session.visit('/form')
+        element = @session.evaluate_script("document.getElementById('form_title')")
+        expect(element).to eq @session.find(:id, 'form_title')
+      end
+    end
   end
 end
