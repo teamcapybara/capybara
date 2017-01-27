@@ -42,7 +42,7 @@ module Capybara
 
       def description
         @description = String.new("#{label} #{locator.inspect}")
-        @description << " with#{" exact" if exact_text === true} text #{options[:text].inspect}" if options[:text]
+        @description << " with#{" exact" if exact_text == true} text #{options[:text].inspect}" if options[:text]
         @description << " with exact text #{options[:exact_text]}" if options[:exact_text].is_a?(String)
         @description << " with id #{options[:id]}" if options[:id]
         @description << " with classes #{Array(options[:class]).join(',')}]" if options[:class]
@@ -56,7 +56,7 @@ module Capybara
           regexp = if options[:text].is_a?(Regexp)
             options[:text]
           else
-            if exact_text === true
+            if exact_text == true
               "\\A#{Regexp.escape(options[:text].to_s)}\\z"
             else
               Regexp.escape(options[:text].to_s)
@@ -205,7 +205,7 @@ module Capybara
       end
 
       def exact_text
-        exact_text = options.fetch(:exact_text, Capybara.exact_text)
+        options.fetch(:exact_text, Capybara.exact_text)
       end
     end
   end

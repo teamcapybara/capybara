@@ -8,12 +8,12 @@ Capybara::Selector::FilterSet.add(:_field) do
 
   describe do |options|
     desc, states = String.new, []
-    states << 'checked' if options[:checked] || (options[:unchecked] === false)
-    states << 'not checked' if options[:unchecked] || (options[:checked] === false)
+    states << 'checked' if options[:checked] || (options[:unchecked] == false)
+    states << 'not checked' if options[:unchecked] || (options[:checked] == false)
     states << 'disabled' if options[:disabled] == true
     desc << " that is #{states.join(' and ')}" unless states.empty?
     desc << " with the multiple attribute" if options[:multiple] == true
-    desc << " without the multiple attribute" if options[:multiple] === false
+    desc << " without the multiple attribute" if options[:multiple] == false
     desc
   end
 end
