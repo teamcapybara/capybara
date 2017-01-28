@@ -16,6 +16,19 @@ Capybara.register_driver :selenium_chrome_clear_storage do |app|
                                       clear_session_storage: true)
 end
 
+Capybara.register_driver :selenium_chrome_no_js do |app|
+  Capybara::Selenium::Driver.new(
+    app,
+    :browser => :chrome,
+    :prefs => {
+      :profile => {
+        :default_content_setting_values => { :javascript => 2 }
+      }
+    }
+  )
+end
+
+
 module TestSessions
   Chrome = Capybara::Session.new(:selenium_chrome, TestApp)
 end
@@ -48,6 +61,16 @@ RSpec.describe "Capybara::Session with chrome" do
         @session.visit('/with_js')
         expect(@session.driver.browser.local_storage.keys).to be_empty
         expect(@session.driver.browser.session_storage.keys).to be_empty
+      end
+    end
+  end
+
+  context "disabled JS" do
+    describe "#reset!" do
+      it "doesn't raise an error" do
+        @session = Capybara::Session.new(:selenium_chrome_no_js, TestApp)
+        @session.visit('/with_html')
+        expect { @session.reset! }.not_to raise_error
       end
     end
   end

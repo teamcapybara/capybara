@@ -32,6 +32,9 @@ Release date: 2017-01-22
 *  RackTest driver no longer modifies the text content of textarea elements in order to behave more like a real browser [Thomas Walpole]
 *  TextQuery (assert_text/have_text/etc) now ignores errors when trying to generate more helpful errors messages so the original error isn't hidden [Thomas Walpole]
 
+### Fixed
+* SeleniumDriver#reset! allows dummy frame with chrome when JS is disabled - Issue #1809
+
 #Version 2.11.0
 Release date: 2016-12-05
 

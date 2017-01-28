@@ -135,7 +135,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         navigated = true
 
         #Ensure the page is empty and trigger an UnhandledAlertError for any modals that appear during unload
-        until find_xpath("/html/body/*").empty? do
+        until empty_browser? do
           raise Capybara::ExpectationNotMet.new('Timed out waiting for Selenium session reset') if (Capybara::Helpers.monotonic_time - start_time) >= 10
           sleep 0.05
         end
@@ -326,5 +326,11 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def silenced_unknown_error_messages
     [ /Error communicating with the remote browser/ ]
+  end
+
+  def empty_browser?
+    elements = find_xpath("/html/body/*")
+    # When using chromedriver with JS disabled there is an extra dummy frame on the about:blank page - Issue #1809
+    elements.empty? || (elements.size == 1 && (elements == find_css('iframe[name="chromedriver dummy frame"][src="about:blank"]')))
   end
 end
