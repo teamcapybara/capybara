@@ -637,8 +637,7 @@ module Capybara
       else
         driver.evaluate_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ?  arg.base : arg} )
       end
-      result = Capybara::Node::Element.new(self, result, nil, nil) if result.is_a?(Capybara::Driver::Node)
-      result
+      element_script_result(result)
     end
 
     ##
@@ -843,6 +842,19 @@ module Capybara
 
     def scopes
       @scopes ||= [nil]
+    end
+
+    def element_script_result(arg)
+      case arg
+      when Array
+        arg.map { |e| element_script_result(e) }
+      when Hash
+        arg.each { |k, v| arg[k] = element_script_result(v) }
+      when Capybara::Driver::Node
+        Capybara::Node::Element.new(self, arg, nil, nil)
+      else
+        arg
+      end
     end
   end
 end
