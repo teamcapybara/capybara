@@ -121,10 +121,30 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
     end
 
     describe "#evaluate_script" do
-      it "can return elements" do
+      it "can return an element" do
         @session.visit('/form')
         element = @session.evaluate_script("document.getElementById('form_title')")
         expect(element).to eq @session.find(:id, 'form_title')
+      end
+
+      it "can return arrays of nested elements" do
+        @session.visit('/form')
+        elements = @session.evaluate_script('document.querySelectorAll("#form_city option")')
+        elements.each do |el|
+          expect(el).to be_instance_of Capybara::Node::Element
+        end
+        expect(elements).to eq @session.find(:css, '#form_city').all(:css, 'option').to_a
+      end
+
+      it "can return hashes with elements" do
+        @session.visit('/form')
+        result = @session.evaluate_script("{ a: document.getElementById('form_title'), b: {c: document.querySelectorAll('#form_city option')}}")
+        expect(result).to eq({
+          'a' => @session.find(:id, 'form_title'),
+          'b' => {
+            'c' => @session.find(:css, '#form_city').all(:css, 'option').to_a
+          }
+        })
       end
     end
   end
