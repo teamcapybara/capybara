@@ -19,7 +19,6 @@ Capybara::SpecHelper.spec '#accept_prompt', requires: [:modals] do
   end
 
   it "should accept the prompt with a response" do
-    pending "selenium-webdriver/geckodriver doesn't support sending a response to prompts" if marionette?(@session)
     @session.accept_prompt with: 'the response' do
       @session.click_link('Open prompt')
     end
@@ -27,7 +26,6 @@ Capybara::SpecHelper.spec '#accept_prompt', requires: [:modals] do
   end
 
   it "should accept the prompt if the message matches" do
-    pending "selenium-webdriver/geckodriver doesn't support sending a response to prompts" if marionette?(@session)
     @session.accept_prompt 'Prompt opened', with: 'matched' do
       @session.click_link('Open prompt')
     end
@@ -44,7 +42,6 @@ Capybara::SpecHelper.spec '#accept_prompt', requires: [:modals] do
 
 
   it "should return the message presented" do
-    pending "selenium-webdriver/geckodriver doesn't support sending a response to prompts" if marionette?(@session)
     message = @session.accept_prompt with: 'the response' do
       @session.click_link('Open prompt')
     end
