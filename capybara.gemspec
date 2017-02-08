@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("yard", [">= 0.5.8"])
   s.add_development_dependency("fuubar", [">= 0.0.1"])
   s.add_development_dependency("cucumber", [">= 0.10.5"])
-  s.add_development_dependency("rake", ["< 11.0"])
+  s.add_development_dependency("rake")
   s.add_development_dependency("pry")
   s.add_development_dependency("erubis")  # dependency specification needed by rbx
 
