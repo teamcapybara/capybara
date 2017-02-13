@@ -387,21 +387,7 @@ module Capybara
     # @overload within_frame(index)
     #   @param [Integer] index         index of a frame (0 based)
     def within_frame(*args)
-      frame = within(document) do  # Previous 2.x versions ignored current scope when finding frames - consider changing in 3.0
-        case args[0]
-        when Capybara::Node::Element
-          args[0]
-        when String, Hash
-          find(:frame, *args)
-        when Symbol
-          find(*args)
-        when Integer
-          idx = args[0]
-          all(:frame, minimum: idx+1)[idx]
-        else
-          raise TypeError
-        end
-      end
+      frame = _find_frame(*args)
 
       begin
         switch_to_frame(frame)
@@ -612,10 +598,10 @@ module Capybara
     #
     def execute_script(script, *args)
       @touched = true
-      if driver.method(:execute_script).arity == 1
-        raise Capybara::NotSupportedByDriverError, "The current driver does not support arguments being passed with execute_script" unless args.empty?
+      if args.empty?
         driver.execute_script(script)
       else
+        raise Capybara::NotSupportedByDriverError, "The current driver does not support execute_script arguments" if driver.method(:execute_script).arity == 1
         driver.execute_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ?  arg.base : arg} )
       end
     end
@@ -631,10 +617,10 @@ module Capybara
     #
     def evaluate_script(script, *args)
       @touched = true
-      result = if driver.method(:evaluate_script).arity == 1
-        raise Capybara::NotSupportedByDriverError, "The current driver does not support arguments being passed with execute_script" unless args.empty?
+      result = if args.empty?
         driver.evaluate_script(script)
       else
+        raise Capybara::NotSupportedByDriverError, "The current driver does not support evaluate_script arguments" if driver.method(:evaluate_script).arity == 1
         driver.evaluate_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ?  arg.base : arg} )
       end
       element_script_result(result)
@@ -854,6 +840,24 @@ module Capybara
         Capybara::Node::Element.new(self, arg, nil, nil)
       else
         arg
+      end
+    end
+
+    def _find_frame(*args)
+      within(document) do  # Previous 2.x versions ignored current scope when finding frames - consider changing in 3.0
+        case args[0]
+        when Capybara::Node::Element
+          args[0]
+        when String, Hash
+          find(:frame, *args)
+        when Symbol
+          find(*args)
+        when Integer
+          idx = args[0]
+          all(:frame, minimum: idx+1)[idx]
+        else
+          raise TypeError
+        end
       end
     end
   end
