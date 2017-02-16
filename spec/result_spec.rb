@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
+JRUBY_LAZY_ENUMERATORS_FIX_VERSION = '9.2.0.0'
+
 RSpec.describe Capybara::Result do
   let :string do
     Capybara.string <<-STRING
@@ -73,7 +75,8 @@ RSpec.describe Capybara::Result do
 
   #Not a great test but it indirectly tests what is needed
   it "should evaluate filters lazily" do
-    skip 'JRuby has an issue with lazy enumerator next evaluation' if RUBY_PLATFORM == 'java' && (Gem::Version.new(JRUBY_VERSION) < Gem::Version.new('9.1.6.0'))
+    skip 'JRuby has an issue with lazy enumerator next evaluation' if RUBY_PLATFORM == 'java' &&
+      Gem::Version.new(JRUBY_VERSION) < Gem::Version.new(JRUBY_LAZY_ENUMERATORS_FIX_VERSION)
     #Not processed until accessed
     expect(result.instance_variable_get('@result_cache').size).to be 0
 
@@ -95,7 +98,8 @@ RSpec.describe Capybara::Result do
 
   context '#each' do
     it 'lazily evaluates' do
-      skip 'JRuby has an issue with lazy enumerator next evaluation' if RUBY_PLATFORM == 'java' && (Gem::Version.new(JRUBY_VERSION) < Gem::Version.new('9.1.6.0'))
+      skip 'JRuby has an issue with lazy enumerator next evaluation' if RUBY_PLATFORM == 'java' &&
+        Gem::Version.new(JRUBY_VERSION) < Gem::Version.new(JRUBY_LAZY_ENUMERATORS_FIX_VERSION)
       results=[]
       result.each do |el|
         results << el
@@ -111,7 +115,8 @@ RSpec.describe Capybara::Result do
       end
 
       it 'lazily evaluates' do
-        skip 'JRuby has an issue with lazy enumerator next evaluation' if RUBY_PLATFORM == 'java' && (Gem::Version.new(JRUBY_VERSION) < Gem::Version.new('9.1.6.0'))
+        skip 'JRuby has an issue with lazy enumerator next evaluation' if RUBY_PLATFORM == 'java' &&
+          Gem::Version.new(JRUBY_VERSION) < Gem::Version.new(JRUBY_LAZY_ENUMERATORS_FIX_VERSION)
         result.each.with_index do |el, idx|
           expect(result.instance_variable_get('@result_cache').size).to eq(idx+1)  # 0 indexing
         end

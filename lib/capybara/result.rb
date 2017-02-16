@@ -28,11 +28,11 @@ module Capybara
       @result_cache = []
       @results_enum = lazy_select_elements { |node| query.matches_filters?(node) }
       @query = query
-      # JRuby < 9.1.6.0 has an issue with eagerly finding next in lazy enumerators which
+      # JRuby < 9.2.0.0 has an issue with eagerly finding next in lazy enumerators which
       # causes a concurrency issue with network requests here
       # https://github.com/jruby/jruby/issues/4212
       # Just force all the results to be evaluated
-      full_results if RUBY_PLATFORM == 'java' && (Gem::Version.new(JRUBY_VERSION) < Gem::Version.new('9.1.6.0'))
+      full_results if RUBY_PLATFORM == 'java' && (Gem::Version.new(JRUBY_VERSION) < Gem::Version.new('9.2.0.0'))
     end
 
     def_delegators :full_results, :size, :length, :last, :values_at, :inspect, :sample
