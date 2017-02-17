@@ -1,5 +1,5 @@
 #Version 2.12.1
-Release date: Unreleased
+Release date: 2017-02-16
 
 ### Fixed
 *  Disable lazy Capybara::Results evaluation for JRuby due to ongoing issues
