@@ -57,7 +57,7 @@ module Capybara
             options[:text]
           else
             if exact_text == true
-              "\\A#{Regexp.escape(options[:text].to_s)}\\z"
+              /\A#{Regexp.escape(options[:text].to_s)}\z/
             else
               Regexp.escape(options[:text].to_s)
             end
@@ -68,7 +68,7 @@ module Capybara
         end
 
         if exact_text.is_a?(String)
-          regexp = "\\A#{Regexp.escape(options[:exact_text])}\\z"
+          regexp = /\A#{Regexp.escape(options[:exact_text])}\z/
           text_visible = visible
           text_visible = :all if text_visible == :hidden
           return false if not node.text(text_visible).match(regexp)
