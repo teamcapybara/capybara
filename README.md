@@ -36,6 +36,7 @@ You can read more about the missing features [here](https://github.com/teamcapyb
 - [Using Capybara with Cucumber](#using-capybara-with-cucumber)
 - [Using Capybara with RSpec](#using-capybara-with-rspec)
 - [Using Capybara with Test::Unit](#using-capybara-with-testunit)
+- [Using Capybara with MiniTest](#using-capybara-with-minitest)
 - [Using Capybara with MiniTest::Spec](#using-capybara-with-minitestspec)
 - [Drivers](#drivers)
     - [Selecting the Driver](#selecting-the-driver)
@@ -291,14 +292,15 @@ class BlogTest < ActionDispatch::IntegrationTest
 end
 ```
 
+## <a name="using-capybara-with-minitest"></a>Using Capybara with MiniTest
+
+Set up your base class as with Test::Unit and additionally require capybara/minitest and include ::Capybara::Minitest::Assertions into
+your base class
+
+
 ## <a name="using-capybara-with-minitestspec"></a>Using Capybara with MiniTest::Spec
 
-Set up your base class as with Test::Unit. (On Rails, the right base class
-could be something other than ActionDispatch::IntegrationTest.)
-
-The capybara_minitest_spec gem ([GitHub](https://github.com/ordinaryzelig/capybara_minitest_spec),
-[rubygems.org](https://rubygems.org/gems/capybara_minitest_spec)) provides MiniTest::Spec
-expectations for Capybara. For example:
+Follow the above instructions for MiniTest and additionally require capybara/minitest/spec
 
 ```ruby
 page.must_have_content('Important!')
