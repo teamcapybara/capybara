@@ -36,8 +36,8 @@ You can read more about the missing features [here](https://github.com/teamcapyb
 - [Using Capybara with Cucumber](#using-capybara-with-cucumber)
 - [Using Capybara with RSpec](#using-capybara-with-rspec)
 - [Using Capybara with Test::Unit](#using-capybara-with-testunit)
-- [Using Capybara with MiniTest](#using-capybara-with-minitest)
-- [Using Capybara with MiniTest::Spec](#using-capybara-with-minitestspec)
+- [Using Capybara with Minitest](#using-capybara-with-minitest)
+- [Using Capybara with Minitest::Spec](#using-capybara-with-minitestspec)
 - [Drivers](#drivers)
     - [Selecting the Driver](#selecting-the-driver)
     - [RackTest](#racktest)
@@ -243,14 +243,37 @@ end
 
 ## <a name="using-capybara-with-testunit"></a>Using Capybara with Test::Unit
 
+* If you are using `Test::Unit`, define a base class for your Capybara tests
+  like so:
+
+    ```ruby
+    require 'capybara/dsl'
+
+    class CapybaraTestCase < Test::Unit::TestCase
+      include Capybara::DSL
+
+      def teardown
+        Capybara.reset_sessions!
+        Capybara.use_default_driver
+      end
+    end
+    ```
+
+## <a name="using-capybara-with-minitest"></a>Using Capybara with Minitest
+
 * If you are using Rails, add the following code in your `test_helper.rb`
     file to make Capybara available in all test cases deriving from
     `ActionDispatch::IntegrationTest`:
 
     ```ruby
+    require 'capybara/rails'
+    require 'capybara/minitest'
+
     class ActionDispatch::IntegrationTest
       # Make the Capybara DSL available in all integration tests
       include Capybara::DSL
+      # Make `assert_*` methods behave like Minitest assertions
+      include Capybara::Minitest::Assertions
 
       # Reset sessions and driver between tests
       # Use super wherever this method is redefined in your individual test classes
@@ -265,8 +288,11 @@ end
   so:
 
     ```ruby
-    class CapybaraTestCase < Test::Unit::TestCase
+    require 'capybara/minitest'
+
+    class CapybaraTestCase < Minitest::Test
       include Capybara::DSL
+      include Capybara::Minitest::Assertions
 
       def teardown
         Capybara.reset_sessions!
@@ -292,15 +318,9 @@ class BlogTest < ActionDispatch::IntegrationTest
 end
 ```
 
-## <a name="using-capybara-with-minitest"></a>Using Capybara with MiniTest
+## <a name="using-capybara-with-minitestspec"></a>Using Capybara with Minitest::Spec
 
-Set up your base class as with Test::Unit and additionally require capybara/minitest and include ::Capybara::Minitest::Assertions into
-your base class
-
-
-## <a name="using-capybara-with-minitestspec"></a>Using Capybara with MiniTest::Spec
-
-Follow the above instructions for MiniTest and additionally require capybara/minitest/spec
+Follow the above instructions for Minitest and additionally require capybara/minitest/spec
 
 ```ruby
 page.must_have_content('Important!')
