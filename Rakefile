@@ -4,7 +4,7 @@ require 'cucumber/rake/task'
 require 'yard'
 
 desc "Run all examples with Firefox non-marionette"
-RSpec::Core::RakeTask.new(:spec) do |t|
+RSpec::Core::RakeTask.new(:spec_firefox) do |t|
   t.rspec_opts = %w[--color]
   t.rspec_opts << '--format documentation' if RUBY_PLATFORM=='java'
   # When we drop RSpec 2.x support we can rename spec_chrome.rb and implement this properly
@@ -26,6 +26,8 @@ RSpec::Core::RakeTask.new(:spec_chrome) do |t|
   t.pattern = './spec/*{_spec_chrome.rb}'
 end
 
+task :spec => [:spec_marionette]
+
 YARD::Rake::YardocTask.new do |t|
   t.files   = ['lib/**/*.rb']
   t.options = %w(--markup=markdown)
@@ -42,7 +44,7 @@ task :travis do |t|
     Rake::Task[:spec_marionette].invoke
     Rake::Task[:cucumber].invoke
   else
-    Rake::Task[:spec].invoke
+    Rake::Task[:spec_firefox].invoke
     Rake::Task[:cucumber].invoke
   end
 end
