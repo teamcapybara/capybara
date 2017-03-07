@@ -3,8 +3,9 @@ Release date: Unreleased
 
 ### Added
 
-* Selenium driver supports returning an element from evaluate_script [Thomas Walpole]
+* Selenium driver supports returning element(s) from evaluate_script [Thomas Walpole]
 * rack_test driver supports click on checkboxes and radio buttons to change their states [Thomas Walpole]
+* Support RSpec equivalent assertions and expectations for MiniTest [Thomas Walpole]
 
 #Version 2.12.1
 Release date: 2017-02-16
