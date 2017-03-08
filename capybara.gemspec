@@ -39,7 +39,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency("rake")
   s.add_development_dependency("pry")
   s.add_development_dependency("erubi")  # dependency specification needed by rbx
-  s.add_development_dependency("byebug")
 
   if RUBY_ENGINE == 'rbx' then
     s.add_development_dependency("racc")
