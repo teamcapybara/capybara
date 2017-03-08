@@ -6,7 +6,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def all_text
-    text = driver.browser.execute_script("return arguments[0].textContent", native)
+    text = driver.execute_script("return arguments[0].textContent", self)
     Capybara::Helpers.normalize_whitespace(text)
   end
 
@@ -70,7 +70,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
           # Clear field by JavaScript assignment of the value property.
           # Script can change a readonly element which user input cannot, so
           # don't execute if readonly.
-          driver.browser.execute_script "arguments[0].value = ''", native
+          driver.execute_script "arguments[0].value = ''", self
           native.send_keys(value.to_s)
         end
       end
@@ -83,7 +83,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
         range.selectNodeContents(arguments[0]);
         window.getSelection().addRange(range);
       JS
-      driver.execute_script script, native
+      driver.execute_script script, self
       if (driver.options[:browser].to_s == "chrome") ||
          (driver.options[:browser].to_s == "firefox" && !driver.marionette?)
         # chromedriver raises a can't focus element if we use native.send_keys

@@ -91,7 +91,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def evaluate_script(script, *args)
-    result = browser.execute_script("return #{script}", *args.map { |arg| arg.is_a?(Capybara::Selenium::Node) ?  arg.native : arg} )
+    result = execute_script("return #{script}", *args)
     unwrap_script_result(result)
   end
 
