@@ -64,7 +64,7 @@ Capybara::SpecHelper.spec '#within_frame', requires: [:frames] do
 
   it "should reset scope when changing frames" do
     @session.within(:css, '#divInMainWindow') do
-      @session.within_frame 'parentFrame' do
+      @session.within_frame 'innerParentFrame' do
         expect(@session.has_selector?(:css, "iframe#childFrame")).to be true
       end
     end
