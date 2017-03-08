@@ -28,7 +28,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency("xpath", ["~> 2.0"])
   s.add_runtime_dependency("addressable")
 
-  s.add_development_dependency("selenium-webdriver", [">= 2.0", "< 3.3"])
+  s.add_development_dependency("selenium-webdriver", [">= 2.0", "< 4.0"])
   s.add_development_dependency("sinatra", [">= 0.9.4"])
   s.add_development_dependency("rspec", [">= 2.2.0"])
   s.add_development_dependency("launchy", [">= 2.0.4"])
@@ -39,6 +39,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("rake")
   s.add_development_dependency("pry")
   s.add_development_dependency("erubi")  # dependency specification needed by rbx
+  s.add_development_dependency("byebug")
 
   if RUBY_ENGINE == 'rbx' then
     s.add_development_dependency("racc")
