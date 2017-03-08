@@ -26,7 +26,7 @@ module Capybara
     def initialize(elements, query)
       @elements = elements
       @result_cache = []
-      @results_enum = @elements.lazy_select_elements { |node| query.matches_filters?(node) }
+      @results_enum = lazy_select_elements { |node| query.matches_filters?(node) }
       @query = query
     end
 
