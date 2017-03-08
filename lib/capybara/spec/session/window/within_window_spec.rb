@@ -30,7 +30,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
       window = (@session.windows - [@window]).first
       expect(@session.driver).to receive(:switch_to_window).exactly(5).times.and_call_original
       @session.within_window window do
-        expect(['Title of the first popup', 'Title of popup two']).to include(@session.title)
+        expect(@session).to have_title(/Title of the first popup|Title of popup two/)
       end
       expect(@session.title).to eq('With Windows')
     end
@@ -140,7 +140,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
     it "should find window by handle" do
       window = (@session.windows - [@window]).first
       @session.within_window window.handle do
-        expect(['Title of the first popup', 'Title of popup two']).to include(@session.title)
+        expect(@session).to have_title(/Title of the first popup|Title of popup two/)
       end
     end
 
