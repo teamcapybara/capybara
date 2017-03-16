@@ -1,11 +1,14 @@
-#Edge
-Release date: Unreleased
+#Version 2.13.0
+Release date: 2017-03-16
 
 ### Added
 
 * Selenium driver supports returning element(s) from evaluate_script [Thomas Walpole]
 * rack_test driver supports click on checkboxes and radio buttons to change their states [Thomas Walpole]
 * Support RSpec equivalent assertions and expectations for MiniTest [Thomas Walpole]
+
+### Foxed
+* Editing of content editable children with selenium
 
 #Version 2.12.1
 Release date: 2017-02-16
