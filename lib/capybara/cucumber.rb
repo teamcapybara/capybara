@@ -18,7 +18,9 @@ Before '@javascript' do
 end
 
 Before do |scenario|
-  scenario.source_tag_names.each do |tag|
+  meth = :source_tags # Cucumber >= 1.1.5
+  meth = :source_tag_names unless scenario.respond_to?(meth)
+  scenario.send(meth).each do |tag|
     driver_name = tag.sub(/^@/, '').to_sym
     if Capybara.drivers.has_key?(driver_name)
       Capybara.current_driver = driver_name
