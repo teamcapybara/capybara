@@ -43,10 +43,10 @@ class Capybara::RackTest::Browser
   end
 
   def process(method, path, attributes = {}, env = {})
-    new_uri = URI.parse(path)
+    new_uri = URI.parse(path.to_s)
     method.downcase! unless method.is_a? Symbol
 
-    new_uri.path = request_path if path.start_with?("?")
+    new_uri.path = request_path if path.to_s.start_with?("?")
     new_uri.path = "/" if new_uri.path.empty?
     new_uri.path = request_path.sub(%r(/[^/]*$), '/') + new_uri.path unless new_uri.path.start_with?('/')
     new_uri.scheme ||= @current_scheme
