@@ -11,7 +11,12 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def [](name)
-    native.attribute(name.to_s)
+    value = native.attribute(name.to_s)
+    if %w{checked disabled autoplay async autofocus controls default defer formnovalidate hidden ismap itemscope loop multiple novalidate open pubdate readonly required reversed scoped seamless selected}.include?(name)
+      value == "true"
+    else
+      value
+    end
   rescue Selenium::WebDriver::Error::WebDriverError
     nil
   end
