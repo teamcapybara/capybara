@@ -374,6 +374,12 @@ module Capybara
         %(#<Capybara::Node::Element tag="#{tag_name}" path="#{path}">)
       rescue NotSupportedByDriverError
         %(#<Capybara::Node::Element tag="#{tag_name}">)
+      rescue => e
+        if session.driver.invalid_element_errors.any? { |et| e.is_a?(et)}
+          %(Obsolete #<Capybara::Node::Element>)
+        else
+          raise
+        end
       end
     end
   end
