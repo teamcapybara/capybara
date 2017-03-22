@@ -23,7 +23,7 @@ addons:
 matrix:
   include:
     - gemfile: Gemfile
-      rvm: 2.4.0
+      rvm: 2.4.1
     - gemfile: gemfiles/Gemfile.rspec-34
       rvm: 2.3.3
       env: CAPYBARA_CHROME=true
@@ -73,7 +73,7 @@ matrix:
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-marionette
-    - rvm: 2.4.0
+    - rvm: 2.4.1
     - rvm: rbx-3
     - rvm: jruby-9.1.7.0
 before_install:
