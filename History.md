@@ -1,3 +1,11 @@
+# Edge
+
+Release date: Unreleased
+
+### Fixed
+
+* Element#inspect doesn't raise an error on obsolete elements
+
 # Version 2.13.0
 
 Release date: 2017-03-16
