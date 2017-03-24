@@ -314,6 +314,12 @@ Capybara::SpecHelper.spec "node" do
       expect(@session.current_url).to match(%r{/with_html$})
     end
 
+    it "should go to the same page if href is blank" do
+      @session.find(:css, '#link_blank_href').click
+      sleep 1
+      expect(@session).to have_current_path('/with_html')
+    end
+
     it "should be able to check a checkbox" do
       @session.visit('form')
       cbox = @session.find(:checkbox, 'form_terms_of_use')
