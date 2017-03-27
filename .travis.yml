@@ -22,8 +22,6 @@ addons:
 
 matrix:
   include:
-    - gemfile: Gemfile
-      rvm: 2.4.1
     - gemfile: gemfiles/Gemfile.rspec-34
       rvm: 2.3.3
       env: CAPYBARA_CHROME=true
@@ -41,7 +39,7 @@ matrix:
     - gemfile: gemfiles/Gemfile.base-versions
       rvm: 1.9.3
     - gemfile: Gemfile
-      rvm: 2.3.3
+      rvm: 2.4.1
       env:
         - WINDOW_TEST=true
         - CAPYBARA_MARIONETTE=true
@@ -73,7 +71,6 @@ matrix:
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-marionette
-    - rvm: 2.4.1
     - rvm: rbx-3
     - rvm: jruby-9.1.7.0
 before_install:
