@@ -1,9 +1,0 @@
-source 'https://rubygems.org'
-
-gem 'bundler', '~> 1.1'
-gemspec path: '..'
-
-gem 'xpath', '~>2.1'
-gem 'nokogiri', '< 1.7.0' # 1.7 requires ruby 2.1+
-gem 'rack', '<2.0' # 2.0 requires ruby 2.2+
-gem 'public_suffix', '<3.0' #3.0 requires ruby 2.1+
