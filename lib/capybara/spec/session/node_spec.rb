@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Capybara::SpecHelper.spec "node" do
+Capybara::SpecHelper.spec "node", :focus_ do
   before do
     @session.visit('/with_html')
   end
@@ -289,7 +289,6 @@ Capybara::SpecHelper.spec "node" do
 
   describe '#drag_to', requires: [:js, :drag] do
     it "should drag and drop an object" do
-      pending "selenium-webdriver/geckodriver doesn't support mouse move_to" if marionette?(@session)
       @session.visit('/with_js')
       element = @session.find('//div[@id="drag"]')
       target = @session.find('//div[@id="drop"]')
@@ -300,7 +299,6 @@ Capybara::SpecHelper.spec "node" do
 
   describe '#hover', requires: [:hover] do
     it "should allow hovering on an element" do
-      pending "selenium-webdriver/geckodriver doesn't support mouse move_to" if marionette?(@session)
       @session.visit('/with_hover')
       expect(@session.find(:css,'.hidden_until_hover', visible: false)).not_to be_visible
       @session.find(:css,'.wrapper').hover
