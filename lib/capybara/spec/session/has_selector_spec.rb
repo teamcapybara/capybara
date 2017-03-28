@@ -131,9 +131,7 @@ Capybara::SpecHelper.spec '#has_no_selector?' do
   end
 
   it "should accept a filter block" do
-    if !defined?(::RSpec::Expectations::Version) || (Gem::Version.new(RSpec::Expectations::Version::STRING) < Gem::Version.new('3.0'))
-      skip "RSpec < 3 doesn't pass the block along to the matcher for the Builtin::Has matcher"
-    end
+    skip "RSpec < 3 doesn't pass the block along to the matcher for the Builtin::Has matcher" if rspec2?
     expect(@session).to have_no_selector(:css, "a#foo") { |el| el[:id] != "foo" }
   end
 

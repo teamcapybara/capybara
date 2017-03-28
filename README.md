@@ -241,6 +241,10 @@ RSpec.describe "todos/show.html.erb", type: :view do
 end
 ```
 
+**Note: When you require 'capybara/rspec' proxy methods are installed to work around name collisions between Capybara::DSL methods
+  `all`/`within` and the identically named built-in RSpec matchers. If you opt not to require 'capybara/rspec' (because you wanted to customize the RSpec
+  configurationm etc.), you can install the proxy methods by requiring 'capybara/rspec/matcher_proxies' after requiring RSpec and 'capybara/dsl'**
+
 ## <a name="using-capybara-with-testunit"></a>Using Capybara with Test::Unit
 
 * If you are using `Test::Unit`, define a base class for your Capybara tests

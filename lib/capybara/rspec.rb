@@ -1,8 +1,9 @@
 # frozen_string_literal: true
-require 'capybara/dsl'
 require 'rspec/core'
+require 'capybara/dsl'
 require 'capybara/rspec/matchers'
 require 'capybara/rspec/features'
+require 'capybara/rspec/matcher_proxies'
 
 RSpec.configure do |config|
   config.include Capybara::DSL, :type => :feature
@@ -22,6 +23,7 @@ RSpec.configure do |config|
       Capybara.use_default_driver
     end
   end
+
   config.before do
     if self.class.include?(Capybara::DSL)
       example = fetch_current_example.call(self)
