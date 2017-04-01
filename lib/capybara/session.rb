@@ -125,6 +125,7 @@ module Capybara
     #
     def reset!
       if @touched
+        clear_storage if @server && Capybara.clear_storage_on_reset
         driver.reset!
         @touched = false
       end
@@ -245,24 +246,7 @@ module Capybara
     def visit(visit_uri)
       raise_server_error!
       @touched = true
-
-      visit_uri = ::Addressable::URI.parse(visit_uri.to_s)
-      base_uri = ::Addressable::URI.parse(config.app_host || server_url)
-
-      if base_uri && [nil, 'http', 'https'].include?(visit_uri.scheme)
-        if visit_uri.relative?
-          visit_uri_parts = visit_uri.to_hash.delete_if { |_k, value| value.nil? }
-
-          # Useful to people deploying to a subdirectory
-          # and/or single page apps where only the url fragment changes
-          visit_uri_parts[:path] = base_uri.path + visit_uri.path
-
-          visit_uri = base_uri.merge(visit_uri_parts)
-        end
-        adjust_server_port(visit_uri)
-      end
-
-      driver.visit(visit_uri.to_s)
+      driver.visit(computed_uri(visit_uri).to_s)
     end
 
     ##
@@ -852,6 +836,37 @@ module Capybara
 
     def adjust_server_port(uri)
       uri.port ||= @server.port if @server && config.always_include_port
+    end
+
+    def computed_uri(visit_uri)
+      visit_uri = ::Addressable::URI.parse(visit_uri.to_s)
+      base_uri = ::Addressable::URI.parse(config.app_host || server_url)
+
+      if base_uri && [nil, 'http', 'https'].include?(visit_uri.scheme)
+        if visit_uri.relative?
+          visit_uri_parts = visit_uri.to_hash.delete_if { |_k, value| value.nil? }
+
+          # Useful to people deploying to a subdirectory
+          # and/or single page apps where only the url fragment changes
+          visit_uri_parts[:path] = base_uri.path + visit_uri.path
+
+          visit_uri = base_uri.merge(visit_uri_parts)
+        end
+        adjust_server_port(visit_uri)
+      end
+      visit_uri
+    end
+
+    def clear_storage
+      if
+        begin
+          driver.clear_storage do
+            driver.visit(computed_uri("/__clear_storage__"))
+          end
+        rescue => e
+          warn "Session storage may not have been cleared due to #{e.message}"
+        end
+      end
     end
 
     def _find_frame(*args)

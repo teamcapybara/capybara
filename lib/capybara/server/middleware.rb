@@ -42,6 +42,22 @@ module Capybara
       def call(env)
         if env['PATH_INFO'] == '/__identify__'
           [200, {}, [@app.object_id.to_s]]
+        elsif env["PATH_INFO"] == "/__clear_storage__"
+          [200, {}, [ <<-HTML
+            <html>
+              <head>
+                <title>Clear Storage</title>
+                <script>
+                  window.localStorage.clear();
+                  window.sessionStorage.clear();
+                </script>
+              </head>
+              <body>
+                Clearing Storage
+              </body>
+            </html>
+            HTML
+          ]]
         else
           @counter.increment
           begin
