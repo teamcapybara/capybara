@@ -42,14 +42,14 @@ module Capybara
       def call(env)
         if env['PATH_INFO'] == '/__identify__'
           [200, {}, [@app.object_id.to_s]]
-        elsif env["PATH_INFO"] == "/__clear_storage__"
+        elsif m = env["PATH_INFO"].match(%r{/__clear_storage__(?:/(local|session))?})
           [200, {}, [ <<-HTML
             <html>
               <head>
                 <title>Clear Storage</title>
                 <script>
-                  window.localStorage.clear();
-                  window.sessionStorage.clear();
+                  #{"if (window.localStorage) window.localStorage.clear();" if m[1].nil? || m[1]=='local'}
+                  #{"if (window.sessionStorage) window.sessionStorage.clear();" if m[1].nil? || m[1]=='session'}
                 </script>
               </head>
               <body>

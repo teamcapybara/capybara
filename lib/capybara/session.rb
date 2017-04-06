@@ -125,7 +125,11 @@ module Capybara
     #
     def reset!
       if @touched
-        clear_storage if @server && Capybara.clear_storage_on_reset
+        if @server && Capybara.clear_storage_on_reset
+          what_to_clear = Capybara.clear_storage_on_reset
+          what_to_clear = nil if what_to_clear == true
+          clear_storage(what_to_clear)
+        end
         driver.reset!
         @touched = false
       end
@@ -857,11 +861,12 @@ module Capybara
       visit_uri
     end
 
-    def clear_storage
+    def clear_storage(only_clear = nil)
       if
         begin
-          driver.clear_storage do
-            driver.visit(computed_uri("/__clear_storage__"))
+          driver.clear_storage(only_clear) do
+            uri = "/__clear_storage__#{ "/#{only_clear}" if !only_clear.nil?}"
+            driver.visit(computed_uri(uri))
           end
         rescue => e
           warn "Session storage may not have been cleared due to #{e.message}"

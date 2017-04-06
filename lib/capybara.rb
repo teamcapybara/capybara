@@ -86,7 +86,7 @@ module Capybara
     # [test_id = Symbol/String/nil] Optional attribute to match locator aginst with builtin selectors along with id (Default: nil)
     # [predicates_wait = Boolean]  Whether Capybaras predicate matchers use waiting behavior by default (Default: true)
     # [default_normalize_ws = Boolean] Whether text predicates and matchers use normalize whitespace behaviour (Default: false)
-    # [clear_storage_on_reset = Boolean]  Clear localStorage and sessionStorage when session is reset (Default: false)
+    # [clear_storage_on_reset = [Boolean, :local, :storage]]  Clear localStorage and sessionStorage when session is reset (Default: false)
     #
 
     # === DSL Options
