@@ -8,3 +8,8 @@ RSpec.configure do |config|
   config.filter_run_including focus_: true unless ENV['TRAVIS']
   config.run_all_when_everything_filtered = true
 end
+
+def rspec2?
+  !defined?(::RSpec::Expectations::Version) || (Gem::Version.new(RSpec::Expectations::Version::STRING) < Gem::Version.new('3.0'))
+end
+

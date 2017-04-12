@@ -2,6 +2,11 @@
 
 Release date: Unreleased
 
+### Added
+
+* Proxy methods when using RSpec for `all`/`within` that call either the Capybara::DSL or RSpec matchers
+  depending on arguments passed
+
 ### Fixed
 
 * Element#inspect doesn't raise an error on obsolete elements

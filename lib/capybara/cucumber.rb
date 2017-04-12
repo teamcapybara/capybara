@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'capybara/dsl'
 require 'capybara/rspec/matchers'
+require 'capybara/rspec/matcher_proxies'
 
 World(Capybara::DSL)
 World(Capybara::RSpecMatchers)
