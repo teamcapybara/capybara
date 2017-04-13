@@ -701,7 +701,7 @@ module Capybara
     #
     def save_page(path = nil)
       path = prepare_path(path, 'html')
-      File.write(path, Capybara::Helpers.inject_asset_host(body), mode: 'wb')
+      File.write(path, Capybara::Helpers.finalise_html(body, self), mode: 'wb')
       path
     end
 
