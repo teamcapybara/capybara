@@ -113,6 +113,8 @@ module Capybara
         return self
       end
 
+      alias :value= :set
+
       ##
       #
       # Select this node if is an option element inside a select tag
