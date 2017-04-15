@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.rubygems_version = "1.3.6"
   s.summary = "Capybara aims to simplify the process of integration testing Rack applications, such as Rails, Sinatra or Merb"
 
-  s.add_runtime_dependency("nokogiri", [">= 1.3.3"])
+  s.add_runtime_dependency("nokogiri", [">= 1.5.6"])
   s.add_runtime_dependency("mime-types", [">= 1.16"])
   s.add_runtime_dependency("rack", [">= 1.0.0"])
   s.add_runtime_dependency("rack-test", [">= 0.5.4"])
