@@ -5,10 +5,10 @@ RSpec.describe Capybara::Result do
   let :string do
     Capybara.string <<-STRING
       <ul>
-        <li>Alpha</li>
-        <li>Beta</li>
-        <li>Gamma</li>
-        <li>Delta</li>
+        <li class="a">Alpha</li>
+        <li class="b">Beta</li>
+        <li class="c">Gamma</li>
+        <li class="d">Delta</li>
       </ul>
     STRING
   end
@@ -117,5 +117,9 @@ RSpec.describe Capybara::Result do
         end
       end
     end
+  end
+
+  it "can have attributes plucked" do
+    result.pluck(:class).should == %w[a b c d]
   end
 end

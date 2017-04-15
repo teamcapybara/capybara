@@ -148,5 +148,9 @@ module Capybara
         end
       end
     end
+
+    def pluck(attribute)
+      map { |element| element[attribute] }
+    end
   end
 end
