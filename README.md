@@ -398,6 +398,8 @@ At the moment, Capybara supports [Selenium 2.0
 Provided Firefox is installed, everything is set up for you, and you should be
 able to start using Selenium right away.
 
+**Note**: If you get the popup error: "Your Firefox profile cannot be loaded. It may be missing or inaccessible." this can likely be fixed by ensuring that firefox is not already running.
+
 **Note**: drivers which run the server in a different thread may not share the
 same transaction as your tests, causing data not to be shared between your test
 and test server, see "Transactions and database setup" below.
