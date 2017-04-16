@@ -417,6 +417,7 @@ gem install capybara-webkit
 And you can use it by:
 
 ```ruby
+require 'capybara-webkit'
 Capybara.javascript_driver = :webkit
 ```
 
