@@ -49,7 +49,7 @@ module Capybara
       :title, :assert_title, :assert_no_title, :has_title?, :has_no_title?
     ]
     SESSION_METHODS = [
-      :body, :html, :source, :current_url, :current_host, :current_path,
+      :body, :html, :source, :current_url, :current_host, :current_path, :current_fullpath,
       :execute_script, :evaluate_script, :visit, :go_back, :go_forward,
       :within, :within_element, :within_fieldset, :within_table, :within_frame, :switch_to_frame,
       :current_window, :windows, :open_new_window, :switch_to_window, :within_window, :window_opened_by,
@@ -183,6 +183,15 @@ module Capybara
       return nil if uri.scheme == "about"
       path = uri.path
       path if path and not path.empty?
+    end
+
+    ##
+    #
+    # @return [String] Path of the current page with query string
+    #
+    def current_fullpath
+      fullpath = URI.parse(current_url).request_uri
+      fullpath if fullpath and not fullpath.empty?
     end
 
     ##
