@@ -35,6 +35,13 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def initialize(app, options={})
     begin
       require 'selenium-webdriver'
+      # Fix for selenium-webdriver 3.4.0 which misnamed these
+      if !defined?(::Selenium::WebDriver::Error::ElementNotInteractableError)
+        ::Selenium::WebDriver::Error.const_set('ElementNotInteractableError', Class.new(::Selenium::WebDriver::Error::WebDriverError))
+      end
+      if !defined?(::Selenium::WebDriver::Error::ElementClickInterceptedError)
+        ::Selenium::WebDriver::Error.const_set('ElementClickInterceptedError', Class.new(::Selenium::WebDriver::Error::WebDriverError))
+      end
     rescue LoadError => e
       if e.message =~ /selenium-webdriver/
         raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
@@ -250,10 +257,12 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def invalid_element_errors
-    [Selenium::WebDriver::Error::StaleElementReferenceError,
-     Selenium::WebDriver::Error::UnhandledError,
-     Selenium::WebDriver::Error::ElementNotVisibleError,
-     Selenium::WebDriver::Error::InvalidSelectorError]  # Work around a race condition that can occur with chromedriver and #go_back/#go_forward
+    [::Selenium::WebDriver::Error::StaleElementReferenceError,
+     ::Selenium::WebDriver::Error::UnhandledError,
+     ::Selenium::WebDriver::Error::ElementNotVisibleError,
+     ::Selenium::WebDriver::Error::InvalidSelectorError, # Work around a race condition that can occur with chromedriver and #go_back/#go_forward
+     ::Selenium::WebDriver::Error::ElementNotInteractableError,
+     ::Selenium::WebDriver::Error::ElementClickInterceptedError]
   end
 
   def no_such_window_error
