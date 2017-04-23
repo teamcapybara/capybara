@@ -77,16 +77,20 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     elsif native.attribute('isContentEditable')
       #ensure we are focused on the element
       native.click
+
       script = <<-JS
         var range = document.createRange();
+        var sel = window.getSelection();
         arguments[0].focus();
         range.selectNodeContents(arguments[0]);
-        window.getSelection().addRange(range);
+        sel.removeAllRanges();
+        sel.addRange(range);
       JS
       driver.execute_script script, self
+
       if (driver.options[:browser].to_s == "chrome") ||
          (driver.options[:browser].to_s == "firefox" && !driver.marionette?)
-        # chromedriver raises a can't focus element if we use native.send_keys
+        # chromedriver raises a can't focus element for child elements if we use native.send_keys
         # we've already focused it so just use action api
         driver.browser.action.send_keys(value.to_s).perform
       else

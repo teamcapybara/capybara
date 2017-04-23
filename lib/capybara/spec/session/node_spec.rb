@@ -122,23 +122,25 @@ Capybara::SpecHelper.spec "node" do
       expect(@session.first('//textarea[@readonly]').set('changed')).to raise_error(Capybara::ReadOnlyElementError)
     end if Capybara::VERSION.to_f > 3.0
 
-    it 'should allow me to change the contents of a contenteditable element', requires: [:js] do
-      @session.visit('/with_js')
-      @session.find(:css,'#existing_content_editable').set('WYSIWYG')
-      expect(@session.find(:css,'#existing_content_editable').text).to eq('WYSIWYG')
-    end
+    context "with a contenteditable element", requires: [:js] do
+      it 'should allow me to change the contents' do
+        @session.visit('/with_js')
+        @session.find(:css,'#existing_content_editable').set('WYSIWYG')
+        expect(@session.find(:css,'#existing_content_editable').text).to eq('WYSIWYG')
+      end
 
-    it 'should allow me to set the contents of a contenteditable element', requires: [:js] do
-      @session.visit('/with_js')
-      @session.find(:css,'#blank_content_editable').set('WYSIWYG')
-      expect(@session.find(:css,'#blank_content_editable').text).to eq('WYSIWYG')
-    end
+      it 'should allow me to set the contents' do
+        @session.visit('/with_js')
+        @session.find(:css,'#blank_content_editable').set('WYSIWYG')
+        expect(@session.find(:css,'#blank_content_editable').text).to eq('WYSIWYG')
+      end
 
-    it 'should allow me to change the contents of a contenteditable elements child', requires: [:js] do
-      @session.visit('/with_js')
-      @session.find(:css,'#existing_content_editable_child').set('WYSIWYG')
-      expect(@session.find(:css,'#existing_content_editable_child').text).to eq('WYSIWYG')
-      expect(@session.find(:css,'#existing_content_editable_child_parent').text).to eq('Some content WYSIWYG')
+      it 'should allow me to change the contents of a child element' do
+        @session.visit('/with_js')
+        @session.find(:css,'#existing_content_editable_child').set('WYSIWYG')
+        expect(@session.find(:css,'#existing_content_editable_child').text).to eq('WYSIWYG')
+        expect(@session.find(:css,'#existing_content_editable_child_parent').text).to eq('Some content WYSIWYG')
+      end
     end
   end
 
