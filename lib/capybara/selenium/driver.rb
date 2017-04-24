@@ -192,7 +192,12 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def resize_window_to(handle, width, height)
     within_given_window(handle) do
-      browser.manage.window.resize_to(width, height)
+      # Don't set the size if already set - See https://github.com/mozilla/geckodriver/issues/643
+      if marionette? && (window_size(handle) == [width, height])
+        {}
+      else
+        browser.manage.window.resize_to(width, height)
+      end
     end
   end
 
