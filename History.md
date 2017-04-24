@@ -1,4 +1,4 @@
-# Edge
+# 2.14.0
 
 Release date: Unreleased
 
@@ -6,10 +6,13 @@ Release date: Unreleased
 
 * Proxy methods when using RSpec for `all`/`within` that call either the Capybara::DSL or RSpec matchers
   depending on arguments passed
+* Support for the new errors in selenium-webdriver 3.4
 
 ### Fixed
 
 * Element#inspect doesn't raise an error on obsolete elements
+* Setting a contenteditable element with Selenium and Chrome 58
+* Workaround a hang while setting the window size when using geckodriver 0.16 and Firefox 53
 
 # Version 2.13.0
 
