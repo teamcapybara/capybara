@@ -237,14 +237,23 @@ end
 # @filter [String] :name  Matches the name attribute
 # @filter [String] :placeholder  Matches the placeholder attribute
 # @filter [String] :with  Matches the current value of the field
+# @filter [String] :type Matches the type attribute of the field or element type for 'textarea'
 # @filter [String, Array<String>] :class  Matches the class(es) provided
 # @filter [Boolean] :disabled Match disabled field?
 # @filter [Boolean] :multiple Match fields that accept multiple values
 #
 Capybara.add_selector(:fillable_field) do
   label "field"
-  xpath(:name, :placeholder) do |locator, options|
+  xpath(:name, :placeholder, :type) do |locator, options|
     xpath = XPath.descendant(:input, :textarea)[~XPath.attr(:type).one_of('submit', 'image', 'radio', 'checkbox', 'hidden', 'file')]
+    if options[:type]
+      type=options[:type].to_s
+      if ['textarea'].include?(type)
+        xpath = XPath.descendant(type.to_sym)
+      else
+        xpath = xpath[XPath.attr(:type).equals(type)]
+      end
+    end
     locate_field(xpath, locator, options)
   end
 

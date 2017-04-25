@@ -106,6 +106,12 @@ Capybara::SpecHelper.spec "#fill_in" do
     expect(extract_results(@session)['first_name']).to eq('Thomas')
   end
 
+  it "should fill in a field based on type" do
+    @session.fill_in(type: 'schmooo', with: 'Schmooo for all')
+    @session.click_button('awesome')
+    expect(extract_results(@session)['schmooo']).to eq('Schmooo for all')
+  end
+
   it "should throw an exception if a hash containing 'with' is not provided" do
     expect {@session.fill_in 'Name', 'ignu'}.to raise_error(RuntimeError, /with/)
   end
