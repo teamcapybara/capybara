@@ -115,7 +115,7 @@ module Capybara
 
     private
 
-    def wait_for_stable_size(seconds=Capybara.default_max_wait_time)
+    def wait_for_stable_size(seconds=session.config.default_max_wait_time)
       res = yield if block_given?
       prev_size = size
       start_time = Capybara::Helpers.monotonic_time

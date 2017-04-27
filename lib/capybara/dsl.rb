@@ -21,12 +21,10 @@ module Capybara
       Capybara.using_session(name, &block)
     end
 
-    ##
-    #
     # Shortcut to using a different wait time.
     #
     def using_wait_time(seconds, &block)
-      Capybara.using_wait_time(seconds, &block)
+      page.using_wait_time(seconds, &block)
     end
 
     ##

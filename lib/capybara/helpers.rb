@@ -46,11 +46,11 @@ module Capybara
     # @param [String] html     HTML code to inject into
     # @return [String]         The modified HTML code
     #
-    def inject_asset_host(html)
-      if Capybara.asset_host && Nokogiri::HTML(html).css("base").empty?
+    def inject_asset_host(html, asset_host = Capybara.asset_host)
+      if asset_host && Nokogiri::HTML(html).css("base").empty?
         match = html.match(/<head[^<]*?>/)
         if match
-          return html.clone.insert match.end(0), "<base href='#{Capybara.asset_host}' />"
+          return html.clone.insert match.end(0), "<base href='#{asset_host}' />"
         end
       end
 

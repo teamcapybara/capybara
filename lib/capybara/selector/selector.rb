@@ -201,9 +201,9 @@ module Capybara
       @default_visibility = default_visibility
     end
 
-    def default_visibility
+    def default_visibility(fallback = Capybara.ignore_hidden_elements)
       if @default_visibility.nil?
-        Capybara.ignore_hidden_elements
+        fallback
       else
         @default_visibility
       end
@@ -219,7 +219,7 @@ module Capybara
                          XPath.attr(:name).equals(locator) |
                          XPath.attr(:placeholder).equals(locator) |
                          XPath.attr(:id).equals(XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for))
-        attr_matchers |= XPath.attr(:'aria-label').is(locator) if Capybara.enable_aria_label
+        attr_matchers |= XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
 
         locate_xpath = locate_xpath[attr_matchers]
         locate_xpath += XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(xpath)

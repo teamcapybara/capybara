@@ -25,9 +25,10 @@ module Capybara
 
       attr_accessor :error
 
-      def initialize(app)
+      def initialize(app, server_errors)
         @app = app
         @counter = Counter.new
+        @server_errors = server_errors
       end
 
       def pending_requests?
@@ -41,7 +42,7 @@ module Capybara
           @counter.increment
           begin
             @app.call(env)
-          rescue *Capybara.server_errors => e
+          rescue *@server_errors => e
             @error = e unless @error
             raise e
           ensure
@@ -59,10 +60,10 @@ module Capybara
 
     attr_reader :app, :port, :host
 
-    def initialize(app, port=Capybara.server_port, host=Capybara.server_host)
+    def initialize(app, port=Capybara.server_port, host=Capybara.server_host, server_errors=Capybara.server_errors)
       @app = app
       @server_thread = nil # suppress warnings
-      @host, @port = host, port
+      @host, @port, @server_errors = host, port, server_errors
       @port ||= Capybara::Server.ports[port_key]
       @port ||= find_available_port(host)
     end
@@ -112,7 +113,7 @@ module Capybara
   private
 
     def middleware
-      @middleware ||= Middleware.new(app)
+      @middleware ||= Middleware.new(app, @server_errors)
     end
 
     def port_key

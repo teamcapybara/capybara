@@ -6,13 +6,18 @@ module Capybara
       COUNT_KEYS = [:count, :minimum, :maximum, :between]
 
       attr_reader :options
+      attr_writer :session_options
 
-      def wait
-        self.class.wait(options)
+      def session_options
+        @session_options || Capybara.session_options
       end
 
-      def self.wait(options)
-        options.fetch(:wait, Capybara.default_max_wait_time) || 0
+      def wait
+        self.class.wait(options, session_options.default_max_wait_time)
+      end
+
+      def self.wait(options, default=Capybara.default_max_wait_time)
+        options.fetch(:wait, default) || 0
       end
 
       ##

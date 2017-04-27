@@ -74,7 +74,7 @@ module Capybara
       # @return [Object]                  The result of the given block
       # @raise  [Capybara::FrozenInTime]  If the return value of `Time.now` appears stuck
       #
-      def synchronize(seconds=Capybara.default_max_wait_time, options = {})
+      def synchronize(seconds=session_options.default_max_wait_time, options = {})
         start_time = Capybara::Helpers.monotonic_time
 
         if session.synchronized
@@ -90,7 +90,7 @@ module Capybara
             raise e if (Capybara::Helpers.monotonic_time - start_time) >= seconds
             sleep(0.05)
             raise Capybara::FrozenInTime, "time appears to be frozen, Capybara does not work with libraries which freeze time, consider using time travelling instead" if Capybara::Helpers.monotonic_time == start_time
-            reload if Capybara.automatic_reload
+            reload if session_options.automatic_reload
             retry
           ensure
             session.synchronized = false
@@ -112,6 +112,11 @@ module Capybara
       def parent
         warn "DEPRECATED: #parent is deprecated in favor of #query_scope - Note: #parent was not the elements parent in the document so it's most likely not what you wanted anyway"
         query_scope
+      end
+
+      # @api private
+      def session_options
+        session.config
       end
 
     protected

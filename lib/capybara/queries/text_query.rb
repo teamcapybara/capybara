@@ -5,13 +5,18 @@ module Capybara
     class TextQuery < BaseQuery
       def initialize(*args)
         @type = (args.first.is_a?(Symbol) || args.first.nil?) ? args.shift : nil
-        @type = (Capybara.ignore_hidden_elements or Capybara.visible_text_only) ? :visible : :all if @type.nil?
-        @expected_text, @options = args
+        # @type = (Capybara.ignore_hidden_elements or Capybara.visible_text_only) ? :visible : :all if @type.nil?
+        @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
+        self.session_options = @options.delete(:session_options)
+
+        @type = (session_options.ignore_hidden_elements or session_options.visible_text_only) ? :visible : :all if @type.nil?
+
+        @expected_text = args.shift
         unless @expected_text.is_a?(Regexp)
           @expected_text = Capybara::Helpers.normalize_whitespace(@expected_text)
         end
-        @options ||= {}
         @search_regexp = Capybara::Helpers.to_regexp(@expected_text, nil, exact?)
+        warn "Unused parameters passed to #{self.class.name} : #{args.to_s}" unless args.empty?
         assert_valid_keys
       end
 
@@ -40,7 +45,7 @@ module Capybara
       private
 
       def exact?
-        options.fetch(:exact, Capybara.exact_text)
+        options.fetch(:exact, session_options.exact_text)
       end
 
       def build_message(report_on_invisible)

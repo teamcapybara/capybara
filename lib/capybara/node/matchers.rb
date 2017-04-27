@@ -114,8 +114,8 @@ module Capybara
       #
       def assert_all_of_selectors(*args, &optional_filter_block)
         options = if args.last.is_a?(Hash) then args.pop.dup else {} end
-        selector = if args.first.is_a?(Symbol) then args.shift else Capybara.default_selector end
-        wait = options.fetch(:wait, Capybara.default_max_wait_time)
+        selector = if args.first.is_a?(Symbol) then args.shift else session_options.default_selector end
+        wait = options.fetch(:wait, session_options.default_max_wait_time)
         synchronize(wait) do
           args.each do |locator|
             assert_selector(selector, locator, options, &optional_filter_block)
@@ -140,8 +140,8 @@ module Capybara
       #
       def assert_none_of_selectors(*args, &optional_filter_block)
         options = if args.last.is_a?(Hash) then args.pop.dup else {} end
-        selector = if args.first.is_a?(Symbol) then args.shift else Capybara.default_selector end
-        wait = options.fetch(:wait, Capybara.default_max_wait_time)
+        selector = if args.first.is_a?(Symbol) then args.shift else session_options.default_selector end
+        wait = options.fetch(:wait, session_options.default_max_wait_time)
         synchronize(wait) do
           args.each do |locator|
             assert_no_selector(selector, locator, options, &optional_filter_block)
@@ -680,6 +680,7 @@ module Capybara
     private
 
       def _verify_selector_result(query_args, optional_filter_block, &result_block)
+        _set_query_session_options(query_args)
         query = Capybara::Queries::SelectorQuery.new(*query_args, &optional_filter_block)
         synchronize(query.wait) do
           result = query.resolve_for(self)
@@ -689,6 +690,7 @@ module Capybara
       end
 
       def _verify_match_result(query_args, optional_filter_block, &result_block)
+        _set_query_session_options(query_args)
         query = Capybara::Queries::MatchQuery.new(*query_args, &optional_filter_block)
         synchronize(query.wait) do
           result = query.resolve_for(self.query_scope)
@@ -698,6 +700,7 @@ module Capybara
       end
 
       def _verify_text(query_args)
+        _set_query_session_options(query_args)
         query = Capybara::Queries::TextQuery.new(*query_args)
         synchronize(query.wait) do
           count = query.resolve_for(self)
@@ -706,6 +709,14 @@ module Capybara
         return true
       end
 
+      def _set_query_session_options(query_args)
+        if query_args.last.is_a? Hash
+          query_args.last[:session_options] = session_options
+        else
+          query_args.push(session_options: session_options)
+        end
+        query_args
+      end
     end
   end
 end

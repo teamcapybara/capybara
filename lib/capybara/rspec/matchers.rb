@@ -7,7 +7,7 @@ module Capybara
       attr_reader :failure_message, :failure_message_when_negated
 
       def wrap(actual)
-        if actual.respond_to?("has_selector?")
+        @context_el = if actual.respond_to?("has_selector?")
           actual
         else
           Capybara.string(actual.to_s)
@@ -33,6 +33,19 @@ module Capybara
         @failure_message_when_negated = e.message
         return false
       end
+
+      def session_query_args
+        if @args.last.is_a? Hash
+          @args.last[:session_options] = session_options
+        else
+          @args.push(session_options: session_options)
+        end
+        @args
+      end
+
+      def session_options
+        @context_el ? @context_el.session_options : Capybara.session_options
+      end
     end
 
     class HaveSelector < Matcher
@@ -55,7 +68,7 @@ module Capybara
       end
 
       def query
-        @query ||= Capybara::Queries::SelectorQuery.new(*@args, &@filter_block)
+        @query ||= Capybara::Queries::SelectorQuery.new(*session_query_args, &@filter_block)
       end
     end
 
@@ -73,7 +86,7 @@ module Capybara
       end
 
       def query
-        @query ||= Capybara::Queries::MatchQuery.new(*@args)
+        @query ||= Capybara::Queries::MatchQuery.new(*session_query_args, &@filter_block)
       end
     end
 
@@ -155,11 +168,12 @@ module Capybara
 
     class BecomeClosed
       def initialize(options)
-        @wait_time = Capybara::Queries::BaseQuery.wait(options)
+        @options = options
       end
 
       def matches?(window)
         @window = window
+        @wait_time = Capybara::Queries::BaseQuery.wait(@options, window.session.config.default_max_wait_time)
         start_time = Capybara::Helpers.monotonic_time
         while window.exists?
           return false if (Capybara::Helpers.monotonic_time - start_time) > @wait_time
