@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class Capybara::Driver::Base
-  attr_writer :session_options
+  attr_writer :session
 
   def current_url
     raise NotImplementedError
@@ -142,7 +142,7 @@ class Capybara::Driver::Base
   end
 
   def session_options
-    @session_options || Capybara.session_options
+    (@session && @session.config) || Capybara.session_options
   end
 
   # @deprecated This method is being removed

@@ -99,7 +99,7 @@ module Capybara
           raise Capybara::DriverNotFoundError, "no driver called #{mode.inspect} was found, available drivers: #{other_drivers.join(', ')}"
         end
         driver = Capybara.drivers[mode].call(app)
-        driver.session_options = config
+        driver.session = self if driver.respond_to?(:session=)
         driver
       end
     end
