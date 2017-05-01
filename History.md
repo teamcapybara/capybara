@@ -1,6 +1,6 @@
 # Version 2.14.0
 
-Release date: Unreleased
+Release date: 2017-05-01
 
 ### Added
 
