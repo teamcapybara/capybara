@@ -4,6 +4,8 @@ Release date: Unreleased
 
 ### Added
 
+* "threadsafe" mode that allows per-session configuration
+* `:type` filter added to the `:fillable_field` selector
 * Proxy methods when using RSpec for `all`/`within` that call either the Capybara::DSL or RSpec matchers
   depending on arguments passed
 * Support for the new errors in selenium-webdriver 3.4
@@ -11,8 +13,9 @@ Release date: Unreleased
 ### Fixed
 
 * Element#inspect doesn't raise an error on obsolete elements
-* Setting a contenteditable element with Selenium and Chrome 58
+* Setting a contenteditable element with Selenium and Chrome 59
 * Workaround a hang while setting the window size when using geckodriver 0.16 and Firefox 53
+* Clicking on url with a blank href goes to the current url when using the RackTest driver
 
 # Version 2.13.0
 
