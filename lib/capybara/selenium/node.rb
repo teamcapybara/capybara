@@ -224,18 +224,18 @@ private
     find_xpath('./ancestor::select[1]').first
   end
 
-  def set_text(value, options)
+  def set_text(value, clear: nil, **)
     if value.to_s.empty? && options[:clear].nil?
       native.clear
     else
-      if options[:clear] == :backspace
+      if clear == :backspace
         # Clear field by sending the correct number of backspace keys.
         backspaces = [:backspace] * self.value.to_s.length
         native.send_keys(*(backspaces + [value.to_s]))
-      elsif options[:clear] == :none
+      elsif clear == :none
         native.send_keys(value.to_s)
-      elsif options[:clear].is_a? Array
-        native.send_keys(*options[:clear], value.to_s)
+      elsif clear.is_a? Array
+        native.send_keys(*clear, value.to_s)
       else
         # Clear field by JavaScript assignment of the value property.
         # Script can change a readonly element which user input cannot, so

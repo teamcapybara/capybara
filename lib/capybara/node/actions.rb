@@ -224,15 +224,15 @@ module Capybara
       # @option options [true, Hash] make_visible   A Hash of CSS styles to change before attempting to attach the file, if `true` { opacity: 1, display: 'block', visibility: 'visible' } is used (may not be supported by all drivers)
       #
       # @return [Capybara::Node::Element]  The file field element
-      def attach_file(locator=nil, path, style: nil, **options)
+      def attach_file(locator=nil, path, make_visible: nil, **options)
         Array(path).each do |p|
           raise Capybara::FileNotFound, "cannot attach file, #{p} does not exist" unless File.exist?(p.to_s)
         end
         # Allow user to update the CSS style of the file input since they are so often hidden on a page
-        if style = options.delete(:make_visible)
-          style = { opacity: 1, display: 'block', visibility: 'visible' } if style == true
+        if make_visible
+          make_visible = { opacity: 1, display: 'block', visibility: 'visible' } if make_visible == true
           ff = find(:file_field, locator, options.merge({visible: :all}))
-          _update_style(ff, style)
+          _update_style(ff, make_visible)
           if ff.visible?
             begin
               ff.set(path)

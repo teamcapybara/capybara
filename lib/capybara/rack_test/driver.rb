@@ -40,7 +40,7 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
     browser.last_request
   end
 
-  def visit(path, attributes = {})
+  def visit(path, **attributes)
     browser.visit(path, attributes)
   end
 
@@ -52,7 +52,7 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
     browser.submit(method, path, attributes)
   end
 
-  def follow(method, path, attributes = {})
+  def follow(method, path, **attributes)
     browser.follow(method, path, attributes)
   end
 

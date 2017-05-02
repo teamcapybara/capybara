@@ -37,7 +37,8 @@ module Capybara
     # The block returned receives a rack app, port, and host/ip and should run a Rack handler
     # By default, Capybara will try to run webrick.
     #
-    def server(&block)
+    def server
+      raise ArgumentError, "Capybara#server no longer accepts a block" if block_given?
       @server
     end
 
