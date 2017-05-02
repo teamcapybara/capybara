@@ -2,6 +2,7 @@ language: ruby
 sudo: required
 dist: trusty
 rvm:
+  - 2.4.1
   - 2.3.3
   - jruby-9.1.7.0
   - rbx-3
@@ -11,11 +12,11 @@ env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
     - JAVA_OPTS=-Djava.security.egd=file:/dev/urandom
-  matrix:
-    - WINDOW_TEST=true
+  # matrix:
+  #   - WINDOW_TEST=true
 
 addons:
-  firefox: 47.0.1
+  firefox: latest
   apt:
     packages:
       - awesome
@@ -32,19 +33,42 @@ matrix:
           packages:
             - google-chrome-stable
             - awesome
-    - gemfile: gemfiles/Gemfile.ruby-20
-      rvm: 2.0.0
-    - gemfile: gemfiles/Gemfile.ruby-19
-      rvm: 1.9.3
-    - gemfile: gemfiles/Gemfile.base-versions
-      rvm: 1.9.3
     - gemfile: Gemfile
       rvm: 2.4.1
-      env:
-        - WINDOW_TEST=true
-        - CAPYBARA_MARIONETTE=true
+      env: CAPYBARA_CHROME_HEADLESS=true
       addons:
-        firefox: latest
+        apt:
+          sources:
+            - google-chrome
+          packages:
+            - google-chrome-stable
+            - awesome
+    - gemfile: gemfiles/Gemfile.ruby-20
+      env:
+        - CAPYBARA_LEGACY_FF=true
+      rvm: 2.0.0
+      addons:
+        firefox: 47.0.1
+        apt:
+          packages:
+            - awesome
+    - gemfile: gemfiles/Gemfile.ruby-19
+      env:
+        - CAPYBARA_LEGACY_FF=true
+        - SKIP_WINDOW=true
+      rvm: 1.9.3
+      addons:
+        firefox: 47.0.1
+        apt:
+          packages:
+            - awesome
+    - gemfile: gemfiles/Gemfile.base-versions
+      env:
+        - CAPYBARA_LEGACY_FF=true
+        - SKIP_WINDOW=true
+      rvm: 1.9.3
+      addons:
+        firefox: 47.0.1
         apt:
           packages:
             - awesome
@@ -55,14 +79,8 @@ matrix:
         apt:
           packages:
             - awesome
-      env:
-        - WINDOW_TEST=true
-        - CAPYBARA_MARIONETTE=true
     - gemfile: gemfiles/Gemfile.edge-marionette
       rvm: 2.3.3
-      env:
-        - WINDOW_TEST=true
-        - CAPYBARA_MARIONETTE=true
       addons:
         firefox: latest-nightly
         apt:
@@ -73,9 +91,12 @@ matrix:
     - gemfile: gemfiles/Gemfile.edge-marionette
     - rvm: rbx-3
     - rvm: jruby-9.1.7.0
+    - gemfile: Gemfile
+      rvm: 2.4.1
+      env: CAPYBARA_CHROME_HEADLESS=true
 before_install:
   - mkdir -p ~/drivers; export PATH=~/drivers:$PATH;
-  - if [ $CAPYBARA_CHROME ]; then
+  - if [ $CAPYBARA_CHROME ] || [ $CAPYBARA_CHROME_HEADLESS ]; then
       CHROMEDRIVER_VERSION=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE);
       CHROMEDRIVER_URL="http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip";
       FILE=`mktemp`; wget "$CHROMEDRIVER_URL" -qO $FILE && unzip $FILE chromedriver -d ~/drivers; rm $FILE; chmod 777 ~/drivers/chromedriver;

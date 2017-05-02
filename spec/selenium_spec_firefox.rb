@@ -31,7 +31,7 @@ skipped_tests = [
   :status_code,
   :trigger
 ]
-skipped_tests << :windows if ENV['TRAVIS'] && !ENV['WINDOW_TEST']
+skipped_tests << :windows if ENV['TRAVIS'] && ENV['SKIP_WINDOW']
 
 Capybara::SpecHelper.run_specs TestSessions::Selenium, "selenium", capybara_skip: skipped_tests
 

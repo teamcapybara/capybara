@@ -38,13 +38,13 @@ Cucumber::Rake::Task.new(:cucumber) do |task|
 end
 
 task :travis do |t|
-  if ENV['CAPYBARA_CHROME']
+  if ENV['CAPYBARA_CHROME'] || ENV['CAPYBARA_CHROME_HEADLESS']
     Rake::Task[:spec_chrome].invoke
-  elsif ENV['CAPYBARA_MARIONETTE']
-    Rake::Task[:spec_marionette].invoke
+  elsif ENV['CAPYBARA_LEGACY_FF']
+    Rake::Task[:spec_firefox].invoke
     Rake::Task[:cucumber].invoke
   else
-    Rake::Task[:spec_firefox].invoke
+    Rake::Task[:spec_marionette].invoke
     Rake::Task[:cucumber].invoke
   end
 end

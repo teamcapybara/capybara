@@ -5,11 +5,13 @@ require 'shared_selenium_session'
 
 Capybara.register_driver :selenium_chrome do |app|
   args = ENV['TRAVIS'] ? ['no-sandbox' ] : []
+  args << 'headless' if ENV['CAPYBARA_CHROME_HEADLESS']
   Capybara::Selenium::Driver.new(app, :browser => :chrome, :args => args)
 end
 
 Capybara.register_driver :selenium_chrome_clear_storage do |app|
   args = ENV['TRAVIS'] ? ['no-sandbox' ] : []
+  args << 'headless' if ENV['CAPYBARA_CHROME_HEADLESS']
   Capybara::Selenium::Driver.new(app, :browser => :chrome,
                                       :args => args,
                                       clear_local_storage: true,
@@ -21,7 +23,7 @@ module TestSessions
 end
 
 skipped_tests = [:response_headers, :status_code, :trigger]
-skipped_tests << :windows if ENV['TRAVIS'] && !ENV['WINDOW_TEST']
+skipped_tests << :windows if ENV['TRAVIS'] && ENV['SKIP_WINDOW']
 
 Capybara::SpecHelper.run_specs TestSessions::Chrome, "selenium_chrome", capybara_skip: skipped_tests
 
