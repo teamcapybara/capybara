@@ -17,7 +17,7 @@ class Capybara::RackTest::Browser
     driver.options
   end
 
-  def visit(path, attributes = {})
+  def visit(path, **attributes)
     reset_host!
     process_and_follow_redirects(:get, path, attributes)
   end
@@ -32,7 +32,7 @@ class Capybara::RackTest::Browser
     process_and_follow_redirects(method, path, attributes, {'HTTP_REFERER' => current_url})
   end
 
-  def follow(method, path, attributes = {})
+  def follow(method, path, **attributes)
     return if path.gsub(/^#{Regexp.escape(request_path)}/, '').start_with?('#') || path.downcase.start_with?('javascript:')
     process_and_follow_redirects(method, path, attributes, {'HTTP_REFERER' => current_url})
   end

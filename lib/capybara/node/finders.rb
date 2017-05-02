@@ -253,12 +253,9 @@ module Capybara
       #   @yieldreturn [Boolean]                     Should the element be considered in the results?
       # @return [Capybara::Result]                   A collection of found elements
       #
-      def all(*args, &optional_filter_block)
-        if args.last.is_a? Hash
-          args.last[:session_options] = session_options
-        else
-          args.push(session_options: session_options)
-        end
+      def all(*args, **options, &optional_filter_block)
+        options[:session_options] = session_options
+        args.push(options)
         query = Capybara::Queries::SelectorQuery.new(*args, &optional_filter_block)
         synchronize(query.wait) do
           result = query.resolve_for(self)

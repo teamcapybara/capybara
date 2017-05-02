@@ -566,7 +566,7 @@ module Capybara
     # @raise [Capybara::WindowError]   if block passed to window hasn't opened window
     #   or opened more than one window
     #
-    def window_opened_by(options = {}, &block)
+    def window_opened_by(**options, &block)
       old_handles = driver.window_handles
       block.call
 

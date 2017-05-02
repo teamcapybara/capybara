@@ -233,7 +233,7 @@ module Capybara
       custom_filters[name] = filter_class.new(name, block, options)
     end
 
-    def locate_field(xpath, locator, **options)
+    def locate_field(xpath, locator, enable_aria_label: false, **options)
       locate_xpath = xpath #need to save original xpath for the label wrap
       if locator
         locator = locator.to_s
@@ -241,7 +241,7 @@ module Capybara
                          XPath.attr(:name).equals(locator)).or(
                          XPath.attr(:placeholder).equals(locator)).or(
                          XPath.attr(:id).equals(XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for)))
-        attr_matchers = attr_matchers.or XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
+        attr_matchers = attr_matchers.or XPath.attr(:'aria-label').is(locator) if enable_aria_label
 
         locate_xpath = locate_xpath[attr_matchers]
         locate_xpath = locate_xpath.union(XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(xpath))
@@ -251,7 +251,7 @@ module Capybara
       locate_xpath
     end
 
-    def describe_all_expression_filters(opts={})
+    def describe_all_expression_filters(**opts)
       expression_filters.map { |ef| " with #{ef} #{opts[ef]}" if opts.has_key?(ef) }.join
     end
 
