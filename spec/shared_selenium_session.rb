@@ -55,6 +55,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
 
     describe "#accept_alert" do
       it "supports a blockless mode" do
+        skip "Headless Chrome doesn't support blockless modal methods" if @session.driver.send(:headless_chrome?)
         @session.visit('/with_js')
         @session.click_link('Open alert')
         @session.accept_alert
