@@ -5,13 +5,19 @@ require 'shared_selenium_session'
 
 Capybara.register_driver :selenium_chrome do |app|
   args = ENV['TRAVIS'] ? ['no-sandbox' ] : []
-  args << 'headless' if ENV['CAPYBARA_CHROME_HEADLESS']
+  if ENV['CAPYBARA_CHROME_HEADLESS']
+    args << 'headless'
+    Selenium::WebDriver::Chrome.path='/usr/bin/google-chrome-beta' if ENV['TRAVIS']
+  end
   Capybara::Selenium::Driver.new(app, :browser => :chrome, :args => args)
 end
 
 Capybara.register_driver :selenium_chrome_clear_storage do |app|
   args = ENV['TRAVIS'] ? ['no-sandbox' ] : []
-  args << 'headless' if ENV['CAPYBARA_CHROME_HEADLESS']
+  if ENV['CAPYBARA_CHROME_HEADLESS']
+    args << 'headless'
+    Selenium::WebDriver::Chrome.path='/usr/bin/google-chrome-beta' if ENV['TRAVIS']
+  end
   Capybara::Selenium::Driver.new(app, :browser => :chrome,
                                       :args => args,
                                       clear_local_storage: true,
