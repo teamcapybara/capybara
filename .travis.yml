@@ -42,6 +42,7 @@ matrix:
             - google-chrome
           packages:
             - google-chrome-stable
+            - google-chrome-beta
             - awesome
     - gemfile: gemfiles/Gemfile.ruby-20
       env:
