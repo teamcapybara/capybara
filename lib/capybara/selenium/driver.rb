@@ -14,7 +14,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def browser
     unless @browser
-      if options[:browser].to_s == "firefox"
+      if firefox?
         options[:desired_capabilities] ||= Selenium::WebDriver::Remote::Capabilities.firefox
         options[:desired_capabilities].merge!({ unexpectedAlertBehaviour: "ignore" })
       end
@@ -232,20 +232,32 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def accept_modal(_type, options={})
-    yield if block_given?
-    modal = find_modal(options)
-    modal.send_keys options[:with] if options[:with]
-    message = modal.text
-    modal.accept
-    message
+    if headless_chrome?
+      insert_modal_handlers(true, options[:with], options[:text])
+      yield if block_given?
+      find_headless_modal(options)
+    else
+      yield if block_given?
+      modal = find_modal(options)
+      modal.send_keys options[:with] if options[:with]
+      message = modal.text
+      modal.accept
+      message
+    end
   end
 
   def dismiss_modal(_type, options={})
-    yield if block_given?
-    modal = find_modal(options)
-    message = modal.text
-    modal.dismiss
-    message
+    if headless_chrome?
+      insert_modal_handlers(false, options[:with], options[:text])
+      yield if block_given?
+      find_headless_modal(options)
+    else
+      yield if block_given?
+      modal = find_modal(options)
+      message = modal.text
+      modal.dismiss
+      message
+    end
   end
 
   def quit
@@ -304,6 +316,49 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   private
 
+  def insert_modal_handlers(accept, response_text, expected_text=nil)
+    script = <<-JS
+      if (typeof window.capybara  === 'undefined') {
+        window.capybara = {
+          modal_handlers: [],
+          current_modal_status: function() {
+            return [this.modal_handlers[0].called, this.modal_handlers[0].modal_text];
+          },
+          add_handler: function(handler) {
+            this.modal_handlers.unshift(handler);
+          },
+          remove_handler: function(handler) {
+            window.alert = handler.alert;
+            window.confirm = handler.confirm;
+            window.prompt = handler.prompt;
+          },
+          handler_called: function(handler, str) {
+            handler.called = true;
+            handler.modal_text = str;
+            this.remove_handler(handler);
+          }
+        };
+      };
+
+      var modal_handler = {
+        prompt: window.prompt,
+        confirm: window.confirm,
+        alert: window.alert,
+      }
+      window.capybara.add_handler(modal_handler);
+
+      window.alert = window.confirm = function(str) {
+        window.capybara.handler_called(modal_handler, str);
+        return #{accept ? 'true' : 'false'};
+      };
+      window.prompt = function(str) {
+        window.capybara.handler_called(modal_handler, str);
+        return #{accept ? "'#{response_text}'" : 'null'};
+      }
+    JS
+    execute_script script
+  end
+
   def within_given_window(handle)
     original_handle = self.current_window_handle
     if handle == original_handle
@@ -333,6 +388,32 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     end
   end
 
+  def find_headless_modal(options={})
+    # Selenium has its own built in wait (2 seconds)for a modal to show up, so this wait is really the minimum time
+    # Actual wait time may be longer than specified
+    wait = Selenium::WebDriver::Wait.new(
+      timeout: options.fetch(:wait, session_options.default_max_wait_time) || 0 ,
+      ignore: Selenium::WebDriver::Error::NoAlertPresentError)
+    begin
+      wait.until do
+        called, alert_text = evaluate_script('window.capybara.current_modal_status()')
+        if called
+          execute_script('window.capybara.modal_handlers.shift()')
+          regexp = options[:text].is_a?(Regexp) ? options[:text] : Regexp.escape(options[:text].to_s)
+          if alert_text.match(regexp)
+            alert_text
+          else
+            raise Capybara::ModalNotFound.new("Unable to find modal dialog#{" with #{options[:text]}" if options[:text]}")
+          end
+        else
+          nil
+        end
+      end
+    rescue Selenium::WebDriver::Error::TimeOutError
+      raise Capybara::ModalNotFound.new("Unable to find modal dialog#{" with #{options[:text]}" if options[:text]}")
+    end
+  end
+
   def silenced_unknown_error_message?(msg)
     silenced_unknown_error_messages.any? { |r| msg =~ r }
   end
@@ -352,5 +433,17 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     else
       arg
     end
+  end
+
+  def firefox?
+    options[:browser].to_s == "firefox"
+  end
+
+  def chrome?
+    options[:browser].to_s == "chrome"
+  end
+
+  def headless_chrome?
+    chrome? && (options[:args] || []).include?("headless")
   end
 end
