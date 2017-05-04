@@ -4,7 +4,7 @@ dist: trusty
 rvm:
   - 2.4.1
   - 2.3.3
-  - jruby-9.1.7.0
+  - jruby-9.1.8.0
   - rbx-3
 gemfile:
   - Gemfile
@@ -90,7 +90,7 @@ matrix:
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-marionette
     - rvm: rbx-3
-    - rvm: jruby-9.1.7.0
+    - rvm: jruby-9.1.8.0
     - gemfile: Gemfile
       rvm: 2.4.1
       env: CAPYBARA_CHROME_HEADLESS=true

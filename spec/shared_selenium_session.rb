@@ -34,6 +34,8 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       before do
         @current_dir = Dir.getwd
         Dir.chdir(File.join(File.dirname(__FILE__), '..'))
+        @env = { 'SELENIUM_BROWSER' => @session.driver.options[:browser].to_s }
+        @env['LEGACY_FIREFOX'] = 'TRUE' if mode == :selenium_firefox
       end
 
       after do
@@ -41,16 +43,12 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
 
       it "should have return code 1 when running selenium_driver_rspec_failure.rb" do
-        env = { 'SELENIUM_BROWSER' => @session.driver.options[:browser].to_s,
-                'LEGACY_FIREFOX' => (mode == :selenium_firefox ? 'TRUE' : nil) }
-        system(env, 'rspec spec/fixtures/selenium_driver_rspec_failure.rb', out: File::NULL, err: File::NULL)
+        system(@env, 'rspec spec/fixtures/selenium_driver_rspec_failure.rb', out: File::NULL, err: File::NULL)
         expect($?.exitstatus).to eq(1)
       end
 
       it "should have return code 0 when running selenium_driver_rspec_success.rb" do
-        env = { 'SELENIUM_BROWSER' => @session.driver.options[:browser].to_s,
-                'LEGACY_FIREFOX' => (mode == :selenium_firefox ? 'TRUE' : nil) }
-        system(env, 'rspec spec/fixtures/selenium_driver_rspec_success.rb', out: File::NULL, err: File::NULL)
+        system(@env, 'rspec spec/fixtures/selenium_driver_rspec_success.rb', out: File::NULL, err: File::NULL)
         expect($?.exitstatus).to eq(0)
       end
     end
