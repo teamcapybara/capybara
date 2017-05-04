@@ -19,7 +19,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         options[:desired_capabilities].merge!({ unexpectedAlertBehaviour: "ignore" })
       end
 
-      @browser = Selenium::WebDriver.for(options[:browser], options.reject { |key,_val| SPECIAL_OPTIONS.include?(key) })
+      @processed_options = options.reject { |key,_val| SPECIAL_OPTIONS.include?(key) }
+      @browser = Selenium::WebDriver.for(options[:browser], @processed_options)
 
       main = Process.pid
       at_exit do
@@ -444,6 +445,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def headless_chrome?
-    chrome? && (options[:args] || []).include?("headless")
+    chrome? && ((@processed_options[:desired_capabilities][:chrome_options] || {})['args'] || []).include?("headless")
   end
 end
