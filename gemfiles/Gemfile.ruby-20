@@ -5,3 +5,4 @@ gemspec path: '..'
 
 gem 'xpath', :git => 'git://github.com/jnicklas/xpath.git'
 gem 'nokogiri', '< 1.7.0' # 1.7 requires ruby 2.1+
+gem 'rack', '<2.0' # 2.0 requires ruby 2.2+
