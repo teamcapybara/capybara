@@ -36,6 +36,7 @@ skipped_tests << :windows if ENV['TRAVIS'] && ENV['SKIP_WINDOW']
 Capybara::SpecHelper.run_specs TestSessions::SeleniumMarionette, "selenium", capybara_skip: skipped_tests
 
 RSpec.describe "Capybara::Session with firefox" do
+  include Capybara::SpecHelper
   include_examples  "Capybara::Session", TestSessions::SeleniumMarionette, :selenium_marionette
   include_examples  Capybara::RSpecMatchers, TestSessions::SeleniumMarionette, :selenium_marionette
 end

@@ -117,7 +117,7 @@ module Capybara
     end
 
     def marionette?(session)
-      session.driver.respond_to?(:marionette?) && session.driver.marionette?
+      session.driver.respond_to?(:marionette?, true) && session.driver.send(:marionette?)
     end
 
     def rspec2?

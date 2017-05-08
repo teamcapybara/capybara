@@ -47,7 +47,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       click if value ^ native.attribute('checked').to_s.eql?("true")
     elsif tag_name == 'input' and type == 'file'
       path_names = value.to_s.empty? ? [] : value
-      if driver.options[:browser].to_s == "chrome"
+      if driver.chrome?
         native.send_keys(Array(path_names).join("\n"))
       else
         native.send_keys(*path_names)
@@ -88,8 +88,8 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       JS
       driver.execute_script script, self
 
-      if (driver.options[:browser].to_s == "chrome") ||
-         (driver.options[:browser].to_s == "firefox" && !driver.marionette?)
+      if (driver.chrome?) ||
+         (driver.firefox? && !driver.marionette?)
         # chromedriver raises a can't focus element for child elements if we use native.send_keys
         # we've already focused it so just use action api
         driver.browser.action.send_keys(value.to_s).perform

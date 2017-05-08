@@ -36,6 +36,7 @@ skipped_tests << :windows if ENV['TRAVIS'] && ENV['CAPYBARA_CHROME_HEADLESS']
 Capybara::SpecHelper.run_specs TestSessions::Chrome, "selenium_chrome", capybara_skip: skipped_tests
 
 RSpec.describe "Capybara::Session with chrome" do
+  include Capybara::SpecHelper
   include_examples  "Capybara::Session", TestSessions::Chrome, :selenium_chrome
 
   context "storage" do

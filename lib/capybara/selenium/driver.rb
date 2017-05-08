@@ -22,6 +22,9 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       @processed_options = options.reject { |key,_val| SPECIAL_OPTIONS.include?(key) }
       @browser = Selenium::WebDriver.for(options[:browser], @processed_options)
 
+      @w3c = ((defined?(Selenium::WebDriver::Remote::W3CCapabilities) && @browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3CCapabilities)) ||
+              (defined?(Selenium::WebDriver::Remote::W3C::Capabilities) && @browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3C::Capabilities)))
+
       main = Process.pid
       at_exit do
         # Store the exit status of the test run since it goes away after calling the at_exit proc...
@@ -288,6 +291,37 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   # @api private
+  def marionette?
+    firefox? && browser && @w3c
+  end
+
+  # @api private
+  def firefox?
+    browser_name == "firefox"
+  end
+
+  # @api private
+  def chrome?
+    browser_name == "chrome"
+  end
+
+  # @api private
+  def headless_chrome?
+    chrome? && ((@processed_options[:desired_capabilities][:chrome_options] || {})['args'] || []).include?("headless")
+  end
+
+  # @deprecated This method is being removed
+  def browser_initialized?
+    super && !@browser.nil?
+  end
+
+  private
+
+  # @api private
+  def browser_name
+    options[:browser].to_s
+  end
+
   def find_window(locator)
     handles = browser.window_handles
     return locator if handles.include? locator
@@ -304,18 +338,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     end
     raise Capybara::ElementNotFound, "Could not find a window identified by #{locator}"
   end
-
-  #@api private
-  def marionette?
-    (options[:browser].to_s == "firefox") && browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3CCapabilities)
-  end
-
-  # @deprecated This method is being removed
-  def browser_initialized?
-    super && !@browser.nil?
-  end
-
-  private
 
   def insert_modal_handlers(accept, response_text, expected_text=nil)
     script = <<-JS
@@ -434,17 +456,5 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     else
       arg
     end
-  end
-
-  def firefox?
-    options[:browser].to_s == "firefox"
-  end
-
-  def chrome?
-    options[:browser].to_s == "chrome"
-  end
-
-  def headless_chrome?
-    chrome? && ((@processed_options[:desired_capabilities][:chrome_options] || {})['args'] || []).include?("headless")
   end
 end
