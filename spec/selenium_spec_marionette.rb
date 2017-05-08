@@ -8,7 +8,7 @@ Capybara.register_driver :selenium_marionette do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
-    desired_capabilities: Selenium::WebDriver::Remote::Capabilities.firefox(marionette: true)
+    desired_capabilities: {marionette: true}
   )
 end
 
@@ -16,7 +16,7 @@ Capybara.register_driver :selenium_marionette_clear_storage do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
-    desired_capabilities: Selenium::WebDriver::Remote::Capabilities.firefox(marionette: true),
+    desired_capabilities: {marionette: true},
     clear_local_storage: true,
     clear_session_storage: true
   )
