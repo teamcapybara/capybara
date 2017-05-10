@@ -25,7 +25,7 @@ Capybara::SpecHelper.spec '#has_current_path?' do
 
   it "should wait for current_path", requires: [:js] do
     @session.click_link("Change page")
-    expect(@session).to have_current_path("/with_html")
+    expect(@session).to have_current_path("/with_html", wait: 3)
   end
 
   it "should be false if the page has not the given current_path" do
