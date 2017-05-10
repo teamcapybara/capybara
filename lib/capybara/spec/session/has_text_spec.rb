@@ -125,9 +125,11 @@ Capybara::SpecHelper.spec '#has_text?' do
   end
 
   it "should wait for text to appear", requires: [:js] do
-    @session.visit('/with_js')
-    @session.click_link('Click me')
-    expect(@session).to have_text("Has been clicked")
+    Capybara.using_wait_time(3) do
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+      expect(@session).to have_text("Has been clicked")
+    end
   end
 
   context "with between" do

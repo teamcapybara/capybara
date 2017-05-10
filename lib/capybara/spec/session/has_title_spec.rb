@@ -53,8 +53,10 @@ Capybara::SpecHelper.spec '#has_no_title?' do
   end
 
   it "should wait for title to disappear", requires: [:js] do
-    @session.click_link("Change title")
-    expect(@session).to have_no_title('with_js')
+    Capybara.using_wait_time(5) do
+      @session.click_link("Change title") # triggers title change after 400ms
+      expect(@session).to have_no_title('with_js')
+    end
   end
 
   it "should be true if the page has not the given title" do

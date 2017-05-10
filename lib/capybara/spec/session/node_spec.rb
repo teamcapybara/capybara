@@ -471,11 +471,13 @@ Capybara::SpecHelper.spec "node" do
       end
 
       it "should reload nodes with options" do
-        @session.visit('/with_js')
-        node = @session.find(:css, 'em', text: "reloaded")
-        @session.click_link('Reload!')
-        sleep(1)
-        expect(node.text).to eq('has been reloaded')
+        Capybara.using_wait_time(4) do
+          @session.visit('/with_js')
+          node = @session.find(:css, 'em', text: "reloaded")
+          @session.click_link('Reload!')
+          sleep(1)
+          expect(node.text).to eq('has been reloaded')
+        end
       end
     end
   end

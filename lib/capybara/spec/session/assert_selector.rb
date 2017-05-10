@@ -65,7 +65,7 @@ Capybara::SpecHelper.spec '#assert_selector' do
       Capybara.using_wait_time(0.1) do
         @session.visit('/with_js')
         @session.click_link('Click me')
-        @session.assert_selector(:css, "a#has-been-clicked", text: "Has been clicked", wait: 0.9)
+        @session.assert_selector(:css, "a#has-been-clicked", text: "Has been clicked", wait: 2)
       end
     end
   end

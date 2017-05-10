@@ -63,7 +63,7 @@ Capybara::SpecHelper.spec '#accept_alert', requires: [:modals] do
     end
 
     it "should allow to adjust the delay" do
-      @session.accept_alert wait: 4 do
+      @session.accept_alert wait: 10 do
         @session.click_link('Open slow alert')
       end
       expect(@session).to have_xpath("//a[@id='open-slow-alert' and @opened='true']")

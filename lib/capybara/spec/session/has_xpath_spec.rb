@@ -29,9 +29,11 @@ Capybara::SpecHelper.spec '#has_xpath?' do
   end
 
   it "should wait for content to appear", requires: [:js] do
-    @session.visit('/with_js')
-    @session.click_link('Click me')
-    expect(@session).to have_xpath("//input[@type='submit' and @value='New Here']")
+    Capybara.using_wait_time(3) do
+      @session.visit('/with_js')
+      @session.click_link('Click me') # updates page after 500ms
+      expect(@session).to have_xpath("//input[@type='submit' and @value='New Here']")
+    end
   end
 
   context "with count" do

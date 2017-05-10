@@ -22,12 +22,12 @@ Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
       Capybara.using_wait_time 2 do
         button=@session.find(:css, '#openWindowWithLongerTimeout')
         expect do
-          @session.window_opened_by(wait: 0.8) do
+          @session.window_opened_by(wait: 0.3) do
             button.click
           end
         end.to raise_error(Capybara::WindowError, zero_windows_message)
       end
-      @session.document.synchronize(2, errors: [Capybara::CapybaraError]) do
+      @session.document.synchronize(5, errors: [Capybara::CapybaraError]) do
         raise Capybara::CapybaraError if @session.windows.size != 2
       end
     end
@@ -60,7 +60,7 @@ Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
 
     it 'should find window if default_max_wait_time is more than timeout' do
       button = @session.find(:css, '#openWindowWithTimeout')
-      Capybara.using_wait_time 1.5 do
+      Capybara.using_wait_time 5 do
         window = @session.window_opened_by do
           button.click
         end

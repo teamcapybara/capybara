@@ -21,7 +21,7 @@ Capybara::SpecHelper.spec '#become_closed', requires: [:windows, :js] do
         @session.execute_script('setTimeout(function(){ window.close(); }, 500);')
       end
       Capybara.using_wait_time 0.1 do
-        expect(@other_window).to become_closed(wait: 2)
+        expect(@other_window).to become_closed(wait: 5)
       end
     end
 
@@ -42,7 +42,7 @@ Capybara::SpecHelper.spec '#become_closed', requires: [:windows, :js] do
       @session.within_window @other_window do
         @session.execute_script('setTimeout(function(){ window.close(); }, 500);')
       end
-      Capybara.using_wait_time 1.5 do
+      Capybara.using_wait_time 5 do
         expect(@other_window).to become_closed
       end
     end
@@ -75,10 +75,10 @@ Capybara::SpecHelper.spec '#become_closed', requires: [:windows, :js] do
       @session.within_window @other_window do
         @session.execute_script('setTimeout(function(){ window.close(); }, 700);')
       end
-      Capybara.using_wait_time 1.1 do
+      Capybara.using_wait_time 3.1 do
         expect do
           expect(@other_window).not_to become_closed
-        end.to raise_error(RSpec::Expectations::ExpectationNotMetError, /\Aexpected #<Window @handle=".+"> not to become closed after 1.1 seconds\Z/)
+        end.to raise_error(RSpec::Expectations::ExpectationNotMetError, /\Aexpected #<Window @handle=".+"> not to become closed after 3.1 seconds\Z/)
       end
     end
   end

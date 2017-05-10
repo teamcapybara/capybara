@@ -83,8 +83,10 @@ Capybara::SpecHelper.spec '#has_no_current_path?' do
   end
 
   it "should wait for current_path to disappear", requires: [:js] do
-    @session.click_link("Change page")
-    expect(@session).to have_no_current_path('/with_js')
+    Capybara.using_wait_time(3) do
+      @session.click_link("Change page")
+      expect(@session).to have_no_current_path('/with_js')
+    end
   end
 
   it "should be true if the page has not the given current_path" do
