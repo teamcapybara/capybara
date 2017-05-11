@@ -428,11 +428,15 @@ Capybara::SpecHelper.spec "node" do
     end
 
     context "with automatic reload" do
+      before do
+        Capybara.default_max_wait_time = 4
+      end
+
       it "should reload the current context of the node automatically" do
         @session.visit('/with_js')
         node = @session.find(:css, '#reload-me')
         @session.click_link('Reload!')
-        sleep(0.3)
+        sleep(1)
         expect(node.text).to eq('has been reloaded')
       end
 
@@ -440,7 +444,7 @@ Capybara::SpecHelper.spec "node" do
         @session.visit('/with_js')
         node = @session.find(:css, '#reload-me').find(:css, 'em')
         @session.click_link('Reload!')
-        sleep(0.3)
+        sleep(1)
         expect(node.text).to eq('has been reloaded')
       end
 
@@ -448,7 +452,7 @@ Capybara::SpecHelper.spec "node" do
         @session.visit('/with_js')
         node = @session.find(:css, '#reload-me')
         @session.click_link('Reload!')
-        sleep(0.3)
+        sleep(1)
         expect(node.find(:css, 'a').text).to eq('has been reloaded')
       end
 
@@ -456,7 +460,7 @@ Capybara::SpecHelper.spec "node" do
         @session.visit('/with_js')
         node = @session.all(:css, '#the-list li')[1]
         @session.click_link('Fetch new list!')
-        sleep(0.3)
+        sleep(1)
 
         expect do
           expect(node).to have_text('Foo')
@@ -471,13 +475,11 @@ Capybara::SpecHelper.spec "node" do
       end
 
       it "should reload nodes with options" do
-        Capybara.using_wait_time(4) do
-          @session.visit('/with_js')
-          node = @session.find(:css, 'em', text: "reloaded")
-          @session.click_link('Reload!')
-          sleep(1)
-          expect(node.text).to eq('has been reloaded')
-        end
+        @session.visit('/with_js')
+        node = @session.find(:css, 'em', text: "reloaded")
+        @session.click_link('Reload!')
+        sleep(1)
+        expect(node.text).to eq('has been reloaded')
       end
     end
   end
