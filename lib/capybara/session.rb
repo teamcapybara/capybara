@@ -214,7 +214,7 @@ module Capybara
     # @return [String] Fully qualified URL of the current page
     #
     def current_url
-      driver.current_url
+      URI.escape(driver.current_url)
     end
 
     ##
