@@ -13,9 +13,11 @@ module Capybara
       end
 
       def filter(name, *types_and_options, &block)
-        options = types_and_options.last.is_a?(Hash) ? types_and_options.pop.dup : {}
-        types_and_options.each { |k| options[k] = true}
-        filters[name] = Filter.new(name, block, options)
+        add_filter(name, Filter, *types_and_options, &block)
+      end
+
+      def expression_filter(name, *types_and_options, &block)
+        add_filter(name, ExpressionFilter, *types_and_options, &block)
       end
 
       def describe(&block)
@@ -30,7 +32,16 @@ module Capybara
         @filters ||= {}
       end
 
+      def node_filters
+        filters.reject { |_n, f| f.nil? || f.is_a?(ExpressionFilter) }.freeze
+      end
+
+      def expression_filters
+        filters.select { |_n, f| f.nil? || f.is_a?(ExpressionFilter)  }.freeze
+      end
+
       class << self
+
         def all
           @filter_sets ||= {}
         end
@@ -42,6 +53,14 @@ module Capybara
         def remove(name)
           all.delete(name.to_sym)
         end
+      end
+
+      private
+
+      def add_filter(name, filter_class, *types_and_options, &block)
+        options = types_and_options.last.is_a?(Hash) ? types_and_options.pop.dup : {}
+        types_and_options.each { |k| options[k] = true}
+        filters[name] = filter_class.new(name, block, options)
       end
     end
   end

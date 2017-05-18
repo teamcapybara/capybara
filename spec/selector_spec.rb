@@ -28,7 +28,7 @@ RSpec.describe Capybara do
             <input type="hidden" id="hidden_field" value="this is hidden"/>
             <a href="#">link</a>
             <fieldset></fieldset>
-            <select>
+            <select id="select">
               <option value="a">A</option>
               <option value="b" disabled>B</option>
               <option value="c" selected>C</option>
@@ -177,6 +177,7 @@ RSpec.describe Capybara do
 
         it "finds by type" do
           expect(string.find(:field, type: 'file')[:id]).to eq 'file'
+          expect(string.find(:field, type: 'select')[:id]).to eq 'select'
         end
       end
 

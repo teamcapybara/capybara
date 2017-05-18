@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'capybara/selector/expression_filter'
 require 'capybara/selector/filter_set'
 require 'capybara/selector/css'
 require 'xpath'
@@ -21,7 +22,7 @@ end
 module Capybara
   class Selector
 
-    attr_reader :name, :format, :expression_filters
+    attr_reader :name, :format
 
     class << self
       def all
@@ -50,13 +51,21 @@ module Capybara
       @description = nil
       @format = nil
       @expression = nil
-      @expression_filters = []
+      @expression_filters = {}
       @default_visibility = nil
       instance_eval(&block)
     end
 
     def custom_filters
       @filter_set.filters
+    end
+
+    def node_filters
+      @filter_set.node_filters
+    end
+
+    def expression_filters
+      @filter_set.expression_filters
     end
 
     ##
@@ -74,7 +83,10 @@ module Capybara
     # @return [#call]                             The block that will be called to generate the XPath expression
     #
     def xpath(*expression_filters, &block)
-      @format, @expression_filters, @expression = :xpath, expression_filters.flatten, block if block
+      if block
+        @format, @expression = :xpath, block
+        expression_filters.flatten.each { |ef| custom_filters[ef] = IdentityExpressionFilter.new }
+      end
       format == :xpath ? @expression : nil
     end
 
@@ -93,7 +105,10 @@ module Capybara
     # @return [#call]                             The block that will be called to generate the CSS selector
     #
     def css(*expression_filters, &block)
-      @format, @expression_filters, @expression = :css, expression_filters.flatten, block if block
+      if block
+        @format, @expression = :css, block
+        expression_filters.flatten.each { |ef| custom_filters[ef] = nil }
+      end
       format == :css ? @expression : nil
     end
 
@@ -172,8 +187,14 @@ module Capybara
     #
     def filter(name, *types_and_options, &block)
       options = types_and_options.last.is_a?(Hash) ? types_and_options.pop.dup : {}
-      types_and_options.each { |k| options[k] = true}
+      types_and_options.each { |k| options[k] = true }
       custom_filters[name] = Filter.new(name, block, options)
+    end
+
+    def expression_filter(name, *types_and_options, &block)
+      options = types_and_options.last.is_a?(Hash) ? types_and_options.pop.dup : {}
+      types_and_options.each { |k| options[k] = true }
+      custom_filters[name] = ExpressionFilter.new(name, block, options)
     end
 
     def filter_set(name, filters_to_use = nil)
@@ -225,7 +246,7 @@ module Capybara
         locate_xpath += XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(xpath)
       end
 
-      locate_xpath = [:name, :placeholder].inject(locate_xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
+      # locate_xpath = [:name, :placeholder].inject(locate_xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
       locate_xpath
     end
 
