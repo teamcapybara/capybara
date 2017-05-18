@@ -47,7 +47,7 @@ module Capybara
         @description << " with#{" exact" if exact_text == true} text #{options[:text].inspect}" if options[:text]
         @description << " with exact text #{options[:exact_text]}" if options[:exact_text].is_a?(String)
         @description << " with id #{options[:id]}" if options[:id]
-        @description << " with classes #{Array(options[:class]).join(',')}]" if options[:class]
+        @description << " with classes [#{Array(options[:class]).join(',')}]" if options[:class]
         @description << selector.description(options)
         @description << " that also matches the custom filter block" if @filter_block
         @description
