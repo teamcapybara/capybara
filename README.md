@@ -1071,7 +1071,7 @@ behaviors of Capybara change
       my_session.config.default_max_wait_time = 10 # only set for my_session
       Capybara.default_max_wait_time = 2 # will not change the default_max_wait in my_session
 
-* `current_driver` and `session_name` are thread specific.  This means that `using_session' and
+* `current_driver` and `session_name` are thread specific.  This means that `using_session` and
   `using_driver` also only affect the current thread.
 
 ## <a name="development"></a>Development
