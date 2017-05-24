@@ -87,6 +87,11 @@ matrix:
         apt:
           packages:
             - awesome
+    - gemfile: Gemfile
+      rvm: 2.4.1
+      addons:
+        firefox: latest-nightly
+      script: MOZ_HEADLESS=1 bundle exec rake travis
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-marionette
@@ -95,6 +100,7 @@ matrix:
     - gemfile: Gemfile
       rvm: 2.4.1
       env: CAPYBARA_CHROME_HEADLESS=true
+    - script: MOZ_HEADLESS=1 bundle exec rake travis
 before_install:
   - mkdir -p ~/drivers; export PATH=~/drivers:$PATH;
   - if [ $CAPYBARA_CHROME ] || [ $CAPYBARA_CHROME_HEADLESS ]; then
