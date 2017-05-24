@@ -149,7 +149,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
           raise Capybara::ExpectationNotMet.new('Timed out waiting for Selenium session reset') if (Capybara::Helpers.monotonic_time - start_time) >= 10
           sleep 0.05
         end
-      rescue Selenium::WebDriver::Error::UnhandledAlertError
+      rescue Selenium::WebDriver::Error::UnhandledAlertError, Selenium::WebDriver::Error::UnexpectedAlertOpenError
         # This error is thrown if an unhandled alert is on the page
         # Firefox appears to automatically dismiss this alert, chrome does not
         # We'll try to accept it
