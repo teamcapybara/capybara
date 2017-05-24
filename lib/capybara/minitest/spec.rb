@@ -8,47 +8,22 @@ module Capybara
         infect_an_assertion "refute_#{assertion}", "wont_have_#{assertion}", :reverse
       end
 
-      # Unfortunately infect_an_assertion doesn't pass through the optional filter block so we can't use it for these
-      %w(selector xpath css link button field select table checked_field unchecked_field).each do |assertion|
-        self.class_eval <<-EOM
-          def must_have_#{assertion} *args, &optional_filter_block
-            ::Minitest::Expectation.new(self, ::Minitest::Spec.current).must_have_#{assertion}(*args, &optional_filter_block)
-          end
-
-          def wont_have_#{assertion} *args, &optional_filter_block
-            ::Minitest::Expectation.new(self, ::Minitest::Spec.current).wont_have_#{assertion}(*args, &optional_filter_block)
-          end
-        EOM
-
-        ::Minitest::Expectation.class_eval <<-EOM, __FILE__, __LINE__ + 1
-          def must_have_#{assertion} *args, &optional_filter_block
-            ctx.assert_#{assertion}(target, *args, &optional_filter_block)
-          end
-
-          def wont_have_#{assertion} *args, &optional_filter_block
-            ctx.refute_#{assertion}(target, *args, &optional_filter_block)
-          end
-        EOM
-      end
-
-      %w(selector xpath css).each do |assertion|
-        self.class_eval <<-EOM
-          def must_match_#{assertion} *args, &optional_filter_block
-            ::Minitest::Expectation.new(self, ::Minitest::Spec.current).must_match_#{assertion}(*args, &optional_filter_block)
-          end
-
-          def wont_match_#{assertion} *args, &optional_filter_block
-            ::Minitest::Expectation.new(self, ::Minitest::Spec.current).wont_match_#{assertion}(*args, &optional_filter_block)
+      (%w(selector xpath css link button field select table checked_field unchecked_field).map do |assertion|
+        [["assert_#{assertion}", "must_have_#{assertion}"],
+         ["refute_#{assertion}", "wont_have_#{assertion}"]]
+      end.flatten(1) + %w(selector xpath css).map do |assertion|
+        [["assert_matches_#{assertion}", "must_match_#{assertion}"],
+         ["refute_matches_#{assertion}", "wont_match_#{assertion}"]]
+      end.flatten(1)).each do |(meth, new_name)|
+        self.class_eval <<-EOM, __FILE__, __LINE__ + 1
+          def #{new_name} *args, &block
+            ::Minitest::Expectation.new(self, ::Minitest::Spec.current).#{new_name}(*args, &block)
           end
         EOM
 
         ::Minitest::Expectation.class_eval <<-EOM, __FILE__, __LINE__ + 1
-          def must_match_#{assertion} *args, &optional_filter_block
-            ctx.assert_matches_#{assertion}(target, *args, &optional_filter_block)
-          end
-
-          def wont_match_#{assertion} *args, &optional_filter_block
-            ctx.refute_matches_#{assertion}(target, *args, &optional_filter_block)
+          def #{new_name} *args, &block
+            ctx.#{meth}(target, *args, &block)
           end
         EOM
       end
