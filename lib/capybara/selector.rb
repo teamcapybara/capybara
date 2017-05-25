@@ -77,7 +77,7 @@ Capybara.add_selector(:field) do
   expression_filter(:type) do |expr, type|
     type = type.to_s
     if ['textarea', 'select'].include?(type)
-      expr.axis(:self, type.to_sym)
+      expr.self(type.to_sym)
     else
       expr[XPath.attr(:type).equals(type)]
     end
@@ -158,7 +158,7 @@ Capybara.add_selector(:link) do
     when Regexp
       node[:href].match href
     else
-      node.first(:xpath, XPath.axis(:self)[XPath.attr(:href).equals(href.to_s)], minimum: 0)
+      node.first(:xpath, XPath.self[XPath.attr(:href).equals(href.to_s)], minimum: 0)
     end
   end
 
@@ -257,7 +257,7 @@ Capybara.add_selector(:fillable_field) do
   expression_filter(:type) do |expr, type|
     type = type.to_s
     if ['textarea'].include?(type)
-      expr.axis(:self, type.to_sym)
+      expr.self(type.to_sym)
     else
       expr[XPath.attr(:type).equals(type)]
     end
