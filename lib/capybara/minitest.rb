@@ -6,109 +6,124 @@ module Capybara
   module Minitest
     module Assertions
       ## Assert text exists
+      #
+      # @!method assert_text
       #  see {Capybara::Node::Matchers#assert_text}
-      def assert_text(*args)
-        self.assertions += 1
-        subject, *args = determine_subject(args)
-        subject.assert_text(*args)
-      rescue Capybara::ExpectationNotMet => e
-        raise ::Minitest::Assertion, e.message
-      end
-      alias_method :assert_content, :assert_text
 
       ## Assert text does not exist
+      #
+      # @!method assert_no_text
       #  see {Capybara::Node::Matchers#assert_no_text}
-      def assert_no_text(*args)
-        self.assertions += 1
-        subject, *args = determine_subject(args)
-        subject.assert_no_text(*args)
-      rescue Capybara::ExpectationNotMet => e
-        raise ::Minitest::Assertion, e.message
+
+      ##
+      # Assertion that page title does match
+      #
+      # @!method assert_title
+      #   see {Capybara::Node::DocumentMatchers#assert_title}
+
+      ##
+      # Assertion that page title does not match
+      #
+      # @!method refute_title
+      # @!method assert_no_title
+      #   see {Capybara::Node::DocumentMatchers#assert_no_title}
+
+      ##
+      # Assertion that current path matches
+      #
+      # @!method assert_current_path
+      #   see {Capybara::SessionMatchers#assert_current_path}
+
+      ##
+      # Assertion that current page does not match
+      #
+      # @!method refute_current_path
+      # @!method assert_no_current_path
+      #   see {Capybara::SessionMatchers#assert_no_current_path}
+
+
+      %w(assert_text assert_no_text assert_title assert_no_title assert_current_path assert_no_current_path).each do |assertion_name|
+        self.class_eval <<-EOM, __FILE__, __LINE__ + 1
+          def #{assertion_name} *args
+            self.assertions +=1
+            subject, *args = determine_subject(args)
+            subject.#{assertion_name}(*args)
+          rescue Capybara::ExpectationNotMet => e
+            raise ::Minitest::Assertions, e.message
+          end
+        EOM
       end
+
+      alias_method :refute_title, :assert_no_title
       alias_method :refute_text, :assert_no_text
       alias_method :refute_content, :refute_text
+      alias_method :refute_current_path, :assert_no_current_path
+      alias_method :assert_content, :assert_text
       alias_method :assert_no_content, :refute_text
 
       ## Assert selector exists on page
-      #  see {Capybara::Node::Matchers#assert_selector}
-      def assert_selector(*args, &optional_filter_block)
-        self.assertions +=1
-        subject, *args = determine_subject(args)
-        subject.assert_selector(*args, &optional_filter_block)
-      rescue Capybara::ExpectationNotMet => e
-        raise ::Minitest::Assertion, e.message
-      end
+      #
+      # @!method assert_selector
+      #   see {Capybara::Node::Matchers#assert_selector}
 
       ## Assert selector does not exist on page
-      #  see {Capybara::Node::Matchers#assert_no_selector}
-      def assert_no_selector(*args, &optional_filter_block)
-        self.assertions +=1
-        subject, *args = determine_subject(args)
-        subject.assert_no_selector(*args, &optional_filter_block)
-      rescue Capybara::ExpectationNotMet => e
-        raise ::Minitest::Assertion, e.message
-      end
-      alias_method :refute_selector, :assert_no_selector
+      #
+      # @!method assert_no_selector
+      #   see {Capybara::Node::Matchers#assert_no_selector}
 
       ## Assert element matches selector
-      #  see {Capybara::Node::Matchers#assert_matches_selector}
-      def assert_matches_selector(*args, &optional_filter_block)
-        self.assertions += 1
-        subject, *args = determine_subject(args)
-        subject.assert_matches_selector(*args, &optional_filter_block)
-      rescue Capybara::ExpectationNotMet => e
-        raise ::Minitest::Assertion, e.message
-      end
+      #
+      # @!method assert_matches_selector
+      #   see {Capybara::Node::Matchers#assert_matches_selector}
 
       ## Assert element does not match selector
-      #  see {Capybara::Node::Matchers#assert_not_matches_selector}
-      def assert_not_matches_selector(*args, &optional_filter_block)
-        self.assertions += 1
-        subject, *args = determine_subject(args)
-        subject.assert_not_matches_selector(*args, &optional_filter_block)
-      rescue Capybara::ExpectationNotMet => e
-        raise ::Minitest::Assertion, e.message
+      #
+      # @!method assert_xpath
+      #   see {Capybara::Node::Matchers#assert_not_matches_selector}
+
+      %w(assert_selector assert_no_selector assert_matches_selector assert_not_matches_selector).each do |assertion_name|
+        self.class_eval <<-EOM, __FILE__, __LINE__ + 1
+          def #{assertion_name} *args, &optional_filter_block
+            self.assertions +=1
+            subject, *args = determine_subject(args)
+            subject.#{assertion_name}(*args, &optional_filter_block)
+          rescue Capybara::ExpectationNotMet => e
+            raise ::Minitest::Assertions, e.message
+          end
+        EOM
       end
+
+      alias_method :refute_selector, :assert_no_selector
       alias_method :refute_matches_selector, :assert_not_matches_selector
-
-      %w(title current_path).each do |selector_type|
-        define_method "assert_#{selector_type}" do |*args|
-          begin
-            self.assertions += 1
-            subject, *args = determine_subject(args)
-            subject.public_send("assert_#{selector_type}",*args)
-          rescue Capybara::ExpectationNotMet => e
-            raise ::Minitest::Assertion, e.message
-          end
-        end
-
-        define_method "assert_no_#{selector_type}" do |*args|
-          begin
-            self.assertions += 1
-            subject, *args = determine_subject(args)
-            subject.public_send("assert_no_#{selector_type}",*args)
-          rescue Capybara::ExpectationNotMet => e
-            raise ::Minitest::Assertion, e.message
-          end
-        end
-        alias_method "refute_#{selector_type}", "assert_no_#{selector_type}"
-      end
 
       %w(xpath css link button field select table).each do |selector_type|
         define_method "assert_#{selector_type}" do |*args, &optional_filter_block|
           subject, *args = determine_subject(args)
-          locator, options = *args, {}
-          locator, options = nil, locator if locator.is_a? Hash
+          locator, options = extract_locator(args)
           assert_selector(subject, selector_type.to_sym, locator, options, &optional_filter_block)
         end
 
         define_method "assert_no_#{selector_type}" do |*args, &optional_filter_block|
           subject, *args = determine_subject(args)
-          locator, options = *args, {}
-          locator, options = nil, locator if locator.is_a? Hash
+          locator, options = extract_locator(args)
           assert_no_selector(subject, selector_type.to_sym, locator, options, &optional_filter_block)
         end
         alias_method "refute_#{selector_type}", "assert_no_#{selector_type}"
+      end
+
+      %w(checked unchecked).each do |field_type|
+        define_method "assert_#{field_type}_field" do |*args, &optional_filter_block|
+          subject, *args = determine_subject(args)
+          locator, options = extract_locator(args)
+          assert_selector(subject, :field, locator, options.merge(field_type.to_sym => true), &optional_filter_block)
+        end
+
+        define_method "assert_no_#{field_type}_field" do |*args, &optional_filter_block|
+          subject, *args = determine_subject(args)
+          locator, options = extract_locator(args)
+          assert_no_selector(subject, :field, locator, options.merge(field_type.to_sym => true), &optional_filter_block)
+        end
+        alias_method "refute_#{field_type}_field", "assert_no_#{field_type}_field"
       end
 
       %w(xpath css).each do |selector_type|
@@ -124,22 +139,6 @@ module Capybara
         alias_method "refute_matches_#{selector_type}", "assert_not_matches_#{selector_type}"
       end
 
-      %w(checked unchecked).each do |field_type|
-        define_method "assert_#{field_type}_field" do |*args, &optional_filter_block|
-          subject, *args = determine_subject(args)
-          locator, options = *args, {}
-          locator, options = nil, locator if locator.is_a? Hash
-          assert_selector(subject, :field, locator, options.merge(field_type.to_sym => true), &optional_filter_block)
-        end
-
-        define_method "assert_no_#{field_type}_field" do |*args, &optional_filter_block|
-          subject, *args = determine_subject(args)
-          locator, options = *args, {}
-          locator, options = nil, locator if locator.is_a? Hash
-          assert_no_selector(subject, :field, locator, options.merge(field_type.to_sym => true), &optional_filter_block)
-        end
-        alias_method "refute_#{field_type}_field", "assert_no_#{field_type}_field"
-      end
 
       ##
       # Assertion that there is xpath
@@ -256,32 +255,6 @@ module Capybara
       # @!method assert_no_table
       #   see {Capybara::Node::Matchers#has_no_table?}
 
-      ##
-      # Assertion that page title does match
-      #
-      # @!method assert_title
-      #   see {Capybara::Node::DocumentMatchers#assert_title}
-
-      ##
-      # Assertion that page title does not match
-      #
-      # @!method refute_title
-      # @!method assert_no_title
-      #   see {Capybara::Node::DocumentMatchers#assert_no_title}
-
-      ##
-      # Assertion that current path matches
-      #
-      # @!method assert_current_path
-      #   see {Capybara::SessionMatchers#assert_current_path}
-
-      ##
-      # Assertion that current page does not match
-      #
-      # @!method refute_current_path
-      # @!method assert_no_current_path
-      #   see {Capybara::SessionMatchers#assert_no_current_path}
-
       private
 
       def determine_subject(args)
@@ -291,6 +264,12 @@ module Capybara
         else
           [page, *args]
         end
+      end
+
+      def extract_locator(args)
+        locator, options = *args, {}
+        locator, options = nil, locator if locator.is_a? Hash
+        [locator, options]
       end
     end
   end
