@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gem 'bundler', '~> 1.1'
 gemspec :path => '..'
 
-gem 'xpath', github: 'jnicklas/xpath'
+gem 'xpath', github: 'teamcapybara/xpath'
 
 gem 'selenium-webdriver', :path => '../../selenium/build/rb'
 gem 'rack', github: 'rack/rack'

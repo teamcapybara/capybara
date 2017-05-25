@@ -4,7 +4,7 @@ gem 'bundler', '~> 1.1'
 gemspec path: '..'
 
 gem 'mime-types', '< 3.0'
-gem 'xpath', :git => 'git://github.com/jnicklas/xpath.git'
+gem 'xpath', :git => 'git://github.com/teamcapybara/xpath.git'
 
 gem 'term-ansicolor', '< 1.4.0'
 gem 'tins', '< 1.7.0'  # 1.7.0 requires ruby 2.0

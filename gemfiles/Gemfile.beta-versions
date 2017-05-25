@@ -4,7 +4,7 @@ gem 'bundler', '~> 1.1'
 gemspec :path => '..'
 
 gem 'pkg-config' # needed by nokogiri
-gem 'xpath', github: 'jnicklas/xpath'
+gem 'xpath', github: 'teamcapybara/xpath'
 gem 'rack', github: 'rack/rack'
 gem 'sinatra', github: 'sinatra/sinatra', branch: 'master'
 gem 'rspec', github: 'rspec/rspec'
