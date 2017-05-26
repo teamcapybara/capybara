@@ -8,7 +8,7 @@ module Capybara
                :automatic_label_click, :enable_aria_label, :save_path, :exact_options, :asset_host, :default_host, :app_host,
                :save_and_open_page_path, :server_host, :server_port, :server_errors]
 
-    attr_accessor *OPTIONS
+    attr_accessor(*OPTIONS)
 
     ##
     #@!method always_include_port
@@ -56,6 +56,8 @@ module Capybara
     #@!method server_errors
     #  See {Capybara#configure}
 
+    remove_method :server_host
+
     ##
     #
     # @return [String]    The IP address bound by default server
@@ -64,20 +66,24 @@ module Capybara
       @server_host || '127.0.0.1'
     end
 
+    remove_method :server_errors=
     def server_errors=(errors)
       (@server_errors ||= []).replace(errors.dup)
     end
 
+    remove_method :app_host=
     def app_host=(url)
       raise ArgumentError.new("Capybara.app_host should be set to a url (http://www.example.com)") unless url.nil? || (url =~ URI::Parser.new.make_regexp)
       @app_host = url
     end
 
+    remove_method :default_host=
     def default_host=(url)
       raise ArgumentError.new("Capybara.default_host should be set to a url (http://www.example.com)") unless url.nil? || (url =~ URI::Parser.new.make_regexp)
       @default_host = url
     end
 
+    remove_method :save_and_open_page_path=
     def save_and_open_page_path=(path)
       warn "DEPRECATED: #save_and_open_page_path is deprecated, please use #save_path instead. \n"\
            "Note: Behavior is slightly different with relative paths - see documentation" unless path.nil?
