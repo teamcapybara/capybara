@@ -79,6 +79,19 @@ RSpec.describe Capybara do
     end
   end
 
+  describe "server=" do
+    after do
+      Capybara.server = :default
+    end
+
+    it "should have a :webrick server registered" do
+      Capybara.server = :webrick
+      session = Capybara::Session.new(:selenium, TestApp.new)
+      session.visit('/')
+      expect(session.body).to include("Hello world!")
+    end
+  end
+
   describe 'app_host' do
     after do
       Capybara.app_host = nil

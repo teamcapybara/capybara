@@ -232,7 +232,7 @@ module Capybara
     # @param [Integer] port              The port to run the application on
     #
     def run_default_server(app, port)
-      servers[:webrick].call(app, port, server_host)
+      servers[:puma].call(app, port, server_host)
     end
 
     ##
