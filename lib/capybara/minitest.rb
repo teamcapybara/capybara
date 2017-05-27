@@ -227,7 +227,7 @@ module Capybara
       # Assertion that there is no unchecked_field
       #
       # @!method assert_no_unchecked_field
-      # @!method refute_unchceked_field
+      # @!method refute_unchecked_field
 
       ##
       # Assertion that there is select
