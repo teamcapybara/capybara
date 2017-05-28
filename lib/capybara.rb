@@ -169,12 +169,13 @@ module Capybara
     ##
     #
     # Modify a selector previously created by {Capybara.add_selector}.
-    # For example modifying the :button selector to also find divs styled
-    # to look like buttons might look like this
+    # For example, adding a new filter to the :button selector to filter based on
+    # button style (a class) might look like this
     #
     #     Capybara.modify_selector(:button) do
-    #       xpath { |locator| XPath::HTML.button(locator).or(XPath::css('div.btn')[XPath::string.n.is(locator)]) }
+    #       filter (:style, valid_values: [:primary, :secondary]) { |node, style| node[:class].split.include? "btn-#{style}" }
     #     end
+    #
     #
     # @param [Symbol] name    The name of the selector to modify
     # @yield                  A block executed in the context of the existing {Capybara::Selector}
