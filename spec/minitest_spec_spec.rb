@@ -37,10 +37,10 @@ class MinitestSpecTest < Minitest::Spec
     page.must_have_xpath('.//input[@id="customer_email"]')
     page.wont_have_xpath('.//select[@id="not_form_title"]')
     page.wont_have_xpath('.//input[@id="customer_email"]') { |el| el[:id] == "not_customer_email" }
-    el = find(:select, 'form_title')
-    el.must_have_xpath('.//option[@class="title"]')
-    el.must_have_xpath('.//option', count: 1) { |el| el[:class] != 'title' && !el.disabled?}
-    el.wont_have_xpath('.//input[@id="customer_email"]')
+    select = find(:select, 'form_title')
+    select.must_have_xpath('.//option[@class="title"]')
+    select.must_have_xpath('.//option', count: 1) { |option| option[:class] != 'title' && !option.disabled?}
+    select.wont_have_xpath('.//input[@id="customer_email"]')
   end
 
   it "support css expectations" do

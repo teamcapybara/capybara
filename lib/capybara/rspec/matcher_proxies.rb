@@ -19,14 +19,18 @@ module Capybara
   end
 
   module DSL
-    def self.included(base)
-      warn "including Capybara::DSL in the global scope is not recommended!" if base == Object
+    class <<self
+      remove_method :included
 
-      if defined?(::RSpec::Matchers) && base.include?(::RSpec::Matchers)
-        base.send(:include, ::Capybara::RSpecMatcherProxies)
+      def included(base)
+        warn "including Capybara::DSL in the global scope is not recommended!" if base == Object
+
+        if defined?(::RSpec::Matchers) && base.include?(::RSpec::Matchers)
+          base.send(:include, ::Capybara::RSpecMatcherProxies)
+        end
+
+        super
       end
-
-      super
     end
   end
 end

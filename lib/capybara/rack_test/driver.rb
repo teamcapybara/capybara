@@ -15,6 +15,7 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
 
   def initialize(app, options={})
     raise ArgumentError, "rack-test requires a rack application, but none was given" unless app
+    @session = nil
     @app = app
     @options = DEFAULT_OPTIONS.merge(options)
   end

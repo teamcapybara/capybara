@@ -8,6 +8,10 @@ module Capybara
       attr_reader :options
       attr_writer :session_options
 
+      def initialize(options)
+        @session_options = options.delete(:session_options)
+      end
+
       def session_options
         @session_options || Capybara.session_options
       end

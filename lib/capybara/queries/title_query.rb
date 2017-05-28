@@ -6,6 +6,7 @@ module Capybara
       def initialize(expected_title, options = {})
         @expected_title = expected_title
         @options = options
+        super(@options)
         unless @expected_title.is_a?(Regexp)
           @expected_title = Capybara::Helpers.normalize_whitespace(@expected_title)
         end

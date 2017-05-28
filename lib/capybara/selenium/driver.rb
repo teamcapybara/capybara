@@ -37,6 +37,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def initialize(app, options={})
+    @session = nil
     begin
       require 'selenium-webdriver'
       # Fix for selenium-webdriver 3.4.0 which misnamed these

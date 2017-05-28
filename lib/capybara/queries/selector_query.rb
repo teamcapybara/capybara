@@ -9,7 +9,7 @@ module Capybara
 
       def initialize(*args, &filter_block)
         @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
-        self.session_options = @options.delete(:session_options)
+        super(@options)
 
         @filter_block = filter_block
 

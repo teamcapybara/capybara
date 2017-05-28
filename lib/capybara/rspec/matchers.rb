@@ -44,6 +44,7 @@ module Capybara
       end
 
       def session_options
+        @context_el ||= nil
         @context_el ? @context_el.session_options : Capybara.session_options
       end
     end
