@@ -79,6 +79,22 @@ RSpec.describe Capybara do
       Capybara.server(&server)
       expect(Capybara.server).to eq(server)
     end
+
+    it "should have :webrick registered" do
+      require 'rack/handler/webrick'
+      mock_app = double('app')
+      Capybara.server = :webrick
+      expect(Rack::Handler::WEBrick).to receive(:run)
+      Capybara.server.call(mock_app, 8000)
+    end
+
+    it "should have :puma registered" do
+      require 'rack/handler/puma'
+      mock_app = double('app')
+      Capybara.server = :puma
+      expect(Rack::Handler::Puma).to receive(:run)
+      Capybara.server.call(mock_app, 8000)
+    end
   end
 
   describe 'app_host' do
