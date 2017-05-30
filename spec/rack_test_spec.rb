@@ -211,6 +211,19 @@ RSpec.describe Capybara::RackTest::Driver do
       end
     end
   end
+
+  describe 'temporarily use different options' do
+    it 'temporarily does not follow redirects' do
+      @driver.with_options(follow_redirects: false) do |driver|
+        driver.visit("/redirect_to_get_referer")
+
+        expect(driver.response.status).to eq(302)
+      end
+
+      @driver.visit("/redirect_to_get_referer")
+      expect(@driver.response.status).to eq(200)
+    end
+  end
 end
 
 module CSSHandlerIncludeTester
