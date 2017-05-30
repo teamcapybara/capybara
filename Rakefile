@@ -6,7 +6,6 @@ require 'yard'
 desc "Run all examples with Firefox non-marionette"
 RSpec::Core::RakeTask.new(:spec_firefox) do |t|
   t.rspec_opts = %w[--color]
-  t.rspec_opts << '--format documentation' if RUBY_PLATFORM=='java'
   # When we drop RSpec 2.x support we can rename spec_chrome.rb and implement this properly
   # t.exclude_pattern = './spec/*{_chrome_spec.rb, _marionette_spec.rb}'
   t.pattern = './spec{,/*/**}/*{_spec.rb,_spec_firefox.rb}'
@@ -14,15 +13,11 @@ end
 
 RSpec::Core::RakeTask.new(:spec_marionette) do |t|
   t.rspec_opts = %w[--color]
-  # jruby buffers the progress formatter so travis doesn't see output often enough
-  t.rspec_opts << '--format documentation' if RUBY_PLATFORM=='java'
   t.pattern = './spec{,/*/**}/*{_spec.rb,_spec_marionette.rb}'
 end
 
 RSpec::Core::RakeTask.new(:spec_chrome) do |t|
   t.rspec_opts = %w[--color]
-  # jruby buffers the progress formatter so travis doesn't see output often enough
-  t.rspec_opts << '--format documentation' if RUBY_PLATFORM=='java'
   t.pattern = './spec/*{_spec_chrome.rb}'
 end
 
