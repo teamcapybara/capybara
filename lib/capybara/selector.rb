@@ -110,7 +110,7 @@ end
 Capybara.add_selector(:fieldset) do
   xpath(:legend) do |locator, options|
     xpath = XPath.descendant(:fieldset)
-    xpath = xpath[XPath.attr(:id).equals(locator.to_s) | XPath.child(:legend)[XPath.string.n.is(locator.to_s)]] unless locator.nil?
+    xpath = xpath[XPath.attr(:id).equals(locator.to_s).or XPath.child(:legend)[XPath.string.n.is(locator.to_s)]] unless locator.nil?
     xpath = xpath[XPath.child(:legend)[XPath.string.n.is(options[:legend])]] if options[:legend]
     xpath
   end
@@ -138,11 +138,11 @@ Capybara.add_selector(:link) do
     end
     unless locator.nil?
       locator = locator.to_s
-      matchers = XPath.attr(:id).equals(locator) |
-                 XPath.string.n.is(locator) |
-                 XPath.attr(:title).is(locator) |
-                 XPath.descendant(:img)[XPath.attr(:alt).is(locator)]
-      matchers |= XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
+      matchers = XPath.attr(:id).equals(locator).or(
+                 XPath.string.n.is(locator)).or(
+                 XPath.attr(:title).is(locator)).or(
+                 XPath.descendant(:img)[XPath.attr(:alt).is(locator)])
+      matchers = matchers.or XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
       xpath = xpath[matchers]
     end
     xpath = [:title].inject(xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
@@ -187,19 +187,19 @@ Capybara.add_selector(:button) do
 
     unless locator.nil?
       locator = locator.to_s
-      locator_matches = XPath.attr(:id).equals(locator) | XPath.attr(:value).is(locator) | XPath.attr(:title).is(locator)
-      locator_matches |= XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
+      locator_matches = XPath.attr(:id).equals(locator).or XPath.attr(:value).is(locator).or XPath.attr(:title).is(locator)
+      locator_matches = locator_matches.or XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
 
       input_btn_xpath = input_btn_xpath[locator_matches]
 
-      btn_xpath = btn_xpath[locator_matches | XPath.string.n.is(locator) | XPath.descendant(:img)[XPath.attr(:alt).is(locator)]]
+      btn_xpath = btn_xpath[locator_matches.or XPath.string.n.is(locator).or XPath.descendant(:img)[XPath.attr(:alt).is(locator)]]
 
       alt_matches = XPath.attr(:alt).is(locator)
-      alt_matches |= XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
+      alt_matches = alt_matches.or XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
       image_btn_xpath = image_btn_xpath[alt_matches]
     end
 
-    res_xpath = input_btn_xpath + btn_xpath + image_btn_xpath
+    res_xpath = input_btn_xpath.union(btn_xpath).union(image_btn_xpath)
 
     res_xpath = expression_filters.keys.inject(res_xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
 
@@ -223,7 +223,7 @@ end
 Capybara.add_selector(:link_or_button) do
   label "link or button"
   xpath do |locator, options|
-    self.class.all.values_at(:link, :button).map {|selector| selector.xpath.call(locator, options)}.reduce(:+)
+    self.class.all.values_at(:link, :button).map {|selector| selector.xpath.call(locator, options)}.reduce(:union)
   end
 
   filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| node.tag_name == "a" or not(value ^ node.disabled?) }
@@ -458,7 +458,7 @@ Capybara.add_selector(:label) do
   label "label"
   xpath(:for) do |locator, options|
     xpath = XPath.descendant(:label)
-    xpath = xpath[XPath.string.n.is(locator.to_s) | XPath.attr(:id).equals(locator.to_s)] unless locator.nil?
+    xpath = xpath[XPath.string.n.is(locator.to_s).or XPath.attr(:id).equals(locator.to_s)] unless locator.nil?
     if options.has_key?(:for) && !options[:for].is_a?(Capybara::Node::Element)
       xpath = xpath[XPath.attr(:for).equals(options[:for].to_s).or((~XPath.attr(:for)).and(XPath.descendant()[XPath.attr(:id).equals(options[:for].to_s)]))]
     end
@@ -497,7 +497,7 @@ end
 Capybara.add_selector(:table) do
   xpath(:caption) do |locator, options|
     xpath = XPath.descendant(:table)
-    xpath = xpath[XPath.attr(:id).equals(locator.to_s) | XPath.descendant(:caption).is(locator.to_s)] unless locator.nil?
+    xpath = xpath[XPath.attr(:id).equals(locator.to_s).or XPath.descendant(:caption).is(locator.to_s)] unless locator.nil?
     xpath = xpath[XPath.descendant(:caption).equals(options[:caption])] if options[:caption]
     xpath
   end
@@ -520,8 +520,8 @@ end
 #
 Capybara.add_selector(:frame) do
   xpath(:name) do |locator, options|
-    xpath = XPath.descendant(:iframe) + XPath.descendant(:frame)
-    xpath = xpath[XPath.attr(:id).equals(locator.to_s) | XPath.attr(:name).equals(locator)] unless locator.nil?
+    xpath = XPath.descendant(:iframe).union(XPath.descendant(:frame))
+    xpath = xpath[XPath.attr(:id).equals(locator.to_s).or XPath.attr(:name).equals(locator)] unless locator.nil?
     xpath = expression_filters.keys.inject(xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
     xpath
   end
