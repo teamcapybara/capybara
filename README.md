@@ -619,7 +619,7 @@ end
 In drivers which support it, you can easily execute JavaScript:
 
 ```ruby
-page.execute_script("$('body').empty()")
+page.evaluate_script("$('body').empty()")
 ```
 
 For simple expressions, you can return the result of the script. Note
