@@ -99,7 +99,7 @@ module Capybara
 
         res
 
-      rescue *(node.respond_to?(:driver) ? node.driver.invalid_element_errors : [])
+      rescue *(node.respond_to?(:session) ? node.session.driver.invalid_element_errors : [])
         return false
       end
 

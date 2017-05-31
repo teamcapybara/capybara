@@ -119,6 +119,14 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
     end
 
+    describe "all with disappearing elements" do
+      it "ignores stale elements in results" do
+        @session.visit('/path')
+        elements = @session.all(:link) { |node| raise Selenium::WebDriver::Error::StaleElementReferenceError }
+        expect(elements.size).to eq 0
+      end
+    end
+
     describe "#evaluate_script" do
       it "can return an element" do
         @session.visit('/form')
