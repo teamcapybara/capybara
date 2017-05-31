@@ -91,8 +91,16 @@ module Capybara
           end
         end
 
-        res &&= node.session.using_wait_time(0){ @filter_block.call(node)} unless @filter_block.nil?
+        res &&= if node.respond_to?(:session)
+          node.session.using_wait_time(0){ @filter_block.call(node) }
+        else
+          @filter_block.call(node)
+        end unless @filter_block.nil?
+
         res
+
+      rescue *(node.respond_to?(:driver) ? node.driver.invalid_element_errors : [])
+        return false
       end
 
       def visible

@@ -71,6 +71,18 @@ RSpec.describe Capybara::Result do
     expect(result[-1].text).to eq 'Delta'
   end
 
+  it 'works with filter blocks' do
+    result = string.all('//li') { |node| node.text == 'Alpha' }
+    expect(result.size).to eq 1
+  end
+
+  it 'should catch invalid element errors during filtering' do
+    allow_any_instance_of(Capybara::Node::Simple).to receive(:driver).and_return(double("driver", invalid_element_errors: [::Selenium::WebDriver::Error::StaleElementReferenceError]))
+    allow_any_instance_of(Capybara::Node::Simple).to receive(:text).and_raise(::Selenium::WebDriver::Error::StaleElementReferenceError)
+    result = string.all('//li') { |node| node.text == 'Alpha' }
+    expect(result.size).to eq 0
+  end
+
   #Not a great test but it indirectly tests what is needed
   it "should evaluate filters lazily" do
     skip 'JRuby has an issue with lazy enumerator evaluation' if RUBY_PLATFORM == 'java'
