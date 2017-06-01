@@ -306,6 +306,16 @@ module Capybara
 
     ##
     #
+    # All sessions that Capybara knows about, this does not include manually started sessions
+    #
+    # @return [Array<Capybara::Session>]     All known sessions
+    #
+    def all_sessions
+      session_pool.values
+    end
+
+    ##
+    #
     # Reset sessions, cleaning out the pool of sessions. This will remove any session information such
     # as cookies.
     #
