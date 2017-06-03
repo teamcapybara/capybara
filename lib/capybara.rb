@@ -371,7 +371,7 @@ module Capybara
     end
 
     def included(base)
-      base.send(:include, Capybara::DSL)
+      base.include Capybara::DSL
       warn "`include Capybara` is deprecated. Please use `include Capybara::DSL` instead."
     end
 
