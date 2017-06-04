@@ -235,6 +235,17 @@ New line after and before textarea tag
     </select>
   </p>
 
+  <!-- invisible multiselect and options -->
+  <p style="display: none">
+    <label for="form_dessert">Dessert</label>
+    <select name="form[dessert]" id="form_dessert" multiple="multiple">
+      <option selected="selected">Pudding</option>
+      <option>Lava cake</option>
+      <option selected="selected">Tiramisu</option>
+      <option>Panna cotta</option>
+    </select>
+  </p>
+
   <!-- visible select with invisible selected option (which some browsers may treat as visible) -->
   <p>
     <label for="form_sorbet">Sorbet</label>
@@ -242,6 +253,17 @@ New line after and before textarea tag
       <option>Chocolate</option>
       <option selected="selected" style="display: none">Vanilla</option>
       <option>Strawberry</option>
+    </select>
+  </p>
+
+  <!-- visible multiselect with invisible selected options (which some browsers may treat as visible) -->
+  <p>
+    <label for="form_cake">Cake</label>
+    <select name="form[cake]" id="form_cake" multiple="multiple">
+      <option>Butter Cake</option>
+      <option selected="selected" style="display: none">Chocolate Cake</option>
+      <option>Strawberry Cake</option>
+      <option selected="selected" style="display: none">Sponge Cake</option>
     </select>
   </p>
 
@@ -593,4 +615,3 @@ New line after and before textarea tag
   <label for="asterisk_input">With Asterisk<abbr title="required">*</abbr></label>
   <input id="asterisk_input" type="number"value="2016"/>
 </p>
-
