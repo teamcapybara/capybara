@@ -23,3 +23,6 @@ Then(/^the failing exception should be nice$/) do
   expect(@error_message).to match %r(expected to find css \"h1#doesnotexist\")
 end
 
+Then /^I should be on '' url$/ do
+  Capybara.current_url.should == ''
+end

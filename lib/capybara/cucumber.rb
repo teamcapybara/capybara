@@ -6,7 +6,10 @@ require 'capybara/rspec/matcher_proxies'
 World(Capybara::DSL)
 World(Capybara::RSpecMatchers)
 
-After do
+# Reset sessions after scenario protects you from hard to debug issues
+# because of dependencies between scenarios.
+# We advice you not to use @no_reset_sessions where you can write a feature without it
+After('~@no_reset_sessions') do
   Capybara.reset_sessions!
 end
 
