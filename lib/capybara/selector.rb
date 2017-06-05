@@ -352,6 +352,7 @@ end
 # @filter [Array<String>] :options Exact match options
 # @filter [Array<String>] :with_options Partial match options
 # @filter [String, Array<String>] :selected Match the selection(s)
+# @filter [String, Array<String>] :with_selected Partial match the selection(s)
 #
 Capybara.add_selector(:select) do
   label "select box"
@@ -380,8 +381,13 @@ Capybara.add_selector(:select) do
   end
 
   filter(:selected) do |node, selected|
-    actual = node.all(:xpath, './/option', visible: false).select { |option| option.selected? }.map { |option| option.text(:all) }
-    [selected].flatten.sort == actual.sort
+    actual = node.all(:xpath, './/option', visible: false).select(&:selected?).map { |option| option.text(:all) }
+    Array(selected).sort == actual.sort
+  end
+
+  filter(:with_selected) do |node, selected|
+    actual = node.all(:xpath, './/option', visible: false).select(&:selected?).map { |option| option.text(:all) }
+    (Array(selected) - actual).empty?
   end
 
   describe do |options|
@@ -389,6 +395,7 @@ Capybara.add_selector(:select) do
     desc << " with options #{options[:options].inspect}" if options[:options]
     desc << " with at least options #{options[:with_options].inspect}" if options[:with_options]
     desc << " with #{options[:selected].inspect} selected" if options[:selected]
+    desc << " with at least #{options[:with_selected].inspect} selected" if options[:with_selected]
     desc << describe_all_expression_filters(options)
     desc
   end
