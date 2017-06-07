@@ -102,7 +102,7 @@ If you experience random errors about missing constants, add `config.allow_concu
 If the application that you are testing is a Rack app, but not Rails, set Capybara.app to your Rack app:
 
 ```ruby
-Capybara.app = MyRackApp
+Capybara.app = MyRackApp.new
 ```
 
 If you need to test JavaScript, or if your app interacts with (or is located at)
