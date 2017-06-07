@@ -1,14 +1,14 @@
 # Version 2.14.1
 
-Release date: unreleased
+Release date: 2017-06-07
 
 ### Fixed
 
-* Workaround broken system modals when using selenium with headless Chrome
 * Catch correct error when unexpected system modals are discovered in latest selenium [Thomas Walpole]
-* Update default `puma` server registration to try to ensure it runs in single mode [Thomas Walpole]
+* Update default `puma` server registration to encourage it to run in single mode [Thomas Walpole]
 * Suppress invalid element errors raised while lazily evaluating the results of `all` [Thomas Walpole]
 * Added missing `with_selected` option to the :select selector to match `options`/`with_options` options - Issue #1865 [Bartosz Nowak]
+* Workaround broken system modals when using selenium with headless Chrome
 
 # Version 2.14.0
 
