@@ -27,32 +27,32 @@ module Capybara
 
     # DelegateCapybara global configurations
     # @!method app
-    #   See {Capybara#configure}
+    #   See {Capybara.configure}
     # @!method reuse_server
-    #   See {Capybara#configure}
+    #   See {Capybara.configure}
     # @!method threadsafe
-    #   See {Capybara#configure}
+    #   See {Capybara.configure}
     # @!method server
-    #   See {Capybara#configure}
+    #   See {Capybara.configure}
     # @!method default_driver
-    #   See {Capybara#configure}
+    #   See {Capybara.configure}
     # @!method javascript_driver
-    #   See {Capybara#configure}
+    #   See {Capybara.configure}
     Config::OPTIONS.each do |method|
       def_delegators :config, method, "#{method}="
     end
 
     # Delegate Capybara global configurations
     # @!method default_selector
-    #   See {Capybara#configure}
+    #   See {Capybara.configure}
     # @!method default_max_wait_time
-    #   See {Capybara#configure}
+    #   See {Capybara.configure}
     # @!method app_host
-    #   See {Capybara#configure}
+    #   See {Capybara.configure}
     # @!method always_include_port
-    #   See {Capybara#configure}
+    #   See {Capybara.configure}
     # @!method wait_on_first_by_default
-    #   See {Capybara#configure}
+    #   See {Capybara.configure}
     SessionConfig::OPTIONS.each do |method|
       def_delegators :config, method, "#{method}="
     end

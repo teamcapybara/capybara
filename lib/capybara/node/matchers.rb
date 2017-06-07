@@ -432,11 +432,12 @@ module Capybara
       #
       #     page.has_select?('Language', with_options: ['English', 'German'])
       #
-      # @param [String] locator                      The label, name or id of a select box
-      # @option options [Array] :options             Options which should be contained in this select box
-      # @option options [Array] :with_options        Partial set of options which should be contained in this select box
-      # @option options [String, Array] :selected    Options which should be selected
-      # @return [Boolean]                            Whether it exists
+      # @param [String] locator                         The label, name or id of a select box
+      # @option options [Array] :options                Options which should be contained in this select box
+      # @option options [Array] :with_options           Partial set of options which should be contained in this select box
+      # @option options [String, Array] :selected       Options which should be selected
+      # @option options [String, Array] :with_selected  Partial set of options which should minimally be selected
+      # @return [Boolean]                               Whether it exists
       #
       def has_select?(locator=nil, options={}, &optional_filter_block)
         locator, options = nil, locator if locator.is_a? Hash

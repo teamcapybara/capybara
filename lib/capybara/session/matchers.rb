@@ -22,6 +22,7 @@ module Capybara
 
     ##
     # Asserts that the page doesn't have the given path.
+    # By default this will compare against the path+query portion of the full url
     #
     # @macro current_path_query_params
     # @raise [Capybara::ExpectationNotMet] if the assertion hasn't succeeded during wait time
@@ -33,6 +34,7 @@ module Capybara
 
     ##
     # Checks if the page has the given path.
+    # By default this will compare against the path+query portion of the full url
     #
     # @macro current_path_query_params
     # @return [Boolean]
@@ -45,6 +47,7 @@ module Capybara
 
     ##
     # Checks if the page doesn't have the given path.
+    # By default this will compare against the path+query portion of the full url
     #
     # @macro current_path_query_params
     # @return [Boolean]
