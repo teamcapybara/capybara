@@ -46,7 +46,7 @@ Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
   context 'without :wait option' do
     it 'should raise error if default_max_wait_time is less than timeout' do
       button = @session.find(:css, '#openWindowWithTimeout')
-      Capybara.using_wait_time 0.4 do
+      Capybara.using_wait_time 0.1 do
         expect do
           @session.window_opened_by do
             button.click
