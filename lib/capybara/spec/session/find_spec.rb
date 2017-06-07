@@ -54,7 +54,7 @@ Capybara::SpecHelper.spec '#find' do
     it "should find element if it appears before given wait duration" do
       @session.visit('/with_js')
       @session.click_link('Click me')
-      expect(@session.find(:css, "a#has-been-clicked", wait: 0.9).text).to include('Has been clicked')
+      expect(@session.find(:css, "a#has-been-clicked", wait: 2.0).text).to include('Has been clicked')
     end
   end
 
