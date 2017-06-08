@@ -63,7 +63,7 @@ module Capybara
       :current_window, :windows, :open_new_window, :switch_to_window, :within_window, :window_opened_by,
       :save_page, :save_and_open_page, :save_screenshot,
       :save_and_open_screenshot, :reset_session!, :response_headers,
-      :status_code, :current_scope,
+      :status_code, :has_status_code?, :current_scope,
       :assert_current_path, :assert_no_current_path, :has_current_path?, :has_no_current_path?
     ] + DOCUMENT_METHODS
     MODAL_METHODS = [
