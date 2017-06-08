@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'rack/test'
+require 'capybara/rack_test/patch.rb'
 require 'rack/utils'
 require 'mime/types'
 require 'nokogiri'
