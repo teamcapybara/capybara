@@ -1,3 +1,11 @@
+# Version 2.14.2
+
+Release date: unreleased
+
+### Fixed
+
+* Workaround for system modals when using headless Chrome now works if the page changes
+
 # Version 2.14.1
 
 Release date: 2017-06-07
