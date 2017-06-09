@@ -47,6 +47,14 @@ Capybara::SpecHelper.spec '#accept_alert', requires: [:modals] do
     expect(message).to eq('Alert opened [*Yay?*]')
   end
 
+  it "should handle the alert if the page changes" do
+    @session.accept_alert do
+      @session.click_link('Alert page change')
+      sleep 1 # ensure page change occurs before the accept_alert block exits
+    end
+    expect(@session).to have_current_path('/with_html')
+  end
+
   context "with an asynchronous alert" do
     it "should accept the alert" do
       @session.accept_alert do

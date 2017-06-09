@@ -368,6 +368,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         prompt: window.prompt,
         confirm: window.confirm,
         alert: window.alert,
+        called: false
       }
       window.capybara.add_handler(modal_handler);
 
@@ -420,15 +421,19 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       ignore: Selenium::WebDriver::Error::NoAlertPresentError)
     begin
       wait.until do
-        called, alert_text = evaluate_script('window.capybara.current_modal_status()')
+        called, alert_text = evaluate_script('window.capybara && window.capybara.current_modal_status()')
         if called
-          execute_script('window.capybara.modal_handlers.shift()')
+          execute_script('window.capybara && window.capybara.modal_handlers.shift()')
           regexp = options[:text].is_a?(Regexp) ? options[:text] : Regexp.escape(options[:text].to_s)
           if alert_text.match(regexp)
             alert_text
           else
             raise Capybara::ModalNotFound.new("Unable to find modal dialog#{" with #{options[:text]}" if options[:text]}")
           end
+        elsif called.nil?
+          # page changed so modal_handler data has gone away
+          warn "Can't verify modal text when page change occurs - ignoring" if options[:text]
+          ""
         else
           nil
         end
