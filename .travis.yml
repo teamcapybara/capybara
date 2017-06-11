@@ -109,7 +109,7 @@ before_install:
       FILE=`mktemp`; wget "$CHROMEDRIVER_URL" -qO $FILE && unzip $FILE chromedriver -d ~/drivers; rm $FILE; chmod 777 ~/drivers/chromedriver;
       ~/drivers/chromedriver --version;
     fi
-  - GECKODRIVER_URL="https://github.com/mozilla/geckodriver/releases/download/v0.16.1/geckodriver-v0.16.1-linux64.tar.gz";
+  - GECKODRIVER_URL="https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-linux64.tar.gz";
     FILE=`mktemp`; wget "$GECKODRIVER_URL" -qO $FILE && tar xz -C ~/drivers -f $FILE geckodriver; rm $FILE; chmod 777 ~/drivers/geckodriver;
     ~/drivers/geckodriver --version;
   - if [[ $BUNDLE_GEMFILE =~ Gemfile.edge-marionette$ ]]; then
