@@ -1,3 +1,12 @@
+# Version 2.14.3
+
+Release date: Unreleased
+
+### Fixed
+
+* Minitest assertions now raise the correct error type - Issue #1879 [Thomas Walpole]
+* Improve flexibility of detecting Chrome headless mode [Thomas Walpole]
+
 # Version 2.14.2
 
 Release date: 2017-06-09
