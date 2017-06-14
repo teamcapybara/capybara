@@ -49,7 +49,7 @@ module Capybara
             subject, *args = determine_subject(args)
             subject.#{assertion_name}(*args)
           rescue Capybara::ExpectationNotMet => e
-            raise ::Minitest::Assertions, e.message
+            raise ::Minitest::Assertion, e.message
           end
         EOM
       end
@@ -88,7 +88,7 @@ module Capybara
             subject, *args = determine_subject(args)
             subject.#{assertion_name}(*args, &optional_filter_block)
           rescue Capybara::ExpectationNotMet => e
-            raise ::Minitest::Assertions, e.message
+            raise ::Minitest::Assertion, e.message
           end
         EOM
       end

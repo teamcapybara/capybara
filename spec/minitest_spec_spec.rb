@@ -102,6 +102,10 @@ class MinitestSpecTest < Minitest::Spec
     find(:select, 'form_title').must_match_xpath('.//select[@id="form_title"]')
     find(:select, 'form_title').wont_match_xpath('.//select[@id="not_on_page"]')
   end
+
+  it "handles failures" do
+    page.must_have_select('non_existing_form_title')
+  end
 end
 
 RSpec.describe 'capybara/minitest/spec' do
@@ -116,6 +120,8 @@ RSpec.describe 'capybara/minitest/spec' do
     reporter.start
     MinitestSpecTest.run reporter, {}
     reporter.report
-    expect(output.string).to include("15 runs, 38 assertions, 0 failures, 0 errors, 0 skips")
+    expect(output.string).to include("16 runs, 39 assertions, 1 failures, 0 errors, 0 skips")
+    #Make sure error messages are displayed
+    expect(output.string).to include('expected to find select box "non_existing_form_title" but there were no matches')
   end
 end
