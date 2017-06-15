@@ -3,25 +3,22 @@ require 'spec_helper'
 require 'selenium-webdriver'
 require 'shared_selenium_session'
 
+chrome_options = {
+  browser: :chrome,
+  options: ::Selenium::WebDriver::Chrome::Options.new(args: ENV['TRAVIS'] ? ['no-sandbox' ] : [])
+}
+
+if ENV['CAPYBARA_CHROME_HEADLESS']
+  chrome_options[:options].args << 'headless'
+  Selenium::WebDriver::Chrome.path='/usr/bin/google-chrome-beta' if ENV['TRAVIS']
+end
+
 Capybara.register_driver :selenium_chrome do |app|
-  args = ENV['TRAVIS'] ? ['no-sandbox' ] : []
-  if ENV['CAPYBARA_CHROME_HEADLESS']
-    args << 'headless'
-    Selenium::WebDriver::Chrome.path='/usr/bin/google-chrome-beta' if ENV['TRAVIS']
-  end
-  Capybara::Selenium::Driver.new(app, :browser => :chrome, :args => args)
+  Capybara::Selenium::Driver.new(app, chrome_options)
 end
 
 Capybara.register_driver :selenium_chrome_clear_storage do |app|
-  args = ENV['TRAVIS'] ? ['no-sandbox' ] : []
-  if ENV['CAPYBARA_CHROME_HEADLESS']
-    args << 'headless'
-    Selenium::WebDriver::Chrome.path='/usr/bin/google-chrome-beta' if ENV['TRAVIS']
-  end
-  Capybara::Selenium::Driver.new(app, :browser => :chrome,
-                                      :args => args,
-                                      clear_local_storage: true,
-                                      clear_session_storage: true)
+  Capybara::Selenium::Driver.new(app, chrome_options.merge(clear_local_storage: true, clear_session_storage: true))
 end
 
 module TestSessions
