@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'capybara/selector/expression_filter'
 require 'capybara/selector/filter_set'
 require 'capybara/selector/css'
 require 'xpath'
@@ -85,7 +84,7 @@ module Capybara
     def xpath(*expression_filters, &block)
       if block
         @format, @expression = :xpath, block
-        expression_filters.flatten.each { |ef| custom_filters[ef] = IdentityExpressionFilter.new }
+        expression_filters.flatten.each { |ef| custom_filters[ef] = Filters::IdentityExpressionFilter.new }
       end
       format == :xpath ? @expression : nil
     end
@@ -188,13 +187,13 @@ module Capybara
     def filter(name, *types_and_options, &block)
       options = types_and_options.last.is_a?(Hash) ? types_and_options.pop.dup : {}
       types_and_options.each { |k| options[k] = true }
-      custom_filters[name] = Filter.new(name, block, options)
+      custom_filters[name] = Filters::NodeFilter.new(name, block, options)
     end
 
     def expression_filter(name, *types_and_options, &block)
       options = types_and_options.last.is_a?(Hash) ? types_and_options.pop.dup : {}
       types_and_options.each { |k| options[k] = true }
-      custom_filters[name] = ExpressionFilter.new(name, block, options)
+      custom_filters[name] = Filters::ExpressionFilter.new(name, block, options)
     end
 
     def filter_set(name, filters_to_use = nil)
