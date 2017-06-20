@@ -57,16 +57,27 @@ Capybara::SpecHelper.spec '#has_current_path?' do
     expect(@session).to have_current_path('/with_js', url: false)
   end
 
+  it "should default to full url if value is a url" do
+    url = @session.current_url
+    expect(url).to match /with_js$/
+    expect(@session).to have_current_path(url)
+    expect(@session).not_to have_current_path("http://www.not_example.com/with_js")
+  end
+
   it "should ignore the query" do
     @session.visit('/with_js?test=test')
     expect(@session).to have_current_path('/with_js?test=test')
     expect(@session).to have_current_path('/with_js', only_path: true)
+    expect(@session).to have_current_path('/with_js', ignore_query: true)
+    uri = ::Addressable::URI.parse(@session.current_url)
+    uri.query = nil
+    expect(@session).to have_current_path(uri.to_s, ignore_query: true)
   end
 
   it "should not allow url and only_path at the same time" do
     expect {
       expect(@session).to have_current_path('/with_js', url: true, only_path: true)
-      }. to raise_error ArgumentError
+    }.to raise_error ArgumentError
   end
 
   it "should not raise an exception if the current_url is nil" do
@@ -75,12 +86,17 @@ Capybara::SpecHelper.spec '#has_current_path?' do
     # Without only_path option
     expect {
       expect(@session).to have_current_path(nil)
-    }. not_to raise_exception
+    }.not_to raise_exception
 
     # With only_path option
     expect {
       expect(@session).to have_current_path(nil, only_path: true)
-    }. not_to raise_exception
+    }.not_to raise_exception
+
+    # With ignore_query option
+    expect {
+      expect(@session).to have_current_path(nil, ignore_query: true)
+    }.not_to raise_exception
   end
 end
 
@@ -120,6 +136,11 @@ Capybara::SpecHelper.spec '#has_no_current_path?' do
     # With only_path option
     expect {
       expect(@session).not_to have_current_path('/with_js', only_path: true)
+    }. not_to raise_exception
+
+    # With ignore_query option
+    expect {
+      expect(@session).not_to have_current_path('/with_js', ignore_query: true)
     }. not_to raise_exception
   end
 end
