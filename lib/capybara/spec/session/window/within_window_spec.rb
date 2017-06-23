@@ -57,10 +57,10 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
       expect(@session.send(:scopes)).to eq([nil])
     end
 
-    it "should leave correct scopes after execution in case of error" do
+    it "should leave correct scopes after execution in case of error", requires: [:windows, :frames] do
       window = (@session.windows - [@window]).first
       expect do
-        @session.within 'html' do
+        @session.within_frame 'frameOne' do
           @session.within_window(window) {}
         end
       end.to raise_error(Capybara::ScopeError)
@@ -100,6 +100,31 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
         expect(@session).to have_css('#divInPopupOne')
       end
       expect(@session.title).to eq('With Windows')
+    end
+
+    it "should be able to nest within_window" do
+      @session.within_window(->{ @session.title == 'Title of popup two'}) do
+        expect(@session).to have_css('#divInPopupTwo')
+        @session.within_window(->{ @session.title == 'Title of the first popup'}) do
+          expect(@session).to have_css('#divInPopupOne')
+        end
+        expect(@session).to have_css('#divInPopupTwo')
+        expect(@session).not_to have_css('divInPopupOne')
+      end
+      expect(@session).not_to have_css('#divInPopupTwo')
+      expect(@session).not_to have_css('divInPopupOne')
+      expect(@session.title).to eq('With Windows')
+    end
+
+    it "should work inside a normal scope" do
+      expect(@session).to have_css('#openWindow')
+      @session.within(:css, '#scope') do
+        @session.within_window(->{ @session.title == 'Title of the first popup'}) do
+          expect(@session).to have_css('#divInPopupOne')
+        end
+        expect(@session).to have_content('My scoped content')
+        expect(@session).not_to have_css('#openWindow')
+      end
     end
 
     it "should raise error if window wasn't found" do
