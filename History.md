@@ -1,3 +1,11 @@
+# Version 2.14.4
+
+Release date: 2017-06-27
+
+### Fixed
+
+* Fix retrieval of session_options for HaveSelector matcher descriptions - Issue #1883
+
 # Version 2.14.3
 
 Release date: 2017-06-15
