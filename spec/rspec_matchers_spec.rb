@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-RSpec.describe 'Capybara RSpec Matchers', :type => :feature, focus_: true do
+RSpec.describe 'Capybara RSpec Matchers', :type => :feature do
   context "after called on session" do
     it "HaveSelector should allow getting a description of the matcher" do
       visit('/with_html')
