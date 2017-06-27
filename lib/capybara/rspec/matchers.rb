@@ -45,7 +45,13 @@ module Capybara
 
       def session_options
         @context_el ||= nil
-        @context_el ? @context_el.session_options : Capybara.session_options
+        if @context_el.respond_to? :session_options
+          @context_el.session_options
+        elsif @context_el.respond_to? :current_scope
+          @context_el.current_scope.session_options
+        else
+          Capybara.session_options
+        end
       end
     end
 
