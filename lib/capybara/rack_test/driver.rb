@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'rack/test'
 require 'rack/utils'
-require 'mime/types'
+require 'mini_mime'
 require 'nokogiri'
 require 'cgi'
 
