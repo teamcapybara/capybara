@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.summary = "Capybara aims to simplify the process of integration testing Rack applications, such as Rails, Sinatra or Merb"
 
   s.add_runtime_dependency("nokogiri", [">= 1.3.3"])
-  s.add_runtime_dependency("mime-types", [">= 1.16"])
+  s.add_runtime_dependency("mini_mime", [">= 0.1.3"])
   s.add_runtime_dependency("rack", [">= 1.0.0"])
   s.add_runtime_dependency("rack-test", [">= 0.5.4"])
   s.add_runtime_dependency("xpath", ["~> 2.0"])
