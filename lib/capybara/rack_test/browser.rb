@@ -22,6 +22,11 @@ class Capybara::RackTest::Browser
     process_and_follow_redirects(:get, path, attributes)
   end
 
+  def refresh
+    reset_cache!
+    request(last_request.fullpath, last_request.env)
+  end
+
   def submit(method, path, attributes)
     path = request_path if not path or path.empty?
     process_and_follow_redirects(method, path, attributes, {'HTTP_REFERER' => current_url})

@@ -17,6 +17,7 @@ class TestApp < Sinatra::Base
   set :raise_errors, true
   set :show_exceptions, false
 
+  @@form_post_count = 0
   # Also check lib/capybara/spec/views/*.erb for pages not listed here
 
   get '/' do
@@ -147,7 +148,8 @@ class TestApp < Sinatra::Base
   end
 
   post '/form' do
-    '<pre id="results">' + params[:form].to_yaml + '</pre>'
+    @@form_post_count += 1
+    '<pre id="results">' + params[:form].merge({"post_count" => @@form_post_count}).to_yaml + '</pre>'
   end
 
   post '/upload_empty' do
