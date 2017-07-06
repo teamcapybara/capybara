@@ -58,7 +58,7 @@ module Capybara
     ]
     SESSION_METHODS = [
       :body, :html, :source, :current_url, :current_host, :current_path,
-      :execute_script, :evaluate_script, :visit, :go_back, :go_forward,
+      :execute_script, :evaluate_script, :visit, :refresh, :go_back, :go_forward,
       :within, :within_element, :within_fieldset, :within_table, :within_frame, :switch_to_frame,
       :current_window, :windows, :open_new_window, :switch_to_window, :within_window, :window_opened_by,
       :save_page, :save_and_open_page, :save_screenshot,
@@ -267,6 +267,15 @@ module Capybara
       visit_uri = uri_base.merge(visit_uri) unless uri_base.nil?
 
       driver.visit(visit_uri.to_s)
+    end
+
+    ##
+    #
+    # Refresh the page
+    #
+    def refresh
+      raise_server_error!
+      driver.refresh
     end
 
     ##

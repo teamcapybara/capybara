@@ -67,6 +67,13 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.navigate.to(path)
   end
 
+  def refresh
+    accept_modal(wait: 0.1) do
+      browser.navigate.refresh
+    end
+  rescue Capybara::ModalNotFound
+  end
+
   def go_back
     browser.navigate.back
   end

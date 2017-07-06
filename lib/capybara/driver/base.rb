@@ -10,6 +10,10 @@ class Capybara::Driver::Base
     raise NotImplementedError
   end
 
+  def refresh
+    raise NotImplementedError
+  end
+
   def find_xpath(query)
     raise NotImplementedError
   end
