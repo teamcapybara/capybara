@@ -2,7 +2,10 @@
 module Capybara
   module RSpecMatchers
     class Matcher
-      include ::RSpec::Matchers::Composable if defined?(::RSpec::Expectations::Version) && (Gem::Version.new(RSpec::Expectations::Version::STRING) >= Gem::Version.new('3.0'))
+      if defined?(::RSpec::Expectations::Version) && (Gem::Version.new(RSpec::Expectations::Version::STRING) >= Gem::Version.new('3.0'))
+        require 'capybara/rspec/compound'
+        include ::Capybara::RSpecMatchers::Compound
+      end
 
       attr_reader :failure_message, :failure_message_when_negated
 
