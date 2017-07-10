@@ -68,7 +68,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def refresh
-    accept_modal(wait: 0.1) do
+    accept_modal(nil, wait: 0.1) do
       browser.navigate.refresh
     end
   rescue Capybara::ModalNotFound
