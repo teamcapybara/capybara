@@ -19,7 +19,7 @@
   et dolore magna aliqua. Ut enim ad minim veniam,
   quis nostrud exercitation <a href="/foo" id="foo">ullamco</a> laboris nisi
   ut aliquip ex ea commodo consequat.
-  <a href="/with_simple_html" aria-label="Go to simple"><img width="20" height="20" alt="awesome image" /></a>
+  <a href="/with_simple_html" aria-label="Go to simple"><img id="first_image" width="20" height="20" alt="awesome image" /></a>
 </p>
 
 <p class="para" id="second">
@@ -120,4 +120,30 @@ banana</textarea>
 <div>
   <a id="link_placeholder">No href</a>
   <a id="link_blank_href" href="">Blank href</a>
+</div>
+
+<div id="ancestor3">
+  Ancestor
+  <div id="ancestor2">
+    Ancestor
+    <div id="ancestor1">
+      Ancestor
+      <div id="child">Child</div>
+    </div>
+  </div>
+  <button id="ancestor_button" type="submit" disabled>
+    <img id="button_img" width="20" height="20" alt="button img"/>
+  </button>
+</div>
+
+<div id="sibling_test">
+  <div id="sibling_wrapper" data-pre=true>
+    <div id="pre_sibling" data-pre=true>Pre Sibling</div>
+    <div id="mid_sibling">Mid Sibling</div>
+    <div id="post_sibling" data-post=true>Post Sibling</div>
+  </div>
+  <div id="other_sibling_wrapper" data-post=true>
+    <div data-pre=true>Pre Sibling</div>
+    <div data-post=true>Post Sibling</div>
+  </div>
 </div>

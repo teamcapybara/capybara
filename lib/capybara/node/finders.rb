@@ -34,22 +34,66 @@ module Capybara
         else
           args.push(session_options: session_options)
         end
-        query = Capybara::Queries::SelectorQuery.new(*args, &optional_filter_block)
-        synchronize(query.wait) do
-          if (query.match == :smart or query.match == :prefer_exact)
-            result = query.resolve_for(self, true)
-            result = query.resolve_for(self, false) if result.empty? && query.supports_exact? && !query.exact?
-          else
-            result = query.resolve_for(self)
-          end
-          if query.match == :one or query.match == :smart and result.size > 1
-            raise Capybara::Ambiguous.new("Ambiguous match, found #{result.size} elements matching #{query.description}")
-          end
-          if result.empty?
-            raise Capybara::ElementNotFound.new("Unable to find #{query.description}")
-          end
-          result.first
-        end.tap(&:allow_reload!)
+        synced_resolve Capybara::Queries::SelectorQuery.new(*args, &optional_filter_block)
+      end
+
+      ##
+      #
+      # Find an {Capybara::Node::Element} based on the given arguments that is also an ancestor of the element called on. +ancestor+ will raise an error if the element
+      # is not found.
+      #
+      # +ancestor+ takes the same options as +find+.
+      #
+      #     element.ancestor('#foo').find('.bar')
+      #     element.ancestor(:xpath, './/div[contains(., "bar")]')
+      #     element.ancestor('ul', text: 'Quox').click_link('Delete')
+      #
+      # @param (see Capybara::Node::Finders#find)
+      #
+      # @!macro waiting_behavior
+      #
+      # @option options [Boolean] match        The matching strategy to use.
+      #
+      # @return [Capybara::Node::Element]      The found element
+      # @raise  [Capybara::ElementNotFound]    If the element can't be found before time expires
+      #
+      def ancestor(*args, &optional_filter_block)
+        if args.last.is_a? Hash
+          args.last[:session_options] = session_options
+        else
+          args.push(session_options: session_options)
+        end
+        synced_resolve Capybara::Queries::AncestorQuery.new(*args, &optional_filter_block)
+      end
+
+      ##
+      #
+      # Find an {Capybara::Node::Element} based on the given arguments that is also a sibling of the element called on. +sibling+ will raise an error if the element
+      # is not found.
+      #
+      #
+      # +sibling+ takes the same options as +find+.
+      #
+      #     element.sibling('#foo').find('.bar')
+      #     element.sibling(:xpath, './/div[contains(., "bar")]')
+      #     element.sibling('ul', text: 'Quox').click_link('Delete')
+      #
+      # @param (see Capybara::Node::Finders#find)
+      #
+      # @macro waiting_behavior
+      #
+      # @option options [Boolean] match        The matching strategy to use.
+      #
+      # @return [Capybara::Node::Element]      The found element
+      # @raise  [Capybara::ElementNotFound]    If the element can't be found before time expires
+      #
+      def sibling(*args, &optional_filter_block)
+        if args.last.is_a? Hash
+          args.last[:session_options] = session_options
+        else
+          args.push(session_options: session_options)
+        end
+        synced_resolve Capybara::Queries::SiblingQuery.new(*args, &optional_filter_block)
       end
 
       ##
@@ -252,6 +296,25 @@ module Capybara
         nil
       end
 
+      private
+
+      def synced_resolve(query)
+        synchronize(query.wait) do
+          if (query.match == :smart or query.match == :prefer_exact)
+            result = query.resolve_for(self, true)
+            result = query.resolve_for(self, false) if result.empty? && query.supports_exact? && !query.exact?
+          else
+            result = query.resolve_for(self)
+          end
+          if query.match == :one or query.match == :smart and result.size > 1
+            raise Capybara::Ambiguous.new("Ambiguous match, found #{result.size} elements matching #{query.description}")
+          end
+          if result.empty?
+            raise Capybara::ElementNotFound.new("Unable to find #{query.description}")
+          end
+          result.first
+        end.tap(&:allow_reload!)
+      end
     end
   end
 end
