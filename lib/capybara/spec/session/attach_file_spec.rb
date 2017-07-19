@@ -81,7 +81,7 @@ Capybara::SpecHelper.spec "#attach_file" do
 
   context "with a locator that doesn't exist" do
     it "should raise an error" do
-      msg = "Unable to find file field \"does not exist\" that is not disabled"
+      msg = "Unable to find visible file field \"does not exist\" that is not disabled"
       expect do
         @session.attach_file('does not exist', @test_file_path)
       end.to raise_error(Capybara::ElementNotFound, msg)

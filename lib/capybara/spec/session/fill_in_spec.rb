@@ -156,7 +156,7 @@ Capybara::SpecHelper.spec "#fill_in" do
     before { Capybara.ignore_hidden_elements = true }
     after  { Capybara.ignore_hidden_elements = false }
     it "should not find a hidden field" do
-      msg = "Unable to find field \"Super Secret\" that is not disabled"
+      msg = "Unable to find visible field \"Super Secret\" that is not disabled"
       expect do
         @session.fill_in('Super Secret', with: '777')
       end.to raise_error(Capybara::ElementNotFound, msg)
@@ -165,7 +165,7 @@ Capybara::SpecHelper.spec "#fill_in" do
 
   context "with a locator that doesn't exist" do
     it "should raise an error" do
-      msg = "Unable to find field \"does not exist\" that is not disabled"
+      msg = "Unable to find visible field \"does not exist\" that is not disabled"
       expect do
         @session.fill_in('does not exist', with: 'Blah blah')
       end.to raise_error(Capybara::ElementNotFound, msg)
