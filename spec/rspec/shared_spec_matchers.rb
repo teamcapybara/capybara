@@ -640,11 +640,11 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     let(:html) { '<p><label>Text field<input type="text" value="some value"/></label></p>' }
 
     it "gives proper description" do
-      expect(have_field('Text field').description).to eq("have field \"Text field\"")
+      expect(have_field('Text field').description).to eq("have field \"Text field\" that is not disabled")
     end
 
     it "gives proper description for a given value" do
-      expect(have_field('Text field', with: 'some value').description).to eq("have field \"Text field\" with value \"some value\"")
+      expect(have_field('Text field', with: 'some value').description).to eq("have field \"Text field\" that is not disabled with value \"some value\"")
     end
 
     it "passes if there is such a field" do
@@ -688,7 +688,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     end
 
     it "gives proper description" do
-      expect(have_checked_field('it is checked').description).to eq("have field \"it is checked\" that is checked")
+      expect(have_checked_field('it is checked').description).to eq("have field \"it is checked\" that is checked and not disabled")
     end
 
     context "with should" do
@@ -737,7 +737,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     end
 
     it "gives proper description" do
-      expect(have_unchecked_field('unchecked field').description).to eq("have field \"unchecked field\" that is not checked")
+      expect(have_unchecked_field('unchecked field').description).to eq("have field \"unchecked field\" that is not checked and not disabled")
     end
 
     context "with should" do
@@ -783,11 +783,11 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     let(:html) { '<label>Select Box<select></select></label>' }
 
     it "gives proper description" do
-      expect(have_select('Select Box').description).to eq("have select box \"Select Box\"")
+      expect(have_select('Select Box').description).to eq("have select box \"Select Box\" that is not disabled")
     end
 
     it "gives proper description for a given selected value" do
-      expect(have_select('Select Box', selected: 'some value').description).to eq("have select box \"Select Box\" with \"some value\" selected")
+      expect(have_select('Select Box', selected: 'some value').description).to eq('have select box "Select Box" that is not disabled with "some value" selected')
     end
 
     it "passes if there is such a select" do
