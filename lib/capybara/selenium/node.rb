@@ -61,7 +61,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
         if options[:clear] == :backspace
           # Clear field by sending the correct number of backspace keys.
           backspaces = [:backspace] * self.value.to_s.length
-          native.send_keys(*(backspaces + [value.to_s]))
+          native.send_keys(*([:down] + backspaces + [value.to_s]))
         elsif options[:clear] == :none
           native.send_keys(value.to_s)
         elsif options[:clear].is_a? Array

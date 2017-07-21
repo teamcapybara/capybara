@@ -71,6 +71,13 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         expect(@session.find(:fillable_field, 'form_first_name').value).to eq('Harry')
       end
 
+      it 'should clear an existing value even if a cursor is autofocused to a field' do
+        @session.visit('/form')
+        @session.fill_in('form_last_name', with: 'Potter',
+                          fill_options: { clear: :backspace} )
+        expect(@session.find(:fillable_field, 'form_last_name').value).to eq('Potter')
+      end
+
       it 'should only trigger onchange once' do
         @session.visit('/with_js')
         @session.fill_in('with_change_event', with: 'some value',
