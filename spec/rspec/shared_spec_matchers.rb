@@ -11,7 +11,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
 
   describe "have_css matcher" do
     it "gives proper description" do
-      expect(have_css('h1').description).to eq("have css \"h1\"")
+      expect(have_css('h1').description).to eq("have visible css \"h1\"")
     end
 
     context "on a string" do
@@ -23,7 +23,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_css? returns false" do
           expect do
             expect("<h1>Text</h1>").to have_css('h2')
-          end.to raise_error(/expected to find css "h2" but there were no matches/)
+          end.to raise_error(/expected to find visible css "h2" but there were no matches/)
         end
 
         it "passes if matched node count equals expected count" do
@@ -33,25 +33,25 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if matched node count does not equal expected count" do
           expect do
             expect("<h1>Text</h1>").to have_css('h1', count: 2)
-          end.to raise_error("expected to find css \"h1\" 2 times, found 1 match: \"Text\"")
+          end.to raise_error("expected to find visible css \"h1\" 2 times, found 1 match: \"Text\"")
         end
 
         it "fails if matched node count is less than expected minimum count" do
           expect do
             expect("<h1>Text</h1>").to have_css('p', minimum: 1)
-          end.to raise_error("expected to find css \"p\" at least 1 time but there were no matches")
+          end.to raise_error("expected to find visible css \"p\" at least 1 time but there were no matches")
         end
 
         it "fails if matched node count is more than expected maximum count" do
           expect do
             expect("<h1>Text</h1><h1>Text</h1><h1>Text</h1>").to have_css('h1', maximum: 2)
-          end.to raise_error('expected to find css "h1" at most 2 times, found 3 matches: "Text", "Text", "Text"')
+          end.to raise_error('expected to find visible css "h1" at most 2 times, found 3 matches: "Text", "Text", "Text"')
         end
 
         it "fails if matched node count does not belong to expected range" do
           expect do
             expect("<h1>Text</h1>").to have_css('h1', between: 2..3)
-          end.to raise_error("expected to find css \"h1\" between 2 and 3 times, found 1 match: \"Text\"")
+          end.to raise_error("expected to find visible css \"h1\" between 2 and 3 times, found 1 match: \"Text\"")
         end
 
       end
@@ -64,7 +64,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_no_css? returns false" do
           expect do
             expect("<h1>Text</h1>").not_to have_css('h1')
-          end.to raise_error(/expected not to find css "h1"/)
+          end.to raise_error(/expected not to find visible css "h1"/)
         end
 
         it "passes if matched node count does not equal expected count" do
@@ -74,7 +74,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if matched node count equals expected count" do
           expect do
             expect("<h1>Text</h1>").not_to have_css('h1', count: 1)
-          end.to raise_error(/expected not to find css "h1"/)
+          end.to raise_error(/expected not to find visible css "h1"/)
         end
       end
 
@@ -97,7 +97,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_css? returns false" do
           expect do
             expect(page).to have_css('h1#doesnotexist')
-          end.to raise_error(/expected to find css "h1#doesnotexist" but there were no matches/)
+          end.to raise_error(/expected to find visible css "h1#doesnotexist" but there were no matches/)
         end
       end
 
@@ -109,7 +109,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_no_css? returns false" do
           expect do
             expect(page).not_to have_css('h1')
-          end.to raise_error(/expected not to find css "h1"/)
+          end.to raise_error(/expected not to find visible css "h1"/)
         end
       end
     end
@@ -117,7 +117,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
 
   describe "have_xpath matcher" do
     it "gives proper description" do
-      expect(have_xpath('//h1').description).to eq("have xpath \"\/\/h1\"")
+      expect(have_xpath('//h1').description).to eq("have visible xpath \"\/\/h1\"")
     end
 
     context "on a string" do
@@ -129,7 +129,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_xpath? returns false" do
           expect do
             expect("<h1>Text</h1>").to have_xpath('//h2')
-          end.to raise_error(%r(expected to find xpath "//h2" but there were no matches))
+          end.to raise_error(%r(expected to find visible xpath "//h2" but there were no matches))
         end
       end
 
@@ -141,7 +141,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_no_xpath? returns false" do
           expect do
             expect("<h1>Text</h1>").not_to have_xpath('//h1')
-          end.to raise_error(%r(expected not to find xpath "//h1"))
+          end.to raise_error(%r(expected not to find visible xpath "//h1"))
         end
       end
 
@@ -164,7 +164,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_xpath? returns false" do
           expect do
             expect(page).to have_xpath("//h1[@id='doesnotexist']")
-          end.to raise_error(%r(expected to find xpath "//h1\[@id='doesnotexist'\]" but there were no matches))
+          end.to raise_error(%r(expected to find visible xpath "//h1\[@id='doesnotexist'\]" but there were no matches))
         end
       end
 
@@ -176,7 +176,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_no_xpath? returns false" do
           expect do
             expect(page).not_to have_xpath('//h1')
-          end.to raise_error(%r(expected not to find xpath "//h1"))
+          end.to raise_error(%r(expected not to find visible xpath "//h1"))
         end
       end
     end
@@ -186,7 +186,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     it "gives proper description" do
       matcher = have_selector('//h1')
       expect("<h1>Text</h1>").to matcher
-      expect(matcher.description).to eq("have xpath \"//h1\"")
+      expect(matcher.description).to eq("have visible xpath \"//h1\"")
     end
 
     context "on a string" do
@@ -198,7 +198,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_selector? returns false" do
           expect do
             expect("<h1>Text</h1>").to have_selector('//h2')
-          end.to raise_error(%r(expected to find xpath "//h2" but there were no matches))
+          end.to raise_error(%r(expected to find visible xpath "//h2" but there were no matches))
         end
       end
 
@@ -210,7 +210,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_no_selector? returns false" do
           expect do
             expect("<h1>Text</h1>").not_to have_selector(:css, 'h1')
-          end.to raise_error(%r(expected not to find css "h1"))
+          end.to raise_error(%r(expected not to find visible css "h1"))
         end
       end
     end
@@ -228,13 +228,13 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_selector? returns false" do
           expect do
             expect(page).to have_selector("//h1[@id='doesnotexist']")
-          end.to raise_error(%r(expected to find xpath "//h1\[@id='doesnotexist'\]" but there were no matches))
+          end.to raise_error(%r(expected to find visible xpath "//h1\[@id='doesnotexist'\]" but there were no matches))
         end
 
         it "includes text in error message" do
           expect do
             expect(page).to have_selector("//h1", text: 'wrong text')
-          end.to raise_error(%r(expected to find xpath "//h1" with text "wrong text" but there were no matches))
+          end.to raise_error(%r(expected to find visible xpath "//h1" with text "wrong text" but there were no matches))
         end
       end
 
@@ -246,7 +246,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_no_selector? returns false" do
           expect do
             expect(page).not_to have_selector(:css, 'h1', text: 'test')
-          end.to raise_error(%r(expected not to find css "h1" with text "test"))
+          end.to raise_error(%r(expected not to find visible css "h1" with text "test"))
         end
       end
     end
@@ -484,7 +484,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     let(:html) { '<a href="#">Just a link</a><a href="#">Another link</a>' }
 
     it "gives proper description" do
-      expect(have_link('Just a link').description).to eq("have link \"Just a link\"")
+      expect(have_link('Just a link').description).to eq("have visible link \"Just a link\"")
     end
 
     it "passes if there is such a button" do
@@ -494,7 +494,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     it "fails if there is no such button" do
       expect do
         expect(html).to have_link('No such Link')
-      end.to raise_error(/expected to find link "No such Link"/)
+      end.to raise_error(/expected to find visible link "No such Link"/)
     end
 
     it "supports compounding" do
@@ -618,7 +618,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     let(:html) { '<button>A button</button><input type="submit" value="Another button"/>' }
 
     it "gives proper description" do
-      expect(have_button('A button').description).to eq("have button \"A button\"")
+      expect(have_button('A button').description).to eq("have visible button \"A button\"")
     end
 
     it "passes if there is such a button" do
@@ -628,7 +628,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     it "fails if there is no such button" do
       expect do
         expect(html).to have_button('No such Button')
-      end.to raise_error(/expected to find button "No such Button"/)
+      end.to raise_error(/expected to find visible button "No such Button"/)
     end
 
     it "supports compounding" do
@@ -640,11 +640,11 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     let(:html) { '<p><label>Text field<input type="text" value="some value"/></label></p>' }
 
     it "gives proper description" do
-      expect(have_field('Text field').description).to eq("have field \"Text field\"")
+      expect(have_field('Text field').description).to eq("have visible field \"Text field\" that is not disabled")
     end
 
     it "gives proper description for a given value" do
-      expect(have_field('Text field', with: 'some value').description).to eq("have field \"Text field\" with value \"some value\"")
+      expect(have_field('Text field', with: 'some value').description).to eq("have visible field \"Text field\" that is not disabled with value \"some value\"")
     end
 
     it "passes if there is such a field" do
@@ -658,13 +658,13 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     it "fails if there is no such field" do
       expect do
         expect(html).to have_field('No such Field')
-      end.to raise_error(/expected to find field "No such Field"/)
+      end.to raise_error(/expected to find visible field "No such Field"/)
     end
 
     it "fails if there is such field but with false value" do
       expect do
         expect(html).to have_field('Text field', with: 'false value')
-      end.to raise_error(/expected to find field "Text field"/)
+      end.to raise_error(/expected to find visible field "Text field"/)
     end
 
     it "treats a given value as a string" do
@@ -688,7 +688,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     end
 
     it "gives proper description" do
-      expect(have_checked_field('it is checked').description).to eq("have field \"it is checked\" that is checked")
+      expect(have_checked_field('it is checked').description).to eq("have visible field \"it is checked\" that is checked and not disabled")
     end
 
     context "with should" do
@@ -699,13 +699,13 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
       it "fails if there is such a field but it is not checked" do
         expect do
           expect(html).to have_checked_field('unchecked field')
-        end.to raise_error(/expected to find field "unchecked field"/)
+        end.to raise_error(/expected to find visible field "unchecked field"/)
       end
 
       it "fails if there is no such field" do
         expect do
           expect(html).to have_checked_field('no such field')
-        end.to raise_error(/expected to find field "no such field"/)
+        end.to raise_error(/expected to find visible field "no such field"/)
       end
     end
 
@@ -713,7 +713,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
       it "fails if there is such a field and it is checked" do
         expect do
           expect(html).not_to have_checked_field('it is checked')
-        end.to raise_error(/expected not to find field "it is checked"/)
+        end.to raise_error(/expected not to find visible field "it is checked"/)
       end
 
       it "passes if there is such a field but it is not checked" do
@@ -737,7 +737,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     end
 
     it "gives proper description" do
-      expect(have_unchecked_field('unchecked field').description).to eq("have field \"unchecked field\" that is not checked")
+      expect(have_unchecked_field('unchecked field').description).to eq("have visible field \"unchecked field\" that is not checked and not disabled")
     end
 
     context "with should" do
@@ -748,13 +748,13 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
       it "fails if there is such a field but it is checked" do
         expect do
           expect(html).to have_unchecked_field('it is checked')
-        end.to raise_error(/expected to find field "it is checked"/)
+        end.to raise_error(/expected to find visible field "it is checked"/)
       end
 
       it "fails if there is no such field" do
         expect do
           expect(html).to have_unchecked_field('no such field')
-        end.to raise_error(/expected to find field "no such field"/)
+        end.to raise_error(/expected to find visible field "no such field"/)
       end
     end
 
@@ -762,7 +762,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
       it "fails if there is such a field and it is not checked" do
         expect do
           expect(html).not_to have_unchecked_field('unchecked field')
-        end.to raise_error(/expected not to find field "unchecked field"/)
+        end.to raise_error(/expected not to find visible field "unchecked field"/)
       end
 
       it "passes if there is such a field but it is checked" do
@@ -783,11 +783,11 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     let(:html) { '<label>Select Box<select></select></label>' }
 
     it "gives proper description" do
-      expect(have_select('Select Box').description).to eq("have select box \"Select Box\"")
+      expect(have_select('Select Box').description).to eq("have visible select box \"Select Box\" that is not disabled")
     end
 
     it "gives proper description for a given selected value" do
-      expect(have_select('Select Box', selected: 'some value').description).to eq("have select box \"Select Box\" with \"some value\" selected")
+      expect(have_select('Select Box', selected: 'some value').description).to eq('have visible select box "Select Box" that is not disabled with "some value" selected')
     end
 
     it "passes if there is such a select" do
@@ -797,7 +797,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     it "fails if there is no such select" do
       expect do
         expect(html).to have_select('No such Select box')
-      end.to raise_error(/expected to find select box "No such Select box"/)
+      end.to raise_error(/expected to find visible select box "No such Select box"/)
     end
 
     it "supports compounding" do
@@ -809,7 +809,14 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     let(:html) { '<table><caption>Lovely table</caption></table>' }
 
     it "gives proper description" do
-      expect(have_table('Lovely table').description).to eq("have table \"Lovely table\"")
+      expect(have_table('Lovely table').description).to eq("have visible table \"Lovely table\"")
+    end
+
+    it "gives proper description when :visible option passed" do
+      expect(have_table('Lovely table', visible: true).description).to eq("have visible table \"Lovely table\"")
+      expect(have_table('Lovely table', visible: :hidden).description).to eq("have non-visible table \"Lovely table\"")
+      expect(have_table('Lovely table', visible: :all).description).to eq("have table \"Lovely table\"")
+      expect(have_table('Lovely table', visible: false).description).to eq("have table \"Lovely table\"")
     end
 
     it "passes if there is such a select" do
@@ -819,7 +826,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
     it "fails if there is no such select" do
       expect do
         expect(html).to have_table('No such Table')
-      end.to raise_error(/expected to find table "No such Table"/)
+      end.to raise_error(/expected to find visible table "No such Table"/)
     end
 
     it "supports compounding" do

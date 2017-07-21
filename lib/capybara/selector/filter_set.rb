@@ -25,7 +25,14 @@ module Capybara
       end
 
       def description(options={})
-        @descriptions.map {|desc| desc.call(options).to_s }.join
+        options_with_defaults = options.dup
+        filters.each do |name, filter|
+          options_with_defaults[name] = filter.default if filter.default? && !options_with_defaults.has_key?(name)
+        end
+
+        @descriptions.map do |desc|
+          desc.call(options_with_defaults).to_s
+        end.join
       end
 
       def filters

@@ -202,6 +202,7 @@ module Capybara
       f_set.filters.each do |n, filter|
         custom_filters[n] = filter if filters_to_use.nil? || filters_to_use.include?(n)
       end
+
       f_set.descriptions.each { |desc| @filter_set.describe(&desc) }
     end
 

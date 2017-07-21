@@ -43,7 +43,10 @@ module Capybara
       def label; selector.label or selector.name; end
 
       def description
-        @description = String.new("#{label} #{locator.inspect}")
+        @description = String.new()
+        @description << "visible " if visible == :visible
+        @description << "non-visible " if visible == :hidden
+        @description << "#{label} #{locator.inspect}"
         @description << " with#{" exact" if exact_text == true} text #{options[:text].inspect}" if options[:text]
         @description << " with exact text #{options[:exact_text]}" if options[:exact_text].is_a?(String)
         @description << " with id #{options[:id]}" if options[:id]
