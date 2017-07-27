@@ -27,12 +27,12 @@ Capybara::SpecHelper.spec '#become_closed', requires: [:windows, :js] do
 
     it 'should raise error if value of :wait is less than timeout' do
       @session.within_window @other_window do
-        @session.execute_script('setTimeout(function(){ window.close(); }, 700);')
+        @session.execute_script('setTimeout(function(){ window.close(); }, 1000);')
       end
       Capybara.using_wait_time 2 do
         expect do
-          expect(@other_window).to become_closed(wait: 0.4)
-        end.to raise_error(RSpec::Expectations::ExpectationNotMetError, /\Aexpected #<Window @handle=".+"> to become closed after 0.4 seconds\Z/)
+          expect(@other_window).to become_closed(wait: 0.2)
+        end.to raise_error(RSpec::Expectations::ExpectationNotMetError, /\Aexpected #<Window @handle=".+"> to become closed after 0.2 seconds\Z/)
       end
     end
   end
