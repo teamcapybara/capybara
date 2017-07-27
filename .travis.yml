@@ -89,6 +89,9 @@ matrix:
     - gemfile: Gemfile
       rvm: 2.5.1
       env: W3C=true HEADLESS=true
+    - gemfile: gemfiles/Gemfile.gumbo
+      rvm: 2.5.3
+      script: bundle exec rake spec_rack
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-marionette

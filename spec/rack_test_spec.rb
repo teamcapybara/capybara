@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+nokogumbo_required = begin
+                       require 'nokogumbo'
+                       true
+                     rescue LoadError
+                       false
+                     end
 
 module TestSessions
   RackTest = Capybara::Session.new(:rack_test, TestApp)
@@ -228,6 +234,15 @@ RSpec.describe Capybara::RackTest::Driver do
         end.to raise_error(Capybara::InfiniteRedirectError)
       end
     end
+  end
+end
+
+RSpec.describe 'Capybara::String' do
+  it 'should use gumbo' do
+    skip 'Only  valid if gumbo is included' unless nokogumbo_required
+    allow(Nokogiri).to receive(:HTML5).and_call_original
+    Capybara.string('<div id=test_div></div>')
+    expect(Nokogiri).to have_received(:HTML5)
   end
 end
 

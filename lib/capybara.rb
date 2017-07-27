@@ -366,9 +366,18 @@ module Capybara
     # @return [Nokogiri::HTML::Document]      HTML document
     #
     def HTML(html) # rubocop:disable Naming/MethodName
-      Nokogiri::HTML(html).tap do |document|
-        document.xpath('//textarea').each do |textarea|
-          textarea['_capybara_raw_value'] = textarea.content.sub(/\A\n/, '')
+      if Nokogiri.respond_to?(:HTML5) # Nokogumbo installed
+        Nokogiri::HTML5(html).tap do |document|
+          document.xpath('//textarea').each do |textarea|
+            # The Nokogumbo HTML5 parser already returns spec compliant contents
+            textarea['_capybara_raw_value'] = textarea.content
+          end
+        end
+      else
+        Nokogiri::HTML(html).tap do |document|
+          document.xpath('//textarea').each do |textarea|
+            textarea['_capybara_raw_value'] = textarea.content.sub(/\A\n/, '')
+          end
         end
       end
     end
