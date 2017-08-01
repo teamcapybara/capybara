@@ -141,7 +141,7 @@ private
 
   # a reference to the select node if this is an option node
   def select_node
-    find_xpath('./ancestor::select').first
+    find_xpath('./ancestor::select[1]').first
   end
 
   def type

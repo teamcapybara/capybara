@@ -18,7 +18,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
 
   def value
     if tag_name == "select" and multiple?
-      native.find_elements(:xpath, ".//option").select { |n| n.selected? }.map { |n| n[:value] || n.text }
+      native.find_elements(:css, "option:checked").map { |n| n[:value] || n.text }
     else
       native[:value]
     end
@@ -38,64 +38,53 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def set(value, options={})
     tag_name = self.tag_name
     type = self[:type]
+
     if (Array === value) && !multiple?
       raise ArgumentError.new "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"
     end
-    if tag_name == 'input' and type == 'radio'
-      click
-    elsif tag_name == 'input' and type == 'checkbox'
-      click if value ^ native.attribute('checked').to_s.eql?("true")
-    elsif tag_name == 'input' and type == 'file'
-      path_names = value.to_s.empty? ? [] : value
-      if driver.chrome?
-        native.send_keys(Array(path_names).join("\n"))
-      else
-        native.send_keys(*path_names)
-      end
-    elsif tag_name == 'textarea' or tag_name == 'input'
-      if readonly?
-        warn "Attempt to set readonly element with value: #{value} \n *This will raise an exception in a future version of Capybara"
-      elsif value.to_s.empty?
-        native.clear
-      else
-        if options[:clear] == :backspace
-          # Clear field by sending the correct number of backspace keys.
-          backspaces = [:backspace] * self.value.to_s.length
-          native.send_keys(*(backspaces + [value.to_s]))
-        elsif options[:clear] == :none
-          native.send_keys(value.to_s)
-        elsif options[:clear].is_a? Array
-          native.send_keys(*options[:clear], value.to_s)
+
+    case tag_name
+    when 'input'
+      case type
+      when 'radio'
+        click
+      when 'checkbox'
+        click if value ^ native.attribute('checked').to_s.eql?("true")
+      when 'file'
+        path_names = value.to_s.empty? ? [] : value
+        if driver.chrome?
+          native.send_keys(Array(path_names).join("\n"))
         else
-          # Clear field by JavaScript assignment of the value property.
-          # Script can change a readonly element which user input cannot, so
-          # don't execute if readonly.
-          driver.execute_script "arguments[0].value = ''", self
+          native.send_keys(*path_names)
+        end
+      else
+        set_text(value, options)
+      end
+    when 'textarea'
+      set_text(value, options)
+    else
+      if content_editable?
+        #ensure we are focused on the element
+        click
+
+        script = <<-JS
+          var range = document.createRange();
+          var sel = window.getSelection();
+          arguments[0].focus();
+          range.selectNodeContents(arguments[0]);
+          sel.removeAllRanges();
+          sel.addRange(range);
+        JS
+        driver.execute_script script, self
+
+        if (driver.chrome?) || (driver.firefox? && !driver.marionette?)
+          # chromedriver raises a can't focus element for child elements if we use native.send_keys
+          # we've already focused it so just use action api
+          driver.browser.action.send_keys(value.to_s).perform
+        else
+          # action api is really slow here just use native.send_keys
           native.send_keys(value.to_s)
         end
-      end
-    elsif native.attribute('isContentEditable')
-      #ensure we are focused on the element
-      native.click
-
-      script = <<-JS
-        var range = document.createRange();
-        var sel = window.getSelection();
-        arguments[0].focus();
-        range.selectNodeContents(arguments[0]);
-        sel.removeAllRanges();
-        sel.addRange(range);
-      JS
-      driver.execute_script script, self
-
-      if (driver.chrome?) ||
-         (driver.firefox? && !driver.marionette?)
-        # chromedriver raises a can't focus element for child elements if we use native.send_keys
-        # we've already focused it so just use action api
-        driver.browser.action.send_keys(value.to_s).perform
-      else
-        # action api is really slow here just use native.send_keys
-        native.send_keys(value.to_s)
       end
     end
   end
@@ -105,9 +94,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def unselect_option
-    if select_node['multiple'] != 'multiple' and select_node['multiple'] != 'true'
-      raise Capybara::UnselectNotAllowed, "Cannot unselect option from single select box."
-    end
+    raise Capybara::UnselectNotAllowed, "Cannot unselect option from single select box." if !select_node.multiple?
     native.click if selected?
   end
 
@@ -173,6 +160,10 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     multiple and multiple != "false"
   end
 
+  def content_editable?
+    native.attribute('isContentEditable')
+  end
+
   def find_xpath(locator)
     native.find_elements(:xpath, locator).map { |n| self.class.new(driver, n) }
   end
@@ -212,6 +203,30 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
 private
   # a reference to the select node if this is an option node
   def select_node
-    find_xpath('./ancestor::select').first
+    find_xpath('./ancestor::select[1]').first
+  end
+
+  def set_text(value, options)
+    if readonly?
+      warn "Attempt to set readonly element with value: #{value} \n *This will raise an exception in a future version of Capybara"
+    elsif value.to_s.empty?
+      native.clear
+    else
+      if options[:clear] == :backspace
+        # Clear field by sending the correct number of backspace keys.
+        backspaces = [:backspace] * self.value.to_s.length
+        native.send_keys(*(backspaces + [value.to_s]))
+      elsif options[:clear] == :none
+        native.send_keys(value.to_s)
+      elsif options[:clear].is_a? Array
+        native.send_keys(*options[:clear], value.to_s)
+      else
+        # Clear field by JavaScript assignment of the value property.
+        # Script can change a readonly element which user input cannot, so
+        # don't execute if readonly.
+        driver.execute_script "arguments[0].value = ''", self
+        native.send_keys(value.to_s)
+      end
+    end
   end
 end
