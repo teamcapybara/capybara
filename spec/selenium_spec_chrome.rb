@@ -3,38 +3,34 @@ require 'spec_helper'
 require 'selenium-webdriver'
 require 'shared_selenium_session'
 
-chrome_options = {
-  browser: :chrome,
-  options: ::Selenium::WebDriver::Chrome::Options.new(args: ENV['TRAVIS'] ? ['no-sandbox' ] : [])
-}
+CHROME_DRIVER = if ENV['CAPYBARA_CHROME_HEADLESS'] then :selenium_chrome_headless else :selenium_chrome end
 
-if ENV['CAPYBARA_CHROME_HEADLESS']
-  chrome_options[:options].args << 'headless'
-  Selenium::WebDriver::Chrome.path='/usr/bin/google-chrome-beta' if ENV['TRAVIS']
-end
-
-Capybara.register_driver :selenium_chrome do |app|
-  Capybara::Selenium::Driver.new(app, chrome_options)
+if ENV['CAPYBARA_CHROME_HEADLESS'] && ENV['TRAVIS']
+  Selenium::WebDriver::Chrome.path='/usr/bin/google-chrome-beta'
 end
 
 Capybara.register_driver :selenium_chrome_clear_storage do |app|
+  chrome_options = {
+    browser: :chrome,
+    options: ::Selenium::WebDriver::Chrome::Options.new()
+  }
+  chrome_options[:options].args << 'headless' if ENV['CAPYBARA_CHROME_HEADLESS']
   Capybara::Selenium::Driver.new(app, chrome_options.merge(clear_local_storage: true, clear_session_storage: true))
 end
 
 module TestSessions
-  Chrome = Capybara::Session.new(:selenium_chrome, TestApp)
+  Chrome = Capybara::Session.new(CHROME_DRIVER, TestApp)
 end
 
 skipped_tests = [:response_headers, :status_code, :trigger]
-skipped_tests << :windows if ENV['TRAVIS'] && ENV['SKIP_WINDOW']
 # skip window tests when headless for now - closing a window not supported by chromedriver/chrome
-skipped_tests << :windows if ENV['TRAVIS'] && ENV['CAPYBARA_CHROME_HEADLESS']
+skipped_tests << :windows if ENV['TRAVIS']  && (ENV['SKIP_WINDOW'] || ENV['CAPYBARA_CHROME_HEADLESS'])
 
-Capybara::SpecHelper.run_specs TestSessions::Chrome, "selenium_chrome", capybara_skip: skipped_tests
+Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_DRIVER.to_s, capybara_skip: skipped_tests
 
 RSpec.describe "Capybara::Session with chrome" do
   include Capybara::SpecHelper
-  include_examples  "Capybara::Session", TestSessions::Chrome, :selenium_chrome
+  include_examples  "Capybara::Session", TestSessions::Chrome, CHROME_DRIVER
 
   context "storage" do
     describe "#reset!" do
