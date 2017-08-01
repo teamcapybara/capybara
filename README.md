@@ -106,7 +106,13 @@ Capybara.app = MyRackApp
 ```
 
 If you need to test JavaScript, or if your app interacts with (or is located at)
-a remote URL, you'll need to [use a different driver](#drivers).
+a remote URL, you'll need to [use a different driver](#drivers).  If using Rails 5.0+, but not using the Rails system tests from 5.1, you'll probably also
+want to swap the "server" used to launch your app to Puma in order to match Rails defaults.
+
+```ruby
+Capybara.server = :puma # Until your setup is working
+Capybara.server = :puma, { Silent: true } # To clean up your test output
+```
 
 ## <a name="using-capybara-with-cucumber"></a>Using Capybara with Cucumber
 

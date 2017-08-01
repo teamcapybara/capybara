@@ -92,8 +92,16 @@ RSpec.describe Capybara do
       require 'rack/handler/puma'
       mock_app = double('app')
       Capybara.server = :puma
-      expect(Rack::Handler::Puma).to receive(:run)
+      expect(Rack::Handler::Puma).to receive(:run).with(mock_app, hash_including(Host: nil, Port: 8000))
       Capybara.server.call(mock_app, 8000)
+    end
+
+    it "should pass options to server" do
+      require 'rack/handler/puma'
+      mock_app = double('app')
+      Capybara.server = :puma, { Silent: true }
+      expect(Rack::Handler::Puma).to receive(:run).with(mock_app, hash_including(Host: nil, Port: 9000, Silent: true))
+      Capybara.server.call(mock_app, 9000)
     end
   end
 
