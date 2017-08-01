@@ -1,3 +1,18 @@
+# Version 2.15.0
+
+Release data: unreleased
+
+### Added
+
+*  Added built-in driver registrations `:selenium_chrome` and `:selenium_chrome_headless` [Thomas Walpole]
+*  Add `and_then` to Capybara RSpec matchers which behaves like the previous `and` compounder. [Thomas Walpole]
+*  Compound RSpec expectations with Capybara matchers now run both matchers inside a retry loop rather
+   than waiting for one to pass/fail before checking the second.  Will make `#or` more performant and confirm
+   both conditions are true "simultaneously" for `and`.  [Thomas Walpole]
+   If you still want the
+*  Add `Session#refresh` [Thomas Walpole]
+*  Loosened restrictions on where `Session#within_window` can be called from [Thomas Walpole]
+*  Switched from `mime-types` dependency to `mini_mime` [Jason Frey]
 # Version 2.14.4
 
 Release date: 2017-06-27

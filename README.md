@@ -747,6 +747,9 @@ Capybara 1.x, set `Capybara.match` to `:prefer_exact`.
 
 ## <a name="transactions-and-database-setup"></a>Transactions and database setup
 
+**Note:**  Rails 5.1+ now "safely" shares the database connection between the app and test threads.  Therefore,
+if using Rails 5.1+ you SHOULD be able to ignore this section.
+
 Some Capybara drivers need to run against an actual HTTP server. Capybara takes
 care of this and starts one for you in the same process as your test, but on
 another thread. Selenium is one of those drivers, whereas RackTest is not.
