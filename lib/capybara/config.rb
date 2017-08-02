@@ -51,15 +51,25 @@ module Capybara
     # Set the server to use.
     #
     #     Capybara.server = :webrick
+    #     Capybara.server = :puma, { Silent: true }
     #
-    # @param [Symbol] name     Name of the server type to use
+    # @overload server=(name)
+    #   @param [Symbol] name     Name of the server type to use
+    # @overload server=([name, options])
+    #   @param [Symbol] name Name of the server type to use
+    #   @param [Hash] options Options to pass to the server block
     # @see register_server
     #
     def server=(name)
+      name, options = *name if name.is_a? Array
       @server = if name.respond_to? :call
         name
       else
-        Capybara.servers[name.to_sym]
+        if options
+          Proc.new { |app, port, host| Capybara.servers[name.to_sym].call(app,port,host,options) }
+        else
+          Capybara.servers[name.to_sym]
+        end
       end
     end
 
