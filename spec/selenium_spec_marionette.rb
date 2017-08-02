@@ -4,6 +4,8 @@ require "selenium-webdriver"
 require 'shared_selenium_session'
 require 'rspec/shared_spec_matchers'
 
+ENV['MOZ_HEADLESS']='1' if ENV['HEADLESS']
+
 Capybara.register_driver :selenium_marionette do |app|
   Capybara::Selenium::Driver.new(
     app,

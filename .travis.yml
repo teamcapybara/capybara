@@ -6,7 +6,6 @@ rvm:
   - 2.4.1
   - 2.3.3
   - jruby-9.1.12.0
-  - rbx-3
 gemfile:
   - Gemfile
 env:
@@ -17,48 +16,31 @@ env:
   #   - WINDOW_TEST=true
 
 addons:
-  firefox: latest
   apt:
+    sources:
+      - google-chrome
     packages:
+      - google-chrome-stable
+      - google-chrome-beta
       - awesome
 
 matrix:
   include:
     - gemfile: gemfiles/Gemfile.rspec-34
       rvm: 2.3.3
-      env: CAPYBARA_CHROME=true
+      env: CAPYBARA_FF=true
       addons:
+        firefox: latest
         apt:
-          sources:
-            - google-chrome
           packages:
-            - google-chrome-stable
             - awesome
     - gemfile: Gemfile
       rvm: 2.4.1
-      env: CAPYBARA_CHROME_HEADLESS=true
-      addons:
-        apt:
-          sources:
-            - google-chrome
-          packages:
-            - google-chrome-stable
-            - google-chrome-beta
-            - awesome
+      env: HEADLESS=true
     - gemfile: gemfiles/Gemfile.ruby-20
       env:
         - CAPYBARA_LEGACY_FF=true
       rvm: 2.0.0
-      addons:
-        firefox: 47.0.1
-        apt:
-          packages:
-            - awesome
-    - gemfile: gemfiles/Gemfile.ruby-19
-      env:
-        - CAPYBARA_LEGACY_FF=true
-        - SKIP_WINDOW=true
-      rvm: 1.9.3
       addons:
         firefox: 47.0.1
         apt:
@@ -76,6 +58,7 @@ matrix:
             - awesome
     - gemfile: gemfiles/Gemfile.beta-versions
       rvm: 2.3.3
+      env: CAPYBARA_FF=true
       addons:
         firefox: latest-beta
         apt:
@@ -83,6 +66,7 @@ matrix:
             - awesome
     - gemfile: gemfiles/Gemfile.edge-marionette
       rvm: 2.3.3
+      env: CAPYBARA_FF=true
       addons:
         firefox: latest-nightly
         apt:
@@ -90,9 +74,9 @@ matrix:
             - awesome
     - gemfile: Gemfile
       rvm: 2.4.1
+      env: CAPYBARA_FF=true HEADLESS=true
       addons:
         firefox: latest-nightly
-      script: MOZ_HEADLESS=1 bundle exec rake travis
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-marionette
@@ -100,16 +84,14 @@ matrix:
     - rvm: jruby-9.1.12.0
     - gemfile: Gemfile
       rvm: 2.4.1
-      env: CAPYBARA_CHROME_HEADLESS=true
-    - script: MOZ_HEADLESS=1 bundle exec rake travis
+      env: CAPYBARA_FF=true HEADLESS=true
+    - env: HEADLESS=true
 before_install:
   - mkdir -p ~/drivers; export PATH=~/drivers:$PATH;
-  - if [ $CAPYBARA_CHROME ] || [ $CAPYBARA_CHROME_HEADLESS ]; then
-      CHROMEDRIVER_VERSION=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE);
-      CHROMEDRIVER_URL="http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip";
-      FILE=`mktemp`; wget "$CHROMEDRIVER_URL" -qO $FILE && unzip $FILE chromedriver -d ~/drivers; rm $FILE; chmod 777 ~/drivers/chromedriver;
-      ~/drivers/chromedriver --version;
-    fi
+  - CHROMEDRIVER_VERSION=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE);
+    CHROMEDRIVER_URL="http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip";
+    FILE=`mktemp`; wget "$CHROMEDRIVER_URL" -qO $FILE && unzip $FILE chromedriver -d ~/drivers; rm $FILE; chmod 777 ~/drivers/chromedriver;
+    ~/drivers/chromedriver --version;
   - GECKODRIVER_URL="https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-linux64.tar.gz";
     FILE=`mktemp`; wget "$GECKODRIVER_URL" -qO $FILE && tar xz -C ~/drivers -f $FILE geckodriver; rm $FILE; chmod 777 ~/drivers/geckodriver;
     ~/drivers/geckodriver --version;
@@ -121,10 +103,12 @@ before_install:
       bundle config local.selenium-webdriver ../selenium/build/rb;
     fi
 before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - sleep 1
-  - mkdir -p ~/.config/awesome
-  - echo "require('awful'); tags = {}; tags[1] = awful.tag({'name'})" > ~/.config/awesome/rc.lua
-  - "awesome &"
+  - if [[ -z $HEADLESS ]]; then
+      export DISPLAY=:99.0;
+      sh -e /etc/init.d/xvfb start;
+      sleep 1;
+      mkdir -p ~/.config/awesome;
+      echo "require('awful'); tags = {}; tags[1] = awful.tag({'name'})" > ~/.config/awesome/rc.lua;
+      awesome &
+    fi
 script: "bundle exec rake travis"

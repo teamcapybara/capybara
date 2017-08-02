@@ -3,9 +3,9 @@ require 'spec_helper'
 require 'selenium-webdriver'
 require 'shared_selenium_session'
 
-CHROME_DRIVER = if ENV['CAPYBARA_CHROME_HEADLESS'] then :selenium_chrome_headless else :selenium_chrome end
+CHROME_DRIVER = if ENV['HEADLESS'] then :selenium_chrome_headless else :selenium_chrome end
 
-if ENV['CAPYBARA_CHROME_HEADLESS'] && ENV['TRAVIS']
+if ENV['HEADLESS'] && ENV['TRAVIS']
   Selenium::WebDriver::Chrome.path='/usr/bin/google-chrome-beta'
 end
 
@@ -14,7 +14,7 @@ Capybara.register_driver :selenium_chrome_clear_storage do |app|
     browser: :chrome,
     options: ::Selenium::WebDriver::Chrome::Options.new()
   }
-  chrome_options[:options].args << 'headless' if ENV['CAPYBARA_CHROME_HEADLESS']
+  chrome_options[:options].args << 'headless' if ENV['HEADLESS']
   Capybara::Selenium::Driver.new(app, chrome_options.merge(clear_local_storage: true, clear_session_storage: true))
 end
 
@@ -24,7 +24,7 @@ end
 
 skipped_tests = [:response_headers, :status_code, :trigger]
 # skip window tests when headless for now - closing a window not supported by chromedriver/chrome
-skipped_tests << :windows if ENV['TRAVIS']  && (ENV['SKIP_WINDOW'] || ENV['CAPYBARA_CHROME_HEADLESS'])
+skipped_tests << :windows if ENV['TRAVIS']  && (ENV['SKIP_WINDOW'] || ENV['HEADLESS'])
 
 Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_DRIVER.to_s, capybara_skip: skipped_tests
 
