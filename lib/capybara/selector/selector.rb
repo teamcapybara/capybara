@@ -185,11 +185,11 @@ module Capybara
     #   @option options :skip_if        Value of the filter that will cause it to be skipped
     #
     def filter(name, *types_and_options, &block)
-      add_filter(name, Filter, *types_and_options, &block)
+      add_filter(name, Filters::NodeFilter, *types_and_options, &block)
     end
 
     def expression_filter(name, *types_and_options, &block)
-      add_filter(name, ExpressionFilter, *types_and_options, &block)
+      add_filter(name, Filters::ExpressionFilter, *types_and_options, &block)
     end
 
     def filter_set(name, filters_to_use = nil)
