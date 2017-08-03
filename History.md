@@ -5,7 +5,8 @@ Release data: unreleased
 ### Added
 
 *  `sibling` and `ancestor` finders added [Thomas Walpole]
-*  Added built-in driver registrations `:selenium_chrome` and `:selenium_chrome_headless` [Thomas Walpole]
+*  Added ability to pass options to registered servers when setting
+*  Added basic built-in driver registrations `:selenium_chrome` and `:selenium_chrome_headless` [Thomas Walpole]
 *  Add `and_then` to Capybara RSpec matchers which behaves like the previous `and` compounder. [Thomas Walpole]
 *  Compound RSpec expectations with Capybara matchers now run both matchers inside a retry loop rather
    than waiting for one to pass/fail before checking the second.  Will make `#or` more performant and confirm
