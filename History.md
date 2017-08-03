@@ -12,9 +12,11 @@ Release data: unreleased
    than waiting for one to pass/fail before checking the second.  Will make `#or` more performant and confirm
    both conditions are true "simultaneously" for `and`.  [Thomas Walpole]
    If you still want the
+*  Default filter values are now included in error descriptions [Thomas Walpole]
 *  Add `Session#refresh` [Thomas Walpole]
 *  Loosened restrictions on where `Session#within_window` can be called from [Thomas Walpole]
 *  Switched from `mime-types` dependency to `mini_mime` [Jason Frey]
+
 # Version 2.14.4
 
 Release date: 2017-06-27
