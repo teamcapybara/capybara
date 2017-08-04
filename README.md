@@ -13,22 +13,6 @@ through an external gem.
 **Need help?** Ask on the mailing list (please do not open an issue on
 GitHub): http://groups.google.com/group/ruby-capybara
 
-**Note: Firefox 48+** If you're using Firefox with selenium-webdriver and want full functionality stay on either Firefox [45.0esr](https://ftp.mozilla.org/pub/firefox/releases/45.0esr/) or [47.0.1](https://ftp.mozilla.org/pub/firefox/releases/47.0.1/).
-If using selenium-webdriver 3.0+ this will require configuring your driver with the `marionette: false` option as shown below
-
-```ruby
-Capybara.register_driver :selenium do |app|
-  Capybara::Selenium::Driver.new(
-    app,
-    browser: :firefox,
-    desired_capabilities: Selenium::WebDriver::Remote::Capabilities.firefox(marionette: false)
-  )
-end
-```
-
-Using Firefox 48+ requires geckodriver and selenium-webdriver v3, the combo of which currently has multiple issues and is feature incomplete.
-You can read more about the missing features [here](https://github.com/teamcapybara/capybara/issues/1710).
-
 ## Table of contents
 
 - [Key benefits](#key-benefits)
@@ -146,8 +130,7 @@ Scenario: do something Ajaxy
   ...
 ```
 
-There are also explicit `@selenium` and `@rack_test`
-tags set up for you.
+There are also explicit tags for each registered driver set up for you (`@selenium`, `@rack_test`, etc).
 
 ## <a name="using-capybara-with-rspec"></a>Using Capybara with RSpec
 
@@ -349,7 +332,7 @@ these limitations, you can set up a different default driver for your features.
 For example if you'd prefer to run everything in Selenium, you could do:
 
 ```ruby
-Capybara.default_driver = :selenium
+Capybara.default_driver = :selenium # :selenium_chrome and :selenium_chrome_headless are also registered
 ```
 
 However, if you are using RSpec or Cucumber, you may instead want to consider
@@ -398,7 +381,7 @@ See the section on adding and configuring drivers.
 
 ### <a name="selenium"></a>Selenium
 
-At the moment, Capybara supports [Selenium 2.0
+At the moment, Capybara supports [Selenium 2.0+
 (Webdriver)](http://seleniumhq.org/docs/01_introducing_selenium.html#selenium-2-aka-selenium-webdriver),
 *not* Selenium RC. In order to use Selenium, you'll need to install the
 `selenium-webdriver` gem, and add it to your Gemfile if you're using bundler.
