@@ -1,3 +1,11 @@
+# Version 2.15.1
+
+Release date: 2017-08-04
+
+### Fixed
+
+*  `attach_file` with no extension/MIME type when using the `:rack_test` driver [Thomas Walpole]
+
 # Version 2.15.0
 
 Release date: 2017-08-04
