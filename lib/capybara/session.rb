@@ -247,14 +247,15 @@ module Capybara
       raise_server_error!
       @touched = true
 
-      visit_uri = URI.parse(visit_uri.to_s)
+      visit_uri = ::Addressable::URI.parse(visit_uri.to_s)
 
       uri_base = if @server
-        visit_uri.port = @server.port if config.always_include_port && (visit_uri.port == visit_uri.default_port)
-        URI.parse(config.app_host || "http://#{@server.host}:#{@server.port}")
+        ::Addressable::URI.parse(config.app_host || "http://#{@server.host}:#{@server.port}")
       else
-        config.app_host && URI.parse(config.app_host)
+        config.app_host && ::Addressable::URI.parse(config.app_host)
       end
+
+      uri_base.port ||= @server.port if @server && config.always_include_port
 
       # TODO - this is only for compatability with previous 2.x behavior that concatenated
       # Capybara.app_host and a "relative" path - Consider removing in 3.0
@@ -264,7 +265,9 @@ module Capybara
         visit_uri.path = uri_base.path + visit_uri.path
       end
 
-      visit_uri = uri_base.merge(visit_uri) unless uri_base.nil?
+      if uri_base && [nil, 'http', 'https'].include?(visit_uri.scheme)
+        visit_uri = uri_base.merge(visit_uri.to_hash.delete_if { |k,v| v.nil? })
+      end
 
       driver.visit(visit_uri.to_s)
     end
