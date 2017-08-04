@@ -42,7 +42,8 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
               if (value = field['value']).to_s.empty?
                 NilUploadedFile.new
               else
-                Rack::Test::UploadedFile.new(value, MiniMime.lookup_by_filename(value).content_type)
+                mime_info = MiniMime.lookup_by_filename(value)
+                Rack::Test::UploadedFile.new(value, (mime_info && mime_info.content_type).to_s)
               end
             merge_param!(params, field['name'].to_s, file)
           else

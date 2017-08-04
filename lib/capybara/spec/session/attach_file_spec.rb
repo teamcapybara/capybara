@@ -4,6 +4,7 @@ Capybara::SpecHelper.spec "#attach_file" do
     @test_file_path = File.expand_path('../fixtures/test_file.txt', File.dirname(__FILE__))
     @another_test_file_path = File.expand_path('../fixtures/another_test_file.txt', File.dirname(__FILE__))
     @test_jpg_file_path = File.expand_path('../fixtures/capybara.jpg', File.dirname(__FILE__))
+    @no_extension_file_path = File.expand_path('../fixtures/no_extension', File.dirname(__FILE__))
     @session.visit('/form')
   end
 
@@ -55,6 +56,12 @@ Capybara::SpecHelper.spec "#attach_file" do
       @session.attach_file "Single Document", @test_jpg_file_path
       @session.click_button 'Upload Single'
       expect(@session).to have_content('image/jpeg')
+    end
+
+    it "should not break when uploading a file without extension" do
+      @session.attach_file "Single Document", @no_extension_file_path
+      @session.click_button 'Upload Single'
+      expect(@session).to have_content(File.read(@no_extension_file_path))
     end
 
     it "should not break when using HTML5 multiple file input" do
