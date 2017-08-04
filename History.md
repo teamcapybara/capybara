@@ -1,6 +1,6 @@
 # Version 2.15.0
 
-Release data: unreleased
+Release date: 2017-08-04
 
 ### Added
 
