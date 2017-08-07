@@ -7,10 +7,15 @@ require 'rspec/shared_spec_matchers'
 ENV['MOZ_HEADLESS']='1' if ENV['HEADLESS']
 
 Capybara.register_driver :selenium_marionette do |app|
+  # ::Selenium::WebDriver.logger.level = "debug"
   Capybara::Selenium::Driver.new(
     app,
-    browser: :firefox,
-    desired_capabilities: {marionette: true}
+    :browser => :firefox,
+    :desired_capabilities => {:marionette => true,
+    },
+    # Get a trace level log from geckodriver
+    # :firefox_options => {"log": {"level": "trace"}},
+    # :driver_opts => { args: ['-vv'] }
   )
 end
 
@@ -23,6 +28,8 @@ Capybara.register_driver :selenium_marionette_clear_storage do |app|
     clear_session_storage: true
   )
 end
+
+
 
 module TestSessions
   SeleniumMarionette = Capybara::Session.new(:selenium_marionette, TestApp)
