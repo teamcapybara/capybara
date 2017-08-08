@@ -24,7 +24,7 @@ module Capybara
         descriptions.push block
       end
 
-      def description(options={})
+      def description(**options)
         options_with_defaults = options.dup
         filters.each do |name, filter|
           options_with_defaults[name] = filter.default if filter.default? && !options_with_defaults.has_key?(name)

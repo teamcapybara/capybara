@@ -436,12 +436,12 @@ Capybara.register_server :default do |app, port, _host|
   Capybara.run_default_server(app, port)
 end
 
-Capybara.register_server :webrick do |app, port, host, options={}|
+Capybara.register_server :webrick do |app, port, host, **options|
   require 'rack/handler/webrick'
   Rack::Handler::WEBrick.run(app, {Host: host, Port: port, AccessLog: [], Logger: WEBrick::Log::new(nil, 0)}.merge(options))
 end
 
-Capybara.register_server :puma do |app, port, host, options={}|
+Capybara.register_server :puma do |app, port, host, **options|
   require 'rack/handler/puma'
   Rack::Handler::Puma.run(app, {Host: host, Port: port, Threads: "0:4", workers: 0, daemon: false}.merge(options))
 end
