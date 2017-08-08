@@ -847,9 +847,8 @@ module Capybara
       driver.dismiss_modal(type, modal_options(text_or_options, options), &blk)
     end
 
-    def modal_options(text_or_options, options)
-      text_or_options, options = nil, text_or_options if text_or_options.is_a?(Hash)
-      options[:text] ||= text_or_options unless text_or_options.nil?
+    def modal_options(text=nil, **options)
+      options[:text] ||= text unless text.nil?
       options[:wait] ||= config.default_max_wait_time
       options
     end
@@ -908,9 +907,7 @@ module Capybara
       end
     end
 
-    def _switch_to_window(window = nil, options= {})
-      options, window = window, nil if window.is_a? Hash
-
+    def _switch_to_window(window = nil, **options)
       raise Capybara::ScopeError, "Window cannot be switched inside a `within_frame` block" if scopes.include?(:frame)
       raise Capybara::ScopeError, "Window cannot be switch inside a `within` block" unless scopes.last.nil?
 
