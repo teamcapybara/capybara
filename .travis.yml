@@ -85,7 +85,6 @@ matrix:
     - gemfile: Gemfile
       rvm: 2.4.1
       env: CAPYBARA_FF=true HEADLESS=true
-    - env: HEADLESS=true
 before_install:
   - mkdir -p ~/drivers; export PATH=~/drivers:$PATH;
   - CHROMEDRIVER_VERSION=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE);
