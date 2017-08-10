@@ -371,9 +371,9 @@ module Capybara
       end
 
       def inspect
-        %(#<Capybara::Node::Element tag="#{tag_name}" path="#{path}">)
+        %(#<Capybara::Node::Element tag="#{base.tag_name}" path="#{base.path}">)
       rescue NotSupportedByDriverError
-        %(#<Capybara::Node::Element tag="#{tag_name}">)
+        %(#<Capybara::Node::Element tag="#{base.tag_name}">)
       rescue => e
         if session.driver.invalid_element_errors.any? { |et| e.is_a?(et)}
           %(Obsolete #<Capybara::Node::Element>)

@@ -161,7 +161,8 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       it "outputs obsolete elements" do
         @session.visit('/form')
         el = @session.find(:button, 'Click me!').click
-        sleep 2
+        expect(@session).to have_no_button('Click me!')
+        expect(el).not_to receive(:synchronize)
         expect(el.inspect).to eq "Obsolete #<Capybara::Node::Element>"
       end
     end
