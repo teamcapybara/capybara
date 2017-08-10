@@ -5,9 +5,9 @@ require 'shared_selenium_session'
 
 CHROME_DRIVER = if ENV['HEADLESS'] then :selenium_chrome_headless else :selenium_chrome end
 
-if ENV['HEADLESS'] && ENV['TRAVIS']
-  Selenium::WebDriver::Chrome.path='/usr/bin/google-chrome-beta'
-end
+# if ENV['HEADLESS'] && ENV['TRAVIS']
+#   Selenium::WebDriver::Chrome.path='/usr/bin/google-chrome-beta'
+# end
 
 Capybara.register_driver :selenium_chrome_clear_storage do |app|
   chrome_options = {
