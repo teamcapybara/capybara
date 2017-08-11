@@ -35,27 +35,13 @@ RSpec.describe Capybara do
   end
 
   describe '.register_server' do
-    before do
-      Capybara.reuse_server = false
-      @old_server = Capybara.server
-    end
-
-    after do
-      Capybara.server(&@old_server)
-      Capybara.reuse_server = true
-    end
-
     it "should add a new server" do
-      skip "JRuby fails this because of path issues to geckodriver I think. Its tested in other runs - not worth figuring out at this time" if RUBY_PLATFORM == 'java'
-
-      require 'rack/handler/webrick'
+      handler = double("handler")
       Capybara.register_server :blob do |app, port, host|
-        Rack::Handler::WEBrick.run(app, Host: host, Port: port, AccessLog: [], Logger: WEBrick::Log::new(nil, 0))
+        handler.run
       end
-      Capybara.server = :blob
-      session = Capybara::Session.new(:selenium, TestApp.new)
-      session.visit('/')
-      expect(session.body).to include("Hello world!")
+
+      expect(Capybara.servers).to have_key(:blob)
     end
   end
 
