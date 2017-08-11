@@ -63,6 +63,23 @@ Capybara::SpecHelper.spec '#visit' do
       expect(URI.parse(@session.current_url).port).to eq(root_uri.port)
       expect(@session).to have_content('Another World')
     end
+
+    it "should add the server port to a visited url if no port specified", requires: [:server] do
+      expect(@session.driver).to receive(:visit).with("http://www.example.com:#{@session.server.port}")
+      @session.visit("http://www.example.com")
+    end
+
+    it "should not override the visit specified port even if default for scheme", requires: [:server] do
+      expect(@session.driver).to receive(:visit).with("http://www.example.com:80")
+      @session.visit('http://www.example.com:80')
+    end
+
+    it "should give preference to app_host port if specified", requires: [:server] do
+      Capybara.app_host = "http://www.example.com:6666"
+      expect(@session.driver).to receive(:visit).with("http://www.example.com:6666/random")
+      @session.visit('/random')
+    end
+
   end
 
   context "without a server", requires: [:server] do
