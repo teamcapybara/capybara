@@ -20,7 +20,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       end
 
       @processed_options = options.reject { |key,_val| SPECIAL_OPTIONS.include?(key) }
-      @browser = Selenium::WebDriver.for(options[:browser], @processed_options)
+      # Selenium's Chrome driver deletes keys from the Hash
+      # (https://github.com/SeleniumHQ/selenium/blob/selenium-3.5.0/rb/lib/selenium/webdriver/chrome/driver.rb#L74),
+      # so make a copy to avoid losing data.
+      @browser = Selenium::WebDriver.for(options[:browser], @processed_options.clone)
 
       @w3c = ((defined?(Selenium::WebDriver::Remote::W3CCapabilities) && @browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3CCapabilities)) ||
               (defined?(Selenium::WebDriver::Remote::W3C::Capabilities) && @browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3C::Capabilities)))
