@@ -643,12 +643,21 @@ module Capybara
     # Execute the block, accepting a alert.
     #
     # @!macro modal_params
+    #   Expects a block whose actions will trigger the display modal to appear
+    #   @example
+    #     $0 do
+    #       click_link('link that triggers appearance of system modal')
+    #     end
     #   @overload $0(text, options = {}, &blk)
     #     @param text [String, Regexp]  Text or regex to match against the text in the modal.  If not provided any modal is matched
+    #     @option options [Numeric] :wait (Capybara.default_max_wait_time) Maximum time to wait for the modal to appear after executing the block.
+    #     @yield Block whose actions will trigger the system modal
     #   @overload $0(options = {}, &blk)
-    #   @option options [Numeric] :wait (Capybara.default_max_wait_time) Maximum time to wait for the modal to appear after executing the block.
+    #     @option options [Numeric] :wait (Capybara.default_max_wait_time) Maximum time to wait for the modal to appear after executing the block.
+    #     @yield Block whose actions will trigger the system modal
     #   @return [String]  the message shown in the modal
     #   @raise [Capybara::ModalNotFound]  if modal dialog hasn't been found
+    #
     #
     def accept_alert(text_or_options=nil, options={}, &blk)
       accept_modal(:alert, text_or_options, options, &blk)
