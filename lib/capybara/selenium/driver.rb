@@ -245,8 +245,9 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def accept_modal(_type, options={})
     if headless_chrome?
+      raise ArgumentError, "Block that triggers the system modal is missing" unless block_given?
       insert_modal_handlers(true, options[:with], options[:text])
-      yield if block_given?
+      yield
       find_headless_modal(options)
     else
       yield if block_given?
@@ -260,8 +261,9 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def dismiss_modal(_type, options={})
     if headless_chrome?
+      raise ArgumentError, "Block that triggers the system modal is missing" unless block_given?
       insert_modal_handlers(false, options[:with], options[:text])
-      yield if block_given?
+      yield
       find_headless_modal(options)
     else
       yield if block_given?
