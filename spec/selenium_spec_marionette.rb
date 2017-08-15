@@ -6,6 +6,7 @@ require 'rspec/shared_spec_matchers'
 
 browser_options = ::Selenium::WebDriver::Firefox::Options.new()
 browser_options.args << '--headless' if ENV['HEADLESS']
+browser_options.add_preference 'dom.file.createInChild', true
 # browser_options.add_option("log", {"level": "trace"})
 
 Capybara.register_driver :selenium_marionette do |app|
@@ -43,26 +44,6 @@ skipped_tests = [
   :trigger
 ]
 skipped_tests << :windows if ENV['TRAVIS'] && ENV['SKIP_WINDOW']
-
-RSpec.configure do |c|
-  c.define_derived_metadata(full_description: ->(description, metadata) {
-     ['#attach_file with normal form should set a file path by id',
-      '#attach_file with normal form should set a file path by label',
-      '#attach_file with normal form casts to string',
-      '#attach_file with multipart form should set a file path by id',
-      '#attach_file with multipart form should set a file path by label',
-      '#attach_file with multipart form should send content type text/plain when uploading a text file',
-      '#attach_file with multipart form should send content type image/jpeg when uploading an image',
-      '#attach_file with multipart form should not break when uploading a file without extension',
-      '#attach_file with multipart form should not break when using HTML5 multiple file input',
-      '#attach_file with :exact option should set a file path by partial label when false',
-      '#attach_file with :make_visible option applies a default style change when true',
-      '#attach_file with :make_visible option accepts a hash of styles to be applied',
-      '#attach_file with :make_visible option resets the style when done'].any? { |desc| description.include?(desc) }
-      }) do |metadata|
-    metadata[:pending] = true
-  end
-end
 
 Capybara::SpecHelper.run_specs TestSessions::SeleniumMarionette, "selenium", capybara_skip: skipped_tests
 
