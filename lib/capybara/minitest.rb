@@ -215,7 +215,7 @@ module Capybara
       # Assertion that there is no checked_field
       #
       # @!method assert_no_checked_field
-      # @!method refute_chceked_field
+      # @!method refute_checked_field
 
       ##
       # Assertion that there is unchecked_field
