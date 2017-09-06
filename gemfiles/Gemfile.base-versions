@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gem 'bundler', '~> 1.0'
 gemspec :path => '..'
 
-gem 'xpath', :git => 'git://github.com/teamcapybara/xpath.git'
+gem 'xpath', '~> 2.1.0'
 
 gem 'rack', '= 1.3.0' # cannot go lower because referer tests need aa7ce77cd0
 gem 'rack-test', '= 0.5.4'

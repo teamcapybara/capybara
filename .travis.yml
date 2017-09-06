@@ -101,6 +101,7 @@ before_install:
       popd;
       bundle config local.selenium-webdriver ../selenium/build/rb;
     fi
+  - gem update bundler
 before_script:
   - if [[ -z $HEADLESS ]]; then
       export DISPLAY=:99.0;
