@@ -3,7 +3,7 @@ require "capybara/spec/test_app"
 
 Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
   before :all do
-    @servers = 2.times.map { Capybara::Server.new(TestApp.clone).boot }
+    @servers = 2.times.map { Capybara::Server.new(TestApp.new).boot }
     # sanity check
     expect(@servers[0].port).not_to eq(@servers[1].port)
     expect(@servers.map { |s| s.port }).not_to include 80
@@ -98,9 +98,9 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
   end
 
   it "doesn't raise exception on a nil current_url" do
+    skip "Only makes sense when there is a real driver" unless @session.respond_to?(:driver)
+    allow(@session.driver).to receive(:current_url) { nil }
     @session.visit("/")
-    allow_any_instance_of(Capybara::Session).to receive(:current_url) { nil }
-
     expect { @session.current_url }.not_to raise_exception
     expect { @session.current_path }.not_to raise_exception
   end
