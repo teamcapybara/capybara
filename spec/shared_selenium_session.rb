@@ -71,6 +71,16 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
     end
 
+    context '#fill_in_with empty string and no options' do
+      it 'should trigger change when clearing a field' do
+        @session.visit('/with_js')
+        @session.fill_in('with_change_event', with: '')
+        # click outside the field to trigger the change event
+        @session.find(:css, 'body').click
+        expect(@session).to have_selector(:css, '.change_event_triggered', match: :one)
+      end
+    end
+
     context "#fill_in with { :clear => :backspace } fill_option", requires: [:js] do
       it 'should fill in a field, replacing an existing value' do
         @session.visit('/form')
@@ -95,6 +105,15 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         # click outside the field to trigger the change event
         @session.find(:css, 'body').click
         expect(@session).to have_selector(:css, '.change_event_triggered', match: :one)
+      end
+
+      it 'should trigger input event field_value.length times' do
+        @session.visit('/with_js')
+        @session.fill_in('with_change_event', with: '',
+                         fill_options: { :clear => :backspace })
+        # click outside the field to trigger the change event
+        @session.find(:css, 'body').click
+        expect(@session).to have_xpath('//p[@class="input_event_triggered"]', count: 13)
       end
     end
 

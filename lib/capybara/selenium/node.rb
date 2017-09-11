@@ -209,7 +209,7 @@ private
   def set_text(value, options)
     if readonly?
       warn "Attempt to set readonly element with value: #{value} \n *This will raise an exception in a future version of Capybara"
-    elsif value.to_s.empty?
+    elsif value.to_s.empty? && options[:clear].nil?
       native.clear
     else
       if options[:clear] == :backspace
