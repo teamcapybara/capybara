@@ -10,6 +10,12 @@ interact with your app. It is agnostic about the driver running your tests and
 comes with Rack::Test and Selenium support built in. WebKit is supported
 through an external gem.
 
+## Support Capybara
+
+If you and/or your company find value in Capybara and would like to contribute financially to its ongoing maintenance and development, please visit
+<a href="https://www.patreon.com/capybara">Patreon</a>
+
+
 **Need help?** Ask on the mailing list (please do not open an issue on
 GitHub): http://groups.google.com/group/ruby-capybara
 
