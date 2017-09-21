@@ -306,6 +306,7 @@ module Capybara
           else
             result = query.resolve_for(self)
           end
+
           if query.match == :one or query.match == :smart and result.size > 1
             raise Capybara::Ambiguous.new("Ambiguous match, found #{result.size} elements matching #{query.description}")
           end

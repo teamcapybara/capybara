@@ -101,7 +101,7 @@ Capybara::SpecHelper.spec '#within' do
           expect do
             @session.within(".//div[@id='doesnotexist']") do
             end
-          end.to raise_error(Capybara::ElementNotFound)
+          end.to raise_error(Capybara::ElementNotFound, %Q{Unable to find visible xpath ".//div[@id='doesnotexist']" within #<Capybara::Node::Element tag="div" path="/html/body/div[1]">})
         end.to_not change { @session.has_xpath?(".//div[@id='another_foo']") }.from(false)
       end
     end.to_not change { @session.has_xpath?(".//div[@id='another_foo']") }.from(true)
