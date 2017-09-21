@@ -64,7 +64,7 @@ Capybara::SpecHelper.spec "#unselect" do
 
   context "with an option that doesn't exist" do
     it "should raise an error" do
-      msg = 'Unable to find visible option "Does not Exist"'
+      msg = /^Unable to find visible option "Does not Exist" within/
       expect do
         @session.unselect('Does not Exist', from: 'form_underwear')
       end.to raise_error(Capybara::ElementNotFound, msg)

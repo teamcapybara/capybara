@@ -8,6 +8,7 @@ module Capybara
       VALID_MATCH = [:first, :smart, :prefer_exact, :one]
 
       def initialize(*args, &filter_block)
+        @resolved_node = nil
         @options = if args.last.is_a?(Hash) then args.pop.dup else {} end
         super(@options)
 
@@ -53,6 +54,7 @@ module Capybara
         @description << " with classes [#{Array(options[:class]).join(',')}]" if options[:class]
         @description << selector.description(options)
         @description << " that also matches the custom filter block" if @filter_block
+        @description << " within #{@resolved_node.inspect}" if describe_within?
         @description
       end
 
@@ -140,6 +142,7 @@ module Capybara
 
       # @api private
       def resolve_for(node, exact = nil)
+        @resolved_node = node
         node.synchronize do
           children = if selector.format == :css
             node.find_css(self.css)
@@ -238,6 +241,11 @@ module Capybara
 
       def exact_text
         options.fetch(:exact_text, session_options.exact_text)
+      end
+
+      def describe_within?
+        @resolved_node && !(@resolved_node.is_a?(::Capybara::Node::Document) ||
+                            (@resolved_node.is_a?(::Capybara::Node::Simple) && @resolved_node.path == '/'))
       end
     end
   end
