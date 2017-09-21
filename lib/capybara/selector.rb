@@ -302,7 +302,7 @@ Capybara.add_selector(:radio_button) do
 
   filter(:option)  { |node, value|  node.value == value.to_s }
 
-  describe do |option: option, **options|
+  describe do |option: nil, **options|
     desc = String.new
     desc << " with value #{option.inspect}" if option
     desc << describe_all_expression_filters(options)
