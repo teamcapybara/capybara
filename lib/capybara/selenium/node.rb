@@ -101,7 +101,8 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def click
     native.click
   rescue => e
-    if e.message =~ /Other element would receive the click/
+    if e.is_a?(::Selenium::WebDriver::Error::ElementClickInterceptedError) ||
+       e.message =~ /Other element would receive the click/
       begin
         driver.execute_script("arguments[0].scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'})", self)
       rescue
