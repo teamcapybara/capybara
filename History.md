@@ -1,3 +1,13 @@
+# Version 2.15.2
+Release date: 2017-10-02
+
+### Fixed
+
+*  Include within scope description in element not found/ambiguous errors [Thomas Walpole]
+*  Raise error when no activation block is passed to modal methods if using headless chrome [Thomas Walpole]
+*  Don't retry element access when inspecting [Ivan Neverov]
+*  Don't override a specified port (even if it is default port) in visited url [Thomas Walpole]
+
 # Version 2.15.1
 
 Release date: 2017-08-04
