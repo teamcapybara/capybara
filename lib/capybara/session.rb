@@ -257,18 +257,19 @@ module Capybara
 
       uri_base.port ||= @server.port if @server && config.always_include_port
 
-      # TODO - this is only for compatability with previous 2.x behavior that concatenated
-      # Capybara.app_host and a "relative" path - Consider removing in 3.0
-      # @abotalov brought up a good point about this behavior potentially being useful to people
-      # deploying to a subdirectory and/or single page apps where only the url fragment changes
-      if visit_uri.scheme.nil? && uri_base
-        visit_uri.path = uri_base.path + visit_uri.path
-      end
-
       if uri_base && [nil, 'http', 'https'].include?(visit_uri.scheme)
-        visit_uri = uri_base.merge(visit_uri.to_hash.delete_if { |k,v| v.nil? })
-      end
+        visit_uri_parts = visit_uri.to_hash.delete_if { |k,v| v.nil? }
 
+        if visit_uri.scheme.nil?
+          # TODO - this is only for compatability with previous 2.x behavior that concatenated
+          # Capybara.app_host and a "relative" path - Consider removing in 3.0
+          # @abotalov brought up a good point about this behavior potentially being useful to people
+          # deploying to a subdirectory and/or single page apps where only the url fragment changes
+          visit_uri_parts[:path] = uri_base.path + visit_uri.path
+        end
+
+        visit_uri = uri_base.merge(visit_uri_parts)
+      end
       driver.visit(visit_uri.to_s)
     end
 

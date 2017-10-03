@@ -113,8 +113,13 @@ Capybara::SpecHelper.spec '#visit' do
       @session.visit('/times')
       expect(@session).to have_content('redirection complete')
     end
-  end
 
+    it "should work if `app_host` has a trailing /", requires: [:server] do
+      Capybara.app_host = "http://#{@session.server.host}:#{@session.server.port}/"
+      @session.visit('/')
+      expect(@session).to have_content('Hello world!')
+    end
+  end
 
   it "should send no referer when visiting a page" do
     @session.visit '/get_referer'
