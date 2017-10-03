@@ -1,5 +1,5 @@
 # Version 2.15.3
-Release date: Unreleased
+Release date: 2017-10-03
 
 ### Fixed
 *  Visiting '/' when Capybara.app_host has a trailing '/' - Issue #1918 [Thomas Walpole]
