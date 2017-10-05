@@ -14,7 +14,7 @@ Capybara.register_driver :selenium_marionette do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
-    desired_capabilities: {:marionette => true},
+    desired_capabilities: {marionette: true, 'moz:webdriverClick': true},
     options: browser_options
     # Get a trace level log from geckodriver
     # :driver_opts => { args: ['-vv'] }
