@@ -37,8 +37,24 @@ Capybara::SpecHelper.spec '#has_current_path?' do
     expect(@session).to have_current_path('/with_js?test=test')
   end
 
-  it "should compare the full url" do
+  it "should compare the full url if url: true is used" do
     expect(@session).to have_current_path(%r{\Ahttp://[^/]*/with_js\Z}, url: true)
+    domain_port = if @session.respond_to?(:server) && @session.server
+      "#{@session.server.host}:#{@session.server.port}"
+    else
+      "www.example.com"
+    end
+    expect(@session).to have_current_path("http://#{domain_port}/with_js", url: true)
+  end
+
+  it "should not compare the full url if url: true is not passed" do
+    expect(@session).to have_current_path(%r{^/with_js\Z})
+    expect(@session).to have_current_path('/with_js')
+  end
+
+  it "should not compare the full url if url: false is passed" do
+    expect(@session).to have_current_path(%r{^/with_js\Z}, url: false)
+    expect(@session).to have_current_path('/with_js', url: false)
   end
 
   it "should ignore the query" do
