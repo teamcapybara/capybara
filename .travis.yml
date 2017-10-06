@@ -2,8 +2,8 @@ language: ruby
 sudo: required
 dist: trusty
 rvm:
-  - 2.4.1
-  - 2.3.3
+  - 2.4.2
+  - 2.3.5
   - jruby-9.1.13.0
 gemfile:
   - Gemfile
@@ -26,7 +26,7 @@ addons:
 matrix:
   include:
     - gemfile: gemfiles/Gemfile.rspec-34
-      rvm: 2.3.3
+      rvm: 2.3.5
       env: CAPYBARA_FF=true
       addons:
         firefox: latest
@@ -34,7 +34,7 @@ matrix:
           packages:
             - awesome
     - gemfile: Gemfile
-      rvm: 2.4.1
+      rvm: 2.4.2
       env: HEADLESS=true
     - gemfile: gemfiles/Gemfile.ruby-20
       env:
@@ -56,7 +56,7 @@ matrix:
           packages:
             - awesome
     - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: 2.3.3
+      rvm: 2.3.5
       env: CAPYBARA_FF=true
       addons:
         firefox: latest-beta
@@ -64,7 +64,7 @@ matrix:
           packages:
             - awesome
     - gemfile: gemfiles/Gemfile.edge-marionette
-      rvm: 2.3.3
+      rvm: ruby-head
       env: CAPYBARA_FF=true
       addons:
         firefox: latest-nightly
@@ -72,7 +72,7 @@ matrix:
           packages:
             - awesome
     - gemfile: Gemfile
-      rvm: 2.4.1
+      rvm: 2.4.2
       env: CAPYBARA_FF=true HEADLESS=true
       addons:
         firefox: latest
@@ -80,7 +80,6 @@ matrix:
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-marionette
     - rvm: rbx-3
-    - rvm: jruby-9.1.12.0
 before_install:
   - mkdir -p ~/drivers; export PATH=~/drivers:$PATH;
   - CHROMEDRIVER_VERSION=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE);
