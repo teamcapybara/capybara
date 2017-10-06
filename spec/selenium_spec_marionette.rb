@@ -25,7 +25,7 @@ Capybara.register_driver :selenium_marionette_clear_storage do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
-    desired_capabilities: {marionette: true},
+    desired_capabilities: {marionette: true, 'moz:webdriverClick': true},
     clear_local_storage: true,
     clear_session_storage: true,
     options: browser_options
@@ -55,7 +55,7 @@ end
 
 RSpec.describe Capybara::Selenium::Driver do
   before do
-    @driver = Capybara::Selenium::Driver.new(TestApp, browser: :firefox)
+    @driver = Capybara::Selenium::Driver.new(TestApp, browser: :firefox, options: browser_options)
   end
 
   describe '#quit' do
