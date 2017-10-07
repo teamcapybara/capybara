@@ -69,7 +69,7 @@ module Capybara
     # === Configurable options
     #
     # [app_host = String/nil]             The default host to use when giving a relative URL to visit, must be a valid URL e.g. http://www.example.com
-    # [always_include_port = Boolean]     Whether the Rack server's port should automatically be inserted into every visited URL (Default: false)
+    # [always_include_port = Boolean]     Whether the Rack server's port should automatically be inserted into every visited URL unless another port is explicitly specified (Default: false)
     # [asset_host = String]               Where dynamic assets are hosted - will be prepended to relative asset locations if present (Default: nil)
     # [run_server = Boolean]              Whether to start a Rack server for the given Rack app (Default: true)
     # [raise_server_errors = Boolean]     Should errors raised in the server be raised in the tests? (Default: true)
