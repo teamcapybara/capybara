@@ -75,7 +75,7 @@ matrix:
       rvm: 2.4.1
       env: CAPYBARA_FF=true HEADLESS=true
       addons:
-        firefox: latest-nightly
+        firefox: latest
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-marionette

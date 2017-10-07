@@ -25,7 +25,7 @@ Capybara.register_driver :selenium_marionette_clear_storage do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
-    desired_capabilities: {marionette: true, 'moz:webdriverClick': true},
+    desired_capabilities: {marionette: true},
     clear_local_storage: true,
     clear_session_storage: true,
     options: browser_options
