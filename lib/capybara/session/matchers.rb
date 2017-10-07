@@ -3,16 +3,18 @@ module Capybara
   module SessionMatchers
     ##
     # Asserts that the page has the given path.
-    # By default this will compare against the path+query portion of the full url
+    # By default, if passed a full url this will compare against the full url,
+    # if passed a path only the path+query portion will be compared, if passed a regexp
+    # the comparison will depend on the :url option
     #
     # @!macro current_path_query_params
     #   @overload $0(string, options = {})
     #     @param string [String]           The string that the current 'path' should equal
     #   @overload $0(regexp, options = {})
     #     @param regexp [Regexp]           The regexp that the current 'path' should match to
-    #   @option options [Numeric] :wait (Capybara.default_max_wait_time) Maximum time that Capybara will wait for the current path to eq/match given string/regexp argument
-    #   @option options [Boolean] :url  (false)  Whether the compare should be done against the full url
-    #   @option options [Boolean] :only_path (false)  Whether the compare should be done against just the path protion of the url
+    #   @option options [Numeric] :wait (Capybara.default_max_wait_time) Maximum time that Capybara will wait for the current url/path to eq/match given string/regexp argument
+    #   @option options [Boolean] :url (true if a full url is passed in, otherwise false) Whether the compare should be done against the full current url or just the path
+    #   @option options [Boolean] :ignore_query (false)  Whether the query portion of the current url/path should be ignored
     # @raise [Capybara::ExpectationNotMet] if the assertion hasn't succeeded during wait time
     # @return [true]
     #
@@ -22,7 +24,9 @@ module Capybara
 
     ##
     # Asserts that the page doesn't have the given path.
-    # By default this will compare against the path+query portion of the full url
+    # By default, if passed a full url this will compare against the full url,
+    # if passed a path only the path+query portion will be compared, if passed a regexp
+    # the comparison will depend on the :url option
     #
     # @macro current_path_query_params
     # @raise [Capybara::ExpectationNotMet] if the assertion hasn't succeeded during wait time
@@ -34,7 +38,9 @@ module Capybara
 
     ##
     # Checks if the page has the given path.
-    # By default this will compare against the path+query portion of the full url
+    # By default, if passed a full url this will compare against the full url,
+    # if passed a path only the path+query portion will be compared, if passed a regexp
+    # the comparison will depend on the :url option
     #
     # @macro current_path_query_params
     # @return [Boolean]
@@ -47,7 +53,9 @@ module Capybara
 
     ##
     # Checks if the page doesn't have the given path.
-    # By default this will compare against the path+query portion of the full url
+    # By default, if passed a full url this will compare against the full url,
+    # if passed a path only the path+query portion will be compared, if passed a regexp
+    # the comparison will depend on the :url option
     #
     # @macro current_path_query_params
     # @return [Boolean]
