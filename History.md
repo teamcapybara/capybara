@@ -1,8 +1,8 @@
 # Version 2.15.4
-Release date: unreleased
+Release date: 2017-10-07
 
 ### Fixed
-*  Visiting an absolute URL shouldn't overwrite the port when no server and/or always_include_port=false - Issue #1921
+*  Visiting an absolute URL shouldn't overwrite the port when no server or always_include_port=false - Issue #1921
 
 # Version 2.15.3
 Release date: 2017-10-03
