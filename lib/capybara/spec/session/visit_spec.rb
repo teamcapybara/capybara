@@ -80,7 +80,40 @@ Capybara::SpecHelper.spec '#visit' do
       @session.visit('/random')
     end
 
+    it "shouldn't override port if no server", requires: [:server] do
+      session = Capybara::Session.new(@session.mode, nil)
+      expect(session.driver).to receive(:visit).with("http://www.google.com")
+      session.visit("http://www.google.com")
+    end
+
+    it "shouldn't override port if no server but app_host is set", requires: [:server] do
+      session = Capybara::Session.new(@session.mode, nil)
+      Capybara.app_host = "http://www.example.com:6666"
+      expect(session.driver).to receive(:visit).with("http://www.google.com")
+      session.visit("http://www.google.com")
+    end
   end
+
+  context "when Capybara.always_include_port is false" do
+    before(:each) do
+      Capybara.always_include_port = false
+    end
+
+    it "shouldn't overwrite port if app_host is set", requires: [:server] do
+      session = Capybara::Session.new(@session.mode, nil)
+      Capybara.app_host = "http://www.example.com:6666"
+      expect(session.driver).to receive(:visit).with("http://www.google.com")
+      session.visit("http://www.google.com")
+    end
+
+    it "shouldn't overwrite port if port specfified", requires: [:server] do
+      session = Capybara::Session.new(@session.mode, nil)
+      Capybara.app_host = "http://www.example.com:6666"
+      expect(session.driver).to receive(:visit).with("http://www.google.com:99")
+      session.visit("http://www.google.com:99")
+    end
+  end
+
 
   context "without a server", requires: [:server] do
     it "should respect `app_host`" do
