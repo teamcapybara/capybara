@@ -32,7 +32,7 @@ Capybara::SpecHelper.spec '#assert_current_path' do
 
   it "should ignore the query" do
     @session.visit('/with_js?test=test')
-    expect{@session.assert_current_path('/with_js', only_path: true)}.not_to raise_error
+    expect{@session.assert_current_path('/with_js', ignore_query: true)}.not_to raise_error
   end
 
   it "should not cause an exception when current_url is nil" do

@@ -8,12 +8,10 @@ module Capybara
       def initialize(expected_path, **options)
         super(options)
         @expected_path = expected_path
-        warn "DEPRECATED: The :only_path option is deprecated in favor of the :ignore_query option" if options.has_key?(:only_path)
-
         @options = {
           url: !@expected_path.is_a?(Regexp) && !::Addressable::URI.parse(@expected_path || "").hostname.nil?,
-          only_path: false,
-          ignore_query: false }.merge(options)
+          ignore_query: false
+        }.merge(options)
         assert_valid_keys
       end
 
@@ -23,11 +21,7 @@ module Capybara
         @actual_path = if options[:url]
           uri.to_s
         else
-          if options[:only_path]
-            uri && uri.path
-          else
-            uri && uri.request_uri
-          end
+          uri && uri.request_uri
         end
 
         if @expected_path.is_a? Regexp
@@ -53,15 +47,9 @@ module Capybara
       end
 
       def valid_keys
-        [:wait, :url, :only_path, :ignore_query]
+        [:wait, :url, :ignore_query]
       end
 
-      def assert_valid_keys
-        super
-        if options[:url] && options[:only_path]
-          raise ArgumentError, "the :url and :only_path options cannot both be true"
-        end
-      end
     end
   end
 end

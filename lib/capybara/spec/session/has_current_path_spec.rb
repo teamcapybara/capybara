@@ -73,30 +73,18 @@ Capybara::SpecHelper.spec '#has_current_path?' do
   it "should ignore the query" do
     @session.visit('/with_js?test=test')
     expect(@session).to have_current_path('/with_js?test=test')
-    expect(@session).to have_current_path('/with_js', only_path: true)
     expect(@session).to have_current_path('/with_js', ignore_query: true)
     uri = ::Addressable::URI.parse(@session.current_url)
     uri.query = nil
     expect(@session).to have_current_path(uri.to_s, ignore_query: true)
   end
 
-  it "should not allow url and only_path at the same time" do
-    expect {
-      expect(@session).to have_current_path('/with_js', url: true, only_path: true)
-    }.to raise_error ArgumentError
-  end
-
   it "should not raise an exception if the current_url is nil" do
     allow_any_instance_of(Capybara::Session).to receive(:current_url) { nil }
 
-    # Without only_path option
+    # Without ignore_query option
     expect {
       expect(@session).to have_current_path(nil)
-    }.not_to raise_exception
-
-    # With only_path option
-    expect {
-      expect(@session).to have_current_path(nil, only_path: true)
     }.not_to raise_exception
 
     # With ignore_query option
@@ -134,14 +122,9 @@ Capybara::SpecHelper.spec '#has_no_current_path?' do
   it "should not raise an exception if the current_url is nil" do
     allow_any_instance_of(Capybara::Session).to receive(:current_url) { nil }
 
-    # Without only_path option
+    # Without ignore_query option
     expect {
       expect(@session).not_to have_current_path('/with_js')
-    }. not_to raise_exception
-
-    # With only_path option
-    expect {
-      expect(@session).not_to have_current_path('/with_js', only_path: true)
     }. not_to raise_exception
 
     # With ignore_query option
