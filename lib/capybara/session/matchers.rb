@@ -12,9 +12,9 @@ module Capybara
     #     @param string [String]           The string that the current 'path' should equal
     #   @overload $0(regexp, options = {})
     #     @param regexp [Regexp]           The regexp that the current 'path' should match to
-    #   @option options [Numeric] :wait (Capybara.default_max_wait_time) Maximum time that Capybara will wait for the current url/path to eq/match given string/regexp argument
-    #   @option options [Boolean] :url (true if a full url is passed in, otherwise false) Whether the compare should be done against the full current url or just the path
+    #   @option options [Boolean] :url (true if `string` ia a full url, otherwise false) Whether the compare should be done against the full current url or just the path
     #   @option options [Boolean] :ignore_query (false)  Whether the query portion of the current url/path should be ignored
+    #   @option options [Numeric] :wait (Capybara.default_max_wait_time) Maximum time that Capybara will wait for the current url/path to eq/match given string/regexp argument
     # @raise [Capybara::ExpectationNotMet] if the assertion hasn't succeeded during wait time
     # @return [true]
     #
