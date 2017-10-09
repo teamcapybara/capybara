@@ -313,7 +313,7 @@ Capybara::SpecHelper.spec '#click_button' do
       expect(@results['middle_name']).to eq('Darren')
       expect(@results['foo']).to be_nil
     end
-  end
+ end
 
  context "with value given on a button defined by <button> tag" do
     it "should submit the associated form" do
@@ -325,7 +325,7 @@ Capybara::SpecHelper.spec '#click_button' do
       @session.click_button('ck_me')
       expect(extract_results(@session)['first_name']).to eq('John')
     end
-  end
+ end
 
   context "with title given on a button defined by <button> tag" do
     it "should submit the associated form" do
