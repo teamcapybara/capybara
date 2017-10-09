@@ -778,6 +778,7 @@ module Capybara
     # @param [Hash] options   a customizable set of options
     #
     def save_and_open_screenshot(path = nil, options = {})
+      # rubocop:disable Lint/Debugger
       path = save_screenshot(path, options)
       open_file(path)
     end
