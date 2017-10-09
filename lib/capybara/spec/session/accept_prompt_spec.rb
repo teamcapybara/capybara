@@ -11,6 +11,13 @@ Capybara::SpecHelper.spec '#accept_prompt', requires: [:modals] do
     expect(@session).to have_xpath("//a[@id='open-prompt' and @response='']")
   end
 
+  it "should accept the prompt with no message when there is a default" do
+    @session.accept_prompt do
+      @session.click_link('Open defaulted prompt')
+    end
+    expect(@session).to have_xpath("//a[@id='open-prompt-with-default' and @response='Default value!']")
+  end
+
   it "should return the message presented" do
     message = @session.accept_prompt do
       @session.click_link('Open prompt')
@@ -23,6 +30,21 @@ Capybara::SpecHelper.spec '#accept_prompt', requires: [:modals] do
       @session.click_link('Open prompt')
     end
     expect(@session).to have_xpath("//a[@id='open-prompt' and @response='the response']")
+  end
+
+  it "should accept the prompt with a response when there is a default" do
+    @session.accept_prompt with: 'the response' do
+      @session.click_link('Open defaulted prompt')
+    end
+    expect(@session).to have_xpath("//a[@id='open-prompt-with-default' and @response='the response']")
+  end
+
+  it "should accept the prompt with a blank response when there is a default", :focus_ do
+    pending "Geckodriver doesn't set a blank response currently" if @session.respond_to?(:mode) && @session.mode.to_s == "selenium_marionette"
+    @session.accept_prompt with: '' do
+      @session.click_link('Open defaulted prompt')
+    end
+    expect(@session).to have_xpath("//a[@id='open-prompt-with-default' and @response='']")
   end
 
   it "should accept the prompt if the message matches" do

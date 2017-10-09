@@ -252,7 +252,9 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     else
       yield if block_given?
       modal = find_modal(options)
+
       modal.send_keys options[:with] if options[:with]
+
       message = modal.text
       modal.accept
       message
@@ -391,13 +393,13 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       }
       window.capybara.add_handler(modal_handler);
 
-      window.alert = window.confirm = function(str) {
-        window.capybara.handler_called(modal_handler, str);
+      window.alert = window.confirm = function(str = "") {
+        window.capybara.handler_called(modal_handler, str.toString());
         return #{accept ? 'true' : 'false'};
-      };
-      window.prompt = function(str) {
-        window.capybara.handler_called(modal_handler, str);
-        return #{accept ? "'#{response_text}'" : 'null'};
+      }
+      window.prompt = function(str = "", default_text = "") {
+        window.capybara.handler_called(modal_handler, str.toString());
+        return #{accept ? (response_text.nil? ? "default_text" : "'#{response_text}'") : 'null'};
       }
     JS
     execute_script script
