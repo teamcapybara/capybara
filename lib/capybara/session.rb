@@ -259,7 +259,7 @@ module Capybara
         if visit_uri.relative?
           uri_base.port ||= @server.port if @server && config.always_include_port
 
-          visit_uri_parts = visit_uri.to_hash.delete_if { |k,v| v.nil? }
+          visit_uri_parts = visit_uri.to_hash.delete_if { |_k,v| v.nil? }
 
           # TODO - this is only for compatability with previous 2.x behavior that concatenated
           # Capybara.app_host and a "relative" path - Consider removing in 3.0

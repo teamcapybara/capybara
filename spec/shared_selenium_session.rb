@@ -149,7 +149,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
     describe "all with disappearing elements" do
       it "ignores stale elements in results" do
         @session.visit('/path')
-        elements = @session.all(:link) { |node| raise Selenium::WebDriver::Error::StaleElementReferenceError }
+        elements = @session.all(:link) { |_node| raise Selenium::WebDriver::Error::StaleElementReferenceError }
         expect(elements.size).to eq 0
       end
     end
