@@ -50,7 +50,7 @@ RSpec.describe Capybara::Result do
 
   it "can be reduced" do
     expect(result.reduce('') do |memo, element|
-      memo += element.text[0]
+      memo + element.text[0]
     end).to eq('ABGD')
   end
 
