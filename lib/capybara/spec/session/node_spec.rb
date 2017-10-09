@@ -258,6 +258,7 @@ Capybara::SpecHelper.spec "node" do
 
   describe "#==" do
     it "preserve object identity" do
+      # rubocop:disable Lint/UselessComparison
       expect(@session.find('//h1') == @session.find('//h1')).to be true
       expect(@session.find('//h1') === @session.find('//h1')).to be true
       expect(@session.find('//h1').eql? @session.find('//h1')).to be false
