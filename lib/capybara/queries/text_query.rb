@@ -72,7 +72,7 @@ module Capybara
             if invisible_count != @count
               details_message << ". it was found #{invisible_count} #{Capybara::Helpers.declension("time", "times", invisible_count)} including non-visible text"
             end
-          rescue
+          rescue # rubocop:disable Lint/HandleExceptions
             # An error getting the non-visible text (if element goes out of scope) should not affect the response
           end
         end

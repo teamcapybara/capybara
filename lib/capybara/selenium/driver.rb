@@ -71,7 +71,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     accept_modal(nil, wait: 0.1) do
       browser.navigate.refresh
     end
-  rescue Capybara::ModalNotFound
+  rescue Capybara::ModalNotFound # rubocop:disable Lint/HandleExceptions
   end
 
   def go_back
@@ -143,7 +143,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
                 warn "localStorage clear requested but is not available for this driver"
               end
             end
-          rescue Selenium::WebDriver::Error::UnhandledError
+          rescue Selenium::WebDriver::Error::UnhandledError # rubocop:disable Lint/HandleExceptions
             # delete_all_cookies fails when we've previously gone
             # to about:blank, so we rescue this error and do nothing
             # instead.
@@ -164,7 +164,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         begin
           @browser.switch_to.alert.accept
           sleep 0.25 # allow time for the modal to be handled
-        rescue Selenium::WebDriver::Error::NoAlertPresentError
+        rescue Selenium::WebDriver::Error::NoAlertPresentError # rubocop:disable Lint/HandleExceptions
           # The alert is now gone - nothing to do
         end
         # try cleaning up the browser again
@@ -278,7 +278,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def quit
     @browser.quit if @browser
-  rescue Errno::ECONNREFUSED
+  rescue Errno::ECONNREFUSED # rubocop:disable Lint/HandleExceptions
     # Browser must have already gone
   rescue Selenium::WebDriver::Error::UnknownError => e
     unless silenced_unknown_error_message?(e.message) # Most likely already gone

@@ -105,7 +105,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
        e.message =~ /Other element would receive the click/
       begin
         driver.execute_script("arguments[0].scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'})", self)
-      rescue
+      rescue # rubocop:disable Lint/HandleExceptions
       end
     end
     raise e

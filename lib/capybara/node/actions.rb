@@ -286,7 +286,7 @@ module Capybara
         JS
         begin
           session.execute_script(script, element)
-        rescue
+        rescue # rubocop:disable Lint/HandleExceptions
         end
       end
 
