@@ -39,7 +39,7 @@ Capybara::SpecHelper.spec '#accept_prompt', requires: [:modals] do
     expect(@session).to have_xpath("//a[@id='open-prompt-with-default' and @response='the response']")
   end
 
-  it "should accept the prompt with a blank response when there is a default", :focus_ do
+  it "should accept the prompt with a blank response when there is a default" do
     pending "Geckodriver doesn't set a blank response currently" if @session.respond_to?(:mode) && @session.mode.to_s == "selenium_marionette"
     @session.accept_prompt with: '' do
       @session.click_link('Open defaulted prompt')
