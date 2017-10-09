@@ -17,7 +17,6 @@ module Capybara
         if args[0].is_a?(Symbol)
           @selector = Selector.all.fetch(args.shift) do |selector_type|
             raise ArgumentError, "Unknown selector type (:#{selector_type})"
-            nil
           end
           @locator = args.shift
         else
