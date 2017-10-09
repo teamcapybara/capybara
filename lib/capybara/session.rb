@@ -35,7 +35,7 @@ module Capybara
   #
   # When using capybara/dsl, the Session is initialized automatically for you.
   #
-  class Session
+  class Session # rubocop:disable Metrics/ClassLength
     include Capybara::SessionMatchers
 
     NODE_METHODS = [

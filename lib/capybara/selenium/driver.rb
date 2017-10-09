@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "uri"
 
-class Capybara::Selenium::Driver < Capybara::Driver::Base
+class Capybara::Selenium::Driver < Capybara::Driver::Base # rubocop:disable Metrics/ClassLength
 
   DEFAULT_OPTIONS = {
     :browser => :firefox,
