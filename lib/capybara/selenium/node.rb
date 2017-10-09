@@ -190,7 +190,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     path.unshift self
 
     result = []
-    while node = path.shift
+    while (node = path.shift)
       parent = path.first
 
       if parent
