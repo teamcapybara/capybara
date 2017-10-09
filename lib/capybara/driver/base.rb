@@ -6,7 +6,7 @@ class Capybara::Driver::Base
     raise NotImplementedError
   end
 
-  def visit(path)
+  def visit(_path)
     raise NotImplementedError
   end
 
@@ -14,11 +14,11 @@ class Capybara::Driver::Base
     raise NotImplementedError
   end
 
-  def find_xpath(query)
+  def find_xpath(_query)
     raise NotImplementedError
   end
 
-  def find_css(query)
+  def find_css(_query)
     raise NotImplementedError
   end
 
@@ -34,15 +34,15 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#go_forward'
   end
 
-  def execute_script(script, *args)
+  def execute_script(_script, *_args)
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#execute_script'
   end
 
-  def evaluate_script(script, *args)
+  def evaluate_script(_script, *_args)
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#evaluate_script'
   end
 
-  def save_screenshot(path, options={})
+  def save_screenshot(_path, _options={})
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#save_screenshot'
   end
 
@@ -58,7 +58,7 @@ class Capybara::Driver::Base
   #
   # @param frame [Capybara::Node::Element, :parent, :top]  The iframe element to switch to
   #
-  def switch_to_frame(frame)
+  def switch_to_frame(_frame)
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#switch_to_frame'
   end
 
@@ -66,19 +66,19 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#current_window_handle'
   end
 
-  def window_size(handle)
+  def window_size(_handle)
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#window_size'
   end
 
-  def resize_window_to(handle, width, height)
+  def resize_window_to(_handle, _width, _height)
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#resize_window_to'
   end
 
-  def maximize_window(handle)
+  def maximize_window(_handle)
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#maximize_current_window'
   end
 
-  def close_window(handle)
+  def close_window(_handle)
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#close_window'
   end
 
@@ -90,11 +90,11 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#open_new_window'
   end
 
-  def switch_to_window(handle)
+  def switch_to_window(_handle)
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#switch_to_window'
   end
 
-  def within_window(locator)
+  def within_window(_locator)
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#within_window'
   end
 
@@ -113,7 +113,7 @@ class Capybara::Driver::Base
   # @return [String]  the message shown in the modal
   # @raise [Capybara::ModalNotFound]  if modal dialog hasn't been found
   #
-  def accept_modal(type, options={}, &blk)
+  def accept_modal(_type, _options={})
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#accept_modal'
   end
 
@@ -126,7 +126,7 @@ class Capybara::Driver::Base
   # @return [String]  the message shown in the modal
   # @raise [Capybara::ModalNotFound]  if modal dialog hasn't been found
   #
-  def dismiss_modal(type, options={}, &blk)
+  def dismiss_modal(_type, _options={})
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#dismiss_modal'
   end
 

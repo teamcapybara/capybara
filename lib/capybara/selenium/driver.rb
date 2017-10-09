@@ -361,7 +361,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     raise Capybara::ElementNotFound, "Could not find a window identified by #{locator}"
   end
 
-  def insert_modal_handlers(accept, response_text, expected_text=nil)
+  def insert_modal_handlers(accept, response_text, _expected_text=nil)
     script = <<-JS
       if (typeof window.capybara  === 'undefined') {
         window.capybara = {

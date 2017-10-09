@@ -17,7 +17,7 @@ module Capybara
         raise NotImplementedError
       end
 
-      def [](name)
+      def [](_name)
         raise NotImplementedError
       end
 
@@ -27,7 +27,7 @@ module Capybara
 
       # @param value String or Array. Array is only allowed if node has 'multiple' attribute
       # @param options [Hash{}] Driver specific options for how to set a value on a node
-      def set(value, options={})
+      def set(_value, _options={})
         raise NotImplementedError
       end
 
@@ -51,7 +51,7 @@ module Capybara
         raise NotImplementedError
       end
 
-      def send_keys(*args)
+      def send_keys(*_args)
         raise NotImplementedError
       end
 
@@ -59,7 +59,7 @@ module Capybara
         raise NotImplementedError
       end
 
-      def drag_to(element)
+      def drag_to(_element)
         raise NotImplementedError
       end
 
@@ -95,7 +95,7 @@ module Capybara
         raise NotSupportedByDriverError, 'Capybara::Driver::Node#path'
       end
 
-      def trigger(event)
+      def trigger(_event)
         raise NotSupportedByDriverError, 'Capybara::Driver::Node#trigger'
       end
 
@@ -105,7 +105,7 @@ module Capybara
         %(#<#{self.class} tag="#{tag_name}">)
       end
 
-      def ==(other)
+      def ==(_other)
         raise NotSupportedByDriverError, 'Capybara::Driver::Node#=='
       end
     end
