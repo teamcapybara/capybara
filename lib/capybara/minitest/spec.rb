@@ -8,13 +8,13 @@ module Capybara
         infect_an_assertion "refute_#{assertion}", "wont_have_#{assertion}", :reverse
       end
 
-      (%w(selector xpath css link button field select table checked_field unchecked_field).map do |assertion|
+      (%w(selector xpath css link button field select table checked_field unchecked_field).flat_map do |assertion|
         [["assert_#{assertion}", "must_have_#{assertion}"],
          ["refute_#{assertion}", "wont_have_#{assertion}"]]
-      end.flatten(1) + %w(selector xpath css).map do |assertion|
+      end + %w(selector xpath css).flat_map do |assertion|
         [["assert_matches_#{assertion}", "must_match_#{assertion}"],
          ["refute_matches_#{assertion}", "wont_match_#{assertion}"]]
-      end.flatten(1)).each do |(meth, new_name)|
+      end).each do |(meth, new_name)|
         self.class_eval <<-EOM, __FILE__, __LINE__ + 1
           def #{new_name} *args, &block
             ::Minitest::Expectation.new(self, ::Minitest::Spec.current).#{new_name}(*args, &block)
