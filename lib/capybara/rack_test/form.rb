@@ -15,7 +15,7 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
     def path; @empty_file.path; end
   end
 
-  def params(button)
+  def params(button) # rubocop:disable Metrics/MethodLength
     params = make_params
 
     form_element_types=[:input, :select, :textarea]

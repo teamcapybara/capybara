@@ -535,7 +535,7 @@ module Capybara
     # @raise [Capybara::ScopeError]        if this method is invoked inside `within_frame` method
     # @return                              value returned by the block
     #
-    def within_window(window_or_handle)
+    def within_window(window_or_handle) # rubocop:disable Metrics/MethodLength
       if window_or_handle.instance_of?(Capybara::Window)
         original = current_window
         scopes << nil
