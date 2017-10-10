@@ -17,7 +17,6 @@ module Capybara
         if args[0].is_a?(Symbol)
           @selector = Selector.all.fetch(args.shift) do |selector_type|
             raise ArgumentError, "Unknown selector type (:#{selector_type})"
-            nil
           end
           @locator = args.shift
         else
@@ -26,7 +25,7 @@ module Capybara
         end
         @selector ||= Selector.all[session_options.default_selector]
 
-        warn "Unused parameters passed to #{self.class.name} : #{args.to_s}" unless args.empty?
+        warn "Unused parameters passed to #{self.class.name} : #{args}" unless args.empty?
 
         # for compatibility with Capybara 2.0
         if session_options.exact_options and @selector == Selector.all[:option]
@@ -235,7 +234,7 @@ module Capybara
 
       def warn_exact_usage
         if options.has_key?(:exact) && !supports_exact?
-          warn "The :exact option only has an effect on queries using the XPath#is method. Using it with the query \"#{expression.to_s}\" has no effect."
+          warn "The :exact option only has an effect on queries using the XPath#is method. Using it with the query \"#{expression}\" has no effect."
         end
       end
 

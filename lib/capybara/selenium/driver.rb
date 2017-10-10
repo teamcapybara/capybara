@@ -246,7 +246,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def accept_modal(_type, options={})
     if headless_chrome?
       raise ArgumentError, "Block that triggers the system modal is missing" unless block_given?
-      insert_modal_handlers(true, options[:with], options[:text])
+      insert_modal_handlers(true, options[:with])
       yield
       find_headless_modal(options)
     else
@@ -264,7 +264,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def dismiss_modal(_type, options={})
     if headless_chrome?
       raise ArgumentError, "Block that triggers the system modal is missing" unless block_given?
-      insert_modal_handlers(false, options[:with], options[:text])
+      insert_modal_handlers(false, options[:with])
       yield
       find_headless_modal(options)
     else
@@ -361,7 +361,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     raise Capybara::ElementNotFound, "Could not find a window identified by #{locator}"
   end
 
-  def insert_modal_handlers(accept, response_text, expected_text=nil)
+  def insert_modal_handlers(accept, response_text)
     script = <<-JS
       if (typeof window.capybara  === 'undefined') {
         window.capybara = {
