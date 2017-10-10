@@ -56,7 +56,7 @@ RSpec.describe Capybara do
       it "can set default visiblity" do
         Capybara.add_selector :hidden_field do
           visible :hidden
-          css { |sel| 'input[type="hidden"]' }
+          css { |_sel| 'input[type="hidden"]' }
         end
 
         expect(string).to have_no_css('input[type="hidden"]')

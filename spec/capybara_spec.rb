@@ -37,7 +37,7 @@ RSpec.describe Capybara do
   describe '.register_server' do
     it "should add a new server" do
       handler = double("handler")
-      Capybara.register_server :blob do |app, port, host|
+      Capybara.register_server :blob do |_app, _port, _host|
         handler.run
       end
 

@@ -16,7 +16,7 @@ module Capybara
           @expected_text = Capybara::Helpers.normalize_whitespace(@expected_text)
         end
         @search_regexp = Capybara::Helpers.to_regexp(@expected_text, nil, exact?)
-        warn "Unused parameters passed to #{self.class.name} : #{args.to_s}" unless args.empty?
+        warn "Unused parameters passed to #{self.class.name} : #{args}" unless args.empty?
         assert_valid_keys
       end
 
@@ -72,7 +72,7 @@ module Capybara
             if invisible_count != @count
               details_message << ". it was found #{invisible_count} #{Capybara::Helpers.declension("time", "times", invisible_count)} including non-visible text"
             end
-          rescue
+          rescue # rubocop:disable Lint/HandleExceptions
             # An error getting the non-visible text (if element goes out of scope) should not affect the response
           end
         end

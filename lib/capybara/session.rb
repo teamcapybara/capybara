@@ -35,7 +35,7 @@ module Capybara
   #
   # When using capybara/dsl, the Session is initialized automatically for you.
   #
-  class Session
+  class Session # rubocop:disable Metrics/ClassLength
     include Capybara::SessionMatchers
 
     NODE_METHODS = [
@@ -259,7 +259,7 @@ module Capybara
         if visit_uri.relative?
           uri_base.port ||= @server.port if @server && config.always_include_port
 
-          visit_uri_parts = visit_uri.to_hash.delete_if { |k,v| v.nil? }
+          visit_uri_parts = visit_uri.to_hash.delete_if { |_k,v| v.nil? }
 
           # TODO - this is only for compatability with previous 2.x behavior that concatenated
           # Capybara.app_host and a "relative" path - Consider removing in 3.0
@@ -535,7 +535,7 @@ module Capybara
     # @raise [Capybara::ScopeError]        if this method is invoked inside `within_frame` method
     # @return                              value returned by the block
     #
-    def within_window(window_or_handle)
+    def within_window(window_or_handle) # rubocop:disable Metrics/MethodLength
       if window_or_handle.instance_of?(Capybara::Window)
         original = current_window
         scopes << nil
@@ -778,6 +778,7 @@ module Capybara
     # @param [Hash] options   a customizable set of options
     #
     def save_and_open_screenshot(path = nil, options = {})
+      # rubocop:disable Lint/Debugger
       path = save_screenshot(path, options)
       open_file(path)
     end

@@ -28,7 +28,7 @@ module Capybara
       #
       # @return [String]    The text of the element
       #
-      def text(type=nil)
+      def text(_type=nil)
         native.text
       end
 
@@ -140,7 +140,7 @@ module Capybara
         native.has_attribute?('selected')
       end
 
-      def synchronize(seconds=nil)
+      def synchronize(_seconds=nil)
         yield # simple nodes don't need to wait
       end
 

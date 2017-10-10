@@ -4,7 +4,7 @@ require 'capybara/dsl'
 require 'capybara/rspec/matchers'
 require 'benchmark'
 
-RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
+RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
   include Capybara::DSL
   include Capybara::RSpecMatchers

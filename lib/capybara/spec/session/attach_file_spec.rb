@@ -71,7 +71,7 @@ Capybara::SpecHelper.spec "#attach_file" do
       expect(@session.body).to include("1 | ")#number of files
     end
 
-    it  "should not break when using HTML5 multiple file input uploading multiple files" do
+    it "should not break when using HTML5 multiple file input uploading multiple files" do
       pending "Selenium is buggy on this, see http://code.google.com/p/selenium/issues/detail?id=2239" if @session.respond_to?(:mode) && @session.mode.to_s =~ /^selenium_(firefox|marionette)/
       @session.attach_file "Multiple Documents", [@test_file_path, @another_test_file_path]
       @session.click_button('Upload Multiple')

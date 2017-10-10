@@ -4,7 +4,7 @@ require 'spec_helper'
 RSpec.describe Capybara::Server do
 
   it "should spool up a rack server" do
-    @app = proc { |env| [200, {}, ["Hello Server!"]]}
+    @app = proc { |_env| [200, {}, ["Hello Server!"]]}
     @server = Capybara::Server.new(@app).boot
 
     @res = Net::HTTP.start(@server.host, @server.port) { |http| http.get('/') }
@@ -20,7 +20,7 @@ RSpec.describe Capybara::Server do
 
   it "should bind to the specified host" do
     begin
-      app = proc { |env| [200, {}, ['Hello Server!']] }
+      app = proc { |_env| [200, {}, ['Hello Server!']] }
 
       Capybara.server_host = '127.0.0.1'
       server = Capybara::Server.new(app).boot
@@ -39,7 +39,7 @@ RSpec.describe Capybara::Server do
   it "should use specified port" do
     Capybara.server_port = 22789
 
-    @app = proc { |env| [200, {}, ["Hello Server!"]]}
+    @app = proc { |_env| [200, {}, ["Hello Server!"]]}
     @server = Capybara::Server.new(@app).boot
 
     @res = Net::HTTP.start(@server.host, 22789) { |http| http.get('/') }
@@ -49,7 +49,7 @@ RSpec.describe Capybara::Server do
   end
 
   it "should use given port" do
-    @app = proc { |env| [200, {}, ["Hello Server!"]]}
+    @app = proc { |_env| [200, {}, ["Hello Server!"]]}
     @server = Capybara::Server.new(@app, 22790).boot
 
     @res = Net::HTTP.start(@server.host, 22790) { |http| http.get('/') }
@@ -59,8 +59,8 @@ RSpec.describe Capybara::Server do
   end
 
   it "should find an available port" do
-    @app1 = proc { |env| [200, {}, ["Hello Server!"]]}
-    @app2 = proc { |env| [200, {}, ["Hello Second Server!"]]}
+    @app1 = proc { |_env| [200, {}, ["Hello Server!"]]}
+    @app2 = proc { |_env| [200, {}, ["Hello Second Server!"]]}
 
     @server1 = Capybara::Server.new(@app1).boot
     @server2 = Capybara::Server.new(@app2).boot
@@ -83,7 +83,7 @@ RSpec.describe Capybara::Server do
     end
 
     it "should use the existing server if it already running" do
-      @app = proc { |env| [200, {}, ["Hello Server!"]]}
+      @app = proc { |_env| [200, {}, ["Hello Server!"]]}
 
       @server1 = Capybara::Server.new(@app).boot
       @server2 = Capybara::Server.new(@app).boot
@@ -132,7 +132,7 @@ RSpec.describe Capybara::Server do
     end
 
     it "should not reuse an already running server" do
-      @app = proc { |env| [200, {}, ["Hello Server!"]]}
+      @app = proc { |_env| [200, {}, ["Hello Server!"]]}
 
       @server1 = Capybara::Server.new(@app).boot
       @server2 = Capybara::Server.new(@app).boot
@@ -197,7 +197,7 @@ RSpec.describe Capybara::Server do
   def start_request(server, wait_time)
     # Start request, but don't wait for it to finish
     socket = TCPSocket.new(server.host, server.port)
-    socket.write "GET /?wait_time=#{wait_time.to_s} HTTP/1.0\r\n\r\n"
+    socket.write "GET /?wait_time=#{wait_time} HTTP/1.0\r\n\r\n"
     socket.close
     sleep 0.1
   end

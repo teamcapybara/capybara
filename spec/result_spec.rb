@@ -50,7 +50,7 @@ RSpec.describe Capybara::Result do
 
   it "can be reduced" do
     expect(result.reduce('') do |memo, element|
-      memo += element.text[0]
+      memo + element.text[0]
     end).to eq('ABGD')
   end
 
@@ -132,7 +132,7 @@ RSpec.describe Capybara::Result do
 
       it 'lazily evaluates' do
         skip 'JRuby has an issue with lazy enumerator evaluation' if RUBY_PLATFORM == 'java'
-        result.each.with_index do |el, idx|
+        result.each.with_index do |_el, idx|
           expect(result.instance_variable_get('@result_cache').size).to eq(idx+1)  # 0 indexing
         end
       end

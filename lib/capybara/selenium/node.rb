@@ -35,7 +35,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   #   :none =>  append the new value to the existing value <br/>
   #   :backspace => send backspace keystrokes to clear the field <br/>
   #   Array => an array of keys to send before the value being set, e.g. [[:command, 'a'], :backspace]
-  def set(value, options={})
+  def set(value, options={}) # rubocop:disable Metrics/MethodLength
     tag_name = self.tag_name
     type = self[:type]
 
@@ -105,7 +105,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
        e.message =~ /Other element would receive the click/
       begin
         driver.execute_script("arguments[0].scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'})", self)
-      rescue
+      rescue # rubocop:disable Lint/HandleExceptions
       end
     end
     raise e
@@ -190,7 +190,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     path.unshift self
 
     result = []
-    while node = path.shift
+    while (node = path.shift)
       parent = path.first
 
       if parent

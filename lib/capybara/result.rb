@@ -62,7 +62,7 @@ module Capybara
       !any?
     end
 
-    def matches_count?
+    def matches_count? # rubocop:disable Metrics/MethodLength
       # Only check filters for as many elements as necessary to determine result
       if @query.options[:count]
         count_opt = Integer(@query.options[:count])
@@ -87,7 +87,7 @@ module Capybara
         begin
           @result_cache << @results_enum.next while @result_cache.size <= max_opt
           return false
-        rescue StopIteration
+        rescue StopIteration # rubocop:disable Lint/HandleExceptions
         end
       end
 
