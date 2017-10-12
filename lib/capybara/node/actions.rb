@@ -80,7 +80,7 @@ module Capybara
       #   @option options [String] :id             Match fields that match the id attribute
       #   @option options [String] :name           Match fields that match the name attribute
       #   @option options [String] :placeholder    Match fields that match the placeholder attribute
-      #   @option options [String, Array<String>] :class    Match links that match the class(es) provided
+      #   @option options [String, Array<String>] :class    Match fields that match the class(es) provided
       #
       # @return [Capybara::Node::Element]  The element filled_in
       def fill_in(locator, options={})
@@ -108,7 +108,7 @@ module Capybara
       #   @option options [String] :option  Value of the radio_button to choose
       #   @option options [String] :id             Match fields that match the id attribute
       #   @option options [String] :name           Match fields that match the name attribute
-      #   @option options [String, Array<String>] :class    Match links that match the class(es) provided
+      #   @option options [String, Array<String>] :class    Match fields that match the class(es) provided
       #   @macro waiting_behavior
       #   @macro label_click
       #
@@ -131,7 +131,7 @@ module Capybara
       #   @option options [String] :option  Value of the checkbox to select
       #   @option options [String] id       Match fields that match the id attribute
       #   @option options [String] name     Match fields that match the name attribute
-      #   @option options [String, Array<String>] :class    Match links that match the class(es) provided
+      #   @option options [String, Array<String>] :class    Match fields that match the class(es) provided
       #   @macro label_click
       #   @macro waiting_behavior
       #
@@ -154,7 +154,7 @@ module Capybara
       #   @option options [String] :option  Value of the checkbox to deselect
       #   @option options [String] id       Match fields that match the id attribute
       #   @option options [String] name     Match fields that match the name attribute
-      #   @option options [String, Array<String>] :class    Match links that match the class(es) provided
+      #   @option options [String, Array<String>] :class    Match fields that match the class(es) provided
       #   @macro label_click
       #   @macro waiting_behavior
       #
@@ -229,7 +229,7 @@ module Capybara
       # @option options [Boolean] multiple Match field which allows multiple file selection
       # @option options [String] id             Match fields that match the id attribute
       # @option options [String] name           Match fields that match the name attribute
-      # @option options [String, Array<String>] :class    Match links that match the class(es) provided
+      # @option options [String, Array<String>] :class    Match fields that match the class(es) provided
       # @option options [true, Hash] make_visible   A Hash of CSS styles to change before attempting to attach the file, if `true` { opacity: 1, display: 'block', visibility: 'visible' } is used (may not be supported by all drivers)
       #
       # @return [Capybara::Node::Element]  The file field element

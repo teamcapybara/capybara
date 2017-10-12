@@ -20,7 +20,7 @@ Capybara::SpecHelper.spec "#evaluate_script", requires: [:js] do
 
   it "should support returning elements", requires: [:js, :es_args] do
     @session.visit('/with_js')
-    el = @session.find(:css, '#change')
+    @session.find(:css, '#change') # ensure page has loaded and element is available
     el = @session.evaluate_script("document.getElementById('change')")
     expect(el).to be_instance_of(Capybara::Node::Element)
     expect(el).to eq(@session.find(:css, '#change'))

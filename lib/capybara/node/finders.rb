@@ -171,7 +171,7 @@ module Capybara
       #   @option options [String] id                 Match buttons with the id provided
       #   @option options [String] title              Match buttons with the title provided
       #   @option options [String] value              Match buttons with the value provided
-      #   @option options [String, Array<String>] class    Match links that match the class(es) provided
+      #   @option options [String, Array<String>] class    Match buttons that match the class(es) provided
       # @return [Capybara::Node::Element]   The found element
       #
       def find_button(locator=nil, options={}, &optional_filter_block)
