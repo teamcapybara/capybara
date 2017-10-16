@@ -235,7 +235,7 @@ Release date: 2016-09-19
 
 Release date: 2016-08-25
 
-###Fixed
+### Fixed
 
 * Fixed error message from have_text when text is not found but contains regex special characters [Ryunosuke Sato]
 * Warn when :exact option is passed that has no effect [Thomas Walpole]
