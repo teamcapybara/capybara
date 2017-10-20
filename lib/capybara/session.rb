@@ -644,6 +644,24 @@ module Capybara
 
     ##
     #
+    # Evaluate the given JavaScript and obtain the result from a callback function which will be passed as the last argument to the script.
+    #
+    # @param  [String] script   A string of JavaScript to evaluate
+    # @return [Object]          The result of the evaluated JavaScript (may be driver specific)
+    #
+    def evaluate_async_script(script, *args)
+      @touched = true
+      result = if args.empty?
+        driver.evaluate_async_script(script)
+      else
+        raise Capybara::NotSupportedByDriverError, "The current driver does not support evaluate_async_script arguments" if driver.method(:evaluate_async_script).arity == 1
+        driver.evaluate_async_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ?  arg.base : arg} )
+      end
+      element_script_result(result)
+    end
+
+    ##
+    #
     # Execute the block, accepting a alert.
     #
     # @!macro modal_params
