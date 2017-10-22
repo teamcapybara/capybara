@@ -5,8 +5,8 @@ module Capybara
 
       ##
       #
-      # Finds a button or link by id, text or value and clicks it. Also looks at image
-      # alt text inside the link.
+      # Finds a button or link and clicks it.  See {Capybara::Node::Actions#click_button} and
+      # {Capybara::Node::Actions#click_link} for what locator will match against for each type of element
       # @!macro waiting_behavior
       #   If the driver is capable of executing JavaScript, +$0+ will wait for a set amount of time
       #   and continuously retry finding the element until either the element is found or the time
@@ -16,7 +16,7 @@ module Capybara
       #
       # @overload click_link_or_button([locator], options)
       #
-      #   @param [String] locator      Text, id or value of link or button
+      #   @param [String] locator      See {Capybara::Node::Actions#click_button} and {Capybara::Node::Actions#click_link}
       #
       # @return [Capybara::Node::Element]  The element clicked
       #
