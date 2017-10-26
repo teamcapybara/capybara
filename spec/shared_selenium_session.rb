@@ -180,6 +180,17 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
           }
         })
       end
+
+      describe "#evaluate_async_script" do
+        it "will timeout if the script takes too long" do
+          @session.visit('/with_js')
+          expect do
+            @session.using_wait_time(1) do
+              @session.evaluate_async_script("var cb = arguments[0]; setTimeout(function(){ cb(null) }, 3000)")
+            end
+          end.to raise_error Selenium::WebDriver::Error::ScriptTimeoutError
+        end
+      end
     end
 
     describe "Element#inspect" do
