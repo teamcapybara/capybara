@@ -549,7 +549,7 @@ If you find yourself needing to use this a lot you may be better off adding a [c
 ```ruby
 find_field('First Name'){ |el| el['data-xyz'] == '123' }
 find("#img_loading"){ |img| img['complete'] == true }
-````
+```
 
 **Note**: `find` will wait for an element to appear on the page, as explained in the
 Ajax section. If the element does not appear it will raise an error.
@@ -894,7 +894,7 @@ To permanently switch the current session to a different session
 
 ```ruby
 Capybara.session_name = "some other session"
-````
+```
 
 ### <a name="using-sessions-manually"></a>Using sessions manually
 
