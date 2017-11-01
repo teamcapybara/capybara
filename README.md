@@ -1053,7 +1053,9 @@ In normal mode most of Capybara's configuration options are global settings whic
 if using multiple sessions and wanting to change a setting for only one of the sessions.  To provide
 support for this type of usage Capybara now provides a "threadsafe" mode which can be enabled by setting
 
-    Capybara.threadsafe = true
+```ruby
+Capybara.threadsafe = true
+```
 
 This setting can only be changed before any sessions have been created.  In "threadsafe" mode the following
 behaviors of Capybara change
@@ -1063,11 +1065,13 @@ behaviors of Capybara change
   `app`, `reuse_server`, `default_driver`, `javascript_driver`, and (obviously) `threadsafe`.  Any drivers and servers
   registered through `register_driver` and `register_server` are also global.
 
-      my_session = Capybara::Session.new(:driver, some_app) do |config|
-        config.automatic_label_click = true # only set for my_session
-      end
-      my_session.config.default_max_wait_time = 10 # only set for my_session
-      Capybara.default_max_wait_time = 2 # will not change the default_max_wait in my_session
+  ```ruby
+  my_session = Capybara::Session.new(:driver, some_app) do |config|
+    config.automatic_label_click = true # only set for my_session
+  end
+  my_session.config.default_max_wait_time = 10 # only set for my_session
+  Capybara.default_max_wait_time = 2 # will not change the default_max_wait in my_session
+  ```
 
 * `current_driver` and `session_name` are thread specific.  This means that `using_session` and
   `using_driver` also only affect the current thread.
