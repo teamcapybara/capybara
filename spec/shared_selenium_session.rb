@@ -61,7 +61,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         skip "Headless Chrome doesn't support blockless modal methods" if @session.driver.send(:headless_chrome?)
         @session.click_link('Open alert')
         @session.accept_alert
-        expect{@session.driver.browser.switch_to.alert}.to raise_error(Selenium::WebDriver::Error::NoAlertPresentError)
+        expect{@session.driver.browser.switch_to.alert}.to raise_error(@session.driver.send(:modal_error))
       end
 
       it "raises if block is missing" do

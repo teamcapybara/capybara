@@ -24,7 +24,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
       @w3c = ((defined?(Selenium::WebDriver::Remote::W3CCapabilities) && @browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3CCapabilities)) ||
               (defined?(Selenium::WebDriver::Remote::W3C::Capabilities) && @browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3C::Capabilities)))
-
       main = Process.pid
       at_exit do
         # Store the exit status of the test run since it goes away after calling the at_exit proc...
@@ -170,7 +169,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         begin
           @browser.switch_to.alert.accept
           sleep 0.25 # allow time for the modal to be handled
-        rescue Selenium::WebDriver::Error::NoAlertPresentError
+        rescue modal_error
           # The alert is now gone - nothing to do
         end
         # try cleaning up the browser again
@@ -350,6 +349,14 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     options[:browser].to_s
   end
 
+  def modal_error
+    if defined?(Selenium::WebDriver::Error::NoSuchAlertError)
+      Selenium::WebDriver::Error::NoSuchAlertError
+    else
+      Selenium::WebDriver::Error::NoAlertPresentError
+    end
+  end
+
   def find_window(locator)
     handles = browser.window_handles
     return locator if handles.include? locator
@@ -428,7 +435,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     # Actual wait time may be longer than specified
     wait = Selenium::WebDriver::Wait.new(
       timeout: options.fetch(:wait, session_options.default_max_wait_time) || 0 ,
-      ignore: Selenium::WebDriver::Error::NoAlertPresentError)
+      ignore: modal_error)
     begin
       wait.until do
         alert = @browser.switch_to.alert
@@ -445,7 +452,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     # Actual wait time may be longer than specified
     wait = Selenium::WebDriver::Wait.new(
       timeout: options.fetch(:wait, session_options.default_max_wait_time) || 0 ,
-      ignore: Selenium::WebDriver::Error::NoAlertPresentError)
+      ignore: modal_error)
     begin
       wait.until do
         called, alert_text = evaluate_script('window.capybara && window.capybara.current_modal_status()')
