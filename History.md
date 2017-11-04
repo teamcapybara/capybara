@@ -1,3 +1,18 @@
+# Version 2.16.0
+Release date: unreleased
+
+### Added
+
+* Attempt to move element into view when selenium doesn't correctly do it - See PR #1917 [Thomas Walpole]
+* `current_path` matchers will now autodetect path vs url based on string to be matched. Deprecates
+  `:only_path` in favor of `:ignore_query` option [Thomas Walpole]
+* Session#evaluate_async_script [Thomas Walpole]
+
+### Fixed
+
+* Default prompt value when using headless Chrome works correctly [Thomas Walpole]
+* Support new modal error returned by selenium-webdriver 3.7 for W3C drivers [Thomas Walpole]
+
 # Version 2.15.4
 Release date: 2017-10-07
 
