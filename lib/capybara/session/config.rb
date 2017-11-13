@@ -6,7 +6,7 @@ module Capybara
     OPTIONS = [:always_include_port, :run_server, :default_selector, :default_max_wait_time, :ignore_hidden_elements,
                :automatic_reload, :match, :exact, :exact_text, :raise_server_errors, :visible_text_only,
                :automatic_label_click, :enable_aria_label, :save_path, :exact_options, :asset_host, :default_host, :app_host,
-               :save_and_open_page_path, :server_host, :server_port, :server_errors]
+               :server_host, :server_port, :server_errors]
 
     attr_accessor(*OPTIONS)
 
@@ -46,8 +46,6 @@ module Capybara
     #  See {Capybara.configure}
     #@!method app_host
     #  See {Capybara.configure}
-    #@!method save_and_open_page_path
-    #  See {Capybara.configure}
     #@!method server_host
     #  See {Capybara.configure}
     #@!method server_port
@@ -80,20 +78,6 @@ module Capybara
     def default_host=(url)
       raise ArgumentError.new("Capybara.default_host should be set to a url (http://www.example.com)") unless url.nil? || (url =~ URI::Parser.new.make_regexp)
       @default_host = url
-    end
-
-    remove_method :save_and_open_page_path=
-    def save_and_open_page_path=(path)
-      warn "DEPRECATED: #save_and_open_page_path is deprecated, please use #save_path instead. \n"\
-           "Note: Behavior is slightly different with relative paths - see documentation" unless path.nil?
-      @save_and_open_page_path = path
-    end
-
-    remove_method :exact_options=
-    def exact_options=(opt)
-      @exact_options = opt
-      warn "DEPRECATED: #exact_options is deprecated, please scope your findes/actions and use the `:exact` "\
-           "option if similar functionality is needed."
     end
 
     def initialize_copy(other)
