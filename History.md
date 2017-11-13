@@ -1,5 +1,5 @@
 # Version 2.16.0
-Release date: unreleased
+Release date: 2017-11-13
 
 ### Added
 
