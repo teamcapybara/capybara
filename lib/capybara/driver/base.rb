@@ -98,10 +98,6 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#switch_to_window'
   end
 
-  def within_window(locator)
-    raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#within_window'
-  end
-
   def no_such_window_error
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#no_such_window_error'
   end
