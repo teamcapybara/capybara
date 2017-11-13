@@ -112,18 +112,6 @@ RSpec.describe Capybara do
       expect { Capybara.default_host = "http://www.example.com" }.not_to raise_error
     end
   end
-
-  describe "configure" do
-    it 'deprecates calling non configuration option methods in configure' do
-      expect_any_instance_of(Kernel).to receive(:warn).
-        with('Calling register_driver from Capybara.configure is deprecated - please call it on Capybara directly ( Capybara.register_driver(...) )')
-      Capybara.configure do |config|
-        config.register_driver(:random_name) do
-          #just a random block
-        end
-      end
-    end
-  end
 end
 
 RSpec.describe Capybara::Session do
