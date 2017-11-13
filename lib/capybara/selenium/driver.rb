@@ -320,11 +320,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
 
-  # @deprecated This method is being removed
-  def browser_initialized?
-    super && !@browser.nil?
-  end
-
   private
 
   # @api private
