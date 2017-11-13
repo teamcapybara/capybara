@@ -233,7 +233,7 @@ module Capybara
       custom_filters[name] = filter_class.new(name, block, options)
     end
 
-    def locate_field(xpath, locator, enable_aria_label: false, **options)
+    def locate_field(xpath, locator, enable_aria_label: false, **_options)
       locate_xpath = xpath #need to save original xpath for the label wrap
       if locator
         locator = locator.to_s

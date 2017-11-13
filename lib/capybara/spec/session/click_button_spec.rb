@@ -300,7 +300,7 @@ Capybara::SpecHelper.spec '#click_button' do
     end
   end
 
- context "with id given on a button defined by <button> tag" do
+  context "with id given on a button defined by <button> tag" do
     it "should submit the associated form" do
       @session.click_button('click_me_123')
       expect(extract_results(@session)['first_name']).to eq('John')
@@ -315,7 +315,7 @@ Capybara::SpecHelper.spec '#click_button' do
     end
   end
 
- context "with value given on a button defined by <button> tag" do
+  context "with value given on a button defined by <button> tag" do
     it "should submit the associated form" do
       @session.click_button('click_me')
       expect(extract_results(@session)['first_name']).to eq('John')

@@ -37,7 +37,7 @@ Cucumber::Rake::Task.new(:cucumber) do |task|
   task.cucumber_opts = ['--format=progress', 'features']
 end
 
-task :travis do |t|
+task :travis do
   if ENV['CAPYBARA_FF']
     Rake::Task[:spec_marionette].invoke
   elsif ENV['CAPYBARA_LEGACY_FF']

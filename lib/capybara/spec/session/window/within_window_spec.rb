@@ -38,8 +38,8 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
     it "returns value from the block" do
       window = (@session.windows - [@window]).first
       value = @session.within_window window do
-                43252003274489856000
-              end
+        43252003274489856000
+      end
       expect(value).to eq(43252003274489856000)
     end
 
@@ -139,9 +139,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
     end
 
     it "returns value from the block" do
-      value = @session.within_window(->{ @session.title == 'Title of popup two'}) do
-                42
-              end
+      value = @session.within_window(->{ @session.title == 'Title of popup two'}) { 42 }
       expect(value).to eq(42)
     end
 
