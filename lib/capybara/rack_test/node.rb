@@ -17,11 +17,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   end
 
   def set(value)
-    return if disabled?
-    if readonly?
-      warn "Attempt to set readonly element with value: #{value} \n * This will raise an exception in a future version of Capybara"
-      return
-    end
+    return if disabled? || readonly?
 
     if (Array === value) && !multiple?
       raise TypeError.new "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"
