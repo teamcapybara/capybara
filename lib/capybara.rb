@@ -91,7 +91,7 @@ module Capybara
     # [javascript_driver = Symbol]        The name of a driver to use for JavaScript enabled tests. (Default: :selenium)
     #
     def configure
-      yield ConfigureDeprecator.new(config)
+      yield config
     end
 
     ##

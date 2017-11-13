@@ -87,26 +87,4 @@ module Capybara
       @deprecation_notified[method]=true
     end
   end
-
-  # @api private
-  class ConfigureDeprecator
-    def initialize(config)
-      @config = config
-    end
-
-    def method_missing(m, *args, &block)
-      if @config.respond_to?(m)
-        @config.public_send(m, *args, &block)
-      elsif Capybara.respond_to?(m)
-        warn "Calling #{m} from Capybara.configure is deprecated - please call it on Capybara directly ( Capybara.#{m}(...) )"
-        Capybara.public_send(m, *args, &block)
-      else
-        super
-      end
-    end
-
-    def respond_to_missing?(m, include_private = false)
-      @config.respond_to?(m) || Capybara.respond_to?(m) || super
-    end
-  end
 end
