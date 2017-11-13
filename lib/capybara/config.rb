@@ -108,6 +108,7 @@ module Capybara
     end
   end
 
+  # @api private
   class ConfigureDeprecator
     def initialize(config)
       @config = config
@@ -125,7 +126,7 @@ module Capybara
     end
 
     def respond_to_missing?(m, include_private = false)
-      @config.respond_to_missing?(m, include_private) || Capybara.respond_to_missing?(m, include_private)
+      @config.respond_to?(m) || Capybara.respond_to?(m) || super
     end
   end
 end
