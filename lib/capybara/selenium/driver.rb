@@ -226,11 +226,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser.switch_to.window handle
   end
 
-  def within_window(locator)
-    handle = find_window(locator)
-    browser.switch_to.window(handle) { yield }
-  end
-
   def accept_modal(_type, **options)
     if headless_chrome?
       raise ArgumentError, "Block that triggers the system modal is missing" unless block_given?
@@ -333,23 +328,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     else
       Selenium::WebDriver::Error::NoAlertPresentError
     end
-  end
-
-  def find_window(locator)
-    handles = browser.window_handles
-    return locator if handles.include? locator
-
-    original_handle = browser.window_handle
-    handles.each do |handle|
-      switch_to_window(handle)
-      if (locator == browser.execute_script("return window.name") ||
-          browser.title.include?(locator) ||
-          browser.current_url.include?(locator))
-        switch_to_window(original_handle)
-        return handle
-      end
-    end
-    raise Capybara::ElementNotFound, "Could not find a window identified by #{locator}"
   end
 
   def insert_modal_handlers(accept, response_text)

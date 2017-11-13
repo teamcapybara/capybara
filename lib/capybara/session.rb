@@ -506,9 +506,6 @@ module Capybara
     #   @example
     #     within_window(->{ page.title == 'Page title' }) { click_button 'Submit' }
     #   @raise [Capybara::WindowError]         if no window matching lambda was found
-    # @overload within_window(string) { do_something }
-    #   @deprecated                            Pass window or lambda instead
-    #   @param [String]                        handle, name, url or title of the window
     #
     # @raise [Capybara::ScopeError]        if this method is invoked inside `within_frame` method
     # @return                              value returned by the block
@@ -541,16 +538,7 @@ module Capybara
           scopes.pop
         end
       else
-        offending_line = caller.first
-        file_line = offending_line.match(/^(.+?):(\d+)/)[0]
-        warn "DEPRECATION WARNING: Passing string argument to #within_window is deprecated. "\
-             "Pass window object or lambda. (called from #{file_line})"
-        begin
-          scopes << nil
-          driver.within_window(window_or_handle) { yield }
-        ensure
-          scopes.pop
-        end
+        raise ArgumentError("`#within_window` requires a `Capybara::Window` instance or a lambda")
       end
     end
 
