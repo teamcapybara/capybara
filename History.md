@@ -12,6 +12,7 @@ Release date: unreleased
 
 * Default prompt value when using headless Chrome works correctly [Thomas Walpole]
 * Support new modal error returned by selenium-webdriver 3.7 for W3C drivers [Thomas Walpole]
+* Calling `respond_to?` on the object passed to `Capybara.configure` block
 
 # Version 2.15.4
 Release date: 2017-10-07
