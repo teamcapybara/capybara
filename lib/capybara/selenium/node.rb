@@ -52,12 +52,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       when 'checkbox'
         click if value ^ native.attribute('checked').to_s.eql?("true")
       when 'file'
-        path_names = value.to_s.empty? ? [] : value
-        if driver.chrome?
-          native.send_keys(Array(path_names).join("\n"))
-        else
-          native.send_keys(*path_names)
-        end
+        set_file(value)
       else
         set_text(value, options)
       end
@@ -65,27 +60,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       set_text(value, options)
     else
       if content_editable?
-        #ensure we are focused on the element
-        click
-
-        script = <<-JS
-          var range = document.createRange();
-          var sel = window.getSelection();
-          arguments[0].focus();
-          range.selectNodeContents(arguments[0]);
-          sel.removeAllRanges();
-          sel.addRange(range);
-        JS
-        driver.execute_script script, self
-
-        if (driver.chrome?) || (driver.firefox? && !driver.marionette?)
-          # chromedriver raises a can't focus element for child elements if we use native.send_keys
-          # we've already focused it so just use action api
-          driver.browser.action.send_keys(value.to_s).perform
-        else
-          # action api is really slow here just use native.send_keys
-          native.send_keys(value.to_s)
-        end
+        set_content_editable(value)
       end
     end
   end
@@ -199,7 +174,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     path.unshift self
 
     result = []
-    while node = path.shift
+    while (node = path.shift)
       parent = path.first
 
       if parent
@@ -258,5 +233,38 @@ private
     JS
     driver.execute_script(script, self)
     block.call
+  end
+
+  def set_file(value)
+    path_names = value.to_s.empty? ? [] : value
+    if driver.chrome?
+      native.send_keys(Array(path_names).join("\n"))
+    else
+      native.send_keys(*path_names)
+    end
+  end
+
+  def set_content_editable(value)
+    #ensure we are focused on the element
+    click
+
+    script = <<-JS
+      var range = document.createRange();
+      var sel = window.getSelection();
+      arguments[0].focus();
+      range.selectNodeContents(arguments[0]);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    JS
+    driver.execute_script script, self
+
+    if (driver.chrome?) || (driver.firefox? && !driver.marionette?)
+      # chromedriver raises a can't focus element for child elements if we use native.send_keys
+      # we've already focused it so just use action api
+      driver.browser.action.send_keys(value.to_s).perform
+    else
+      # action api is really slow here just use native.send_keys
+      native.send_keys(value.to_s)
+    end
   end
 end

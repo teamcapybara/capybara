@@ -65,7 +65,7 @@ Capybara::SpecHelper.spec '#has_current_path?' do
 
   it "should default to full url if value is a url" do
     url = @session.current_url
-    expect(url).to match /with_js$/
+    expect(url).to match(/with_js$/)
     expect(@session).to have_current_path(url)
     expect(@session).not_to have_current_path("http://www.not_example.com/with_js")
   end

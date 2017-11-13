@@ -98,6 +98,7 @@ module Capybara
       alias_method :refute_selector, :assert_no_selector
       alias_method :refute_matches_selector, :assert_not_matches_selector
 
+      # rubocop:disable Lint/UnusedBlockArgument
       %w(xpath css link button field select table).each do |selector_type|
         define_method "assert_#{selector_type}" do |*args, &optional_filter_block|
           subject, *args = determine_subject(args)
@@ -140,7 +141,7 @@ module Capybara
         end
         alias_method "refute_matches_#{selector_type}", "assert_not_matches_#{selector_type}"
       end
-
+      # rubocop:enable Lint/UnusedBlockArgument
 
       ##
       # Assertion that there is xpath

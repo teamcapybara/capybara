@@ -59,27 +59,8 @@ module Capybara
       end
 
       def matches_filters?(node)
-        if options[:text]
-          regexp = if options[:text].is_a?(Regexp)
-            options[:text]
-          else
-            if exact_text == true
-              /\A#{Regexp.escape(options[:text].to_s)}\z/
-            else
-              Regexp.escape(options[:text].to_s)
-            end
-          end
-          text_visible = visible
-          text_visible = :all if text_visible == :hidden
-          return false if not node.text(text_visible).match(regexp)
-        end
-
-        if exact_text.is_a?(String)
-          regexp = /\A#{Regexp.escape(options[:exact_text])}\z/
-          text_visible = visible
-          text_visible = :all if text_visible == :hidden
-          return false if not node.text(text_visible).match(regexp)
-        end
+        return false unless matches_text_filter(node, options[:text]) if options[:text]
+        return false unless matches_exact_text_filter(node, exact_text) if exact_text.is_a?(String)
 
         case visible
           when :visible then return false unless node.visible?
@@ -103,7 +84,6 @@ module Capybara
         end unless @filter_block.nil?
 
         res
-
       rescue *(node.respond_to?(:session) ? node.session.driver.invalid_element_errors : [])
         return false
       end
@@ -246,6 +226,28 @@ module Capybara
       def describe_within?
         @resolved_node && !(@resolved_node.is_a?(::Capybara::Node::Document) ||
                             (@resolved_node.is_a?(::Capybara::Node::Simple) && @resolved_node.path == '/'))
+      end
+
+      def matches_text_filter(node, text_option)
+        regexp = if text_option.is_a?(Regexp)
+          text_option
+        else
+          if exact_text == true
+            /\A#{Regexp.escape(text_option.to_s)}\z/
+          else
+            Regexp.escape(text_option.to_s)
+          end
+        end
+        text_visible = visible
+        text_visible = :all if text_visible == :hidden
+        node.text(text_visible).match(regexp)
+      end
+
+      def matches_exact_text_filter(node, exact_text_option)
+        regexp = /\A#{Regexp.escape(exact_text_option)}\z/
+        text_visible = visible
+        text_visible = :all if text_visible == :hidden
+        node.text(text_visible).match(regexp)
       end
     end
   end

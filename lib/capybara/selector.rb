@@ -9,7 +9,7 @@ Capybara::Selector::FilterSet.add(:_field) do
   expression_filter(:name) { |xpath, val| xpath[XPath.attr(:name).equals(val)] }
   expression_filter(:placeholder) { |xpath, val| xpath[XPath.attr(:placeholder).equals(val)] }
 
-  describe do |checked: nil, unchecked: nil, disabled: nil, multiple: nil, **options|
+  describe do |checked: nil, unchecked: nil, disabled: nil, multiple: nil, **_options|
     desc, states = String.new, []
     states << 'checked' if checked || (unchecked == false)
     states << 'not checked' if unchecked || (checked == false)
@@ -109,7 +109,7 @@ end
 # @filter [String, Array<String>] :class Matches the class(es) provided
 #
 Capybara.add_selector(:fieldset) do
-  xpath(:legend) do |locator, legend: nil, **options|
+  xpath(:legend) do |locator, legend: nil, **_options|
     xpath = XPath.descendant(:fieldset)
     xpath = xpath[XPath.attr(:id).equals(locator.to_s).or XPath.child(:legend)[XPath.string.n.is(locator.to_s)]] unless locator.nil?
     xpath = xpath[XPath.child(:legend)[XPath.string.n.is(legend)]] if legend
@@ -130,7 +130,8 @@ end
 # @filter [String, Regexp,nil] :href  Matches the normalized href of the link, if nil will find <a> elements with no href attribute
 #
 Capybara.add_selector(:link) do
-  xpath(:title, :alt) do |locator, href: true, enable_aria_label: false, alt: nil, title: nil, **options|
+  # rubocop: disable Metrics/ParameterLists:
+  xpath(:title, :alt) do |locator, href: true, enable_aria_label: false, alt: nil, title: nil, **_options|
     xpath = XPath.descendant(:a)
     xpath = if href.nil?
       xpath[~XPath.attr(:href)]
@@ -229,7 +230,7 @@ Capybara.add_selector(:link_or_button) do
 
   filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| node.tag_name == "a" or not(value ^ node.disabled?) }
 
-  describe { |disabled: nil, **options| " that is disabled" if disabled == true }
+  describe { |disabled: nil, **_options| " that is disabled" if disabled == true }
 end
 
 ##
@@ -514,7 +515,7 @@ Capybara.add_selector(:table) do
     xpath
   end
 
-  describe do |caption: nil, **options|
+  describe do |caption: nil, **_options|
     desc = String.new
     desc << " with caption #{caption}" if caption
     desc
@@ -538,7 +539,7 @@ Capybara.add_selector(:frame) do
     xpath
   end
 
-  describe do |name: nil, **options|
+  describe do |name: nil, **_options|
     desc = String.new
     desc << " with name #{name}" if name
     desc

@@ -30,43 +30,11 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
     native.xpath(form_elements_xpath).map do |field|
       case field.name
       when 'input'
-        if %w(radio checkbox).include? field['type']
-          if field['checked']
-            node=Capybara::RackTest::Node.new(self.driver, field)
-            merge_param!(params, field['name'].to_s, node.value.to_s)
-          end
-        elsif %w(submit image).include? field['type']
-          # TO DO identify the click button here (in document order, rather
-          # than leaving until the end of the params)
-        elsif field['type'] =='file'
-          if multipart?
-            file = \
-              if (value = field['value']).to_s.empty?
-                NilUploadedFile.new
-              else
-                mime_info = MiniMime.lookup_by_filename(value)
-                Rack::Test::UploadedFile.new(value, (mime_info && mime_info.content_type).to_s)
-              end
-            merge_param!(params, field['name'].to_s, file)
-          else
-            merge_param!(params, field['name'].to_s, File.basename(field['value'].to_s))
-          end
-        else
-          merge_param!(params, field['name'].to_s, field['value'].to_s)
-        end
+        add_input_param(field, params)
       when 'select'
-        if field['multiple'] == 'multiple'
-          options = field.xpath(".//option[@selected]")
-          options.each do |option|
-            merge_param!(params, field['name'].to_s, (option['value'] || option.text).to_s)
-          end
-        else
-          option = field.xpath(".//option[@selected]").first
-          option ||= field.xpath('.//option').first
-          merge_param!(params, field['name'].to_s, (option['value'] || option.text).to_s) if option
-        end
+        add_select_param(field, params)
       when 'textarea'
-        merge_param!(params, field['name'].to_s, field['_capybara_raw_value'].to_s.gsub(/\n/, "\r\n"))
+        add_textarea_param(field, params)
       end
     end
     merge_param!(params, button[:name], button[:value] || "") if button[:name]
@@ -110,5 +78,49 @@ private
     else
       ParamsHash.new
     end
+  end
+
+  def add_input_param(field, params)
+    if %w(radio checkbox).include? field['type']
+      if field['checked']
+        node=Capybara::RackTest::Node.new(self.driver, field)
+        merge_param!(params, field['name'].to_s, node.value.to_s)
+      end
+    elsif %w(submit image).include? field['type']
+      # TO DO identify the click button here (in document order, rather
+      # than leaving until the end of the params)
+    elsif field['type'] =='file'
+      if multipart?
+        file = \
+          if (value = field['value']).to_s.empty?
+            NilUploadedFile.new
+          else
+            mime_info = MiniMime.lookup_by_filename(value)
+            Rack::Test::UploadedFile.new(value, (mime_info && mime_info.content_type).to_s)
+          end
+        merge_param!(params, field['name'].to_s, file)
+      else
+        merge_param!(params, field['name'].to_s, File.basename(field['value'].to_s))
+      end
+    else
+      merge_param!(params, field['name'].to_s, field['value'].to_s)
+    end
+  end
+
+  def add_select_param(field, params)
+    if field['multiple'] == 'multiple'
+      options = field.xpath(".//option[@selected]")
+      options.each do |option|
+        merge_param!(params, field['name'].to_s, (option['value'] || option.text).to_s)
+      end
+    else
+      option = field.xpath(".//option[@selected]").first
+      option ||= field.xpath('.//option').first
+      merge_param!(params, field['name'].to_s, (option['value'] || option.text).to_s) if option
+    end
+  end
+
+  def add_textarea_param(field, params)
+    merge_param!(params, field['name'].to_s, field['_capybara_raw_value'].to_s.gsub(/\n/, "\r\n"))
   end
 end
