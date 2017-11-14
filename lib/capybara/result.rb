@@ -63,7 +63,7 @@ module Capybara
     end
 
     # rubocop:disable Metrics/MethodLength
-    def matches_count?
+    def compare_count
       # Only check filters for as many elements as necessary to determine result
       if @query.options[:count]
         count_opt = Integer(@query.options[:count])
@@ -71,7 +71,7 @@ module Capybara
           break if @result_cache.size > count_opt
           @result_cache << @results_enum.next
         end
-        return @result_cache.size == count_opt
+        return @result_cache.size <=> count_opt
       end
 
       if @query.options[:minimum]
@@ -79,7 +79,7 @@ module Capybara
         begin
           @result_cache << @results_enum.next while @result_cache.size < min_opt
         rescue StopIteration
-          return false
+          return -1
         end
       end
 
@@ -87,23 +87,30 @@ module Capybara
         max_opt = Integer(@query.options[:maximum])
         begin
           @result_cache << @results_enum.next while @result_cache.size <= max_opt
-          return false
+          return 1
         rescue StopIteration
         end
       end
 
       if @query.options[:between]
-        max =  Integer(@query.options[:between].max)
+        max = Integer(@query.options[:between].max)
+        min = Integer(@query.options[:between].min)
         loop do
           break if @result_cache.size > max
           @result_cache << @results_enum.next
         end
-        return false unless (@query.options[:between] === @result_cache.size)
+        return 0 if (@query.options[:between] === @result_cache.size)
+        return -1 if @result_cache.size < min
+        return 1
       end
 
-      return true
+      return 0
     end
     # rubocop:enable Metrics/MethodLength
+
+    def matches_count?
+      compare_count == 0
+    end
 
     def failure_message
       message = @query.failure_message
@@ -113,7 +120,7 @@ module Capybara
         message << " but there were no matches"
       end
       unless rest.empty?
-        elements = rest.map(&:text).map(&:inspect).join(", ")
+        elements = rest.map { |el| el.text rescue "<<ERROR>>" }.map(&:inspect).join(", ")
         message << ". Also found " << elements << ", which matched the selector but not all filters."
       end
       message

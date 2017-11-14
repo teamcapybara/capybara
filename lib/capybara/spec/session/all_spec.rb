@@ -14,6 +14,18 @@ Capybara::SpecHelper.spec "#all" do
     expect(@session.all('//div[@id="nosuchthing"]')).to be_empty
   end
 
+  it "should wait for matching elements to appear", requires: [:js] do
+    @session.visit('/with_js')
+    @session.click_link('Click me')
+    expect(@session.all(:css, "a#has-been-clicked")).not_to be_empty
+  end
+
+  it "should not wait if `minimum: 0` option is specified", requires: [:js] do
+    @session.visit('/with_js')
+    @session.click_link('Click me')
+    expect(@session.all(:css, "a#has-been-clicked", minimum: 0)).to be_empty
+  end
+
   it "should accept an XPath instance" do
     @session.visit('/form')
     @xpath = Capybara::Selector.all[:fillable_field].call('Name')

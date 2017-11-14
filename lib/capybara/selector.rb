@@ -159,7 +159,7 @@ Capybara.add_selector(:link) do
     when Regexp
       node[:href].match href
     else
-      node.first(:xpath, XPath.self[XPath.attr(:href).equals(href.to_s)], minimum: 0)
+      node.first(:xpath, XPath.self[XPath.attr(:href).equals(href.to_s)], allow_nil: true, wait: false)
     end
   end
 
@@ -371,9 +371,9 @@ Capybara.add_selector(:select) do
 
   filter(:options) do |node, options|
     if node.visible?
-      actual = node.all(:xpath, './/option').map { |option| option.text }
+      actual = node.all(:xpath, './/option', wait: false).map { |option| option.text }
     else
-      actual = node.all(:xpath, './/option', visible: false).map { |option| option.text(:all) }
+      actual = node.all(:xpath, './/option', visible: false, wait: false).map { |option| option.text(:all) }
     end
     options.sort == actual.sort
   end
@@ -387,12 +387,12 @@ Capybara.add_selector(:select) do
   end
 
   filter(:selected) do |node, selected|
-    actual = node.all(:xpath, './/option', visible: false).select(&:selected?).map { |option| option.text(:all) }
+    actual = node.all(:xpath, './/option', visible: false, wait: false).select(&:selected?).map { |option| option.text(:all) }
     Array(selected).sort == actual.sort
   end
 
   filter(:with_selected) do |node, selected|
-    actual = node.all(:xpath, './/option', visible: false).select(&:selected?).map { |option| option.text(:all) }
+    actual = node.all(:xpath, './/option', visible: false, wait: false).select(&:selected?).map { |option| option.text(:all) }
     (Array(selected) - actual).empty?
   end
 

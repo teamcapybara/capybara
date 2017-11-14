@@ -14,7 +14,7 @@ RSpec.describe Capybara::Result do
   end
 
   let :result do
-    string.all '//li'
+    string.all '//li', minimum: 0 # pass minimum: 0 so lazy evaluation doesn't get triggered yet
   end
 
   it "has a length" do

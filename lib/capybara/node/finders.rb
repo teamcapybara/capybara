@@ -218,10 +218,11 @@ module Capybara
       #     page.all('a', text: 'Home')
       #     page.all('#menu li', visible: true)
       #
-      # By default if no elements are found, an empty array is returned;
-      # however, expectations can be set on the number of elements to be found which
-      # will trigger Capybara's waiting behavior for the expectations to match.The
-      # expectations can be set using
+      # By default Capybara's waiting behavior will wait up to `Capybara.default_max_wait_time`
+      # seconds for matching elements to be available and then return an empty result if none
+      # are available. It is possible to set expectations on the number of results located and
+      # Capybara will raise an exception if the number of elements located don't satisfy the
+      # specified conditions.  The expectations can be set using
       #
       #     page.assert_selector('p#foo', count: 4)
       #     page.assert_selector('p#foo', maximum: 10)
@@ -232,9 +233,9 @@ module Capybara
       # count matching.
       #
       # @param [Symbol] kind                       Optional selector type (:css, :xpath, :field, etc.) - Defaults to Capybara.default_selector
-      # @param [String] locator                    The selector
+      # @param [String] locator                    The locator for the specified selector
       # @option options [String, Regexp] text      Only find elements which contain this text or match this regexp
-      # @option options [String, Boolean] exact_text (Capybara.exact_text) When String the string the elements contained text must match exactly, when Boolean controls whether the :text option must match exactly
+      # @option options [String, Boolean] exact_text (Capybara.exact_text) When String the elements contained text must match exactly, when Boolean controls whether the :text option must match exactly
       # @option options [Boolean, Symbol] visible  Only find elements with the specified visibility:
       #                                              * true - only finds visible elements.
       #                                              * false - finds invisible _and_ visible elements.
@@ -246,21 +247,29 @@ module Capybara
       # @option options [Integer] minimum          Minimum number of matches that are expected to be found
       # @option options [Range]   between          Number of matches found must be within the given range
       # @option options [Boolean] exact            Control whether `is` expressions in the given XPath match exactly or partially
-      # @option options [Integer] wait (Capybara.default_max_wait_time)  The time to wait for element count expectations to become true
+      # @option options [Integer, false] wait (Capybara.default_max_wait_time)  The time to wait for matching elements to become available
       # @overload all([kind = Capybara.default_selector], locator = nil, options = {})
       # @overload all([kind = Capybara.default_selector], locator = nil, options = {}, &filter_block)
       #   @yieldparam element [Capybara::Node::Element]  The element being considered for inclusion in the results
       #   @yieldreturn [Boolean]                     Should the element be considered in the results?
       # @return [Capybara::Result]                   A collection of found elements
-      #
+      # @raise [Capybara::ExpectationNotMet]         The number of elements found doesn't match the specified conditions
       def all(*args, **options, &optional_filter_block)
+        minimum_specified = [:count, :minimum, :between].any? {|k| options.key?(k)}
+        options = {minimum: 1}.merge(options) unless minimum_specified
         options[:session_options] = session_options
         args.push(options)
         query = Capybara::Queries::SelectorQuery.new(*args, &optional_filter_block)
-        synchronize(query.wait) do
-          result = query.resolve_for(self)
-          raise Capybara::ExpectationNotMet, result.failure_message unless result.matches_count?
-          result
+        begin
+          result = nil
+          synchronize(query.wait) do
+            result = query.resolve_for(self)
+            raise Capybara::ExpectationNotMet, result.failure_message unless result.matches_count?
+            result
+          end
+        rescue Capybara::ExpectationNotMet
+          raise if minimum_specified || (result.compare_count == 1)
+          Result.new([], nil)
         end
       end
       alias_method :find_all, :all
@@ -269,12 +278,14 @@ module Capybara
       #
       # Find the first element on the page matching the given selector
       # and options.  Will raise an error if no matching element is found
+      # unless the `allow_nil` option is true.
       #
       # @overload first([kind], locator, options)
       #   @param [:css, :xpath] kind                 The type of selector
       #   @param [String] locator                    The selector
       #   @param [Hash] options                      Additional options; see {#all}
       # @return [Capybara::Node::Element]            The found element or nil
+      # @raise  [Capybara::ElementNotFound]          If the element can't be found before time expires and `allow_nil` is not true
       #
       def first(*args, allow_nil: false, **options, &optional_filter_block)
         options = {minimum: 1}.merge(options)
