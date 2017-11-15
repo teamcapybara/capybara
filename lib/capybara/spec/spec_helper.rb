@@ -52,7 +52,7 @@ module Capybara
         end
       end
 
-      def spec(name, options={}, &block)
+      def spec(name, *options, &block)
         @specs ||= []
         @specs << [name, options, block]
       end
@@ -79,7 +79,7 @@ module Capybara
           end
 
           specs.each do |spec_name, spec_options, block|
-            describe spec_name, spec_options do
+            describe spec_name, *spec_options do
               class_eval(&block)
             end
           end
