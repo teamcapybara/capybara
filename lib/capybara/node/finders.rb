@@ -277,22 +277,20 @@ module Capybara
       ##
       #
       # Find the first element on the page matching the given selector
-      # and options.  Will raise an error if no matching element is found
-      # unless the `allow_nil` option is true.
+      # and options. By default `first` will wait up to `Capybara.default_max_wait_time`
+      # seconds for matching elements to appear and then raise an error if no matching
+      # element is found
       #
       # @overload first([kind], locator, options)
       #   @param [:css, :xpath] kind                 The type of selector
       #   @param [String] locator                    The selector
       #   @param [Hash] options                      Additional options; see {#all}
       # @return [Capybara::Node::Element]            The found element or nil
-      # @raise  [Capybara::ElementNotFound]          If the element can't be found before time expires and `allow_nil` is not true
+      # @raise  [Capybara::ElementNotFound]          If the element can't be found before time expires
       #
-      def first(*args, allow_nil: false, **options, &optional_filter_block)
+      def first(*args, **options, &optional_filter_block)
         options = {minimum: 1}.merge(options)
         all(*args, **options, &optional_filter_block).first
-      rescue Capybara::ElementNotFound
-        raise unless allow_nil
-        nil
       end
 
       private

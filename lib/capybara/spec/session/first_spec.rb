@@ -123,7 +123,11 @@ Capybara::SpecHelper.spec '#first' do
 
     it "should not wait if minimum: 0" do
       @session.click_link('clickable')
-      expect(@session.first(:css, 'a#has-been-clicked', minimum: 0)).to be_nil
+      Capybara.using_wait_time(3) do
+        start_time = Time.now
+        expect(@session.first(:css, 'a#has-been-clicked', minimum: 0)).to be_nil
+        expect(Time.now-start_time).to be < 3
+      end
     end
 
     it "should wait for at least one match by default" do
@@ -133,11 +137,13 @@ Capybara::SpecHelper.spec '#first' do
       end
     end
 
-    it "should return nil after waiting if no match and allow_nil is true" do
+    it "should raise an error after waiting if no match" do
       @session.click_link('clickable')
-      start_time = Time.now
       Capybara.using_wait_time(3) do
-        expect(@session.first(:css, 'a#not-a-real-link', allow_nil: true)).to be_nil
+        start_time = Time.now
+        expect {
+          @session.first(:css, 'a#not-a-real-link')
+        }.to raise_error Capybara::ElementNotFound
         expect(Time.now-start_time).to be > 3
       end
     end

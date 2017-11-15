@@ -159,7 +159,7 @@ Capybara.add_selector(:link) do
     when Regexp
       node[:href].match href
     else
-      node.first(:xpath, XPath.self[XPath.attr(:href).equals(href.to_s)], allow_nil: true, wait: false)
+      node.first(:xpath, XPath.self[XPath.attr(:href).equals(href.to_s)], minimum: 0)
     end
   end
 
