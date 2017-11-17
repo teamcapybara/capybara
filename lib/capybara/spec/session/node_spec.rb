@@ -297,14 +297,29 @@ Capybara::SpecHelper.spec "node" do
       element.drag_to(target)
       expect(@session.find('//div[contains(., "Dropped!")]')).not_to be_nil
     end
+
+    it "should drag and drop if scrolling is needed" do
+      @session.visit('/with_js')
+      element = @session.find('//div[@id="drag_scroll"]')
+      target = @session.find('//div[@id="drop_scroll"]')
+      element.drag_to(target)
+      expect(@session.find('//div[contains(., "Dropped!")]')).not_to be_nil
+    end
   end
 
   describe '#hover', requires: [:hover] do
     it "should allow hovering on an element" do
       @session.visit('/with_hover')
-      expect(@session.find(:css,'.hidden_until_hover', visible: false)).not_to be_visible
-      @session.find(:css,'.wrapper').hover
-      expect(@session.find(:css, '.hidden_until_hover', visible: false)).to be_visible
+      expect(@session.find(:css, '.wrapper:not(.scroll_needed) .hidden_until_hover', visible: false)).not_to be_visible
+      @session.find(:css,'.wrapper:not(.scroll_needed)').hover
+      expect(@session.find(:css, '.wrapper:not(.scroll_needed) .hidden_until_hover', visible: false)).to be_visible
+    end
+
+    it "should allow hovering on an element that needs to be scrolled into view" do
+      @session.visit('/with_hover')
+      expect(@session.find(:css, '.wrapper.scroll_needed .hidden_until_hover', visible: false)).not_to be_visible
+      @session.find(:css,'.wrapper.scroll_needed').hover
+      expect(@session.find(:css, '.wrapper.scroll_needed .hidden_until_hover', visible: false)).to be_visible
     end
   end
 
@@ -347,7 +362,7 @@ Capybara::SpecHelper.spec "node" do
 
   describe '#double_click', requires: [:js] do
     it "should double click an element" do
-      pending "selenium-webdriver/geckodriver doesn't support mouse move_to" if marionette?(@session)
+      pending "selenium-webdriver/geckodriver doesn't generate double click event" if marionette?(@session)
       @session.visit('/with_js')
       @session.find(:css, '#click-test').double_click
       expect(@session.find(:css, '#has-been-double-clicked')).to be
@@ -356,7 +371,6 @@ Capybara::SpecHelper.spec "node" do
 
   describe '#right_click', requires: [:js] do
     it "should right click an element" do
-      pending "selenium-webdriver/geckodriver doesn't support mouse move_to" if marionette?(@session)
       @session.visit('/with_js')
       @session.find(:css, '#click-test').right_click
       expect(@session.find(:css, '#has-been-right-clicked')).to be

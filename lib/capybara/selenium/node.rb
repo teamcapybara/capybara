@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class Capybara::Selenium::Node < Capybara::Driver::Node
+
   def visible_text
     # Selenium doesn't normalize Unicode whitespace.
     Capybara::Helpers.normalize_whitespace(native.text)
@@ -112,11 +113,15 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def right_click
-    driver.browser.action.context_click(native).perform
+    scroll_if_needed do
+      driver.browser.action.context_click(native).perform
+    end
   end
 
   def double_click
-    driver.browser.action.double_click(native).perform
+    scroll_if_needed do
+      driver.browser.action.double_click(native).perform
+    end
   end
 
   def send_keys(*args)
@@ -124,11 +129,15 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def hover
-    driver.browser.action.move_to(native).perform
+    scroll_if_needed do
+      driver.browser.action.move_to(native).perform
+    end
   end
 
   def drag_to(element)
-    driver.browser.action.drag_and_drop(native, element.native).perform
+    scroll_if_needed do
+      driver.browser.action.drag_and_drop(native, element.native).perform
+    end
   end
 
   def tag_name
@@ -237,5 +246,19 @@ private
         native.send_keys(value.to_s)
       end
     end
+  end
+
+  def scroll_if_needed(&block)
+    block.call
+  rescue ::Selenium::WebDriver::Error::MoveTargetOutOfBoundsError
+    script = <<-JS
+      try {
+        arguments[0].scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
+      } catch(e) {
+        arguments[0].scrollIntoView(true);
+      }
+    JS
+    driver.execute_script(script, self)
+    block.call
   end
 end
