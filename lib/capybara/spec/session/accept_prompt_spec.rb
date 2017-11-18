@@ -40,11 +40,18 @@ Capybara::SpecHelper.spec '#accept_prompt', requires: [:modals] do
   end
 
   it "should accept the prompt with a blank response when there is a default" do
-    pending "Geckodriver doesn't set a blank response currently" if @session.respond_to?(:mode) && @session.mode.to_s == "selenium_marionette"
+    pending "Geckodriver doesn't set a blank response currently" if marionette?(@session)
     @session.accept_prompt with: '' do
       @session.click_link('Open defaulted prompt')
     end
     expect(@session).to have_xpath("//a[@id='open-prompt-with-default' and @response='']")
+  end
+
+  it "should allow special characters in the reponse" do
+    @session.accept_prompt with: '\'the\' \b "response"' do
+      @session.click_link('Open prompt')
+    end
+    expect(@session).to have_xpath(%{//a[@id='open-prompt' and @response=concat("'the' ", '\\b "response"')]})
   end
 
   it "should accept the prompt if the message matches" do
@@ -61,7 +68,6 @@ Capybara::SpecHelper.spec '#accept_prompt', requires: [:modals] do
       end
     end.to raise_error(Capybara::ModalNotFound)
   end
-
 
   it "should return the message presented" do
     message = @session.accept_prompt with: 'the response' do
