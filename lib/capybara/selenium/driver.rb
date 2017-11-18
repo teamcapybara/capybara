@@ -36,25 +36,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def initialize(app, options={})
+    load_selenium
     @session = nil
-    begin
-      require 'selenium-webdriver'
-      # Fix for selenium-webdriver 3.4.0 which misnamed these
-      if !defined?(::Selenium::WebDriver::Error::ElementNotInteractableError)
-        ::Selenium::WebDriver::Error.const_set('ElementNotInteractableError', Class.new(::Selenium::WebDriver::Error::WebDriverError))
-      end
-      if !defined?(::Selenium::WebDriver::Error::ElementClickInterceptedError)
-        ::Selenium::WebDriver::Error.const_set('ElementClickInterceptedError', Class.new(::Selenium::WebDriver::Error::WebDriverError))
-      end
-    rescue LoadError => e
-      if e.message =~ /selenium-webdriver/
-        raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
-      else
-        raise e
-      end
-    end
-
-
     @app = app
     @browser = nil
     @exit_status = nil
@@ -375,6 +358,16 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def insert_modal_handlers(accept, response_text)
+    prompt_response = if accept
+      if response_text.nil?
+        "default_text"
+      else
+        "'#{response_text.gsub("\\", "\\\\\\").gsub("'", "\\\\'")}'"
+      end
+    else
+      'null'
+    end
+
     script = <<-JS
       if (typeof window.capybara  === 'undefined') {
         window.capybara = {
@@ -412,7 +405,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       }
       window.prompt = function(str = "", default_text = "") {
         window.capybara.handler_called(modal_handler, str.toString());
-        return #{accept ? (response_text.nil? ? "default_text" : "'#{response_text}'") : 'null'};
+        return #{prompt_response};
       }
     JS
     execute_script script
@@ -495,6 +488,25 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       Capybara::Selenium::Node.new(self, arg)
     else
       arg
+    end
+  end
+
+  def load_selenium
+    begin
+      require 'selenium-webdriver'
+      # Fix for selenium-webdriver 3.4.0 which misnamed these
+      if !defined?(::Selenium::WebDriver::Error::ElementNotInteractableError)
+        ::Selenium::WebDriver::Error.const_set('ElementNotInteractableError', Class.new(::Selenium::WebDriver::Error::WebDriverError))
+      end
+      if !defined?(::Selenium::WebDriver::Error::ElementClickInterceptedError)
+        ::Selenium::WebDriver::Error.const_set('ElementClickInterceptedError', Class.new(::Selenium::WebDriver::Error::WebDriverError))
+      end
+    rescue LoadError => e
+      if e.message =~ /selenium-webdriver/
+        raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
+      else
+        raise e
+      end
     end
   end
 end
