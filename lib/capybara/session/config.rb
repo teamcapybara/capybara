@@ -39,6 +39,7 @@ module Capybara
     #  See {Capybara.configure}
     #@!method save_path
     #  See {Capybara.configure}
+    #@deprecated
     #@!method exact_options
     #  See {Capybara.configure}
     #@!method asset_host
@@ -88,6 +89,13 @@ module Capybara
       warn "DEPRECATED: #save_and_open_page_path is deprecated, please use #save_path instead. \n"\
            "Note: Behavior is slightly different with relative paths - see documentation" unless path.nil?
       @save_and_open_page_path = path
+    end
+
+    remove_method :exact_options=
+    def exact_options=(opt)
+      @exact_options = opt
+      warn "DEPRECATED: #exact_options is deprecated, please scope your findes/actions and use the `:exact` "\
+           "option if similar functionality is needed."
     end
 
     def initialize_copy(other)

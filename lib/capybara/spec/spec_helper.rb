@@ -33,7 +33,9 @@ module Capybara
         Capybara.default_max_wait_time = 1
         Capybara.ignore_hidden_elements = true
         Capybara.exact = false
-        Capybara.exact_options = false
+        # `exact_options` is deprecated - set instancce var directly so we
+        # don't generate message every reset
+        Capybara.send(:config).session_options.instance_variable_set('@exact_options', false)
         Capybara.raise_server_errors = true
         Capybara.visible_text_only = false
         Capybara.match = :smart

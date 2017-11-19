@@ -24,6 +24,7 @@ Capybara::SpecHelper.spec "#select" do
   end
 
   it "should not allow selecting options where they are the only inexact match if `Capybara.exact_options = true`" do
+    expect_any_instance_of(Kernel).to receive(:warn).with(/^DEPRECATED:/)
     Capybara.exact_options = true
     expect do
       @session.select("Mis", from: 'Title')
