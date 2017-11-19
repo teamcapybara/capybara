@@ -8,6 +8,13 @@ Release date: unreleased
 * RSpec 2.x no longer supported
 * Deprecated methods removed
 * `first` now raises ElementNotFound by default instead of returning nil, when no matches are found  - Issue #1507
+* 'all' now waits for at least one matching element by default.  Pass `wait: false` if you want the previous
+  behavior where an empty result would be returned immediately if no matching elements exist yet.
+
+### Removed
+
+* `Capybara.exact_options` no longer exists. Just use `exact:true` on relevant actions/finders if necessary.
+
 
 # Version 2.16.0
 Release date: 2017-11-13

@@ -5,7 +5,7 @@ module Capybara
   class SessionConfig
     OPTIONS = [:always_include_port, :run_server, :default_selector, :default_max_wait_time, :ignore_hidden_elements,
                :automatic_reload, :match, :exact, :exact_text, :raise_server_errors, :visible_text_only,
-               :automatic_label_click, :enable_aria_label, :save_path, :exact_options, :asset_host, :default_host, :app_host,
+               :automatic_label_click, :enable_aria_label, :save_path, :asset_host, :default_host, :app_host,
                :server_host, :server_port, :server_errors]
 
     attr_accessor(*OPTIONS)
@@ -36,9 +36,6 @@ module Capybara
     #@!method enable_aria_label
     #  See {Capybara.configure}
     #@!method save_path
-    #  See {Capybara.configure}
-    #@deprecated
-    #@!method exact_options
     #  See {Capybara.configure}
     #@!method asset_host
     #  See {Capybara.configure}
