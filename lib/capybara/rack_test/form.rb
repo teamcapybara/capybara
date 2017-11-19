@@ -13,6 +13,8 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
     def original_filename; ""; end
     def content_type; "application/octet-stream"; end
     def path; @empty_file.path; end
+    def size; 0; end
+    def read; ""; end
   end
 
   def params(button)
