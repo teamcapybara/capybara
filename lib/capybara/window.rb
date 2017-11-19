@@ -125,10 +125,7 @@ module Capybara
         return res if cur_size == prev_size
         prev_size = cur_size
       end while (Capybara::Helpers.monotonic_time - start_time) < seconds
-      #TODO raise error in 3.0
-      #raise Capybara::WindowError, "Window size not stable."
-      warn "Window size not stable in #{seconds} seconds.  This will raise an exception in a future version of Capybara"
-      return res
+      raise Capybara::WindowError, "Window size not stable within #{seconds} seconds."
     end
 
     def raise_unless_current(what)
