@@ -13,7 +13,7 @@ Capybara::SpecHelper.spec "#select" do
     expect(@session.find_field('Title').value).to eq('Miss')
   end
 
-  it "should allow selecting options where there are inexact matches" do
+  it "should allow selecting exact options where there are inexact matches" do
     @session.select("Mr", from: 'Title')
     expect(@session.find_field('Title').value).to eq('Mr')
   end
@@ -23,11 +23,10 @@ Capybara::SpecHelper.spec "#select" do
     expect(@session.find_field('Title').value).to eq('Miss')
   end
 
-  it "should not allow selecting options where they are the only inexact match if `Capybara.exact_options = true`" do
-    expect_any_instance_of(Kernel).to receive(:warn).with(/^DEPRECATED:/)
-    Capybara.exact_options = true
+  it "should not allow selecting options where they are the only inexact match if `exact: true` is specified" do
+    sel = @session.find(:select, 'Title')
     expect do
-      @session.select("Mis", from: 'Title')
+      sel.select("Mis", exact: true)
     end.to raise_error(Capybara::ElementNotFound)
   end
 

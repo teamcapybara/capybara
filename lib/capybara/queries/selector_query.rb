@@ -27,12 +27,6 @@ module Capybara
 
         warn "Unused parameters passed to #{self.class.name} : #{args}" unless args.empty?
 
-        # TODO: make this better somehow
-        # for compatibility with Capybara 2.0
-        if session_options.exact_options and @selector == Selector.all[:option]
-          @options[:exact] = true
-        end
-
         @expression = @selector.call(@locator, @options.merge(enable_aria_label: session_options.enable_aria_label))
 
         warn_exact_usage

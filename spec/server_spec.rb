@@ -183,8 +183,6 @@ RSpec.describe Capybara::Server do
         Capybara::Server.new(proc {|e|}).boot
       end.to raise_error(RuntimeError, 'kaboom')
     ensure
-      # TODO refactor out the defaults so it's reliant on unset state instead of
-      # a one-time call in capybara.rb
       Capybara.server = :default
     end
   end
