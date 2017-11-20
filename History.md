@@ -1,5 +1,5 @@
 # Version 2.16.1
-Release data: 2017-11-20
+Release date: 2017-11-20
 
 ### Fixed
 
