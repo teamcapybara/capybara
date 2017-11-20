@@ -1,3 +1,11 @@
+# Version 2.16.1
+Release data: 2017-11-20
+
+### Fixed
+
+* Fix rack_test driver for rack_test 0.7.1/0.8.0 [Thomas Walpole]
+* `accept_prompt` response text can contain quotes when using selenium with headless chrome [Thomas Walpole]
+
 # Version 2.16.0
 Release date: 2017-11-13
 
