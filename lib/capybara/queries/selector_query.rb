@@ -175,8 +175,8 @@ module Capybara
           expr = "#{expr}[#{XPath.attr(:id) == options[:id]}]" if options.has_key?(:id) && !custom_keys.include?(:id)
           if options.has_key?(:class) && !custom_keys.include?(:class)
             class_xpath = Array(options[:class]).map do |klass|
-              "contains(concat(' ',normalize-space(@class),' '),' #{klass} ')"
-            end.join(" and ")
+              XPath.attr(:class).contains_word(klass)
+            end.reduce(:&)
             expr = "#{expr}[#{class_xpath}]"
           end
         end
@@ -198,9 +198,9 @@ module Capybara
       def apply_expression_filters(expr)
         expression_filters.inject(expr) do |memo, (name, ef)|
           if options.has_key?(name)
-            ef.apply_filter(memo, options[name])
+            ef.apply_filter(memo, options[name], @selector.expression_context)
           elsif ef.default?
-            ef.apply_filter(memo, ef.default)
+            ef.apply_filter(memo, ef.default, @selector.expression_context)
           else
             memo
           end
