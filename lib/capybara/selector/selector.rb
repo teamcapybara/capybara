@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'capybara/selector/filter_set'
 require 'capybara/selector/css'
+require 'capybara/selector/context'
 require 'xpath'
 
 #Patch XPath to allow a nil condition in where
@@ -20,6 +21,7 @@ end
 
 module Capybara
   class Selector
+    include XPath
 
     attr_reader :name, :format
 
@@ -152,13 +154,20 @@ module Capybara
 
     def call(locator, **options)
       if format
-        # @expression.call(locator, options.select {|k,v| @expression_filters.include?(k)})
-        @expression.call(locator, options)
+        # @expression.call(locator, options)
+        if format == :xpath
+          expression_context.instance_exec(locator, options, &@expression)
+        else
+          @expression.call(locator, options)
+        end
       else
         warn "Selector has no format"
       end
     end
 
+    def expression_context
+      @context ||= ExpressionContext.new(self)
+    end
     ##
     #
     #  Should this selector be used for the passed in locator
@@ -233,45 +242,8 @@ module Capybara
       custom_filters[name] = filter_class.new(name, block, options)
     end
 
-    def locate_field(xpath, locator, enable_aria_label: false, **_options)
-      locate_xpath = xpath #need to save original xpath for the label wrap
-      if locator
-        locator = locator.to_s
-        attr_matchers =  XPath.attr(:id).equals(locator).or(
-                         XPath.attr(:name).equals(locator)).or(
-                         XPath.attr(:placeholder).equals(locator)).or(
-                         XPath.attr(:id).equals(XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for)))
-        attr_matchers = attr_matchers.or XPath.attr(:'aria-label').is(locator) if enable_aria_label
-
-        locate_xpath = locate_xpath[attr_matchers]
-        locate_xpath = locate_xpath.union(XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(xpath))
-      end
-
-      # locate_xpath = [:name, :placeholder].inject(locate_xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
-      locate_xpath
-    end
-
     def describe_all_expression_filters(**opts)
       expression_filters.map { |ef| " with #{ef} #{opts[ef]}" if opts.has_key?(ef) }.join
-    end
-
-    def find_by_attr(attribute, value)
-      finder_name = "find_by_#{attribute}_attr"
-      if respond_to?(finder_name, true)
-        send(finder_name, value)
-      else
-        value ? XPath.attr(attribute).equals(value) : nil
-      end
-    end
-
-    def find_by_class_attr(classes)
-      if classes
-        Array(classes).map do |klass|
-          "contains(concat(' ',normalize-space(@class),' '),' #{klass} ')"
-        end.join(" and ").to_sym
-      else
-        nil
-      end
     end
   end
 end

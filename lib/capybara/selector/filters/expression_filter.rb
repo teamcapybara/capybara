@@ -5,7 +5,7 @@ module Capybara
   class Selector
     module Filters
       class ExpressionFilter < Base
-        def apply_filter(expr, value)
+        def apply_filter(expr, value, context)
           return expr if skip?(value)
 
           if !valid_value?(value)
@@ -19,7 +19,7 @@ module Capybara
             end
           end
 
-          @block.call(expr, value)
+          context.instance_exec(expr, value, &@block)
         end
       end
 
@@ -31,7 +31,7 @@ module Capybara
           false
         end
 
-        def apply_filter(expr, _value)
+        def apply_filter(expr, _value, _context)
           return expr
         end
       end
