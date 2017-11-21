@@ -15,11 +15,11 @@ private
     locate_xpath = xpath #need to save original xpath for the label wrap
     if locator
       locator = locator.to_s
-      attr_matchers =  attr(:id).equals(locator).or(
-                       attr(:name).equals(locator)).or(
-                       attr(:placeholder).equals(locator)).or(
-                       attr(:id).equals(anywhere(:label)[string.n.is(locator)].attr(:for)))
-      attr_matchers = attr_matchers.or attr(:'aria-label').is(locator) if enable_aria_label
+      attr_matchers =  attr(:id).equals(locator) |
+                       attr(:name).equals(locator) |
+                       attr(:placeholder).equals(locator) |
+                       attr(:id).equals(anywhere(:label)[string.n.is(locator)].attr(:for))
+      attr_matchers = attr_matchers | attr(:'aria-label').is(locator) if enable_aria_label
 
       locate_xpath = locate_xpath[attr_matchers]
       locate_xpath = locate_xpath.union(descendant(:label)[string.n.is(locator)].descendant(xpath))
