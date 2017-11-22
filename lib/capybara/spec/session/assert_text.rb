@@ -52,6 +52,14 @@ Capybara::SpecHelper.spec '#assert_text' do
     end.to raise_error(Capybara::ExpectationNotMet, /it was found 1 time using a case insensitive search/)
   end
 
+  it "should raise error with helpful message if requested text is present but invisible and with incorrect case", requires: [:js] do
+    @session.visit('/with_html')
+    el = @session.find(:css, '#uppercase')
+    expect do
+      el.assert_text('text here')
+    end.to raise_error(Capybara::ExpectationNotMet, /it was found 1 time using a case insensitive search and it was found 1 time including non-visible text/)
+  end
+
   it "should raise the correct error if requested text is missing but contains regex special characters" do
     @session.visit('/with_html')
     expect do
