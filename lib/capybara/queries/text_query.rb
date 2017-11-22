@@ -70,7 +70,7 @@ module Capybara
             invisible_text = text(@node, :all)
             invisible_count = invisible_text.scan(@search_regexp).size
             if invisible_count != @count
-              details_message << ". it was found #{invisible_count} #{Capybara::Helpers.declension("time", "times", invisible_count)} including non-visible text"
+              details_message << "it was found #{invisible_count} #{Capybara::Helpers.declension("time", "times", invisible_count)} including non-visible text"
             end
           rescue
             # An error getting the non-visible text (if element goes out of scope) should not affect the response
