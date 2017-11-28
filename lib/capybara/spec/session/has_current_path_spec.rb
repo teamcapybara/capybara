@@ -13,6 +13,12 @@ Capybara::SpecHelper.spec '#has_current_path?' do
     expect(@session).not_to have_current_path(/monkey/)
   end
 
+  it "should not raise an error when non-http" do
+    @session.reset_session!
+    expect(@session.has_current_path?(/monkey/)).to eq false
+    expect(@session.has_current_path?("/with_js")).to eq false
+  end
+
   it "should handle non-escaped query options" do
     @session.click_link("Non-escaped query options")
     expect(@session).to have_current_path("/with_html?options[]=things")
