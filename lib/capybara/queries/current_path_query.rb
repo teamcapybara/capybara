@@ -31,7 +31,7 @@ module Capybara
         end
 
         if @expected_path.is_a? Regexp
-          @actual_path.match(@expected_path)
+          @actual_path.to_s.match(@expected_path)
         else
           ::Addressable::URI.parse(@expected_path) == ::Addressable::URI.parse(@actual_path)
         end
