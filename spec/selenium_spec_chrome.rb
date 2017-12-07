@@ -40,8 +40,10 @@ RSpec.describe "Capybara::Session with chrome" do
         @session.find(:css, '#set-storage').click
         @session.reset!
         @session.visit('/with_js')
-        expect(@session.driver.browser.local_storage.keys).not_to be_empty
-        expect(@session.driver.browser.session_storage.keys).not_to be_empty
+        # expect(@session.driver.browser.local_storage.keys).not_to be_empty
+        # expect(@session.driver.browser.session_storage.keys).not_to be_empty
+        expect(@session.evaluate_script('Object.keys(localStorage)')).not_to be_empty
+        expect(@session.evaluate_script('Object.keys(sessionStorage)')).not_to be_empty
       end
 
       it "clears storage when set" do
@@ -50,8 +52,10 @@ RSpec.describe "Capybara::Session with chrome" do
         @session.find(:css, '#set-storage').click
         @session.reset!
         @session.visit('/with_js')
-        expect(@session.driver.browser.local_storage.keys).to be_empty
-        expect(@session.driver.browser.session_storage.keys).to be_empty
+        # expect(@session.driver.browser.local_storage.keys).to be_empty
+        # expect(@session.driver.browser.session_storage.keys).to be_empty
+        expect(@session.evaluate_script('Object.keys(localStorage)')).to be_empty
+        expect(@session.evaluate_script('Object.keys(sessionStorage)')).to be_empty
       end
     end
   end
