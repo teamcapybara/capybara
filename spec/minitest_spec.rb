@@ -88,6 +88,14 @@ class MinitestTest < Minitest::Test
     refute_table('not_on_form')
   end
 
+  def test_assert_all_of_selectors
+    assert_all_of_selectors(:css, 'select#form_other_title', 'input#form_last_name')
+  end
+
+  def test_assert_none_of_selectors
+    assert_none_of_selectors(:css, 'input#not_on_page', 'input#also_not_on_page')
+  end
+
   def test_assert_matches_selector
     assert_matches_selector(find(:field, 'customer_email'), :field, 'customer_email')
     assert_not_matches_selector(find(:select, 'form_title'), :field, 'customer_email')
@@ -117,6 +125,6 @@ RSpec.describe 'capybara/minitest' do
     reporter.start
     MinitestTest.run reporter, {}
     reporter.report
-    expect(output.string).to include("15 runs, 42 assertions, 0 failures, 0 errors, 0 skips")
+    expect(output.string).to include("17 runs, 44 assertions, 0 failures, 0 errors, 0 skips")
   end
 end

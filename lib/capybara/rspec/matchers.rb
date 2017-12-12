@@ -59,7 +59,6 @@ module Capybara
     end
 
     class HaveSelector < Matcher
-
       def initialize(*args, &filter_block)
         @args = args
         @filter_block = filter_block
@@ -79,6 +78,44 @@ module Capybara
 
       def query
         @query ||= Capybara::Queries::SelectorQuery.new(*session_query_args, &@filter_block)
+      end
+    end
+
+    class HaveAllSelectors < Matcher
+      def initialize(*args, &filter_block)
+        @args = args
+        @filter_block = filter_block
+      end
+
+      def matches?(actual)
+        wrap_matches?(actual){ |el| el.assert_all_of_selectors(*@args, &@filter_block) }
+      end
+
+      def does_not_match?(actual)
+        raise ArgumentError, "The have_all_selectors matcher does not support use with not_to/should_not"
+      end
+
+      def description
+        "have all selectors"
+      end
+    end
+
+    class HaveNoSelectors < Matcher
+      def initialize(*args, &filter_block)
+        @args = args
+        @filter_block = filter_block
+      end
+
+      def matches?(actual)
+        wrap_matches?(actual){ |el| el.assert_none_of_selectors(*@args, &@filter_block) }
+      end
+
+      def does_not_match?(actual)
+        raise ArgumentError, "The have_none_of_selectors matcher does not support use with not_to/should_not"
+      end
+
+      def description
+        "have no selectors"
       end
     end
 
@@ -209,6 +246,18 @@ module Capybara
     # See {Capybara::Node::Matcher#assert_selector}
     def have_selector(*args, &optional_filter_block)
       HaveSelector.new(*args, &optional_filter_block)
+    end
+
+    # RSpec matcher for whether the element(s) matching a group of selectors exist
+    # See {Capybara::Node::Matcher#assert_all_of_selectors}
+    def have_all_of_selectors(*args, &optional_filter_block)
+      HaveAllSelectors.new(*args, &optional_filter_block)
+    end
+
+    # RSpec matcher for whether no element(s) matching a group of selectors exist
+    # See {Capybara::Node::Matcher#assert_none_of_selectors}
+    def have_none_of_selectors(*args, &optional_filter_block)
+      HaveNoSelectors.new(*args, &optional_filter_block)
     end
 
     # RSpec matcher for whether the current element matches a given selector

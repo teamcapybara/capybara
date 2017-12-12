@@ -11,7 +11,9 @@ module Capybara
       (%w(selector xpath css link button field select table checked_field unchecked_field).flat_map do |assertion|
         [["assert_#{assertion}", "must_have_#{assertion}"],
          ["refute_#{assertion}", "wont_have_#{assertion}"]]
-      end + %w(selector xpath css).flat_map do |assertion|
+      end + [["assert_all_of_selectors", "must_have_all_of_selectors"],
+             ["assert_none_of_selectors", "must_have_none_of_selectors"]] +
+      %w(selector xpath css).flat_map do |assertion|
         [["assert_matches_#{assertion}", "must_match_#{assertion}"],
          ["refute_matches_#{assertion}", "wont_match_#{assertion}"]]
       end).each do |(meth, new_name)|

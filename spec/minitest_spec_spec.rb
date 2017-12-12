@@ -88,6 +88,14 @@ class MinitestSpecTest < Minitest::Spec
     page.wont_have_table('not_on_form')
   end
 
+  it "supports all_of_selectors expectations" do
+    page.must_have_all_of_selectors(:css, 'select#form_other_title', 'input#form_last_name')
+  end
+
+  it "supports none_of_selectors expectations" do
+    page.must_have_none_of_selectors(:css, 'input#not_on_page', 'input#also_not_on_page')
+  end
+
   it "supports match_selector expectations" do
     find(:field, 'customer_email').must_match_selector(:field, 'customer_email')
     find(:select, 'form_title').wont_match_selector(:field, 'customer_email')
@@ -120,7 +128,7 @@ RSpec.describe 'capybara/minitest/spec' do
     reporter.start
     MinitestSpecTest.run reporter, {}
     reporter.report
-    expect(output.string).to include("16 runs, 39 assertions, 1 failures, 0 errors, 0 skips")
+    expect(output.string).to include("18 runs, 41 assertions, 1 failures, 0 errors, 0 skips")
     #Make sure error messages are displayed
     expect(output.string).to include('expected to find visible select box "non_existing_form_title" that is not disabled but there were no matches')
   end
