@@ -423,6 +423,10 @@ module Capybara
       #
       #     page.has_select?('Language', selected: ['English', 'German'])
       #
+      # Or, that no options should have the selected attribute:
+      #
+      #     page.has_select?('City', selected: [])
+      #
       # It's also possible to check if the exact set of options exists for
       # this select box:
       #

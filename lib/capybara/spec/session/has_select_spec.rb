@@ -17,6 +17,7 @@ Capybara::SpecHelper.spec '#has_select?' do
     it "should be true if a field with the given value is on the page" do
       expect(@session).to have_select('form_locale', selected: 'English')
       expect(@session).to have_select('Region', selected: 'Norway')
+      expect(@session).to have_select('City', selected: [])
       expect(@session).to have_select('Underwear', selected: [
         'Boxerbriefs', 'Briefs', 'Commando', "Frenchman's Pantalons", 'Long Johns'
       ])
@@ -24,6 +25,7 @@ Capybara::SpecHelper.spec '#has_select?' do
 
     it "should be false if the given field is not on the page" do
       expect(@session).not_to have_select('Locale', selected: 'Swedish')
+      expect(@session).not_to have_select('Locale', selected: [])
       expect(@session).not_to have_select('Does not exist', selected: 'John')
       expect(@session).not_to have_select('City', selected: 'Not there')
       expect(@session).not_to have_select('Underwear', selected: [
