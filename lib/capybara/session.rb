@@ -486,7 +486,7 @@ module Capybara
     #   @raise [Capybara::WindowError]     if no window matches given block
     # @overload switch_to_window(window)
     #   @param window [Capybara::Window]   window that should be switched to
-    #   @raise [Capybara::Driver::Base#no_such_window_error] if non-existent (e.g. closed) window was passed
+    #   @raise [Capybara::Driver::Base#no_such_window_error] if nonexistent (e.g. closed) window was passed
     #
     # @return [Capybara::Window]         window that has been switched to
     # @raise [Capybara::ScopeError]        if this method is invoked inside `within` or
@@ -519,7 +519,7 @@ module Capybara
     # @overload within_window(window) { do_something }
     #   @param window [Capybara::Window]       instance of `Capybara::Window` class
     #     that will be switched to
-    #   @raise [driver#no_such_window_error] if unexistent (e.g. closed) window was passed
+    #   @raise [driver#no_such_window_error] if nonexistent (e.g. closed) window was passed
     # @overload within_window(proc_or_lambda) { do_something }
     #   @param lambda [Proc]                  lambda. First window for which lambda
     #     returns a value other than false or nil will be switched to.
