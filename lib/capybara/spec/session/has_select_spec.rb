@@ -27,7 +27,7 @@ Capybara::SpecHelper.spec '#has_select?' do
       expect(@session).not_to have_select('Does not exist', selected: 'John')
       expect(@session).not_to have_select('City', selected: 'Not there')
       expect(@session).not_to have_select('Underwear', selected: [
-        'Boxerbriefs', 'Briefs', 'Commando', "Frenchman's Pantalons", 'Long Johns', 'Nonexistant'
+        'Boxerbriefs', 'Briefs', 'Commando', "Frenchman's Pantalons", 'Long Johns', 'Nonexistent'
       ])
       expect(@session).not_to have_select('Underwear', selected: [
         'Boxerbriefs', 'Briefs', 'Boxers', 'Commando', "Frenchman's Pantalons", 'Long Johns'
@@ -185,7 +185,7 @@ Capybara::SpecHelper.spec '#has_no_select?' do
       expect(@session).to have_no_select('Does not exist', selected: 'John')
       expect(@session).to have_no_select('City', selected: 'Not there')
       expect(@session).to have_no_select('Underwear', selected: [
-        'Boxerbriefs', 'Briefs', 'Commando', "Frenchman's Pantalons", 'Long Johns', 'Nonexistant'
+        'Boxerbriefs', 'Briefs', 'Commando', "Frenchman's Pantalons", 'Long Johns', 'Nonexistent'
       ])
       expect(@session).to have_no_select('Underwear', selected: [
         'Boxerbriefs', 'Briefs', 'Boxers', 'Commando', "Frenchman's Pantalons", 'Long Johns'

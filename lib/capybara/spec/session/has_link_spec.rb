@@ -14,8 +14,8 @@ Capybara::SpecHelper.spec '#has_link?' do
 
   it "should be false if the given link is not on the page" do
     expect(@session).not_to have_link('monkey')
-    expect(@session).not_to have_link('A link', href: '/non-existant-href')
-    expect(@session).not_to have_link('A link', href: /non-existant/)
+    expect(@session).not_to have_link('A link', href: '/nonexistent-href')
+    expect(@session).not_to have_link('A link', href: /nonexistent/)
   end
 end
 
@@ -32,7 +32,7 @@ Capybara::SpecHelper.spec '#has_no_link?' do
 
   it "should be true if the given link is not on the page" do
     expect(@session).to have_no_link('monkey')
-    expect(@session).to have_no_link('A link', href: '/non-existant-href')
-    expect(@session).to have_no_link('A link', href: /\/non-existant-href/)
+    expect(@session).to have_no_link('A link', href: '/nonexistent-href')
+    expect(@session).to have_no_link('A link', href: /\/nonexistent-href/)
   end
 end

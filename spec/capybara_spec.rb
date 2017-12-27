@@ -139,7 +139,7 @@ RSpec.describe Capybara do
 end
 
 RSpec.describe Capybara::Session do
-  context 'with non-existant driver' do
+  context 'with nonexistent driver' do
     it "should raise an error" do
       expect {
         Capybara::Session.new(:quox, TestApp).driver
