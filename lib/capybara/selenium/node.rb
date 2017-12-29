@@ -74,8 +74,20 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     native.click if selected?
   end
 
-  def click
-    native.click
+  def click(*keys, **options)
+    if keys.empty? && options.empty? && !(options[:x] && options[:y])
+      native.click
+    else
+      scroll_if_needed do
+        action_with_modifiers(*keys, **options) do |a|
+          if options[:x] && options[:y]
+            a.click
+          else
+            a.click(native)
+          end
+        end
+      end
+    end
   rescue => e
     if e.is_a?(::Selenium::WebDriver::Error::ElementClickInterceptedError) ||
        e.message =~ /Other element would receive the click/
@@ -87,15 +99,27 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     raise e
   end
 
-  def right_click
+  def right_click(*keys, **options)
     scroll_if_needed do
-      driver.browser.action.context_click(native).perform
+      action_with_modifiers(*keys, **options) do |a|
+        if options[:x] && options[:y]
+          a.context_click
+        else
+          a.context_click(native)
+        end
+      end
     end
   end
 
-  def double_click
+  def double_click(*keys, **options)
     scroll_if_needed do
-      driver.browser.action.double_click(native).perform
+      action_with_modifiers(*keys, **options) do |a|
+        if options[:x] && options[:y]
+          a.double_click
+        else
+          a.double_click(native)
+        end
+      end
     end
   end
 
@@ -265,6 +289,42 @@ private
     else
       # action api is really slow here just use native.send_keys
       native.send_keys(value.to_s)
+    end
+  end
+
+  def action_with_modifiers(*keys, x: nil, y: nil)
+    actions = driver.browser.action
+    actions.move_to(native, x, y)
+    modifiers_down(actions, keys)
+    yield actions
+    modifiers_up(actions, keys)
+    actions.perform
+  ensure
+    a = driver.browser.action
+    a.release_actions if a.respond_to?(:release_actions)
+  end
+
+  def modifiers_down(actions, keys)
+    keys.each do |key|
+      key = case key
+      when :ctrl then :control
+      when :command, :cmd then :meta
+      else
+        key
+      end
+      actions.key_down(key)
+    end
+  end
+
+  def modifiers_up(actions, keys)
+    keys.each do |key|
+      key = case key
+      when :ctrl then :control
+      when :command, :cmd then :meta
+      else
+        key
+      end
+      actions.key_up(key)
     end
   end
 end

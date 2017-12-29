@@ -338,14 +338,57 @@ Capybara::SpecHelper.spec "node" do
       radio.click
       expect(radio).to be_checked
     end
+
+    it "should allow modifiers", requires: [:js] do
+      @session.visit('/with_js')
+      @session.find(:css, '#click-test').click(:control)
+      expect(@session).to have_link('Has been control clicked')
+    end
+
+    it "should allow multiple modifiers", requires: [:js] do
+      @session.visit('with_js')
+      @session.find(:css, '#click-test').click(:control, :alt, :meta, :shift)
+      expect(@session).to have_link('Has been alt control meta shift clicked')
+    end
+
+    it "should allow to adjust the click offset", requires: [:js] do
+      @session.visit('with_js')
+      @session.find(:css, '#click-test').click(x:0, y:0)
+      link = @session.find(:link, 'has-been-clicked')
+      locations = link.text.match /^Has been clicked at (?<x>[\d\.-]+),(?<y>[\d\.-]+)$/
+      # Resulting click location should be very close to 0, 0 relative to top left corner of the element, but may not be exact due to
+      # integer/float conversions and rounding.
+      expect(locations[:x].to_f).to be_within(1).of(0)
+      expect(locations[:y].to_f).to be_within(1).of(0)
+    end
   end
 
-  describe '#double_click', requires: [:js] do
-    it "should double click an element" do
+  describe '#double_click', requires: [:js], focus_: true do
+    before do
       pending "selenium-webdriver/geckodriver doesn't generate double click event" if marionette?(@session)
+    end
+
+    it "should double click an element" do
       @session.visit('/with_js')
       @session.find(:css, '#click-test').double_click
       expect(@session.find(:css, '#has-been-double-clicked')).to be
+    end
+
+    it "should allow modifiers", requires: [:js] do
+      @session.visit('/with_js')
+      @session.find(:css, '#click-test').double_click(:alt)
+      expect(@session).to have_link('Has been alt double clicked')
+    end
+
+    it "should allow to adjust the offset", requires: [:js] do
+      @session.visit('with_js')
+      @session.find(:css, '#click-test').double_click(x:10, y:5)
+      link = @session.find(:link, 'has-been-double-clicked')
+      locations = link.text.match /^Has been double clicked at (?<x>[\d\.-]+),(?<y>[\d\.-]+)$/
+      # Resulting click location should be very close to 10, 5 relative to top left corner of the element, but may not be exact due
+      # to integer/float conversions and rounding.
+      expect(locations[:x].to_f).to be_within(1).of(10)
+      expect(locations[:y].to_f).to be_within(1).of(5)
     end
   end
 
@@ -354,6 +397,23 @@ Capybara::SpecHelper.spec "node" do
       @session.visit('/with_js')
       @session.find(:css, '#click-test').right_click
       expect(@session.find(:css, '#has-been-right-clicked')).to be
+    end
+
+    it "should allow modifiers", requires: [:js] do
+      @session.visit('/with_js')
+      @session.find(:css, '#click-test').right_click(:meta)
+      expect(@session).to have_link('Has been meta right clicked')
+    end
+
+    it "should allow to adjust the offset", requires: [:js] do
+      @session.visit('with_js')
+      @session.find(:css, '#click-test').right_click(x:10, y:10)
+      link = @session.find(:link, 'has-been-right-clicked')
+      locations = link.text.match /^Has been right clicked at (?<x>[\d\.-]+),(?<y>[\d\.-]+)$/
+      # Resulting click location should be very close to 10, 10 relative to top left corner of the element, but may not be exact due
+      # to integer/float conversions and rounding
+      expect(locations[:x].to_f).to be_within(1).of(10)
+      expect(locations[:y].to_f).to be_within(1).of(10)
     end
   end
 

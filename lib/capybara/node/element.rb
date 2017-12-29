@@ -138,9 +138,14 @@ module Capybara
       #
       # Click the Element
       #
+      # @!macro click_modifiers
+      #   @overload $0(*key_modifiers=[], offset={x: nil, y: nil})
+      #     @param [Array<:alt, :control, :meta, :shift>] *key_modifiers  Keys to be held down when clicking
+      #     @param [Hash] offset                          x and y coordinates to offset the click location from the top left corner of the element.  If not specified will click the middle of the element.
       # @return [Capybara::Node::Element]  The element
-      def click
-        synchronize { base.click }
+      def click(*options)
+        verify_click_options_support(__method__) if !options.empty?
+        synchronize { base.click(*options) }
         return self
       end
 
@@ -148,9 +153,11 @@ module Capybara
       #
       # Right Click the Element
       #
+      # @macro click_modifiers
       # @return [Capybara::Node::Element]  The element
-      def right_click
-        synchronize { base.right_click }
+      def right_click(*options)
+        verify_click_options_support(__method__) if !options.empty?
+        synchronize { base.right_click(*options) }
         return self
       end
 
@@ -158,9 +165,11 @@ module Capybara
       #
       # Double Click the Element
       #
+      # @macro click_modifiers
       # @return [Capybara::Node::Element]  The element
-      def double_click
-        synchronize { base.double_click }
+      def double_click(*options)
+        verify_click_options_support(__method__) if !options.empty?
+        synchronize { base.double_click(*options) }
         return self
       end
 
@@ -379,6 +388,13 @@ module Capybara
           %(Obsolete #<Capybara::Node::Element>)
         else
           raise
+        end
+      end
+    private
+
+      def verify_click_options_support(method)
+        if base.method(method).arity == 0
+          raise ArgumentError, "The current driver does not support #{method} options"
         end
       end
     end
