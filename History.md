@@ -3,7 +3,7 @@ Release date: unreleased
 
 ### Added
 
-* `have_all_selectors`, `have_no_selectors` RSpec matchers for parity with minitest assertions [Thomas Walpole]
+* `have_all_of_selectors`, `have_none_of_selectors` RSpec matchers for parity with minitest assertions [Thomas Walpole]
 
 ### Fixed
 
