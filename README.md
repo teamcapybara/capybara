@@ -71,7 +71,7 @@ GitHub): http://groups.google.com/group/ruby-capybara
 
 ## <a name="setup"></a>Setup
 
-Capybara requires Ruby 2.0.0 or later. To install, add this line to your
+Capybara requires Ruby 2.2.0 or later. To install, add this line to your
 `Gemfile` and run `bundle install`:
 
 ```ruby
@@ -83,9 +83,6 @@ If the application that you are testing is a Rails app, add this line to your te
 ```ruby
 require 'capybara/rails'
 ```
-
-**Note:** In Rails 4.0/4.1 the default test environment (`config/environments/test.rb`) is [not threadsafe](https://github.com/rails/rails/issues/15089).
-If you experience random errors about missing constants, add `config.allow_concurrency = false` to `config/environments/test.rb`.
 
 If the application that you are testing is a Rack app, but not Rails, set Capybara.app to your Rack app:
 
@@ -145,11 +142,11 @@ Load RSpec 3.x support by adding the following line (typically to your
 require 'capybara/rspec'
 ```
 
-If you are using Rails, put your Capybara specs in `spec/features` (only works
+If you are using Rails, put your Capybara specs in `spec/features` of `spec/system` (only works
 if [you have it configured in
 RSpec](https://www.relishapp.com/rspec/rspec-rails/docs/upgrade#file-type-inference-disabled))
 and if you have your Capybara specs in a different directory, then tag the
-example groups with `:type => :feature`.
+example groups with `:type => :feature` or `:type => :system` depending on which type of test you're writing.
 
 If you are not using Rails, tag all the example groups in which you want to use
 Capybara with `:type => :feature`.
@@ -221,7 +218,7 @@ end
 `background` is an alias for `before`, `scenario` for `it`, and
 `given`/`given!` aliases for `let`/`let!`, respectively.
 
-Finally, Capybara matchers are supported in view specs:
+Finally, Capybara matchers are also supported in view specs:
 
 ```ruby
 RSpec.describe "todos/show.html.erb", type: :view do
@@ -740,7 +737,7 @@ Capybara 1.x, set `Capybara.match` to `:prefer_exact`.
 
 ## <a name="transactions-and-database-setup"></a>Transactions and database setup
 
-**Note:**  Rails 5.1+ now "safely" shares the database connection between the app and test threads.  Therefore,
+**Note:**  Rails 5.1+ "safely" shares the database connection between the app and test threads.  Therefore,
 if using Rails 5.1+ you SHOULD be able to ignore this section.
 
 Some Capybara drivers need to run against an actual HTTP server. Capybara takes
@@ -1080,7 +1077,8 @@ To set up a development environment, simply do:
 
 ```bash
 bundle install
-bundle exec rake  # run the test suite
+bundle exec rake  # run the test suite with Firefox - requires `geckodriver` to be installed
+bundle exec rake spec_chrome # run the test suite with Chrome - require `chromedriver` to be installed
 ```
 
 See
