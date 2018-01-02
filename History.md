@@ -1,3 +1,16 @@
+# Version 2.17.0
+Release date: unreleased
+
+### Added
+
+* `have_all_selectors`, `have_no_selectors` RSpec matchers for parity with minitest assertions [Thomas Walpole]
+
+### Fixed
+
+* Allow xpath 3.x gem [Thomas Walpole]
+* Issue when drivers returned nil for `current_path` and a matcher was used with a Regexp [Thomas Walpole]
+* Error message when visible element not found, but non-visible was [Andy Klimczak]
+
 # Version 2.16.1
 Release date: 2017-11-20
 
