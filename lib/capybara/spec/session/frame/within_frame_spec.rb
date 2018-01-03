@@ -79,16 +79,4 @@ Capybara::SpecHelper.spec '#within_frame', requires: [:frames] do
       expect(@session).not_to have_selector(:css, '#childFrame')
     end
   end
-
-  it "should support the driver #switch_to_frame api" do
-    # This test is purely to notify driver authors to update their API.
-    # The #switch_to_frame API will be required in the next version (> 2.8) of Capybara for frames support.
-    # It should not be used as an example of code for users.
-    frame = @session.find(:frame, "frameOne")
-    expect {
-      @session.driver.switch_to_frame(frame)
-      sleep 0.5
-      @session.driver.switch_to_frame(:parent)
-    }.not_to raise_error
-  end
 end
