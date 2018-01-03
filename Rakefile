@@ -50,7 +50,7 @@ task :travis do
 end
 
 task :release do
-  version = Capybara::Poltergeist::VERSION
+  version = Capybara::VERSION
   puts "Releasing #{version}, y/n?"
   exit(1) unless STDIN.gets.chomp == 'y'
   sh "git commit -am 'tagged #{version}' && " \
