@@ -2,8 +2,8 @@ language: ruby
 sudo: required
 dist: trusty
 rvm:
-  - 2.4.2
-  - 2.3.5
+  - 2.5.0
+  - 2.3.6
   - jruby-9.1.13.0
 gemfile:
   - Gemfile
@@ -26,7 +26,7 @@ addons:
 matrix:
   include:
     - gemfile: gemfiles/Gemfile.rspec-34
-      rvm: 2.3.5
+      rvm: 2.3.6
       env: CAPYBARA_FF=true
       addons:
         firefox: latest
@@ -34,7 +34,7 @@ matrix:
           packages:
             - awesome
     - gemfile: Gemfile
-      rvm: 2.4.2
+      rvm: 2.4.3
       env: HEADLESS=true
     - gemfile: gemfiles/Gemfile.ruby-20
       env:
@@ -56,7 +56,7 @@ matrix:
           packages:
             - awesome
     - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: 2.3.5
+      rvm: 2.5.0
       env: CAPYBARA_FF=true
       addons:
         firefox: latest-beta
@@ -72,7 +72,7 @@ matrix:
           packages:
             - awesome
     - gemfile: Gemfile
-      rvm: 2.4.2
+      rvm: 2.4.3
       env: CAPYBARA_FF=true HEADLESS=true
       addons:
         firefox: latest
@@ -96,6 +96,7 @@ before_install:
       popd;
       bundle config local.selenium-webdriver ../selenium/build/rb;
     fi
+  - gem update --system
   - gem update bundler
 before_script:
   - if [[ -z $HEADLESS ]]; then
