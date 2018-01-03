@@ -6,8 +6,8 @@ Capybara::Selector::FilterSet.add(:_field) do
   filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| not(value ^ node.disabled?) }
   filter(:multiple, :boolean) { |node, value| !(value ^ node.multiple?) }
 
-  expression_filter(:name) { |xpath, val| xpath[XPath.attr(:name).equals(val)] }
-  expression_filter(:placeholder) { |xpath, val| xpath[XPath.attr(:placeholder).equals(val)] }
+  expression_filter(:name) { |xpath, val| xpath[XPath.attr(:name) == val] }
+  expression_filter(:placeholder) { |xpath, val| xpath[XPath.attr(:placeholder) ==  val] }
 
   describe do |checked: nil, unchecked: nil, disabled: nil, multiple: nil, **_options|
     desc, states = String.new, []
@@ -70,7 +70,7 @@ end
 # @filter [Boolean] :multiple Match fields that accept multiple values
 Capybara.add_selector(:field) do
   xpath do |locator, **options|
-    xpath = XPath.descendant(:input, :textarea, :select)[~XPath.attr(:type).one_of('submit', 'image', 'hidden')]
+    xpath = XPath.descendant(:input, :textarea, :select)[!XPath.attr(:type).one_of('submit', 'image', 'hidden')]
     locate_field(xpath, locator, options)
   end
 
@@ -79,7 +79,7 @@ Capybara.add_selector(:field) do
     if ['textarea', 'select'].include?(type)
       expr.self(type.to_sym)
     else
-      expr[XPath.attr(:type).equals(type)]
+      expr[XPath.attr(:type) == type]
     end
   end
 
@@ -111,7 +111,7 @@ end
 Capybara.add_selector(:fieldset) do
   xpath(:legend) do |locator, legend: nil, **_options|
     xpath = XPath.descendant(:fieldset)
-    xpath = xpath[XPath.attr(:id).equals(locator.to_s).or XPath.child(:legend)[XPath.string.n.is(locator.to_s)]] unless locator.nil?
+    xpath = xpath[(XPath.attr(:id) == locator.to_s) | XPath.child(:legend)[XPath.string.n.is(locator.to_s)]] unless locator.nil?
     xpath = xpath[XPath.child(:legend)[XPath.string.n.is(legend)]] if legend
     xpath
   end
@@ -134,21 +134,21 @@ Capybara.add_selector(:link) do
   xpath(:title, :alt) do |locator, href: true, enable_aria_label: false, alt: nil, title: nil, **_options|
     xpath = XPath.descendant(:a)
     xpath = if href.nil?
-      xpath[~XPath.attr(:href)]
+      xpath[!XPath.attr(:href)]
     else
       xpath[XPath.attr(:href)]
     end
     unless locator.nil?
       locator = locator.to_s
-      matchers = XPath.attr(:id).equals(locator).or(
-                 XPath.string.n.is(locator)).or(
-                 XPath.attr(:title).is(locator)).or(
-                 XPath.descendant(:img)[XPath.attr(:alt).is(locator)])
+      matchers = [ XPath.attr(:id).equals(locator),
+                   XPath.string.n.is(locator),
+                   XPath.attr(:title).is(locator),
+                   XPath.descendant(:img)[XPath.attr(:alt).is(locator)] ].reduce(:|)
       matchers = matchers.or XPath.attr(:'aria-label').is(locator) if enable_aria_label
       xpath = xpath[matchers]
     end
     xpath = xpath[find_by_attr(:title, title)]
-    xpath = xpath[XPath.descendant(:img)[XPath.attr(:alt).equals(alt)]] if alt
+    xpath = xpath[XPath.descendant(:img)[XPath.attr(:alt) == alt]] if alt
     xpath
   end
 
@@ -159,7 +159,7 @@ Capybara.add_selector(:link) do
     when Regexp
       node[:href].match href
     else
-      node.first(:xpath, XPath.self[XPath.attr(:href).equals(href.to_s)], minimum: 0)
+      node.first(:xpath, XPath.self[XPath.attr(:href) == href.to_s], minimum: 0)
     end
   end
 
@@ -185,16 +185,16 @@ Capybara.add_selector(:button) do
   xpath(:value, :title) do |locator, **options|
     input_btn_xpath = XPath.descendant(:input)[XPath.attr(:type).one_of('submit', 'reset', 'image', 'button')]
     btn_xpath = XPath.descendant(:button)
-    image_btn_xpath = XPath.descendant(:input)[XPath.attr(:type).equals('image')]
+    image_btn_xpath = XPath.descendant(:input)[XPath.attr(:type) == 'image']
 
     unless locator.nil?
       locator = locator.to_s
-      locator_matches = XPath.attr(:id).equals(locator).or XPath.attr(:value).is(locator).or XPath.attr(:title).is(locator)
+      locator_matches = XPath.attr(:id).equals(locator) | XPath.attr(:value).is(locator) | XPath.attr(:title).is(locator)
       locator_matches = locator_matches.or XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
 
       input_btn_xpath = input_btn_xpath[locator_matches]
 
-      btn_xpath = btn_xpath[locator_matches.or XPath.string.n.is(locator).or XPath.descendant(:img)[XPath.attr(:alt).is(locator)]]
+      btn_xpath = btn_xpath[locator_matches | XPath.string.n.is(locator) | XPath.descendant(:img)[XPath.attr(:alt).is(locator)]]
 
       alt_matches = XPath.attr(:alt).is(locator)
       alt_matches = alt_matches.or XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
@@ -251,7 +251,7 @@ Capybara.add_selector(:fillable_field) do
   label "field"
 
   xpath do |locator, **options|
-    xpath = XPath.descendant(:input, :textarea)[~XPath.attr(:type).one_of('submit', 'image', 'radio', 'checkbox', 'hidden', 'file')]
+    xpath = XPath.descendant(:input, :textarea)[!XPath.attr(:type).one_of('submit', 'image', 'radio', 'checkbox', 'hidden', 'file')]
     locate_field(xpath, locator, options)
   end
 
@@ -260,7 +260,7 @@ Capybara.add_selector(:fillable_field) do
     if ['textarea'].include?(type)
       expr.self(type.to_sym)
     else
-      expr[XPath.attr(:type).equals(type)]
+      expr[XPath.attr(:type) == type]
     end
   end
 
@@ -295,7 +295,7 @@ Capybara.add_selector(:radio_button) do
   label "radio button"
 
   xpath do |locator, **options|
-    xpath = XPath.descendant(:input)[XPath.attr(:type).equals('radio')]
+    xpath = XPath.descendant(:input)[XPath.attr(:type) == 'radio']
     locate_field(xpath, locator, options)
   end
 
@@ -327,7 +327,7 @@ end
 Capybara.add_selector(:checkbox) do
 
   xpath do |locator, **options|
-    xpath = XPath.descendant(:input)[XPath.attr(:type).equals('checkbox')]
+    xpath = XPath.descendant(:input)[XPath.attr(:type) == 'checkbox']
     locate_field(xpath, locator, options)
   end
 
@@ -447,7 +447,7 @@ end
 Capybara.add_selector(:file_field) do
   label "file field"
   xpath do |locator, options|
-    xpath = XPath.descendant(:input)[XPath.attr(:type).equals('file')]
+    xpath = XPath.descendant(:input)[XPath.attr(:type) == 'file']
     locate_field(xpath, locator, options)
   end
 
@@ -471,9 +471,13 @@ Capybara.add_selector(:label) do
   label "label"
   xpath(:for) do |locator, options|
     xpath = XPath.descendant(:label)
-    xpath = xpath[XPath.string.n.is(locator.to_s).or XPath.attr(:id).equals(locator.to_s)] unless locator.nil?
+    xpath = xpath[XPath.string.n.is(locator.to_s) | (XPath.attr(:id) == locator.to_s)] unless locator.nil?
     if options.has_key?(:for) && !options[:for].is_a?(Capybara::Node::Element)
-      xpath = xpath[XPath.attr(:for).equals(options[:for].to_s).or((~XPath.attr(:for)).and(XPath.descendant()[XPath.attr(:id).equals(options[:for].to_s)]))]
+      with_attr = XPath.attr(:for).equals(options[:for].to_s)
+      labelable_elements = %i(button input keygen meter output progress select textarea)
+      wrapped = !XPath.attr(:for) &
+                XPath.descendant(*labelable_elements)[XPath.attr(:id) == options[:for].to_s]
+      xpath = xpath[with_attr | wrapped]
     end
     xpath
   end
@@ -510,8 +514,8 @@ end
 Capybara.add_selector(:table) do
   xpath(:caption) do |locator, options|
     xpath = XPath.descendant(:table)
-    xpath = xpath[XPath.attr(:id).equals(locator.to_s).or XPath.descendant(:caption).is(locator.to_s)] unless locator.nil?
-    xpath = xpath[XPath.descendant(:caption).equals(options[:caption])] if options[:caption]
+    xpath = xpath[(XPath.attr(:id) == locator.to_s) | XPath.descendant(:caption).is(locator.to_s)] unless locator.nil?
+    xpath = xpath[XPath.descendant(:caption) == options[:caption]] if options[:caption]
     xpath
   end
 
@@ -534,7 +538,7 @@ end
 Capybara.add_selector(:frame) do
   xpath(:name) do |locator, **options|
     xpath = XPath.descendant(:iframe).union(XPath.descendant(:frame))
-    xpath = xpath[XPath.attr(:id).equals(locator.to_s).or XPath.attr(:name).equals(locator)] unless locator.nil?
+    xpath = xpath[(XPath.attr(:id) == locator.to_s) | (XPath.attr(:name) == locator.to_s)] unless locator.nil?
     xpath = expression_filters.keys.inject(xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
     xpath
   end

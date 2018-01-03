@@ -237,11 +237,11 @@ module Capybara
       locate_xpath = xpath #need to save original xpath for the label wrap
       if locator
         locator = locator.to_s
-        attr_matchers =  XPath.attr(:id).equals(locator).or(
-                         XPath.attr(:name).equals(locator)).or(
-                         XPath.attr(:placeholder).equals(locator)).or(
-                         XPath.attr(:id).equals(XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for)))
-        attr_matchers = attr_matchers.or XPath.attr(:'aria-label').is(locator) if enable_aria_label
+        attr_matchers = [ XPath.attr(:id).equals(locator),
+                          XPath.attr(:name).equals(locator),
+                          XPath.attr(:placeholder).equals(locator),
+                          XPath.attr(:id).equals(XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for))].reduce(:|)
+        attr_matchers = attr_matchers | XPath.attr(:'aria-label').is(locator) if enable_aria_label
 
         locate_xpath = locate_xpath[attr_matchers]
         locate_xpath = locate_xpath.union(XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(xpath))
@@ -267,8 +267,8 @@ module Capybara
     def find_by_class_attr(classes)
       if classes
         Array(classes).map do |klass|
-          "contains(concat(' ',normalize-space(@class),' '),' #{klass} ')"
-        end.join(" and ").to_sym
+          XPath.attr(:class).contains_word(klass)
+        end.reduce(:&)
       else
         nil
       end
