@@ -108,10 +108,6 @@ module Capybara
     def marionette?(session)
       session.driver.respond_to?(:marionette?, true) && session.driver.send(:marionette?)
     end
-
-    def rspec2?
-      !defined?(::RSpec::Expectations::Version) || (Gem::Version.new(RSpec::Expectations::Version::STRING) < Gem::Version.new('3.0'))
-    end
   end
 end
 

@@ -48,8 +48,6 @@ RSpec.describe 'capybara/rspec', :type => :feature do
     end
 
     it "allows access to the RSpec matcher" do
-      skip "RSpec < 3 doesn't have an `all` matcher" if rspec2?
-
       visit('/with_html')
       expect(["test1", "test2"]).to all(be_a(String))
     end
@@ -64,7 +62,6 @@ RSpec.describe 'capybara/rspec', :type => :feature do
     end
 
     it "allows access to the RSpec matcher" do
-      skip "RSpec version doesn't have a 'within' matcher" unless ::RSpec::Matchers.instance_methods.include?(:within)
       visit('/with_html')
       # This reads terribly, but must call #within
       expect(find(:css, 'span.number').text.to_i).to within(1).of(41)
@@ -90,8 +87,6 @@ RSpec.describe 'capybara/rspec', :type => :other do
       end
 
       it "allows access to the RSpec matcher" do
-        skip "RSpec < 3 doesn't have an `all` matcher" if rspec2?
-
         @test_class_instance.visit('/with_html')
         expect(["test1", "test2"]).to @test_class_instance.all(be_a(String))
       end
@@ -106,7 +101,6 @@ RSpec.describe 'capybara/rspec', :type => :other do
       end
 
       it "allows access to the RSpec matcher" do
-        skip "RSpec version doesn't have a 'within' matcher" unless ::RSpec::Matchers.instance_methods.include?(:within)
         @test_class_instance.visit('/with_html')
         # This reads terribly, but must call #within
         expect(@test_class_instance.find(:css, 'span.number').text.to_i).to @test_class_instance.within(1).of(41)
