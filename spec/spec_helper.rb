@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'rspec/expectations'
 require "capybara/spec/spec_helper"
+require 'webdrivers' if ENV['TRAVIS']
 
 RSpec.configure do |config|
   Capybara::SpecHelper.configure(config)

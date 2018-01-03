@@ -23,6 +23,11 @@ addons:
       - google-chrome-beta
       - awesome
 
+cache:
+  bundler: true
+  directories:
+    - ~/.webdrivers
+
 matrix:
   include:
     - gemfile: gemfiles/Gemfile.rspec-34
@@ -62,14 +67,6 @@ matrix:
     - gemfile: gemfiles/Gemfile.edge-marionette
     - rvm: rbx-3
 before_install:
-  - mkdir -p ~/drivers; export PATH=~/drivers:$PATH;
-  - CHROMEDRIVER_VERSION=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE);
-    CHROMEDRIVER_URL="http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip";
-    FILE=`mktemp`; wget "$CHROMEDRIVER_URL" -qO $FILE && unzip $FILE chromedriver -d ~/drivers; rm $FILE; chmod 777 ~/drivers/chromedriver;
-    ~/drivers/chromedriver --version;
-  - GECKODRIVER_URL="https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz";
-    FILE=`mktemp`; wget "$GECKODRIVER_URL" -qO $FILE && tar xz -C ~/drivers -f $FILE geckodriver; rm $FILE; chmod 777 ~/drivers/geckodriver;
-    ~/drivers/geckodriver --version;
   - if [[ $BUNDLE_GEMFILE =~ Gemfile.edge-marionette$ ]]; then
       pushd ..;
       git clone --depth 1 https://github.com/SeleniumHQ/selenium.git;
