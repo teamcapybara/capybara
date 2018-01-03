@@ -55,6 +55,8 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
         path_names = value.to_s.empty? ? [] : value
         if driver.chrome?
           native.send_keys(Array(path_names).join("\n"))
+        elsif driver.marionette? && Gem.win_platform?
+          native.send_keys(*Array(path_names).map {|p| p.tr('/', '\\')})
         else
           native.send_keys(*path_names)
         end
