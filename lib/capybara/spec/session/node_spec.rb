@@ -480,7 +480,6 @@ Capybara::SpecHelper.spec "node" do
 
   context "when #synchronize raises server errors" do
     it "sets an explanatory exception as the cause of server exceptions", requires: [:server, :js] do
-      skip "This version of ruby doesn't support exception causes" unless Exception.instance_methods.include? :cause
       quietly { @session.visit("/error") }
       expect do
         @session.find(:css, 'span')
@@ -491,7 +490,6 @@ Capybara::SpecHelper.spec "node" do
     end
 
     it "sets an explanatory exception as the cause of server exceptions with errors with initializers", requires: [:server, :js] do
-      skip "This version of ruby doesn't support exception causes" unless Exception.instance_methods.include? :cause
       quietly { @session.visit("/other_error") }
       expect do
         @session.find(:css, 'span')
