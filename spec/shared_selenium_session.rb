@@ -35,7 +35,6 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         @current_dir = Dir.getwd
         Dir.chdir(File.join(File.dirname(__FILE__), '..'))
         @env = { 'SELENIUM_BROWSER' => @session.driver.options[:browser].to_s }
-        @env['LEGACY_FIREFOX'] = 'TRUE' if mode == :selenium_firefox
       end
 
       after do
