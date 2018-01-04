@@ -353,13 +353,13 @@ Capybara::SpecHelper.spec "node" do
 
     it "should allow to adjust the click offset", requires: [:js] do
       @session.visit('with_js')
-      @session.find(:css, '#click-test').click(x:0, y:0)
+      @session.find(:css, '#click-test').click(x:5, y:5)
       link = @session.find(:link, 'has-been-clicked')
       locations = link.text.match /^Has been clicked at (?<x>[\d\.-]+),(?<y>[\d\.-]+)$/
       # Resulting click location should be very close to 0, 0 relative to top left corner of the element, but may not be exact due to
       # integer/float conversions and rounding.
-      expect(locations[:x].to_f).to be_within(1).of(0)
-      expect(locations[:y].to_f).to be_within(1).of(0)
+      expect(locations[:x].to_f).to be_within(1).of(5)
+      expect(locations[:y].to_f).to be_within(1).of(5)
     end
   end
 
