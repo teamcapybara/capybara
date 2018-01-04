@@ -363,7 +363,7 @@ Capybara::SpecHelper.spec "node" do
     end
   end
 
-  describe '#double_click', requires: [:js], focus_: true do
+  describe '#double_click', requires: [:js] do
     before do
       pending "selenium-webdriver/geckodriver doesn't generate double click event" if marionette?(@session)
     end

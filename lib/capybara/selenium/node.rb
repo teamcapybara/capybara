@@ -282,14 +282,11 @@ private
     JS
     driver.execute_script script, self
 
-    if (driver.chrome?) || (driver.firefox? && !driver.marionette?)
-      # chromedriver raises a can't focus element for child elements if we use native.send_keys
-      # we've already focused it so just use action api
-      driver.browser.action.send_keys(value.to_s).perform
-    else
-      # action api is really slow here just use native.send_keys
-      native.send_keys(value.to_s)
-    end
+    # The action api has a speed problem but both chrome and firefox 58 raise errors
+    # if we use the faster direct send_keys.  For now just send_keys to the element
+    # we've already focused.
+    # native.send_keys(value.to_s)
+    driver.browser.action.send_keys(value.to_s).perform
   end
 
   def action_with_modifiers(*keys, x: nil, y: nil)
