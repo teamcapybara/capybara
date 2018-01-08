@@ -143,9 +143,13 @@ module Capybara
       #     @param [Array<:alt, :control, :meta, :shift>] *key_modifiers  Keys to be held down when clicking
       #     @param [Hash] offset                          x and y coordinates to offset the click location from the top left corner of the element.  If not specified will click the middle of the element.
       # @return [Capybara::Node::Element]  The element
-      def click(*options)
-        verify_click_options_support(__method__) if !options.empty?
-        synchronize { base.click(*options) }
+      def click(*keys, **offset)
+        if keys.empty? && offset.empty?
+          synchronize { base.click }
+        else
+          verify_click_options_support(__method__)
+          synchronize { base.click(keys, offset) }
+        end
         return self
       end
 
@@ -155,9 +159,13 @@ module Capybara
       #
       # @macro click_modifiers
       # @return [Capybara::Node::Element]  The element
-      def right_click(*options)
-        verify_click_options_support(__method__) if !options.empty?
-        synchronize { base.right_click(*options) }
+      def right_click(*keys, **offset)
+        if keys.empty? && offset.empty?
+          synchronize { base.right_click }
+        else
+          verify_click_options_support(__method__)
+          synchronize { base.right_click(keys, offset) }
+        end
         return self
       end
 
@@ -167,9 +175,13 @@ module Capybara
       #
       # @macro click_modifiers
       # @return [Capybara::Node::Element]  The element
-      def double_click(*options)
-        verify_click_options_support(__method__) if !options.empty?
-        synchronize { base.double_click(*options) }
+      def double_click(*keys, **offset)
+        if keys.empty? && offset.empty?
+          synchronize { base.double_click }
+        else
+          verify_click_options_support(__method__)
+          synchronize { base.double_click(keys, offset) }
+        end
         return self
       end
 

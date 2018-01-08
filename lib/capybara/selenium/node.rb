@@ -74,12 +74,12 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     native.click if selected?
   end
 
-  def click(*keys, **options)
-    if keys.empty? && options.empty? && !(options[:x] && options[:y])
+  def click(keys=[], options={})
+    if keys.empty? && !(options[:x] && options[:y])
       native.click
     else
       scroll_if_needed do
-        action_with_modifiers(*keys, **options) do |a|
+        action_with_modifiers(keys, options) do |a|
           if options[:x] && options[:y]
             a.click
           else
@@ -99,9 +99,9 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     raise e
   end
 
-  def right_click(*keys, **options)
+  def right_click(keys=[], options={})
     scroll_if_needed do
-      action_with_modifiers(*keys, **options) do |a|
+      action_with_modifiers(keys, options) do |a|
         if options[:x] && options[:y]
           a.context_click
         else
@@ -111,9 +111,9 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     end
   end
 
-  def double_click(*keys, **options)
+  def double_click(keys=[], options={})
     scroll_if_needed do
-      action_with_modifiers(*keys, **options) do |a|
+      action_with_modifiers(keys, options) do |a|
         if options[:x] && options[:y]
           a.double_click
         else
@@ -289,7 +289,7 @@ private
     driver.browser.action.send_keys(value.to_s).perform
   end
 
-  def action_with_modifiers(*keys, x: nil, y: nil)
+  def action_with_modifiers(keys, x: nil, y: nil)
     actions = driver.browser.action
     actions.move_to(native, x, y)
     modifiers_down(actions, keys)
