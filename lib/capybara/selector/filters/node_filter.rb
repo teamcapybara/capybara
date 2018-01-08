@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'capybara/selector/filters/base'
 
 module Capybara

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forwardable'
 
 module Capybara
@@ -41,7 +42,7 @@ module Capybara
       loop do
         next_result = @results_enum.next
         @result_cache << next_result
-        block.call(next_result)
+        yield next_result
       end
       self
     end
@@ -109,7 +110,7 @@ module Capybara
     # rubocop:enable Metrics/MethodLength
 
     def matches_count?
-      compare_count == 0
+      compare_count.zero?
     end
 
     def failure_message

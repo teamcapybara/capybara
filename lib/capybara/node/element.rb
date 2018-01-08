@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Capybara
   module Node
 
@@ -405,7 +406,7 @@ module Capybara
     private
 
       def verify_click_options_support(method)
-        if base.method(method).arity == 0
+        if base.method(method).arity.zero?
           raise ArgumentError, "The current driver does not support #{method} options"
         end
       end

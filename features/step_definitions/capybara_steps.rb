@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 When(/^I visit the (?:root|home) page$/) do
   visit('/')
 end

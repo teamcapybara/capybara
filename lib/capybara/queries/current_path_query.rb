@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'addressable/uri'
 
 module Capybara
@@ -42,12 +43,12 @@ module Capybara
       private
 
       def failure_message_helper(negated = '')
-        verb = (@expected_path.is_a?(Regexp))? 'match' : 'equal'
+        verb = @expected_path.is_a?(Regexp) ? 'match' : 'equal'
         "expected #{@actual_path.inspect}#{negated} to #{verb} #{@expected_path.inspect}"
       end
 
       def valid_keys
-        [:wait, :url, :ignore_query]
+        %i[wait url ignore_query]
       end
 
     end

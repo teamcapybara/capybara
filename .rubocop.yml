@@ -1,9 +1,10 @@
 AllCops:
-  DisabledByDefault: true
+  DisabledByDefault: false
   TargetRubyVersion: 2.2.2
   Exclude:
       - 'spec/**/*'
       - 'lib/capybara/spec/**/*'
+      - 'capybara.gemspec'
 #################### Lint ################################
 
 Lint/AmbiguousOperator:
@@ -1014,11 +1015,6 @@ Layout/SpaceAroundEqualsInParameterDefault:
 Layout/SpaceAroundOperators:
   Description: 'Use a single space around operators.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#spaces-operators'
-  Enabled: false
-
-Layout/SpaceInsideBrackets:
-  Description: 'No spaces after [ or before ].'
-  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#no-spaces-braces'
   Enabled: false
 
 Layout/SpaceInsideHashLiteralBraces:

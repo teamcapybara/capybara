@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Capybara
   module RSpecMatchers
     class Matcher
@@ -87,7 +88,7 @@ module Capybara
         wrap_matches?(actual){ |el| el.assert_all_of_selectors(*@args, &@filter_block) }
       end
 
-      def does_not_match?(actual)
+      def does_not_match?(_actual)
         raise ArgumentError, "The have_all_selectors matcher does not support use with not_to/should_not"
       end
 
@@ -106,7 +107,7 @@ module Capybara
         wrap_matches?(actual){ |el| el.assert_none_of_selectors(*@args, &@filter_block) }
       end
 
-      def does_not_match?(actual)
+      def does_not_match?(_actual)
         raise ArgumentError, "The have_none_of_selectors matcher does not support use with not_to/should_not"
       end
 
@@ -142,7 +143,7 @@ module Capybara
         # are set just for backwards compatability
         @type = args.shift if args.first.is_a?(Symbol)
         @content = args.shift
-        @options = (args.first.is_a?(Hash))? args.first : {}
+        @options = args.first.is_a?(Hash) ? args.first : {}
       end
 
       def matches?(actual)

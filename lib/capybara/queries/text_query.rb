@@ -1,11 +1,12 @@
 # frozen_string_literal: true
+
 module Capybara
   # @api private
   module Queries
     class TextQuery < BaseQuery
       def initialize(type=nil, expected_text, session_options:, **options)
         @type = type
-        @type = (Capybara.ignore_hidden_elements or Capybara.visible_text_only) ? :visible : :all if @type.nil?
+        @type = Capybara.ignore_hidden_elements or Capybara.visible_text_only ? :visible : :all if @type.nil?
         @expected_text = expected_text
         @options = options
         super(@options)
@@ -80,7 +81,7 @@ module Capybara
       end
 
       def valid_keys
-        COUNT_KEYS + [:wait, :exact]
+        COUNT_KEYS + %i[wait exact]
       end
 
       def check_visible_text?

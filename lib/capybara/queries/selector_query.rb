@@ -1,11 +1,12 @@
 # frozen_string_literal: true
+
 module Capybara
   module Queries
     class SelectorQuery < Queries::BaseQuery
       attr_accessor :selector, :locator, :options, :expression, :find, :negative
 
-      VALID_KEYS = COUNT_KEYS + [:text, :id, :class, :visible, :exact, :exact_text, :match, :wait, :filter_set]
-      VALID_MATCH = [:first, :smart, :prefer_exact, :one]
+      VALID_KEYS = COUNT_KEYS + %i[text id class visible exact exact_text match wait filter_set]
+      VALID_MATCH = %i[first smart prefer_exact one].freeze
 
       def initialize(*args, session_options:, **options, &filter_block)
         @resolved_node = nil
@@ -14,15 +15,14 @@ module Capybara
         self.session_options = session_options
         @filter_block = filter_block
 
-        if args[0].is_a?(Symbol)
-          @selector = Selector.all.fetch(args.shift) do |selector_type|
+        @selector = if args[0].is_a?(Symbol)
+          Selector.all.fetch(args.shift) do |selector_type|
             raise ArgumentError, "Unknown selector type (:#{selector_type})"
           end
-          @locator = args.shift
         else
-          @selector = Selector.all.values.find { |s| s.match?(args[0]) }
-          @locator = args.shift
+          Selector.all.values.find { |s| s.match?(args[0]) }
         end
+        @locator = args.shift
         @selector ||= Selector.all[session_options.default_selector]
 
         warn "Unused parameters passed to #{self.class.name} : #{args}" unless args.empty?
@@ -225,12 +225,10 @@ module Capybara
       def matches_text_filter(node, text_option)
         regexp = if text_option.is_a?(Regexp)
           text_option
+        elsif exact_text == true
+          /\A#{Regexp.escape(text_option.to_s)}\z/
         else
-          if exact_text == true
-            /\A#{Regexp.escape(text_option.to_s)}\z/
-          else
-            Regexp.escape(text_option.to_s)
-          end
+          Regexp.escape(text_option.to_s)
         end
         text_visible = visible
         text_visible = :all if text_visible == :hidden

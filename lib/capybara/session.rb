@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'capybara/session/matchers'
 require 'addressable/uri'
 
@@ -38,38 +39,37 @@ module Capybara
   class Session
     include Capybara::SessionMatchers
 
-    NODE_METHODS = [
-      :all, :first, :attach_file, :text, :check, :choose,
-      :click_link_or_button, :click_button, :click_link, :field_labeled,
-      :fill_in, :find, :find_all, :find_button, :find_by_id, :find_field, :find_link,
-      :has_content?, :has_text?, :has_css?, :has_no_content?, :has_no_text?,
-      :has_no_css?, :has_no_xpath?, :resolve, :has_xpath?, :select, :uncheck,
-      :has_link?, :has_no_link?, :has_button?, :has_no_button?, :has_field?,
-      :has_no_field?, :has_checked_field?, :has_unchecked_field?,
-      :has_no_table?, :has_table?, :unselect, :has_select?, :has_no_select?,
-      :has_selector?, :has_no_selector?, :click_on, :has_no_checked_field?,
-      :has_no_unchecked_field?, :query, :assert_selector, :assert_no_selector,
-      :assert_all_of_selectors, :assert_none_of_selectors,
-      :refute_selector, :assert_text, :assert_no_text
-    ]
+    NODE_METHODS = %i[
+      all first attach_file text check choose
+      click_link_or_button click_button click_link field_labeled
+      fill_in find find_all find_button find_by_id find_field find_link
+      has_content? has_text? has_css? has_no_content? has_no_text?
+      has_no_css? has_no_xpath? resolve has_xpath? select uncheck
+      has_link? has_no_link? has_button? has_no_button? has_field?
+      has_no_field? has_checked_field? has_unchecked_field?
+      has_no_table? has_table? unselect has_select? has_no_select?
+      has_selector? has_no_selector? click_on has_no_checked_field?
+      has_no_unchecked_field? query assert_selector assert_no_selector
+      assert_all_of_selectors assert_none_of_selectors
+      refute_selector assert_text assert_no_text
+    ].freeze
     # @api private
-    DOCUMENT_METHODS = [
-      :title, :assert_title, :assert_no_title, :has_title?, :has_no_title?
-    ]
-    SESSION_METHODS = [
-      :body, :html, :source, :current_url, :current_host, :current_path,
-      :execute_script, :evaluate_script, :visit, :refresh, :go_back, :go_forward,
-      :within, :within_element, :within_fieldset, :within_table, :within_frame, :switch_to_frame,
-      :current_window, :windows, :open_new_window, :switch_to_window, :within_window, :window_opened_by,
-      :save_page, :save_and_open_page, :save_screenshot,
-      :save_and_open_screenshot, :reset_session!, :response_headers,
-      :status_code, :current_scope,
-      :assert_current_path, :assert_no_current_path, :has_current_path?, :has_no_current_path?
-    ] + DOCUMENT_METHODS
-    MODAL_METHODS = [
-      :accept_alert, :accept_confirm, :dismiss_confirm, :accept_prompt,
-      :dismiss_prompt
-    ]
+    DOCUMENT_METHODS = %i[
+      title assert_title assert_no_title has_title? has_no_title?
+    ].freeze
+    SESSION_METHODS = %i[
+      body html source current_url current_host current_path
+      execute_script evaluate_script visit refresh go_back go_forward
+      within within_element within_fieldset within_table within_frame switch_to_frame
+      current_window windows open_new_window switch_to_window within_window window_opened_by
+      save_page save_and_open_page save_screenshot
+      save_and_open_screenshot reset_session! response_headers
+      status_code current_scope
+      assert_current_path assert_no_current_path has_current_path? has_no_current_path?
+    ].freeze + DOCUMENT_METHODS
+    MODAL_METHODS = %i[
+      accept_alert accept_confirm dismiss_confirm accept_prompt dismiss_prompt
+    ].freeze
     DSL_METHODS = NODE_METHODS + SESSION_METHODS + MODAL_METHODS
 
     attr_reader :mode, :app, :server
@@ -84,10 +84,10 @@ module Capybara
         raise "A configuration block is only accepted when Capybara.threadsafe == true" unless Capybara.threadsafe
         yield config if block_given?
       end
-      if config.run_server and @app and driver.needs_server?
-        @server = Capybara::Server.new(@app, config.server_port, config.server_host, config.server_errors).boot
+      @server = if config.run_server and @app and driver.needs_server?
+        Capybara::Server.new(@app, config.server_port, config.server_host, config.server_errors).boot
       else
-        @server = nil
+        nil
       end
       @touched = false
     end
@@ -266,8 +266,8 @@ module Capybara
           visit_uri_parts[:path] = uri_base.path + visit_uri.path
 
           visit_uri = uri_base.merge(visit_uri_parts)
-        else
-          visit_uri.port ||= @server.port if @server && config.always_include_port
+        elsif @server && config.always_include_port
+          visit_uri.port ||= @server.port
         end
       end
 
@@ -548,15 +548,16 @@ module Capybara
     # It's better to use this method than `windows.last`
     # {https://dvcs.w3.org/hg/webdriver/raw-file/default/webdriver-spec.html#h_note_10 as order of windows isn't defined in some drivers}
     #
-    # @param options [Hash]
-    # @option options [Numeric] :wait (Capybara.default_max_wait_time) maximum wait time
-    # @return [Capybara::Window]       the window that has been opened within a block
-    # @raise [Capybara::WindowError]   if block passed to window hasn't opened window
-    #   or opened more than one window
+    # @overload window_opened_by(**options, &block)
+    #   @param options [Hash]
+    #   @option options [Numeric] :wait (Capybara.default_max_wait_time) maximum wait time
+    #   @return [Capybara::Window]       the window that has been opened within a block
+    #   @raise [Capybara::WindowError]   if block passed to window hasn't opened window
+    #     or opened more than one window
     #
-    def window_opened_by(**options, &block)
+    def window_opened_by(**options)
       old_handles = driver.window_handles
-      block.call
+      yield
 
       wait_time = Capybara::Queries::BaseQuery.wait(options, config.default_max_wait_time)
       document.synchronize(wait_time, errors: [Capybara::WindowError]) do

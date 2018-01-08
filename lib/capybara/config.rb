@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forwardable'
 require 'capybara/session/config'
 
@@ -6,7 +7,7 @@ module Capybara
   class Config
     extend Forwardable
 
-    OPTIONS = [:app, :reuse_server, :threadsafe, :default_wait_time, :server, :default_driver, :javascript_driver]
+    OPTIONS = %i[app reuse_server threadsafe default_wait_time server default_driver javascript_driver].freeze
 
     attr_accessor :app
     attr_reader :reuse_server, :threadsafe

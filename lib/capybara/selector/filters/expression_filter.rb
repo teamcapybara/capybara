@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'capybara/selector/filters/base'
 
 module Capybara
@@ -24,8 +25,7 @@ module Capybara
       end
 
       class IdentityExpressionFilter < ExpressionFilter
-        def initialize
-        end
+        def initialize; end
 
         def default?
           false

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Capybara::RackTest::Form < Capybara::RackTest::Node
   # This only needs to inherit from Rack::Test::UploadedFile because Rack::Test checks for
   # the class specifically when determining whether to construct the request as multipart.
@@ -20,7 +21,7 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
   def params(button)
     params = make_params
 
-    form_element_types=[:input, :select, :textarea]
+    form_element_types = %i[input select textarea]
     form_elements_xpath=XPath.generate do |x|
       xpath=x.descendant(*form_element_types).where(~x.attr(:form))
       xpath=xpath.union(x.anywhere(*form_element_types).where(x.attr(:form) == native[:id])) if native[:id]

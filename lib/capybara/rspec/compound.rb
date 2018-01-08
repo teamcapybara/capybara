@@ -17,10 +17,10 @@ module Capybara
 
 
       class CapybaraEvaluator
-        def initialize(actual, matcher_1, matcher_2)
+        def initialize(actual, matcher1, matcher2)
           @actual        = actual
-          @matcher_1     = matcher_1
-          @matcher_2     = matcher_2
+          @matcher1     = matcher1
+          @matcher2     = matcher2
           @match_results = Hash.new { |h, matcher| h[matcher] = matcher.matches?(@actual) }
         end
 
@@ -38,12 +38,12 @@ module Capybara
       private
 
         def match(_expected, actual)
-          @evaluator = CapybaraEvaluator.new(actual, matcher_1, matcher_2)
+          @evaluator = CapybaraEvaluator.new(actual, matcher1, matcher2)
           syncer = sync_element(actual)
           begin
             syncer.synchronize do
               @evaluator.reset
-              raise ::Capybara::ElementNotFound unless [matcher_1_matches?, matcher_2_matches?].all?
+              raise ::Capybara::ElementNotFound unless [matcher1_matches?, matcher2_matches?].all?
               true
             end
           rescue
@@ -67,12 +67,12 @@ module Capybara
       private
 
         def match(_expected, actual)
-          @evaluator = CapybaraEvaluator.new(actual, matcher_1, matcher_2)
+          @evaluator = CapybaraEvaluator.new(actual, matcher1, matcher2)
           syncer = sync_element(actual)
           begin
             syncer.synchronize do
               @evaluator.reset
-              raise ::Capybara::ElementNotFound unless [matcher_1_matches?, matcher_2_matches?].any?
+              raise ::Capybara::ElementNotFound unless [matcher1_matches?, matcher2_matches?].any?
               true
             end
           rescue

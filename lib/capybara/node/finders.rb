@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Capybara
   module Node
     module Finders
@@ -255,7 +256,7 @@ module Capybara
       # @return [Capybara::Result]                   A collection of found elements
       # @raise [Capybara::ExpectationNotMet]         The number of elements found doesn't match the specified conditions
       def all(*args, **options, &optional_filter_block)
-        minimum_specified = [:count, :minimum, :between].any? {|k| options.key?(k)}
+        minimum_specified = %i[count minimum between].any? {|k| options.key?(k)}
         options = {minimum: 1}.merge(options) unless minimum_specified
         options[:session_options] = session_options
         args.push(options)

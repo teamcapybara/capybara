@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rack/test'
 require 'rack/utils'
 require 'mini_mime'
@@ -10,7 +11,7 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
     respect_data_method: false,
     follow_redirects: true,
     redirect_limit: 5
-  }
+  }.freeze
   attr_reader :app, :options
 
   def initialize(app, **options)

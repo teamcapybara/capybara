@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'capybara/selector/filter_set'
 require 'capybara/selector/css'
 require 'xpath'
@@ -12,7 +13,7 @@ module XPath
       if !condition.empty?
         "#{on}[#{condition}]"
       else
-        "#{on}"
+        on.to_s
       end
     end
   end
@@ -237,10 +238,10 @@ module Capybara
       locate_xpath = xpath #need to save original xpath for the label wrap
       if locator
         locator = locator.to_s
-        attr_matchers = [ XPath.attr(:id).equals(locator),
-                          XPath.attr(:name).equals(locator),
-                          XPath.attr(:placeholder).equals(locator),
-                          XPath.attr(:id).equals(XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for))].reduce(:|)
+        attr_matchers = [XPath.attr(:id).equals(locator),
+                         XPath.attr(:name).equals(locator),
+                         XPath.attr(:placeholder).equals(locator),
+                         XPath.attr(:id).equals(XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for))].reduce(:|)
         attr_matchers = attr_matchers | XPath.attr(:'aria-label').is(locator) if enable_aria_label
 
         locate_xpath = locate_xpath[attr_matchers]

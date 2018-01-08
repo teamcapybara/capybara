@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'uri'
 require 'net/http'
 require 'rack'
@@ -43,7 +44,7 @@ module Capybara
           begin
             @app.call(env)
           rescue *@server_errors => e
-            @error = e unless @error
+            @error ||= e
             raise e
           ensure
             @counter.decrement

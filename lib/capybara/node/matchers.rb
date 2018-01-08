@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Capybara
   module Node
     module Matchers
@@ -91,7 +92,7 @@ module Capybara
       #
       def assert_selector(*args, &optional_filter_block)
         _verify_selector_result(args, optional_filter_block) do |result, query|
-          unless result.matches_count? && ((!result.empty?) || query.expects_none?)
+          unless result.matches_count? && (!result.empty? || query.expects_none?)
             raise Capybara::ExpectationNotMet, result.failure_message
           end
         end
@@ -163,7 +164,7 @@ module Capybara
       #
       def assert_no_selector(*args, &optional_filter_block)
         _verify_selector_result(args, optional_filter_block) do |result, query|
-          if result.matches_count? && ((!result.empty?) || query.expects_none?)
+          if result.matches_count? && (!result.empty? || query.expects_none?)
             raise Capybara::ExpectationNotMet, result.negative_failure_message
           end
         end
@@ -662,22 +663,22 @@ module Capybara
 
     private
 
-      def _verify_selector_result(query_args, optional_filter_block, &result_block)
+      def _verify_selector_result(query_args, optional_filter_block)
         _set_query_session_options(query_args)
         query = Capybara::Queries::SelectorQuery.new(*query_args, &optional_filter_block)
         synchronize(query.wait) do
           result = query.resolve_for(self)
-          result_block.call(result, query)
+          yield result, query
         end
         return true
       end
 
-      def _verify_match_result(query_args, optional_filter_block, &result_block)
+      def _verify_match_result(query_args, optional_filter_block)
         _set_query_session_options(query_args)
         query = Capybara::Queries::MatchQuery.new(*query_args, &optional_filter_block)
         synchronize(query.wait) do
           result = query.resolve_for(self.query_scope)
-          result_block.call(result)
+          yield result
         end
         return true
       end

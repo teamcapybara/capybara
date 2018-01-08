@@ -34,11 +34,10 @@ end
 task :travis do
   if ENV['CAPYBARA_FF']
     Rake::Task[:spec_marionette].invoke
-    Rake::Task[:cucumber].invoke
   else
     Rake::Task[:spec_chrome].invoke
-    Rake::Task[:cucumber].invoke
   end
+  Rake::Task[:cucumber].invoke
 end
 
 task :release do
@@ -53,4 +52,4 @@ task :release do
      'git push --tags'
 end
 
-task :default => [:spec, :cucumber]
+task :default => %i[spec cucumber]

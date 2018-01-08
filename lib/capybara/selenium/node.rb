@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Capybara::Selenium::Node < Capybara::Driver::Node
 
   def visible_text
@@ -226,27 +227,25 @@ private
   def set_text(value, clear: nil, **)
     if value.to_s.empty? && clear.nil?
       native.clear
+    elsif clear == :backspace
+      # Clear field by sending the correct number of backspace keys.
+      backspaces = [:backspace] * self.value.to_s.length
+      native.send_keys(*(backspaces + [value.to_s]))
+    elsif clear == :none
+      native.send_keys(value.to_s)
+    elsif clear.is_a? Array
+      native.send_keys(*clear, value.to_s)
     else
-      if clear == :backspace
-        # Clear field by sending the correct number of backspace keys.
-        backspaces = [:backspace] * self.value.to_s.length
-        native.send_keys(*(backspaces + [value.to_s]))
-      elsif clear == :none
-        native.send_keys(value.to_s)
-      elsif clear.is_a? Array
-        native.send_keys(*clear, value.to_s)
-      else
-        # Clear field by JavaScript assignment of the value property.
-        # Script can change a readonly element which user input cannot, so
-        # don't execute if readonly.
-        driver.execute_script "arguments[0].value = ''", self
-        native.send_keys(value.to_s)
-      end
+      # Clear field by JavaScript assignment of the value property.
+      # Script can change a readonly element which user input cannot, so
+      # don't execute if readonly.
+      driver.execute_script "arguments[0].value = ''", self
+      native.send_keys(value.to_s)
     end
   end
 
-  def scroll_if_needed(&block)
-    block.call
+  def scroll_if_needed
+    yield
   rescue ::Selenium::WebDriver::Error::MoveTargetOutOfBoundsError
     script = <<-JS
       try {
@@ -256,7 +255,7 @@ private
       }
     JS
     driver.execute_script(script, self)
-    block.call
+    yield
   end
 
   def set_file(value)

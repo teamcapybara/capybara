@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'capybara/selector/selector'
 Capybara::Selector::FilterSet.add(:_field) do
   filter(:checked, :boolean) { |node, value| not(value ^ node.checked?) }
@@ -21,6 +22,9 @@ Capybara::Selector::FilterSet.add(:_field) do
     desc
   end
 end
+
+# rubocop:disable Metrics/BlockLength
+# rubocop:disable Metrics/ParameterLists
 
 ##
 #
@@ -130,7 +134,6 @@ end
 # @filter [String, Regexp,nil] :href  Matches the normalized href of the link, if nil will find <a> elements with no href attribute
 #
 Capybara.add_selector(:link) do
-  # rubocop: disable Metrics/ParameterLists:
   xpath(:title, :alt) do |locator, href: true, enable_aria_label: false, alt: nil, title: nil, **_options|
     xpath = XPath.descendant(:a)
     xpath = if href.nil?
@@ -140,10 +143,10 @@ Capybara.add_selector(:link) do
     end
     unless locator.nil?
       locator = locator.to_s
-      matchers = [ XPath.attr(:id).equals(locator),
-                   XPath.string.n.is(locator),
-                   XPath.attr(:title).is(locator),
-                   XPath.descendant(:img)[XPath.attr(:alt).is(locator)] ].reduce(:|)
+      matchers = [XPath.attr(:id).equals(locator),
+                  XPath.string.n.is(locator),
+                  XPath.attr(:title).is(locator),
+                  XPath.descendant(:img)[XPath.attr(:alt).is(locator)]].reduce(:|)
       matchers = matchers.or XPath.attr(:'aria-label').is(locator) if enable_aria_label
       xpath = xpath[matchers]
     end
@@ -264,7 +267,7 @@ Capybara.add_selector(:fillable_field) do
     end
   end
 
-  filter_set(:_field, [:disabled, :multiple, :name, :placeholder])
+  filter_set(:_field, %i[disabled multiple name placeholder])
 
   filter(:with) do |node, with|
     with.is_a?(Regexp) ? node.value =~ with : node.value == with.to_s
@@ -299,7 +302,7 @@ Capybara.add_selector(:radio_button) do
     locate_field(xpath, locator, options)
   end
 
-  filter_set(:_field, [:checked, :unchecked, :disabled, :name])
+  filter_set(:_field, %i[checked unchecked disabled name])
 
   filter(:option)  { |node, value|  node.value == value.to_s }
 
@@ -331,7 +334,7 @@ Capybara.add_selector(:checkbox) do
     locate_field(xpath, locator, options)
   end
 
-  filter_set(:_field, [:checked, :unchecked, :disabled, :name])
+  filter_set(:_field, %i[checked unchecked disabled name])
 
   filter(:option)  { |node, value|  node.value == value.to_s }
 
@@ -367,13 +370,13 @@ Capybara.add_selector(:select) do
     locate_field(xpath, locator, options)
   end
 
-  filter_set(:_field, [:disabled, :multiple, :name, :placeholder])
+  filter_set(:_field, %i[disabled multiple name placeholder])
 
   filter(:options) do |node, options|
-    if node.visible?
-      actual = node.all(:xpath, './/option', wait: false).map { |option| option.text }
+    actual = if node.visible?
+      node.all(:xpath, './/option', wait: false).map { |option| option.text }
     else
-      actual = node.all(:xpath, './/option', visible: false, wait: false).map { |option| option.text(:all) }
+      node.all(:xpath, './/option', visible: false, wait: false).map { |option| option.text(:all) }
     end
     options.sort == actual.sort
   end
@@ -451,7 +454,7 @@ Capybara.add_selector(:file_field) do
     locate_field(xpath, locator, options)
   end
 
-  filter_set(:_field, [:disabled, :multiple, :name])
+  filter_set(:_field, %i[disabled multiple name])
 
   describe do |**options|
     desc = String.new
@@ -549,3 +552,6 @@ Capybara.add_selector(:frame) do
     desc
   end
 end
+
+# rubocop:enable Metrics/BlockLength
+# rubocop:enable Metrics/ParameterLists

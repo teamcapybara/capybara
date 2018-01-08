@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'minitest'
 require 'capybara/dsl'
 
@@ -43,15 +44,15 @@ module Capybara
 
 
       %w(assert_text assert_no_text assert_title assert_no_title assert_current_path assert_no_current_path).each do |assertion_name|
-        self.class_eval <<-EOM, __FILE__, __LINE__ + 1
+        self.class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
           def #{assertion_name} *args
             self.assertions +=1
-            subject, *args = determine_subject(args)
+            subject, args = determine_subject(args)
             subject.#{assertion_name}(*args)
           rescue Capybara::ExpectationNotMet => e
             raise ::Minitest::Assertion, e.message
           end
-        EOM
+        ASSERTION
       end
 
       alias_method :refute_title, :assert_no_title
@@ -84,30 +85,29 @@ module Capybara
       %w(assert_selector assert_no_selector
          assert_all_of_selectors assert_none_of_selectors
          assert_matches_selector assert_not_matches_selector).each do |assertion_name|
-        self.class_eval <<-EOM, __FILE__, __LINE__ + 1
+        self.class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
           def #{assertion_name} *args, &optional_filter_block
             self.assertions +=1
-            subject, *args = determine_subject(args)
+            subject, args = determine_subject(args)
             subject.#{assertion_name}(*args, &optional_filter_block)
           rescue Capybara::ExpectationNotMet => e
             raise ::Minitest::Assertion, e.message
           end
-        EOM
+        ASSERTION
       end
 
       alias_method :refute_selector, :assert_no_selector
       alias_method :refute_matches_selector, :assert_not_matches_selector
 
-      # rubocop:disable Lint/UnusedBlockArgument
       %w(xpath css link button field select table).each do |selector_type|
         define_method "assert_#{selector_type}" do |*args, &optional_filter_block|
-          subject, *args = determine_subject(args)
+          subject, args = determine_subject(args)
           locator, options = extract_locator(args)
           assert_selector(subject, selector_type.to_sym, locator, options, &optional_filter_block)
         end
 
         define_method "assert_no_#{selector_type}" do |*args, &optional_filter_block|
-          subject, *args = determine_subject(args)
+          subject, args = determine_subject(args)
           locator, options = extract_locator(args)
           assert_no_selector(subject, selector_type.to_sym, locator, options, &optional_filter_block)
         end
@@ -116,13 +116,13 @@ module Capybara
 
       %w(checked unchecked).each do |field_type|
         define_method "assert_#{field_type}_field" do |*args, &optional_filter_block|
-          subject, *args = determine_subject(args)
+          subject, args = determine_subject(args)
           locator, options = extract_locator(args)
           assert_selector(subject, :field, locator, options.merge(field_type.to_sym => true), &optional_filter_block)
         end
 
         define_method "assert_no_#{field_type}_field" do |*args, &optional_filter_block|
-          subject, *args = determine_subject(args)
+          subject, args = determine_subject(args)
           locator, options = extract_locator(args)
           assert_no_selector(subject, :field, locator, options.merge(field_type.to_sym => true), &optional_filter_block)
         end
@@ -131,17 +131,16 @@ module Capybara
 
       %w(xpath css).each do |selector_type|
         define_method "assert_matches_#{selector_type}" do |*args, &optional_filter_block|
-          subject, *args = determine_subject(args)
+          subject, args = determine_subject(args)
           assert_matches_selector(subject, selector_type.to_sym, *args, &optional_filter_block)
         end
 
         define_method "assert_not_matches_#{selector_type}" do |*args, &optional_filter_block|
-          subject, *args = determine_subject(args)
+          subject, args = determine_subject(args)
           assert_not_matches_selector(subject, selector_type.to_sym, *args, &optional_filter_block)
         end
         alias_method "refute_matches_#{selector_type}", "assert_not_matches_#{selector_type}"
       end
-      # rubocop:enable Lint/UnusedBlockArgument
 
       ##
       # Assertion that there is xpath
@@ -263,9 +262,9 @@ module Capybara
       def determine_subject(args)
         case args.first
         when Capybara::Session, Capybara::Node::Base, Capybara::Node::Simple
-          args
+          [args.shift, args]
         else
-          [page, *args]
+          [page, args]
         end
       end
 

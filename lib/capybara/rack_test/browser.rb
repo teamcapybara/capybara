@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Capybara::RackTest::Browser
   include ::Rack::Test::Methods
 

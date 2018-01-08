@@ -19,7 +19,7 @@ module Capybara
         "\\#{c}"
       end
 
-      S = '\u{80}-\u{D7FF}\u{E000}-\u{FFFD}\u{10000}-\u{10FFFF}'
+      S = '\u{80}-\u{D7FF}\u{E000}-\u{FFFD}\u{10000}-\u{10FFFF}'.freeze
       H = /[0-9a-fA-F]/
       UNICODE  = /\\#{H}{1,6}[ \t\r\n\f]?/
       NONASCII = /[#{S}]/

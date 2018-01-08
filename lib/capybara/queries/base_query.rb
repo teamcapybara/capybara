@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 module Capybara
   # @api private
   module Queries
     class BaseQuery
-      COUNT_KEYS = [:count, :minimum, :maximum, :between]
+      COUNT_KEYS = %i[count minimum maximum between].freeze
 
       attr_reader :options
       attr_writer :session_options

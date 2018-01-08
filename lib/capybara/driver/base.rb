@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Capybara::Driver::Base
   attr_writer :session
 
@@ -138,8 +139,7 @@ class Capybara::Driver::Base
     false
   end
 
-  def reset!
-  end
+  def reset!; end
 
   def needs_server?
     false

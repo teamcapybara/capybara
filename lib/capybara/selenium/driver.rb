@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "uri"
 
 class Capybara::Selenium::Driver < Capybara::Driver::Base
@@ -7,8 +8,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     :browser => :firefox,
     clear_local_storage: false,
     clear_session_storage: false
-  }
-  SPECIAL_OPTIONS = [:browser, :clear_local_storage, :clear_session_storage]
+  }.freeze
+  SPECIAL_OPTIONS = %i[browser clear_local_storage clear_session_storage].freeze
 
   attr_reader :app, :options
 
@@ -260,14 +261,15 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def invalid_element_errors
-    [::Selenium::WebDriver::Error::StaleElementReferenceError,
-     ::Selenium::WebDriver::Error::UnhandledError,
-     ::Selenium::WebDriver::Error::ElementNotVisibleError,
-     ::Selenium::WebDriver::Error::InvalidSelectorError, # Work around a race condition that can occur with chromedriver and #go_back/#go_forward
-     ::Selenium::WebDriver::Error::ElementNotInteractableError,
-     ::Selenium::WebDriver::Error::ElementClickInterceptedError,
-     ::Selenium::WebDriver::Error::InvalidElementStateError,
-     ::Selenium::WebDriver::Error::ElementNotSelectableError,
+    [
+      ::Selenium::WebDriver::Error::StaleElementReferenceError,
+      ::Selenium::WebDriver::Error::UnhandledError,
+      ::Selenium::WebDriver::Error::ElementNotVisibleError,
+      ::Selenium::WebDriver::Error::InvalidSelectorError, # Work around a race condition that can occur with chromedriver and #go_back/#go_forward
+      ::Selenium::WebDriver::Error::ElementNotInteractableError,
+      ::Selenium::WebDriver::Error::ElementClickInterceptedError,
+      ::Selenium::WebDriver::Error::InvalidElementStateError,
+      ::Selenium::WebDriver::Error::ElementNotSelectableError,
     ]
   end
 
@@ -407,7 +409,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     # Actual wait time may be longer than specified
     wait = Selenium::WebDriver::Wait.new(
       timeout: options.fetch(:wait, session_options.default_max_wait_time) || 0 ,
-      ignore: modal_error)
+      ignore: modal_error
+    )
     begin
       wait.until do
         alert = @browser.switch_to.alert
@@ -424,7 +427,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     # Actual wait time may be longer than specified
     wait = Selenium::WebDriver::Wait.new(
       timeout: options.fetch(:wait, session_options.default_max_wait_time) || 0 ,
-      ignore: modal_error)
+      ignore: modal_error
+    )
     begin
       wait.until do
         called, alert_text = evaluate_script('window.capybara && window.capybara.current_modal_status()')
@@ -454,7 +458,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def silenced_unknown_error_messages
-    [ /Error communicating with the remote browser/ ]
+    [/Error communicating with the remote browser/]
   end
 
   def unwrap_script_result(arg)

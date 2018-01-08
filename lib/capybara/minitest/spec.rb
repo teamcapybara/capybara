@@ -17,17 +17,17 @@ module Capybara
         [["assert_matches_#{assertion}", "must_match_#{assertion}"],
          ["refute_matches_#{assertion}", "wont_match_#{assertion}"]]
       end).each do |(meth, new_name)|
-        self.class_eval <<-EOM, __FILE__, __LINE__ + 1
+        self.class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
           def #{new_name} *args, &block
             ::Minitest::Expectation.new(self, ::Minitest::Spec.current).#{new_name}(*args, &block)
           end
-        EOM
+        ASSERTION
 
-        ::Minitest::Expectation.class_eval <<-EOM, __FILE__, __LINE__ + 1
+        ::Minitest::Expectation.class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
           def #{new_name} *args, &block
             ctx.#{meth}(target, *args, &block)
           end
-        EOM
+        ASSERTION
       end
 
       ##

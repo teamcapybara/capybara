@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Capybara
   module Queries
     class SiblingQuery < MatchQuery

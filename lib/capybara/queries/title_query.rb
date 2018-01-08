@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Capybara
   # @api private
   module Queries
@@ -30,12 +31,12 @@ module Capybara
       private
 
       def failure_message_helper(negated = '')
-        verb = (@expected_title.is_a?(Regexp))? 'match' : 'include'
+        verb = @expected_title.is_a?(Regexp) ? 'match' : 'include'
         "expected #{@actual_title.inspect}#{negated} to #{verb} #{@expected_title.inspect}"
       end
 
       def valid_keys
-        [:wait, :exact]
+        %i[wait exact]
       end
     end
   end
