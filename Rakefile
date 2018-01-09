@@ -20,11 +20,11 @@ RSpec::Core::RakeTask.new(:spec_rack) do |t|
   t.pattern = './spec{,/*/**}/*{_spec.rb}'
 end
 
-task :spec => [:spec_marionette]
+task spec: [:spec_marionette]
 
 YARD::Rake::YardocTask.new do |t|
   t.files   = ['lib/**/*.rb']
-  t.options = %w(--markup=markdown)
+  t.options = %w[--markup=markdown]
 end
 
 Cucumber::Rake::Task.new(:cucumber) do |task|
@@ -52,4 +52,4 @@ task :release do
      'git push --tags'
 end
 
-task :default => %i[spec cucumber]
+task default: %i[spec cucumber]

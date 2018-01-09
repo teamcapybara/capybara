@@ -9,7 +9,7 @@ module Capybara
         def matches?(node, value)
           return true if skip?(value)
 
-          if !valid_value?(value)
+          unless valid_value?(value)
             msg = "Invalid value #{value.inspect} passed to filter #{@name} - "
             if default?
               warn msg + "defaulting to #{default}"

@@ -3,7 +3,6 @@
 module Capybara
   module Node
     module Matchers
-
       ##
       #
       # Checks if a given selector is on the page or a descendant of the current node.
@@ -114,7 +113,7 @@ module Capybara
       # @overload assert_all_of_selectors([kind = Capybara.default_selector], *locators, options = {})
       #
       def assert_all_of_selectors(*args, wait: session_options.default_max_wait_time, **options, &optional_filter_block)
-        selector = if args.first.is_a?(Symbol) then args.shift else session_options.default_selector end
+        selector = args.first.is_a?(Symbol) ? args.shift : session_options.default_selector
         synchronize(wait) do
           args.each do |locator|
             assert_selector(selector, locator, options, &optional_filter_block)
@@ -138,7 +137,7 @@ module Capybara
       # @overload assert_none_of_selectors([kind = Capybara.default_selector], *locators, options = {})
       #
       def assert_none_of_selectors(*args, wait: session_options.default_max_wait_time, **options, &optional_filter_block)
-        selector = if args.first.is_a?(Symbol) then args.shift else session_options.default_selector end
+        selector = args.first.is_a?(Symbol) ? args.shift : session_options.default_selector
         synchronize(wait) do
           args.each do |locator|
             assert_no_selector(selector, locator, options, &optional_filter_block)
@@ -265,7 +264,7 @@ module Capybara
       # @option options [String, Regexp] :href    The value the href attribute must be
       # @return [Boolean]                 Whether it exists
       #
-      def has_link?(locator=nil, **options, &optional_filter_block)
+      def has_link?(locator = nil, **options, &optional_filter_block)
         has_selector?(:link, locator, options, &optional_filter_block)
       end
 
@@ -277,7 +276,7 @@ module Capybara
       # @param (see Capybara::Node::Finders#has_link?)
       # @return [Boolean]            Whether it doesn't exist
       #
-      def has_no_link?(locator=nil, **options, &optional_filter_block)
+      def has_no_link?(locator = nil, **options, &optional_filter_block)
         has_no_selector?(:link, locator, options, &optional_filter_block)
       end
 
@@ -289,7 +288,7 @@ module Capybara
       # @param [String] locator      The text, value or id of a button to check for
       # @return [Boolean]            Whether it exists
       #
-      def has_button?(locator=nil, **options, &optional_filter_block)
+      def has_button?(locator = nil, **options, &optional_filter_block)
         has_selector?(:button, locator, options, &optional_filter_block)
       end
 
@@ -301,7 +300,7 @@ module Capybara
       # @param [String] locator      The text, value or id of a button to check for
       # @return [Boolean]            Whether it doesn't exist
       #
-      def has_no_button?(locator=nil, **options, &optional_filter_block)
+      def has_no_button?(locator = nil, **options, &optional_filter_block)
         has_no_selector?(:button, locator, options, &optional_filter_block)
       end
 
@@ -327,7 +326,7 @@ module Capybara
       # @option options [String] :type           The type attribute of the field
       # @return [Boolean]                        Whether it exists
       #
-      def has_field?(locator=nil, **options, &optional_filter_block)
+      def has_field?(locator = nil, **options, &optional_filter_block)
         has_selector?(:field, locator, options, &optional_filter_block)
       end
 
@@ -341,7 +340,7 @@ module Capybara
       # @option options [String] :type           The type attribute of the field
       # @return [Boolean]                        Whether it doesn't exist
       #
-      def has_no_field?(locator=nil, **options, &optional_filter_block)
+      def has_no_field?(locator = nil, **options, &optional_filter_block)
         has_no_selector?(:field, locator, options, &optional_filter_block)
       end
 
@@ -354,7 +353,7 @@ module Capybara
       # @param [String] locator           The label, name or id of a checked field
       # @return [Boolean]                 Whether it exists
       #
-      def has_checked_field?(locator=nil, **options, &optional_filter_block)
+      def has_checked_field?(locator = nil, **options, &optional_filter_block)
         has_selector?(:field, locator, options.merge(checked: true), &optional_filter_block)
       end
 
@@ -367,7 +366,7 @@ module Capybara
       # @param [String] locator           The label, name or id of a checked field
       # @return [Boolean]                 Whether it doesn't exist
       #
-      def has_no_checked_field?(locator=nil, **options, &optional_filter_block)
+      def has_no_checked_field?(locator = nil, **options, &optional_filter_block)
         has_no_selector?(:field, locator, options.merge(checked: true), &optional_filter_block)
       end
 
@@ -380,7 +379,7 @@ module Capybara
       # @param [String] locator           The label, name or id of an unchecked field
       # @return [Boolean]                 Whether it exists
       #
-      def has_unchecked_field?(locator=nil, **options, &optional_filter_block)
+      def has_unchecked_field?(locator = nil, **options, &optional_filter_block)
         has_selector?(:field, locator, options.merge(unchecked: true), &optional_filter_block)
       end
 
@@ -393,7 +392,7 @@ module Capybara
       # @param [String] locator           The label, name or id of an unchecked field
       # @return [Boolean]                 Whether it doesn't exist
       #
-      def has_no_unchecked_field?(locator=nil, **options, &optional_filter_block)
+      def has_no_unchecked_field?(locator = nil, **options, &optional_filter_block)
         has_no_selector?(:field, locator, options.merge(unchecked: true), &optional_filter_block)
       end
 
@@ -426,7 +425,7 @@ module Capybara
       # @option options [String, Array] :with_selected  Partial set of options which should minimally be selected
       # @return [Boolean]                               Whether it exists
       #
-      def has_select?(locator=nil, **options, &optional_filter_block)
+      def has_select?(locator = nil, **options, &optional_filter_block)
         has_selector?(:select, locator, options, &optional_filter_block)
       end
 
@@ -438,7 +437,7 @@ module Capybara
       # @param (see Capybara::Node::Matchers#has_select?)
       # @return [Boolean]     Whether it doesn't exist
       #
-      def has_no_select?(locator=nil, **options, &optional_filter_block)
+      def has_no_select?(locator = nil, **options, &optional_filter_block)
         has_no_selector?(:select, locator, options, &optional_filter_block)
       end
 
@@ -452,7 +451,7 @@ module Capybara
       # @param [String] locator                        The id or caption of a table
       # @return [Boolean]                              Whether it exist
       #
-      def has_table?(locator=nil, **options, &optional_filter_block)
+      def has_table?(locator = nil, **options, &optional_filter_block)
         has_selector?(:table, locator, options, &optional_filter_block)
       end
 
@@ -464,7 +463,7 @@ module Capybara
       # @param (see Capybara::Node::Matchers#has_table?)
       # @return [Boolean]       Whether it doesn't exist
       #
-      def has_no_table?(locator=nil, **options, &optional_filter_block)
+      def has_no_table?(locator = nil, **options, &optional_filter_block)
         has_no_selector?(:table, locator, options, &optional_filter_block)
       end
 
@@ -568,7 +567,6 @@ module Capybara
         not_matches_selector?(:css, css, options, &optional_filter_block)
       end
 
-
       ##
       # Asserts that the page or current node has the given text content,
       # ignoring any HTML tags.
@@ -658,7 +656,7 @@ module Capybara
       alias_method :has_no_content?, :has_no_text?
 
       def ==(other)
-        self.eql?(other) || (other.respond_to?(:base) && base == other.base)
+        eql?(other) || (other.respond_to?(:base) && base == other.base)
       end
 
     private
@@ -677,7 +675,7 @@ module Capybara
         _set_query_session_options(query_args)
         query = Capybara::Queries::MatchQuery.new(*query_args, &optional_filter_block)
         synchronize(query.wait) do
-          result = query.resolve_for(self.query_scope)
+          result = query.resolve_for(query_scope)
           yield result
         end
         return true

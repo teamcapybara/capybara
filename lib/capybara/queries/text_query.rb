@@ -4,9 +4,9 @@ module Capybara
   # @api private
   module Queries
     class TextQuery < BaseQuery
-      def initialize(type=nil, expected_text, session_options:, **options)
+      def initialize(type = nil, expected_text, session_options:, **options) # rubocop:disable Style/OptionalArguments
         @type = type
-        @type = Capybara.ignore_hidden_elements or Capybara.visible_text_only ? :visible : :all if @type.nil?
+        @type = Capybara.ignore_hidden_elements || Capybara.visible_text_only ? :visible : :all if @type.nil?
         @expected_text = expected_text
         @options = options
         super(@options)
@@ -40,14 +40,14 @@ module Capybara
         end
       end
 
-      private
+    private
 
       def exact?
         options.fetch(:exact, session_options.exact_text)
       end
 
       def build_message(report_on_invisible)
-        message = String.new()
+        message = "".dup
         unless (COUNT_KEYS & @options.keys).empty?
           message << " but found #{@count} #{Capybara::Helpers.declension('time', 'times', @count)}"
         end
@@ -70,8 +70,7 @@ module Capybara
             if invisible_count != @count
               details_message << "it was found #{invisible_count} #{Capybara::Helpers.declension("time", "times", invisible_count)} including non-visible text"
             end
-          rescue
-            # An error getting the non-visible text (if element goes out of scope) should not affect the response
+          rescue # An error getting the non-visible text (if element goes out of scope) should not affect the response
           end
         end
 

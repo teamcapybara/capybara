@@ -9,7 +9,7 @@ module Capybara
         def apply_filter(expr, value)
           return expr if skip?(value)
 
-          if !valid_value?(value)
+          unless valid_value?(value)
             msg = "Invalid value #{value.inspect} passed to expression filter #{@name} - "
             if default?
               warn msg + "defaulting to #{default}"

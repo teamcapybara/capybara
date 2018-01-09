@@ -3,7 +3,6 @@
 module Capybara
   module Node
     module Finders
-
       ##
       #
       # Find an {Capybara::Node::Element} based on the given arguments. +find+ will raise an error if the element
@@ -124,7 +123,7 @@ module Capybara
       # @return [Capybara::Node::Element]   The found element
       #
 
-      def find_field(locator=nil, **options, &optional_filter_block)
+      def find_field(locator = nil, **options, &optional_filter_block)
         find(:field, locator, options, &optional_filter_block)
       end
       alias_method :field_labeled, :find_field
@@ -145,7 +144,7 @@ module Capybara
       #   @option options [String, Array<String>] class    Match links that match the class(es) provided
       # @return [Capybara::Node::Element]   The found element
       #
-      def find_link(locator=nil, **options, &optional_filter_block)
+      def find_link(locator = nil, **options, &optional_filter_block)
         find(:link, locator, options, &optional_filter_block)
       end
 
@@ -173,7 +172,7 @@ module Capybara
       #   @option options [String, Array<String>] class    Match buttons that match the class(es) provided
       # @return [Capybara::Node::Element]   The found element
       #
-      def find_button(locator=nil, **options, &optional_filter_block)
+      def find_button(locator = nil, **options, &optional_filter_block)
         find(:button, locator, options, &optional_filter_block)
       end
 
@@ -256,8 +255,8 @@ module Capybara
       # @return [Capybara::Result]                   A collection of found elements
       # @raise [Capybara::ExpectationNotMet]         The number of elements found doesn't match the specified conditions
       def all(*args, **options, &optional_filter_block)
-        minimum_specified = %i[count minimum between].any? {|k| options.key?(k)}
-        options = {minimum: 1}.merge(options) unless minimum_specified
+        minimum_specified = %i[count minimum between].any? { |k| options.key?(k) }
+        options = { minimum: 1 }.merge(options) unless minimum_specified
         options[:session_options] = session_options
         args.push(options)
         query = Capybara::Queries::SelectorQuery.new(*args, &optional_filter_block)
@@ -290,15 +289,15 @@ module Capybara
       # @raise  [Capybara::ElementNotFound]          If the element can't be found before time expires
       #
       def first(*args, **options, &optional_filter_block)
-        options = {minimum: 1}.merge(options)
+        options = { minimum: 1 }.merge(options)
         all(*args, **options, &optional_filter_block).first
       end
 
-      private
+    private
 
       def synced_resolve(query)
         synchronize(query.wait) do
-          if (query.match == :smart or query.match == :prefer_exact)
+          if query.match == :smart or query.match == :prefer_exact
             result = query.resolve_for(self, true)
             result = query.resolve_for(self, false) if result.empty? && query.supports_exact? && !query.exact?
           else
@@ -306,11 +305,11 @@ module Capybara
           end
 
           if query.match == :one or query.match == :smart and result.size > 1
-            raise Capybara::Ambiguous.new("Ambiguous match, found #{result.size} elements matching #{query.description}")
+            raise Capybara::Ambiguous, "Ambiguous match, found #{result.size} elements matching #{query.description}"
           end
-          if result.empty?
-            raise Capybara::ElementNotFound.new("Unable to find #{query.description}")
-          end
+
+          raise Capybara::ElementNotFound, "Unable to find #{query.description}" if result.empty?
+
           result.first
         end.tap(&:allow_reload!)
       end

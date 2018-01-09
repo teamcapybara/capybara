@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Capybara::Selenium::Node < Capybara::Driver::Node
-
   def visible_text
     # Selenium doesn't normalize Unicode whitespace.
     Capybara::Helpers.normalize_whitespace(native.text)
@@ -41,8 +40,8 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     tag_name = self.tag_name
     type = self[:type]
 
-    if (Array === value) && !multiple?
-      raise ArgumentError.new "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"
+    if value.is_a?(Array) && !multiple?
+      raise ArgumentError, "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"
     end
 
     case tag_name
@@ -60,9 +59,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     when 'textarea'
       set_text(value, options)
     else
-      if content_editable?
-        set_content_editable(value)
-      end
+      set_content_editable(value) if content_editable?
     end
   end
 
@@ -71,11 +68,11 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def unselect_option
-    raise Capybara::UnselectNotAllowed, "Cannot unselect option from single select box." if !select_node.multiple?
+    raise Capybara::UnselectNotAllowed, "Cannot unselect option from single select box." unless select_node.multiple?
     native.click if selected?
   end
 
-  def click(keys=[], options={})
+  def click(keys = [], options = {})
     if keys.empty? && !(options[:x] && options[:y])
       native.click
     else
@@ -94,13 +91,13 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
        e.message =~ /Other element would receive the click/
       begin
         driver.execute_script("arguments[0].scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'})", self)
-      rescue
+      rescue # Swallow error if scrollIntoView with options isn't supported
       end
     end
     raise e
   end
 
-  def right_click(keys=[], options={})
+  def right_click(keys = [], options = {})
     scroll_if_needed do
       action_with_modifiers(keys, options) do |a|
         if options[:x] && options[:y]
@@ -112,7 +109,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     end
   end
 
-  def double_click(keys=[], options={})
+  def double_click(keys = [], options = {})
     scroll_if_needed do
       action_with_modifiers(keys, options) do |a|
         if options[:x] && options[:y]
@@ -158,7 +155,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def disabled?
     # workaround for selenium-webdriver/geckodriver reporting elements as enabled when they are nested in disabling elements
     if driver.marionette?
-      if %w(option optgroup).include? tag_name
+      if %w[option optgroup].include? tag_name
         !native.enabled? || find_xpath("parent::*[self::optgroup or self::select]")[0].disabled?
       else
         !native.enabled? || !find_xpath("parent::fieldset[@disabled] | ancestor::*[not(self::legend) or preceding-sibling::legend][parent::fieldset[@disabled]]").empty?
@@ -208,7 +205,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
           result.unshift node.tag_name
         else
           index = siblings.index(node)
-          result.unshift "#{node.tag_name}[#{index+1}]"
+          result.unshift "#{node.tag_name}[#{index + 1}]"
         end
       else
         result.unshift node.tag_name
@@ -219,6 +216,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
 private
+
   # a reference to the select node if this is an option node
   def select_node
     find_xpath('./ancestor::select[1]').first
@@ -258,7 +256,7 @@ private
     yield
   end
 
-  def set_file(value)
+  def set_file(value) # rubocop:disable Naming/AccessorMethodName
     path_names = value.to_s.empty? ? [] : value
     if driver.chrome?
       native.send_keys(Array(path_names).join("\n"))
@@ -267,8 +265,8 @@ private
     end
   end
 
-  def set_content_editable(value)
-    #ensure we are focused on the element
+  def set_content_editable(value) # rubocop:disable Naming/AccessorMethodName
+    # Ensure we are focused on the element
     click
 
     script = <<-JS

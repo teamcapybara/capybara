@@ -2,7 +2,6 @@
 
 module Capybara
   module Node
-
     ##
     #
     # A {Capybara::Node::Base} represents either an element on a page through the subclass
@@ -75,7 +74,7 @@ module Capybara
       # @return [Object]                  The result of the given block
       # @raise  [Capybara::FrozenInTime]  If the return value of `Time.now` appears stuck
       #
-      def synchronize(seconds=session_options.default_max_wait_time, errors: nil)
+      def synchronize(seconds = session_options.default_max_wait_time, errors: nil)
         start_time = Capybara::Helpers.monotonic_time
 
         if session.synchronized

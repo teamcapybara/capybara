@@ -74,7 +74,7 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
   end
 
   def find_css(selector)
-    browser.find(:css,selector)
+    browser.find(:css, selector)
   end
 
   def html

@@ -2,7 +2,6 @@
 
 module Capybara
   module Node
-
     ##
     #
     # A {Capybara::Node::Simple} is a simpler version of {Capybara::Node::Base} which
@@ -29,7 +28,7 @@ module Capybara
       #
       # @return [String]    The text of the element
       #
-      def text(_type=nil)
+      def text(_type = nil)
         native.text
       end
 
@@ -80,12 +79,12 @@ module Capybara
           native['_capybara_raw_value']
         elsif tag_name == 'select'
           if native['multiple'] == 'multiple'
-            native.xpath(".//option[@selected='selected']").map { |option| option[:value] || option.content  }
+            native.xpath(".//option[@selected='selected']").map { |option| option[:value] || option.content }
           else
             option = native.xpath(".//option[@selected='selected']").first || native.xpath(".//option").first
             option[:value] || option.content if option
           end
-        elsif tag_name == 'input' && %w(radio checkbox).include?(native[:type])
+        elsif tag_name == 'input' && %w[radio checkbox].include?(native[:type])
           native[:value] || 'on'
         else
           native[:value]
@@ -101,13 +100,13 @@ module Capybara
       # @return [Boolean]     Whether the element is visible
       #
       def visible?(check_ancestors = true)
-        return false if (tag_name == 'input') && (native[:type]=="hidden")
+        return false if (tag_name == 'input') && (native[:type] == "hidden")
 
         if check_ancestors
           !native.xpath("boolean(./ancestor-or-self::*[contains(@style, 'display:none') or contains(@style, 'display: none') or @hidden or name()='script' or name()='head'])")
         else
-          #no need for an xpath if only checking the current element
-          !(native.has_attribute?('hidden') || (native[:style] =~ /display:\s?none/) || %w(script head).include?(tag_name))
+          # No need for an xpath if only checking the current element
+          !(native.has_attribute?('hidden') || (native[:style] =~ /display:\s?none/) || %w[script head].include?(tag_name))
         end
       end
 
@@ -140,7 +139,7 @@ module Capybara
         native.has_attribute?('selected')
       end
 
-      def synchronize(_seconds=nil)
+      def synchronize(_seconds = nil)
         yield # simple nodes don't need to wait
       end
 

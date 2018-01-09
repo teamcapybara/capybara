@@ -2,14 +2,14 @@ module Capybara
   module Queries
     class MatchQuery < Capybara::Queries::SelectorQuery
       def visible
-        if options.has_key?(:visible)
+        if options.key?(:visible)
           super
         else
           :all
         end
       end
 
-      private
+    private
 
       def valid_keys
         super - COUNT_KEYS

@@ -18,7 +18,7 @@ module Capybara
         end
       end
 
-      private
+    private
 
       def wrap_matches?(actual)
         yield(wrap(actual))
@@ -62,11 +62,11 @@ module Capybara
       end
 
       def matches?(actual)
-        wrap_matches?(actual){ |el| el.assert_selector(*@args, &@filter_block) }
+        wrap_matches?(actual) { |el| el.assert_selector(*@args, &@filter_block) }
       end
 
       def does_not_match?(actual)
-        wrap_does_not_match?(actual){ |el| el.assert_no_selector(*@args, &@filter_block) }
+        wrap_does_not_match?(actual) { |el| el.assert_no_selector(*@args, &@filter_block) }
       end
 
       def description
@@ -85,7 +85,7 @@ module Capybara
       end
 
       def matches?(actual)
-        wrap_matches?(actual){ |el| el.assert_all_of_selectors(*@args, &@filter_block) }
+        wrap_matches?(actual) { |el| el.assert_all_of_selectors(*@args, &@filter_block) }
       end
 
       def does_not_match?(_actual)
@@ -104,7 +104,7 @@ module Capybara
       end
 
       def matches?(actual)
-        wrap_matches?(actual){ |el| el.assert_none_of_selectors(*@args, &@filter_block) }
+        wrap_matches?(actual) { |el| el.assert_none_of_selectors(*@args, &@filter_block) }
       end
 
       def does_not_match?(_actual)
@@ -302,43 +302,43 @@ module Capybara
 
     # RSpec matcher for links
     # See {Capybara::Node::Matchers#has_link?}
-    def have_link(locator=nil, **options, &optional_filter_block)
+    def have_link(locator = nil, **options, &optional_filter_block)
       HaveSelector.new(:link, locator, options, &optional_filter_block)
     end
 
     # RSpec matcher for buttons
     # See {Capybara::Node::Matchers#has_button?}
-    def have_button(locator=nil, **options, &optional_filter_block)
+    def have_button(locator = nil, **options, &optional_filter_block)
       HaveSelector.new(:button, locator, options, &optional_filter_block)
     end
 
     # RSpec matcher for links
     # See {Capybara::Node::Matchers#has_field?}
-    def have_field(locator=nil, **options, &optional_filter_block)
+    def have_field(locator = nil, **options, &optional_filter_block)
       HaveSelector.new(:field, locator, options, &optional_filter_block)
     end
 
     # RSpec matcher for checked fields
     # See {Capybara::Node::Matchers#has_checked_field?}
-    def have_checked_field(locator=nil, **options, &optional_filter_block)
+    def have_checked_field(locator = nil, **options, &optional_filter_block)
       HaveSelector.new(:field, locator, options.merge(checked: true), &optional_filter_block)
     end
 
     # RSpec matcher for unchecked fields
     # See {Capybara::Node::Matchers#has_unchecked_field?}
-    def have_unchecked_field(locator=nil, **options, &optional_filter_block)
+    def have_unchecked_field(locator = nil, **options, &optional_filter_block)
       HaveSelector.new(:field, locator, options.merge(unchecked: true), &optional_filter_block)
     end
 
     # RSpec matcher for select elements
     # See {Capybara::Node::Matchers#has_select?}
-    def have_select(locator=nil, **options, &optional_filter_block)
+    def have_select(locator = nil, **options, &optional_filter_block)
       HaveSelector.new(:select, locator, options, &optional_filter_block)
     end
 
     # RSpec matcher for table elements
     # See {Capybara::Node::Matchers#has_table?}
-    def have_table(locator=nil, **options, &optional_filter_block)
+    def have_table(locator = nil, **options, &optional_filter_block)
       HaveSelector.new(:table, locator, options, &optional_filter_block)
     end
 

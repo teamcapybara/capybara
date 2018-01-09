@@ -22,9 +22,9 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
     params = make_params
 
     form_element_types = %i[input select textarea]
-    form_elements_xpath=XPath.generate do |x|
-      xpath=x.descendant(*form_element_types).where(~x.attr(:form))
-      xpath=xpath.union(x.anywhere(*form_element_types).where(x.attr(:form) == native[:id])) if native[:id]
+    form_elements_xpath = XPath.generate do |x|
+      xpath = x.descendant(*form_element_types).where(~x.attr(:form))
+      xpath = xpath.union(x.anywhere(*form_element_types).where(x.attr(:form) == native[:id])) if native[:id]
       xpath.where(~x.attr(:disabled))
     end.to_s
 
@@ -82,15 +82,15 @@ private
   end
 
   def add_input_param(field, params)
-    if %w(radio checkbox).include? field['type']
+    if %w[radio checkbox].include? field['type']
       if field['checked']
-        node=Capybara::RackTest::Node.new(self.driver, field)
+        node = Capybara::RackTest::Node.new(driver, field)
         merge_param!(params, field['name'].to_s, node.value.to_s)
       end
-    elsif %w(submit image).include? field['type']
+    elsif %w[submit image].include? field['type']
       # TO DO identify the click button here (in document order, rather
       # than leaving until the end of the params)
-    elsif field['type'] =='file'
+    elsif field['type'] == 'file'
       if multipart?
         file = \
           if (value = field['value']).to_s.empty?

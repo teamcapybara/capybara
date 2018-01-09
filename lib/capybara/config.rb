@@ -22,9 +22,7 @@ module Capybara
       @session_options = Capybara::SessionConfig.new
     end
 
-    def reuse_server=(bool)
-      @reuse_server = bool
-    end
+    attr_writer :reuse_server
 
     def threadsafe=(bool)
       warn "Capybara.threadsafe == true is a BETA feature and may change in future minor versions" if bool
@@ -60,7 +58,7 @@ module Capybara
     def server=(name)
       name, options = *name if name.is_a? Array
       @server = if options
-        Proc.new { |app, port, host| Capybara.servers[name.to_sym].call(app,port,host,options) }
+        proc { |app, port, host| Capybara.servers[name.to_sym].call(app, port, host, options) }
       else
         Capybara.servers[name.to_sym]
       end
@@ -82,10 +80,10 @@ module Capybara
       @javascript_driver || :selenium
     end
 
-    def deprecate(method, alternate_method, once=false)
+    def deprecate(method, alternate_method, once = false)
       @deprecation_notified ||= {}
       warn "DEPRECATED: ##{method} is deprecated, please use ##{alternate_method} instead" unless once and @deprecation_notified[method]
-      @deprecation_notified[method]=true
+      @deprecation_notified[method] = true
     end
   end
 end

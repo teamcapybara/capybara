@@ -3,21 +3,22 @@ require 'minitest/spec'
 module Capybara
   module Minitest
     module Expectations
-      %w(text content title current_path).each do |assertion|
+      %w[text content title current_path].each do |assertion|
         infect_an_assertion "assert_#{assertion}", "must_have_#{assertion}", :reverse
         infect_an_assertion "refute_#{assertion}", "wont_have_#{assertion}", :reverse
       end
 
-      (%w(selector xpath css link button field select table checked_field unchecked_field).flat_map do |assertion|
-        [["assert_#{assertion}", "must_have_#{assertion}"],
-         ["refute_#{assertion}", "wont_have_#{assertion}"]]
-      end + [["assert_all_of_selectors", "must_have_all_of_selectors"],
-             ["assert_none_of_selectors", "must_have_none_of_selectors"]] +
-      %w(selector xpath css).flat_map do |assertion|
-        [["assert_matches_#{assertion}", "must_match_#{assertion}"],
-         ["refute_matches_#{assertion}", "wont_match_#{assertion}"]]
+      # rubocop:disable Style/MultilineBlockChain
+      (%w[selector xpath css link button field select table checked_field unchecked_field].flat_map do |assertion|
+        [%W[assert_#{assertion} must_have_#{assertion}],
+         %W[refute_#{assertion} wont_have_#{assertion}]]
+      end + [%w[assert_all_of_selectors must_have_all_of_selectors],
+             %w[assert_none_of_selectors must_have_none_of_selectors]] +
+      %w[selector xpath css].flat_map do |assertion|
+        [%W[assert_matches_#{assertion} must_match_#{assertion}],
+         %W[refute_matches_#{assertion} wont_match_#{assertion}]]
       end).each do |(meth, new_name)|
-        self.class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
+        class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
           def #{new_name} *args, &block
             ::Minitest::Expectation.new(self, ::Minitest::Spec.current).#{new_name}(*args, &block)
           end
@@ -29,6 +30,7 @@ module Capybara
           end
         ASSERTION
       end
+      # rubocop:enable Style/MultilineBlockChain
 
       ##
       # Expectation that there is xpath
@@ -159,7 +161,6 @@ module Capybara
       #
       # @!method wont_have_current_path
       #   see {Capybara::SessionMatchers#assert_no_current_path}
-
     end
   end
 end

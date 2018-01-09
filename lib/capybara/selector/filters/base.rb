@@ -8,11 +8,11 @@ module Capybara
           @name = name
           @block = block
           @options = options
-          @options[:valid_values] = [true,false] if options[:boolean]
+          @options[:valid_values] = [true, false] if options[:boolean]
         end
 
         def default?
-          @options.has_key?(:default)
+          @options.key?(:default)
         end
 
         def default
@@ -20,13 +20,13 @@ module Capybara
         end
 
         def skip?(value)
-          @options.has_key?(:skip_if) && value == @options[:skip_if]
+          @options.key?(:skip_if) && value == @options[:skip_if]
         end
 
-        private
+      private
 
         def valid_value?(value)
-          !@options.has_key?(:valid_values) || Array(@options[:valid_values]).include?(value)
+          !@options.key?(:valid_values) || Array(@options[:valid_values]).include?(value)
         end
       end
     end

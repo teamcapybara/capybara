@@ -20,8 +20,8 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   def set(value)
     return if disabled? || readonly?
 
-    if (Array === value) && !multiple?
-      raise TypeError.new "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"
+    if value.is_a?(Array) && !multiple?
+      raise TypeError, "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"
     end
 
     if radio?
@@ -55,13 +55,13 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
       method = self["data-method"] if driver.options[:respect_data_method]
       method ||= :get
       driver.follow(method, self[:href].to_s)
-    elsif (tag_name == 'input' and %w(submit image).include?(type)) or
-        ((tag_name == 'button') and type.nil? or type == "submit")
+    elsif (tag_name == 'input' and %w[submit image].include?(type)) or
+          (tag_name == 'button' and [nil, "submit"].include?(type))
       associated_form = form
       Capybara::RackTest::Form.new(driver, associated_form).submit(self) if associated_form
-    elsif (tag_name == 'input' and %w(checkbox radio).include?(type))
+    elsif tag_name == 'input' and %w[checkbox radio].include?(type)
       set(!checked?)
-    elsif (tag_name == 'label')
+    elsif tag_name == 'label'
       labelled_control = if native[:for]
         find_xpath("//input[@id='#{native[:for]}']").first
       else
@@ -91,7 +91,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   end
 
   def disabled?
-    if %w(option optgroup).include? tag_name
+    if %w[option optgroup].include? tag_name
       string_node.disabled? || find_xpath("parent::*[self::optgroup or self::select]")[0].disabled?
     else
       string_node.disabled? || !find_xpath("parent::fieldset[@disabled] | ancestor::*[not(self::legend) or preceding-sibling::legend][parent::fieldset[@disabled]]").empty?
@@ -153,13 +153,13 @@ private
     end
   end
 
-  def set_radio(_value)
+  def set_radio(_value) # rubocop:disable Naming/AccessorMethodName
     other_radios_xpath = XPath.generate { |x| x.anywhere(:input)[x.attr(:name) == self[:name]] }.to_s
     driver.dom.xpath(other_radios_xpath).each { |node| node.remove_attribute("checked") }
     native['checked'] = 'checked'
   end
 
-  def set_checkbox(value)
+  def set_checkbox(value) # rubocop:disable Naming/AccessorMethodName
     if value && !native['checked']
       native['checked'] = 'checked'
     elsif !value && native['checked']
@@ -167,13 +167,13 @@ private
     end
   end
 
-  def set_input(value)
+  def set_input(value) # rubocop:disable Naming/AccessorMethodName
     if text_or_password? && attribute_is_not_blank?(:maxlength)
       # Browser behavior for maxlength="0" is inconsistent, so we stick with
       # Firefox, allowing no input
       value = value.to_s[0...self[:maxlength].to_i]
     end
-    if Array === value #Assert multiple attribute is present
+    if value.is_a?(Array) # Assert multiple attribute is present
       value.each do |v|
         new_native = native.clone
         new_native.remove_attribute('value')

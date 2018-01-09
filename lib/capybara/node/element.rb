@@ -2,7 +2,6 @@
 
 module Capybara
   module Node
-
     ##
     #
     # A {Capybara::Node::Element} represents a single element on the page. It is possible
@@ -23,7 +22,6 @@ module Capybara
     # @see Capybara::Node
     #
     class Element < Base
-
       def initialize(session, base, query_scope, query)
         super(session, base)
         @query_scope = query_scope
@@ -55,7 +53,7 @@ module Capybara
       # @param [:all, :visible] type  Whether to return only visible or all text
       # @return [String]              The text of the element
       #
-      def text(type=nil)
+      def text(type = nil)
         type ||= :all unless session_options.ignore_hidden_elements or session_options.visible_text_only
         synchronize do
           if type == :all
@@ -397,18 +395,15 @@ module Capybara
       rescue NotSupportedByDriverError
         %(#<Capybara::Node::Element tag="#{base.tag_name}">)
       rescue => e
-        if session.driver.invalid_element_errors.any? { |et| e.is_a?(et)}
-          %(Obsolete #<Capybara::Node::Element>)
-        else
-          raise
-        end
+        raise unless session.driver.invalid_element_errors.any? { |et| e.is_a?(et) }
+
+        %(Obsolete #<Capybara::Node::Element>)
       end
+
     private
 
       def verify_click_options_support(method)
-        if base.method(method).arity.zero?
-          raise ArgumentError, "The current driver does not support #{method} options"
-        end
+        raise ArgumentError, "The current driver does not support #{method} options" if base.method(method).arity.zero?
       end
     end
   end

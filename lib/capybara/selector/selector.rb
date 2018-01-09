@@ -4,7 +4,7 @@ require 'capybara/selector/filter_set'
 require 'capybara/selector/css'
 require 'xpath'
 
-#Patch XPath to allow a nil condition in where
+# Patch XPath to allow a nil condition in where
 module XPath
   class Renderer
     undef :where if method_defined?(:where)
@@ -21,7 +21,6 @@ end
 
 module Capybara
   class Selector
-
     attr_reader :name, :format
 
     class << self
@@ -44,7 +43,7 @@ module Capybara
 
     def initialize(name, &block)
       @name = name
-      @filter_set = FilterSet.add(name){}
+      @filter_set = FilterSet.add(name) {}
       @match = nil
       @label = nil
       @failure_message = nil
@@ -135,7 +134,7 @@ module Capybara
     # @overload label()
     # @return [String]                 The currently set label
     #
-    def label(label=nil)
+    def label(label = nil)
       @label = label if label
       @label
     end
@@ -202,7 +201,7 @@ module Capybara
       f_set.descriptions.each { |desc| @filter_set.describe(&desc) }
     end
 
-    def describe &block
+    def describe(&block)
       @filter_set.describe(&block)
     end
 
@@ -227,22 +226,22 @@ module Capybara
       end
     end
 
-    private
+  private
 
     def add_filter(name, filter_class, *types, **options, &block)
-      types.each { |k| options[k] = true}
+      types.each { |k| options[k] = true }
       custom_filters[name] = filter_class.new(name, block, options)
     end
 
     def locate_field(xpath, locator, enable_aria_label: false, **_options)
-      locate_xpath = xpath #need to save original xpath for the label wrap
+      locate_xpath = xpath # Need to save original xpath for the label wrap
       if locator
         locator = locator.to_s
         attr_matchers = [XPath.attr(:id).equals(locator),
                          XPath.attr(:name).equals(locator),
                          XPath.attr(:placeholder).equals(locator),
                          XPath.attr(:id).equals(XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for))].reduce(:|)
-        attr_matchers = attr_matchers | XPath.attr(:'aria-label').is(locator) if enable_aria_label
+        attr_matchers |= XPath.attr(:'aria-label').is(locator) if enable_aria_label
 
         locate_xpath = locate_xpath[attr_matchers]
         locate_xpath = locate_xpath.union(XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(xpath))
@@ -253,7 +252,7 @@ module Capybara
     end
 
     def describe_all_expression_filters(**opts)
-      expression_filters.map { |ef| " with #{ef} #{opts[ef]}" if opts.has_key?(ef) }.join
+      expression_filters.map { |ef| " with #{ef} #{opts[ef]}" if opts.key?(ef) }.join
     end
 
     def find_by_attr(attribute, value)

@@ -2,20 +2,16 @@ module Capybara
   class Selector
     class CSS
       def self.escape(str)
-        out = String.new("")
+        out = "".dup
         value = str.dup
         out << value.slice!(0...1) if value =~ /^[-_]/
-        out << if value[0] =~ NMSTART
-          value.slice!(0...1)
-        else
-          escape_char(value.slice!(0...1))
-        end
-        out << value.gsub(/[^a-zA-Z0-9_-]/) {|c| escape_char c}
+        out << (value[0] =~ NMSTART ? value.slice!(0...1) : escape_char(value.slice!(0...1)))
+        out << value.gsub(/[^a-zA-Z0-9_-]/) { |c| escape_char c }
         out
       end
 
       def self.escape_char(c)
-        return "\\%06x" % c.ord() unless c =~ %r{[ -/:-~]}
+        return format("\\%06x", c.ord) unless c =~ %r{[ -/:-~]}
         "\\#{c}"
       end
 

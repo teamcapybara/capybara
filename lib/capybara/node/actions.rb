@@ -3,7 +3,6 @@
 module Capybara
   module Node
     module Actions
-
       ##
       #
       # Finds a button or link and clicks it.  See {Capybara::Node::Actions#click_button} and
@@ -21,7 +20,7 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The element clicked
       #
-      def click_link_or_button(locator=nil, **options)
+      def click_link_or_button(locator = nil, **options)
         find(:link_or_button, locator, options).click
       end
       alias_method :click_on, :click_link_or_button
@@ -38,7 +37,7 @@ module Capybara
       #   @param options                  See {Capybara::Node::Finders#find_link}
       #
       # @return [Capybara::Node::Element]  The element clicked
-      def click_link(locator=nil, **options)
+      def click_link(locator = nil, **options)
         find(:link, locator, options).click
       end
 
@@ -55,7 +54,7 @@ module Capybara
       #   @param [String] locator      Which button to find
       #   @param options     See {Capybara::Node::Finders#find_button}
       # @return [Capybara::Node::Element]  The element clicked
-      def click_button(locator=nil, **options)
+      def click_button(locator = nil, **options)
         find(:button, locator, options).click
       end
 
@@ -81,8 +80,8 @@ module Capybara
       #   @option options [String, Array<String>] :class    Match fields that match the class(es) provided
       #
       # @return [Capybara::Node::Element]  The element filled_in
-      def fill_in(locator=nil, with:, fill_options: {}, **options)
-        options[:with] = options.delete(:currently_with) if options.has_key?(:currently_with)
+      def fill_in(locator = nil, with:, fill_options: {}, **options)
+        options[:with] = options.delete(:currently_with) if options.key?(:currently_with)
         find(:fillable_field, locator, options).set(with, fill_options)
       end
 
@@ -107,7 +106,7 @@ module Capybara
       #   @macro label_click
       #
       # @return [Capybara::Node::Element]  The element chosen or the label clicked
-      def choose(locator=nil, **options)
+      def choose(locator = nil, **options)
         _check_with_label(:radio_button, true, locator, **options)
       end
 
@@ -153,7 +152,7 @@ module Capybara
       #   @macro waiting_behavior
       #
       # @return [Capybara::Node::Element]  The element unchecked or the label clicked
-      def uncheck(locator=nil, **options)
+      def uncheck(locator = nil, **options)
         _check_with_label(:checkbox, false, locator, **options)
       end
 
@@ -174,7 +173,7 @@ module Capybara
       # @option options [String] :from  The id, name or label of the select box
       #
       # @return [Capybara::Node::Element]  The option element selected
-      def select(value=nil, from: nil, **options)
+      def select(value = nil, from: nil, **options)
         if from
           find(:select, from, options).find(:option, value, options).select_option
         else
@@ -196,7 +195,7 @@ module Capybara
       # @param [Hash{:from => String}] options  The id, name or label of the select box
       #
       # @return [Capybara::Node::Element]  The option element unselected
-      def unselect(value=nil, from: nil, **options)
+      def unselect(value = nil, from: nil, **options)
         if from
           find(:select, from, options).find(:option, value, options).unselect_option
         else
@@ -225,23 +224,22 @@ module Capybara
       # @option options [true, Hash] make_visible   A Hash of CSS styles to change before attempting to attach the file, if `true` { opacity: 1, display: 'block', visibility: 'visible' } is used (may not be supported by all drivers)
       #
       # @return [Capybara::Node::Element]  The file field element
-      def attach_file(locator=nil, path, make_visible: nil, **options)
+      def attach_file(locator = nil, path, make_visible: nil, **options) # rubocop:disable Style/OptionalArguments
         Array(path).each do |p|
           raise Capybara::FileNotFound, "cannot attach file, #{p} does not exist" unless File.exist?(p.to_s)
         end
         # Allow user to update the CSS style of the file input since they are so often hidden on a page
         if make_visible
           make_visible = { opacity: 1, display: 'block', visibility: 'visible' } if make_visible == true
-          ff = find(:file_field, locator, options.merge({visible: :all}))
+          ff = find(:file_field, locator, options.merge(visible: :all))
           _update_style(ff, make_visible)
-          if ff.visible?
-            begin
-              ff.set(path)
-            ensure
-              _reset_style(ff)
-            end
-          else
-            raise ExpectationNotMet, "The style changes in :make_visible did not make the file input visible"
+
+          raise ExpectationNotMet, "The style changes in :make_visible did not make the file input visible" unless ff.visible?
+
+          begin
+            ff.set(path)
+          ensure
+            _reset_style(ff)
           end
         else
           find(:file_field, locator, options).set(path)
@@ -249,6 +247,7 @@ module Capybara
       end
 
     private
+
       def _update_style(element, style)
         script = <<-JS
           var el = arguments[0];
@@ -277,12 +276,12 @@ module Capybara
         JS
         begin
           session.execute_script(script, element)
-        rescue
+        rescue # swallow extra errors
         end
       end
 
       def _check_with_label(selector, checked, locator, allow_label_click: session_options.automatic_label_click, **options)
-        synchronize(Capybara::Queries::BaseQuery::wait(options, session_options.default_max_wait_time)) do
+        synchronize(Capybara::Queries::BaseQuery.wait(options, session_options.default_max_wait_time)) do
           begin
             el = find(selector, locator, options)
             el.set(checked)
@@ -291,14 +290,13 @@ module Capybara
             begin
               el ||= find(selector, locator, options.merge(visible: :all))
               label = find(:label, for: el, visible: true)
-              label.click unless (el.checked? == checked)
-            rescue
+              label.click unless el.checked? == checked
+            rescue # swallow extra errors - raise original
               raise e
             end
           end
         end
       end
-
     end
   end
 end

@@ -38,7 +38,7 @@ module Capybara
       def label; selector.label or selector.name; end
 
       def description
-        @description = String.new()
+        @description = "".dup
         @description << "visible " if visible == :visible
         @description << "non-visible " if visible == :hidden
         @description << "#{label} #{locator.inspect}"
@@ -53,16 +53,16 @@ module Capybara
       end
 
       def matches_filters?(node)
-        return false unless matches_text_filter(node, options[:text]) if options[:text]
-        return false unless matches_exact_text_filter(node, exact_text) if exact_text.is_a?(String)
+        return false if options[:text] && !matches_text_filter(node, options[:text])
+        return false if exact_text.is_a?(String) && !matches_exact_text_filter(node, exact_text)
 
         case visible
-          when :visible then return false unless node.visible?
-          when :hidden then return false if node.visible?
+        when :visible then return false unless node.visible?
+        when :hidden then return false if node.visible?
         end
 
         res = node_filters.all? do |name, filter|
-          if options.has_key?(name)
+          if options.key?(name)
             filter.matches?(node, options[name])
           elsif filter.default?
             filter.matches?(node, filter.default)
@@ -71,11 +71,13 @@ module Capybara
           end
         end
 
-        res &&= if node.respond_to?(:session)
-          node.session.using_wait_time(0){ @filter_block.call(node) }
-        else
-          @filter_block.call(node)
-        end unless @filter_block.nil?
+        if @filter_block
+          res &&= if node.respond_to?(:session)
+            node.session.using_wait_time(0) { @filter_block.call(node) }
+          else
+            @filter_block.call(node)
+          end
+        end
 
         res
       rescue *(node.respond_to?(:session) ? node.session.driver.invalid_element_errors : [])
@@ -83,15 +85,15 @@ module Capybara
       end
 
       def visible
-        case (vis = options.fetch(:visible){ @selector.default_visibility(session_options.ignore_hidden_elements) })
-          when true then :visible
-          when false then :all
-          else vis
+        case (vis = options.fetch(:visible) { @selector.default_visibility(session_options.ignore_hidden_elements) })
+        when true then :visible
+        when false then :all
+        else vis
         end
       end
 
       def exact?
-        return false if !supports_exact?
+        return false unless supports_exact?
         options.fetch(:exact, session_options.exact)
       end
 
@@ -99,14 +101,10 @@ module Capybara
         options.fetch(:match, session_options.match)
       end
 
-      def xpath(exact=nil)
-        exact = self.exact? if exact.nil?
+      def xpath(exact = nil)
+        exact = exact? if exact.nil?
         expr = apply_expression_filters(@expression)
-        expr = if expr.respond_to?(:to_xpath) and exact
-          expr.to_xpath(:exact)
-        else
-          expr.to_s
-        end
+        expr = exact ? expr.to_xpath(:exact) : expr.to_s if expr.respond_to?(:to_xpath)
         filtered_xpath(expr)
       end
 
@@ -119,9 +117,9 @@ module Capybara
         @resolved_node = node
         node.synchronize do
           children = if selector.format == :css
-            node.find_css(self.css)
+            node.find_css(css)
           else
-            node.find_xpath(self.xpath(exact))
+            node.find_xpath(xpath(exact))
           end.map do |child|
             if node.is_a?(Capybara::Node::Base)
               Capybara::Node::Element.new(node.session, child, node, self)
@@ -138,14 +136,14 @@ module Capybara
         @expression.respond_to? :to_xpath
       end
 
-      private
+    private
 
       def valid_keys
         VALID_KEYS + custom_keys
       end
 
       def node_filters
-        if options.has_key?(:filter_set)
+        if options.key?(:filter_set)
           ::Capybara::Selector::FilterSet.all[options[:filter_set]].node_filters
         else
           @selector.node_filters
@@ -154,7 +152,7 @@ module Capybara
 
       def expression_filters
         filters = @selector.expression_filters
-        filters.merge ::Capybara::Selector::FilterSet.all[options[:filter_set]].expression_filters if options.has_key?(:filter_set)
+        filters.merge ::Capybara::Selector::FilterSet.all[options[:filter_set]].expression_filters if options.key?(:filter_set)
         filters
       end
 
@@ -170,10 +168,10 @@ module Capybara
       end
 
       def filtered_xpath(expr)
-        if options.has_key?(:id) || options.has_key?(:class)
+        if options.key?(:id) || options.key?(:class)
           expr = "(#{expr})"
-          expr = "#{expr}[#{XPath.attr(:id) == options[:id]}]" if options.has_key?(:id) && !custom_keys.include?(:id)
-          if options.has_key?(:class) && !custom_keys.include?(:class)
+          expr = "#{expr}[#{XPath.attr(:id) == options[:id]}]" if options.key?(:id) && !custom_keys.include?(:id)
+          if options.key?(:class) && !custom_keys.include?(:class)
             class_xpath = Array(options[:class]).map do |klass|
               XPath.attr(:class).contains_word(klass)
             end.reduce(:&)
@@ -184,12 +182,12 @@ module Capybara
       end
 
       def filtered_css(expr)
-        if options.has_key?(:id) || options.has_key?(:class)
+        if options.key?(:id) || options.key?(:class)
           css_selectors = expr.split(',').map(&:rstrip)
           expr = css_selectors.map do |sel|
-           sel += "##{Capybara::Selector::CSS.escape(options[:id])}" if options.has_key?(:id) && !custom_keys.include?(:id)
-           sel += Array(options[:class]).map { |k| ".#{Capybara::Selector::CSS.escape(k)}"}.join if options.has_key?(:class) && !custom_keys.include?(:class)
-           sel
+            sel += "##{Capybara::Selector::CSS.escape(options[:id])}" if options.key?(:id) && !custom_keys.include?(:id)
+            sel += Array(options[:class]).map { |k| ".#{Capybara::Selector::CSS.escape(k)}" }.join if options.key?(:class) && !custom_keys.include?(:class)
+            sel
           end.join(", ")
         end
         expr
@@ -197,7 +195,7 @@ module Capybara
 
       def apply_expression_filters(expr)
         expression_filters.inject(expr) do |memo, (name, ef)|
-          if options.has_key?(name)
+          if options.key?(name)
             ef.apply_filter(memo, options[name])
           elsif ef.default?
             ef.apply_filter(memo, ef.default)
@@ -208,9 +206,8 @@ module Capybara
       end
 
       def warn_exact_usage
-        if options.has_key?(:exact) && !supports_exact?
-          warn "The :exact option only has an effect on queries using the XPath#is method. Using it with the query \"#{expression}\" has no effect."
-        end
+        return unless options.key?(:exact) && !supports_exact?
+        warn "The :exact option only has an effect on queries using the XPath#is method. Using it with the query \"#{expression}\" has no effect."
       end
 
       def exact_text

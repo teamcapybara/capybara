@@ -29,23 +29,24 @@ class Capybara::RackTest::Browser
   end
 
   def submit(method, path, attributes)
-    path = request_path if not path or path.empty?
-    process_and_follow_redirects(method, path, attributes, {'HTTP_REFERER' => current_url})
+    path = request_path if path.nil? || path.empty?
+    process_and_follow_redirects(method, path, attributes, 'HTTP_REFERER' => current_url)
   end
 
   def follow(method, path, **attributes)
     return if path.gsub(/^#{Regexp.escape(request_path)}/, '').start_with?('#') || path.downcase.start_with?('javascript:')
-    process_and_follow_redirects(method, path, attributes, {'HTTP_REFERER' => current_url})
+    process_and_follow_redirects(method, path, attributes, 'HTTP_REFERER' => current_url)
   end
 
   def process_and_follow_redirects(method, path, attributes = {}, env = {})
     process(method, path, attributes, env)
-    if driver.follow_redirects?
-      driver.redirect_limit.times do
-        process(:get, last_response["Location"], {}, env) if last_response.redirect?
-      end
-      raise Capybara::InfiniteRedirectError, "redirected more than #{driver.redirect_limit} times, check for infinite redirects." if last_response.redirect?
+
+    return unless driver.follow_redirects?
+
+    driver.redirect_limit.times do
+      process(:get, last_response["Location"], {}, env) if last_response.redirect?
     end
+    raise Capybara::InfiniteRedirectError, "redirected more than #{driver.redirect_limit} times, check for infinite redirects." if last_response.redirect?
   end
 
   def process(method, path, attributes = {}, env = {})
@@ -56,7 +57,7 @@ class Capybara::RackTest::Browser
     else
       new_uri.path = request_path if path.start_with?("?")
       new_uri.path = "/" if new_uri.path.empty?
-      new_uri.path = request_path.sub(%r(/[^/]*$), '/') + new_uri.path unless new_uri.path.start_with?('/')
+      new_uri.path = request_path.sub(%r{/[^/]*$}, '/') + new_uri.path unless new_uri.path.start_with?('/')
     end
     new_uri.scheme ||= @current_scheme
     new_uri.host ||= @current_host
@@ -92,7 +93,7 @@ class Capybara::RackTest::Browser
   end
 
   def find(format, selector)
-    if format==:css
+    if format == :css
       dom.css(selector, Capybara::RackTest::CSSHandlers.new)
     else
       dom.xpath(selector)

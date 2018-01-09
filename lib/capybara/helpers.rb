@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Capybara
-
   # @api private
   module Helpers
     extend self
@@ -27,7 +26,7 @@ module Capybara
     # @param [String] text Text to escape
     # @return [String]     Escaped text
     #
-    def to_regexp(text, regexp_options=nil, exact=false)
+    def to_regexp(text, regexp_options = nil, exact = false)
       if text.is_a?(Regexp)
         text
       else

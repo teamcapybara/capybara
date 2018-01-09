@@ -2,6 +2,7 @@
 require 'spec_helper'
 require 'selenium-webdriver'
 require 'shared_selenium_session'
+require 'rspec/shared_spec_matchers'
 
 CHROME_DRIVER = if ENV['HEADLESS'] then :selenium_chrome_headless else :selenium_chrome end
 
@@ -12,7 +13,7 @@ CHROME_DRIVER = if ENV['HEADLESS'] then :selenium_chrome_headless else :selenium
 Capybara.register_driver :selenium_chrome_clear_storage do |app|
   chrome_options = {
     browser: :chrome,
-    options: ::Selenium::WebDriver::Chrome::Options.new()
+    options: ::Selenium::WebDriver::Chrome::Options.new
   }
   chrome_options[:options].args << 'headless' if ENV['HEADLESS']
   Capybara::Selenium::Driver.new(app, chrome_options.merge(clear_local_storage: true, clear_session_storage: true))
@@ -31,6 +32,7 @@ Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_DRIVER.to_s, capybar
 RSpec.describe "Capybara::Session with chrome" do
   include Capybara::SpecHelper
   include_examples  "Capybara::Session", TestSessions::Chrome, CHROME_DRIVER
+  include_examples  Capybara::RSpecMatchers, TestSessions::Chrome, CHROME_DRIVER
 
   context "storage" do
     describe "#reset!" do

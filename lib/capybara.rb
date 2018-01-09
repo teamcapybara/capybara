@@ -22,7 +22,6 @@ module Capybara
   class WindowError < CapybaraError; end
   class ReadOnlyElementError < CapybaraError; end
 
-
   class << self
     extend Forwardable
 
@@ -305,7 +304,7 @@ module Capybara
     # as cookies.
     #
     def reset_sessions!
-      #reset in reverse so sessions that started servers are reset last
+      # reset in reverse so sessions that started servers are reset last
       session_pool.reverse_each { |_mode, session| session.reset! }
     end
     alias_method :reset!, :reset_sessions!
@@ -359,10 +358,10 @@ module Capybara
     # @param [String] html              The raw html
     # @return [Nokogiri::HTML::Document]      HTML document
     #
-    def HTML(html)
+    def HTML(html) # rubocop:disable Naming/MethodName
       Nokogiri::HTML(html).tap do |document|
         document.xpath('//textarea').each do |textarea|
-          textarea['_capybara_raw_value'] = textarea.content.sub(/\A\n/,'')
+          textarea['_capybara_raw_value'] = textarea.content.sub(/\A\n/, '')
         end
       end
     end
@@ -377,6 +376,7 @@ module Capybara
     end
 
   private
+
     def config
       @config ||= Capybara::Config.new
     end
@@ -439,12 +439,12 @@ end
 
 Capybara.register_server :webrick do |app, port, host, **options|
   require 'rack/handler/webrick'
-  Rack::Handler::WEBrick.run(app, {Host: host, Port: port, AccessLog: [], Logger: WEBrick::Log::new(nil, 0)}.merge(options))
+  Rack::Handler::WEBrick.run(app, { Host: host, Port: port, AccessLog: [], Logger: WEBrick::Log.new(nil, 0) }.merge(options))
 end
 
 Capybara.register_server :puma do |app, port, host, **options|
   require 'rack/handler/puma'
-  Rack::Handler::Puma.run(app, {Host: host, Port: port, Threads: "0:4", workers: 0, daemon: false}.merge(options))
+  Rack::Handler::Puma.run(app, { Host: host, Port: port, Threads: "0:4", workers: 0, daemon: false }.merge(options))
 end
 
 Capybara.configure do |config|
@@ -476,11 +476,11 @@ Capybara.register_driver :selenium do |app|
 end
 
 Capybara.register_driver :selenium_chrome do |app|
-  Capybara::Selenium::Driver.new(app, :browser => :chrome)
+  Capybara::Selenium::Driver.new(app, browser: :chrome)
 end
 
 Capybara.register_driver :selenium_chrome_headless do |app|
-  browser_options = ::Selenium::WebDriver::Chrome::Options.new()
+  browser_options = ::Selenium::WebDriver::Chrome::Options.new
   browser_options.args << '--headless'
   browser_options.args << '--disable-gpu'
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)

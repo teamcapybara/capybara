@@ -21,7 +21,7 @@ module Capybara
         self.class.wait(options, session_options.default_max_wait_time)
       end
 
-      def self.wait(options, default=Capybara.default_max_wait_time)
+      def self.wait(options, default = Capybara.default_max_wait_time)
         options.fetch(:wait, default) || 0
       end
 
@@ -31,7 +31,7 @@ module Capybara
       # Returns false if query does not have any count options specified.
       #
       def expects_none?
-        if COUNT_KEYS.any? { |k| options.has_key? k }
+        if COUNT_KEYS.any? { |k| options.key? k }
           matches_count?(0)
         else
           false
@@ -48,10 +48,10 @@ module Capybara
       # @param [Integer] count     The actual number. Should be coercible via Integer()
       #
       def matches_count?(count)
-        return (Integer(options[:count]) == count)     if options[:count]
+        return (Integer(options[:count]) == count) if options[:count]
         return false if options[:maximum] && (Integer(options[:maximum]) < count)
         return false if options[:minimum] && (Integer(options[:minimum]) > count)
-        return false if options[:between] && !(options[:between] === count)
+        return false if options[:between] && !options[:between].include?(count)
         return true
       end
 
@@ -67,10 +67,10 @@ module Capybara
         String.new("expected not to find #{description}") << count_message
       end
 
-      private
+    private
 
       def count_message
-        message = String.new()
+        message = "".dup
         if options[:count]
           message << " #{options[:count]} #{Capybara::Helpers.declension('time', 'times', options[:count])}"
         elsif options[:between]
@@ -85,11 +85,11 @@ module Capybara
 
       def assert_valid_keys
         invalid_keys = @options.keys - valid_keys
-        unless invalid_keys.empty?
-          invalid_names = invalid_keys.map(&:inspect).join(", ")
-          valid_names = valid_keys.map(&:inspect).join(", ")
-          raise ArgumentError, "invalid keys #{invalid_names}, should be one of #{valid_names}"
-        end
+        return if invalid_keys.empty?
+
+        invalid_names = invalid_keys.map(&:inspect).join(", ")
+        valid_names = valid_keys.map(&:inspect).join(", ")
+        raise ArgumentError, "invalid keys #{invalid_names}, should be one of #{valid_names}"
       end
     end
   end

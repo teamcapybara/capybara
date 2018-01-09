@@ -17,7 +17,7 @@ module Capybara
       # @return [true]
       #
       def assert_title(title, **options)
-        _verify_title(title,options) { |query| raise Capybara::ExpectationNotMet, query.failure_message unless query.resolves_for?(self) }
+        _verify_title(title, options) { |query| raise Capybara::ExpectationNotMet, query.failure_message unless query.resolves_for?(self) }
       end
 
       ##
@@ -28,7 +28,7 @@ module Capybara
       # @return [true]
       #
       def assert_no_title(title, **options)
-        _verify_title(title,options) { |query| raise Capybara::ExpectationNotMet, query.negative_failure_message if query.resolves_for?(self) }
+        _verify_title(title, options) { |query| raise Capybara::ExpectationNotMet, query.negative_failure_message if query.resolves_for?(self) }
       end
 
       ##
@@ -55,7 +55,7 @@ module Capybara
         return false
       end
 
-      private
+    private
 
       def _verify_title(title, options)
         query = Capybara::Queries::TitleQuery.new(title, options)
@@ -64,7 +64,6 @@ module Capybara
         end
         return true
       end
-
     end
   end
 end

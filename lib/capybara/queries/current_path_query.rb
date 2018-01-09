@@ -40,7 +40,7 @@ module Capybara
         failure_message_helper(' not')
       end
 
-      private
+    private
 
       def failure_message_helper(negated = '')
         verb = @expected_path.is_a?(Regexp) ? 'match' : 'equal'
@@ -50,7 +50,6 @@ module Capybara
       def valid_keys
         %i[wait url ignore_query]
       end
-
     end
   end
 end

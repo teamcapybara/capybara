@@ -61,7 +61,7 @@ module Capybara
 
     attr_reader :app, :port, :host
 
-    def initialize(app, port=Capybara.server_port, host=Capybara.server_host, server_errors=Capybara.server_errors)
+    def initialize(app, port = Capybara.server_port, host = Capybara.server_host, server_errors = Capybara.server_errors)
       @app = app
       @server_thread = nil # suppress warnings
       @host, @port, @server_errors = host, port, server_errors

@@ -2,7 +2,6 @@
 
 module Capybara
   module Node
-
     ##
     #
     # A {Capybara::Document} represents an HTML document. Any operation
@@ -21,7 +20,7 @@ module Capybara
       #
       # @return [String]    The text of the document
       #
-      def text(type=nil)
+      def text(type = nil)
         find(:xpath, '/html').text(type)
       end
 

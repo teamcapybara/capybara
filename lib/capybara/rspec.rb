@@ -7,9 +7,9 @@ require 'capybara/rspec/features'
 require 'capybara/rspec/matcher_proxies'
 
 RSpec.configure do |config|
-  config.include Capybara::DSL, :type => :feature
-  config.include Capybara::RSpecMatchers, :type => :feature
-  config.include Capybara::RSpecMatchers, :type => :view
+  config.include Capybara::DSL, type: :feature
+  config.include Capybara::RSpecMatchers, type: :feature
+  config.include Capybara::RSpecMatchers, type: :view
 
   # The before and after blocks must run instantaneously, because Capybara
   # might not actually be used in all examples where it's included.
@@ -28,4 +28,3 @@ RSpec.configure do |config|
     end
   end
 end
-

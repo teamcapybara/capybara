@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require "uri"
+require "English"
 
 class Capybara::Selenium::Driver < Capybara::Driver::Base
-
   DEFAULT_OPTIONS = {
-    :browser => :firefox,
+    browser: :firefox,
     clear_local_storage: false,
     clear_session_storage: false
   }.freeze
@@ -17,10 +17,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     unless @browser
       if firefox?
         options[:desired_capabilities] ||= {}
-        options[:desired_capabilities].merge!({ unexpectedAlertBehaviour: "ignore" })
+        options[:desired_capabilities][:unexpectedAlertBehaviour] = "ignore"
       end
 
-      @processed_options = options.reject { |key,_val| SPECIAL_OPTIONS.include?(key) }
+      @processed_options = options.reject { |key, _val| SPECIAL_OPTIONS.include?(key) }
       @browser = Selenium::WebDriver.for(options[:browser], @processed_options)
 
       @w3c = ((defined?(Selenium::WebDriver::Remote::W3CCapabilities) && @browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3CCapabilities)) ||
@@ -28,7 +28,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       main = Process.pid
       at_exit do
         # Store the exit status of the test run since it goes away after calling the at_exit proc...
-        @exit_status = $!.status if $!.is_a?(SystemExit)
+        @exit_status = $ERROR_INFO.status if $ERROR_INFO.is_a?(SystemExit)
         quit if Process.pid == main
         exit @exit_status if @exit_status # Force exit with stored status
       end
@@ -89,7 +89,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def needs_server?; true; end
 
   def execute_script(script, *args)
-    browser.execute_script(script, *args.map { |arg| arg.is_a?(Capybara::Selenium::Node) ?  arg.native : arg} )
+    browser.execute_script(script, *args.map { |arg| arg.is_a?(Capybara::Selenium::Node) ? arg.native : arg })
   end
 
   def evaluate_script(script, *args)
@@ -99,7 +99,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def evaluate_async_script(script, *args)
     browser.manage.timeouts.script_timeout = Capybara.default_max_wait_time
-    result = browser.execute_async_script(script, *args.map { |arg| arg.is_a?(Capybara::Selenium::Node) ? arg.native : arg} )
+    result = browser.execute_async_script(script, *args.map { |arg| arg.is_a?(Capybara::Selenium::Node) ? arg.native : arg })
     unwrap_script_result(result)
   end
 
@@ -109,43 +109,43 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def reset!
     # Use instance variable directly so we avoid starting the browser just to reset the session
-    if @browser
-      navigated = false
-      start_time = Capybara::Helpers.monotonic_time
-      begin
-        if !navigated
-          # Only trigger a navigation if we haven't done it already, otherwise it
-          # can trigger an endless series of unload modals
-          begin
-            @browser.manage.delete_all_cookies
-            clear_storage
-          rescue Selenium::WebDriver::Error::UnhandledError
-            # delete_all_cookies fails when we've previously gone
-            # to about:blank, so we rescue this error and do nothing
-            # instead.
-          end
-          @browser.navigate.to("about:blank")
-        end
-        navigated = true
+    return unless @browser
 
-        #Ensure the page is empty and trigger an UnhandledAlertError for any modals that appear during unload
-        until find_xpath("/html/body/*").empty? do
-          raise Capybara::ExpectationNotMet.new('Timed out waiting for Selenium session reset') if (Capybara::Helpers.monotonic_time - start_time) >= 10
-          sleep 0.05
-        end
-      rescue Selenium::WebDriver::Error::UnhandledAlertError, Selenium::WebDriver::Error::UnexpectedAlertOpenError
-        # This error is thrown if an unhandled alert is on the page
-        # Firefox appears to automatically dismiss this alert, chrome does not
-        # We'll try to accept it
+    navigated = false
+    start_time = Capybara::Helpers.monotonic_time
+    begin
+      unless navigated
+        # Only trigger a navigation if we haven't done it already, otherwise it
+        # can trigger an endless series of unload modals
         begin
-          @browser.switch_to.alert.accept
-          sleep 0.25 # allow time for the modal to be handled
-        rescue modal_error
-          # The alert is now gone - nothing to do
+          @browser.manage.delete_all_cookies
+          clear_storage
+        rescue Selenium::WebDriver::Error::UnhandledError
+          # delete_all_cookies fails when we've previously gone
+          # to about:blank, so we rescue this error and do nothing
+          # instead.
         end
-        # try cleaning up the browser again
-        retry
+        @browser.navigate.to("about:blank")
       end
+      navigated = true
+
+      # Ensure the page is empty and trigger an UnhandledAlertError for any modals that appear during unload
+      until find_xpath("/html/body/*").empty?
+        raise Capybara::ExpectationNotMet, 'Timed out waiting for Selenium session reset' if (Capybara::Helpers.monotonic_time - start_time) >= 10
+        sleep 0.05
+      end
+    rescue Selenium::WebDriver::Error::UnhandledAlertError, Selenium::WebDriver::Error::UnexpectedAlertOpenError
+      # This error is thrown if an unhandled alert is on the page
+      # Firefox appears to automatically dismiss this alert, chrome does not
+      # We'll try to accept it
+      begin
+        @browser.switch_to.alert.accept
+        sleep 0.25 # allow time for the modal to be handled
+      rescue modal_error
+        # The alert is now gone - nothing to do
+      end
+      # try cleaning up the browser again
+      retry
     end
   end
 
@@ -269,7 +269,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       ::Selenium::WebDriver::Error::ElementNotInteractableError,
       ::Selenium::WebDriver::Error::ElementClickInterceptedError,
       ::Selenium::WebDriver::Error::InvalidElementStateError,
-      ::Selenium::WebDriver::Error::ElementNotSelectableError,
+      ::Selenium::WebDriver::Error::ElementNotSelectableError
     ]
   end
 
@@ -303,8 +303,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     return false
   end
 
-
-  private
+private
 
   # @api private
   def browser_name
@@ -393,7 +392,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   # rubocop:enable Metrics/MethodLength
 
   def within_given_window(handle)
-    original_handle = self.current_window_handle
+    original_handle = current_window_handle
     if handle == original_handle
       yield
     else
@@ -408,7 +407,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     # Selenium has its own built in wait (2 seconds)for a modal to show up, so this wait is really the minimum time
     # Actual wait time may be longer than specified
     wait = Selenium::WebDriver::Wait.new(
-      timeout: options.fetch(:wait, session_options.default_max_wait_time) || 0 ,
+      timeout: options.fetch(:wait, session_options.default_max_wait_time) || 0,
       ignore: modal_error
     )
     begin
@@ -418,7 +417,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         alert.text.match(regexp) ? alert : nil
       end
     rescue Selenium::WebDriver::Error::TimeOutError
-      raise Capybara::ModalNotFound.new("Unable to find modal dialog#{" with #{text}" if text}")
+      raise Capybara::ModalNotFound, "Unable to find modal dialog#{" with #{text}" if text}"
     end
   end
 
@@ -426,7 +425,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     # Selenium has its own built in wait (2 seconds)for a modal to show up, so this wait is really the minimum time
     # Actual wait time may be longer than specified
     wait = Selenium::WebDriver::Wait.new(
-      timeout: options.fetch(:wait, session_options.default_max_wait_time) || 0 ,
+      timeout: options.fetch(:wait, session_options.default_max_wait_time) || 0,
       ignore: modal_error
     )
     begin
@@ -438,7 +437,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
           if alert_text.match(regexp)
             alert_text
           else
-            raise Capybara::ModalNotFound.new("Unable to find modal dialog#{" with #{text}" if text}")
+            raise Capybara::ModalNotFound, "Unable to find modal dialog#{" with #{text}" if text}"
           end
         elsif called.nil?
           # page changed so modal_handler data has gone away
@@ -449,7 +448,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         end
       end
     rescue Selenium::WebDriver::Error::TimeOutError
-      raise Capybara::ModalNotFound.new("Unable to find modal dialog#{" with #{options[:text]}" if options[:text]}")
+      raise Capybara::ModalNotFound, "Unable to find modal dialog#{" with #{options[:text]}" if options[:text]}"
     end
   end
 
@@ -475,21 +474,19 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def load_selenium
-    begin
-      require 'selenium-webdriver'
-      # Fix for selenium-webdriver 3.4.0 which misnamed these
-      if !defined?(::Selenium::WebDriver::Error::ElementNotInteractableError)
-        ::Selenium::WebDriver::Error.const_set('ElementNotInteractableError', Class.new(::Selenium::WebDriver::Error::WebDriverError))
-      end
-      if !defined?(::Selenium::WebDriver::Error::ElementClickInterceptedError)
-        ::Selenium::WebDriver::Error.const_set('ElementClickInterceptedError', Class.new(::Selenium::WebDriver::Error::WebDriverError))
-      end
-    rescue LoadError => e
-      if e.message =~ /selenium-webdriver/
-        raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
-      else
-        raise e
-      end
+    require 'selenium-webdriver'
+    # Fix for selenium-webdriver 3.4.0 which misnamed these
+    unless defined?(::Selenium::WebDriver::Error::ElementNotInteractableError)
+      ::Selenium::WebDriver::Error.const_set('ElementNotInteractableError', Class.new(::Selenium::WebDriver::Error::WebDriverError))
+    end
+    unless defined?(::Selenium::WebDriver::Error::ElementClickInterceptedError)
+      ::Selenium::WebDriver::Error.const_set('ElementClickInterceptedError', Class.new(::Selenium::WebDriver::Error::WebDriverError))
+    end
+  rescue LoadError => e
+    if e.message =~ /selenium-webdriver/
+      raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
+    else
+      raise e
     end
   end
 end

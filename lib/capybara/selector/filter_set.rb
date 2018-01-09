@@ -28,7 +28,7 @@ module Capybara
       def description(**options)
         options_with_defaults = options.dup
         filters.each do |name, filter|
-          options_with_defaults[name] = filter.default if filter.default? && !options_with_defaults.has_key?(name)
+          options_with_defaults[name] = filter.default if filter.default? && !options_with_defaults.key?(name)
         end
 
         @descriptions.map do |desc|
@@ -45,11 +45,10 @@ module Capybara
       end
 
       def expression_filters
-        filters.select { |_n, f| f.nil? || f.is_a?(Filters::ExpressionFilter)  }.freeze
+        filters.select { |_n, f| f.nil? || f.is_a?(Filters::ExpressionFilter) }.freeze
       end
 
       class << self
-
         def all
           @filter_sets ||= {}
         end
@@ -63,10 +62,10 @@ module Capybara
         end
       end
 
-      private
+    private
 
       def add_filter(name, filter_class, *types, **options, &block)
-        types.each { |k| options[k] = true}
+        types.each { |k| options[k] = true }
         filters[name] = filter_class.new(name, block, options)
       end
     end

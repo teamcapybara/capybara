@@ -4,7 +4,6 @@ require 'capybara/session/matchers'
 require 'addressable/uri'
 
 module Capybara
-
   ##
   #
   # The Session class represents a single user's interaction with the system. The Session can use
@@ -75,7 +74,7 @@ module Capybara
     attr_reader :mode, :app, :server
     attr_accessor :synchronized
 
-    def initialize(mode, app=nil)
+    def initialize(mode, app = nil)
       raise TypeError, "The second parameter to Session::new should be a rack app if passed." if app && !app.respond_to?(:call)
       @@instance_created = true
       @mode = mode
@@ -94,8 +93,8 @@ module Capybara
 
     def driver
       @driver ||= begin
-        unless Capybara.drivers.has_key?(mode)
-          other_drivers = Capybara.drivers.keys.map { |key| key.inspect }
+        unless Capybara.drivers.key?(mode)
+          other_drivers = Capybara.drivers.keys.map(&:inspect)
           raise Capybara::DriverNotFoundError, "no driver called #{mode.inspect} was found, available drivers: #{other_drivers.join(', ')}"
         end
         driver = Capybara.drivers[mode].call(app)
@@ -145,7 +144,7 @@ module Capybara
             raise CapybaraError, "Your application server raised an error - It has been raised in your test code because Capybara.raise_server_errors == true"
           end
         rescue CapybaraError
-          #needed to get the cause set correctly in JRuby -- otherwise we could just do raise @server.error
+          # needed to get the cause set correctly in JRuby -- otherwise we could just do raise @server.error
           raise @server.error, @server.error.message, @server.error.backtrace
         ensure
           @server.reset_error!
@@ -197,7 +196,7 @@ module Capybara
       # Addressable doesn't support opaque URIs - we want nil here
       return nil if uri.scheme == "about"
       path = uri.path
-      path if path and not path.empty?
+      path if path && !path.empty?
     end
 
     ##
@@ -259,7 +258,7 @@ module Capybara
         if visit_uri.relative?
           uri_base.port ||= @server.port if @server && config.always_include_port
 
-          visit_uri_parts = visit_uri.to_hash.delete_if { |_k,v| v.nil? }
+          visit_uri_parts = visit_uri.to_hash.delete_if { |_k, v| v.nil? }
 
           # Useful to people deploying to a subdirectory
           # and/or single page apps where only the url fragment changes
@@ -335,7 +334,7 @@ module Capybara
     # @raise  [Capybara::ElementNotFound]      If the scope can't be found before time expires
     #
     def within(*args)
-      new_scope = if args.first.is_a?(Capybara::Node::Base) then args.first else find(*args) end
+      new_scope = args.first.is_a?(Capybara::Node::Base) ? args.first : find(*args)
       begin
         scopes.push(new_scope)
         yield
@@ -390,15 +389,19 @@ module Capybara
         driver.switch_to_frame(frame)
         scopes.push(:frame)
       when :parent
-        raise Capybara::ScopeError, "`switch_to_frame(:parent)` cannot be called from inside a descendant frame's "\
-                                    "`within` block." if scopes.last() != :frame
+        if scopes.last != :frame
+          raise Capybara::ScopeError, "`switch_to_frame(:parent)` cannot be called from inside a descendant frame's "\
+                                      "`within` block."
+        end
         scopes.pop
         driver.switch_to_frame(:parent)
       when :top
         idx = scopes.index(:frame)
         if idx
-          raise Capybara::ScopeError, "`switch_to_frame(:top)` cannot be called from inside a descendant frame's "\
-                                      "`within` block." if scopes.slice(idx..-1).any? {|scope| ![:frame, nil].include?(scope)}
+          if scopes.slice(idx..-1).any? { |scope| ![:frame, nil].include?(scope) }
+            raise Capybara::ScopeError, "`switch_to_frame(:top)` cannot be called from inside a descendant frame's "\
+                                        "`within` block."
+          end
           scopes.slice!(idx..-1)
           driver.switch_to_frame(:top)
         end
@@ -477,11 +480,9 @@ module Capybara
     #
     def switch_to_window(window = nil, **options, &window_locator)
       block_given = block_given?
-      if window && block_given
-        raise ArgumentError, "`switch_to_window` can take either a block or a window, not both"
-      elsif !window && !block_given
-        raise ArgumentError, "`switch_to_window`: either window or block should be provided"
-      elsif !scopes.last.nil?
+      raise ArgumentError, "`switch_to_window` can take either a block or a window, not both" if window && block_given
+      raise ArgumentError, "`switch_to_window`: either window or block should be provided" if !window && !block_given
+      unless scopes.last.nil?
         raise Capybara::ScopeError, "`switch_to_window` is not supposed to be invoked from "\
                                     "`within` or `within_frame` blocks."
       end
@@ -585,7 +586,7 @@ module Capybara
         driver.execute_script(script)
       else
         raise Capybara::NotSupportedByDriverError, "The current driver does not support execute_script arguments" if driver.method(:execute_script).arity == 1
-        driver.execute_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ?  arg.base : arg} )
+        driver.execute_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ? arg.base : arg })
       end
     end
 
@@ -604,7 +605,7 @@ module Capybara
         driver.evaluate_script(script)
       else
         raise Capybara::NotSupportedByDriverError, "The current driver does not support evaluate_script arguments" if driver.method(:evaluate_script).arity == 1
-        driver.evaluate_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ?  arg.base : arg} )
+        driver.evaluate_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ? arg.base : arg })
       end
       element_script_result(result)
     end
@@ -622,7 +623,7 @@ module Capybara
         driver.evaluate_async_script(script)
       else
         raise Capybara::NotSupportedByDriverError, "The current driver does not support evaluate_async_script arguments" if driver.method(:evaluate_async_script).arity == 1
-        driver.evaluate_async_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ?  arg.base : arg} )
+        driver.evaluate_async_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ? arg.base : arg })
       end
       element_script_result(result)
     end
@@ -647,7 +648,7 @@ module Capybara
     #   @return [String]  the message shown in the modal
     #   @raise [Capybara::ModalNotFound]  if modal dialog hasn't been found
     #
-    def accept_alert(text=nil, **options, &blk)
+    def accept_alert(text = nil, **options, &blk)
       accept_modal(:alert, text, options, &blk)
     end
 
@@ -657,7 +658,7 @@ module Capybara
     #
     # @macro modal_params
     #
-    def accept_confirm(text=nil, **options, &blk)
+    def accept_confirm(text = nil, **options, &blk)
       accept_modal(:confirm, text, options, &blk)
     end
 
@@ -667,7 +668,7 @@ module Capybara
     #
     # @macro modal_params
     #
-    def dismiss_confirm(text=nil, **options, &blk)
+    def dismiss_confirm(text = nil, **options, &blk)
       dismiss_modal(:confirm, text, options, &blk)
     end
 
@@ -678,7 +679,7 @@ module Capybara
     # @macro modal_params
     # @option options [String] :with   Response to provide to the prompt
     #
-    def accept_prompt(text=nil, **options, &blk)
+    def accept_prompt(text = nil, **options, &blk)
       accept_modal(:prompt, text, options, &blk)
     end
 
@@ -688,7 +689,7 @@ module Capybara
     #
     # @macro modal_params
     #
-    def dismiss_prompt(text=nil, **options, &blk)
+    def dismiss_prompt(text = nil, **options, &blk)
       dismiss_modal(:prompt, text, options, &blk)
     end
 
@@ -826,6 +827,7 @@ module Capybara
         Capybara::ReadOnlySessionConfig.new(Capybara.session_options)
       end
     end
+
   private
 
     @@instance_created = false
@@ -838,20 +840,18 @@ module Capybara
       driver.dismiss_modal(type, modal_options(text_or_options, options), &blk)
     end
 
-    def modal_options(text=nil, **options)
+    def modal_options(text = nil, **options)
       options[:text] ||= text unless text.nil?
       options[:wait] ||= config.default_max_wait_time
       options
     end
 
     def open_file(path)
-      begin
-        require "launchy"
-        Launchy.open(path)
-      rescue LoadError
-        warn "File saved to #{path}."
-        warn "Please install the launchy gem to open the file automatically."
-      end
+      require "launchy"
+      Launchy.open(path)
+    rescue LoadError
+      warn "File saved to #{path}."
+      warn "Please install the launchy gem to open the file automatically."
     end
 
     def prepare_path(path, extension)
@@ -892,7 +892,7 @@ module Capybara
         find(*args)
       when Integer
         idx = args[0]
-        all(:frame, minimum: idx+1)[idx]
+        all(:frame, minimum: idx + 1)[idx]
       else
         raise TypeError
       end
@@ -912,9 +912,7 @@ module Capybara
           begin
             driver.window_handles.each do |handle|
               driver.switch_to_window handle
-              if yield
-                return Window.new(self, handle)
-              end
+              return Window.new(self, handle) if yield
             end
           rescue => e
             driver.switch_to_window(original_window_handle)
@@ -926,6 +924,5 @@ module Capybara
         end
       end
     end
-
   end
 end

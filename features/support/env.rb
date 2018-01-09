@@ -20,4 +20,3 @@ Capybara.javascript_driver = :javascript_test
 Capybara.register_driver :named_test do |app|
   Capybara::RackTest::Driver.new(app)
 end
-

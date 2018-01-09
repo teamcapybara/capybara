@@ -4,7 +4,7 @@ module Capybara
       include ::RSpec::Matchers::Composable
 
       def and(matcher)
-        Capybara::RSpecMatchers::Compound::And.new(self,matcher)
+        Capybara::RSpecMatchers::Compound::And.new(self, matcher)
       end
 
       def and_then(matcher)
@@ -15,12 +15,11 @@ module Capybara
         Capybara::RSpecMatchers::Compound::Or.new(self, matcher)
       end
 
-
       class CapybaraEvaluator
         def initialize(actual, matcher1, matcher2)
-          @actual        = actual
-          @matcher1     = matcher1
-          @matcher2     = matcher2
+          @actual = actual
+          @matcher1 = matcher1
+          @matcher2 = matcher2
           @match_results = Hash.new { |h, matcher| h[matcher] = matcher.matches?(@actual) }
         end
 
@@ -34,16 +33,15 @@ module Capybara
       end
 
       class And < ::RSpec::Matchers::BuiltIn::Compound::And
-
       private
 
         def match(_expected, actual)
-          @evaluator = CapybaraEvaluator.new(actual, matcher1, matcher2)
+          @evaluator = CapybaraEvaluator.new(actual, matcher_1, matcher_2)
           syncer = sync_element(actual)
           begin
             syncer.synchronize do
               @evaluator.reset
-              raise ::Capybara::ElementNotFound unless [matcher1_matches?, matcher2_matches?].all?
+              raise ::Capybara::ElementNotFound unless [matcher_1_matches?, matcher_2_matches?].all?
               true
             end
           rescue
@@ -63,16 +61,15 @@ module Capybara
       end
 
       class Or < ::RSpec::Matchers::BuiltIn::Compound::Or
-
       private
 
         def match(_expected, actual)
-          @evaluator = CapybaraEvaluator.new(actual, matcher1, matcher2)
+          @evaluator = CapybaraEvaluator.new(actual, matcher_1, matcher_2)
           syncer = sync_element(actual)
           begin
             syncer.synchronize do
               @evaluator.reset
-              raise ::Capybara::ElementNotFound unless [matcher1_matches?, matcher2_matches?].any?
+              raise ::Capybara::ElementNotFound unless [matcher_1_matches?, matcher_2_matches?].any?
               true
             end
           rescue

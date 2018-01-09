@@ -28,7 +28,7 @@ module Capybara
         failure_message_helper(' not')
       end
 
-      private
+    private
 
       def failure_message_helper(negated = '')
         verb = @expected_title.is_a?(Regexp) ? 'match' : 'include'

@@ -102,7 +102,7 @@ module Capybara
     end
 
     def eql?(other)
-      other.kind_of?(self.class) && @session == other.session && @handle == other.handle
+      other.is_a?(self.class) && @session == other.session && @handle == other.handle
     end
     alias_method :==, :eql?
 
@@ -114,9 +114,9 @@ module Capybara
       "#<Window @handle=#{@handle.inspect}>"
     end
 
-    private
+  private
 
-    def wait_for_stable_size(seconds=session.config.default_max_wait_time)
+    def wait_for_stable_size(seconds = session.config.default_max_wait_time)
       res = yield if block_given?
       prev_size = size
       start_time = Capybara::Helpers.monotonic_time
@@ -130,9 +130,7 @@ module Capybara
     end
 
     def raise_unless_current(what)
-      unless current?
-        raise Capybara::WindowError, "#{what} not current window is not possible."
-      end
+      raise Capybara::WindowError, "#{what} not current window is not possible." unless current?
     end
   end
 end

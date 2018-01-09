@@ -3,7 +3,6 @@
 require 'forwardable'
 
 module Capybara
-
   ##
   # A {Capybara::Result} represents a collection of {Capybara::Node::Element} on the page. It is possible to interact with this
   # collection similar to an Array because it implements Enumerable and offers the following Array methods through delegation:
@@ -100,7 +99,7 @@ module Capybara
           break if @result_cache.size > max
           @result_cache << @results_enum.next
         end
-        return 0 if (@query.options[:between] === @result_cache.size)
+        return 0 if @query.options[:between].include?(@result_cache.size)
         return -1 if @result_cache.size < min
         return 1
       end
@@ -131,7 +130,7 @@ module Capybara
       failure_message.sub(/(to find)/, 'not \1')
     end
 
-    private
+  private
 
     def full_results
       loop { @result_cache << @results_enum.next }
@@ -147,7 +146,7 @@ module Capybara
       # causes a concurrency issue with network requests here
       # https://github.com/jruby/jruby/issues/4212
       if RUBY_PLATFORM == 'java'
-        @elements.select(&block).to_enum  # non-lazy evaluation
+        @elements.select(&block).to_enum # non-lazy evaluation
       else
         @elements.lazy.select(&block)
       end
