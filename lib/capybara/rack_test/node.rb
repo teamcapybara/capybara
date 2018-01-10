@@ -50,7 +50,9 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     native.remove_attribute('selected')
   end
 
-  def click
+  def click(keys = [], offset = {})
+    raise ArgumentError, "The RackTest driver does not support click options" unless keys.empty? && offset.empty?
+
     if tag_name == 'a' && !self[:href].nil?
       method = self["data-method"] if driver.options[:respect_data_method]
       method ||= :get

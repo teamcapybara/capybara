@@ -40,15 +40,15 @@ module Capybara
         raise NotImplementedError
       end
 
-      def click(keys = [], offset = {})
+      def click(keys = [], options = {})
         raise NotImplementedError
       end
 
-      def right_click(keys = [], offset = {})
+      def right_click(keys = [], options = {})
         raise NotImplementedError
       end
 
-      def double_click(keys = [], offset = {})
+      def double_click(keys = [], options = {})
         raise NotImplementedError
       end
 
