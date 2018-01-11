@@ -126,7 +126,6 @@ module Capybara
       def find_field(locator = nil, **options, &optional_filter_block)
         find(:field, locator, options, &optional_filter_block)
       end
-      alias_method :field_labeled, :find_field
 
       ##
       #

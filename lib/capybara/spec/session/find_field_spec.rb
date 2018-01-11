@@ -41,13 +41,6 @@ Capybara::SpecHelper.spec '#find_field' do
     @session.find_field('Dog', disabled: nil)
   end
 
-  it "should be aliased as 'field_labeled' for webrat compatibility" do
-    expect(@session.field_labeled('Dog').value).to eq('dog')
-    expect do
-      @session.field_labeled('Does not exist')
-    end.to raise_error(Capybara::ElementNotFound)
-  end
-
   context "with :exact option" do
     it "should accept partial matches when false" do
       expect(@session.find_field("Explanation", exact:  false)[:name]).to eq("form[name_explanation]")
