@@ -582,12 +582,7 @@ module Capybara
     #
     def execute_script(script, *args)
       @touched = true
-      if args.empty?
-        driver.execute_script(script)
-      else
-        raise Capybara::NotSupportedByDriverError, "The current driver does not support execute_script arguments" if driver.method(:execute_script).arity == 1
-        driver.execute_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ? arg.base : arg })
-      end
+      driver.execute_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ? arg.base : arg })
     end
 
     ##
@@ -601,12 +596,7 @@ module Capybara
     #
     def evaluate_script(script, *args)
       @touched = true
-      result = if args.empty?
-        driver.evaluate_script(script)
-      else
-        raise Capybara::NotSupportedByDriverError, "The current driver does not support evaluate_script arguments" if driver.method(:evaluate_script).arity == 1
-        driver.evaluate_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ? arg.base : arg })
-      end
+      result = driver.evaluate_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ? arg.base : arg })
       element_script_result(result)
     end
 
@@ -619,12 +609,7 @@ module Capybara
     #
     def evaluate_async_script(script, *args)
       @touched = true
-      result = if args.empty?
-        driver.evaluate_async_script(script)
-      else
-        raise Capybara::NotSupportedByDriverError, "The current driver does not support evaluate_async_script arguments" if driver.method(:evaluate_async_script).arity == 1
-        driver.evaluate_async_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ? arg.base : arg })
-      end
+      result = driver.evaluate_async_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ? arg.base : arg })
       element_script_result(result)
     end
 
