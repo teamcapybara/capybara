@@ -17,8 +17,10 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     string_node.value
   end
 
-  def set(value)
+  def set(value, **options)
     return if disabled? || readonly?
+
+    warn "Options passed to Node#set but the RackTest driver doesn't support any - ignoring" unless options.empty?
 
     if value.is_a?(Array) && !multiple?
       raise TypeError, "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"

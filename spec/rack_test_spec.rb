@@ -64,10 +64,11 @@ RSpec.describe Capybara::Session do
 
     describe "#fill_in" do
       it "should warn that :fill_options are not supported" do
-        expect_any_instance_of(Capybara::Node::Element).to receive(:warn)
-          .with("Options passed to Capybara::Node#set but the driver doesn't support them")
+        expect_any_instance_of(Capybara::RackTest::Node).to receive(:warn)
+          .with("Options passed to Node#set but the RackTest driver doesn't support any - ignoring")
         @session.visit "/with_html"
-        @session.fill_in 'test_field', with: 'not_moneky', fill_options: { random: true }
+        @session.fill_in 'test_field', with: 'not_monkey', fill_options: { random: true }
+        expect(@session).to have_field('test_field', with: 'not_monkey')
       end
     end
 

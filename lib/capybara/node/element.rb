@@ -96,20 +96,10 @@ module Capybara
       def set(value, **options)
         raise Capybara::ReadOnlyElementError, "Attempt to set readonly element with value: #{value}" if readonly?
 
-        driver_supports_options = (base.method(:set).arity != 1)
-
-        unless options.empty? || driver_supports_options
-          warn "Options passed to Capybara::Node#set but the driver doesn't support them"
-        end
-
         synchronize do
-          if driver_supports_options
-            base.set(value, options)
-          else
-            base.set(value)
-          end
+          base.set(value, options)
         end
-        return self
+        self
       end
 
       ##
