@@ -61,25 +61,7 @@ module Capybara
         when :hidden then return false if node.visible?
         end
 
-        res = node_filters.all? do |name, filter|
-          if options.key?(name)
-            filter.matches?(node, options[name])
-          elsif filter.default?
-            filter.matches?(node, filter.default)
-          else
-            true
-          end
-        end
-
-        if @filter_block
-          res &&= if node.respond_to?(:session)
-            node.session.using_wait_time(0) { @filter_block.call(node) }
-          else
-            @filter_block.call(node)
-          end
-        end
-
-        res
+        matches_node_filters?(node) && matches_filter_block?(node)
       rescue *(node.respond_to?(:session) ? node.session.driver.invalid_element_errors : [])
         return false
       end
@@ -140,6 +122,28 @@ module Capybara
 
       def valid_keys
         VALID_KEYS + custom_keys
+      end
+
+      def matches_node_filters?(node)
+        node_filters.all? do |name, filter|
+          if options.key?(name)
+            filter.matches?(node, options[name])
+          elsif filter.default?
+            filter.matches?(node, filter.default)
+          else
+            true
+          end
+        end
+      end
+
+      def matches_filter_block?(node)
+        return true unless @filter_block
+
+        if node.respond_to?(:session)
+          node.session.using_wait_time(0) { @filter_block.call(node) }
+        else
+          @filter_block.call(node)
+        end
       end
 
       def node_filters

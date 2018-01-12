@@ -143,11 +143,11 @@ Capybara.add_selector(:link) do
     end
     unless locator.nil?
       locator = locator.to_s
-      matchers = [XPath.attr(:id).equals(locator),
+      matchers = [XPath.attr(:id) == locator,
                   XPath.string.n.is(locator),
                   XPath.attr(:title).is(locator),
                   XPath.descendant(:img)[XPath.attr(:alt).is(locator)]].reduce(:|)
-      matchers = matchers.or XPath.attr(:'aria-label').is(locator) if enable_aria_label
+      matchers |= XPath.attr(:'aria-label').is(locator) if enable_aria_label
       xpath = xpath[matchers]
     end
     xpath = xpath[find_by_attr(:title, title)]
@@ -193,14 +193,14 @@ Capybara.add_selector(:button) do
     unless locator.nil?
       locator = locator.to_s
       locator_matches = XPath.attr(:id).equals(locator) | XPath.attr(:value).is(locator) | XPath.attr(:title).is(locator)
-      locator_matches = locator_matches.or XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
+      locator_matches |= XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
 
       input_btn_xpath = input_btn_xpath[locator_matches]
 
       btn_xpath = btn_xpath[locator_matches | XPath.string.n.is(locator) | XPath.descendant(:img)[XPath.attr(:alt).is(locator)]]
 
       alt_matches = XPath.attr(:alt).is(locator)
-      alt_matches = alt_matches.or XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
+      alt_matches |= XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
       image_btn_xpath = image_btn_xpath[alt_matches]
     end
 
@@ -473,7 +473,7 @@ Capybara.add_selector(:label) do
     xpath = XPath.descendant(:label)
     xpath = xpath[XPath.string.n.is(locator.to_s) | (XPath.attr(:id) == locator.to_s)] unless locator.nil?
     if options.key?(:for) && !options[:for].is_a?(Capybara::Node::Element)
-      with_attr = XPath.attr(:for).equals(options[:for].to_s)
+      with_attr = XPath.attr(:for) == options[:for].to_s
       labelable_elements = %i[button input keygen meter output progress select textarea]
       wrapped = !XPath.attr(:for) &
                 XPath.descendant(*labelable_elements)[XPath.attr(:id) == options[:for].to_s]

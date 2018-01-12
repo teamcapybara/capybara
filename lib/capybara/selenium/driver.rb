@@ -335,7 +335,6 @@ private
     end
   end
 
-  # rubocop:disable Metrics/MethodLength
   def insert_modal_handlers(accept, response_text)
     prompt_response = if accept
       if response_text.nil?
@@ -389,7 +388,6 @@ private
     JS
     execute_script script
   end
-  # rubocop:enable Metrics/MethodLength
 
   def within_given_window(handle)
     original_handle = current_window_handle

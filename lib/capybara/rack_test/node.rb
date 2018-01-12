@@ -56,9 +56,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     raise ArgumentError, "The RackTest driver does not support click options" unless keys.empty? && offset.empty?
 
     if tag_name == 'a' && !self[:href].nil?
-      method = self["data-method"] if driver.options[:respect_data_method]
-      method ||= :get
-      driver.follow(method, self[:href].to_s)
+      follow_link
     elsif (tag_name == 'input' and %w[submit image].include?(type)) or
           (tag_name == 'button' and [nil, "submit"].include?(type))
       associated_form = form
@@ -66,15 +64,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     elsif tag_name == 'input' and %w[checkbox radio].include?(type)
       set(!checked?)
     elsif tag_name == 'label'
-      labelled_control = if native[:for]
-        find_xpath("//input[@id='#{native[:for]}']").first
-      else
-        find_xpath(".//input").first
-      end
-
-      if labelled_control && (labelled_control.checkbox? || labelled_control.radio?)
-        labelled_control.set(!labelled_control.checked?)
-      end
+      click_label
     end
   end
 
@@ -192,6 +182,24 @@ private
 
   def attribute_is_not_blank?(attribute)
     self[attribute] && !self[attribute].empty?
+  end
+
+  def follow_link
+    method = self["data-method"] if driver.options[:respect_data_method]
+    method ||= :get
+    driver.follow(method, self[:href].to_s)
+  end
+
+  def click_label
+    labelled_control = if native[:for]
+      find_xpath("//input[@id='#{native[:for]}']").first
+    else
+      find_xpath(".//input").first
+    end
+
+    if labelled_control && (labelled_control.checkbox? || labelled_control.radio?)
+      labelled_control.set(!labelled_control.checked?)
+    end
   end
 
 protected

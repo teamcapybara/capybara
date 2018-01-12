@@ -14,22 +14,25 @@ Metrics/LineLength:
   Enabled: false
 
 Metrics/AbcSize:
-  Max: 53
+  Enabled: false
 
 Metrics/ClassLength:
-  Max: 460
+  CountComments: false
+  Enabled: false
 
 Metrics/CyclomaticComplexity:
-  Max: 17
+  Enabled: false
 
 Metrics/MethodLength:
-  Max: 29
+  CountComments: false
+  Enabled: false
 
 Metrics/ModuleLength:
-  Max: 194
+  Enabled: false
+  CountComments: false
 
 Metrics/PerceivedComplexity:
-  Max: 19
+  Enabled: false
 
 Lint/UnusedMethodArgument:
   Exclude:

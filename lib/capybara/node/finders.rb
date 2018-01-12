@@ -257,10 +257,9 @@ module Capybara
         minimum_specified = %i[count minimum between].any? { |k| options.key?(k) }
         options = { minimum: 1 }.merge(options) unless minimum_specified
         options[:session_options] = session_options
-        args.push(options)
-        query = Capybara::Queries::SelectorQuery.new(*args, &optional_filter_block)
+        query = Capybara::Queries::SelectorQuery.new(*args.push(options), &optional_filter_block)
+        result = nil
         begin
-          result = nil
           synchronize(query.wait) do
             result = query.resolve_for(self)
             raise Capybara::ExpectationNotMet, result.failure_message unless result.matches_count?
@@ -296,21 +295,26 @@ module Capybara
 
       def synced_resolve(query)
         synchronize(query.wait) do
-          if query.match == :smart or query.match == :prefer_exact
+          if prefer_exact?(query)
             result = query.resolve_for(self, true)
             result = query.resolve_for(self, false) if result.empty? && query.supports_exact? && !query.exact?
           else
             result = query.resolve_for(self)
           end
 
-          if query.match == :one or query.match == :smart and result.size > 1
-            raise Capybara::Ambiguous, "Ambiguous match, found #{result.size} elements matching #{query.description}"
-          end
-
+          raise Capybara::Ambiguous, "Ambiguous match, found #{result.size} elements matching #{query.description}" if ambiguous?(query, result)
           raise Capybara::ElementNotFound, "Unable to find #{query.description}" if result.empty?
 
           result.first
         end.tap(&:allow_reload!)
+      end
+
+      def ambiguous?(query, result)
+        query.match == :one or query.match == :smart and result.size > 1
+      end
+
+      def prefer_exact?(query)
+        query.match == :smart or query.match == :prefer_exact
       end
     end
   end

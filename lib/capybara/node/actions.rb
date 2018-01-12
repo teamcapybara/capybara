@@ -230,17 +230,8 @@ module Capybara
         end
         # Allow user to update the CSS style of the file input since they are so often hidden on a page
         if make_visible
-          make_visible = { opacity: 1, display: 'block', visibility: 'visible' } if make_visible == true
           ff = find(:file_field, locator, options.merge(visible: :all))
-          _update_style(ff, make_visible)
-
-          raise ExpectationNotMet, "The style changes in :make_visible did not make the file input visible" unless ff.visible?
-
-          begin
-            ff.set(path)
-          ensure
-            _reset_style(ff)
-          end
+          while_visible(ff, make_visible) { |el| el.set(path) }
         else
           find(:file_field, locator, options).set(path)
         end
@@ -248,36 +239,26 @@ module Capybara
 
     private
 
-      def _update_style(element, style)
-        script = <<-JS
-          var el = arguments[0];
-          el.capybara_style_cache = el.style.cssText;
-          var css = arguments[1];
-          for (var prop in css){
-            if (css.hasOwnProperty(prop)) {
-              el.style[prop] = css[prop]
-            }
-          }
-        JS
+      def while_visible(element, visible_css)
+        visible_css = { opacity: 1, display: 'block', visibility: 'visible' } if visible_css == true
+        _update_style(element, visible_css)
+        raise ExpectationNotMet, "The style changes in :make_visible did not make the file input visible" unless element.visible?
         begin
-          session.execute_script(script, element, style)
-        rescue Capybara::NotSupportedByDriverError
-          warn "The :make_visible option is not supported by the current driver - ignoring"
+          yield element
+        ensure
+          _reset_style(element)
         end
       end
 
+      def _update_style(element, style)
+        session.execute_script(UPDATE_STYLE_SCRIPT, element, style)
+      rescue Capybara::NotSupportedByDriverError
+        warn "The :make_visible option is not supported by the current driver - ignoring"
+      end
+
       def _reset_style(element)
-        script = <<-JS
-          var el = arguments[0];
-          if (el.hasOwnProperty('capybara_style_cache')) {
-            el.style.cssText = el.capybara_style_cache;
-            delete el.capybara_style_cache;
-          }
-        JS
-        begin
-          session.execute_script(script, element)
-        rescue # swallow extra errors
-        end
+        session.execute_script(RESET_STYLE_SCRIPT, element)
+      rescue # swallow extra errors
       end
 
       def _check_with_label(selector, checked, locator, allow_label_click: session_options.automatic_label_click, **options)
@@ -289,14 +270,32 @@ module Capybara
             raise unless allow_label_click && catch_error?(e)
             begin
               el ||= find(selector, locator, options.merge(visible: :all))
-              label = find(:label, for: el, visible: true)
-              label.click unless el.checked? == checked
+              find(:label, for: el, visible: true).click unless el.checked? == checked
             rescue # swallow extra errors - raise original
               raise e
             end
           end
         end
       end
+
+      UPDATE_STYLE_SCRIPT = <<-'JS'.freeze
+        var el = arguments[0];
+        el.capybara_style_cache = el.style.cssText;
+        var css = arguments[1];
+        for (var prop in css){
+          if (css.hasOwnProperty(prop)) {
+            el.style[prop] = css[prop]
+          }
+        }
+      JS
+
+      RESET_STYLE_SCRIPT = <<-'JS'.freeze
+        var el = arguments[0];
+        if (el.hasOwnProperty('capybara_style_cache')) {
+          el.style.cssText = el.capybara_style_cache;
+          delete el.capybara_style_cache;
+        }
+      JS
     end
   end
 end

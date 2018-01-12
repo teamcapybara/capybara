@@ -237,10 +237,10 @@ module Capybara
       locate_xpath = xpath # Need to save original xpath for the label wrap
       if locator
         locator = locator.to_s
-        attr_matchers = [XPath.attr(:id).equals(locator),
-                         XPath.attr(:name).equals(locator),
-                         XPath.attr(:placeholder).equals(locator),
-                         XPath.attr(:id).equals(XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for))].reduce(:|)
+        attr_matchers = [XPath.attr(:id) == locator,
+                         XPath.attr(:name) == locator,
+                         XPath.attr(:placeholder) == locator,
+                         XPath.attr(:id) == XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for)].reduce(:|)
         attr_matchers |= XPath.attr(:'aria-label').is(locator) if enable_aria_label
 
         locate_xpath = locate_xpath[attr_matchers]
@@ -260,7 +260,7 @@ module Capybara
       if respond_to?(finder_name, true)
         send(finder_name, value)
       else
-        value ? XPath.attr(attribute).equals(value) : nil
+        value ? XPath.attr(attribute) == value : nil
       end
     end
 

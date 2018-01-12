@@ -511,35 +511,26 @@ module Capybara
     # @raise [Capybara::ScopeError]        if this method is invoked inside `within_frame` method
     # @return                              value returned by the block
     #
-    def within_window(window_or_handle)
-      if window_or_handle.instance_of?(Capybara::Window)
-        original = current_window
-        scopes << nil
-        begin
-          _switch_to_window(window_or_handle) unless original == window_or_handle
-          begin
-            yield
-          ensure
-            _switch_to_window(original) unless original == window_or_handle
-          end
-        ensure
-          scopes.pop
+    def within_window(window_or_proc)
+      original = current_window
+      scopes << nil
+      begin
+        case window_or_proc
+        when Capybara::Window
+          _switch_to_window(window_or_proc) unless original == window_or_proc
+        when Proc
+          _switch_to_window { window_or_proc.call }
+        else
+          raise ArgumentError("`#within_window` requires a `Capybara::Window` instance or a lambda")
         end
-      elsif window_or_handle.is_a?(Proc)
-        original = current_window
-        scopes << nil
+
         begin
-          _switch_to_window { window_or_handle.call }
-          begin
-            yield
-          ensure
-            _switch_to_window(original)
-          end
+          yield
         ensure
-          scopes.pop
+          _switch_to_window(original) unless original == window_or_proc
         end
-      else
-        raise ArgumentError("`#within_window` requires a `Capybara::Window` instance or a lambda")
+      ensure
+        scopes.pop
       end
     end
 

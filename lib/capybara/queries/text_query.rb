@@ -54,29 +54,29 @@ module Capybara
         message << " in #{@actual_text.inspect}"
 
         details_message = []
-
-        if @node and !@expected_text.is_a? Regexp
-          insensitive_regexp = Capybara::Helpers.to_regexp(@expected_text, Regexp::IGNORECASE)
-          insensitive_count = @actual_text.scan(insensitive_regexp).size
-          if insensitive_count != @count
-            details_message << "it was found #{insensitive_count} #{Capybara::Helpers.declension("time", "times", insensitive_count)} using a case insensitive search"
-          end
-        end
-
-        if @node and check_visible_text? and report_on_invisible
-          begin
-            invisible_text = text(@node, :all)
-            invisible_count = invisible_text.scan(@search_regexp).size
-            if invisible_count != @count
-              details_message << "it was found #{invisible_count} #{Capybara::Helpers.declension("time", "times", invisible_count)} including non-visible text"
-            end
-          rescue # An error getting the non-visible text (if element goes out of scope) should not affect the response
-          end
-        end
+        details_message << case_insensitive_message if @node and !@expected_text.is_a? Regexp
+        details_message << invisible_message if @node and check_visible_text? and report_on_invisible
+        details_message.compact!
 
         message << ". (However, #{details_message.join(' and ')}.)" unless details_message.empty?
-
         message
+      end
+
+      def case_insensitive_message
+        insensitive_regexp = Capybara::Helpers.to_regexp(@expected_text, Regexp::IGNORECASE)
+        insensitive_count = @actual_text.scan(insensitive_regexp).size
+        if insensitive_count != @count
+          "it was found #{insensitive_count} #{Capybara::Helpers.declension("time", "times", insensitive_count)} using a case insensitive search"
+        end
+      end
+
+      def invisible_message
+        invisible_text = text(@node, :all)
+        invisible_count = invisible_text.scan(@search_regexp).size
+        if invisible_count != @count
+          "it was found #{invisible_count} #{Capybara::Helpers.declension("time", "times", invisible_count)} including non-visible text"
+        end
+      rescue # An error getting the non-visible text (if element goes out of scope) should not affect the response
       end
 
       def valid_keys

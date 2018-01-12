@@ -37,12 +37,9 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   #   :backspace => send backspace keystrokes to clear the field <br/>
   #   Array => an array of keys to send before the value being set, e.g. [[:command, 'a'], :backspace]
   def set(value, **options)
+    raise ArgumentError, "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}" if value.is_a?(Array) && !multiple?
     tag_name = self.tag_name
     type = self[:type]
-
-    if value.is_a?(Array) && !multiple?
-      raise ArgumentError, "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"
-    end
 
     case tag_name
     when 'input'
@@ -50,7 +47,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       when 'radio'
         click
       when 'checkbox'
-        click if value ^ native.attribute('checked').to_s.eql?("true")
+        click if value ^ checked?
       when 'file'
         set_file(value)
       else

@@ -62,7 +62,6 @@ module Capybara
       !any?
     end
 
-    # rubocop:disable Metrics/MethodLength
     def compare_count
       # Only check filters for as many elements as necessary to determine result
       if @query.options[:count]
@@ -106,7 +105,6 @@ module Capybara
 
       return 0
     end
-    # rubocop:enable Metrics/MethodLength
 
     def matches_count?
       compare_count.zero?
