@@ -11,8 +11,7 @@ module Capybara
       end
 
       def self.escape_char(c)
-        return format("\\%06x", c.ord) unless c =~ %r{[ -/:-~]}
-        "\\#{c}"
+        c =~ %r{[ -/:-~]} ? "\\#{c}" : format("\\%06x", c.ord)
       end
 
       S = '\u{80}-\u{D7FF}\u{E000}-\u{FFFD}\u{10000}-\u{10FFFF}'.freeze
