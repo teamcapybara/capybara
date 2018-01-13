@@ -370,11 +370,6 @@ module Capybara
       config.session_options
     end
 
-    def included(base)
-      base.include Capybara::DSL
-      warn "`include Capybara` is deprecated. Please use `include Capybara::DSL` instead."
-    end
-
   private
 
     def config
