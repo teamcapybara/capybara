@@ -31,11 +31,7 @@ module Capybara
       # Returns false if query does not have any count options specified.
       #
       def expects_none?
-        if COUNT_KEYS.any? { |k| options.key? k }
-          matches_count?(0)
-        else
-          false
-        end
+        count_specified? ? matches_count?(0) : false
       end
 
       ##
@@ -52,7 +48,7 @@ module Capybara
         return false if options[:maximum] && (Integer(options[:maximum]) < count)
         return false if options[:minimum] && (Integer(options[:minimum]) > count)
         return false if options[:between] && !options[:between].include?(count)
-        return true
+        true
       end
 
       ##
@@ -68,6 +64,10 @@ module Capybara
       end
 
     private
+
+      def count_specified?
+        COUNT_KEYS.any? { |k| options.key? k }
+      end
 
       def count_message
         message = "".dup

@@ -8,17 +8,14 @@ module Capybara
         @child_node = node
         node.synchronize do
           match_results = super(node.session.current_scope, exact)
-          node.all(:xpath, XPath.ancestor) do |el|
-            match_results.include?(el)
-          end
+          node.all(:xpath, XPath.ancestor) { |el| match_results.include?(el) }
         end
       end
 
       def description
+        child_query = @child_node && @child_node.instance_variable_get(:@query)
         desc = super
-        if @child_node && (child_query = @child_node.instance_variable_get(:@query))
-          desc += " that is an ancestor of #{child_query.description}"
-        end
+        desc += " that is an ancestor of #{child_query.description}" if child_query
         desc
       end
     end

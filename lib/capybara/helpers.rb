@@ -27,13 +27,11 @@ module Capybara
     # @return [String]     Escaped text
     #
     def to_regexp(text, regexp_options = nil, exact = false)
-      if text.is_a?(Regexp)
-        text
-      else
-        escaped = Regexp.escape(normalize_whitespace(text))
-        escaped = "\\A#{escaped}\\z" if exact
-        Regexp.new(escaped, regexp_options)
-      end
+      return text if text.is_a?(Regexp)
+
+      escaped = Regexp.escape(normalize_whitespace(text))
+      escaped = "\\A#{escaped}\\z" if exact
+      Regexp.new(escaped, regexp_options)
     end
 
     ##
@@ -47,11 +45,8 @@ module Capybara
     def inject_asset_host(html, asset_host = Capybara.asset_host)
       if asset_host && Nokogiri::HTML(html).css("base").empty?
         match = html.match(/<head[^<]*?>/)
-        if match
-          return html.clone.insert match.end(0), "<base href='#{asset_host}' />"
-        end
+        return html.clone.insert match.end(0), "<base href='#{asset_host}' />" if match
       end
-
       html
     end
 
@@ -66,11 +61,7 @@ module Capybara
     # @param [Integer] count       The number of items
     #
     def declension(singular, plural, count)
-      if count == 1
-        singular
-      else
-        plural
-      end
+      count == 1 ? singular : plural
     end
 
     if defined?(Process::CLOCK_MONOTONIC)

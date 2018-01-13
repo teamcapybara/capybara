@@ -26,42 +26,33 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
       raise TypeError, "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"
     end
 
-    if radio?
-      set_radio(value)
-    elsif checkbox?
-      set_checkbox(value)
-    elsif input_field?
-      set_input(value)
-    elsif textarea?
-      native['_capybara_raw_value'] = value.to_s
+    if radio? then set_radio(value)
+    elsif checkbox? then set_checkbox(value)
+    elsif input_field? then set_input(value)
+    elsif textarea? then native['_capybara_raw_value'] = value.to_s
     end
   end
 
   def select_option
     return if disabled?
-    if select_node['multiple'] != 'multiple'
-      select_node.find_xpath(".//option[@selected]").each { |node| node.native.remove_attribute("selected") }
-    end
+    deselect_options unless select_node.multiple?
     native["selected"] = 'selected'
   end
 
   def unselect_option
-    if select_node['multiple'] != 'multiple'
-      raise Capybara::UnselectNotAllowed, "Cannot unselect option from single select box."
-    end
+    raise Capybara::UnselectNotAllowed, "Cannot unselect option from single select box." unless select_node.multiple?
     native.remove_attribute('selected')
   end
 
   def click(keys = [], offset = {})
     raise ArgumentError, "The RackTest driver does not support click options" unless keys.empty? && offset.empty?
 
-    if tag_name == 'a' && !self[:href].nil?
+    if link?
       follow_link
-    elsif (tag_name == 'input' and %w[submit image].include?(type)) or
-          (tag_name == 'button' and [nil, "submit"].include?(type))
+    elsif submits?
       associated_form = form
       Capybara::RackTest::Form.new(driver, associated_form).submit(self) if associated_form
-    elsif tag_name == 'input' and %w[checkbox radio].include?(type)
+    elsif checkable?
       set(!checked?)
     elsif tag_name == 'label'
       click_label
@@ -85,10 +76,12 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   end
 
   def disabled?
+    return true if string_node.disabled?
+
     if %w[option optgroup].include? tag_name
-      string_node.disabled? || find_xpath("parent::*[self::optgroup or self::select]")[0].disabled?
+      find_xpath("parent::*[self::optgroup or self::select]")[0].disabled?
     else
-      string_node.disabled? || !find_xpath("parent::fieldset[@disabled] | ancestor::*[not(self::legend) or preceding-sibling::legend][parent::fieldset[@disabled]]").empty?
+      !find_xpath("parent::fieldset[@disabled] | ancestor::*[not(self::legend) or preceding-sibling::legend][parent::fieldset[@disabled]]").empty?
     end
   end
 
@@ -126,6 +119,10 @@ protected
 
 private
 
+  def deselect_options
+    select_node.find_xpath(".//option[@selected]").each { |node| node.native.remove_attribute("selected") }
+  end
+
   def string_node
     @string_node ||= Capybara::Node::Simple.new(native)
   end
@@ -141,10 +138,10 @@ private
 
   def form
     if native[:form]
-      native.xpath("//form[@id='#{native[:form]}']").first
+      native.xpath("//form[@id='#{native[:form]}']")
     else
-      native.ancestors('form').first
-    end
+      native.ancestors('form')
+    end.first
   end
 
   def set_radio(_value) # rubocop:disable Naming/AccessorMethodName
@@ -192,14 +189,26 @@ private
 
   def click_label
     labelled_control = if native[:for]
-      find_xpath("//input[@id='#{native[:for]}']").first
+      find_xpath("//input[@id='#{native[:for]}']")
     else
-      find_xpath(".//input").first
-    end
+      find_xpath(".//input")
+    end.first
 
     if labelled_control && (labelled_control.checkbox? || labelled_control.radio?)
       labelled_control.set(!labelled_control.checked?)
     end
+  end
+
+  def link?
+    tag_name == 'a' && !self[:href].nil?
+  end
+
+  def submits?
+    (tag_name == 'input' and %w[submit image].include?(type)) || (tag_name == 'button' and [nil, "submit"].include?(type))
+  end
+
+  def checkable?
+    tag_name == 'input' and %w[checkbox radio].include?(type)
   end
 
 protected

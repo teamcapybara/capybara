@@ -35,10 +35,10 @@ Capybara::SpecHelper.spec '#find_field' do
     end.to raise_error(Capybara::ElementNotFound)
   end
 
-  it "should warn if filter option is invalid" do
-    expect_any_instance_of(Kernel).to receive(:warn).
-      with('Invalid value nil passed to filter disabled - defaulting to false')
-    @session.find_field('Dog', disabled: nil)
+  it "should raise error if filter option is invalid" do
+    expect do
+      @session.find_field('Dog', disabled: nil)
+    end.to raise_error ArgumentError, "Invalid value nil passed to filter disabled"
   end
 
   context "with :exact option" do

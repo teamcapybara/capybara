@@ -5,16 +5,22 @@ module Capybara
   module Queries
     class TextQuery < BaseQuery
       def initialize(type = nil, expected_text, session_options:, **options) # rubocop:disable Style/OptionalArguments
-        @type = type
-        @type = Capybara.ignore_hidden_elements || Capybara.visible_text_only ? :visible : :all if @type.nil?
-        @expected_text = expected_text
+        @type = if type.nil?
+          Capybara.ignore_hidden_elements || Capybara.visible_text_only ? :visible : :all
+        else
+          type
+        end
+        @expected_text = if expected_text.is_a?(Regexp)
+          expected_text
+        else
+          Capybara::Helpers.normalize_whitespace(expected_text)
+        end
         @options = options
         super(@options)
         self.session_options = session_options
-        unless @expected_text.is_a?(Regexp)
-          @expected_text = Capybara::Helpers.normalize_whitespace(@expected_text)
-        end
+
         @search_regexp = Capybara::Helpers.to_regexp(@expected_text, nil, exact?)
+
         assert_valid_keys
       end
 

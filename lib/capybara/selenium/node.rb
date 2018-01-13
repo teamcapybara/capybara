@@ -38,12 +38,10 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   #   Array => an array of keys to send before the value being set, e.g. [[:command, 'a'], :backspace]
   def set(value, **options)
     raise ArgumentError, "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}" if value.is_a?(Array) && !multiple?
-    tag_name = self.tag_name
-    type = self[:type]
 
     case tag_name
     when 'input'
-      case type
+      case self[:type]
       when 'radio'
         click
       when 'checkbox'
@@ -123,53 +121,36 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def hover
-    scroll_if_needed do
-      driver.browser.action.move_to(native).perform
-    end
+    scroll_if_needed { driver.browser.action.move_to(native).perform }
   end
 
   def drag_to(element)
-    scroll_if_needed do
-      driver.browser.action.drag_and_drop(native, element.native).perform
-    end
+    scroll_if_needed { driver.browser.action.drag_and_drop(native, element.native).perform }
   end
 
   def tag_name
     native.tag_name.downcase
   end
 
-  def visible?
-    displayed = native.displayed?
-    displayed and displayed != "false"
-  end
-
-  def selected?
-    selected = native.selected?
-    selected and selected != "false"
-  end
+  def visible?; boolean_attr(native.displayed?); end
+  def readonly?; boolean_attr(self[:readonly]); end
+  def multiple?; boolean_attr(self[:multiple]); end
+  def selected?; boolean_attr(native.selected?); end
   alias :checked? :selected?
 
   def disabled?
+    return true unless native.enabled?
+
     # workaround for selenium-webdriver/geckodriver reporting elements as enabled when they are nested in disabling elements
     if driver.marionette?
       if %w[option optgroup].include? tag_name
-        !native.enabled? || find_xpath("parent::*[self::optgroup or self::select]")[0].disabled?
+        find_xpath("parent::*[self::optgroup or self::select]")[0].disabled?
       else
-        !native.enabled? || !find_xpath("parent::fieldset[@disabled] | ancestor::*[not(self::legend) or preceding-sibling::legend][parent::fieldset[@disabled]]").empty?
+        !find_xpath("parent::fieldset[@disabled] | ancestor::*[not(self::legend) or preceding-sibling::legend][parent::fieldset[@disabled]]").empty?
       end
     else
-      !native.enabled?
+      false
     end
-  end
-
-  def readonly?
-    readonly = self[:readonly]
-    readonly and readonly != "false"
-  end
-
-  def multiple?
-    multiple = self[:multiple]
-    multiple and multiple != "false"
   end
 
   def content_editable?
@@ -189,34 +170,31 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def path
-    path = find_xpath('ancestor::*').reverse
-    path.unshift self
+    path = find_xpath(XPath.ancestor_or_self).reverse
 
     result = []
     while (node = path.shift)
       parent = path.first
-
+      selector = node.tag_name
       if parent
         siblings = parent.find_xpath(node.tag_name)
-        if siblings.size == 1
-          result.unshift node.tag_name
-        else
-          index = siblings.index(node)
-          result.unshift "#{node.tag_name}[#{index + 1}]"
-        end
-      else
-        result.unshift node.tag_name
+        selector += "[#{siblings.index(node) + 1}]" unless siblings.size == 1
       end
+      result.push selector
     end
 
-    '/' + result.join('/')
+    '/' + result.reverse.join('/')
   end
 
 private
 
+  def boolean_attr(val)
+    val and val != "false"
+  end
+
   # a reference to the select node if this is an option node
   def select_node
-    find_xpath('./ancestor::select[1]').first
+    find_xpath(XPath.ancestor(:select)[1]).first
   end
 
   def set_text(value, clear: nil, **)
@@ -242,7 +220,7 @@ private
   def scroll_if_needed
     yield
   rescue ::Selenium::WebDriver::Error::MoveTargetOutOfBoundsError
-    script = <<-JS
+    script = <<-'JS'
       try {
         arguments[0].scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
       } catch(e) {

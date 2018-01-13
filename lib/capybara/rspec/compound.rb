@@ -16,10 +16,8 @@ module Capybara
       end
 
       class CapybaraEvaluator
-        def initialize(actual, matcher1, matcher2)
+        def initialize(actual)
           @actual = actual
-          @matcher1 = matcher1
-          @matcher2 = matcher2
           @match_results = Hash.new { |h, matcher| h[matcher] = matcher.matches?(@actual) }
         end
 
@@ -36,7 +34,7 @@ module Capybara
       private
 
         def match(_expected, actual)
-          @evaluator = CapybaraEvaluator.new(actual, matcher_1, matcher_2)
+          @evaluator = CapybaraEvaluator.new(actual)
           syncer = sync_element(actual)
           begin
             syncer.synchronize do
@@ -64,7 +62,7 @@ module Capybara
       private
 
         def match(_expected, actual)
-          @evaluator = CapybaraEvaluator.new(actual, matcher_1, matcher_2)
+          @evaluator = CapybaraEvaluator.new(actual)
           syncer = sync_element(actual)
           begin
             syncer.synchronize do

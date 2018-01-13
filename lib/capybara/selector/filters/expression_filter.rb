@@ -8,32 +8,15 @@ module Capybara
       class ExpressionFilter < Base
         def apply_filter(expr, value)
           return expr if skip?(value)
-
-          unless valid_value?(value)
-            msg = "Invalid value #{value.inspect} passed to expression filter #{@name} - "
-            if default?
-              warn msg + "defaulting to #{default}"
-              value = default
-            else
-              warn msg + "skipping"
-              return expr
-            end
-          end
-
+          raise "ArgumentError", "Invalid value #{value.inspect} passed to expression filter #{@name}" unless valid_value?(value)
           @block.call(expr, value)
         end
       end
 
       class IdentityExpressionFilter < ExpressionFilter
         def initialize; end
-
-        def default?
-          false
-        end
-
-        def apply_filter(expr, _value)
-          return expr
-        end
+        def default?; false; end
+        def apply_filter(expr, _value); expr; end
       end
     end
   end

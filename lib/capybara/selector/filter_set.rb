@@ -26,13 +26,9 @@ module Capybara
       end
 
       def description(**options)
-        options_with_defaults = options.dup
-        filters.each do |name, filter|
-          options_with_defaults[name] = filter.default if filter.default? && !options_with_defaults.key?(name)
-        end
-
+        opts = options_with_defaults(options)
         @descriptions.map do |desc|
-          desc.call(options_with_defaults).to_s
+          desc.call(opts).to_s
         end.join
       end
 
@@ -63,6 +59,14 @@ module Capybara
       end
 
     private
+
+      def options_with_defaults(options)
+        options = options.dup
+        filters.each do |name, filter|
+          options[name] = filter.default if filter.default? && !options.key?(name)
+        end
+        options
+      end
 
       def add_filter(name, filter_class, *types, **options, &block)
         types.each { |k| options[k] = true }

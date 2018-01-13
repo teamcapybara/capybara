@@ -8,18 +8,7 @@ module Capybara
       class NodeFilter < Base
         def matches?(node, value)
           return true if skip?(value)
-
-          unless valid_value?(value)
-            msg = "Invalid value #{value.inspect} passed to filter #{@name} - "
-            if default?
-              warn msg + "defaulting to #{default}"
-              value = default
-            else
-              warn msg + "skipping"
-              return true
-            end
-          end
-
+          raise ArgumentError, "Invalid value #{value.inspect} passed to filter #{@name}" unless valid_value?(value)
           @block.call(node, value)
         end
       end

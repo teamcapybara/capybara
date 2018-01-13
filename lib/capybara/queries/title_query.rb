@@ -5,19 +5,15 @@ module Capybara
   module Queries
     class TitleQuery < BaseQuery
       def initialize(expected_title, **options)
-        @expected_title = expected_title
+        @expected_title = expected_title.is_a?(Regexp) ? expected_title : Capybara::Helpers.normalize_whitespace(expected_title)
         @options = options
         super(@options)
-        unless @expected_title.is_a?(Regexp)
-          @expected_title = Capybara::Helpers.normalize_whitespace(@expected_title)
-        end
         @search_regexp = Capybara::Helpers.to_regexp(@expected_title, nil, options.fetch(:exact, false))
         assert_valid_keys
       end
 
       def resolves_for?(node)
-        @actual_title = node.title
-        @actual_title.match(@search_regexp)
+        (@actual_title = node.title).match(@search_regexp)
       end
 
       def failure_message

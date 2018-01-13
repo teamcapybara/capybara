@@ -2,11 +2,7 @@ module Capybara
   module Queries
     class MatchQuery < Capybara::Queries::SelectorQuery
       def visible
-        if options.key?(:visible)
-          super
-        else
-          :all
-        end
+        options.key?(:visible) ? super : :all
       end
 
     private

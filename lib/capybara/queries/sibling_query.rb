@@ -8,7 +8,7 @@ module Capybara
         @sibling_node = node
         node.synchronize do
           match_results = super(node.session.current_scope, exact)
-          node.all(:xpath, XPath.preceding_sibling.union(XPath.following_sibling)) do |el|
+          node.all(:xpath, XPath.preceding_sibling + XPath.following_sibling) do |el|
             match_results.include?(el)
           end
         end
@@ -16,9 +16,8 @@ module Capybara
 
       def description
         desc = super
-        if @sibling_node && (sibling_query = @sibling_node.instance_variable_get(:@query))
-          desc += " that is a sibling of #{sibling_query.description}"
-        end
+        sibling_query = @sibling_node && @sibling_node.instance_variable_get(:@query)
+        desc += " that is a sibling of #{sibling_query.description}" if sibling_query
         desc
       end
     end

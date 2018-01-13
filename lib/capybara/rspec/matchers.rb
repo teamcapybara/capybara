@@ -135,15 +135,9 @@ module Capybara
     end
 
     class HaveText < Matcher
-      attr_reader :type, :content, :options
-
       def initialize(*args)
         @args = args.dup
-
-        # are set just for backwards compatability
-        @type = args.shift if args.first.is_a?(Symbol)
-        @content = args.shift
-        @options = args.first.is_a?(Hash) ? args.first : {}
+        @content = args[0].is_a?(Symbol) ? args[1] : args[0]
       end
 
       def matches?(actual)
@@ -155,7 +149,7 @@ module Capybara
       end
 
       def description
-        "text #{format(content)}"
+        "text #{format(@content)}"
       end
 
       def format(content)
@@ -165,8 +159,6 @@ module Capybara
     end
 
     class HaveTitle < Matcher
-      attr_reader :title
-
       def initialize(*args)
         @args = args
 
@@ -183,17 +175,13 @@ module Capybara
       end
 
       def description
-        "have title #{title.inspect}"
+        "have title #{@title.inspect}"
       end
     end
 
     class HaveCurrentPath < Matcher
-      attr_reader :current_path
-
       def initialize(*args)
         @args = args
-
-        # are set just for backwards compatability
         @current_path = args.first
       end
 
@@ -206,7 +194,7 @@ module Capybara
       end
 
       def description
-        "have current path #{current_path.inspect}"
+        "have current path #{@current_path.inspect}"
       end
     end
 

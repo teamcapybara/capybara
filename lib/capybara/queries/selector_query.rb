@@ -13,17 +13,10 @@ module Capybara
         @options = options.dup
         super(@options)
         self.session_options = session_options
-        @filter_block = filter_block
 
-        @selector = if args[0].is_a?(Symbol)
-          Selector.all.fetch(args.shift) do |selector_type|
-            raise ArgumentError, "Unknown selector type (:#{selector_type})"
-          end
-        else
-          Selector.all.values.find { |s| s.match?(args[0]) }
-        end
+        @selector = find_selector(args[0].is_a?(Symbol) ? args.shift : args[0])
         @locator = args.shift
-        @selector ||= Selector.all[session_options.default_selector]
+        @filter_block = filter_block
 
         warn "Unused parameters passed to #{self.class.name} : #{args}" unless args.empty?
 
@@ -35,7 +28,7 @@ module Capybara
       end
 
       def name; selector.name; end
-      def label; selector.label or selector.name; end
+      def label; selector.label || selector.name; end
 
       def description
         @description = "".dup
@@ -75,8 +68,7 @@ module Capybara
       end
 
       def exact?
-        return false unless supports_exact?
-        options.fetch(:exact, session_options.exact)
+        supports_exact? ? options.fetch(:exact, session_options.exact) : false
       end
 
       def match
@@ -119,6 +111,15 @@ module Capybara
       end
 
     private
+
+      def find_selector(locator)
+        selector = if locator.is_a?(Symbol)
+          Selector.all.fetch(locator) { |sel_type| raise ArgumentError, "Unknown selector type (:#{sel_type})" }
+        else
+          Selector.all.values.find { |s| s.match?(locator) }
+        end
+        selector || Selector.all[session_options.default_selector]
+      end
 
       def valid_keys
         VALID_KEYS + custom_keys

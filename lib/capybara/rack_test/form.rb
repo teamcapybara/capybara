@@ -23,9 +23,9 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
 
     form_element_types = %i[input select textarea]
     form_elements_xpath = XPath.generate do |x|
-      xpath = x.descendant(*form_element_types).where(~x.attr(:form))
-      xpath = xpath.union(x.anywhere(*form_element_types).where(x.attr(:form) == native[:id])) if native[:id]
-      xpath.where(~x.attr(:disabled))
+      xpath = x.descendant(*form_element_types).where(!x.attr(:form))
+      xpath += x.anywhere(*form_element_types).where(x.attr(:form) == native[:id]) if native[:id]
+      xpath.where(!x.attr(:disabled))
     end.to_s
 
     native.xpath(form_elements_xpath).map do |field|
@@ -88,17 +88,16 @@ private
         merge_param!(params, field['name'].to_s, node.value.to_s)
       end
     elsif %w[submit image].include? field['type']
-      # TO DO identify the click button here (in document order, rather
+      # TODO: identify the click button here (in document order, rather
       # than leaving until the end of the params)
     elsif field['type'] == 'file'
       if multipart?
-        file = \
-          if (value = field['value']).to_s.empty?
-            NilUploadedFile.new
-          else
-            mime_info = MiniMime.lookup_by_filename(value)
-            Rack::Test::UploadedFile.new(value, (mime_info && mime_info.content_type).to_s)
-          end
+        file = if (value = field['value']).to_s.empty?
+          NilUploadedFile.new
+        else
+          mime_info = MiniMime.lookup_by_filename(value)
+          Rack::Test::UploadedFile.new(value, (mime_info && mime_info.content_type).to_s)
+        end
         merge_param!(params, field['name'].to_s, file)
       else
         merge_param!(params, field['name'].to_s, File.basename(field['value'].to_s))
@@ -110,13 +109,11 @@ private
 
   def add_select_param(field, params)
     if field['multiple'] == 'multiple'
-      options = field.xpath(".//option[@selected]")
-      options.each do |option|
+      field.xpath(".//option[@selected]").each do |option|
         merge_param!(params, field['name'].to_s, (option['value'] || option.text).to_s)
       end
     else
-      option = field.xpath(".//option[@selected]").first
-      option ||= field.xpath('.//option').first
+      option = field.xpath('.//option[@selected]').first || field.xpath('.//option').first
       merge_param!(params, field['name'].to_s, (option['value'] || option.text).to_s) if option
     end
   end

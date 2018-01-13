@@ -152,7 +152,6 @@ module Capybara
 
     def call(locator, **options)
       if format
-        # @expression.call(locator, options.select {|k,v| @expression_filters.include?(k)})
         @expression.call(locator, options)
       else
         warn "Selector has no format"
@@ -265,13 +264,7 @@ module Capybara
     end
 
     def find_by_class_attr(classes)
-      if classes
-        Array(classes).map do |klass|
-          XPath.attr(:class).contains_word(klass)
-        end.reduce(:&)
-      else
-        nil
-      end
+      Array(classes).map { |klass| XPath.attr(:class).contains_word(klass) }.reduce(:&)
     end
   end
 end

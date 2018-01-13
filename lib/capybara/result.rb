@@ -92,8 +92,7 @@ module Capybara
       end
 
       if @query.options[:between]
-        max = Integer(@query.options[:between].max)
-        min = Integer(@query.options[:between].min)
+        min, max = @query.options[:between].minmax
         loop do
           break if @result_cache.size > max
           @result_cache << @results_enum.next
@@ -112,10 +111,10 @@ module Capybara
 
     def failure_message
       message = @query.failure_message
-      if count > 0
-        message << ", found #{count} #{Capybara::Helpers.declension("match", "matches", count)}: " << full_results.map(&:text).map(&:inspect).join(", ")
-      else
+      if count.zero?
         message << " but there were no matches"
+      else
+        message << ", found #{count} #{Capybara::Helpers.declension("match", "matches", count)}: " << full_results.map(&:text).map(&:inspect).join(", ")
       end
       unless rest.empty?
         elements = rest.map { |el| el.text rescue "<<ERROR>>" }.map(&:inspect).join(", ")

@@ -81,7 +81,7 @@ module Capybara
       @app = app
       if block_given?
         raise "A configuration block is only accepted when Capybara.threadsafe == true" unless Capybara.threadsafe
-        yield config if block_given?
+        yield config
       end
       @server = if config.run_server and @app and driver.needs_server?
         Capybara::Server.new(@app, config.server_port, config.server_host, config.server_errors).boot
@@ -195,6 +195,7 @@ module Capybara
 
       # Addressable doesn't support opaque URIs - we want nil here
       return nil if uri.scheme == "about"
+
       path = uri.path
       path if path && !path.empty?
     end
@@ -351,9 +352,7 @@ module Capybara
     # @param [String] locator    Id or legend of the fieldset
     #
     def within_fieldset(locator)
-      within :fieldset, locator do
-        yield
-      end
+      within(:fieldset, locator) { yield }
     end
 
     ##
@@ -363,9 +362,7 @@ module Capybara
     # @param [String] locator    Id or caption of the table
     #
     def within_table(locator)
-      within :table, locator do
-        yield
-      end
+      within(:table, locator) { yield }
     end
 
     ##
@@ -682,9 +679,9 @@ module Capybara
     # @return [String]      the path to which the file was saved
     #
     def save_page(path = nil)
-      path = prepare_path(path, 'html')
-      File.write(path, Capybara::Helpers.inject_asset_host(body, config.asset_host), mode: 'wb')
-      path
+      prepare_path(path, 'html').tap do |p|
+        File.write(p, Capybara::Helpers.inject_asset_host(body, config.asset_host), mode: 'wb')
+      end
     end
 
     ##
@@ -698,8 +695,7 @@ module Capybara
     # @param [String] path  the path to where it should be saved
     #
     def save_and_open_page(path = nil)
-      path = save_page(path)
-      open_file(path)
+      save_page(path).tap { |p| open_file(p) }
     end
 
     ##
@@ -714,9 +710,7 @@ module Capybara
     # @param [Hash] options   a customizable set of options
     # @return [String]        the path to which the file was saved
     def save_screenshot(path = nil, **options)
-      path = prepare_path(path, 'png')
-      driver.save_screenshot(path, options)
-      path
+      prepare_path(path, 'png').tap { |p| driver.save_screenshot(p, options) }
     end
 
     ##
@@ -732,9 +726,8 @@ module Capybara
     #
     def save_and_open_screenshot(path = nil, **options)
       # rubocop:disable Lint/Debugger
-      path = save_screenshot(path, options)
+      save_screenshot(path, options).tap { |p| open_file(p) }
       # rubocop:enable Lint/Debugger
-      open_file(path)
     end
 
     def document
@@ -760,8 +753,7 @@ module Capybara
 
     def current_scope
       scope = scopes.last
-      scope = document if [nil, :frame].include? scope
-      scope
+      [nil, :frame].include?(scope) ? document : scope
     end
 
     ##
@@ -826,14 +818,11 @@ module Capybara
       require "launchy"
       Launchy.open(path)
     rescue LoadError
-      warn "File saved to #{path}."
-      warn "Please install the launchy gem to open the file automatically."
+      warn "File saved to #{path}.\nPlease install the launchy gem to open the file automatically."
     end
 
     def prepare_path(path, extension)
-      path = File.expand_path(path || default_fn(extension), config.save_path)
-      FileUtils.mkdir_p(File.dirname(path))
-      path
+      File.expand_path(path || default_fn(extension), config.save_path).tap { |p| FileUtils.mkdir_p(File.dirname(p)) }
     end
 
     def default_fn(extension)
