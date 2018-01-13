@@ -95,10 +95,7 @@ module Capybara
       # @return [Capybara::Node::Element]  The element
       def set(value, **options)
         raise Capybara::ReadOnlyElementError, "Attempt to set readonly element with value: #{value}" if readonly?
-
-        synchronize do
-          base.set(value, options)
-        end
+        synchronize { base.set(value, options) }
         self
       end
 
@@ -110,7 +107,7 @@ module Capybara
       def select_option
         warn "Attempt to select disabled option: #{value || text}" if disabled?
         synchronize { base.select_option }
-        return self
+        self
       end
 
       ##
@@ -120,7 +117,7 @@ module Capybara
       # @return [Capybara::Node::Element]  The element
       def unselect_option
         synchronize { base.unselect_option }
-        return self
+        self
       end
 
       ##
@@ -134,7 +131,7 @@ module Capybara
       # @return [Capybara::Node::Element]  The element
       def click(*keys, **offset)
         synchronize { base.click(keys, offset) }
-        return self
+        self
       end
 
       ##
@@ -145,7 +142,7 @@ module Capybara
       # @return [Capybara::Node::Element]  The element
       def right_click(*keys, **offset)
         synchronize { base.right_click(keys, offset) }
-        return self
+        self
       end
 
       ##
@@ -156,7 +153,7 @@ module Capybara
       # @return [Capybara::Node::Element]  The element
       def double_click(*keys, **offset)
         synchronize { base.double_click(keys, offset) }
-        return self
+        self
       end
 
       ##
@@ -232,7 +229,7 @@ module Capybara
       # @return [Capybara::Node::Element]  The element
       def send_keys(*args)
         synchronize { base.send_keys(*args) }
-        return self
+        self
       end
 
       ##
@@ -242,7 +239,7 @@ module Capybara
       # @return [Capybara::Node::Element]  The element
       def hover
         synchronize { base.hover }
-        return self
+        self
       end
 
       ##
@@ -334,7 +331,7 @@ module Capybara
       # @return [Capybara::Node::Element]  The element
       def trigger(event)
         synchronize { base.trigger(event) }
-        return self
+        self
       end
 
       ##
@@ -350,7 +347,7 @@ module Capybara
       # @return [Capybara::Node::Element]  The element
       def drag_to(node)
         synchronize { base.drag_to(node.base) }
-        return self
+        self
       end
 
       def reload

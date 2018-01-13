@@ -28,13 +28,9 @@ module Capybara
       # @return [Capybara::Node::Element]      The found element
       # @raise  [Capybara::ElementNotFound]    If the element can't be found before time expires
       #
-      def find(*args, &optional_filter_block)
-        if args.last.is_a? Hash
-          args.last[:session_options] = session_options
-        else
-          args.push(session_options: session_options)
-        end
-        synced_resolve Capybara::Queries::SelectorQuery.new(*args, &optional_filter_block)
+      def find(*args, **options, &optional_filter_block)
+        options[:session_options] = session_options
+        synced_resolve Capybara::Queries::SelectorQuery.new(*args, options, &optional_filter_block)
       end
 
       ##
@@ -57,13 +53,9 @@ module Capybara
       # @return [Capybara::Node::Element]      The found element
       # @raise  [Capybara::ElementNotFound]    If the element can't be found before time expires
       #
-      def ancestor(*args, &optional_filter_block)
-        if args.last.is_a? Hash
-          args.last[:session_options] = session_options
-        else
-          args.push(session_options: session_options)
-        end
-        synced_resolve Capybara::Queries::AncestorQuery.new(*args, &optional_filter_block)
+      def ancestor(*args, **options, &optional_filter_block)
+        options[:session_options] = session_options
+        synced_resolve Capybara::Queries::AncestorQuery.new(*args, **options, &optional_filter_block)
       end
 
       ##
@@ -87,13 +79,9 @@ module Capybara
       # @return [Capybara::Node::Element]      The found element
       # @raise  [Capybara::ElementNotFound]    If the element can't be found before time expires
       #
-      def sibling(*args, &optional_filter_block)
-        if args.last.is_a? Hash
-          args.last[:session_options] = session_options
-        else
-          args.push(session_options: session_options)
-        end
-        synced_resolve Capybara::Queries::SiblingQuery.new(*args, &optional_filter_block)
+      def sibling(*args, **options, &optional_filter_block)
+        options[:session_options] = session_options
+        synced_resolve Capybara::Queries::SiblingQuery.new(*args, **options, &optional_filter_block)
       end
 
       ##

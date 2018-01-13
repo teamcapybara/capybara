@@ -174,11 +174,8 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The option element selected
       def select(value = nil, from: nil, **options)
-        if from
-          find(:select, from, options).find(:option, value, options).select_option
-        else
-          find(:option, value, options).select_option
-        end
+        scope = from ? find(:select, from, options) : self
+        scope.find(:option, value, options).select_option
       end
 
       ##
@@ -196,11 +193,8 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The option element unselected
       def unselect(value = nil, from: nil, **options)
-        if from
-          find(:select, from, options).find(:option, value, options).unselect_option
-        else
-          find(:option, value, options).unselect_option
-        end
+        scope = from ? find(:select, from, options) : self
+        scope.find(:option, value, options).unselect_option
       end
 
       ##

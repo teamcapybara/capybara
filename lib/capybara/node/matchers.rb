@@ -39,7 +39,7 @@ module Capybara
       def has_selector?(*args, &optional_filter_block)
         assert_selector(*args, &optional_filter_block)
       rescue Capybara::ExpectationNotMet
-        return false
+        false
       end
 
       ##
@@ -53,7 +53,7 @@ module Capybara
       def has_no_selector?(*args, &optional_filter_block)
         assert_no_selector(*args, &optional_filter_block)
       rescue Capybara::ExpectationNotMet
-        return false
+        false
       end
 
       ##
@@ -637,7 +637,7 @@ module Capybara
       def has_text?(*args)
         assert_text(*args)
       rescue Capybara::ExpectationNotMet
-        return false
+        false
       end
       alias_method :has_content?, :has_text?
 
@@ -651,7 +651,7 @@ module Capybara
       def has_no_text?(*args)
         assert_no_text(*args)
       rescue Capybara::ExpectationNotMet
-        return false
+        false
       end
       alias_method :has_no_content?, :has_no_text?
 
@@ -662,42 +662,38 @@ module Capybara
     private
 
       def _verify_selector_result(query_args, optional_filter_block)
-        _set_query_session_options(query_args)
+        query_args = _set_query_session_options(*query_args)
         query = Capybara::Queries::SelectorQuery.new(*query_args, &optional_filter_block)
         synchronize(query.wait) do
           result = query.resolve_for(self)
           yield result, query
         end
-        return true
+        true
       end
 
       def _verify_match_result(query_args, optional_filter_block)
-        _set_query_session_options(query_args)
+        query_args = _set_query_session_options(*query_args)
         query = Capybara::Queries::MatchQuery.new(*query_args, &optional_filter_block)
         synchronize(query.wait) do
           result = query.resolve_for(query_scope)
           yield result
         end
-        return true
+        true
       end
 
       def _verify_text(query_args)
-        _set_query_session_options(query_args)
+        query_args = _set_query_session_options(*query_args)
         query = Capybara::Queries::TextQuery.new(*query_args)
         synchronize(query.wait) do
           count = query.resolve_for(self)
           yield(count, query)
         end
-        return true
+        true
       end
 
-      def _set_query_session_options(query_args)
-        if query_args.last.is_a? Hash
-          query_args.last[:session_options] = session_options
-        else
-          query_args.push(session_options: session_options)
-        end
-        query_args
+      def _set_query_session_options(*query_args, **query_options)
+        query_options[:session_options] = session_options
+        query_args.push(query_options)
       end
     end
   end
