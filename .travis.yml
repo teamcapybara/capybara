@@ -67,6 +67,8 @@ matrix:
     - gemfile: gemfiles/Gemfile.edge-marionette
     - rvm: rbx-3
 before_install:
+  - gem update --system
+  # - gem update bundler
   - if [[ $BUNDLE_GEMFILE =~ Gemfile.edge-marionette$ ]]; then
       pushd ..;
       git clone --depth 1 https://github.com/SeleniumHQ/selenium.git;
@@ -74,8 +76,6 @@ before_install:
       popd;
       bundle config local.selenium-webdriver ../selenium/build/rb;
     fi
-  - gem update --system
-  - gem update bundler
 before_script:
   - if [[ -z $HEADLESS ]]; then
       export DISPLAY=:99.0;
