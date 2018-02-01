@@ -18,7 +18,7 @@ module Capybara
         @locator = args.shift
         @filter_block = filter_block
 
-        warn "Unused parameters passed to #{self.class.name} : #{args}" unless args.empty?
+        raise ArgumentError, "Unused parameters passed to #{self.class.name} : #{args}" unless args.empty?
 
         @expression = @selector.call(@locator, @options.merge(enable_aria_label: session_options.enable_aria_label))
 

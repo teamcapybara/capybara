@@ -26,9 +26,10 @@ Capybara::SpecHelper.spec '#first' do
     expect(@session.first(@xpath).value).to eq('John')
   end
 
-  it "should warn when unused parameters are passed" do
-    expect_any_instance_of(Kernel).to receive(:warn).with(/Unused parameters passed.*unused text/)
-    @session.first(:css, 'h1', 'unused text')
+  it "should raise when unused parameters are passed" do
+    expect {
+      @session.first(:css, 'h1', 'unused text')
+    }.to raise_error ArgumentError, /Unused parameters passed.*unused text/
   end
 
   context "with css selectors" do

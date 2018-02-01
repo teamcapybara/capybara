@@ -104,7 +104,7 @@ RSpec.describe Capybara do
       Capybara.default_host = old_default
     end
 
-    it "should warn if not a valid URL" do
+    it "should raise if not a valid URL" do
       expect { Capybara.default_host = "www.example.com" }.to raise_error(ArgumentError, /Capybara\.default_host should be set to a url/)
     end
 
