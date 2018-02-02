@@ -256,8 +256,9 @@ module Capybara
       end
 
       if uri_base && [nil, 'http', 'https'].include?(visit_uri.scheme)
+        s_port = @server&.port if config.always_include_port
         if visit_uri.relative?
-          uri_base.port ||= @server.port if @server && config.always_include_port
+          uri_base.port ||= s_port
 
           visit_uri_parts = visit_uri.to_hash.delete_if { |_k, v| v.nil? }
 
@@ -266,8 +267,8 @@ module Capybara
           visit_uri_parts[:path] = uri_base.path + visit_uri.path
 
           visit_uri = uri_base.merge(visit_uri_parts)
-        elsif @server && config.always_include_port
-          visit_uri.port ||= @server.port
+        else
+          visit_uri.port ||= s_port
         end
       end
 
