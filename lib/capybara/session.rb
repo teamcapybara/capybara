@@ -126,7 +126,7 @@ module Capybara
         driver.reset!
         @touched = false
       end
-      @server.wait_for_pending_requests if @server
+      @server&.wait_for_pending_requests
       raise_server_error!
     end
     alias_method :cleanup!, :reset!
@@ -137,7 +137,7 @@ module Capybara
     # Raise errors encountered in the server
     #
     def raise_server_error!
-      if @server and @server.error
+      if @server&.error
         # Force an explanation for the error being raised as the exception cause
         begin
           if config.raise_server_errors

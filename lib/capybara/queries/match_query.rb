@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Capybara
   module Queries
     class MatchQuery < Capybara::Queries::SelectorQuery

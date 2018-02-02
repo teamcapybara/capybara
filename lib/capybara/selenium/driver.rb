@@ -234,7 +234,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def quit
-    @browser.quit if @browser
+    @browser&.quit
   rescue Selenium::WebDriver::Error::SessionNotCreatedError, Errno::ECONNREFUSED
     # Browser must have already gone
   rescue Selenium::WebDriver::Error::UnknownError => e
@@ -278,7 +278,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser_name == "chrome"
   end
 
-  private
+private
 
   def browser_name
     options[:browser].to_s
