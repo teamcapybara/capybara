@@ -57,7 +57,6 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
 
     describe "#accept_alert" do
       it "supports a blockless mode" do
-        skip "Headless Chrome doesn't support blockless modal methods" if @session.driver.send(:headless_chrome?)
         @session.visit('/with_js')
         @session.click_link('Open alert')
         @session.accept_alert
@@ -65,17 +64,10 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
 
       it "can be called before visiting" do
-        skip "Headless Chrome doesn't support this due to needed modal JS injection" if @session.driver.send(:headless_chrome?)
         @session.accept_alert "Initial alert" do
           @session.visit('/initial_alert')
         end
         expect(@session).to have_text('Initial alert page')
-      end
-
-      it "raises if block is missing" do
-        skip "Only Headless Chrome requires the block due to system modal JS injection" unless @session.driver.send(:headless_chrome?)
-        @session.visit('/with_js')
-        expect { @session.accept_alert }.to raise_error(ArgumentError)
       end
     end
 
