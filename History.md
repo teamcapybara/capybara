@@ -1,10 +1,13 @@
 #Version 2.18.0
 Release date: unreleased
 
+### Fixed
+
+* Firefox/geckodriver setting of contenteditable childs contents
+
 ### Removed
 
 * Headless chrome modal JS injection that is no longer needed for Chrome 64+/chromedriver 2.35+
-
 
 # Version 2.17.0
 Release date: 2018-01-02

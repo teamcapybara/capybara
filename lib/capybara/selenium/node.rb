@@ -78,7 +78,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
         JS
         driver.execute_script script, self
 
-        if (driver.chrome?) || (driver.firefox? && !driver.marionette?)
+        if driver.chrome? || driver.firefox?
           # chromedriver raises a can't focus element for child elements if we use native.send_keys
           # we've already focused it so just use action api
           driver.browser.action.send_keys(value.to_s).perform
