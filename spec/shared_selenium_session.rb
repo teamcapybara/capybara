@@ -64,6 +64,13 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         expect{@session.driver.browser.switch_to.alert}.to raise_error(@session.driver.send(:modal_error))
       end
 
+      it "can be called before visiting" do
+        @session.accept_alert "Initial alert" do
+          @session.visit('/initial_alert')
+        end
+        expect(@session).to have_text('Initial alert page')
+      end
+
       it "raises if block is missing" do
         @session.visit('/with_js')
         skip "Only Headless Chrome requires the block due to system modal JS injection" unless @session.driver.send(:headless_chrome?)

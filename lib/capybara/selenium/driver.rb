@@ -310,7 +310,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   # @api private
   def headless_chrome?
-    if chrome?
+    if chrome? && browser
       caps = @processed_options[:desired_capabilities]
       chrome_options = caps[:chrome_options] || caps[:chromeOptions] || {}
       args = chrome_options['args'] || chrome_options[:args] || []
