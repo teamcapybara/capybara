@@ -215,36 +215,22 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def accept_modal(_type, **options)
-    if headless_chrome?
-      raise ArgumentError, "Block that triggers the system modal is missing" unless block_given?
-      insert_modal_handlers(true, options[:with])
-      yield
-      find_headless_modal(options)
-    else
-      yield if block_given?
-      modal = find_modal(options)
+    yield if block_given?
+    modal = find_modal(options)
 
-      modal.send_keys options[:with] if options[:with]
+    modal.send_keys options[:with] if options[:with]
 
-      message = modal.text
-      modal.accept
-      message
-    end
+    message = modal.text
+    modal.accept
+    message
   end
 
   def dismiss_modal(_type, **options)
-    if headless_chrome?
-      raise ArgumentError, "Block that triggers the system modal is missing" unless block_given?
-      insert_modal_handlers(false, options[:with])
-      yield
-      find_headless_modal(options)
-    else
-      yield if block_given?
-      modal = find_modal(options)
-      message = modal.text
-      modal.dismiss
-      message
-    end
+    yield if block_given?
+    modal = find_modal(options)
+    message = modal.text
+    modal.dismiss
+    message
   end
 
   def quit
@@ -292,20 +278,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser_name == "chrome"
   end
 
-  # @api private
-  def headless_chrome?
-    if chrome?
-      caps = @processed_options[:desired_capabilities]
-      chrome_options = caps[:chrome_options] || caps[:chromeOptions] || {}
-      args = chrome_options['args'] || chrome_options[:args] || []
-      return args.include?("--headless") || args.include?("headless")
-    end
-    return false
-  end
+  private
 
-private
-
-  # @api private
   def browser_name
     options[:browser].to_s
   end
