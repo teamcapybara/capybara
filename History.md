@@ -1,5 +1,4 @@
 # Version 3.0.0
-
 Release date: unreleased
 
 ### Added
@@ -17,6 +16,11 @@ Release date: unreleased
 
 #Version 2.18.0
 Release date: unreleased
+
+### Fixed
+
+* Firefox/geckodriver setting of contenteditable childs contents
+* Ignore Selenium::WebDriver::Error::SessionNotCreatedError when quitting driver [Tim Connor]
 
 ### Removed
 
