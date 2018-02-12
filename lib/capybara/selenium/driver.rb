@@ -249,7 +249,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def quit
     @browser.quit if @browser
-  rescue Errno::ECONNREFUSED
+  rescue Selenium::WebDriver::Error::SessionNotCreatedError, Errno::ECONNREFUSED
     # Browser must have already gone
   rescue Selenium::WebDriver::Error::UnknownError => e
     unless silenced_unknown_error_message?(e.message) # Most likely already gone
