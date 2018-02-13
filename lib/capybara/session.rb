@@ -335,7 +335,7 @@ module Capybara
     # @raise  [Capybara::ElementNotFound]      If the scope can't be found before time expires
     #
     def within(*args)
-      new_scope = args.first.is_a?(Capybara::Node::Base) ? args.first : find(*args)
+      new_scope = args.first.respond_to?(:to_capybara_node) ? args.first.to_capybara_node : find(*args)
       begin
         scopes.push(new_scope)
         yield
