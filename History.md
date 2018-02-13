@@ -15,7 +15,7 @@ Release date: unreleased
 * `Capybara.exact_options` no longer exists. Just use `exact:true` on relevant actions/finders if necessary.
 
 #Version 2.18.0
-Release date: unreleased
+Release date: 2018-02-12
 
 ### Fixed
 
