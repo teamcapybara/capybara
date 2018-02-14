@@ -2,11 +2,11 @@
 
 module Capybara
   module RSpecMatcherProxies
-    def all(*args)
+    def all(*args, &block)
       if defined?(::RSpec::Matchers::BuiltIn::All) && args.first.respond_to?(:matches?)
         ::RSpec::Matchers::BuiltIn::All.new(*args)
       else
-        find_all(*args)
+        find_all(*args, &block)
       end
     end
 

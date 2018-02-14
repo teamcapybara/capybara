@@ -44,7 +44,8 @@ RSpec.describe 'capybara/rspec', :type => :feature do
   context "#all" do
     it "allows access to the Capybara finder" do
       visit('/with_html')
-      expect(all(:css, 'h2.head').size).to eq(5)
+      found = all(:css, 'h2') { |element| element[:class] == 'head' }
+      expect(found.size).to eq(5)
     end
 
     it "allows access to the RSpec matcher" do
