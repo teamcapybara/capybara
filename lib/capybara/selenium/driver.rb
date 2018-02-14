@@ -142,7 +142,20 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         @browser.switch_to.alert.accept
         sleep 0.25 # allow time for the modal to be handled
       rescue modal_error
-        # The alert is now gone - nothing to do
+        # The alert is now gone
+
+        if navigated
+          # The alert appeared after attempting navigation but disappeared before we could accept it
+
+          # Try to navigate again, anticipating the alert this time
+          begin
+            accept_modal(nil, wait: 0.1) do
+              @browser.navigate.to("about:blank")
+            end
+          rescue Capybara::ModalNotFound
+            # No alert appeared this time
+          end
+        end
       end
       # try cleaning up the browser again
       retry
