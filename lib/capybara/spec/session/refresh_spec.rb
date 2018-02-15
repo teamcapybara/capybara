@@ -17,6 +17,7 @@ Capybara::SpecHelper.spec '#refresh' do
   end
 
   it "it reposts" do
+    skip "Firefox insists on prompting without providing a way to suppress" if marionette?(@session)
     @session.visit('/form')
     @session.select('Sweden', from: 'form_region')
     @session.click_button('awesome')
