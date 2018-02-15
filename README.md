@@ -146,7 +146,7 @@ Load RSpec 3.x support by adding the following line (typically to your
 require 'capybara/rspec'
 ```
 
-If you are using Rails, put your Capybara specs in `spec/features` of `spec/system` (only works
+If you are using Rails, put your Capybara specs in `spec/features` or `spec/system` (only works
 if [you have it configured in
 RSpec](https://www.relishapp.com/rspec/rspec-rails/docs/upgrade#file-type-inference-disabled))
 and if you have your Capybara specs in a different directory, then tag the
