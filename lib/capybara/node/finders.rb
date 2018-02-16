@@ -265,14 +265,17 @@ module Capybara
       # Find the first element on the page matching the given selector
       # and options. By default `first` will wait up to `Capybara.default_max_wait_time`
       # seconds for matching elements to appear and then raise an error if no matching
-      # element is found
+      # element is found. Providing the option `minimum: 0` changes this behavior to
+      # instead return `nil` if no matching elements appear in time.
       #
       # @overload first([kind], locator, options)
       #   @param [:css, :xpath] kind                 The type of selector
       #   @param [String] locator                    The selector
       #   @param [Hash] options                      Additional options; see {#all}
       # @return [Capybara::Node::Element]            The found element or nil
-      # @raise  [Capybara::ElementNotFound]          If the element can't be found before time expires
+      # @raise  [Capybara::ElementNotFound]          If the element can't be found before wait
+      #                                              time expires, unless option `minimum: 0`
+      #                                              was provided
       #
       def first(*args, **options, &optional_filter_block)
         options = { minimum: 1 }.merge(options)
