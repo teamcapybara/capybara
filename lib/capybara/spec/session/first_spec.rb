@@ -17,6 +17,8 @@ Capybara::SpecHelper.spec '#first' do
 
   it "should return nil when nothing was found if count options allow no results" do
     expect(@session.first('//div[@id="nosuchthing"]', minimum: 0)).to be_nil
+    expect(@session.first('//div[@id="nosuchthing"]', count: 0)).to be_nil
+    expect(@session.first('//div[@id="nosuchthing"]', between: (0..3))).to be_nil
   end
 
   it "should accept an XPath instance" do
