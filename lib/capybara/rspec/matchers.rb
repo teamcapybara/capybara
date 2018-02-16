@@ -271,7 +271,7 @@ module Capybara
       MatchSelector.new(:css, css, options, &optional_filter_block)
     end
 
-    # RSpec matcher for text on the page
+    # RSpec matcher for text content
     # See {Capybara::SessionMatchers#assert_text}
     def have_text(*args)
       HaveText.new(*args)
