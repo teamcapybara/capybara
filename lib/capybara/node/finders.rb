@@ -242,7 +242,7 @@ module Capybara
       # @return [Capybara::Result]                   A collection of found elements
       # @raise [Capybara::ExpectationNotMet]         The number of elements found doesn't match the specified conditions
       def all(*args, **options, &optional_filter_block)
-        minimum_specified = %i[count minimum between].any? { |k| options.key?(k) }
+        minimum_specified = options_include_minimum?(options)
         options = { minimum: 1 }.merge(options) unless minimum_specified
         options[:session_options] = session_options
         query = Capybara::Queries::SelectorQuery.new(*args.push(options), &optional_filter_block)
@@ -265,17 +265,17 @@ module Capybara
       # Find the first element on the page matching the given selector
       # and options. By default `first` will wait up to `Capybara.default_max_wait_time`
       # seconds for matching elements to appear and then raise an error if no matching
-      # element is found
+      # element is found, or `nil` if the provided count options allow for empty results.
       #
       # @overload first([kind], locator, options)
       #   @param [:css, :xpath] kind                 The type of selector
       #   @param [String] locator                    The selector
       #   @param [Hash] options                      Additional options; see {#all}
       # @return [Capybara::Node::Element]            The found element or nil
-      # @raise  [Capybara::ElementNotFound]          If the element can't be found before time expires
+      # @raise  [Capybara::ElementNotFound]          If element(s) matching the provided options can't be found before time expires
       #
       def first(*args, **options, &optional_filter_block)
-        options = { minimum: 1 }.merge(options)
+        options = { minimum: 1 }.merge(options) unless options_include_minimum?(options)
         all(*args, **options, &optional_filter_block).first
       end
 
@@ -303,6 +303,10 @@ module Capybara
 
       def prefer_exact?(query)
         query.match == :smart or query.match == :prefer_exact
+      end
+
+      def options_include_minimum?(opts)
+        %i[count minimum between].any? { |k| opts.key?(k) }
       end
     end
   end
