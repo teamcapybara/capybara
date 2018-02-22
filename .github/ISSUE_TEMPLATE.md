@@ -9,6 +9,7 @@ Driver Information (and browser if relevant):
 ## Expected Behavior
 
 ## Actual Behavior
+<!-- include full stacktrace of any error -->
 
 ## Steps to reproduce
 <!--
