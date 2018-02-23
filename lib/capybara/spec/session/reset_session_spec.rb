@@ -40,6 +40,7 @@ Capybara::SpecHelper.spec '#reset_session!' do
   end
 
   it "handles modals during unload", requires: [:modals] do
+    skip "geckodriver cannot be reliably reset with unload alerts" if marionette?(@session)
     @session.visit('/with_unload_alert')
     expect(@session).to have_selector(:css, 'div')
     expect { @session.reset_session! }.not_to raise_error
@@ -47,6 +48,7 @@ Capybara::SpecHelper.spec '#reset_session!' do
   end
 
   it "handles already open modals", requires: [:modals] do
+    skip "geckodriver cannot be reliably reset with unload alerts" if marionette?(@session)
     @session.visit('/with_unload_alert')
     @session.click_link('Go away')
     expect { @session.reset_session! }.not_to raise_error
