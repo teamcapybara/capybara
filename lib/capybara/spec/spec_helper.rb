@@ -108,6 +108,10 @@ module Capybara
     def marionette?(session)
       session.respond_to?(:driver) && session.driver.respond_to?(:marionette?, true) && session.driver.send(:marionette?)
     end
+
+    def marionette_lt?(version, session)
+      marionette?(session) && (session.driver.browser.capabilities[:browser_version].to_f < version)
+    end
   end
 end
 

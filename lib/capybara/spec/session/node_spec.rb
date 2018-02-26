@@ -366,7 +366,7 @@ Capybara::SpecHelper.spec "node" do
 
   describe '#double_click', requires: [:js] do
     before do
-      pending "selenium-webdriver/geckodriver doesn't generate double click event" if marionette?(@session)
+      pending "selenium-webdriver/geckodriver doesn't generate double click event" if marionette_lt?(59, @session)
     end
 
     it "should double click an element" do
