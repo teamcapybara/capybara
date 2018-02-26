@@ -112,6 +112,10 @@ module Capybara
     def marionette_lt?(version, session)
       marionette?(session) && (session.driver.browser.capabilities[:browser_version].to_f < version)
     end
+
+    def marionette_gte?(version, session)
+      marionette?(session) && (session.driver.browser.capabilities[:browser_version].to_f >= version)
+    end
   end
 end
 
