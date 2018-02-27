@@ -139,7 +139,18 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         @browser.switch_to.alert.accept
         sleep 0.25 # allow time for the modal to be handled
       rescue modal_error
-        # The alert is now gone - nothing to do
+        # The alert is now gone
+        if current_url != "about:blank"
+          begin
+            # If navigation has not occurred attempt again and accept alert
+            # since FF may have dismissed the alert at first attempt
+            @browser.navigate.to("about:blank")
+            sleep 0.1 # slight wait for alert
+            @browser.switch_to.alert.accept
+          rescue modal_error
+            # alert now gone, should mean navigation happened
+          end
+        end
       end
       # try cleaning up the browser again
       retry
