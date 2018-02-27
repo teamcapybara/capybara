@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-Capybara::SpecHelper.spec "#to_capybara_node", :focus_ do
+Capybara::SpecHelper.spec "#to_capybara_node" do
   before do
     @session.visit('/with_html')
   end
