@@ -19,7 +19,7 @@ module Capybara
         super(@options)
         self.session_options = session_options
 
-        @search_regexp = Capybara::Helpers.to_regexp(@expected_text, nil, exact?)
+        @search_regexp = Capybara::Helpers.to_regexp(@expected_text, exact: exact?)
 
         assert_valid_keys
       end
@@ -69,7 +69,7 @@ module Capybara
       end
 
       def case_insensitive_message
-        insensitive_regexp = Capybara::Helpers.to_regexp(@expected_text, Regexp::IGNORECASE)
+        insensitive_regexp = Capybara::Helpers.to_regexp(@expected_text, options: Regexp::IGNORECASE)
         insensitive_count = @actual_text.scan(insensitive_regexp).size
         if insensitive_count != @count
           "it was found #{insensitive_count} #{Capybara::Helpers.declension("time", "times", insensitive_count)} using a case insensitive search"

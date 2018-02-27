@@ -24,14 +24,16 @@ module Capybara
     # if text is not a regexp
     #
     # @param [String] text Text to escape
-    # @return [String]     Escaped text
+    # @param [Boolean] exact (false) Whether or not this should be an exact text match
+    # @param [Fixnum, Boolean, nil] options Options passed to Regexp.new when creating the Regexp
+    # @return [Regexp] Regexp to match the passed in text and options
     #
-    def to_regexp(text, regexp_options = nil, exact = false)
+    def to_regexp(text, exact: false, options: nil)
       return text if text.is_a?(Regexp)
 
       escaped = Regexp.escape(normalize_whitespace(text))
       escaped = "\\A#{escaped}\\z" if exact
-      Regexp.new(escaped, regexp_options)
+      Regexp.new(escaped, options)
     end
 
     ##
@@ -40,12 +42,13 @@ module Capybara
     # `Capybara.asset_host`.
     #
     # @param [String] html     HTML code to inject into
+    # @param [URL] host (Capybara.asset_host) The host from which assets should be loaded
     # @return [String]         The modified HTML code
     #
-    def inject_asset_host(html, asset_host = Capybara.asset_host)
-      if asset_host && Nokogiri::HTML(html).css("base").empty?
+    def inject_asset_host(html, host: Capybara.asset_host)
+      if host && Nokogiri::HTML(html).css("base").empty?
         match = html.match(/<head[^<]*?>/)
-        return html.clone.insert match.end(0), "<base href='#{asset_host}' />" if match
+        return html.clone.insert match.end(0), "<base href='#{host}' />" if match
       end
       html
     end
@@ -65,13 +68,9 @@ module Capybara
     end
 
     if defined?(Process::CLOCK_MONOTONIC)
-      def monotonic_time
-        Process.clock_gettime Process::CLOCK_MONOTONIC
-      end
+      def monotonic_time; Process.clock_gettime Process::CLOCK_MONOTONIC; end
     else
-      def monotonic_time
-        Time.now.to_f
-      end
+      def monotonic_time; Time.now.to_f; end
     end
   end
 end

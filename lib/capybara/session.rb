@@ -680,7 +680,7 @@ module Capybara
     #
     def save_page(path = nil)
       prepare_path(path, 'html').tap do |p|
-        File.write(p, Capybara::Helpers.inject_asset_host(body, config.asset_host), mode: 'wb')
+        File.write(p, Capybara::Helpers.inject_asset_host(body, host: config.asset_host), mode: 'wb')
       end
     end
 
