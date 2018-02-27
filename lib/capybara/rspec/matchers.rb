@@ -11,7 +11,8 @@ module Capybara
       attr_reader :failure_message, :failure_message_when_negated
 
       def wrap(actual)
-        @context_el = if actual.respond_to?("has_selector?")
+        actual = actual.to_capybara_node if actual.respond_to?(:to_capybara_node)
+        @context_el = if actual.respond_to?(:has_selector?)
           actual
         else
           Capybara.string(actual.to_s)

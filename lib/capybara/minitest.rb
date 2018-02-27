@@ -262,6 +262,8 @@ module Capybara
         case args.first
         when Capybara::Session, Capybara::Node::Base, Capybara::Node::Simple
           [args.shift, args]
+        when -> (arg) { arg.respond_to?(:to_capybara_node) }
+          [args.shift.to_capybara_node, args]
         else
           [page, args]
         end

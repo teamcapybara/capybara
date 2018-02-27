@@ -111,6 +111,10 @@ module Capybara
         session.config
       end
 
+      def to_capybara_node
+        self
+      end
+
     protected
 
       def catch_error?(error, errors = nil)
