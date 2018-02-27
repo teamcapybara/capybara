@@ -275,7 +275,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser_name == "chrome"
   end
 
-  private
+private
 
   def browser_name
     options[:browser].to_s
