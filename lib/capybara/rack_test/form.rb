@@ -96,7 +96,7 @@ private
           NilUploadedFile.new
         else
           mime_info = MiniMime.lookup_by_filename(value)
-          Rack::Test::UploadedFile.new(value, (mime_info && mime_info.content_type).to_s)
+          Rack::Test::UploadedFile.new(value, mime_info&.content_type.to_s)
         end
         merge_param!(params, field['name'].to_s, file)
       else
