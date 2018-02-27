@@ -67,9 +67,8 @@ module Capybara
       # time has passed. On rubies/platforms which don't support access to a monotonic process clock
       # if the return value of `Time.now` is stubbed out, Capybara will raise `Capybara::FrozenInTime`.
       #
-      # @param  [Integer] seconds         Number of seconds to retry this block
-      # @param options [Hash]
-      # @option options [Array<Exception>] :errors (driver.invalid_element_errors +
+      # @param  [Integer] seconds  (current sessions default_max_wait_time) Maximum number of seconds to retry this block
+      # @param  [Array<Exception>] errors (driver.invalid_element_errors +
       #   [Capybara::ElementNotFound]) exception types that cause the block to be rerun
       # @return [Object]                  The result of the given block
       # @raise  [Capybara::FrozenInTime]  If the return value of `Time.now` appears stuck
