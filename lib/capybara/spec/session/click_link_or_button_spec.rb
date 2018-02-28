@@ -37,7 +37,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
   end
 
   context "with :exact option" do
-    context "when `true`" do
+    context "when `false`" do
       it "clicks on approximately matching link" do
         @session.visit('/with_html')
         @session.click_link_or_button('abore', exact:  false)
@@ -46,12 +46,12 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
 
       it "clicks on approximately matching button" do
         @session.visit('/form')
-        @session.click_link_or_button('awe')
+        @session.click_link_or_button('awe', exact: false)
         expect(extract_results(@session)['first_name']).to eq('John')
       end
     end
 
-    context "when `false`" do
+    context "when `true`" do
       it "does not click on link which matches approximately" do
         @session.visit('/with_html')
         msg = "Unable to find visible link or button \"abore\""

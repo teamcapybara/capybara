@@ -35,7 +35,7 @@ Capybara::SpecHelper.spec '#click_link' do
       expect(@session).to have_content('Bar')
     end
 
-    it "should accept partial matches" do
+    it "should accept partial matches", :exact_false do
       @session.click_link('abo')
       expect(@session).to have_content('Bar')
     end
@@ -47,7 +47,7 @@ Capybara::SpecHelper.spec '#click_link' do
       expect(@session).to have_content('Bar')
     end
 
-    it "should accept partial matches" do
+    it "should accept partial matches", :exact_false do
       @session.click_link('some titl')
       expect(@session).to have_content('Bar')
     end
@@ -59,7 +59,7 @@ Capybara::SpecHelper.spec '#click_link' do
       expect(@session).to have_content('Bar')
     end
 
-    it "should accept partial matches" do
+    it "should accept partial matches", :exact_false do
       @session.click_link('some imag')
       expect(@session).to have_content('Bar')
     end

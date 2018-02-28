@@ -108,7 +108,7 @@ Capybara::SpecHelper.spec "#attach_file" do
       expect(extract_results(@session)['image']).to eq(File.basename(__FILE__))
     end
 
-    it "not allow partial matches when true" do
+    it "should not allow partial matches when true" do
       expect do
         @session.attach_file "Imag", __FILE__, exact:  true
       end.to raise_error(Capybara::ElementNotFound)

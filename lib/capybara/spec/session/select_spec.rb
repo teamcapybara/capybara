@@ -13,12 +13,12 @@ Capybara::SpecHelper.spec "#select" do
     expect(@session.find_field('Title').value).to eq('Miss')
   end
 
-  it "should allow selecting exact options where there are inexact matches" do
+  it "should allow selecting exact options where there are inexact matches", :exact_false do
     @session.select("Mr", from: 'Title')
     expect(@session.find_field('Title').value).to eq('Mr')
   end
 
-  it "should allow selecting options where they are the only inexact match" do
+  it "should allow selecting options where they are the only inexact match", :exact_false do
     @session.select("Mis", from: 'Title')
     expect(@session.find_field('Title').value).to eq('Miss')
   end
@@ -30,7 +30,7 @@ Capybara::SpecHelper.spec "#select" do
     end.to raise_error(Capybara::ElementNotFound)
   end
 
-  it "should not allow selecting an option if the match is ambiguous" do
+  it "should not allow selecting an option if the match is ambiguous", :exact_false do
     expect do
       @session.select("M", from: 'Title')
     end.to raise_error(Capybara::Ambiguous)
@@ -123,32 +123,32 @@ Capybara::SpecHelper.spec "#select" do
 
   context "with multiple select" do
     it "should return an empty value" do
-      expect(@session.find_field('Language').value).to eq([])
+      expect(@session.find_field('Languages').value).to eq([])
     end
 
     it "should return value of the selected options" do
-      @session.select("Ruby",       from: 'Language')
-      @session.select("Javascript", from: 'Language')
-      expect(@session.find_field('Language').value).to include('Ruby', 'Javascript')
+      @session.select("Ruby",       from: 'Languages')
+      @session.select("Javascript", from: 'Languages')
+      expect(@session.find_field('Languages').value).to include('Ruby', 'Javascript')
     end
 
     it "should select one option" do
-      @session.select("Ruby", from: 'Language')
+      @session.select("Ruby", from: 'Languages')
       @session.click_button('awesome')
       expect(extract_results(@session)['languages']).to eq(['Ruby'])
     end
 
     it "should select multiple options" do
-      @session.select("Ruby",       from: 'Language')
-      @session.select("Javascript", from: 'Language')
+      @session.select("Ruby",       from: 'Languages')
+      @session.select("Javascript", from: 'Languages')
       @session.click_button('awesome')
       expect(extract_results(@session)['languages']).to include('Ruby', 'Javascript')
     end
 
     it "should remain selected if already selected" do
-      @session.select("Ruby",       from: 'Language')
-      @session.select("Javascript", from: 'Language')
-      @session.select("Ruby",       from: 'Language')
+      @session.select("Ruby",       from: 'Languages')
+      @session.select("Javascript", from: 'Languages')
+      @session.select("Ruby",       from: 'Languages')
       @session.click_button('awesome')
       expect(extract_results(@session)['languages']).to include('Ruby', 'Javascript')
     end

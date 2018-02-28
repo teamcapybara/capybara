@@ -151,25 +151,18 @@ Capybara::SpecHelper.spec '#click_button' do
     end
   end
 
-  context "with id given on a submit button" do
-    it "should submit the associated form" do
+  context "input type=submit button" do
+    it "should submit by button id" do
       @session.click_button('awe123')
       expect(extract_results(@session)['first_name']).to eq('John')
     end
 
-    it "should work with partial matches" do
-      @session.click_button('Go')
-      expect(@session).to have_content('You landed')
-    end
-  end
-
-  context "with title given on a submit button" do
-    it "should submit the associated form" do
+    it "should submit by button title" do
       @session.click_button('What an Awesome Button')
       expect(extract_results(@session)['first_name']).to eq('John')
     end
 
-    it "should work with partial matches" do
+    it "should submit by partial title", :exact_false do
       @session.click_button('What an Awesome')
       expect(extract_results(@session)['first_name']).to eq('John')
     end
@@ -250,7 +243,7 @@ Capybara::SpecHelper.spec '#click_button' do
       expect(extract_results(@session)['first_name']).to eq('John')
     end
 
-    it "should work with partial matches" do
+    it "should work with partial matches", :exact_false do
       @session.click_button('hai')
       expect(extract_results(@session)['first_name']).to eq('John')
     end
@@ -263,7 +256,7 @@ Capybara::SpecHelper.spec '#click_button' do
       expect(extract_results(@session)['first_name']).to eq('John')
     end
 
-    it "should work with partial matches" do
+    it "should work with partial matches", :exact_false do
       @session.click_button('kay')
       expect(extract_results(@session)['first_name']).to eq('John')
     end
@@ -282,7 +275,7 @@ Capybara::SpecHelper.spec '#click_button' do
       expect(extract_results(@session)['first_name']).to eq('John')
     end
 
-    it "should work with partial matches" do
+    it "should work with partial matches", :exact_false do
       @session.click_button('Okay 556')
       expect(extract_results(@session)['first_name']).to eq('John')
     end
@@ -290,11 +283,11 @@ Capybara::SpecHelper.spec '#click_button' do
 
   context "with text given on a button defined by <button> tag" do
     it "should submit the associated form" do
-      @session.click_button('Click me')
+      @session.click_button('Click me!')
       expect(extract_results(@session)['first_name']).to eq('John')
     end
 
-    it "should work with partial matches" do
+    it "should work with partial matches", :exact_false do
       @session.click_button('Click')
       expect(extract_results(@session)['first_name']).to eq('John')
     end
@@ -321,7 +314,7 @@ Capybara::SpecHelper.spec '#click_button' do
       expect(extract_results(@session)['first_name']).to eq('John')
     end
 
-    it "should work with partial matches" do
+    it "should work with partial matches", :exact_false do
       @session.click_button('ck_me')
       expect(extract_results(@session)['first_name']).to eq('John')
     end
@@ -333,7 +326,7 @@ Capybara::SpecHelper.spec '#click_button' do
       expect(extract_results(@session)['first_name']).to eq('John')
     end
 
-    it "should work with partial matches" do
+    it "should work with partial matches", :exact_false do
       @session.click_button('Click Title')
       expect(extract_results(@session)['first_name']).to eq('John')
     end
@@ -345,7 +338,7 @@ Capybara::SpecHelper.spec '#click_button' do
       expect(extract_results(@session)['first_name']).to eq('John')
     end
 
-    it "should work with partial matches" do
+    it "should work with partial matches", :exact_false do
       @session.click_button('se eating h')
       expect(extract_results(@session)['first_name']).to eq('John')
     end

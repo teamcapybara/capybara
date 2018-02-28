@@ -26,7 +26,7 @@ Capybara::SpecHelper.spec "#all" do
     expect(@session.all(:css, "a#has-been-clicked", minimum: 0)).to be_empty
   end
 
-  it "should accept an XPath instance" do
+  it "should accept an XPath instance", :exact_false do
     @session.visit('/form')
     @xpath = Capybara::Selector.all[:fillable_field].call('Name')
     expect(@xpath).to be_a(::XPath::Union)

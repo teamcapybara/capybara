@@ -67,6 +67,10 @@ module Capybara
             SpecHelper.reset_threadsafe(false, @session)
           end
 
+          before :each, :exact_false do
+            Capybara.exact = false
+          end
+
           specs.each do |spec_name, spec_options, block|
             describe spec_name, *spec_options do
               class_eval(&block)
