@@ -4,7 +4,7 @@ dist: trusty
 rvm:
   - 2.5.0
   - 2.3.6
-  - jruby-9.1.13.0
+  - jruby-9.1.16.0
 gemfile:
   - Gemfile
 env:
