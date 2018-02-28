@@ -147,7 +147,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
             @browser.navigate.to("about:blank")
             sleep 0.1 # slight wait for alert
             @browser.switch_to.alert.accept
-          rescue modal_error
+          rescue modal_error # rubocop:disable Metrics/BlockNesting
             # alert now gone, should mean navigation happened
           end
         end
