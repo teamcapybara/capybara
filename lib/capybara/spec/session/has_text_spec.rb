@@ -252,7 +252,7 @@ Capybara::SpecHelper.spec '#has_no_text?' do
     expect(@session).not_to have_no_text('exercitation ullamco laboris')
   end
 
-  it "should be true if the given text is not on the page" do
+  it "should be true if the given text is not on the page", :focus_ do
     @session.visit('/with_html')
     expect(@session).to have_no_text('xxxxyzzz')
     expect(@session).to have_no_text('monkey')

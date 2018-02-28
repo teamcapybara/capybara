@@ -199,6 +199,32 @@ module Capybara
       end
     end
 
+    class NegatedMatcher
+      def initialize(matcher)
+        @matcher = matcher
+      end
+
+      def matches?(actual)
+        @matcher.does_not_match?(actual)
+      end
+
+      def does_not_match?(actual)
+        @matcher.matches?(actual)
+      end
+
+      def description
+        "not #{@matcher.description}"
+      end
+
+      def failure_message
+        @matcher.failure_message_when_negated
+      end
+
+      def failure_message_when_negated
+        @matcher.failure_message
+      end
+    end
+
     class BecomeClosed
       def initialize(options)
         @options = options
@@ -279,6 +305,7 @@ module Capybara
     end
     alias_method :have_content, :have_text
 
+
     def have_title(title, **options)
       HaveTitle.new(title, options)
     end
@@ -330,6 +357,13 @@ module Capybara
     def have_table(locator = nil, **options, &optional_filter_block)
       HaveSelector.new(:table, locator, options, &optional_filter_block)
     end
+
+    %w(selector css xpath text title current_path link button field checked_field unchecked_field select table).each do |matcher_type|
+      define_method "have_no_#{matcher_type}" do |*args, &optional_filter_block|
+        NegatedMatcher.new(send("have_#{matcher_type}", *args, &optional_filter_block))
+      end
+    end
+    alias_method :have_no_content, :have_no_text
 
     ##
     # Wait for window to become closed.
