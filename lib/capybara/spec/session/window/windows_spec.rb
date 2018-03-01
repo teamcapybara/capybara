@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#windows', requires: [:windows] do
   before(:each) do
     @window = @session.current_window
@@ -25,8 +26,6 @@ Capybara::SpecHelper.spec '#windows', requires: [:windows] do
     titles = @session.windows.map do |window|
       @session.within_window(window) { @session.title }
     end
-    expect(titles).to match_array([
-      'With Windows', 'Title of the first popup', 'Title of popup two'
-    ])
+    expect(titles).to match_array(['With Windows', 'Title of the first popup', 'Title of popup two'])
   end
 end

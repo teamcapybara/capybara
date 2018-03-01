@@ -1,10 +1,11 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 require "selenium-webdriver"
 require 'shared_selenium_session'
 require 'rspec/shared_spec_matchers'
 
-browser_options = ::Selenium::WebDriver::Firefox::Options.new()
+browser_options = ::Selenium::WebDriver::Firefox::Options.new
 browser_options.args << '--headless' if ENV['HEADLESS']
 browser_options.add_preference 'dom.file.createInChild', true
 # browser_options.add_option("log", {"level": "trace"})
@@ -14,7 +15,7 @@ Capybara.register_driver :selenium_marionette do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
-    desired_capabilities: {marionette: true, 'moz:webdriverClick': true},
+    desired_capabilities: { marionette: true, 'moz:webdriverClick': true },
     options: browser_options
     # Get a trace level log from geckodriver
     # :driver_opts => { args: ['-vv'] }
@@ -25,24 +26,18 @@ Capybara.register_driver :selenium_marionette_clear_storage do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
-    desired_capabilities: {marionette: true},
+    desired_capabilities: { marionette: true },
     clear_local_storage: true,
     clear_session_storage: true,
     options: browser_options
   )
 end
 
-
-
 module TestSessions
   SeleniumMarionette = Capybara::Session.new(:selenium_marionette, TestApp)
 end
 
-skipped_tests = [
-  :response_headers,
-  :status_code,
-  :trigger
-]
+skipped_tests = %i[response_headers status_code trigger]
 skipped_tests << :windows if ENV['TRAVIS'] && ENV['SKIP_WINDOW']
 
 Capybara::SpecHelper.run_specs TestSessions::SeleniumMarionette, "selenium", capybara_skip: skipped_tests
@@ -62,7 +57,7 @@ RSpec.describe Capybara::Selenium::Driver do
     it "should reset browser when quit" do
       expect(@driver.browser).to be
       @driver.quit
-      #access instance variable directly so we don't create a new browser instance
+      # access instance variable directly so we don't create a new browser instance
       expect(@driver.instance_variable_get(:@browser)).to be_nil
     end
 
@@ -135,13 +130,12 @@ RSpec.describe Capybara::Selenium::Driver do
       @session.visit('/form')
       @session.select('Sweden', from: 'form_region')
       @session.click_button('awesome')
-      expect {
+      expect do
         @session.accept_confirm(wait: 0.1) do
           @session.refresh
           sleep 2
         end
-      }.to change{ extract_results(@session)['post_count'] }.by(1)
+      end.to change { extract_results(@session)['post_count'] }.by(1)
     end
   end
 end
-

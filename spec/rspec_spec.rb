@@ -1,7 +1,8 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
-RSpec.describe 'capybara/rspec', :type => :feature do
+RSpec.describe 'capybara/rspec', type: :feature do
   it "should include Capybara in rspec" do
     visit('/foo')
     expect(page.body).to include('Another World')
@@ -37,7 +38,7 @@ RSpec.describe 'capybara/rspec', :type => :feature do
     expect(Capybara.current_driver).to eq(Capybara.javascript_driver)
   end
 
-  it "switches to the given driver when giving it as metadata", :driver => :culerity do
+  it "switches to the given driver when giving it as metadata", driver: :culerity do
     expect(Capybara.current_driver).to eq(:culerity)
   end
 
@@ -50,7 +51,7 @@ RSpec.describe 'capybara/rspec', :type => :feature do
 
     it "allows access to the RSpec matcher" do
       visit('/with_html')
-      expect(["test1", "test2"]).to all(be_a(String))
+      expect(%w[test1 test2]).to all(be_a(String))
     end
   end
 
@@ -70,15 +71,15 @@ RSpec.describe 'capybara/rspec', :type => :feature do
   end
 end
 
-RSpec.describe 'capybara/rspec', :type => :other do
+RSpec.describe 'capybara/rspec', type: :other do
   context "when RSpec::Matchers is included after Capybara::DSL" do
     before do
-      class DSL_MatchersTest
+      class DSLMatchersTest
         include Capybara::DSL
         include RSpec::Matchers
       end
 
-      @test_class_instance = DSL_MatchersTest.new
+      @test_class_instance = DSLMatchersTest.new
     end
 
     context "#all" do
@@ -89,7 +90,7 @@ RSpec.describe 'capybara/rspec', :type => :other do
 
       it "allows access to the RSpec matcher" do
         @test_class_instance.visit('/with_html')
-        expect(["test1", "test2"]).to @test_class_instance.all(be_a(String))
+        expect(%w[test1 test2]).to @test_class_instance.all(be_a(String))
       end
     end
 
@@ -110,7 +111,7 @@ RSpec.describe 'capybara/rspec', :type => :other do
   end
 end
 
-RSpec.describe 'capybara/rspec', :type => :other do
+RSpec.describe 'capybara/rspec', type: :other do
   it "should not include Capybara" do
     expect { visit('/') }.to raise_error(NoMethodError)
   end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#save_page' do
   let(:alternative_path) { File.join(Dir.pwd, "save_and_open_page_tmp") }
   before do

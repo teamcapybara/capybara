@@ -1,8 +1,9 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 require 'capybara/rspec'
 
-RSpec.configuration.before(:each, { file_path: "./spec/rspec/features_spec.rb" } ) do
+RSpec.configuration.before(:each, file_path: "./spec/rspec/features_spec.rb") do
   @in_filtered_hook = true
 end
 
@@ -25,7 +26,7 @@ feature "Capybara's feature DSL" do
       .to eq("Capybara's feature DSL preserves description")
   end
 
-  scenario "allows driver switching", :driver => :selenium do
+  scenario "allows driver switching", driver: :selenium do
     expect(Capybara.current_driver).to eq(:selenium)
   end
 
@@ -71,15 +72,19 @@ feature "given and given! aliases to let and let!" do
   end
 end
 
-feature "Capybara's feature DSL with driver", :driver => :culerity do
+feature "Capybara's feature DSL with driver", driver: :culerity do
   scenario "switches driver" do
     expect(Capybara.current_driver).to eq(:culerity)
   end
 end
 
 xfeature "if xfeature aliases to pending then" do
-  scenario "this should be 'temporarily disabled with xfeature'" do; end
-  scenario "this also should be 'temporarily disabled with xfeature'" do; end
+  scenario "this should be 'temporarily disabled with xfeature'" do
+    # dummy
+  end
+  scenario "this also should be 'temporarily disabled with xfeature'" do
+    # dummy
+  end
 end
 
 ffeature "if ffeature aliases focused tag then" do

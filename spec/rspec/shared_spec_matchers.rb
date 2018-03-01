@@ -1,11 +1,11 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 require 'capybara/dsl'
 require 'capybara/rspec/matchers'
 require 'benchmark'
 
-RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
-
+RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
   include Capybara::DSL
   include Capybara::RSpecMatchers
 
@@ -53,7 +53,6 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
             expect("<h1>Text</h1>").to have_css('h1', between: 2..3)
           end.to raise_error("expected to find visible css \"h1\" between 2 and 3 times, found 1 match: \"Text\"")
         end
-
       end
 
       context "with should_not" do
@@ -129,7 +128,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_xpath? returns false" do
           expect do
             expect("<h1>Text</h1>").to have_xpath('//h2')
-          end.to raise_error(%r(expected to find visible xpath "//h2" but there were no matches))
+          end.to raise_error(%r{expected to find visible xpath "//h2" but there were no matches})
         end
       end
 
@@ -141,7 +140,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_no_xpath? returns false" do
           expect do
             expect("<h1>Text</h1>").not_to have_xpath('//h1')
-          end.to raise_error(%r(expected not to find visible xpath "//h1"))
+          end.to raise_error(%r{expected not to find visible xpath "//h1"})
         end
       end
 
@@ -164,7 +163,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_xpath? returns false" do
           expect do
             expect(page).to have_xpath("//h1[@id='doesnotexist']")
-          end.to raise_error(%r(expected to find visible xpath "//h1\[@id='doesnotexist'\]" but there were no matches))
+          end.to raise_error(%r{expected to find visible xpath "//h1\[@id='doesnotexist'\]" but there were no matches})
         end
       end
 
@@ -176,7 +175,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_no_xpath? returns false" do
           expect do
             expect(page).not_to have_xpath('//h1')
-          end.to raise_error(%r(expected not to find visible xpath "//h1"))
+          end.to raise_error(%r{expected not to find visible xpath "//h1"})
         end
       end
     end
@@ -198,7 +197,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_selector? returns false" do
           expect do
             expect("<h1>Text</h1>").to have_selector('//h2')
-          end.to raise_error(%r(expected to find visible xpath "//h2" but there were no matches))
+          end.to raise_error(%r{expected to find visible xpath "//h2" but there were no matches})
         end
       end
 
@@ -210,7 +209,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_no_selector? returns false" do
           expect do
             expect("<h1>Text</h1>").not_to have_selector(:css, 'h1')
-          end.to raise_error(%r(expected not to find visible css "h1"))
+          end.to raise_error(%r{expected not to find visible css "h1"})
         end
       end
     end
@@ -228,13 +227,13 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_selector? returns false" do
           expect do
             expect(page).to have_selector("//h1[@id='doesnotexist']")
-          end.to raise_error(%r(expected to find visible xpath "//h1\[@id='doesnotexist'\]" but there were no matches))
+          end.to raise_error(%r{expected to find visible xpath "//h1\[@id='doesnotexist'\]" but there were no matches})
         end
 
         it "includes text in error message" do
           expect do
             expect(page).to have_selector("//h1", text: 'wrong text')
-          end.to raise_error(%r(expected to find visible xpath "//h1" with text "wrong text" but there were no matches))
+          end.to raise_error(%r{expected to find visible xpath "//h1" with text "wrong text" but there were no matches})
         end
       end
 
@@ -246,7 +245,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         it "fails if has_no_selector? returns false" do
           expect do
             expect(page).not_to have_selector(:css, 'h1', text: 'test')
-          end.to raise_error(%r(expected not to find visible css "h1" with text "test"))
+          end.to raise_error(%r{expected not to find visible css "h1" with text "test"})
         end
       end
     end
@@ -846,10 +845,10 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         Capybara.using_wait_time(2) do
           matcher = have_text('this is not there').and have_text('neither is this')
           expect(Benchmark.realtime do
-            expect {
+            expect do
               expect(@el).to matcher
-            }.to raise_error RSpec::Expectations::ExpectationNotMetError
-          end).to be_between(2,3)
+            end.to raise_error RSpec::Expectations::ExpectationNotMetError
+          end).to be_between(2, 3)
         end
       end
 
@@ -857,10 +856,10 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         @session.click_link('reload-link')
         @session.using_wait_time(2) do
           expect(Benchmark.realtime do
-            expect {
+            expect do
               expect(@el).to have_text('waiting to be reloaded').and(have_text('has been reloaded'))
-            }.to raise_error RSpec::Expectations::ExpectationNotMetError, /expected to find text "waiting to be reloaded" in "has been reloaded"/
-          end).to be_between(2,3)
+            end.to raise_error RSpec::Expectations::ExpectationNotMetError, /expected to find text "waiting to be reloaded" in "has been reloaded"/
+          end).to be_between(2, 3)
         end
       end
 
@@ -868,10 +867,10 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
         @session.using_wait_time(2) do
           matcher = have_text('this is not there', wait: 5).and have_text('neither is this', wait: 6)
           expect(Benchmark.realtime do
-            expect {
+            expect do
               expect(@el).to matcher
-            }.to raise_error RSpec::Expectations::ExpectationNotMetError
-          end).to be_between(2,3)
+            end.to raise_error RSpec::Expectations::ExpectationNotMetError
+          end).to be_between(2, 3)
         end
       end
 
@@ -902,9 +901,9 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
       it "should retry" do
         @session.using_wait_time(3) do
           expect(Benchmark.realtime do
-            expect {
+            expect do
               expect(@el).to have_text('has been reloaded').or have_text('random stuff')
-            }.to raise_error RSpec::Expectations::ExpectationNotMetError
+            end.to raise_error RSpec::Expectations::ExpectationNotMetError
           end).to be > 3
         end
       end
@@ -912,10 +911,10 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, mode|
       it "should ignore :wait options" do
         @session.using_wait_time(2) do
           expect(Benchmark.realtime do
-            expect {
+            expect do
               expect(@el).to have_text('this is not there', wait: 10).or have_text('neither is this', wait: 15)
-            }.to raise_error RSpec::Expectations::ExpectationNotMetError
-          end).to be_between(2,3)
+            end.to raise_error RSpec::Expectations::ExpectationNotMetError
+          end).to be_between(2, 3)
         end
       end
 

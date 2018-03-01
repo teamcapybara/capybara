@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#find_field' do
   before do
     @session.visit('/form')
@@ -26,7 +27,7 @@ Capybara::SpecHelper.spec '#find_field' do
   end
 
   it "casts to string" do
-    expect(@session.find_field(:'Dog').value).to eq('dog')
+    expect(@session.find_field(:Dog).value).to eq('dog')
   end
 
   it "should raise error if the field doesn't exist" do
@@ -43,12 +44,12 @@ Capybara::SpecHelper.spec '#find_field' do
 
   context "with :exact option" do
     it "should accept partial matches when false" do
-      expect(@session.find_field("Explanation", exact:  false)[:name]).to eq("form[name_explanation]")
+      expect(@session.find_field("Explanation", exact: false)[:name]).to eq("form[name_explanation]")
     end
 
     it "should not accept partial matches when true" do
       expect do
-        @session.find_field("Explanation", exact:  true)
+        @session.find_field("Explanation", exact: true)
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
@@ -105,6 +106,6 @@ Capybara::SpecHelper.spec '#find_field' do
 
   it "should accept an optional filter block" do
     # this would be better done with the :with option but this is just a test
-    expect(@session.find_field('form[pets][]'){ |node| node.value == 'dog' }[:id]).to eq "form_pets_dog"
+    expect(@session.find_field('form[pets][]') { |node| node.value == 'dog' }[:id]).to eq "form_pets_dog"
   end
 end

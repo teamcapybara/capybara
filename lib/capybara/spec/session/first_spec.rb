@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#first' do
   before do
     @session.visit('/with_html')
@@ -29,9 +30,9 @@ Capybara::SpecHelper.spec '#first' do
   end
 
   it "should raise when unused parameters are passed" do
-    expect {
+    expect do
       @session.first(:css, 'h1', 'unused text')
-    }.to raise_error ArgumentError, /Unused parameters passed.*unused text/
+    end.to raise_error ArgumentError, /Unused parameters passed.*unused text/
   end
 
   context "with css selectors" do
@@ -129,7 +130,7 @@ Capybara::SpecHelper.spec '#first' do
       Capybara.using_wait_time(3) do
         start_time = Time.now
         expect(@session.first(:css, 'a#has-been-clicked', minimum: 0)).to be_nil
-        expect(Time.now-start_time).to be < 3
+        expect(Time.now - start_time).to be < 3
       end
     end
 
@@ -144,10 +145,10 @@ Capybara::SpecHelper.spec '#first' do
       @session.click_link('clickable')
       Capybara.using_wait_time(3) do
         start_time = Time.now
-        expect {
+        expect do
           @session.first(:css, 'a#not-a-real-link')
-        }.to raise_error Capybara::ElementNotFound
-        expect(Time.now-start_time).to be > 3
+        end.to raise_error Capybara::ElementNotFound
+        expect(Time.now - start_time).to be > 3
       end
     end
   end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#within_frame', requires: [:frames] do
   before(:each) do
     @session.visit('/within_frames')
@@ -56,8 +57,12 @@ Capybara::SpecHelper.spec '#within_frame', requires: [:frames] do
   it "should find multiple nested frames" do
     @session.within_frame 'parentFrame' do
       @session.within_frame 'childFrame' do
-        @session.within_frame 'grandchildFrame1' do end
-        @session.within_frame 'grandchildFrame2' do end
+        @session.within_frame 'grandchildFrame1' do
+          # dummy
+        end
+        @session.within_frame 'grandchildFrame2' do
+          # dummy
+        end
       end
     end
   end
@@ -70,7 +75,7 @@ Capybara::SpecHelper.spec '#within_frame', requires: [:frames] do
     end
   end
 
-  it "works if the frame is closed", requires: [:frames, :js] do
+  it "works if the frame is closed", requires: %i[frames js] do
     @session.within_frame 'parentFrame' do
       @session.within_frame 'childFrame' do
         @session.click_link 'Close Window'

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec "#select" do
   before do
     @session.visit('/form')
@@ -79,7 +80,7 @@ Capybara::SpecHelper.spec "#select" do
   end
 
   it "casts to string" do
-    @session.select(:"Miss", from: :'Title')
+    @session.select(:Miss, from: :Title)
     expect(@session.find_field('Title').value).to eq('Miss')
   end
 
@@ -161,7 +162,7 @@ Capybara::SpecHelper.spec "#select" do
   context "with :exact option" do
     context "when `false`" do
       it "can match select box approximately" do
-        @session.select("Finish", from: "Loc", exact:  false)
+        @session.select("Finish", from: "Loc", exact: false)
         @session.click_button("awesome")
         expect(extract_results(@session)["locale"]).to eq("fi")
       end
@@ -194,7 +195,7 @@ Capybara::SpecHelper.spec "#select" do
 
       it "can match option approximately when :from not given" do
         expect do
-          @session.select("made-up language", exact:  true)
+          @session.select("made-up language", exact: true)
         end.to raise_error(Capybara::ElementNotFound)
       end
     end

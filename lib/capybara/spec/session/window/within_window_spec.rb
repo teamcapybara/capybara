@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
   before(:each) do
     @window = @session.current_window
@@ -57,7 +58,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
       expect(@session.send(:scopes)).to eq([nil])
     end
 
-    it "should leave correct scopes after execution in case of error", requires: [:windows, :frames] do
+    it "should leave correct scopes after execution in case of error", requires: %i[windows frames] do
       window = (@session.windows - [@window]).first
       expect do
         @session.within_frame 'frameOne' do
@@ -87,25 +88,25 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
 
   context "with lambda" do
     it "should find the div in another window" do
-      @session.within_window(->{ @session.title == 'Title of the first popup'}) do
+      @session.within_window(-> { @session.title == 'Title of the first popup' }) do
         expect(@session).to have_css('#divInPopupOne')
       end
     end
 
     it "should find divs in both windows" do
-      @session.within_window(->{ @session.title == 'Title of popup two'}) do
+      @session.within_window(-> { @session.title == 'Title of popup two' }) do
         expect(@session).to have_css('#divInPopupTwo')
       end
-      @session.within_window(->{ @session.title == 'Title of the first popup'}) do
+      @session.within_window(-> { @session.title == 'Title of the first popup' }) do
         expect(@session).to have_css('#divInPopupOne')
       end
       expect(@session.title).to eq('With Windows')
     end
 
     it "should be able to nest within_window" do
-      @session.within_window(->{ @session.title == 'Title of popup two'}) do
+      @session.within_window(-> { @session.title == 'Title of popup two' }) do
         expect(@session).to have_css('#divInPopupTwo')
-        @session.within_window(->{ @session.title == 'Title of the first popup'}) do
+        @session.within_window(-> { @session.title == 'Title of the first popup' }) do
           expect(@session).to have_css('#divInPopupOne')
         end
         expect(@session).to have_css('#divInPopupTwo')
@@ -119,7 +120,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
     it "should work inside a normal scope" do
       expect(@session).to have_css('#openWindow')
       @session.within(:css, '#scope') do
-        @session.within_window(->{ @session.title == 'Title of the first popup'}) do
+        @session.within_window(-> { @session.title == 'Title of the first popup' }) do
           expect(@session).to have_css('#divInPopupOne')
         end
         expect(@session).to have_content('My scoped content')
@@ -129,7 +130,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
 
     it "should raise error if window wasn't found" do
       expect do
-        @session.within_window(->{ @session.title == 'Invalid title'}) do
+        @session.within_window(-> { @session.title == 'Invalid title' }) do
           expect(@session).to have_css('#divInPopupOne')
         end
       end.to raise_error(Capybara::WindowError, "Could not find a window matching block/lambda")
@@ -139,13 +140,13 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
     end
 
     it "returns value from the block" do
-      value = @session.within_window(->{ @session.title == 'Title of popup two'}) { 42 }
+      value = @session.within_window(-> { @session.title == 'Title of popup two' }) { 42 }
       expect(value).to eq(42)
     end
 
     it "should switch back if exception was raised inside block" do
       expect do
-        @session.within_window(->{ @session.title == 'Title of popup two'}) do
+        @session.within_window(-> { @session.title == 'Title of popup two' }) do
           raise 'some error'
         end
       end.to raise_error(StandardError, 'some error')

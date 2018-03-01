@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#ancestor' do
   before do
     @session.visit('/with_html')
@@ -57,7 +58,6 @@ Capybara::SpecHelper.spec '#ancestor' do
     end
   end
 
-
   it "should raise ElementNotFound with a useful default message if nothing was found" do
     el = @session.find(:css, '#child')
     expect do
@@ -65,13 +65,11 @@ Capybara::SpecHelper.spec '#ancestor' do
     end.to raise_error(Capybara::ElementNotFound, "Unable to find xpath \"//div[@id=\\\"nosuchthing\\\"]\" that is an ancestor of visible css \"#child\"")
   end
 
-
-
   context "within a scope" do
     it "should limit the ancestors to inside the scope" do
       @session.within(:css, '#ancestor2') do
         el = @session.find(:css, '#child')
-        expect(el.ancestor(:css,'div', text: 'Ancestor')[:id]).to eq('ancestor1')
+        expect(el.ancestor(:css, 'div', text: 'Ancestor')[:id]).to eq('ancestor1')
       end
     end
   end

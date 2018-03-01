@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#click_button' do
   before do
     @session.visit('/form')
@@ -191,7 +192,6 @@ Capybara::SpecHelper.spec '#click_button' do
     end
   end
 
-
   context "with submit button outside the form defined by <button> tag" do
     before do
       @session.click_button('outside_button')
@@ -248,7 +248,6 @@ Capybara::SpecHelper.spec '#click_button' do
       expect(extract_results(@session)['first_name']).to eq('John')
     end
   end
-
 
   context "with value given on an image button" do
     it "should submit the associated form" do
@@ -417,15 +416,15 @@ Capybara::SpecHelper.spec '#click_button' do
 
   it "should encode complex field names, like array[][value]" do
     @session.visit('/form')
-    @session.fill_in('address1_city', :with =>'Paris')
-    @session.fill_in('address1_street', :with =>'CDG')
+    @session.fill_in('address1_city', with: 'Paris')
+    @session.fill_in('address1_street', with: 'CDG')
 
     @session.fill_in('address2_city', with: 'Mikolaiv')
     @session.fill_in('address2_street', with: 'PGS')
 
     @session.click_button "awesome"
 
-    addresses=extract_results(@session)["addresses"]
+    addresses = extract_results(@session)["addresses"]
     expect(addresses.size).to eq(2)
 
     expect(addresses[0]["street"]).to eq('CDG')
@@ -439,13 +438,13 @@ Capybara::SpecHelper.spec '#click_button' do
 
   context "with :exact option" do
     it "should accept partial matches when false" do
-      @session.click_button('What an Awesome', exact:  false)
+      @session.click_button('What an Awesome', exact: false)
       expect(extract_results(@session)['first_name']).to eq('John')
     end
 
     it "should not accept partial matches when true" do
       expect do
-        @session.click_button('What an Awesome', exact:  true)
+        @session.click_button('What an Awesome', exact: true)
       end.to raise_error(Capybara::ElementNotFound)
     end
   end

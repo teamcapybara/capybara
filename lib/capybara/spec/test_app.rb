@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'sinatra/base'
 require 'tilt/erb'
 require 'rack'
@@ -21,7 +22,7 @@ class TestApp < Sinatra::Base
   # Also check lib/capybara/spec/views/*.erb for pages not listed here
 
   get '/' do
-    response.set_cookie('capybara', { value: 'root cookie', domain: request.host, path: request.path} )
+    response.set_cookie('capybara', value: 'root cookie', domain: request.host, path: request.path)
     'Hello world! <a href="with_html">Relative</a>'
   end
 
@@ -38,8 +39,8 @@ class TestApp < Sinatra::Base
   end
 
   get '/referer_base' do
-    '<a href="/get_referer">direct link</a>' +
-    '<a href="/redirect_to_get_referer">link via redirect</a>' +
+    '<a href="/get_referer">direct link</a>' \
+    '<a href="/redirect_to_get_referer">link via redirect</a>' \
     '<form action="/get_referer" method="get"><input type="submit"></form>'
   end
 
@@ -69,7 +70,7 @@ class TestApp < Sinatra::Base
   end
 
   get '/with-quotes' do
-    %q{"No," he said, "you can't do that."}
+    %q("No," he said, "you can't do that.")
   end
 
   get '/form/get' do
@@ -149,7 +150,7 @@ class TestApp < Sinatra::Base
 
   post '/form' do
     @@form_post_count += 1
-    '<pre id="results">' + params[:form].merge({"post_count" => @@form_post_count}).to_yaml + '</pre>'
+    '<pre id="results">' + params[:form].merge("post_count" => @@form_post_count).to_yaml + '</pre>'
   end
 
   post '/upload_empty' do
@@ -173,7 +174,7 @@ class TestApp < Sinatra::Base
 
   post '/upload_multiple' do
     begin
-      buffer = ["#{params[:form][:multiple_documents].size}"]
+      buffer = [params[:form][:multiple_documents].size.to_s]
       params[:form][:multiple_documents].each do |doc|
         buffer << "Content-type: #{doc[:type]}"
         buffer << "File content: #{doc[:tempfile].read}"
@@ -185,6 +186,4 @@ class TestApp < Sinatra::Base
   end
 end
 
-if __FILE__ == $0
-  Rack::Handler::Puma.run TestApp, Port: 8070
-end
+Rack::Handler::Puma.run TestApp, Port: 8070 if $PROGRAM_NAME == __FILE__

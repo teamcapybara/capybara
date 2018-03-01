@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec "#choose" do
   before do
     @session.visit('/form')
@@ -18,7 +19,7 @@ Capybara::SpecHelper.spec "#choose" do
 
   it "casts to string" do
     @session.choose("Both")
-    @session.click_button(:'awesome')
+    @session.click_button(:awesome)
     expect(extract_results(@session)['gender']).to eq('both')
   end
 
@@ -41,14 +42,14 @@ Capybara::SpecHelper.spec "#choose" do
 
   context "with :exact option" do
     it "should accept partial matches when false" do
-      @session.choose("Mal", exact:  false)
+      @session.choose("Mal", exact: false)
       @session.click_button('awesome')
       expect(extract_results(@session)['gender']).to eq('male')
     end
 
     it "should not accept partial matches when true" do
       expect do
-        @session.choose("Mal", exact:  true)
+        @session.choose("Mal", exact: true)
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
@@ -82,7 +83,7 @@ Capybara::SpecHelper.spec "#choose" do
       end
 
       it "should raise error if not allowed to click label" do
-        expect{@session.choose("party_democrat", allow_label_click: false)}.to raise_error(Capybara::ElementNotFound, 'Unable to find visible radio button "party_democrat" that is not disabled')
+        expect { @session.choose("party_democrat", allow_label_click: false) }.to raise_error(Capybara::ElementNotFound, 'Unable to find visible radio button "party_democrat" that is not disabled')
       end
     end
   end

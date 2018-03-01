@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#has_css?' do
   before do
     @session.visit('/with_html')
@@ -36,7 +37,7 @@ Capybara::SpecHelper.spec '#has_css?' do
     end
 
     it "should be false if the content occurs more or fewer times than range" do
-      expect(@session).not_to have_css("p", between: 6..11 )
+      expect(@session).not_to have_css("p", between: 6..11)
       expect(@session).not_to have_css("p a#foo", between: 4..7)
       expect(@session).not_to have_css("p a.doesnotexist", between: 3..8)
     end
@@ -162,7 +163,7 @@ Capybara::SpecHelper.spec '#has_no_css?' do
     end
 
     it "should be true if the content occurs more or fewer times than range" do
-      expect(@session).to have_no_css("p", between: 6..11 )
+      expect(@session).to have_no_css("p", between: 6..11)
       expect(@session).to have_no_css("p a#foo", between: 4..7)
       expect(@session).to have_no_css("p a.doesnotexist", between: 3..8)
     end

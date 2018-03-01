@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec "#all" do
   before do
     @session.visit('/with_html')
@@ -30,7 +31,7 @@ Capybara::SpecHelper.spec "#all" do
     @session.visit('/form')
     @xpath = Capybara::Selector.all[:fillable_field].call('Name')
     expect(@xpath).to be_a(::XPath::Union)
-    @result = @session.all(@xpath).map { |r| r.value }
+    @result = @session.all(@xpath).map(&:value)
     expect(@result).to include('Smith', 'John', 'John Smith')
   end
 
@@ -128,35 +129,35 @@ Capybara::SpecHelper.spec "#all" do
 
     context 'with multiple count filters' do
       it 'ignores other filters when :count is specified' do
-        o = {count: 4,
-             minimum: 5,
-             maximum: 0,
-             between: 0..3}
+        o = { count: 4,
+              minimum: 5,
+              maximum: 0,
+              between: 0..3 }
         expect { @session.all(:css, 'h1, p', o) }.to_not raise_error
       end
       context 'with no :count expectation' do
         it 'fails if :minimum is not met' do
-          o = {minimum: 5,
-               maximum: 4,
-               between: 2..7}
+          o = { minimum: 5,
+                maximum: 4,
+                between: 2..7 }
           expect { @session.all(:css, 'h1, p', o) }.to raise_error(Capybara::ExpectationNotMet)
         end
         it 'fails if :maximum is not met' do
-          o = {minimum: 0,
-               maximum: 0,
-               between: 2..7}
+          o = { minimum: 0,
+                maximum: 0,
+                between: 2..7 }
           expect { @session.all(:css, 'h1, p', o) }.to raise_error(Capybara::ExpectationNotMet)
         end
         it 'fails if :between is not met' do
-          o = {minimum: 0,
-               maximum: 4,
-               between: 0..3}
+          o = { minimum: 0,
+                maximum: 4,
+                between: 0..3 }
           expect { @session.all(:css, 'h1, p', o) }.to raise_error(Capybara::ExpectationNotMet)
         end
         it 'succeeds if all combineable expectations are met' do
-          o = {minimum: 0,
-               maximum: 4,
-               between: 2..7}
+          o = { minimum: 0,
+                maximum: 4,
+                between: 2..7 }
           expect { @session.all(:css, 'h1, p', o) }.to_not raise_error
         end
       end

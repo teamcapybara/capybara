@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'launchy'
 
 Capybara::SpecHelper.spec '#save_and_open_screenshot' do
@@ -13,8 +14,8 @@ Capybara::SpecHelper.spec '#save_and_open_screenshot' do
 
     @session.save_and_open_screenshot
 
-    expect(@session.driver).to have_received(:save_screenshot).
-      with(expected_file_regex, {})
+    expect(@session.driver).to have_received(:save_screenshot)
+      .with(expected_file_regex, {})
     expect(Launchy).to have_received(:open).with(expected_file_regex)
   end
 
@@ -25,8 +26,8 @@ Capybara::SpecHelper.spec '#save_and_open_screenshot' do
 
     @session.save_and_open_screenshot(custom_path)
 
-    expect(@session.driver).to have_received(:save_screenshot).
-      with(/#{custom_path}$/, {})
+    expect(@session.driver).to have_received(:save_screenshot)
+      .with(/#{custom_path}$/, {})
     expect(Launchy).to have_received(:open).with(/#{custom_path}$/)
   end
 

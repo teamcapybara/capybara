@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 require 'capybara/minitest'
 require 'capybara/minitest/spec'
@@ -39,7 +40,7 @@ class MinitestSpecTest < Minitest::Spec
     page.wont_have_xpath('.//input[@id="customer_email"]') { |el| el[:id] == "not_customer_email" }
     select = find(:select, 'form_title')
     select.must_have_xpath('.//option[@class="title"]')
-    select.must_have_xpath('.//option', count: 1) { |option| option[:class] != 'title' && !option.disabled?}
+    select.must_have_xpath('.//option', count: 1) { |option| option[:class] != 'title' && !option.disabled? }
     select.wont_have_xpath('.//input[@id="customer_email"]')
   end
 
@@ -129,7 +130,7 @@ RSpec.describe 'capybara/minitest/spec' do
     MinitestSpecTest.run reporter, {}
     reporter.report
     expect(output.string).to include("18 runs, 41 assertions, 1 failures, 0 errors, 0 skips")
-    #Make sure error messages are displayed
+    # Make sure error messages are displayed
     expect(output.string).to include('expected to find visible select box "non_existing_form_title" that is not disabled but there were no matches')
   end
 end

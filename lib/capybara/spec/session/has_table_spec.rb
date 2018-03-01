@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#has_table?' do
   before do
     @session.visit('/tables')
@@ -7,7 +8,7 @@ Capybara::SpecHelper.spec '#has_table?' do
   it "should be true if the table is on the page" do
     expect(@session).to have_table('Villain')
     expect(@session).to have_table('villain_table')
-    expect(@session).to have_table(:'villain_table')
+    expect(@session).to have_table(:villain_table)
   end
 
   it "should be false if the table is not on the page" do

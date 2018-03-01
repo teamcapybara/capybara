@@ -1,11 +1,12 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#has_text?' do
   it "should be true if the given text is on the page at least once" do
     @session.visit('/with_html')
     expect(@session).to have_text('est')
     expect(@session).to have_text('Lorem')
     expect(@session).to have_text('Redirect')
-    expect(@session).to have_text(:'Redirect')
+    expect(@session).to have_text(:Redirect)
   end
 
   it "should be true if scoped to an element which has the text" do
@@ -51,12 +52,12 @@ Capybara::SpecHelper.spec '#has_text?' do
 
   it 'should handle double quotes in the text' do
     @session.visit('/with-quotes')
-    expect(@session).to have_text(%q{"No," he said})
+    expect(@session).to have_text('"No," he said')
   end
 
   it 'should handle mixed single and double quotes in the text' do
     @session.visit('/with-quotes')
-    expect(@session).to have_text(%q{"you can't do that."})
+    expect(@session).to have_text(%q("you can't do that."))
   end
 
   it 'should be false if text is in the title tag in the head' do
@@ -265,12 +266,12 @@ Capybara::SpecHelper.spec '#has_no_text?' do
 
   it 'should handle double quotes in the text' do
     @session.visit('/with-quotes')
-    expect(@session).not_to have_no_text(%q{"No," he said})
+    expect(@session).not_to have_no_text('"No," he said')
   end
 
   it 'should handle mixed single and double quotes in the text' do
     @session.visit('/with-quotes')
-    expect(@session).not_to have_no_text(%q{"you can't do that."})
+    expect(@session).not_to have_no_text(%q("you can't do that."))
   end
 
   it 'should be true if text is in the title tag in the head' do

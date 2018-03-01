@@ -305,7 +305,6 @@ module Capybara
     end
     alias_method :have_content, :have_text
 
-
     def have_title(title, **options)
       HaveTitle.new(title, options)
     end
@@ -358,7 +357,7 @@ module Capybara
       HaveSelector.new(:table, locator, options, &optional_filter_block)
     end
 
-    %w(selector css xpath text title current_path link button field checked_field unchecked_field select table).each do |matcher_type|
+    %w[selector css xpath text title current_path link button field checked_field unchecked_field select table].each do |matcher_type|
       define_method "have_no_#{matcher_type}" do |*args, &optional_filter_block|
         NegatedMatcher.new(send("have_#{matcher_type}", *args, &optional_filter_block))
       end

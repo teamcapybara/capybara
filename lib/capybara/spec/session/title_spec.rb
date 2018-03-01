@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-Capybara::SpecHelper.spec '#title' do
 
+Capybara::SpecHelper.spec '#title' do
   it "should get the title of the page" do
     @session.visit('/with_title')
     expect(@session.title).to eq('Test Title')

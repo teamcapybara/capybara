@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec "#check" do
   before do
     @session.visit('/form')
@@ -18,7 +19,7 @@ Capybara::SpecHelper.spec "#check" do
   it "should trigger associated events", requires: [:js] do
     @session.visit('/with_js')
     @session.check('checkbox_with_event')
-    expect(@session).to have_css('#checkbox_event_triggered');
+    expect(@session).to have_css('#checkbox_event_triggered')
   end
 
   describe "checking" do
@@ -62,7 +63,7 @@ Capybara::SpecHelper.spec "#check" do
   end
 
   it "casts to string" do
-    @session.check(:"form_pets_cat")
+    @session.check(:form_pets_cat)
     @session.click_button('awesome')
     expect(extract_results(@session)['pets']).to include('dog', 'cat', 'hamster')
   end
@@ -86,14 +87,14 @@ Capybara::SpecHelper.spec "#check" do
 
   context "with :exact option" do
     it "should accept partial matches when false" do
-      @session.check('Ham', exact:  false)
+      @session.check('Ham', exact: false)
       @session.click_button('awesome')
       expect(extract_results(@session)['pets']).to include('hamster')
     end
 
     it "should not accept partial matches when true" do
       expect do
-        @session.check('Ham', exact:  true)
+        @session.check('Ham', exact: true)
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
@@ -146,7 +147,7 @@ Capybara::SpecHelper.spec "#check" do
       end
 
       it "should raise error if not allowed to click label" do
-        expect{@session.check('form_cars_mclaren', allow_label_click: false)}.to raise_error(Capybara::ElementNotFound, 'Unable to find visible checkbox "form_cars_mclaren" that is not disabled')
+        expect { @session.check('form_cars_mclaren', allow_label_click: false) }.to raise_error(Capybara::ElementNotFound, 'Unable to find visible checkbox "form_cars_mclaren" that is not disabled')
       end
     end
 
@@ -158,7 +159,7 @@ Capybara::SpecHelper.spec "#check" do
       end
 
       it "should raise error if checkbox not visible" do
-        expect{@session.check('form_cars_mclaren')}.to raise_error(Capybara::ElementNotFound, 'Unable to find visible checkbox "form_cars_mclaren" that is not disabled')
+        expect { @session.check('form_cars_mclaren') }.to raise_error(Capybara::ElementNotFound, 'Unable to find visible checkbox "form_cars_mclaren" that is not disabled')
       end
 
       context "with allow_label_click == true" do

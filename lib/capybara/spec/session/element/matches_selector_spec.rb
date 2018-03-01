@@ -52,10 +52,10 @@ Capybara::SpecHelper.spec '#match_selector?' do
   it 'should accept a custom filter block' do
     @session.visit('/form')
     cbox = @session.find(:css, '#form_pets_dog')
-    expect(cbox).to match_selector(:checkbox){ |node| node[:id] == "form_pets_dog"}
-    expect(cbox).not_to match_selector(:checkbox){ |node| node[:id] != "form_pets_dog"}
-    expect(cbox.matches_selector?(:checkbox){ |node| node[:id] == "form_pets_dog"}).to be true
-    expect(cbox.matches_selector?(:checkbox){ |node| node[:id] != "form_pets_dog"}).to be false
+    expect(cbox).to match_selector(:checkbox) { |node| node[:id] == "form_pets_dog" }
+    expect(cbox).not_to match_selector(:checkbox) { |node| node[:id] != "form_pets_dog" }
+    expect(cbox.matches_selector?(:checkbox) { |node| node[:id] == "form_pets_dog" }).to be true
+    expect(cbox.matches_selector?(:checkbox) { |node| node[:id] != "form_pets_dog" }).to be false
   end
 end
 

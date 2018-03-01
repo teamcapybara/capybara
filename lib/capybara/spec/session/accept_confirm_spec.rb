@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#accept_confirm', requires: [:modals] do
   before do
     @session.visit('/with_js')
@@ -19,13 +20,13 @@ Capybara::SpecHelper.spec '#accept_confirm', requires: [:modals] do
   end
 
   it "should work with nested modals" do
-    expect {
+    expect do
       @session.dismiss_confirm 'Are you really sure?' do
         @session.accept_confirm 'Are you sure?' do
           @session.click_link('Open check twice')
         end
       end
-    }.not_to raise_error
+    end.not_to raise_error
     expect(@session).to have_xpath("//a[@id='open-twice' and @confirmed='false']")
   end
 end

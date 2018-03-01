@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
   before(:each) do
     @window = @session.current_window
@@ -90,7 +91,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
       @session.evaluate_script("[window.outerWidth || window.innerWidth, window.outerHeight || window.innerHeight]")
     end
 
-    it 'should return size of whole window', requires: [:windows, :js] do
+    it 'should return size of whole window', requires: %i[windows js] do
       expect(@session.current_window.size).to eq win_size
     end
 
@@ -108,15 +109,14 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
   end
 
   describe '#resize_to' do
-    it 'should be able to resize window', requires: [:windows, :js] do
+    it 'should be able to resize window', requires: %i[windows js] do
       width, height = @session.current_window.size
-      @session.current_window.resize_to(width-100, height-100)
+      @session.current_window.resize_to(width - 100, height - 100)
       sleep 1
-      expect(@session.current_window.size).to eq([width-100, height-100])
+      expect(@session.current_window.size).to eq([width - 100, height - 100])
     end
 
-    it 'should stay on current window if invoked not for current window', requires: [:windows, :js] do
-
+    it 'should stay on current window if invoked not for current window', requires: %i[windows js] do
       @other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
@@ -125,35 +125,35 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
 
       # #size returns values larger than availWidth, availHeight with Chromedriver
       @session.within_window(@other_window) do
-        expect(@session.current_window.size).to eq([400,300])
+        expect(@session.current_window.size).to eq([400, 300])
         # expect(@session.evaluate_script("[window.outerWidth, window.outerHeight]")).to eq([400,300])
       end
     end
   end
 
   describe '#maximize' do
-    it 'should be able to maximize window', requires: [:windows, :js] do
+    it 'should be able to maximize window', requires: %i[windows js] do
       start_width, start_height = 400, 300
       @session.current_window.resize_to(start_width, start_height)
       sleep 0.5
 
       @session.current_window.maximize
-      sleep 0.5  # The timing on maximize is finicky on Travis -- wait a bit for maximize to occur
+      sleep 0.5 # The timing on maximize is finicky on Travis -- wait a bit for maximize to occur
 
       max_width, max_height = @session.current_window.size
 
-      #maximize behavior is window manage dependant, so just make sure it increases in size
+      # maximize behavior is window manage dependant, so just make sure it increases in size
       expect(max_width).to be > start_width
       expect(max_height).to be > start_height
     end
 
-    it 'should stay on current window if invoked not for current window', requires: [:windows, :js] do
+    it 'should stay on current window if invoked not for current window', requires: %i[windows js] do
       cur_window_size = @session.current_window.size
       @other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
 
-      @other_window.resize_to(400,300)
+      @other_window.resize_to(400, 300)
       sleep 0.5
       @other_window.maximize
       sleep 0.5 # The timing on maximize is finicky on Travis -- wait a bit for maximize to occur

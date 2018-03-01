@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec "#uncheck" do
   before do
     @session.visit('/form')
@@ -19,7 +20,7 @@ Capybara::SpecHelper.spec "#uncheck" do
   end
 
   it "casts to string" do
-    @session.uncheck(:"form_pets_hamster")
+    @session.uncheck(:form_pets_hamster)
     @session.click_button('awesome')
     expect(extract_results(@session)['pets']).to include('dog')
     expect(extract_results(@session)['pets']).not_to include('hamster')
@@ -73,7 +74,7 @@ Capybara::SpecHelper.spec "#uncheck" do
       end
 
       it "should raise error if not allowed to click label" do
-        expect{@session.uncheck('form_cars_jaguar', allow_label_click: false)}.to raise_error(Capybara::ElementNotFound, 'Unable to find visible checkbox "form_cars_jaguar" that is not disabled')
+        expect { @session.uncheck('form_cars_jaguar', allow_label_click: false) }.to raise_error(Capybara::ElementNotFound, 'Unable to find visible checkbox "form_cars_jaguar" that is not disabled')
       end
     end
   end

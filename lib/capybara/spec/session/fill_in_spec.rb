@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec "#fill_in" do
   before do
     @session.visit('/form')
@@ -113,7 +114,7 @@ Capybara::SpecHelper.spec "#fill_in" do
   end
 
   it "should throw an exception if a hash containing 'with' is not provided" do
-    expect {@session.fill_in 'Name'}.to raise_error(ArgumentError, /with/)
+    expect { @session.fill_in 'Name' }.to raise_error(ArgumentError, /with/)
   end
 
   it "should wait for asynchronous load", requires: [:js] do
@@ -123,13 +124,13 @@ Capybara::SpecHelper.spec "#fill_in" do
   end
 
   it "casts to string" do
-    @session.fill_in(:'form_first_name', with: :'Harry')
+    @session.fill_in(:form_first_name, with: :Harry)
     @session.click_button('awesome')
     expect(extract_results(@session)['first_name']).to eq('Harry')
   end
 
   it "casts to string if field has maxlength" do
-    @session.fill_in(:'form_zipcode', with: 1234567)
+    @session.fill_in(:form_zipcode, with: 1234567)
     @session.click_button('awesome')
     expect(extract_results(@session)['zipcode']).to eq('12345')
   end
@@ -182,14 +183,14 @@ Capybara::SpecHelper.spec "#fill_in" do
 
   context "with :exact option" do
     it "should accept partial matches when false" do
-      @session.fill_in("Explanation", with: "Dude", exact:  false)
+      @session.fill_in("Explanation", with: "Dude", exact: false)
       @session.click_button("awesome")
       expect(extract_results(@session)["name_explanation"]).to eq("Dude")
     end
 
     it "should not accept partial matches when true" do
       expect do
-        @session.fill_in("Explanation", with: "Dude", exact:  true)
+        @session.fill_in("Explanation", with: "Dude", exact: true)
       end.to raise_error(Capybara::ElementNotFound)
     end
   end

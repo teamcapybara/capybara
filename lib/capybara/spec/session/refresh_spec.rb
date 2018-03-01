@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#refresh' do
   it "reload the page" do
     @session.visit('/form')
@@ -21,9 +22,9 @@ Capybara::SpecHelper.spec '#refresh' do
     @session.visit('/form')
     @session.select('Sweden', from: 'form_region')
     @session.click_button('awesome')
-    expect {
+    expect do
       @session.refresh
       sleep 2
-    }.to change{ extract_results(@session)['post_count'] }.by(1)
+    end.to change { extract_results(@session)['post_count'] }.by(1)
   end
 end

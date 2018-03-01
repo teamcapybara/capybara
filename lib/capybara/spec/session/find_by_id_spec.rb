@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#find_by_id' do
   before do
     @session.visit('/with_html')
@@ -9,7 +10,7 @@ Capybara::SpecHelper.spec '#find_by_id' do
   end
 
   it "casts to string" do
-    expect(@session.find_by_id(:'red').tag_name).to eq('a')
+    expect(@session.find_by_id(:red).tag_name).to eq('a')
   end
 
   it "should raise error if no element with id is found" do

@@ -2,8 +2,6 @@ AllCops:
   DisabledByDefault: false
   TargetRubyVersion: 2.2.2
   Exclude:
-      - 'spec/**/*'
-      - 'lib/capybara/spec/**/*'
       - 'capybara.gemspec'
 
 #################### Lint ################################
@@ -12,6 +10,11 @@ Metrics/LineLength:
   Description: 'Limit lines to 80 characters.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#80-character-limits'
   Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - 'lib/capybara/spec/**/*'
 
 Metrics/AbcSize:
   Enabled: false
@@ -103,6 +106,16 @@ Style/ClassAndModuleChildren:
 Style/ModuleFunction:
   Enabled: false
 
+Style/NumericLiterals:
+  Exclude:
+    - 'lib/capybara/spec/**/*'
+    - 'spec/**/*'
+
+Style/MultilineIfModifier:
+  Exclude:
+    - 'lib/capybara/spec/**/*'
+    - 'spec/**/*'
+
 Layout/EmptyLineBetweenDefs:
   AllowAdjacentOneLineDefs: true
 
@@ -111,3 +124,11 @@ Layout/AccessModifierIndentation:
 
 Layout/CaseIndentation:
   EnforcedStyle: end
+
+Layout/IndentArray:
+  EnforcedStyle: consistent
+
+Security/YAMLLoad:
+  Exclude:
+    - 'lib/capybara/spec/**/*'
+    - 'spec/**/*'

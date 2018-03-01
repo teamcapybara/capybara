@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#visit' do
   it "should fetch a response from the driver with a relative url" do
     @session.visit('/')
@@ -48,7 +49,6 @@ Capybara::SpecHelper.spec '#visit' do
   end
 
   context "when Capybara.always_include_port is true" do
-
     let(:root_uri) do
       @session.visit('/')
       URI.parse(@session.current_url)
@@ -121,7 +121,6 @@ Capybara::SpecHelper.spec '#visit' do
       session.visit("http://www.google.com:99")
     end
   end
-
 
   context "without a server", requires: [:server] do
     it "should respect `app_host`" do
@@ -196,5 +195,4 @@ Capybara::SpecHelper.spec '#visit' do
     @session.visit('/get_cookie')
     expect(@session).to have_content('root cookie')
   end
-
 end

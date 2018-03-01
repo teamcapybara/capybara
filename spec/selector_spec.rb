@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Capybara do
@@ -56,7 +57,7 @@ RSpec.describe Capybara do
       it "can set default visiblity" do
         Capybara.add_selector :hidden_field do
           visible :hidden
-          css { |sel| 'input[type="hidden"]' }
+          css { |_sel| 'input[type="hidden"]' }
         end
 
         expect(string).to have_no_css('input[type="hidden"]')
@@ -77,7 +78,7 @@ RSpec.describe Capybara do
 
       it "doesn't change existing filters" do
         Capybara.modify_selector :custom_selector do
-          css { |css_class| "p.#{css_class}"}
+          css { |css_class| "p.#{css_class}" }
         end
         expect(string).to have_selector(:custom_selector, 'b', count: 1)
         expect(string).to have_selector(:custom_selector, 'b', not_empty: false, count: 1)
@@ -92,7 +93,7 @@ RSpec.describe Capybara do
             field: ".//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')]",
             fieldset: ".//fieldset",
             link: ".//a[./@href]",
-            link_or_button: ".//a[./@href] | .//input[./@type = 'submit' or ./@type = 'reset' or ./@type = 'image' or ./@type = 'button'] | .//button" ,
+            link_or_button: ".//a[./@href] | .//input[./@type = 'submit' or ./@type = 'reset' or ./@type = 'image' or ./@type = 'button'] | .//button",
             fillable_field: ".//*[self::input | self::textarea][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'radio' or ./@type = 'checkbox' or ./@type = 'hidden' or ./@type = 'file')]",
             radio_button: ".//input[./@type = 'radio']",
             checkbox: ".//input[./@type = 'checkbox']",
@@ -102,7 +103,7 @@ RSpec.describe Capybara do
             table: ".//table"
           }
           selectors.each do |selector, xpath|
-            results = string.all(selector,nil).to_a.map(&:native)
+            results = string.all(selector, nil).to_a.map(&:native)
             expect(results.size).to be > 0
             expect(results).to eq string.all(:xpath, xpath).to_a.map(&:native)
           end

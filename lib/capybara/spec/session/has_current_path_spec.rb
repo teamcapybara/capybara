@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#has_current_path?' do
   before do
     @session.visit('/with_js')
@@ -83,14 +84,14 @@ Capybara::SpecHelper.spec '#has_current_path?' do
     allow_any_instance_of(Capybara::Session).to receive(:current_url) { nil }
 
     # Without ignore_query option
-    expect {
+    expect do
       expect(@session).to have_current_path(nil)
-    }.not_to raise_exception
+    end.not_to raise_exception
 
     # With ignore_query option
-    expect {
+    expect do
       expect(@session).to have_current_path(nil, ignore_query: true)
-    }.not_to raise_exception
+    end.not_to raise_exception
   end
 end
 
@@ -123,13 +124,13 @@ Capybara::SpecHelper.spec '#has_no_current_path?' do
     allow_any_instance_of(Capybara::Session).to receive(:current_url) { nil }
 
     # Without ignore_query option
-    expect {
+    expect do
       expect(@session).not_to have_current_path('/with_js')
-    }. not_to raise_exception
+    end. not_to raise_exception
 
     # With ignore_query option
-    expect {
+    expect do
       expect(@session).not_to have_current_path('/with_js', ignore_query: true)
-    }. not_to raise_exception
+    end. not_to raise_exception
   end
 end

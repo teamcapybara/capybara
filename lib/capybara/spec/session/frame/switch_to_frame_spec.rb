@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#switch_to_frame', requires: [:frames] do
   before(:each) do
     @session.visit('/within_frames')
@@ -47,7 +48,7 @@ Capybara::SpecHelper.spec '#switch_to_frame', requires: [:frames] do
     end
   end
 
-  it "works if the frame is closed", requires: [:frames, :js] do
+  it "works if the frame is closed", requires: %i[frames js] do
     frame = @session.find(:frame, 'parentFrame')
     @session.switch_to_frame frame
     frame = @session.find(:frame, 'childFrame')

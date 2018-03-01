@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec "#to_capybara_node" do
   before do
     @session.visit('/with_html')
@@ -25,11 +26,11 @@ Capybara::SpecHelper.spec "#to_capybara_node" do
 
   it "should generate correct errors" do
     para = NodeWrapper.new(@session.find(:css, '#first'))
-    expect {
+    expect do
       expect(para).to have_text("Header Class Test One")
-    }.to raise_error /^expected to find text "Header Class Test One" in "Lore/
-    expect {
+    end.to raise_error(/^expected to find text "Header Class Test One" in "Lore/)
+    expect do
       expect(para).to have_css('#second')
-    }.to raise_error /^expected to find visible css "#second" within #<Capybara::Node::Element/
+    end.to raise_error(/^expected to find visible css "#second" within #<Capybara::Node::Element/)
   end
 end

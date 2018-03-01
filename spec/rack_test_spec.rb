@@ -1,20 +1,21 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 module TestSessions
   RackTest = Capybara::Session.new(:rack_test, TestApp)
 end
 
-Capybara::SpecHelper.run_specs TestSessions::RackTest, "RackTest", capybara_skip: [
-  :js,
-  :modals,
-  :screenshot,
-  :frames,
-  :windows,
-  :send_keys,
-  :server,
-  :hover,
-  :about_scheme,
+Capybara::SpecHelper.run_specs TestSessions::RackTest, "RackTest", capybara_skip: %i[
+  js
+  modals
+  screenshot
+  frames
+  windows
+  send_keys
+  server
+  hover
+  about_scheme
 ]
 
 RSpec.describe Capybara::Session do
@@ -133,27 +134,27 @@ RSpec.describe Capybara::RackTest::Driver do
 
   describe ':headers option' do
     it 'should always set headers' do
-      @driver = Capybara::RackTest::Driver.new(TestApp, headers: {'HTTP_FOO' => 'foobar'})
+      @driver = Capybara::RackTest::Driver.new(TestApp, headers: { 'HTTP_FOO' => 'foobar' })
       @driver.visit('/get_header')
       expect(@driver.html).to include('foobar')
     end
 
     it 'should keep headers on link clicks' do
-      @driver = Capybara::RackTest::Driver.new(TestApp, headers: {'HTTP_FOO' => 'foobar'})
+      @driver = Capybara::RackTest::Driver.new(TestApp, headers: { 'HTTP_FOO' => 'foobar' })
       @driver.visit('/header_links')
       @driver.find_xpath('.//a').first.click
       expect(@driver.html).to include('foobar')
     end
 
     it 'should keep headers on form submit' do
-      @driver = Capybara::RackTest::Driver.new(TestApp, headers: {'HTTP_FOO' => 'foobar'})
+      @driver = Capybara::RackTest::Driver.new(TestApp, headers: { 'HTTP_FOO' => 'foobar' })
       @driver.visit('/header_links')
       @driver.find_xpath('.//input').first.click
       expect(@driver.html).to include('foobar')
     end
 
     it 'should keep headers on redirects' do
-      @driver = Capybara::RackTest::Driver.new(TestApp, headers: {'HTTP_FOO' => 'foobar'})
+      @driver = Capybara::RackTest::Driver.new(TestApp, headers: { 'HTTP_FOO' => 'foobar' })
       @driver.visit('/get_header_via_redirect')
       expect(@driver.html).to include('foobar')
     end
@@ -219,11 +220,10 @@ module CSSHandlerIncludeTester
     raise 'should never be called'
   end
 end
-include CSSHandlerIncludeTester
+include CSSHandlerIncludeTester # rubocop:disable Style/MixinUsage
 
-RSpec.describe  Capybara::RackTest::CSSHandlers do
+RSpec.describe Capybara::RackTest::CSSHandlers do
   it "should not be extended by global includes" do
     expect(Capybara::RackTest::CSSHandlers.new).not_to respond_to(:dont_extend_css_handler)
   end
 end
-

@@ -31,6 +31,6 @@ Capybara::SpecHelper.spec '#assert_matches_selector' do
 
   it "should accept a filter block" do
     @element.assert_matches_selector(:css, 'span') { |el| el[:class] == "number" }
-    @element.assert_not_matches_selector(:css,'span') { |el| el[:class] == "not_number" }
+    @element.assert_not_matches_selector(:css, 'span') { |el| el[:class] == "not_number" }
   end
 end

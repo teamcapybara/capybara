@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 require 'capybara/dsl'
 
@@ -7,13 +8,13 @@ RSpec.describe Capybara::SessionConfig do
     it "defaults to global session options" do
       Capybara.threadsafe = true
       session = Capybara::Session.new(:rack_test, TestApp)
-      [:default_host, :app_host, :always_include_port, :run_server,
-       :default_selector, :default_max_wait_time, :ignore_hidden_elements,
-       :automatic_reload, :match, :exact, :raise_server_errors, :visible_text_only,
-       :automatic_label_click, :enable_aria_label, :save_path,
-       :asset_host].each do |m|
-         expect(session.config.public_send(m)).to eq Capybara.public_send(m)
-       end
+      %i[default_host app_host always_include_port run_server
+         default_selector default_max_wait_time ignore_hidden_elements
+         automatic_reload match exact raise_server_errors visible_text_only
+         automatic_label_click enable_aria_label save_path
+         asset_host].each do |m|
+           expect(session.config.public_send(m)).to eq Capybara.public_send(m)
+         end
     end
 
     it "doesn't change global session when changed" do

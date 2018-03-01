@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Capybara do
@@ -28,7 +29,7 @@ RSpec.describe Capybara do
   describe '.register_server' do
     it "should add a new server" do
       handler = double("handler")
-      Capybara.register_server :blob do |app, port, host|
+      Capybara.register_server :blob do |_app, _port, _host|
         handler.run
       end
 
@@ -48,7 +49,7 @@ RSpec.describe Capybara do
     end
 
     it "should return a custom server proc" do
-      server = lambda {|app, port|}
+      server = ->(_app, _port) {}
       Capybara.register_server :custom, &server
       Capybara.server = :custom
       expect(Capybara.server).to eq(server)
@@ -117,9 +118,9 @@ end
 RSpec.describe Capybara::Session do
   context 'with nonexistent driver' do
     it "should raise an error" do
-      expect {
+      expect do
         Capybara::Session.new(:quox, TestApp).driver
-      }.to raise_error(Capybara::DriverNotFoundError)
+      end.to raise_error(Capybara::DriverNotFoundError)
     end
   end
 end

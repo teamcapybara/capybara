@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec "#unselect" do
   before do
     @session.visit('/form')
@@ -40,7 +41,7 @@ Capybara::SpecHelper.spec "#unselect" do
     end
 
     it "casts to string" do
-      @session.unselect(:"Briefs", from: :'Underwear')
+      @session.unselect(:Briefs, from: :Underwear)
       @session.click_button('awesome')
       expect(extract_results(@session)['underwear']).to include('Commando', 'Boxerbriefs')
       expect(extract_results(@session)['underwear']).not_to include('Briefs')
@@ -74,19 +75,19 @@ Capybara::SpecHelper.spec "#unselect" do
   context "with :exact option" do
     context "when `false`" do
       it "can match select box approximately" do
-        @session.unselect("Boxerbriefs", from: "Under", exact:  false)
+        @session.unselect("Boxerbriefs", from: "Under", exact: false)
         @session.click_button("awesome")
         expect(extract_results(@session)["underwear"]).not_to include("Boxerbriefs")
       end
 
       it "can match option approximately" do
-        @session.unselect("Boxerbr", from: "Underwear", exact:  false)
+        @session.unselect("Boxerbr", from: "Underwear", exact: false)
         @session.click_button("awesome")
         expect(extract_results(@session)["underwear"]).not_to include("Boxerbriefs")
       end
 
       it "can match option approximately when :from not given" do
-        @session.unselect("Boxerbr", exact:  false)
+        @session.unselect("Boxerbr", exact: false)
         @session.click_button("awesome")
         expect(extract_results(@session)["underwear"]).not_to include("Boxerbriefs")
       end
@@ -107,7 +108,7 @@ Capybara::SpecHelper.spec "#unselect" do
 
       it "can match option approximately when :from not given" do
         expect do
-          @session.unselect("Boxerbr", exact:  true)
+          @session.unselect("Boxerbr", exact: true)
         end.to raise_error(Capybara::ElementNotFound)
       end
     end

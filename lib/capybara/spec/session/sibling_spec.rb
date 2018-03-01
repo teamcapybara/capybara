@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#sibling' do
   before do
     @session.visit('/with_html')
@@ -41,7 +42,6 @@ Capybara::SpecHelper.spec '#sibling' do
       expect(el.sibling(:data_attribute, 'post').text).to eq('Post Sibling')
     end
   end
-
 
   it "should raise ElementNotFound with a useful default message if nothing was found" do
     el = @session.find(:css, '#child')

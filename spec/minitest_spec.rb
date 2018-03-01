@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 require 'capybara/minitest'
 
@@ -37,7 +38,7 @@ class MinitestTest < Minitest::Test
     assert_xpath('.//select[@id="form_title"]')
     assert_xpath('.//select', count: 1) { |el| el[:id] == "form_title" }
     assert_no_xpath('.//select[@id="not_form_title"]')
-    assert_no_xpath('.//select') { |el| el[:id] == "not_form_title"}
+    assert_no_xpath('.//select') { |el| el[:id] == "not_form_title" }
     refute_xpath('.//select[@id="not_form_title"]')
   end
 
@@ -49,13 +50,13 @@ class MinitestTest < Minitest::Test
   def test_assert_link
     visit('/with_html')
     assert_link('A link')
-    assert_link(count: 1){ |el| el.text == 'A link'}
+    assert_link(count: 1) { |el| el.text == 'A link' }
     assert_no_link('Not on page')
   end
 
   def test_assert_button
     assert_button('fresh_btn')
-    assert_button(count: 1){ |el| el[:id] == 'fresh_btn' }
+    assert_button(count: 1) { |el| el[:id] == 'fresh_btn' }
     assert_no_button('not_btn')
   end
 

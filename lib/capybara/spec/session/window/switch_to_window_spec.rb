@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#switch_to_window', requires: [:windows] do
   before(:each) do
     @window = @session.current_window
@@ -121,7 +122,7 @@ Capybara::SpecHelper.spec '#switch_to_window', requires: [:windows] do
   it "should wait for window to appear" do
     @session.find(:css, '#openWindowWithTimeout').click
     expect do
-      @session.switch_to_window(wait: 5) { @session.title == 'Title of the first popup'}
+      @session.switch_to_window(wait: 5) { @session.title == 'Title of the first popup' }
     end.not_to raise_error
   end
 end

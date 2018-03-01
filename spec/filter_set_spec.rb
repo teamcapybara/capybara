@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Capybara::Selector::FilterSet do
@@ -8,8 +9,8 @@ RSpec.describe Capybara::Selector::FilterSet do
 
   it "allows node filters" do
     fs = Capybara::Selector::FilterSet.add(:test) do
-      filter(:node_test, :boolean) { |node, value| true }
-      expression_filter(:expression_test, :boolean) { |expr, value| true }
+      filter(:node_test, :boolean) { |_node, _value| true }
+      expression_filter(:expression_test, :boolean) { |_expr, _value| true }
     end
 
     expect(fs.node_filters.keys).to include(:node_test)
@@ -18,8 +19,8 @@ RSpec.describe Capybara::Selector::FilterSet do
 
   it "allows expression filters" do
     fs = Capybara::Selector::FilterSet.add(:test) do
-      filter(:node_test, :boolean) { |node, value| true }
-      expression_filter(:expression_test, :boolean) { |expr, value| true }
+      filter(:node_test, :boolean) { |_node, _value| true }
+      expression_filter(:expression_test, :boolean) { |_expr, _value| true }
     end
 
     expect(fs.expression_filters.keys).to include(:expression_test)

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#dismiss_confirm', requires: [:modals] do
   before do
     @session.visit('/with_js')
@@ -25,7 +26,6 @@ Capybara::SpecHelper.spec '#dismiss_confirm', requires: [:modals] do
       end
     end.to raise_error(Capybara::ModalNotFound)
   end
-
 
   it "should return the message presented" do
     message = @session.dismiss_confirm do

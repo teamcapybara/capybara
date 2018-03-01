@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#click_link' do
   before do
     @session.visit('/with_html')
@@ -11,7 +12,7 @@ Capybara::SpecHelper.spec '#click_link' do
   end
 
   it "casts to string" do
-    @session.click_link(:'foo')
+    @session.click_link(:foo)
     expect(@session).to have_content('Another World')
   end
 
@@ -85,7 +86,7 @@ Capybara::SpecHelper.spec '#click_link' do
     end
   end
 
-  context "with a regex :href option given"  do
+  context "with a regex :href option given" do
     it "should find a link matching an all-matching regex pattern" do
       @session.click_link('labore', href: /.+/)
       expect(@session).to have_content('Bar')
@@ -180,13 +181,13 @@ Capybara::SpecHelper.spec '#click_link' do
 
   context "with :exact option" do
     it "should accept partial matches when false" do
-      @session.click_link('abo', exact:  false)
+      @session.click_link('abo', exact: false)
       expect(@session).to have_content('Bar')
     end
 
     it "should not accept partial matches when true" do
       expect do
-        @session.click_link('abo', exact:  true)
+        @session.click_link('abo', exact: true)
       end.to raise_error(Capybara::ElementNotFound)
     end
   end

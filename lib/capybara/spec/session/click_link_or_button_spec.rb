@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#click_link_or_button' do
   it "should click on a link" do
     @session.visit('/with_html')
@@ -32,7 +33,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
 
   it "casts to string" do
     @session.visit('/form')
-    @session.click_link_or_button(:'awe123')
+    @session.click_link_or_button(:awe123)
     expect(extract_results(@session)['first_name']).to eq('John')
   end
 
@@ -40,7 +41,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
     context "when `false`" do
       it "clicks on approximately matching link" do
         @session.visit('/with_html')
-        @session.click_link_or_button('abore', exact:  false)
+        @session.click_link_or_button('abore', exact: false)
         expect(@session).to have_content('Bar')
       end
 
@@ -56,7 +57,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
         @session.visit('/with_html')
         msg = "Unable to find visible link or button \"abore\""
         expect do
-          @session.click_link_or_button('abore', exact:  true)
+          @session.click_link_or_button('abore', exact: true)
         end.to raise_error(Capybara::ElementNotFound, msg)
       end
 
@@ -65,7 +66,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
         msg = "Unable to find visible link or button \"awe\""
 
         expect do
-          @session.click_link_or_button('awe', exact:  true)
+          @session.click_link_or_button('awe', exact: true)
         end.to raise_error(Capybara::ElementNotFound, msg)
       end
     end

@@ -105,21 +105,21 @@ Capybara::SpecHelper.spec "node" do
     context "with a contenteditable element", requires: [:js] do
       it 'should allow me to change the contents' do
         @session.visit('/with_js')
-        @session.find(:css,'#existing_content_editable').set('WYSIWYG')
-        expect(@session.find(:css,'#existing_content_editable').text).to eq('WYSIWYG')
+        @session.find(:css, '#existing_content_editable').set('WYSIWYG')
+        expect(@session.find(:css, '#existing_content_editable').text).to eq('WYSIWYG')
       end
 
       it 'should allow me to set the contents' do
         @session.visit('/with_js')
-        @session.find(:css,'#blank_content_editable').set('WYSIWYG')
-        expect(@session.find(:css,'#blank_content_editable').text).to eq('WYSIWYG')
+        @session.find(:css, '#blank_content_editable').set('WYSIWYG')
+        expect(@session.find(:css, '#blank_content_editable').text).to eq('WYSIWYG')
       end
 
       it 'should allow me to change the contents of a child element' do
         @session.visit('/with_js')
-        @session.find(:css,'#existing_content_editable_child').set('WYSIWYG')
-        expect(@session.find(:css,'#existing_content_editable_child').text).to eq('WYSIWYG')
-        expect(@session.find(:css,'#existing_content_editable_child_parent').text).to eq('Some content WYSIWYG')
+        @session.find(:css, '#existing_content_editable_child').set('WYSIWYG')
+        expect(@session.find(:css, '#existing_content_editable_child').text).to eq('WYSIWYG')
+        expect(@session.find(:css, '#existing_content_editable_child_parent').text).to eq('Some content WYSIWYG')
       end
     end
   end
@@ -238,9 +238,9 @@ Capybara::SpecHelper.spec "node" do
 
   describe "#==" do
     it "preserve object identity" do
-      expect(@session.find('//h1') == @session.find('//h1')).to be true
-      expect(@session.find('//h1') === @session.find('//h1')).to be true
-      expect(@session.find('//h1').eql? @session.find('//h1')).to be false
+      expect(@session.find('//h1') == @session.find('//h1')).to be true # rubocop:disable Lint/UselessComparison
+      expect(@session.find('//h1') === @session.find('//h1')).to be true # rubocop:disable Style/CaseEquality, Lint/UselessComparison
+      expect(@session.find('//h1').eql?(@session.find('//h1'))).to be false
     end
 
     it "returns false for unrelated object" do
@@ -261,7 +261,7 @@ Capybara::SpecHelper.spec "node" do
     end
   end
 
-  describe "#trigger", requires: [:js, :trigger] do
+  describe "#trigger", requires: %i[js trigger] do
     it "should allow triggering of custom JS events" do
       @session.visit('/with_js')
       @session.find(:css, '#with_focus_event').trigger(:focus)
@@ -269,7 +269,7 @@ Capybara::SpecHelper.spec "node" do
     end
   end
 
-  describe '#drag_to', requires: [:js, :drag] do
+  describe '#drag_to', requires: %i[js drag] do
     it "should drag and drop an object" do
       @session.visit('/with_js')
       element = @session.find('//div[@id="drag"]')
@@ -291,14 +291,14 @@ Capybara::SpecHelper.spec "node" do
     it "should allow hovering on an element" do
       @session.visit('/with_hover')
       expect(@session.find(:css, '.wrapper:not(.scroll_needed) .hidden_until_hover', visible: false)).not_to be_visible
-      @session.find(:css,'.wrapper:not(.scroll_needed)').hover
+      @session.find(:css, '.wrapper:not(.scroll_needed)').hover
       expect(@session.find(:css, '.wrapper:not(.scroll_needed) .hidden_until_hover', visible: false)).to be_visible
     end
 
     it "should allow hovering on an element that needs to be scrolled into view" do
       @session.visit('/with_hover')
       expect(@session.find(:css, '.wrapper.scroll_needed .hidden_until_hover', visible: false)).not_to be_visible
-      @session.find(:css,'.wrapper.scroll_needed').hover
+      @session.find(:css, '.wrapper.scroll_needed').hover
       expect(@session.find(:css, '.wrapper.scroll_needed .hidden_until_hover', visible: false)).to be_visible
     end
   end
@@ -354,9 +354,9 @@ Capybara::SpecHelper.spec "node" do
 
     it "should allow to adjust the click offset", requires: [:js] do
       @session.visit('with_js')
-      @session.find(:css, '#click-test').click(x:5, y:5)
+      @session.find(:css, '#click-test').click(x: 5, y: 5)
       link = @session.find(:link, 'has-been-clicked')
-      locations = link.text.match /^Has been clicked at (?<x>[\d\.-]+),(?<y>[\d\.-]+)$/
+      locations = link.text.match(/^Has been clicked at (?<x>[\d\.-]+),(?<y>[\d\.-]+)$/)
       # Resulting click location should be very close to 0, 0 relative to top left corner of the element, but may not be exact due to
       # integer/float conversions and rounding.
       expect(locations[:x].to_f).to be_within(1).of(5)
@@ -383,9 +383,9 @@ Capybara::SpecHelper.spec "node" do
 
     it "should allow to adjust the offset", requires: [:js] do
       @session.visit('with_js')
-      @session.find(:css, '#click-test').double_click(x:10, y:5)
+      @session.find(:css, '#click-test').double_click(x: 10, y: 5)
       link = @session.find(:link, 'has-been-double-clicked')
-      locations = link.text.match /^Has been double clicked at (?<x>[\d\.-]+),(?<y>[\d\.-]+)$/
+      locations = link.text.match(/^Has been double clicked at (?<x>[\d\.-]+),(?<y>[\d\.-]+)$/)
       # Resulting click location should be very close to 10, 5 relative to top left corner of the element, but may not be exact due
       # to integer/float conversions and rounding.
       expect(locations[:x].to_f).to be_within(1).of(10)
@@ -408,9 +408,9 @@ Capybara::SpecHelper.spec "node" do
 
     it "should allow to adjust the offset", requires: [:js] do
       @session.visit('with_js')
-      @session.find(:css, '#click-test').right_click(x:10, y:10)
+      @session.find(:css, '#click-test').right_click(x: 10, y: 10)
       link = @session.find(:link, 'has-been-right-clicked')
-      locations = link.text.match /^Has been right clicked at (?<x>[\d\.-]+),(?<y>[\d\.-]+)$/
+      locations = link.text.match(/^Has been right clicked at (?<x>[\d\.-]+),(?<y>[\d\.-]+)$/)
       # Resulting click location should be very close to 10, 10 relative to top left corner of the element, but may not be exact due
       # to integer/float conversions and rounding
       expect(locations[:x].to_f).to be_within(1).of(10)
@@ -439,10 +439,10 @@ Capybara::SpecHelper.spec "node" do
       expect(@session.find(:css, '#address1_city').value).to eq 'Oceanside'
     end
 
-    it "should generate key events", requires: [:send_keys, :js] do
+    it "should generate key events", requires: %i[send_keys js] do
       pending "selenium-webdriver/geckodriver doesn't support complex sets of characters" if marionette?(@session)
       @session.visit('/with_js')
-      @session.find(:css, '#with-key-events').send_keys([:shift,'t'], [:shift,'w'])
+      @session.find(:css, '#with-key-events').send_keys([:shift, 't'], [:shift, 'w'])
       expect(@session.find(:css, '#key-events-output')).to have_text('keydown:16 keydown:84 keydown:16 keydown:87')
     end
   end
@@ -475,9 +475,9 @@ Capybara::SpecHelper.spec "node" do
         sleep(0.3)
         expect do
           expect(node).to have_text('has been reloaded')
-        end.to raise_error do |error|
+        end.to(raise_error do |error|
           expect(error).to be_an_invalid_element_error(@session)
-        end
+        end)
       end
       after { Capybara.automatic_reload = true }
     end
@@ -519,14 +519,10 @@ Capybara::SpecHelper.spec "node" do
 
         expect do
           expect(node).to have_text('Foo')
-        end.to raise_error { |error|
-          expect(error).to be_an_invalid_element_error(@session)
-        }
+        end.to(raise_error { |error| expect(error).to be_an_invalid_element_error(@session) })
         expect do
           expect(node).to have_text('Bar')
-        end.to raise_error { |error|
-          expect(error).to be_an_invalid_element_error(@session)
-        }
+        end.to(raise_error { |error| expect(error).to be_an_invalid_element_error(@session) })
       end
 
       it "should reload nodes with options" do
@@ -540,24 +536,24 @@ Capybara::SpecHelper.spec "node" do
   end
 
   context "when #synchronize raises server errors" do
-    it "sets an explanatory exception as the cause of server exceptions", requires: [:server, :js] do
+    it "sets an explanatory exception as the cause of server exceptions", requires: %i[server js] do
       quietly { @session.visit("/error") }
       expect do
         @session.find(:css, 'span')
-      end.to raise_error(TestApp::TestAppError) do |e|
+      end.to(raise_error(TestApp::TestAppError) do |e|
         expect(e.cause).to be_a Capybara::CapybaraError
         expect(e.cause.message).to match(/Your application server raised an error/)
-      end
+      end)
     end
 
-    it "sets an explanatory exception as the cause of server exceptions with errors with initializers", requires: [:server, :js] do
+    it "sets an explanatory exception as the cause of server exceptions with errors with initializers", requires: %i[server js] do
       quietly { @session.visit("/other_error") }
       expect do
         @session.find(:css, 'span')
-      end.to raise_error(TestApp::TestAppOtherError) do |e|
+      end.to(raise_error(TestApp::TestAppOtherError) do |e|
         expect(e.cause).to be_a Capybara::CapybaraError
         expect(e.cause.message).to match(/Your application server raised an error/)
-      end
+      end)
     end
   end
 

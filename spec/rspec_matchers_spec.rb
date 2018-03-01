@@ -1,7 +1,8 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
-RSpec.describe 'Capybara RSpec Matchers', :type => :feature do
+RSpec.describe 'Capybara RSpec Matchers', type: :feature do
   context "after called on session" do
     it "HaveSelector should allow getting a description of the matcher" do
       visit('/with_html')
@@ -57,6 +58,6 @@ RSpec.describe 'Capybara RSpec Matchers', :type => :feature do
   end
 
   def error_msg_for(&block)
-    expect(&block).to raise_error { |e| return e.message }
+    expect(&block).to(raise_error { |e| return e.message })
   end
 end

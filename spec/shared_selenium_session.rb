@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 require "selenium-webdriver"
 
 RSpec.shared_examples "Capybara::Session" do |session, mode|
-  let(:session) {session}
+  let(:session) { session }
 
   context 'with selenium driver' do
     before do
@@ -44,13 +45,13 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       it "should have return code 1 when running selenium_driver_rspec_failure.rb" do
         skip if ENV['HEADLESS']
         system(@env, 'rspec spec/fixtures/selenium_driver_rspec_failure.rb', out: File::NULL, err: File::NULL)
-        expect($?.exitstatus).to eq(1)
+        expect($CHILD_STATUS.exitstatus).to eq(1)
       end
 
       it "should have return code 0 when running selenium_driver_rspec_success.rb" do
         skip if ENV['HEADLESS']
         system(@env, 'rspec spec/fixtures/selenium_driver_rspec_success.rb', out: File::NULL, err: File::NULL)
-        expect($?.exitstatus).to eq(0)
+        expect($CHILD_STATUS.exitstatus).to eq(0)
       end
     end
 
@@ -59,7 +60,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         @session.visit('/with_js')
         @session.click_link('Open alert')
         @session.accept_alert
-        expect{@session.driver.browser.switch_to.alert}.to raise_error(@session.driver.send(:modal_error))
+        expect { @session.driver.browser.switch_to.alert }.to raise_error(@session.driver.send(:modal_error))
       end
 
       it "can be called before visiting" do
@@ -83,15 +84,17 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
     context "#fill_in with { :clear => :backspace } fill_option", requires: [:js] do
       it 'should fill in a field, replacing an existing value' do
         @session.visit('/form')
-        @session.fill_in('form_first_name', with: 'Harry',
-                          fill_options: { clear: :backspace} )
+        @session.fill_in('form_first_name',
+                         with: 'Harry',
+                         fill_options: { clear: :backspace })
         expect(@session.find(:fillable_field, 'form_first_name').value).to eq('Harry')
       end
 
       it 'should only trigger onchange once' do
         @session.visit('/with_js')
-        @session.fill_in('with_change_event', with: 'some value',
-                         fill_options: { :clear => :backspace })
+        @session.fill_in('with_change_event',
+                         with: 'some value',
+                         fill_options: { clear: :backspace })
         # click outside the field to trigger the change event
         @session.find(:css, 'body').click
         expect(@session.find(:css, '.change_event_triggered', match: :one)).to have_text 'some value'
@@ -99,8 +102,9 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
 
       it 'should trigger change when clearing field' do
         @session.visit('/with_js')
-        @session.fill_in('with_change_event', with: '',
-                         fill_options: { :clear => :backspace })
+        @session.fill_in('with_change_event',
+                         with: '',
+                         fill_options: { clear: :backspace })
         # click outside the field to trigger the change event
         @session.find(:css, 'body').click
         expect(@session).to have_selector(:css, '.change_event_triggered', match: :one)
@@ -108,8 +112,9 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
 
       it 'should trigger input event field_value.length times' do
         @session.visit('/with_js')
-        @session.fill_in('with_change_event', with: '',
-                         fill_options: { :clear => :backspace })
+        @session.fill_in('with_change_event',
+                         with: '',
+                         fill_options: { clear: :backspace })
         # click outside the field to trigger the change event
         @session.find(:css, 'body').click
         expect(@session).to have_xpath('//p[@class="input_event_triggered"]', count: 13)
@@ -119,8 +124,9 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
     context "#fill_in with { clear: :none } fill_options" do
       it 'should append to content in a field' do
         @session.visit('/form')
-        @session.fill_in('form_first_name', with: 'Harry',
-                          fill_options: { clear: :none} )
+        @session.fill_in('form_first_name',
+                         with: 'Harry',
+                         fill_options: { clear: :none })
         expect(@session.find(:fillable_field, 'form_first_name').value).to eq('JohnHarry')
       end
     end
@@ -128,10 +134,11 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
     context "#fill_in with { clear: Array } fill_options" do
       it 'should pass the array through to the element' do
         pending "selenium-webdriver/geckodriver doesn't support complex sets of characters" if marionette?(@session)
-        #this is mainly for use with [[:control, 'a'], :backspace] - however since that is platform dependant I'm testing with something less useful
+        # this is mainly for use with [[:control, 'a'], :backspace] - however since that is platform dependant I'm testing with something less useful
         @session.visit('/form')
-        @session.fill_in('form_first_name', with: 'Harry',
-                          fill_options: { clear: [[:shift, 'abc'], :backspace] } )
+        @session.fill_in('form_first_name',
+                         with: 'Harry',
+                         fill_options: { clear: [[:shift, 'abc'], :backspace] })
         expect(@session.find(:fillable_field, 'form_first_name').value).to eq('JohnABHarry')
       end
     end
@@ -148,7 +155,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
     describe "all with disappearing elements" do
       it "ignores stale elements in results" do
         @session.visit('/path')
-        elements = @session.all(:link) { |node| raise Selenium::WebDriver::Error::StaleElementReferenceError }
+        elements = @session.all(:link) { |_node| raise Selenium::WebDriver::Error::StaleElementReferenceError }
         expect(elements.size).to eq 0
       end
     end
@@ -172,12 +179,12 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       it "can return hashes with elements" do
         @session.visit('/form')
         result = @session.evaluate_script("{ a: document.getElementById('form_title'), b: {c: document.querySelectorAll('#form_city option')}}")
-        expect(result).to eq({
+        expect(result).to eq(
           'a' => @session.find(:id, 'form_title'),
           'b' => {
             'c' => @session.find(:css, '#form_city').all(:css, 'option').to_a
           }
-        })
+        )
       end
 
       describe "#evaluate_async_script" do

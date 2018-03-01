@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#has_field' do
   before { @session.visit('/form') }
 
@@ -6,7 +7,7 @@ Capybara::SpecHelper.spec '#has_field' do
     expect(@session).to have_field('Dog')
     expect(@session).to have_field('form_description')
     expect(@session).to have_field('Region')
-    expect(@session).to have_field(:'Region')
+    expect(@session).to have_field(:Region)
   end
 
   it "should be false if the field is not on the page" do
@@ -269,7 +270,7 @@ Capybara::SpecHelper.spec '#has_unchecked_field?' do
 
   it "should support locator-less usage" do
     expect(@session.has_unchecked_field?(disabled: true, id: "form_disabled_unchecked_checkbox"))
-    expect(@session).to have_unchecked_field(disabled: true, id: "form_disabled_unchecked_checkbox" )
+    expect(@session).to have_unchecked_field(disabled: true, id: "form_disabled_unchecked_checkbox")
   end
 end
 
@@ -304,6 +305,6 @@ Capybara::SpecHelper.spec '#has_no_unchecked_field?' do
 
   it "should support locator-less usage" do
     expect(@session.has_no_unchecked_field?(disabled: false, id: "form_disabled_unchecked_checkbox")).to eq true
-    expect(@session).to have_no_unchecked_field(disabled: false, id: "form_disabled_unchecked_checkbox" )
+    expect(@session).to have_no_unchecked_field(disabled: false, id: "form_disabled_unchecked_checkbox")
   end
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 require 'capybara/dsl'
 
@@ -6,17 +7,8 @@ class TestClass
   include Capybara::DSL
 end
 
-Capybara::SpecHelper.run_specs TestClass.new, "DSL", capybara_skip: [
-  :js,
-  :modals,
-  :screenshot,
-  :frames,
-  :windows,
-  :send_keys,
-  :server,
-  :hover,
-  :about_scheme,
-  :psc
+Capybara::SpecHelper.run_specs TestClass.new, "DSL", capybara_skip: %i[
+  js modals screenshot frames windows send_keys server hover about_scheme psc
 ]
 
 RSpec.describe Capybara::DSL do
@@ -93,7 +85,7 @@ RSpec.describe Capybara::DSL do
       driver_before_block = Capybara.current_driver
       begin
         Capybara.using_driver(:selenium) { raise "ohnoes!" }
-      rescue Exception
+      rescue Exception # rubocop:disable Lint/RescueException
       end
       expect(Capybara.current_driver).to eq(driver_before_block)
     end
@@ -211,7 +203,7 @@ RSpec.describe Capybara::DSL do
         Capybara.using_session(:raise) do
           raise
         end
-      rescue Exception
+      rescue Exception # rubocop:disable Lint/RescueException
       end
       expect(Capybara.session_name).to eq(:default)
     end

@@ -1,19 +1,20 @@
 # frozen_string_literal: true
+
 require "capybara/spec/test_app"
 
 Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
   before :all do
-    @servers = 2.times.map { Capybara::Server.new(TestApp.new).boot }
+    @servers = Array.new(2) { Capybara::Server.new(TestApp.new).boot }
     # sanity check
     expect(@servers[0].port).not_to eq(@servers[1].port)
-    expect(@servers.map { |s| s.port }).not_to include 80
+    expect(@servers.map(&:port)).not_to include 80
   end
 
   def bases
     @servers.map { |s| "http://#{s.host}:#{s.port}" }
   end
 
-  def should_be_on server_index, path="/host", scheme="http"
+  def should_be_on(server_index, path = "/host", scheme = "http")
     # Check that we are on /host on the given server
     s = @servers[server_index]
 

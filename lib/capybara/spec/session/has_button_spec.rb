@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#has_button?' do
   before do
     @session.visit('/form')
@@ -7,7 +8,7 @@ Capybara::SpecHelper.spec '#has_button?' do
   it "should be true if the given button is on the page" do
     expect(@session).to have_button('med')
     expect(@session).to have_button('crap321')
-    expect(@session).to have_button(:'crap321')
+    expect(@session).to have_button(:crap321)
   end
 
   it "should be true for disabled buttons if disabled: true" do

@@ -1,21 +1,22 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#assert_all_of_selectors' do
   before do
     @session.visit('/with_html')
   end
 
   it "should be true if the given selectors are on the page" do
-    @session.assert_all_of_selectors(:css, "p a#foo", "h2#h2one", "h2#h2two" )
+    @session.assert_all_of_selectors(:css, "p a#foo", "h2#h2one", "h2#h2two")
   end
 
   it "should be false if any of the given selectors are not on the page" do
-    expect { @session.assert_all_of_selectors(:css, "p a#foo", "h2#h2three", "h2#h2one")}.to raise_error(Capybara::ElementNotFound)
+    expect { @session.assert_all_of_selectors(:css, "p a#foo", "h2#h2three", "h2#h2one") }.to raise_error(Capybara::ElementNotFound)
   end
 
   it "should use default selector" do
     Capybara.default_selector = :css
-    expect { @session.assert_all_of_selectors("p a#foo", "h2#h2three", "h2#h2one")}.to raise_error(Capybara::ElementNotFound)
-    @session.assert_all_of_selectors("p a#foo", "h2#h2two", "h2#h2one" )
+    expect { @session.assert_all_of_selectors("p a#foo", "h2#h2three", "h2#h2one") }.to raise_error(Capybara::ElementNotFound)
+    @session.assert_all_of_selectors("p a#foo", "h2#h2two", "h2#h2one")
   end
 
   context "should respect scopes" do
@@ -63,7 +64,7 @@ Capybara::SpecHelper.spec '#assert_none_of_selectors' do
   end
 
   it "should be true if none of the given locators are on the page" do
-    @session.assert_none_of_selectors(:xpath, "//abbr", "//td" )
+    @session.assert_none_of_selectors(:xpath, "//abbr", "//td")
     @session.assert_none_of_selectors(:css, "p a#doesnotexist", "abbr")
   end
 

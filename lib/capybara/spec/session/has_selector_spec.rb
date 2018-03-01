@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#has_selector?' do
   before do
     @session.visit('/with_html')
@@ -73,9 +74,9 @@ Capybara::SpecHelper.spec '#has_selector?' do
     end
 
     it "should raise when extra parameters passed" do
-      expect {
+      expect do
         expect(@session).to have_selector(:css, "p a#foo", 'extra')
-      }.to raise_error ArgumentError, /extra/
+      end.to raise_error ArgumentError, /extra/
     end
   end
 

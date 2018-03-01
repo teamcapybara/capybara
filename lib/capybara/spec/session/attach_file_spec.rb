@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec "#attach_file" do
   before do
     @test_file_path = File.expand_path('../fixtures/test_file.txt', File.dirname(__FILE__))
@@ -22,7 +23,7 @@ Capybara::SpecHelper.spec "#attach_file" do
     end
 
     it "casts to string" do
-      @session.attach_file :"form_image", __FILE__
+      @session.attach_file :form_image, __FILE__
       @session.click_button('awesome')
       expect(extract_results(@session)['image']).to eq(File.basename(__FILE__))
     end
@@ -68,14 +69,14 @@ Capybara::SpecHelper.spec "#attach_file" do
       @session.attach_file "Multiple Documents", @test_file_path
       @session.click_button('Upload Multiple')
       expect(@session).to have_content(File.read(@test_file_path))
-      expect(@session.body).to include("1 | ")#number of files
+      expect(@session.body).to include("1 | ") # number of files
     end
 
     it "should not break when using HTML5 multiple file input uploading multiple files" do
       pending "Selenium is buggy on this, see http://code.google.com/p/selenium/issues/detail?id=2239" if @session.respond_to?(:mode) && @session.mode.to_s =~ /^selenium_(firefox|marionette)/
       @session.attach_file "Multiple Documents", [@test_file_path, @another_test_file_path]
       @session.click_button('Upload Multiple')
-      expect(@session.body).to include("2 | ")#number of files
+      expect(@session.body).to include("2 | ") # number of files
       expect(@session.body).to include(File.read(@test_file_path))
       expect(@session.body).to include(File.read(@another_test_file_path))
     end
@@ -110,32 +111,32 @@ Capybara::SpecHelper.spec "#attach_file" do
 
     it "should not allow partial matches when true" do
       expect do
-        @session.attach_file "Imag", __FILE__, exact:  true
+        @session.attach_file "Imag", __FILE__, exact: true
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
 
-  context "with :make_visible option", requires: [:js, :es_args] do
+  context "with :make_visible option", requires: %i[js es_args] do
     it "applies a default style change when true" do
       @session.visit('/with_js')
       expect { @session.attach_file("hidden_file", __FILE__) }.to raise_error Capybara::ElementNotFound
-      expect {
+      expect do
         @session.attach_file("hidden_file", __FILE__, make_visible: true)
-      }.not_to raise_error
+      end.not_to raise_error
     end
 
     it "accepts a hash of styles to be applied" do
       @session.visit('/with_js')
-      expect {
+      expect do
         @session.attach_file("hidden_file", __FILE__, make_visible: { opacity: 1, display: 'block' })
-      }.not_to raise_error
+      end.not_to raise_error
     end
 
     it "raises an error when the file input is not made visible" do
       @session.visit('/with_js')
-      expect {
+      expect do
         @session.attach_file("hidden_file", __FILE__, make_visible: { color: 'red' })
-      }.to raise_error(Capybara::ExpectationNotMet)
+      end.to raise_error(Capybara::ExpectationNotMet)
     end
 
     it "resets the style when done" do

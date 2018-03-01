@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#assert_selector' do
   before do
     @session.visit('/with_html')

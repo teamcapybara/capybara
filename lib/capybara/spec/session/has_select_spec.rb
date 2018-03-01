@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#has_select?' do
   before { @session.visit('/form') }
 
@@ -6,7 +7,7 @@ Capybara::SpecHelper.spec '#has_select?' do
     expect(@session).to have_select('Locale')
     expect(@session).to have_select('form_region')
     expect(@session).to have_select('Languages')
-    expect(@session).to have_select(:'Languages')
+    expect(@session).to have_select(:Languages)
   end
 
   it "should be false if the field is not on the page" do
@@ -33,7 +34,7 @@ Capybara::SpecHelper.spec '#has_select?' do
         'Boxerbriefs', 'Briefs', 'Boxers', 'Commando', "Frenchman's Pantalons", 'Long Johns'
       ])
       expect(@session).not_to have_select('Underwear', selected: [
-        'Boxerbriefs', 'Briefs','Commando', "Frenchman's Pantalons"
+        'Boxerbriefs', 'Briefs', 'Commando', "Frenchman's Pantalons"
       ])
     end
 
@@ -69,25 +70,25 @@ Capybara::SpecHelper.spec '#has_select?' do
 
   context 'with partial select' do
     it "should be true if a field with the given partial values is on the page" do
-      expect(@session).to have_select('Underwear', with_selected: ['Boxerbriefs', 'Briefs'])
+      expect(@session).to have_select('Underwear', with_selected: %w[Boxerbriefs Briefs])
     end
 
     it "should be false if a field with the given partial values is not on the page" do
-      expect(@session).not_to have_select('Underwear', with_selected: ['Boxerbriefs', 'Boxers'])
+      expect(@session).not_to have_select('Underwear', with_selected: %w[Boxerbriefs Boxers])
     end
 
     it "should be true after the given partial value is selected" do
       @session.select('Boxers', from: 'Underwear')
-      expect(@session).to have_select('Underwear', with_selected: ['Boxerbriefs', 'Boxers'])
+      expect(@session).to have_select('Underwear', with_selected: %w[Boxerbriefs Boxers])
     end
 
     it "should be false after one of the given partial values is unselected" do
       @session.unselect('Briefs', from: 'Underwear')
-      expect(@session).not_to have_select('Underwear', with_selected: ['Boxerbriefs', 'Briefs'])
+      expect(@session).not_to have_select('Underwear', with_selected: %w[Boxerbriefs Briefs])
     end
 
     it "should be true even when the selected values are invisible, regardless of the select's visibility" do
-      expect(@session).to have_select('Dessert', visible: false, with_options: ['Pudding', 'Tiramisu'])
+      expect(@session).to have_select('Dessert', visible: false, with_options: %w[Pudding Tiramisu])
       expect(@session).to have_select('Cake', with_selected: ['Chocolate Cake', 'Sponge Cake'])
     end
 
@@ -99,7 +100,7 @@ Capybara::SpecHelper.spec '#has_select?' do
 
   context 'with exact options' do
     it "should be true if a field with the given options is on the page" do
-      expect(@session).to have_select('Region', options: ['Norway', 'Sweden', 'Finland'])
+      expect(@session).to have_select('Region', options: %w[Norway Sweden Finland])
       expect(@session).to have_select('Tendency', options: [])
     end
 
@@ -107,29 +108,29 @@ Capybara::SpecHelper.spec '#has_select?' do
       expect(@session).not_to have_select('Locale', options: ['Swedish'])
       expect(@session).not_to have_select('Does not exist', options: ['John'])
       expect(@session).not_to have_select('City', options: ['London', 'Made up city'])
-      expect(@session).not_to have_select('Region', options: ['Norway', 'Sweden'])
-      expect(@session).not_to have_select('Region', options: ['Norway', 'Norway', 'Norway'])
+      expect(@session).not_to have_select('Region', options: %w[Norway Sweden])
+      expect(@session).not_to have_select('Region', options: %w[Norway Norway Norway])
     end
 
     it "should be true even when the options are invisible, if the select itself is invisible" do
-      expect(@session).to have_select("Icecream", visible: false, options: ['Chocolate', 'Vanilla', 'Strawberry'])
+      expect(@session).to have_select("Icecream", visible: false, options: %w[Chocolate Vanilla Strawberry])
     end
   end
 
   context 'with partial options' do
     it "should be true if a field with the given partial options is on the page" do
-      expect(@session).to have_select('Region', with_options: ['Norway', 'Sweden'])
+      expect(@session).to have_select('Region', with_options: %w[Norway Sweden])
       expect(@session).to have_select('City', with_options: ['London'])
     end
 
     it "should be false if a field with the given partial options is not on the page" do
       expect(@session).not_to have_select('Locale', with_options: ['Uruguayan'])
       expect(@session).not_to have_select('Does not exist', with_options: ['John'])
-      expect(@session).not_to have_select('Region', with_options: ['Norway', 'Sweden', 'Finland', 'Latvia'])
+      expect(@session).not_to have_select('Region', with_options: %w[Norway Sweden Finland Latvia])
     end
 
     it "should be true even when the options are invisible, if the select itself is invisible" do
-      expect(@session).to have_select("Icecream", visible: false, with_options: ['Vanilla', 'Strawberry'])
+      expect(@session).to have_select("Icecream", visible: false, with_options: %w[Vanilla Strawberry])
     end
   end
 
@@ -151,9 +152,9 @@ Capybara::SpecHelper.spec '#has_select?' do
   end
 
   it "should support locator-less usage" do
-    expect(@session.has_select?(with_options: ['Norway', 'Sweden'])).to eq true
+    expect(@session.has_select?(with_options: %w[Norway Sweden])).to eq true
     expect(@session).to have_select(with_options: ['London'])
-    expect(@session.has_select?(with_selected: ['Commando', 'Boxerbriefs'])).to eq true
+    expect(@session.has_select?(with_selected: %w[Commando Boxerbriefs])).to eq true
     expect(@session).to have_select(with_selected: ['Briefs'])
   end
 end
@@ -191,7 +192,7 @@ Capybara::SpecHelper.spec '#has_no_select?' do
         'Boxerbriefs', 'Briefs', 'Boxers', 'Commando', "Frenchman's Pantalons", 'Long Johns'
       ])
       expect(@session).to have_no_select('Underwear', selected: [
-        'Boxerbriefs', 'Briefs','Commando', "Frenchman's Pantalons"
+        'Boxerbriefs', 'Briefs', 'Commando', "Frenchman's Pantalons"
       ])
     end
 
@@ -222,21 +223,21 @@ Capybara::SpecHelper.spec '#has_no_select?' do
 
   context 'with partial select' do
     it "should be false if a field with the given partial values is on the page" do
-      expect(@session).not_to have_no_select('Underwear', with_selected: ['Boxerbriefs', 'Briefs'])
+      expect(@session).not_to have_no_select('Underwear', with_selected: %w[Boxerbriefs Briefs])
     end
 
     it "should be true if a field with the given partial values is not on the page" do
-      expect(@session).to have_no_select('Underwear', with_selected: ['Boxerbriefs', 'Boxers'])
+      expect(@session).to have_no_select('Underwear', with_selected: %w[Boxerbriefs Boxers])
     end
 
     it "should be false after the given partial value is selected" do
       @session.select('Boxers', from: 'Underwear')
-      expect(@session).not_to have_no_select('Underwear', with_selected: ['Boxerbriefs', 'Boxers'])
+      expect(@session).not_to have_no_select('Underwear', with_selected: %w[Boxerbriefs Boxers])
     end
 
     it "should be true after one of the given partial values is unselected" do
       @session.unselect('Briefs', from: 'Underwear')
-      expect(@session).to have_no_select('Underwear', with_selected: ['Boxerbriefs', 'Briefs'])
+      expect(@session).to have_no_select('Underwear', with_selected: %w[Boxerbriefs Briefs])
     end
 
     it "should support non array partial values" do
@@ -247,35 +248,35 @@ Capybara::SpecHelper.spec '#has_no_select?' do
 
   context 'with exact options' do
     it "should be false if a field with the given options is on the page" do
-      expect(@session).not_to have_no_select('Region', options: ['Norway', 'Sweden', 'Finland'])
+      expect(@session).not_to have_no_select('Region', options: %w[Norway Sweden Finland])
     end
 
     it "should be true if the given field is not on the page" do
       expect(@session).to have_no_select('Locale', options: ['Swedish'])
       expect(@session).to have_no_select('Does not exist', options: ['John'])
       expect(@session).to have_no_select('City', options: ['London', 'Made up city'])
-      expect(@session).to have_no_select('Region', options: ['Norway', 'Sweden'])
-      expect(@session).to have_no_select('Region', options: ['Norway', 'Norway', 'Norway'])
+      expect(@session).to have_no_select('Region', options: %w[Norway Sweden])
+      expect(@session).to have_no_select('Region', options: %w[Norway Norway Norway])
     end
   end
 
   context 'with partial options' do
     it "should be false if a field with the given partial options is on the page" do
-      expect(@session).not_to have_no_select('Region', with_options: ['Norway', 'Sweden'])
+      expect(@session).not_to have_no_select('Region', with_options: %w[Norway Sweden])
       expect(@session).not_to have_no_select('City', with_options: ['London'])
     end
 
     it "should be true if a field with the given partial options is not on the page" do
       expect(@session).to have_no_select('Locale', with_options: ['Uruguayan'])
       expect(@session).to have_no_select('Does not exist', with_options: ['John'])
-      expect(@session).to have_no_select('Region', with_options: ['Norway', 'Sweden', 'Finland', 'Latvia'])
+      expect(@session).to have_no_select('Region', with_options: %w[Norway Sweden Finland Latvia])
     end
   end
 
   it "should support locator-less usage" do
-    expect(@session.has_no_select?(with_options: ['Norway', 'Sweden', 'Finland', 'Latvia'])).to eq true
-    expect(@session).to have_no_select(with_options: ['New London'] )
+    expect(@session.has_no_select?(with_options: %w[Norway Sweden Finland Latvia])).to eq true
+    expect(@session).to have_no_select(with_options: ['New London'])
     expect(@session.has_no_select?(with_selected: ['Boxers'])).to eq true
-    expect(@session).to have_no_select(with_selected: ['Commando', 'Boxers'])
+    expect(@session).to have_no_select(with_selected: %w[Commando Boxers])
   end
 end
