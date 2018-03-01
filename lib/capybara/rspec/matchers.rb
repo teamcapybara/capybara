@@ -274,8 +274,6 @@ module Capybara
       MatchSelector.new(*args, &optional_filter_block)
     end
 
-    ::RSpec::Matchers.define_negated_matcher :not_match_selector, :match_selector if defined?(::RSpec::Matchers)
-
     # RSpec matcher for whether elements(s) matching a given xpath selector exist
     # See {Capybara::Node::Matchers#has_xpath?}
     def have_xpath(xpath, **options, &optional_filter_block)
@@ -363,6 +361,12 @@ module Capybara
       end
     end
     alias_method :have_no_content, :have_no_text
+
+    %w[selector css xpath].each do |matcher_type|
+      define_method "not_match_#{matcher_type}" do |*args, &optional_filter_block|
+        NegatedMatcher.new(send("match_#{matcher_type}", *args, &optional_filter_block))
+      end
+    end
 
     ##
     # Wait for window to become closed.
