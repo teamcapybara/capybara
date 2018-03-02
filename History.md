@@ -2,17 +2,24 @@
 Release date: unreleased
 
 ### Added
+* Support for libraries which want to wrap Capybara elements by providing a `#to_capybara_node` method
 
-* Ruby 2.2+ required
-* RSpec 2.x no longer supported
-* Deprecated methods removed
-* `first` now raises ElementNotFound by default instead of returning nil, when no matches are found  - Issue #1507
+### Changed
+
+* `first` now raises ElementNotFound, by default, instead of returning nil, when no matches are found  - Issue #1507
 * 'all' now waits for at least one matching element by default.  Pass `wait: false` if you want the previous
   behavior where an empty result would be returned immediately if no matching elements exist yet.
+* ArgumentError raised if extra parameters passed to selector queries
 
 ### Removed
 
+* Ruby < 2.2.2 support
 * `Capybara.exact_options` no longer exists. Just use `exact:true` on relevant actions/finders if necessary.
+* All previously deprecated methods removed
+* RSpec 2.x support
+* selenium-webdriver 2.x support
+* Nokogiri < 1.8 support
+* `field_labeled` alaias for `find_field`
 
 # Version 2.18.0
 Release date: 2018-02-12
