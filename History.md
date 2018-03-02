@@ -1,8 +1,8 @@
-# Version 3.0.0
-Release date: unreleased
+# Version 3.0.0.rc1
+Release date: 2018-03-02
 
 ### Added
-* Support for libraries which want to wrap Capybara elements by providing a `#to_capybara_node` method
+* Support for libraries wrapping Capybara elements and providing a `#to_capybara_node` method
 
 ### Changed
 
