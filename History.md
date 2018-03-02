@@ -19,7 +19,7 @@ Release date: 2018-03-02
 * RSpec 2.x support
 * selenium-webdriver 2.x support
 * Nokogiri < 1.8 support
-* `field_labeled` alaias for `find_field`
+* `field_labeled` alias for `find_field`
 
 # Version 2.18.0
 Release date: 2018-02-12
