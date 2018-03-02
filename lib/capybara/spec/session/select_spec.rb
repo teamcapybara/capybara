@@ -59,6 +59,13 @@ Capybara::SpecHelper.spec '#select' do
     expect(extract_results(@session)['locale']).to eq('sv')
   end
 
+  it 'should select an option when called on the select box' do
+    el = @session.find(:css, 'select#form_locale')
+    el.select('Swedish')
+    @session.click_button('awesome')
+    expect(extract_results(@session)['locale']).to eq('sv')
+  end
+
   it 'should escape quotes' do
     @session.select("John's made-up language", from: 'Locale')
     @session.click_button('awesome')

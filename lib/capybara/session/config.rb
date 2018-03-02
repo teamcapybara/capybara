@@ -8,7 +8,7 @@ module Capybara
                  automatic_reload match exact exact_text raise_server_errors visible_text_only
                  automatic_label_click enable_aria_label save_path asset_host default_host app_host
                  server_host server_port server_errors default_set_options disable_animation test_id
-                 predicates_wait default_normalize_ws].freeze
+                 predicates_wait default_normalize_ws default_plugin].freeze
 
     attr_accessor(*OPTIONS)
 
@@ -104,6 +104,11 @@ module Capybara
     #
     def test_id=(id)
       @test_id = id&.to_sym
+    end
+
+    remove_method :default_plugin
+    def default_plugin
+      @default_plugin ||= {}
     end
 
     def initialize_copy(other)
