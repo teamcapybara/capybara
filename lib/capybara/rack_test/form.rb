@@ -8,6 +8,7 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
   class NilUploadedFile < Rack::Test::UploadedFile
     def initialize
       @empty_file = Tempfile.new("nil_uploaded_file")
+      super @empty_file
       @empty_file.close
     end
 
