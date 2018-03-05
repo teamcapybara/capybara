@@ -7,8 +7,7 @@ Capybara::SpecHelper.spec '#assert_text' do
     expect(@session.assert_text('Lorem')).to eq(true)
     expect(@session.assert_text('Redirect')).to eq(true)
     expect(@session.assert_text(:Redirect)).to eq(true)
-    expect(@session.assert_text('text with whitespace')).to eq(true)
-    expect(@session.assert_text("text     with \n\n whitespace")).to eq(true)
+    expect(@session.assert_text('text with   whitespace')).to eq(true)
   end
 
   it "should take scopes into account" do
@@ -49,7 +48,7 @@ Capybara::SpecHelper.spec '#assert_text' do
   it "should raise error with a helpful message if the requested text is present but with incorrect case" do
     @session.visit('/with_html')
     expect do
-      @session.assert_text('Text With Whitespace')
+      @session.assert_text('Text With   Whitespace')
     end.to raise_error(Capybara::ExpectationNotMet, /it was found 1 time using a case insensitive search/)
   end
 
@@ -77,7 +76,7 @@ Capybara::SpecHelper.spec '#assert_text' do
     @session.visit('/with_html')
     expect do
       @session.assert_text(/xxxxyzzz/)
-    end.to raise_error(Capybara::ExpectationNotMet, /\Aexpected to find text matching \/xxxxyzzz\/ in "This is a test Header Class(.+)"\Z/)
+    end.to raise_error(Capybara::ExpectationNotMet, /\Aexpected to find text matching \/xxxxyzzz\/ in "This is a test\\nHeader Class(.+)"\Z/)
   end
 
   it "should escape any characters that would have special meaning in a regexp" do
@@ -112,7 +111,7 @@ Capybara::SpecHelper.spec '#assert_text' do
       Capybara.using_wait_time(0) do
         @session.visit('/with_js')
         @session.find(:css, '#reload-list').click
-        @session.find(:css, '#the-list').assert_text('Foo Bar', wait: 0.9)
+        @session.find(:css, '#the-list').assert_text("Foo\nBar", wait: 0.9)
       end
     end
 
@@ -174,7 +173,7 @@ Capybara::SpecHelper.spec '#assert_no_text' do
     @session.visit('/with_html')
     expect do
       @session.assert_no_text('Lorem')
-    end.to raise_error(Capybara::ExpectationNotMet, /\Aexpected not to find text "Lorem" in "This is a test Header Class.+"\Z/)
+    end.to raise_error(Capybara::ExpectationNotMet, /\Aexpected not to find text "Lorem" in "This is a test.*"\z/)
   end
 
   it "should be true if scoped to an element which does not have the text" do

@@ -154,7 +154,6 @@ module Capybara
       end
 
       def format(content)
-        content = Capybara::Helpers.normalize_whitespace(content) unless content.is_a? Regexp
         content.inspect
       end
     end

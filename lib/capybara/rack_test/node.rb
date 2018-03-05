@@ -1,12 +1,22 @@
 # frozen_string_literal: true
 
 class Capybara::RackTest::Node < Capybara::Driver::Node
+  BLOCK_ELEMENTS = %w[p h1 h2 h3 h4 h5 h6 ol ul pre address blockquote dl div fieldset form hr noscript table].freeze
+
   def all_text
-    Capybara::Helpers.normalize_whitespace(native.text)
+    native.text
+          .gsub(/[\u200b\u200e\u200f]/, '')
+          .gsub(/[\ \n\f\t\v\u2028\u2029]+/, ' ')
+          .strip
+          .tr("\u00a0", ' ')
   end
 
   def visible_text
-    Capybara::Helpers.normalize_whitespace(unnormalized_text)
+    displayed_text.gsub(/\ +/, ' ')
+                  .gsub(/\ *\n+\ */, "\n")
+                  .gsub(/\n+/, "\n")
+                  .strip
+                  .tr("\u00a0", ' ')
   end
 
   def [](name)
@@ -103,15 +113,20 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
 
 protected
 
-  def unnormalized_text(check_ancestor_visibility = true)
-    if !string_node.visible?(check_ancestor_visibility)
+  # @api private
+  def displayed_text(check_ancestor: true)
+    if !string_node.visible?(check_ancestor)
       ''
     elsif native.text?
       native.text
+            .gsub(/[\u200b\u200e\u200f]/, '')
+            .gsub(/[\ \n\f\t\v\u2028\u2029]+/, ' ')
     elsif native.element?
-      native.children.map do |child|
-        Capybara::RackTest::Node.new(driver, child).unnormalized_text(false)
-      end.join
+      text = native.children.map do |child|
+        Capybara::RackTest::Node.new(driver, child).displayed_text(check_ancestor: false)
+      end.join || ''
+      text = "\n#{text}\n" if BLOCK_ELEMENTS.include?(tag_name)
+      text
     else
       ''
     end

@@ -17,7 +17,7 @@ Capybara::SpecHelper.spec '#ancestor' do
 
   it "should find the ancestor element using the given locator and options" do
     el = @session.find(:css, '#child')
-    expect(el.ancestor('//div', text: 'Ancestor Ancestor Ancestor')[:id]).to eq('ancestor3')
+    expect(el.ancestor('//div', text: "Ancestor\nAncestor\nAncestor")[:id]).to eq('ancestor3')
   end
 
   it "should raise an error if there are multiple matches" do
@@ -53,8 +53,8 @@ Capybara::SpecHelper.spec '#ancestor' do
         xpath { |num| ".//*[@id='ancestor#{num}']" }
       end
       el = @session.find(:css, '#child')
-      expect(el.ancestor(:level, 1).text).to eq('Ancestor Child')
-      expect(el.ancestor(:level, 3).text).to eq('Ancestor Ancestor Ancestor Child')
+      expect(el.ancestor(:level, 1)[:id]).to eq "ancestor1"
+      expect(el.ancestor(:level, 3)[:id]).to eq "ancestor3"
     end
   end
 
@@ -62,7 +62,7 @@ Capybara::SpecHelper.spec '#ancestor' do
     el = @session.find(:css, '#child')
     expect do
       el.ancestor(:xpath, '//div[@id="nosuchthing"]')
-    end.to raise_error(Capybara::ElementNotFound, "Unable to find xpath \"//div[@id=\\\"nosuchthing\\\"]\" that is an ancestor of visible css \"#child\"")
+    end.to raise_error(Capybara::ElementNotFound, "Unable to find visible xpath \"//div[@id=\\\"nosuchthing\\\"]\" that is an ancestor of visible css \"#child\"")
   end
 
   context "within a scope" do

@@ -51,9 +51,15 @@ Capybara::SpecHelper.spec '#text' do
     after { Capybara.default_selector = :xpath }
   end
 
-  it "should strip whitespace" do
+  it "should be correctly normalized when visible" do
     @session.visit('/with_html')
-    @session.find(:css, '#second')
-    expect(@session.find(:css, '#second').text).to match(/\ADuis aute .* text with whitespace .* est laborum\.\z/)
+    el = @session.find(:css, '#normalized')
+    expect(el.text).to eq "Some text\nMore text\nAnd more text\nEven more    text on multiple lines"
+  end
+
+  it "should be a textContent with irrelevant whitespace collapsed when non-visible" do
+    @session.visit('/with_html')
+    el = @session.find(:css, '#non_visible_normalized', visible: false)
+    expect(el.text(:all)).to eq "Some textMore text And more text Even more    text on multiple lines"
   end
 end

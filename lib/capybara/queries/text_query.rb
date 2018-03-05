@@ -10,11 +10,8 @@ module Capybara
         else
           type
         end
-        @expected_text = if expected_text.is_a?(Regexp)
-          expected_text
-        else
-          Capybara::Helpers.normalize_whitespace(expected_text)
-        end
+
+        @expected_text = expected_text.is_a?(Regexp) ? expected_text : expected_text.to_s
         @options = options
         super(@options)
         self.session_options = session_options
@@ -94,7 +91,7 @@ module Capybara
       end
 
       def text(node, query_type)
-        Capybara::Helpers.normalize_whitespace(node.text(query_type))
+        node.text(query_type)
       end
     end
   end
