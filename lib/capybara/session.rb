@@ -413,7 +413,7 @@ module Capybara
     # @overload within_frame(element)
     #   @param [Capybara::Node::Element]  frame element
     # @overload within_frame([kind = :frame], locator, options = {})
-    #   @param [Symobl] kind      Optional selector type (:css, :xpath, :field, etc.) - Defaults to :frame
+    #   @param [Symbol] kind      Optional selector type (:css, :xpath, :field, etc.) - Defaults to :frame
     #   @param [String] locator   The locator for the given selector kind.  For :frame this is the name/id of a frame/iframe element
     # @overload within_frame(index)
     #   @param [Integer] index         index of a frame (0 based)
