@@ -7,15 +7,16 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     native.text
           .gsub(/[\u200b\u200e\u200f]/, '')
           .gsub(/[\ \n\f\t\v\u2028\u2029]+/, ' ')
-          .strip
+          .gsub(/\A[[:space:]&&[^\u00a0]]+/, "")
+          .gsub(/[[:space:]&&[^\u00a0]]+\z/, "")
           .tr("\u00a0", ' ')
   end
 
   def visible_text
     displayed_text.gsub(/\ +/, ' ')
-                  .gsub(/\ *\n+\ */, "\n")
-                  .gsub(/\n+/, "\n")
-                  .strip
+                  .gsub(/[\ \n]*\n[\ \n]*/, "\n")
+                  .gsub(/\A[[:space:]&&[^\u00a0]]+/, "")
+                  .gsub(/[[:space:]&&[^\u00a0]]+\z/, "")
                   .tr("\u00a0", ' ')
   end
 

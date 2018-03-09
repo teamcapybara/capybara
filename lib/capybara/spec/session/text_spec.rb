@@ -62,4 +62,11 @@ Capybara::SpecHelper.spec '#text' do
     el = @session.find(:css, '#non_visible_normalized', visible: false)
     expect(el.text(:all)).to eq "Some textMore text And more text Even more    text on multiple lines"
   end
+
+  it "should strip correctly" do
+    @session.visit('/with_html')
+    el = @session.find(:css, '#ws')
+    expect(el.text).to eq " "
+    expect(el.text(:all)).to eq " "
+  end
 end
