@@ -63,6 +63,24 @@ Capybara::SpecHelper.spec '#reset_session!' do
     expect(@session.current_path).to eq("/")
   end
 
+  it "closes extra windows", requires: [:windows] do
+    @session.visit('/with_html')
+    @session.open_new_window
+    @session.open_new_window
+    expect(@session.windows.size).to eq 3
+    @session.reset_session!
+    expect(@session.windows.size).to eq 1
+  end
+
+  it "closes extra windows when not on the first window", requires: [:windows] do
+    @session.visit('/with_html')
+    @session.switch_to_window(@session.open_new_window)
+    @session.open_new_window
+    expect(@session.windows.size).to eq 3
+    @session.reset_session!
+    expect(@session.windows.size).to eq 1
+  end
+
   context "When reuse_server == false" do
     before do
       @reuse_server = Capybara.reuse_server

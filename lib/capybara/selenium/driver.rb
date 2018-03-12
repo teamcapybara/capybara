@@ -108,6 +108,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     # Use instance variable directly so we avoid starting the browser just to reset the session
     return unless @browser
 
+    window_handles.reject { |handle| handle == current_window_handle }.each { |win| close_window(win) }
+
     navigated = false
     start_time = Capybara::Helpers.monotonic_time
     begin
