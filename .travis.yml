@@ -39,7 +39,7 @@ matrix:
           packages:
             - awesome
     - gemfile: Gemfile
-      rvm: 2.4.3
+      rvm: 2.2.2
       env: HEADLESS=true
     - gemfile: gemfiles/Gemfile.beta-versions
       rvm: 2.5.0
