@@ -6,16 +6,16 @@ module Capybara
     extend self
 
     ##
-    #
+    # @deprecated
     # Normalizes whitespace space by stripping leading and trailing
     # whitespace and replacing sequences of whitespace characters
     # with a single space.
-    # TODO: Deprecate this see: https://w3c.github.io/webdriver/webdriver-spec.html#dfn-bot-dom-getvisibletext
     #
     # @param [String] text     Text to normalize
     # @return [String]         Normalized text
     #
     def normalize_whitespace(text)
+      warn "DEPRECATED: Capybara::Helpers::normalize_whitespace is deprecated, please update your driver"
       text.to_s.gsub(/[[:space:]]+/, ' ').strip
     end
 
