@@ -53,6 +53,30 @@ Capybara::SpecHelper.spec "#fill_in" do
     expect(extract_results(@session)['password']).to eq('supasikrit')
   end
 
+  context "Date/Time" do
+    it "should fill in a date input" do
+      date = Date.today
+      @session.fill_in('form_date', with: date)
+      @session.click_button('awesome')
+      expect(Date.parse(extract_results(@session)['date'])).to eq date
+    end
+
+    it "should fill in a time input" do
+      time = Time.new(2018, 3, 9, 15, 26)
+      @session.fill_in('form_time', with: time)
+      @session.click_button('awesome')
+      results = extract_results(@session)['time']
+      expect(Time.parse(results).strftime('%r')).to eq time.strftime('%r')
+    end
+
+    it "should fill in a datetime input" do
+      dt = Time.new(2018, 3, 13, 9, 53)
+      @session.fill_in('form_datetime', with: dt)
+      @session.click_button('awesome')
+      expect(Time.parse(extract_results(@session)['datetime'])).to eq dt
+    end
+  end
+
   it "should handle HTML in a textarea" do
     @session.fill_in('form_description', with: 'is <strong>very</strong> secret!')
     @session.click_button('awesome')
