@@ -119,7 +119,7 @@ Capybara::SpecHelper.spec "node" do
         @session.visit('/with_js')
         @session.find(:css, '#existing_content_editable_child').set('WYSIWYG')
         expect(@session.find(:css, '#existing_content_editable_child').text).to eq('WYSIWYG')
-        expect(@session.find(:css, '#existing_content_editable_child_parent').text).to eq('Some content WYSIWYG')
+        expect(@session.find(:css, '#existing_content_editable_child_parent').text).to eq("Some content\nWYSIWYG")
       end
     end
   end

@@ -29,14 +29,9 @@ Capybara::SpecHelper.spec '#has_text?' do
     expect(@session).to have_text('exercitation ullamco laboris')
   end
 
-  it "should ignore extra whitespace and newlines" do
+  it "should search correctly normalized text" do
     @session.visit('/with_html')
-    expect(@session).to have_text('text with whitespace')
-  end
-
-  it "should ignore whitespace and newlines in the search string" do
-    @session.visit('/with_html')
-    expect(@session).to have_text("text     with \n\n whitespace")
+    expect(@session).to have_text('text with   whitespace')
   end
 
   it "should be false if the given text is not on the page" do

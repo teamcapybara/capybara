@@ -144,6 +144,15 @@ class TestApp < Sinatra::Base
     erb :with_html, locals: { referrer: request.referrer }
   end
 
+  get '/with_title' do
+    <<-HTML
+      <title>#{params[:title] || 'Test Title'}</title>
+      <body>
+        <svg><title>abcdefg</title></svg>
+      </body>
+    HTML
+  end
+
   get '/:view' do |view|
     erb view.to_sym, locals: { referrer: request.referrer }
   end

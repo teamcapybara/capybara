@@ -40,11 +40,20 @@ Capybara::SpecHelper.spec '#assert_title' do
     end.to raise_error(Capybara::ExpectationNotMet, 'expected "with_js" to include "monkey"')
   end
 
-  it "should normalize given title" do
-    @session.assert_title('  with_js  ')
+  it "should not normalize given title" do
+    @session.visit('/with_js')
+    expect { @session.assert_title('  with_js  ') }.to raise_error(Capybara::ExpectationNotMet)
   end
 
-  it "should normalize given title in error message" do
+  it "should match correctly normalized title" do
+    uri = Addressable::URI.parse('/with_title')
+    uri.query_values = { title: ' &nbsp; with space &nbsp;title   ' }
+    @session.visit(uri.to_s)
+    @session.assert_title('  with space  title')
+    expect { @session.assert_title('with space title') }.to raise_error(Capybara::ExpectationNotMet)
+  end
+
+  it "should not normalize given title in error message" do
     expect do
       @session.assert_title(2)
     end.to raise_error(Capybara::ExpectationNotMet, 'expected "with_js" to include "2"')

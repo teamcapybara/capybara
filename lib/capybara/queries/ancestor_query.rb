@@ -2,7 +2,7 @@
 
 module Capybara
   module Queries
-    class AncestorQuery < MatchQuery
+    class AncestorQuery < Capybara::Queries::SelectorQuery
       # @api private
       def resolve_for(node, exact = nil)
         @child_node = node
@@ -17,6 +17,12 @@ module Capybara
         desc = super
         desc += " that is an ancestor of #{child_query.description}" if child_query
         desc
+      end
+
+    private
+
+      def valid_keys
+        super - COUNT_KEYS
       end
     end
   end

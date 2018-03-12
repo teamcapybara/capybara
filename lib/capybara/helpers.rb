@@ -6,7 +6,7 @@ module Capybara
     extend self
 
     ##
-    #
+    # @deprecated
     # Normalizes whitespace space by stripping leading and trailing
     # whitespace and replacing sequences of whitespace characters
     # with a single space.
@@ -15,6 +15,7 @@ module Capybara
     # @return [String]         Normalized text
     #
     def normalize_whitespace(text)
+      warn "DEPRECATED: Capybara::Helpers::normalize_whitespace is deprecated, please update your driver"
       text.to_s.gsub(/[[:space:]]+/, ' ').strip
     end
 
@@ -28,10 +29,11 @@ module Capybara
     # @param [Fixnum, Boolean, nil] options Options passed to Regexp.new when creating the Regexp
     # @return [Regexp] Regexp to match the passed in text and options
     #
-    def to_regexp(text, exact: false, options: nil)
+    def to_regexp(text, exact: false, all_whitespace: false, options: nil)
       return text if text.is_a?(Regexp)
 
-      escaped = Regexp.escape(normalize_whitespace(text))
+      escaped = Regexp.escape(text)
+      escaped = escaped.gsub("\\ ", "[[:blank:]]") if all_whitespace
       escaped = "\\A#{escaped}\\z" if exact
       Regexp.new(escaped, options)
     end
