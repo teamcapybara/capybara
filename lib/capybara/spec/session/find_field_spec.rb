@@ -7,7 +7,7 @@ Capybara::SpecHelper.spec '#find_field' do
 
   it "should find any field" do
     expect(@session.find_field('Dog').value).to eq('dog')
-    expect(@session.find_field('form_description').text).to eq('Descriptive text goes here')
+    expect(@session.find_field('form_description').value).to eq('Descriptive text goes here')
     expect(@session.find_field('Region')[:name]).to eq('form[region]')
     expect(@session.find_field('With Asterisk*')).to be
   end
