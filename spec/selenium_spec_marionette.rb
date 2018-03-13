@@ -40,6 +40,8 @@ end
 skipped_tests = %i[response_headers status_code trigger]
 skipped_tests << :windows if ENV['TRAVIS'] && ENV['SKIP_WINDOW']
 
+$stdout.puts `#{Selenium::WebDriver::Firefox.driver_path} --version` if ENV['TRAVIS']
+
 Capybara::SpecHelper.run_specs TestSessions::SeleniumMarionette, "selenium", capybara_skip: skipped_tests
 
 RSpec.describe "Capybara::Session with firefox" do
