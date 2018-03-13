@@ -321,7 +321,7 @@ Capybara::SpecHelper.spec '#has_no_text?' do
     it "should not find element if it appears after given wait duration" do
       @session.visit('/with_js')
       @session.click_link('Click me')
-      expect(@session).to have_no_text('Has been clicked', wait: 0.1)
+      expect(@session).to have_no_text('Has been clicked', wait: 0.05)
     end
   end
 end
