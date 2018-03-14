@@ -112,7 +112,8 @@ module Capybara
       #
       # @overload assert_all_of_selectors([kind = Capybara.default_selector], *locators, options = {})
       #
-      def assert_all_of_selectors(*args, wait: session_options.default_max_wait_time, **options, &optional_filter_block)
+      def assert_all_of_selectors(*args, wait: nil, **options, &optional_filter_block)
+        wait = session_options.default_max_wait_time if wait.nil?
         selector = args.first.is_a?(Symbol) ? args.shift : session_options.default_selector
         synchronize(wait) do
           args.each do |locator|
@@ -136,7 +137,8 @@ module Capybara
       #
       # @overload assert_none_of_selectors([kind = Capybara.default_selector], *locators, options = {})
       #
-      def assert_none_of_selectors(*args, wait: session_options.default_max_wait_time, **options, &optional_filter_block)
+      def assert_none_of_selectors(*args, wait: nil, **options, &optional_filter_block)
+        wait = session_options.default_max_wait_time if wait.nil?
         selector = args.first.is_a?(Symbol) ? args.shift : session_options.default_selector
         synchronize(wait) do
           args.each do |locator|

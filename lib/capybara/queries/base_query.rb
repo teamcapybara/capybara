@@ -22,7 +22,10 @@ module Capybara
       end
 
       def self.wait(options, default = Capybara.default_max_wait_time)
-        options.fetch(:wait, default) || 0
+        # if no value or nil for the :wait option is passed it should default to the default
+        w = options.fetch(:wait, nil)
+        w = default if w.nil?
+        w || 0
       end
 
       ##
