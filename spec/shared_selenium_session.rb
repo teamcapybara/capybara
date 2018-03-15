@@ -217,5 +217,13 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         expect(@session).to have_current_path('/')
       end
     end
+
+    context "Windows" do
+      it "can't close the primary window" do
+        expect do
+          @session.current_window.close
+        end.to raise_error(ArgumentError, 'Not allowed to close the primary window')
+      end
+    end
   end
 end

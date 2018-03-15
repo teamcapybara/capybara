@@ -20,16 +20,15 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
 
   context "with an instance of Capybara::Window" do
     it "should not invoke driver#switch_to_window when given current window" do
-      # switch_to_window is invoked in after hook
-      expect(@session.driver).to receive(:switch_to_window).exactly(3).times.and_call_original
+      allow(@session.driver).to receive(:switch_to_window).and_call_original
       @session.within_window @window do
         expect(@session.title).to eq('With Windows')
       end
+      expect(@session.driver).not_to have_received(:switch_to_window)
     end
 
     it "should be able to switch to another window" do
       window = (@session.windows - [@window]).first
-      expect(@session.driver).to receive(:switch_to_window).exactly(5).times.and_call_original
       @session.within_window window do
         expect(@session).to have_title(/Title of the first popup|Title of popup two/)
       end
