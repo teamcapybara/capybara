@@ -25,7 +25,7 @@ module Capybara
 
     class << self
       def all
-        @selectors ||= {}
+        @selectors ||= {} # rubocop:disable Naming/MemoizedInstanceVariableName
       end
 
       def add(name, &block)

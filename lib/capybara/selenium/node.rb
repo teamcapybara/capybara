@@ -219,7 +219,7 @@ private
     find_xpath(XPath.ancestor(:select)[1]).first
   end
 
-  def set_text(value, clear: nil, **)
+  def set_text(value, clear: nil, **_unused)
     if value.to_s.empty? && clear.nil?
       native.clear
     elsif clear == :backspace

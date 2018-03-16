@@ -46,7 +46,7 @@ module Capybara
 
       class << self
         def all
-          @filter_sets ||= {}
+          @filter_sets ||= {} # rubocop:disable Naming/MemoizedInstanceVariableName
         end
 
         def add(name, &block)

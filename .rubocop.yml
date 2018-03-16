@@ -48,12 +48,21 @@ Lint/HandleExceptions:
 Lint/Loop:
   Enabled: false
 
-Lint/EndAlignment:
+Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
 
 Naming/PredicateName:
   Exclude:
     - '**/*/*matchers.rb'
+
+Naming/UncommunicativeMethodParamName:
+  AllowedNames:
+    - 'el'
+    - 'id'
+    - 'c'
+    - 'x'
+    - 'y'
+    - 'on'
 
 Style/RescueStandardError:
   Enabled: false
