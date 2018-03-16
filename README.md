@@ -1,6 +1,7 @@
 # Capybara
 
 [![Build Status](https://secure.travis-ci.org/teamcapybara/capybara.svg)](https://travis-ci.org/teamcapybara/capybara)
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/teamcapybara/capybara?svg=true)](https://ci.appveyor.com/api/projects/github/teamcapybara/capybara)
 [![Dependency Status](https://gemnasium.com/teamcapybara/capybara.svg)](https://gemnasium.com/teamcapybara/capybara)
 [![Code Climate](https://codeclimate.com/github/teamcapybara/capybara.svg)](https://codeclimate.com/github/teamcapybara/capybara)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jnicklas/capybara?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)

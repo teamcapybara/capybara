@@ -11,19 +11,19 @@ Capybara::SpecHelper.spec "#attach_file" do
 
   context "with normal form" do
     it "should set a file path by id" do
-      @session.attach_file "form_image", attachment_path(__FILE__)
+      @session.attach_file "form_image", with_os_path_separators(__FILE__)
       @session.click_button('awesome')
       expect(extract_results(@session)['image']).to eq(File.basename(__FILE__))
     end
 
     it "should set a file path by label" do
-      @session.attach_file "Image", attachment_path(__FILE__)
+      @session.attach_file "Image", with_os_path_separators(__FILE__)
       @session.click_button('awesome')
       expect(extract_results(@session)['image']).to eq(File.basename(__FILE__))
     end
 
     it "casts to string" do
-      @session.attach_file :form_image, attachment_path(__FILE__)
+      @session.attach_file :form_image, with_os_path_separators(__FILE__)
       @session.click_button('awesome')
       expect(extract_results(@session)['image']).to eq(File.basename(__FILE__))
     end
@@ -31,13 +31,13 @@ Capybara::SpecHelper.spec "#attach_file" do
 
   context "with multipart form" do
     it "should set a file path by id" do
-      @session.attach_file "form_document", attachment_path(@test_file_path)
+      @session.attach_file "form_document", with_os_path_separators(@test_file_path)
       @session.click_button('Upload Single')
       expect(@session).to have_content(File.read(@test_file_path))
     end
 
     it "should set a file path by label" do
-      @session.attach_file "Single Document", attachment_path(@test_file_path)
+      @session.attach_file "Single Document", with_os_path_separators(@test_file_path)
       @session.click_button('Upload Single')
       expect(@session).to have_content(File.read(@test_file_path))
     end
@@ -48,25 +48,25 @@ Capybara::SpecHelper.spec "#attach_file" do
     end
 
     it "should send content type text/plain when uploading a text file" do
-      @session.attach_file "Single Document", attachment_path(@test_file_path)
+      @session.attach_file "Single Document", with_os_path_separators(@test_file_path)
       @session.click_button 'Upload Single'
       expect(@session).to have_content('text/plain')
     end
 
     it "should send content type image/jpeg when uploading an image" do
-      @session.attach_file "Single Document", attachment_path(@test_jpg_file_path)
+      @session.attach_file "Single Document", with_os_path_separators(@test_jpg_file_path)
       @session.click_button 'Upload Single'
       expect(@session).to have_content('image/jpeg')
     end
 
     it "should not break when uploading a file without extension" do
-      @session.attach_file "Single Document", attachment_path(@no_extension_file_path)
+      @session.attach_file "Single Document", with_os_path_separators(@no_extension_file_path)
       @session.click_button 'Upload Single'
       expect(@session).to have_content(File.read(@no_extension_file_path))
     end
 
     it "should not break when using HTML5 multiple file input" do
-      @session.attach_file "Multiple Documents", attachment_path(@test_file_path)
+      @session.attach_file "Multiple Documents", with_os_path_separators(@test_file_path)
       @session.click_button('Upload Multiple')
       expect(@session).to have_content(File.read(@test_file_path))
       expect(@session.body).to include("1 | ") # number of files
@@ -74,8 +74,8 @@ Capybara::SpecHelper.spec "#attach_file" do
 
     it "should not break when using HTML5 multiple file input uploading multiple files" do
       pending "Selenium is buggy on this, see http://code.google.com/p/selenium/issues/detail?id=2239" if @session.respond_to?(:mode) && @session.mode.to_s =~ /^selenium_(firefox|marionette)/
-      @session.attach_file "Multiple Documents",
-                           [@test_file_path, @another_test_file_path].map {|f| attachment_path(f)}
+      @session.attach_file("Multiple Documents",
+                           [@test_file_path, @another_test_file_path].map { |f| with_os_path_separators(f) })
       @session.click_button('Upload Multiple')
       expect(@session.body).to include("2 | ") # number of files
       expect(@session.body).to include(File.read(@test_file_path))
@@ -92,7 +92,7 @@ Capybara::SpecHelper.spec "#attach_file" do
     it "should raise an error" do
       msg = "Unable to find visible file field \"does not exist\" that is not disabled"
       expect do
-        @session.attach_file('does not exist', attachment_path(@test_file_path))
+        @session.attach_file('does not exist', with_os_path_separators(@test_file_path))
       end.to raise_error(Capybara::ElementNotFound, msg)
     end
   end
@@ -105,14 +105,14 @@ Capybara::SpecHelper.spec "#attach_file" do
 
   context "with :exact option" do
     it "should set a file path by partial label when false" do
-      @session.attach_file "Imag", attachment_path(__FILE__), exact:  false
+      @session.attach_file "Imag", with_os_path_separators(__FILE__), exact: false
       @session.click_button('awesome')
       expect(extract_results(@session)['image']).to eq(File.basename(__FILE__))
     end
 
     it "should not allow partial matches when true" do
       expect do
-        @session.attach_file "Imag", attachment_path(__FILE__), exact: true
+        @session.attach_file "Imag", with_os_path_separators(__FILE__), exact: true
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
@@ -120,29 +120,33 @@ Capybara::SpecHelper.spec "#attach_file" do
   context "with :make_visible option", requires: %i[js es_args] do
     it "applies a default style change when true" do
       @session.visit('/with_js')
-      expect { @session.attach_file("hidden_file", attachment_path(__FILE__)) }.to raise_error Capybara::ElementNotFound
       expect do
-        @session.attach_file("hidden_file", attachment_path(__FILE__), make_visible: true)
+        @session.attach_file("hidden_file", with_os_path_separators(__FILE__))
+      end.to raise_error Capybara::ElementNotFound
+      expect do
+        @session.attach_file("hidden_file", with_os_path_separators(__FILE__), make_visible: true)
       end.not_to raise_error
     end
 
     it "accepts a hash of styles to be applied" do
       @session.visit('/with_js')
       expect do
-        @session.attach_file("hidden_file", attachment_path(__FILE__), make_visible: {opacity: 1, display: 'block' })
+        @session.attach_file("hidden_file",
+                             with_os_path_separators(__FILE__),
+                             make_visible: {opacity: 1, display: 'block'})
       end.not_to raise_error
     end
 
     it "raises an error when the file input is not made visible" do
       @session.visit('/with_js')
       expect do
-        @session.attach_file("hidden_file", attachment_path(__FILE__), make_visible: {color: 'red' })
+        @session.attach_file("hidden_file", with_os_path_separators(__FILE__), make_visible: {color: 'red'})
       end.to raise_error(Capybara::ExpectationNotMet)
     end
 
     it "resets the style when done" do
       @session.visit('/with_js')
-      @session.attach_file("hidden_file", attachment_path(__FILE__), make_visible: true)
+      @session.attach_file("hidden_file", with_os_path_separators(__FILE__), make_visible: true)
       expect(@session.evaluate_script("arguments[0].style.display", @session.find(:css, '#hidden_file', visible: :all))).to eq 'none'
     end
   end
@@ -150,7 +154,7 @@ Capybara::SpecHelper.spec "#attach_file" do
 
   private
 
-  def attachment_path(path)
-    Gem.win_platform? ? path.to_s.gsub('/', '\\') : path.to_s
+  def with_os_path_separators(path)
+    Gem.win_platform? ? path.to_s.tr('/', '\\') : path.to_s
   end
 end

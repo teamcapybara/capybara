@@ -28,7 +28,7 @@ skipped_tests = %i[response_headers status_code trigger]
 # skip window tests when headless for now - closing a window not supported by chromedriver/chrome
 skipped_tests << :windows if ENV['TRAVIS'] && (ENV['SKIP_WINDOW'] || ENV['HEADLESS'])
 
-$stdout.puts `#{Selenium::WebDriver::Chrome.driver_path} --version` if ENV['TRAVIS']
+$stdout.puts `#{Selenium::WebDriver::Chrome.driver_path} --version` if ENV['CI']
 
 Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_DRIVER.to_s, capybara_skip: skipped_tests
 
