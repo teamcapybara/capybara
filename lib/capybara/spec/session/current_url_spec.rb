@@ -105,4 +105,15 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
     expect { @session.current_url }.not_to raise_exception
     expect { @session.current_path }.not_to raise_exception
   end
+
+  context "within iframe", requires: [:frames] do
+    it "should get the url of the top level browsing context" do
+      @session.visit('/within_frames')
+      expect(@session.current_url).to match(/within_frames\z/)
+      @session.within_frame('frameOne') do
+        expect(@session.current_url).to match(/within_frames\z/)
+      end
+    end
+  end
+
 end

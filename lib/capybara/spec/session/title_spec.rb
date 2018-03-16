@@ -14,4 +14,14 @@ Capybara::SpecHelper.spec '#title' do
     end
     after { Capybara.default_selector = :xpath }
   end
+
+  context "within iframe", requires: [:frames] do
+    it "should get the title of the top level browsing context" do
+      @session.visit('/within_frames')
+      expect(@session.title).to eq('With Frames')
+      @session.within_frame('frameOne') do
+        expect(@session.title).to eq('With Frames')
+      end
+    end
+  end
 end
