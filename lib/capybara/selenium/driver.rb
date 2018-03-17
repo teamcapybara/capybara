@@ -292,6 +292,11 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     browser_name == "chrome"
   end
 
+  # @api private
+  def edge?
+    browser_name == "edge"
+  end
+
 private
 
   def browser_name
