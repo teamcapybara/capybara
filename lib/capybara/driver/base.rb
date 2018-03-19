@@ -67,6 +67,16 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#switch_to_frame'
   end
 
+  def frame_title
+    title = find_xpath('/html/head/title').map(&:all_text).first.to_s
+  end
+
+  def frame_url
+    evaluate_script('document.location.href')
+  rescue Capybara::NotSupportedByDriverError
+    raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#frame_title'
+  end
+
   def current_window_handle
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#current_window_handle'
   end
