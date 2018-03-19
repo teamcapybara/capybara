@@ -1,0 +1,33 @@
+version: 1.0.{build}-{branch}
+
+cache:
+  - vendor/bundle
+
+environment:
+  matrix:
+    - RUBY_VERSION: 25
+      CAPYBARA_FF: true
+    - RUBY_VERSION: 25
+      CAPYBARA_IE: true
+    - RUBY_VERSION: 22
+
+matrix:
+  allow_failures:
+    - CAPYBARA_IE: true
+    - CAPYBARA_EDGE: true
+
+install:
+  - set PATH=C:\Ruby%RUBY_VERSION%\bin;%PATH%
+  - cinst Firefox GoogleChrome
+  - bundle config --local path vendor/bundle
+  - bundle install
+
+build: off
+
+before_test:
+  - ruby -v
+  - gem -v
+  - bundle -v
+
+test_script:
+  - bundle exec rake travis

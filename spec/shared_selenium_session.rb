@@ -64,6 +64,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
 
       it "can be called before visiting" do
+        skip "Edge driver doesn't get any interactions when alert is set" if edge?(@session)
         @session.accept_alert "Initial alert" do
           @session.visit('/initial_alert')
         end

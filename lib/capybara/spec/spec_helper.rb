@@ -133,6 +133,10 @@ module Capybara
     def chrome_gte?(version, session)
       chrome?(session) && (session.driver.browser.capabilities[:version].to_f >= version)
     end
+
+    def edge?(session)
+      session.respond_to?(:driver) && session.driver.respond_to?(:edge?, true) && session.driver.send(:edge?)
+    end
   end
 end
 

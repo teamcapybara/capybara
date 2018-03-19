@@ -16,7 +16,7 @@ Capybara::SpecHelper.spec '#save_screenshot', requires: [:screenshot] do
 
     @session.save_screenshot
 
-    regexp = Regexp.new(File.expand_path('capybara-\d+\.png'))
+    regexp = Regexp.new(File.join(Dir.pwd, 'capybara-\d+\.png'))
     expect(@session.driver).to have_received(:save_screenshot).with(regexp, {})
   end
 
@@ -36,7 +36,7 @@ Capybara::SpecHelper.spec '#save_screenshot', requires: [:screenshot] do
 
       @session.save_screenshot
 
-      regexp = Regexp.new(File.expand_path('capybara-\d+\.png', alternative_path))
+      regexp = Regexp.new(File.join(alternative_path, 'capybara-\d+\.png'))
       expect(@session.driver).to have_received(:save_screenshot).with(regexp, {})
     end
 
