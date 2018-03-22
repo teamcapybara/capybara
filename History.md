@@ -6,6 +6,13 @@ Release date: unreleased
 * Drivers are now expected to return visible text more in line with the WebDriver spec for visible text
 * Drivers are expected to close extra windows when resetting the session
 * Selenium driver supports Date/Time when filling in date/time/datetime-local inputs
+* `current_url` returns the url for the top level browsing context
+* `title` returns the title for the top level browsing context
+
+### Added
+
+* `Driver#frame_url` returns the url for the current frame
+* `Driver#frame_title` returns the title for the current frame
 
 # Version 3.0.0.rc1
 Release date: 2018-03-02
@@ -15,7 +22,7 @@ Release date: 2018-03-02
 
 ### Changed
 
-* `first` now raises ElementNotFound, by default, instead of returning nil, when no matches are found  - Issue #1507
+* `first` now raises ElementNotFound, by default, instead of returning nil when no matches are found  - Issue #1507
 * 'all' now waits for at least one matching element by default.  Pass `wait: false` if you want the previous
   behavior where an empty result would be returned immediately if no matching elements exist yet.
 * ArgumentError raised if extra parameters passed to selector queries
