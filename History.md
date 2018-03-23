@@ -1,5 +1,5 @@
 # Version 3.0.0.rc2
-Release date: unreleased
+Release date: 2018-03-23
 
 ### Changed
 
