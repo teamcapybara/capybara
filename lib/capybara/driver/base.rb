@@ -68,7 +68,7 @@ class Capybara::Driver::Base
   end
 
   def frame_title
-    title = find_xpath('/html/head/title').map(&:all_text).first.to_s
+    find_xpath('/html/head/title').map(&:all_text).first.to_s
   end
 
   def frame_url

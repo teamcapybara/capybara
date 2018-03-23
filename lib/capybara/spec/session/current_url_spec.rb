@@ -115,5 +115,4 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
       end
     end
   end
-
 end

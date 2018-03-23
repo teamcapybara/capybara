@@ -133,14 +133,14 @@ Capybara::SpecHelper.spec "#attach_file" do
       expect do
         @session.attach_file("hidden_file",
                              with_os_path_separators(__FILE__),
-                             make_visible: {opacity: 1, display: 'block'})
+                             make_visible: { opacity: 1, display: 'block' })
       end.not_to raise_error
     end
 
     it "raises an error when the file input is not made visible" do
       @session.visit('/with_js')
       expect do
-        @session.attach_file("hidden_file", with_os_path_separators(__FILE__), make_visible: {color: 'red'})
+        @session.attach_file("hidden_file", with_os_path_separators(__FILE__), make_visible: { color: 'red' })
       end.to raise_error(Capybara::ExpectationNotMet)
     end
 
@@ -150,7 +150,6 @@ Capybara::SpecHelper.spec "#attach_file" do
       expect(@session.evaluate_script("arguments[0].style.display", @session.find(:css, '#hidden_file', visible: :all))).to eq 'none'
     end
   end
-
 
   private
 
