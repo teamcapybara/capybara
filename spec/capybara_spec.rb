@@ -56,27 +56,11 @@ RSpec.describe Capybara do
     end
 
     it "should have :webrick registered" do
-      require 'rack/handler/webrick'
-      mock_app = double('app')
-      Capybara.server = :webrick
-      expect(Rack::Handler::WEBrick).to receive(:run)
-      Capybara.server.call(mock_app, 8000)
+      expect(Capybara.servers[:webrick]).not_to be_nil
     end
 
     it "should have :puma registered" do
-      require 'rack/handler/puma'
-      mock_app = double('app')
-      Capybara.server = :puma
-      expect(Rack::Handler::Puma).to receive(:run).with(mock_app, hash_including(Host: nil, Port: 8000))
-      Capybara.server.call(mock_app, 8000)
-    end
-
-    it "should pass options to server" do
-      require 'rack/handler/puma'
-      mock_app = double('app')
-      Capybara.server = :puma, { Silent: true }
-      expect(Rack::Handler::Puma).to receive(:run).with(mock_app, hash_including(Host: nil, Port: 9000, Silent: true))
-      Capybara.server.call(mock_app, 9000)
+      expect(Capybara.servers[:puma]).not_to be_nil
     end
   end
 
