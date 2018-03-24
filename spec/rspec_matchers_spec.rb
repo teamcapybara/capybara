@@ -26,7 +26,6 @@ RSpec.describe 'Capybara RSpec Matchers', type: :feature do
 
       not_to_msg = error_msg_for { expect(page).not_to have_text('This is a test') }
       have_no_msg = error_msg_for { expect(page).to have_no_text('This is a test') }
-      puts not_to_msg
       expect(not_to_msg).to eq have_no_msg
     end
   end
