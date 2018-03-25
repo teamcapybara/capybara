@@ -14,14 +14,14 @@ module TestSessions
   SeleniumIE = Capybara::Session.new(:selenium_ie, TestApp)
 end
 
-skipped_tests = %i[response_headers status_code trigger]
+skipped_tests = %i[response_headers status_code trigger js modals]
 
 $stdout.puts `#{Selenium::WebDriver::IE.driver_path} --version` if ENV['CI']
 
 Capybara::SpecHelper.run_specs TestSessions::SeleniumIE, "selenium", capybara_skip: skipped_tests
 
-RSpec.describe "Capybara::Session with Internet Explorer" do
+RSpec.describe "Capybara::Session with Internet Explorer", capybara_skip: skipped_tests do
   include Capybara::SpecHelper
-  include_examples  "Capybara::Session", TestSessions::SeleniumIE, :selenium_ie
-  include_examples  Capybara::RSpecMatchers, TestSessions::SeleniumIE, :selenium_ie
+  include_examples "Capybara::Session", TestSessions::SeleniumIE, :selenium_ie
+  include_examples Capybara::RSpecMatchers, TestSessions::SeleniumIE, :selenium_ie
 end
