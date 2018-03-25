@@ -55,7 +55,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
     end
 
-    describe "#accept_alert" do
+    describe "#accept_alert", requires: [:modals] do
       it "supports a blockless mode" do
         @session.visit('/with_js')
         @session.click_link('Open alert')
@@ -64,7 +64,6 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
 
       it "can be called before visiting" do
-        skip "Edge driver doesn't get any interactions when alert is set" if edge?(@session)
         @session.accept_alert "Initial alert" do
           @session.visit('/initial_alert')
         end
