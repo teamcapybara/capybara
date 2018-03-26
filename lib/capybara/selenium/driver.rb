@@ -26,7 +26,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       @w3c = ((defined?(Selenium::WebDriver::Remote::W3CCapabilities) && @browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3CCapabilities)) ||
               (defined?(Selenium::WebDriver::Remote::W3C::Capabilities) && @browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3C::Capabilities)))
       main = Process.pid
-      @primary_window_handle = current_window_handle
 
       at_exit do
         # Store the exit status of the test run since it goes away after calling the at_exit proc...
@@ -110,8 +109,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     # Use instance variable directly so we avoid starting the browser just to reset the session
     return unless @browser
 
-    switch_to_window(@primary_window_handle)
-    window_handles.reject { |handle| handle == @primary_window_handle }.each { |win| close_window(win) }
+    switch_to_window(window_handles.first)
+    window_handles.slice(1..-1).each { |win| close_window(win) }
 
     navigated = false
     start_time = Capybara::Helpers.monotonic_time
@@ -210,7 +209,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def close_window(handle)
-    raise ArgumentError, "Not allowed to close the primary window" if handle == @primary_window_handle
+    raise ArgumentError, "Not allowed to close the primary window" if handle == window_handles.first
     within_given_window(handle) do
       browser.close
     end
