@@ -73,7 +73,6 @@ Capybara::SpecHelper.spec "#attach_file" do
     end
 
     it "should not break when using HTML5 multiple file input uploading multiple files" do
-      pending "Selenium is buggy on this, see http://code.google.com/p/selenium/issues/detail?id=2239" if @session.respond_to?(:mode) && @session.mode.to_s =~ /^selenium_(firefox|marionette)/
       @session.attach_file("Multiple Documents",
                            [@test_file_path, @another_test_file_path].map { |f| with_os_path_separators(f) })
       @session.click_button('Upload Multiple')
@@ -85,6 +84,16 @@ Capybara::SpecHelper.spec "#attach_file" do
     it "should not send anything when attaching no files to a multiple upload field" do
       @session.click_button('Upload Empty Multiple')
       expect(@session).to have_content("Successfully ignored empty file field")
+    end
+
+    it "should not append files to already attached" do
+      @session.attach_file "Multiple Documents", with_os_path_separators(@test_file_path)
+      @session.attach_file("Multiple Documents",
+                           [@test_file_path, @another_test_file_path].map { |f| with_os_path_separators(f) })
+      @session.click_button('Upload Multiple')
+      expect(@session.body).to include("2 | ") # number of files
+      expect(@session.body).to include(File.read(@test_file_path))
+      expect(@session.body).to include(File.read(@another_test_file_path))
     end
   end
 

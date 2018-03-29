@@ -279,10 +279,11 @@ private
 
   def set_file(value) # rubocop:disable Naming/AccessorMethodName
     path_names = value.to_s.empty? ? [] : value
-    if driver.chrome?
-      native.send_keys(Array(path_names).join("\n"))
+    if driver.marionette?
+      native.clear
+      Array(path_names).each { |p| native.send_keys(p) }
     else
-      native.send_keys(*path_names)
+      native.send_keys(Array(path_names).join("\n"))
     end
   end
 
