@@ -169,7 +169,7 @@ Capybara::SpecHelper.spec '#click_button' do
     end
   end
 
-  context "with fields associated with the form using the form attribute" do
+  context "with fields associated with the form using the form attribute", requires: [:form_attribute] do
     before do
       @session.click_button('submit_form1')
       @results = extract_results(@session)
@@ -192,7 +192,7 @@ Capybara::SpecHelper.spec '#click_button' do
     end
   end
 
-  context "with submit button outside the form defined by <button> tag" do
+  context "with submit button outside the form defined by <button> tag", requires: [:form_attribute] do
     before do
       @session.click_button('outside_button')
       @results = extract_results(@session)
@@ -208,7 +208,7 @@ Capybara::SpecHelper.spec '#click_button' do
     end
   end
 
-  context "with submit button outside the form defined by <input type='submit'> tag" do
+  context "with submit button outside the form defined by <input type='submit'> tag", requires: [:form_attribute] do
     before do
       @session.click_button('outside_submit')
       @results = extract_results(@session)
@@ -224,7 +224,7 @@ Capybara::SpecHelper.spec '#click_button' do
     end
   end
 
-  context "with submit button for form1 located within form2" do
+  context "with submit button for form1 located within form2", requires: [:form_attribute] do
     it "should submit the form associated with the button" do
       @session.click_button('other_form_button')
       expect(extract_results(@session)['which_form']).to eq("form1")
