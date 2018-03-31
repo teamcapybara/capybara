@@ -1047,7 +1047,7 @@ additional info about how the underlying driver can be configured.
   are testing for specific server errors and using multiple sessions make sure to test for the
   errors using the initial session (usually :default)
 
-## <a name="threadsafe"></a>"Threadsafe" mode - BETA - may change
+## <a name="threadsafe"></a>"Threadsafe" mode
 
 In normal mode most of Capybara's configuration options are global settings which can cause issues
 if using multiple sessions and wanting to change a setting for only one of the sessions.  To provide
