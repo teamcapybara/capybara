@@ -20,7 +20,7 @@ $stdout.puts `#{Selenium::WebDriver::Edge.driver_path} --version` if ENV['CI']
 
 Capybara::SpecHelper.run_specs TestSessions::SeleniumEdge, "selenium", capybara_skip: skipped_tests
 
-RSpec.describe "Capybara::Session with Edge" do
+RSpec.describe "Capybara::Session with Edge", capybara_skip: skipped_tests do
   include Capybara::SpecHelper
   include_examples  "Capybara::Session", TestSessions::SeleniumEdge, :selenium_edge
   include_examples  Capybara::RSpecMatchers, TestSessions::SeleniumEdge, :selenium_edge
