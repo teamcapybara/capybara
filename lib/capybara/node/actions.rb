@@ -264,8 +264,9 @@ module Capybara
             raise unless allow_label_click && catch_error?(e)
             begin
               el ||= find(selector, locator, options.merge(visible: :all))
-              find(:label, for: el, visible: true).click unless el.checked? == checked
-            rescue # swallow extra errors - raise original
+              res = find(:label, for: el, visible: true).click unless el.checked? == checked
+              res
+            rescue => e2 # swallow extra errors - raise original
               raise e
             end
           end

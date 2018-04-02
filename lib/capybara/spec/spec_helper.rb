@@ -137,6 +137,10 @@ module Capybara
     def edge?(session)
       session.respond_to?(:driver) && session.driver.respond_to?(:edge?, true) && session.driver.send(:edge?)
     end
+
+    def ie?(session)
+      session.respond_to?(:driver) && session.driver.respond_to?(:ie?, true) && session.driver.send(:ie?)
+    end
   end
 end
 

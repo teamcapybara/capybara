@@ -268,7 +268,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       ::Selenium::WebDriver::Error::ElementNotInteractableError,
       ::Selenium::WebDriver::Error::ElementClickInterceptedError,
       ::Selenium::WebDriver::Error::InvalidElementStateError,
-      ::Selenium::WebDriver::Error::ElementNotSelectableError
+      ::Selenium::WebDriver::Error::ElementNotSelectableError,
+      ::Selenium::WebDriver::Error::ElementNotSelectableError,
+      ::Selenium::WebDriver::Error::NoSuchElementError,     # IE
+      ::Selenium::WebDriver::Error::InvalidArgumentError #IE
     ]
   end
 
@@ -294,6 +297,11 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   # @api private
   def edge?
     browser_name == "edge"
+  end
+
+  # @api private
+  def ie?
+    browser_name == "ie"
   end
 
 private

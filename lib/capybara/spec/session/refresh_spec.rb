@@ -18,7 +18,7 @@ Capybara::SpecHelper.spec '#refresh' do
   end
 
   it "it reposts" do
-    if marionette?(@session) || edge?(@session)
+    if marionette?(@session) || edge?(@session) || ie?(@session)
       skip "Firefox and Edge insist on prompting without providing a way to suppress"
     end
     @session.visit('/form')
