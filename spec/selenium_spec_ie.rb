@@ -18,7 +18,7 @@ module TestSessions
   SeleniumIE = Capybara::Session.new(:selenium_ie, TestApp)
 end
 
-skipped_tests = %i[response_headers status_code trigger modals hover form_attribute]
+skipped_tests = %i[response_headers status_code trigger modals hover form_attribute windows]
 
 $stdout.puts `#{Selenium::WebDriver::IE.driver_path} --version` if ENV['CI']
 
