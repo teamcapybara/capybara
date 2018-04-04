@@ -1,3 +1,16 @@
+# Version 3.0.0
+Release date: unreleased
+
+### Changed
+
+* Selenium driver only closes extra windows for browsers where that is known to work (Firefox, Chrome)
+* "threadsafe" mode is no longer considered beta
+
+### Fixes
+
+* Multiple file attach_file with Firefox
+* Use Puma::Server directly rather than Rack::Handler::Puma so signal handlers don't prevent test quitting
+
 # Version 3.0.0.rc2
 Release date: 2018-03-23
 
