@@ -76,7 +76,7 @@ GitHub): http://groups.google.com/group/ruby-capybara
 
 ## <a name="setup"></a>Setup
 
-Capybara requires Ruby 2.2.0 or later. To install, add this line to your
+Capybara requires Ruby 2.2.2 or later. To install, add this line to your
 `Gemfile` and run `bundle install`:
 
 ```ruby
@@ -151,15 +151,15 @@ If you are using Rails, put your Capybara specs in `spec/features` or `spec/syst
 if [you have it configured in
 RSpec](https://www.relishapp.com/rspec/rspec-rails/docs/upgrade#file-type-inference-disabled))
 and if you have your Capybara specs in a different directory, then tag the
-example groups with `:type => :feature` or `:type => :system` depending on which type of test you're writing.
+example groups with `type: :feature` or `type: :system` depending on which type of test you're writing.
 
 If you are not using Rails, tag all the example groups in which you want to use
-Capybara with `:type => :feature`.
+Capybara with `type: :feature`.
 
 You can now write your specs like so:
 
 ```ruby
-describe "the signin process", :type => :feature do
+describe "the signin process", type: :feature do
   before :each do
     User.make(email: 'user@example.com', password: 'password')
   end
@@ -183,7 +183,7 @@ to one specific driver. For example:
 ```ruby
 describe 'some stuff which requires js', js: true do
   it 'will use the default js driver'
-  it 'will switch to one specific driver', :driver => :webkit
+  it 'will switch to one specific driver', driver: :webkit
 end
 ```
 
@@ -219,7 +219,7 @@ feature "Signing in" do
 end
 ```
 
-`feature` is in fact just an alias for `describe ..., :type => :feature`,
+`feature` is in fact just an alias for `describe ..., type:> :feature`,
 `background` is an alias for `before`, `scenario` for `it`, and
 `given`/`given!` aliases for `let`/`let!`, respectively.
 

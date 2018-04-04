@@ -43,7 +43,7 @@ Release date: 2018-03-02
 ### Removed
 
 * Ruby < 2.2.2 support
-* `Capybara.exact_options` no longer exists. Just use `exact:true` on relevant actions/finders if necessary.
+* `Capybara.exact_options` no longer exists. Just use `exact: true` on relevant actions/finders if necessary.
 * All previously deprecated methods removed
 * RSpec 2.x support
 * selenium-webdriver 2.x support
