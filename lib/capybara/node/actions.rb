@@ -266,7 +266,7 @@ module Capybara
               el ||= find(selector, locator, options.merge(visible: :all))
               res = find(:label, for: el, visible: true).click unless el.checked? == checked
               res
-            rescue => e2 # swallow extra errors - raise original
+            rescue # swallow extra errors - raise original
               raise e
             end
           end

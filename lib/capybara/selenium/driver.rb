@@ -272,8 +272,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       ::Selenium::WebDriver::Error::InvalidElementStateError,
       ::Selenium::WebDriver::Error::ElementNotSelectableError,
       ::Selenium::WebDriver::Error::ElementNotSelectableError,
-      ::Selenium::WebDriver::Error::NoSuchElementError,     # IE
-      ::Selenium::WebDriver::Error::InvalidArgumentError #IE
+      ::Selenium::WebDriver::Error::NoSuchElementError, # IE
+      ::Selenium::WebDriver::Error::InvalidArgumentError # IE
     ]
   end
 

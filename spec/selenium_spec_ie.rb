@@ -8,9 +8,9 @@ require 'rspec/shared_spec_matchers'
 Capybara.register_driver :selenium_ie do |app|
   # ::Selenium::WebDriver.logger.level = "debug"
   Capybara::Selenium::Driver.new(
-      app,
-      browser: :ie,
-      desired_capabilities: ::Selenium::WebDriver::Remote::Capabilities.ie('requireWindowFocus': true)
+    app,
+    browser: :ie,
+    desired_capabilities: ::Selenium::WebDriver::Remote::Capabilities.ie('requireWindowFocus': true)
   )
 end
 

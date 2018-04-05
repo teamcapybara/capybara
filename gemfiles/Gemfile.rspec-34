@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'bundler', '~> 1.1'
-gemspec :path => '..'
+gemspec path: '..'
 
 gem 'xpath', github: 'teamcapybara/xpath'
 gem 'rspec', '~>3.4.0'

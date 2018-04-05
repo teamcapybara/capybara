@@ -9,6 +9,7 @@ environment:
       CAPYBARA_FF: true
     - RUBY_VERSION: 25
       CAPYBARA_IE: true
+      BUNDLE_GEMFILE: gemfiles/Gemfile.ie
     - RUBY_VERSION: 22
 
 matrix:
