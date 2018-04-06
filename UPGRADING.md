@@ -25,3 +25,16 @@ first('div', minimum: 0)
 all('div', wait: false)
 ```
 
+## Matchers
+
+`has_text?` (aka. `has_content?`) no longer normalizes whitespace.
+
+```
+# 2.18.0
+Capybara::Node::Simple.new("<p>foo\nbar</p>").has_text?("foo bar")
+#=> true
+
+# 3.0.0
+Capybara::Node::Simple.new("<p>foo\nbar</p>").has_text?("foo bar")
+#=> false
+```
