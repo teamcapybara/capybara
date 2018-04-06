@@ -48,6 +48,20 @@ RSpec.describe Capybara do
       Capybara.server.call(mock_app, 8000)
     end
 
+    it "should call the webrick server when puma is not available" do
+      mock_app = double('app')
+      expect(Capybara.servers[:webrick]).to receive(:call)
+      Capybara.server.call(mock_app, 8000)
+    end
+
+    it "should call the puma server when puma is available" do
+      module Puma; end
+      mock_app = double('app')
+      expect(Capybara.servers[:puma]).to receive(:call)
+      Capybara.server.call(mock_app, 8000)
+      Object.send(:remove_const, :Puma)
+    end
+
     it "should return a custom server proc" do
       server = ->(_app, _port) {}
       Capybara.register_server :custom, &server
