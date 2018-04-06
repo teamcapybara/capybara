@@ -1,5 +1,13 @@
 # Upgrading from Capybara 2.x to 3.x
 
+## Server
+
+Capybara 3 changes the default server to <a href="https://github.com/puma/puma">Puma</a>. If you do not use `Puma` in your project you can
+revert to the previous default of WEBRick by specifying
+
+```ruby
+Capybara.server = :webrick
+```
 
 ## Finders
 
