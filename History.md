@@ -1,5 +1,5 @@
 # Version 3.0.1
-Release date: unreleased
+Release date: 2018-04-06
 
 ### Changed
 
