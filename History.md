@@ -23,7 +23,7 @@ Release date: 2018-03-23
 
 ### Changed
 
-* Drivers are now expected to return visible text more in line with the WebDriver spec for visible text
+* Visibile text whitespace is no longer fully normalized in favor of being more in line with the WebDriver spec for visible text
 * Drivers are expected to close extra windows when resetting the session
 * Selenium driver supports Date/Time when filling in date/time/datetime-local inputs
 * `current_url` returns the url for the top level browsing context

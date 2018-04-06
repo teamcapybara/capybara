@@ -622,10 +622,6 @@ module Capybara
       # Checks if the page or current node has the given text content,
       # ignoring any HTML tags.
       #
-      # Whitespaces are normalized in both node's text and passed text parameter.
-      # Note that whitespace isn't normalized in passed regexp as normalizing whitespace
-      # in regexp isn't easy and doesn't seem to be worth it.
-      #
       # By default it will check if the text occurs at least once,
       # but a different number can be specified.
       #
