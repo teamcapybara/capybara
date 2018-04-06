@@ -1,3 +1,10 @@
+# Version 3.0.1
+Release date: unreleased
+
+### Changed
+
+* Restored ability for `Capybara.server=` to accept a proc which was accidentally removed in 3.0.0
+
 # Version 3.0.0
 Release date: 2018-04-05
 

@@ -64,6 +64,18 @@ RSpec.describe Capybara do
     end
   end
 
+  describe "server=" do
+    after do
+      Capybara.server = :default
+    end
+
+    it "accepts a proc" do
+      server = ->(_app, _port) {}
+      Capybara.server = server
+      expect(Capybara.server).to eq server
+    end
+  end
+
   describe 'app_host' do
     after do
       Capybara.app_host = nil
