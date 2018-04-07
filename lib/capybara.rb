@@ -458,6 +458,7 @@ Capybara.register_server :puma do |app, port, host, **options|
     s.binder.parse conf.options[:binds], s.events
     s.min_threads = conf.options[:min_threads]
     s.max_threads = conf.options[:max_threads]
+    s.leak_stack_on_error = true
   end.run.join
 end
 
