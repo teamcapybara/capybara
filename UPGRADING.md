@@ -19,7 +19,7 @@ The biggest user differences between Capybara 2.x and 3.x are the changes in beh
 first('div', minimum: 0)
 ```
 
-`all` will now wait up to `Capybara.default_max_wait_time' seconds for at least one matching element to exist, and return the matching elements.  If no matching elements are found within the time it will return an empty result set.  If you need to maintain the previous behavior you can pass `wait: false` as an option to `all`
+`all` will now wait up to `Capybara.default_max_wait_time` seconds for at least one matching element to exist, and return the matching elements.  If no matching elements are found within the time it will return an empty result set.  If you need to maintain the previous behavior you can pass `wait: false` as an option to `all`
 
 ```ruby
 all('div', wait: false)
