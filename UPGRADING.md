@@ -25,3 +25,6 @@ first('div', minimum: 0)
 all('div', wait: false)
 ```
 
+## Node
+
+`Node#text` no longer fully normalizes whitespace, instead returning text as close as possible to "as rendered". This means non-blanking spaces will no longer be collapsed, carriage returns may be returned in text strings, etc.  This affects not only the `Node#text` method but also methods that take a `:text` option as well as the text related predicates, assertions, and matchers (`has_text?`, `has_content?`, `assert_text`, `have_text`, etc.).
