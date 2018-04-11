@@ -34,6 +34,11 @@ Capybara::SpecHelper.spec '#has_button?' do
   it "should be true for enabled buttons if disabled: :all" do
     expect(@session).to have_button('med', disabled: :all)
   end
+
+  it "can verify button type" do
+    expect(@session).to have_button('awe123', type: 'submit')
+    expect(@session).not_to have_button('awe123', type: 'reset')
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_button?' do

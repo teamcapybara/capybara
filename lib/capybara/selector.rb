@@ -185,7 +185,7 @@ end
 # @filter [String] :value Matches the value of an input button
 #
 Capybara.add_selector(:button) do
-  xpath(:value, :title) do |locator, **options|
+  xpath(:value, :title, :type) do |locator, **options|
     input_btn_xpath = XPath.descendant(:input)[XPath.attr(:type).one_of('submit', 'reset', 'image', 'button')]
     btn_xpath = XPath.descendant(:button)
     image_btn_xpath = XPath.descendant(:input)[XPath.attr(:type) == 'image']
