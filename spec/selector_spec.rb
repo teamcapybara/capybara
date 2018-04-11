@@ -27,6 +27,7 @@ RSpec.describe Capybara do
             <input type="text" name="form[my_text_input]" placeholder="my text" id="my_text_input"/>
             <input type="file" id="file" class=".special file"/>
             <input type="hidden" id="hidden_field" value="this is hidden"/>
+            <input type="submit" value="click me" title="submit button"/>
             <a href="#">link</a>
             <fieldset></fieldset>
             <select id="select">
@@ -191,6 +192,20 @@ RSpec.describe Capybara do
 
         it "finds not selected and not disabled options" do
           expect(string.find(:option, disabled: false, selected: false).value).to eq 'a'
+        end
+      end
+
+      describe ":button selector" do
+        it "finds by value" do
+          expect(string.find(:button, 'click me').value).to eq 'click me'
+        end
+
+        it "finds by title" do
+          expect(string.find(:button, 'submit button').value).to eq 'click me'
+        end
+
+        it "includes non-matching parameters in failure message" do
+          expect { string.find(:button, 'click me', title: 'click me') }.to raise_error(/with title click me/)
         end
       end
     end

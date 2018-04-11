@@ -251,7 +251,7 @@ module Capybara
     end
 
     def describe_all_expression_filters(**opts)
-      expression_filters.map { |ef| " with #{ef} #{opts[ef]}" if opts.key?(ef) }.join
+      expression_filters.keys.map { |ef| " with #{ef} #{opts[ef]}" if opts.key?(ef) }.join
     end
 
     def find_by_attr(attribute, value)
