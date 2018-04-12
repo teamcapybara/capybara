@@ -199,6 +199,11 @@ module Capybara
     end
 
     class NegatedMatcher
+      if defined?(::RSpec::Expectations::Version)
+        require 'capybara/rspec/compound'
+        include ::Capybara::RSpecMatchers::Compound
+      end
+
       def initialize(matcher)
         @matcher = matcher
       end

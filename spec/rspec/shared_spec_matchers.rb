@@ -80,6 +80,8 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
       it "supports compounding" do
         expect("<h1>Text</h1><h2>Text</h2>").to have_css('h1').and have_css('h2')
         expect("<h1>Text</h1><h2>Text</h2>").to have_css('h3').or have_css('h1')
+        expect("<h1>Text</h1><h2>Text</h2>").to have_no_css('h4').and have_css('h2')
+        expect("<h1>Text</h1><h2>Text</h2>").to have_no_css('h2').or have_css('h1')
       end
     end
 
@@ -147,6 +149,8 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
       it "supports compounding" do
         expect("<h1>Text</h1><h2>Text</h2>").to have_xpath('//h1').and have_xpath('//h2')
         expect("<h1>Text</h1><h2>Text</h2>").to have_xpath('//h3').or have_xpath('//h1')
+        expect("<h1>Text</h1><h2>Text</h2>").to have_no_xpath('//h4').and have_xpath('//h1')
+        expect("<h1>Text</h1><h2>Text</h2>").to have_no_xpath('//h4').or have_xpath('//h4')
       end
     end
 
@@ -253,6 +257,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
     it "supports compounding" do
       expect("<h1>Text</h1><h2>Text</h2>").to have_selector('//h1').and have_selector('//h2')
       expect("<h1>Text</h1><h2>Text</h2>").to have_selector('//h3').or have_selector('//h1')
+      expect("<h1>Text</h1><h2>Text</h2>").to have_no_selector('//h3').and have_selector('//h1')
     end
   end
 
@@ -342,6 +347,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
     it "supports compounding" do
       expect("<h1>Text</h1><h2>And</h2>").to have_content('Text').and have_content('And')
       expect("<h1>Text</h1><h2>Or</h2>").to have_content('XYZ').or have_content('Or')
+      expect("<h1>Text</h1><h2>Or</h2>").to have_no_content('XYZ').and have_content('Or')
     end
   end
 
@@ -499,6 +505,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
     it "supports compounding" do
       expect(html).to have_link('Just a link').and have_link('Another link')
       expect(html).to have_link('Not a link').or have_link('Another link')
+      expect(html).to have_no_link('Not a link').and have_link('Another link')
     end
   end
 
