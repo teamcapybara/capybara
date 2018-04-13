@@ -7,7 +7,7 @@ module TestSessions
   RackTest = Capybara::Session.new(:rack_test, TestApp)
 end
 
-Capybara::SpecHelper.run_specs TestSessions::RackTest, "RackTest", capybara_skip: %i[
+skipped_tests = %i[
   js
   modals
   screenshot
@@ -18,8 +18,9 @@ Capybara::SpecHelper.run_specs TestSessions::RackTest, "RackTest", capybara_skip
   hover
   about_scheme
 ]
+Capybara::SpecHelper.run_specs TestSessions::RackTest, "RackTest", capybara_skip: skipped_tests
 
-RSpec.describe Capybara::Session do
+RSpec.describe Capybara::Session, capybara_skip: skipped_tests do
   include_examples Capybara::RSpecMatchers, TestSessions::RackTest, :rack_test
 
   context 'with rack test driver' do

@@ -547,7 +547,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
         end.to raise_error('expected "with_js" to include "No such title"')
       end
 
-      context 'with wait' do
+      context 'with wait', requires: [:js] do
         before(:each) do
           @session = session
           @session.visit('/with_js')
@@ -592,7 +592,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
         end.to raise_error('expected "/with_js" to equal "/not_with_js"')
       end
 
-      context 'with wait' do
+      context 'with wait', requires: [:js] do
         before(:each) do
           @session = session
           @session.visit('/with_js')
@@ -840,7 +840,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
     end
   end
 
-  context "compounding", requires: [:js] do
+  context "compounding timing", requires: [:js] do
     before(:each) do
       @session = session
       @session.visit('/with_js')
@@ -848,7 +848,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
     end
 
     context "#and" do
-      it "should run 'concurrently'" do
+      it "should run 'concurrently'", requires: [:js] do
         Capybara.using_wait_time(2) do
           matcher = have_text('this is not there').and have_text('neither is this')
           expect(Benchmark.realtime do
@@ -859,7 +859,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
         end
       end
 
-      it "should run 'concurrently' and retry" do
+      it "should run 'concurrently' and retry", requires: [:js] do
         @session.click_link('reload-link')
         @session.using_wait_time(2) do
           expect(Benchmark.realtime do
