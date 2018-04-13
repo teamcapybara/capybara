@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'rspec/shared_spec_matchers'
 
 module TestSessions
   RackTest = Capybara::Session.new(:rack_test, TestApp)
@@ -20,9 +19,7 @@ skipped_tests = %i[
 ]
 Capybara::SpecHelper.run_specs TestSessions::RackTest, "RackTest", capybara_skip: skipped_tests
 
-RSpec.describe Capybara::Session, capybara_skip: skipped_tests do
-  include_examples Capybara::RSpecMatchers, TestSessions::RackTest, :rack_test
-
+RSpec.describe Capybara::Session do
   context 'with rack test driver' do
     before do
       @session = TestSessions::RackTest
