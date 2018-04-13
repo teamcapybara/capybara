@@ -1,3 +1,11 @@
+# Version 3.0.2
+Release date: 2018-04-13
+
+### Fixes
+
+* Fix expression filter descriptions in some selector failure messages
+* Fix compounding of negated matechers - Issue #2010
+
 # Version 3.0.1
 Release date: 2018-04-06
 
