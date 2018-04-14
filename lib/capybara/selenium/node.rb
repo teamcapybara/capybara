@@ -1,18 +1,7 @@
 # frozen_string_literal: true
 
 class Capybara::Selenium::Node < Capybara::Driver::Node
-  SET_FORMATS = Hash.new(date: '%Y-%m-%d', time: '%H:%M', datetime: "%m%d%Y\t%I%M%P").merge(
-    firefox: {
-      date: '%Y-%m-%d',
-      time: '%H:%M',
-      datetime: "%m%d%Y\t%I%M%P"
-    },
-    chrome: {
-      date: '%m%d%Y',
-      time: '%I%M%P',
-      datetime: "%m%d%Y\t%I%M%P"
-    }
-  )
+  SET_FORMATS = {date: '%Y-%m-%d', time: '%H:%M', datetime: '%Y-%m-%dT%H:%M'}
 
   def visible_text
     native.text
@@ -254,27 +243,18 @@ private
   end
 
   def set_date(value) # rubocop:disable Naming/AccessorMethodName
-    if value.respond_to?(:to_date)
-      set_text(value.to_date.strftime(SET_FORMATS[driver.options[:browser].to_sym][:date]))
-    else
-      set_text(value)
-    end
+    formatted_value = value.respond_to?(:to_date) ? value.to_date.strftime(SET_FORMATS[:date]) : value
+    driver.execute_script "arguments[0].value = '#{formatted_value}'", self
   end
 
   def set_time(value) # rubocop:disable Naming/AccessorMethodName
-    if value.respond_to?(:to_time)
-      set_text(value.to_time.strftime(SET_FORMATS[driver.options[:browser].to_sym][:time]))
-    else
-      set_text(value)
-    end
+    formatted_value = value.respond_to?(:to_time) ? value.to_time.strftime(SET_FORMATS[:time]) : value
+    driver.execute_script "arguments[0].value = '#{formatted_value}'", self
   end
 
   def set_datetime_local(value) # rubocop:disable Naming/AccessorMethodName
-    if value.respond_to?(:to_time)
-      set_text(value.to_time.strftime(SET_FORMATS[driver.options[:browser].to_sym][:datetime]))
-    else
-      set_text(value)
-    end
+    formatted_value = value.respond_to?(:to_time) ? value.to_time.strftime(SET_FORMATS[:datetime]) : value
+    driver.execute_script "arguments[0].value = '#{formatted_value}'", self
   end
 
   def set_file(value) # rubocop:disable Naming/AccessorMethodName
