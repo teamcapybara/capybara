@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'selenium-webdriver'
 require 'shared_selenium_session'
 require 'rspec/shared_spec_matchers'
 
@@ -12,6 +11,7 @@ CHROME_DRIVER = ENV['HEADLESS'] ? :selenium_chrome_headless : :selenium_chrome
 # end
 
 Capybara.register_driver :selenium_chrome_clear_storage do |app|
+  Capybara::Selenium::Driver.load_selenium
   chrome_options = {
     browser: :chrome,
     options: ::Selenium::WebDriver::Chrome::Options.new

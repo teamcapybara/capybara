@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require "selenium-webdriver"
 require 'shared_selenium_session'
 require 'rspec/shared_spec_matchers'
 
+Capybara::Selenium::Driver.load_selenium
 browser_options = ::Selenium::WebDriver::Firefox::Options.new
 browser_options.args << '--headless' if ENV['HEADLESS']
 browser_options.add_preference 'dom.file.createInChild', true

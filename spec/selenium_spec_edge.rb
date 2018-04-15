@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require "selenium-webdriver"
 require 'shared_selenium_session'
 require 'rspec/shared_spec_matchers'
 
