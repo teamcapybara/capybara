@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require "selenium-webdriver"
 
 RSpec.shared_examples "Capybara::Session" do |session, mode|
   let(:session) { session }

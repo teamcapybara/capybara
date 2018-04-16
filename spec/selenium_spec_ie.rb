@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require "selenium-webdriver"
 require 'shared_selenium_session'
 require 'rspec/shared_spec_matchers'
 
 Capybara.register_driver :selenium_ie do |app|
   # ::Selenium::WebDriver.logger.level = "debug"
-  Capybara::Selenium::Driver.load_selenium
   Capybara::Selenium::Driver.new(
     app,
     browser: :ie,

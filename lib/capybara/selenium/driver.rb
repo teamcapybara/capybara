@@ -55,7 +55,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def initialize(app, **options)
-    Capybara::Selenium::Driver.load_selenium
+    self.class.load_selenium
     @session = nil
     @app = app
     @browser = nil
