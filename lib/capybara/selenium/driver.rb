@@ -13,6 +13,23 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   attr_reader :app, :options
 
+  def self.load_selenium
+    require 'selenium-webdriver'
+    # Fix for selenium-webdriver 3.4.0 which misnamed these
+    unless defined?(::Selenium::WebDriver::Error::ElementNotInteractableError)
+      ::Selenium::WebDriver::Error.const_set('ElementNotInteractableError', Class.new(::Selenium::WebDriver::Error::WebDriverError))
+    end
+    unless defined?(::Selenium::WebDriver::Error::ElementClickInterceptedError)
+      ::Selenium::WebDriver::Error.const_set('ElementClickInterceptedError', Class.new(::Selenium::WebDriver::Error::WebDriverError))
+    end
+  rescue LoadError => e
+    if e.message =~ /selenium-webdriver/
+      raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
+    else
+      raise e
+    end
+  end
+
   def browser
     unless @browser
       if firefox?
@@ -38,7 +55,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def initialize(app, **options)
-    load_selenium
+    self.class.load_selenium
     @session = nil
     @app = app
     @browser = nil
@@ -470,23 +487,6 @@ private
       Capybara::Selenium::Node.new(self, arg)
     else
       arg
-    end
-  end
-
-  def load_selenium
-    require 'selenium-webdriver'
-    # Fix for selenium-webdriver 3.4.0 which misnamed these
-    unless defined?(::Selenium::WebDriver::Error::ElementNotInteractableError)
-      ::Selenium::WebDriver::Error.const_set('ElementNotInteractableError', Class.new(::Selenium::WebDriver::Error::WebDriverError))
-    end
-    unless defined?(::Selenium::WebDriver::Error::ElementClickInterceptedError)
-      ::Selenium::WebDriver::Error.const_set('ElementClickInterceptedError', Class.new(::Selenium::WebDriver::Error::WebDriverError))
-    end
-  rescue LoadError => e
-    if e.message =~ /selenium-webdriver/
-      raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
-    else
-      raise e
     end
   end
 end
