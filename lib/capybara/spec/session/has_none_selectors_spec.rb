@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Capybara::SpecHelper.spec '#have_none_of_selectors' do
   before do
     @session.visit('/with_html')
