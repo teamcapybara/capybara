@@ -43,13 +43,15 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
 
       it "should have return code 1 when running selenium_driver_rspec_failure.rb" do
-        skip if ENV['HEADLESS']
+        skip if headless_or_remote?
+
         system(@env, 'rspec spec/fixtures/selenium_driver_rspec_failure.rb', out: File::NULL, err: File::NULL)
         expect($CHILD_STATUS.exitstatus).to eq(1)
       end
 
       it "should have return code 0 when running selenium_driver_rspec_success.rb" do
-        skip if ENV['HEADLESS']
+        skip if headless_or_remote?
+
         system(@env, 'rspec spec/fixtures/selenium_driver_rspec_success.rb', out: File::NULL, err: File::NULL)
         expect($CHILD_STATUS.exitstatus).to eq(0)
       end
@@ -225,5 +227,9 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         end.to raise_error(ArgumentError, 'Not allowed to close the primary window')
       end
     end
+  end
+
+  def headless_or_remote?
+    !ENV['HEADLESS'].nil? || session.driver.options[:browser] == :remote
   end
 end

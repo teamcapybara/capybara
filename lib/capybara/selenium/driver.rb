@@ -32,10 +32,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def browser
     unless @browser
-      if firefox?
-        options[:desired_capabilities] ||= {}
-        options[:desired_capabilities][:unexpectedAlertBehaviour] = "ignore"
-      end
+      # if firefox?
+      #   options[:desired_capabilities] ||= {}
+      #   options[:desired_capabilities][:unexpectedAlertBehaviour] = "ignore"
+      # end
 
       @processed_options = options.reject { |key, _val| SPECIAL_OPTIONS.include?(key) }
       @browser = Selenium::WebDriver.for(options[:browser], @processed_options)
@@ -305,29 +305,25 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   # @api private
   def firefox?
-    browser_name == "firefox"
+    browser.browser == :firefox
   end
 
   # @api private
   def chrome?
-    browser_name == "chrome"
+    browser.browser == :chrome
   end
 
   # @api private
   def edge?
-    browser_name == "edge"
+    browser.browser == :edge
   end
 
   # @api private
   def ie?
-    browser_name == "ie"
+    browser.browser == :ie
   end
 
 private
-
-  def browser_name
-    options[:browser].to_s
-  end
 
   def clear_storage
     if options[:clear_session_storage]
