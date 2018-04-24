@@ -5,20 +5,22 @@ require 'yard'
 
 desc "Run all examples with Firefox non-marionette"
 
+rspec_opts = %w[--color]
+
 RSpec::Core::RakeTask.new(:spec_marionette) do |t|
-  t.rspec_opts = %w[--color]
+  t.rspec_opts = rspec_opts
   t.pattern = './spec{,/*/**}/*{_spec.rb,_spec_marionette.rb}'
 end
 
-%w[chrome ie edge].each do |driver|
+%w[chrome ie edge chrome_remote].each do |driver|
   RSpec::Core::RakeTask.new(:"spec_#{driver}") do |t|
-    t.rspec_opts = %w[--color]
+    t.rspec_opts = rspec_opts
     t.pattern = "./spec/*{_spec_#{driver}.rb}"
   end
 end
 
 RSpec::Core::RakeTask.new(:spec_rack) do |t|
-  t.rspec_opts = %w[--color]
+  t.rspec_opts = rspec_opts
   t.pattern = './spec{,/*/**}/*{_spec.rb}'
 end
 
@@ -40,6 +42,8 @@ task :travis do
     Rake::Task[:spec_ie].invoke
   elsif ENV['CAPYBARA_EDGE']
     Rake::Task[:spec_edge].invoke
+  elsif ENV['CAPYBARA_CHROME_REMOTE']
+    Rake::Task[:spec_chrome_remote].invoke
   else
     Rake::Task[:spec_chrome].invoke
   end
