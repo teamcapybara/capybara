@@ -62,9 +62,13 @@ matrix:
       env: CAPYBARA_FF=true HEADLESS=true
       addons:
         firefox: latest
+    - gemfile: Gemfile
+      rvm: 2.5.0
+      env: CAPYBARA_REMOTE=true
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-marionette
+    - env: CAPYBARA_REMOTE=true
     - rvm: rbx-3
 before_install:
   - gem update --system
@@ -84,5 +88,10 @@ before_script:
       mkdir -p ~/.config/awesome;
       echo "require('awful'); tags = {}; tags[1] = awful.tag({'name'})" > ~/.config/awesome/rc.lua;
       awesome &
+    fi
+  - if [[ $CAPYBARA_REMOTE ]]; then
+      wget http://selenium-release.storage.googleapis.com/3.11/selenium-server-standalone-3.11.0.jar;
+      export PATH=~/.webdrivers:$PATH;
+      java -jar selenium-server-standalone-3.11.0.jar &
     fi
 script: "bundle exec rake travis"
