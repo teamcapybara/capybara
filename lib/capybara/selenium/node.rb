@@ -255,7 +255,7 @@ private
 
   def set_date(value) # rubocop:disable Naming/AccessorMethodName
     if value.respond_to?(:to_date)
-      set_text(value.to_date.strftime(SET_FORMATS[driver.browser.browser][:date]))
+      set_text(value.to_date.strftime(SET_FORMATS[driver.browser_name][:date]))
     else
       set_text(value)
     end
@@ -263,7 +263,7 @@ private
 
   def set_time(value) # rubocop:disable Naming/AccessorMethodName
     if value.respond_to?(:to_time)
-      set_text(value.to_time.strftime(SET_FORMATS[driver.browser.browser][:time]))
+      set_text(value.to_time.strftime(SET_FORMATS[driver.browser_name][:time]))
     else
       set_text(value)
     end
@@ -271,7 +271,7 @@ private
 
   def set_datetime_local(value) # rubocop:disable Naming/AccessorMethodName
     if value.respond_to?(:to_time)
-      set_text(value.to_time.strftime(SET_FORMATS[driver.browser.browser][:datetime]))
+      set_text(value.to_time.strftime(SET_FORMATS[driver.browser_name][:datetime]))
     else
       set_text(value)
     end

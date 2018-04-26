@@ -305,22 +305,27 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   # @api private
   def firefox?
-    browser.browser == :firefox
+    browser_name == :firefox
   end
 
   # @api private
   def chrome?
-    browser.browser == :chrome
+    browser_name == :chrome
   end
 
   # @api private
   def edge?
-    browser.browser == :edge
+    browser_name == :edge
   end
 
   # @api private
   def ie?
-    browser.browser == :ie
+    browser_name == :ie
+  end
+
+  # @api private
+  def browser_name
+    browser.browser
   end
 
 private
