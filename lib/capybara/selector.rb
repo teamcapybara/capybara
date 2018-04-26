@@ -407,6 +407,34 @@ Capybara.add_selector(:select) do
   end
 end
 
+Capybara.add_selector(:datalist_input) do
+  label "input box with datalist completion"
+
+  xpath do |locator, **options|
+    xpath = XPath.descendant(:input)[XPath.attr(:list)]
+    locate_field(xpath, locator, options)
+  end
+
+  filter_set(:_field, %i[disabled name placeholder])
+
+  filter(:options) do |node, options|
+    actual = node.find("//datalist[@id=#{node[:list]}]", visible: :all).all(:datalist_option, wait: false).map(&:value)
+    options.sort == actual.sort
+  end
+
+  filter(:with_options) do |node, options|
+    options.all? { |option| node.find("//datalist[@id=#{node[:list]}]", visible: :all).first(:datalist_option, option) }
+  end
+
+  describe do |options: nil, with_options: nil, **opts|
+    desc = "".dup
+    desc << " with options #{options.inspect}" if options
+    desc << " with at least options #{with_options.inspect}" if with_options
+    desc << describe_all_expression_filters(opts)
+    desc
+  end
+end
+
 ##
 #
 # Find option elements
@@ -429,6 +457,25 @@ Capybara.add_selector(:option) do
     desc = "".dup
     desc << " that is#{' not' unless options[:disabled]} disabled" if options.key?(:disabled)
     desc << " that is#{' not' unless options[:selected]} selected" if options.key?(:selected)
+    desc
+  end
+end
+
+Capybara.add_selector(:datalist_option) do
+  label "datalist option"
+  visible(:all)
+
+  xpath do |locator|
+    xpath = XPath.descendant(:option)
+    xpath = xpath[XPath.string.n.is(locator.to_s) | (XPath.attr(:value) == locator.to_s)] unless locator.nil?
+    xpath
+  end
+
+  filter(:disabled, :boolean) { |node, value| !(value ^ node.disabled?) }
+
+  describe do |**options|
+    desc = "".dup
+    desc << " that is#{' not' unless options[:disabled]} disabled" if options.key?(:disabled)
     desc
   end
 end
