@@ -1,0 +1,10 @@
+---
+version: "2.1"
+
+services:
+  selenium:
+    network_mode: "host"
+    image: "selenium/${SELENIUM_IMAGE:-standalone-chrome-debug}"
+    volumes:
+      - "/dev/shm:/dev/shm"
+      - "${PWD}:${PWD}" # For making attach_file specs work

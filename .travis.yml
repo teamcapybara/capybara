@@ -1,6 +1,8 @@
 language: ruby
 sudo: required
 dist: trusty
+services:
+  - docker
 rvm:
   - 2.5.0
   - 2.3.6
@@ -30,6 +32,9 @@ cache:
 
 matrix:
   include:
+    - gemfile: Gemfile
+      rvm: 2.5.0
+      env: CAPYBARA_CHROME_REMOTE=true
     - gemfile: gemfiles/Gemfile.rspec-34
       rvm: 2.3.6
       env: CAPYBARA_FF=true
@@ -66,6 +71,7 @@ matrix:
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-marionette
     - rvm: rbx-3
+    - env: CAPYBARA_CHROME_REMOTE=true
 before_install:
   - gem update --system
   # - gem update bundler
@@ -77,7 +83,7 @@ before_install:
       bundle config local.selenium-webdriver ../selenium/build/rb;
     fi
 before_script:
-  - if [[ -z $HEADLESS ]]; then
+  - if [[ -z $HEADLESS && -z $CAPYBARA_CHROME_REMOTE ]]; then
       export DISPLAY=:99.0;
       sh -e /etc/init.d/xvfb start;
       sleep 1;
@@ -85,4 +91,15 @@ before_script:
       echo "require('awful'); tags = {}; tags[1] = awful.tag({'name'})" > ~/.config/awesome/rc.lua;
       awesome &
     fi
+  - if [[ $CAPYBARA_CHROME_REMOTE = true ]]; then
+      docker-compose up -d selenium
+
+      TIMEOUT=10
+
+      until wget --spider http://localhost:4444 > /dev/null 2>&1 || [ $TIMEOUT -eq 0 ]; do
+        echo "Waiting for selenium server, $((TIMEOUT--)) remaining attempts...";
+        sleep 1;
+      done
+    fi
+
 script: "bundle exec rake travis"
