@@ -15,4 +15,4 @@ gem 'rspec-expectations', github: 'rspec/rspec-expectations'
 gem 'cucumber', github: 'cucumber/cucumber-ruby'
 
 gem 'puma', github: 'puma/puma'
-
+gem 'thin', github: 'macournoyer/thin'

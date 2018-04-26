@@ -62,6 +62,10 @@ RSpec.describe Capybara do
     it "should have :puma registered" do
       expect(Capybara.servers[:puma]).not_to be_nil
     end
+
+    it "should have :thin registered" do
+      expect(Capybara.servers[:thin]).not_to be_nil
+    end
   end
 
   describe "server=" do

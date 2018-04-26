@@ -10,3 +10,4 @@ gem 'rack', github: 'rack/rack'
 gem 'sinatra', github: 'sinatra/sinatra', branch: 'master'
 
 gem 'puma', github: 'puma/puma'
+gem 'thin', github: 'macournoyer/thin'

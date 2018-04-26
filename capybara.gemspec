@@ -36,6 +36,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("rspec", [">= 3.4.0"])
   s.add_development_dependency("selenium-webdriver", [">= 3.0", "< 4.0", "!=3.4.1"])
   s.add_development_dependency("sinatra", [">= 1.4.0"])
+  s.add_development_dependency("thin")
   s.add_development_dependency("webdrivers") if ENV['CI']
   s.add_development_dependency("yard", [">= 0.9.0"])
 
