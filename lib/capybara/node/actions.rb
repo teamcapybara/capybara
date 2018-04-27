@@ -129,7 +129,7 @@ module Capybara
       #   @macro waiting_behavior
       #
       # @return [Capybara::Node::Element]  The element checked or the label clicked
-      def check(locator, **options)
+      def check(locator = nil, **options)
         _check_with_label(:checkbox, true, locator, **options)
       end
 
