@@ -461,6 +461,18 @@ Capybara.register_server :puma do |app, port, host, **options|
   end.run.join
 end
 
+Capybara.register_server :thin do |app, port, host, **options|
+  begin
+    require 'rack/handler/thin'
+  rescue LoadError
+    raise LoadError, "Capybara is unable to load `thin` for its server, please add `thin` to your project or specify a different server via something like `Capybara.server = :webrick`."
+  end
+
+  Thin::Logging.silent = options.delete(:Silent)
+
+  Rack::Handler::Thin.run(app, {:Port => port, :Host => host, :signals => false}.merge(options))
+end
+
 Capybara.configure do |config|
   config.always_include_port = false
   config.run_server = true

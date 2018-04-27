@@ -104,6 +104,13 @@ Capybara.server = :puma # Until your setup is working
 Capybara.server = :puma, { Silent: true } # To clean up your test output
 ```
 
+Or in case you are using thin:
+
+```ruby
+Capybara.server = :thin
+Capybara.server = :thin, { Silent: true } # To silence thin's start message
+```
+
 ## <a name="using-capybara-with-cucumber"></a>Using Capybara with Cucumber
 
 The `cucumber-rails` gem comes with Capybara support built-in. If you
