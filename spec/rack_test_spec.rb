@@ -19,7 +19,7 @@ skipped_tests = %i[
 ]
 Capybara::SpecHelper.run_specs TestSessions::RackTest, "RackTest", capybara_skip: skipped_tests
 
-RSpec.describe Capybara::Session do
+RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
   context 'with rack test driver' do
     before do
       @session = TestSessions::RackTest
@@ -66,11 +66,11 @@ RSpec.describe Capybara::Session do
 
     describe "#fill_in" do
       it "should warn that :fill_options are not supported" do
-        expect_any_instance_of(Capybara::RackTest::Node).to receive(:warn)
-          .with("Options passed to Node#set but the RackTest driver doesn't support any - ignoring")
+        allow_any_instance_of(Capybara::RackTest::Node).to receive(:warn)
         @session.visit "/with_html"
-        @session.fill_in 'test_field', with: 'not_monkey', fill_options: { random: true }
+        field = @session.fill_in 'test_field', with: 'not_monkey', fill_options: { random: true }
         expect(@session).to have_field('test_field', with: 'not_monkey')
+        expect(field.base).to have_received(:warn).with("Options passed to Node#set but the RackTest driver doesn't support any - ignoring")
       end
     end
 
@@ -221,9 +221,10 @@ module CSSHandlerIncludeTester
     raise 'should never be called'
   end
 end
-include CSSHandlerIncludeTester # rubocop:disable Style/MixinUsage
 
 RSpec.describe Capybara::RackTest::CSSHandlers do
+  include CSSHandlerIncludeTester
+
   it "should not be extended by global includes" do
     expect(Capybara::RackTest::CSSHandlers.new).not_to respond_to(:dont_extend_css_handler)
   end

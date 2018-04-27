@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Capybara::SpecHelper.spec '#within_frame', requires: [:frames] do
-  before(:each) do
+  before do
     @session.visit('/within_frames')
   end
 

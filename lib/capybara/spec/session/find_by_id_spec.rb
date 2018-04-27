@@ -24,7 +24,7 @@ Capybara::SpecHelper.spec '#find_by_id' do
       expect(@session.find_by_id("hidden_via_ancestor", visible: false).text(:all)).to match(/with hidden ancestor/)
     end
 
-    it "finds invisible elements when `false`" do
+    it "doesn't find invisible elements when `true`" do
       expect do
         @session.find_by_id("hidden_via_ancestor", visible: true)
       end.to raise_error(Capybara::ElementNotFound)

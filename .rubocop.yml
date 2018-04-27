@@ -1,3 +1,6 @@
+require:
+  - rubocop-rspec
+
 AllCops:
   DisabledByDefault: false
   TargetRubyVersion: 2.2.2
@@ -76,9 +79,6 @@ Style/SingleLineMethods:
 Style/StringLiterals:
   Enabled: false
 
-Style/StringLiteralsInInterpolation:
-  Enabled: false
-
 Style/RegexpLiteral:
   Enabled: false
 
@@ -112,9 +112,6 @@ Style/RedundantReturn:
 Style/ClassAndModuleChildren:
   Enabled: false
 
-Style/ModuleFunction:
-  Enabled: false
-
 Style/NumericLiterals:
   Exclude:
     - 'lib/capybara/spec/**/*'
@@ -141,3 +138,36 @@ Security/YAMLLoad:
   Exclude:
     - 'lib/capybara/spec/**/*'
     - 'spec/**/*'
+
+RSpec/ExampleWording:
+  Enabled: false
+
+RSpec/InstanceVariable:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/DescribedClass:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
+
+RSpec/DescribeClass:
+  Enabled: false
+
+RSpec/AnyInstance:
+  Enabled: false
+
+RSpec/FilePath:
+  Enabled: false
+
+RSpec/PredicateMatcher:
+  Enabled: false

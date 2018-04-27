@@ -3,7 +3,7 @@
 module Capybara
   # @api private
   module Helpers
-    extend self
+  module_function
 
     ##
     # @deprecated

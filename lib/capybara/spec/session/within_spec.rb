@@ -7,7 +7,7 @@ Capybara::SpecHelper.spec '#within' do
 
   context "with CSS selector" do
     it "should click links in the given scope" do
-      @session.within(:css, "#for_bar li", text: 'With Simple HTML') do
+      @session.within(:css, "#for_bar li:first-child") do
         @session.click_link('Go')
       end
       expect(@session).to have_content('Bar')
@@ -103,9 +103,9 @@ Capybara::SpecHelper.spec '#within' do
             @session.within(".//div[@id='doesnotexist']") do
             end
           end.to raise_error(Capybara::ElementNotFound)
-        end.to_not change { @session.has_xpath?(".//div[@id='another_foo']") }.from(false)
+        end.not_to change { @session.has_xpath?(".//div[@id='another_foo']") }.from(false)
       end
-    end.to_not change { @session.has_xpath?(".//div[@id='another_foo']") }.from(true)
+    end.not_to change { @session.has_xpath?(".//div[@id='another_foo']") }.from(true)
   end
 
   it "should fill in a field and click a button" do

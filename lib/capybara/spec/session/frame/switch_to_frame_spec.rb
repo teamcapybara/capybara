@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 Capybara::SpecHelper.spec '#switch_to_frame', requires: [:frames] do
-  before(:each) do
+  before do
     @session.visit('/within_frames')
   end
 
-  after(:each) do
+  after do
     # Ensure we clean up after the frame changes
     @session.switch_to_frame(:top)
   end

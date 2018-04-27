@@ -114,7 +114,7 @@ module Capybara
       if count.zero?
         message << " but there were no matches"
       else
-        message << ", found #{count} #{Capybara::Helpers.declension("match", "matches", count)}: " << full_results.map(&:text).map(&:inspect).join(", ")
+        message << ", found #{count} #{Capybara::Helpers.declension('match', 'matches', count)}: " << full_results.map(&:text).map(&:inspect).join(", ")
       end
       unless rest.empty?
         elements = rest.map { |el| el.text rescue "<<ERROR>>" }.map(&:inspect).join(", ")

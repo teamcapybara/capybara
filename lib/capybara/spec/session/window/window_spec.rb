@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
-  before(:each) do
+  before do
     @window = @session.current_window
     @session.visit('/with_windows')
   end
-  after(:each) do
+  after do
     (@session.windows - [@window]).each do |w|
       @session.switch_to_window w
       w.close
@@ -14,7 +14,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
   end
 
   describe '#exists?' do
-    before(:each) do
+    before do
       @other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
@@ -41,7 +41,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
   end
 
   describe '#current?' do
-    before(:each) do
+    before do
       @other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
@@ -61,7 +61,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
   end
 
   describe '#close' do
-    before(:each) do
+    before do
       @other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end

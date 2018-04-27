@@ -37,8 +37,7 @@ Capybara::SpecHelper.spec '#assert_current_path' do
   end
 
   it "should not cause an exception when current_url is nil" do
-    allow_any_instance_of(Capybara::Session).to receive(:current_url) { nil }
-
+    allow_any_instance_of(Capybara::Session).to receive(:current_url).and_return(nil)
     expect { @session.assert_current_path(nil) }.not_to raise_error
   end
 end
@@ -66,7 +65,7 @@ Capybara::SpecHelper.spec '#assert_no_current_path?' do
   end
 
   it "should not cause an exception when current_url is nil" do
-    allow_any_instance_of(Capybara::Session).to receive(:current_url) { nil }
+    allow_any_instance_of(Capybara::Session).to receive(:current_url).and_return(nil)
 
     expect { @session.assert_no_current_path('/with_html') }.not_to raise_error
   end

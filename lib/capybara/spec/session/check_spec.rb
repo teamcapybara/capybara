@@ -128,21 +128,21 @@ Capybara::SpecHelper.spec "#check" do
       end
 
       it "should check via clicking the label with :for attribute if possible" do
-        expect(@session.find(:checkbox, 'form_cars_tesla', unchecked: true, visible: :hidden)).to be
+        expect(@session.find(:checkbox, 'form_cars_tesla', unchecked: true, visible: :hidden)).to be_truthy
         @session.check('form_cars_tesla')
         @session.click_button('awesome')
         expect(extract_results(@session)['cars']).to include('tesla')
       end
 
       it "should check via clicking the wrapping label if possible" do
-        expect(@session.find(:checkbox, 'form_cars_mclaren', unchecked: true, visible: :hidden)).to be
+        expect(@session.find(:checkbox, 'form_cars_mclaren', unchecked: true, visible: :hidden)).to be_truthy
         @session.check('form_cars_mclaren')
         @session.click_button('awesome')
         expect(extract_results(@session)['cars']).to include('mclaren')
       end
 
       it "should not click the label if unneeded" do
-        expect(@session.find(:checkbox, 'form_cars_jaguar', checked: true, visible: :hidden)).to be
+        expect(@session.find(:checkbox, 'form_cars_jaguar', checked: true, visible: :hidden)).to be_truthy
         @session.check('form_cars_jaguar')
         @session.click_button('awesome')
         expect(extract_results(@session)['cars']).to include('jaguar')
@@ -170,14 +170,14 @@ Capybara::SpecHelper.spec "#check" do
 
       context "with allow_label_click == true" do
         it "should check via the label if input is hidden" do
-          expect(@session.find(:checkbox, 'form_cars_tesla', unchecked: true, visible: :hidden)).to be
+          expect(@session.find(:checkbox, 'form_cars_tesla', unchecked: true, visible: :hidden)).to be_truthy
           @session.check('form_cars_tesla', allow_label_click: true)
           @session.click_button('awesome')
           expect(extract_results(@session)['cars']).to include('tesla')
         end
 
         it "should not wait the full time if label can be clicked" do
-          expect(@session.find(:checkbox, 'form_cars_tesla', unchecked: true, visible: :hidden)).to be
+          expect(@session.find(:checkbox, 'form_cars_tesla', unchecked: true, visible: :hidden)).to be_truthy
           start_time = Time.now
           @session.check('form_cars_tesla', allow_label_click: true, wait: 10)
           end_time = Time.now
@@ -185,7 +185,7 @@ Capybara::SpecHelper.spec "#check" do
         end
 
         it "should check via the label if input is moved off the left edge of the page" do
-          expect(@session.find(:checkbox, 'form_cars_pagani', unchecked: true, visible: :all)).to be
+          expect(@session.find(:checkbox, 'form_cars_pagani', unchecked: true, visible: :all)).to be_truthy
           @session.check('form_cars_pagani', allow_label_click: true)
           @session.click_button('awesome')
           expect(extract_results(@session)['cars']).to include('pagani')

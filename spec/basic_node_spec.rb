@@ -95,7 +95,7 @@ RSpec.describe Capybara do
       expect(string.find('//h1').path).to eq('/html/body/div/div[1]/h1')
     end
 
-    it "allows finding elements and extracting the path" do
+    it "allows finding elements and extracting the value" do
       expect(string.find('//div/input').value).to eq('bar')
       expect(string.find('//select').value).to eq('Capybara')
     end

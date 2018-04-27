@@ -210,9 +210,7 @@ private
       find_xpath(".//input")
     end.first
 
-    if labelled_control && (labelled_control.checkbox? || labelled_control.radio?)
-      labelled_control.set(!labelled_control.checked?)
-    end
+    labelled_control.set(!labelled_control.checked?) if checkbox_or_radio?(labelled_control)
   end
 
   def link?
@@ -228,6 +226,10 @@ private
   end
 
 protected
+
+  def checkbox_or_radio?(field = self)
+    field && (field.checkbox? || field.radio?)
+  end
 
   def checkbox?
     input_field? && type == 'checkbox'

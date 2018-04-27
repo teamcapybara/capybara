@@ -49,31 +49,33 @@ module Capybara
 
       def run_specs(session, name, **options)
         specs = @specs
-        RSpec.describe Capybara::Session, name, options do
+        RSpec.describe Capybara::Session, name, options do # rubocop:disable RSpec/EmptyExampleGroup
           include Capybara::SpecHelper
           include Capybara::RSpecMatchers
+          # rubocop:disable RSpec/ScatteredSetup
           before do
             @session = session
           end
 
           after do
-            @session.reset_session!
+            session.reset_session!
           end
 
           before :each, psc: true do
-            SpecHelper.reset_threadsafe(true, @session)
+            SpecHelper.reset_threadsafe(true, session)
           end
 
           after psc: true do
-            SpecHelper.reset_threadsafe(false, @session)
+            SpecHelper.reset_threadsafe(false, session)
           end
 
           before :each, :exact_false do
             Capybara.exact = false
           end
+          # rubocop:enable RSpec/ScatteredSetup
 
           specs.each do |spec_name, spec_options, block|
-            describe spec_name, *spec_options do
+            describe spec_name, *spec_options do # rubocop:disable RSpec/EmptyExampleGroup
               class_eval(&block)
             end
           end

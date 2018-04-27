@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Capybara::SpecHelper.spec '#windows', requires: [:windows] do
-  before(:each) do
+  before do
     @window = @session.current_window
     @session.visit('/with_windows')
     @session.find(:css, '#openTwoWindows').click
@@ -10,7 +10,7 @@ Capybara::SpecHelper.spec '#windows', requires: [:windows] do
       raise Capybara::CapybaraError if @session.windows.size != 3
     end
   end
-  after(:each) do
+  after do
     (@session.windows - [@window]).each do |w|
       @session.switch_to_window w
       w.close

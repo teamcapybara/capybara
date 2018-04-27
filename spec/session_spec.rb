@@ -3,10 +3,18 @@
 require 'spec_helper'
 
 RSpec.describe Capybara::Session do
-  it "verifies a passed app is a rack app" do
-    expect do
-      Capybara::Session.new(:unknown, random: "hash")
-    end.to raise_error TypeError, "The second parameter to Session::new should be a rack app if passed."
+  context "#new" do
+    it "should raise an error if passed non-existent driver" do
+      expect do
+        Capybara::Session.new(:quox, TestApp).driver
+      end.to raise_error(Capybara::DriverNotFoundError)
+    end
+
+    it "verifies a passed app is a rack app" do
+      expect do
+        Capybara::Session.new(:unknown, random: "hash")
+      end.to raise_error TypeError, "The second parameter to Session::new should be a rack app if passed."
+    end
   end
 
   context "current_driver" do

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 Capybara::SpecHelper.spec '#current_window', requires: [:windows] do
-  before(:each) do
+  before do
     @window = @session.current_window
     @session.visit('/with_windows')
   end
-  after(:each) do
+  after do
     (@session.windows - [@window]).each do |w|
       @session.switch_to_window w
       w.close

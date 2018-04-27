@@ -189,7 +189,7 @@ RSpec.describe Capybara::Server do
   it "is not #responsive? when Net::HTTP raises a SystemCallError" do
     app = -> { [200, {}, ['Hello, world']] }
     server = Capybara::Server.new(app)
-    expect(Net::HTTP).to receive(:start).and_raise(SystemCallError.allocate)
+    allow(Net::HTTP).to receive(:start).and_raise(SystemCallError.allocate)
     expect(server.responsive?).to eq false
   end
 

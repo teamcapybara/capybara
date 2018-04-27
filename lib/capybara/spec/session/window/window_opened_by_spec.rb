@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
-  before(:each) do
+  before do
     @window = @session.current_window
     @session.visit('/with_windows')
-    expect(@session).to have_css('body.loaded')
+    @session.assert_selector(:css, 'body.loaded')
   end
-  after(:each) do
+  after do
     (@session.windows - [@window]).each do |w|
       @session.switch_to_window w
       w.close

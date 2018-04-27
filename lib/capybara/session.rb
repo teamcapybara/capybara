@@ -137,18 +137,17 @@ module Capybara
     # Raise errors encountered in the server
     #
     def raise_server_error!
-      if @server and @server.error
-        # Force an explanation for the error being raised as the exception cause
-        begin
-          if config.raise_server_errors
-            raise CapybaraError, "Your application server raised an error - It has been raised in your test code because Capybara.raise_server_errors == true"
-          end
-        rescue CapybaraError
-          # needed to get the cause set correctly in JRuby -- otherwise we could just do raise @server.error
-          raise @server.error, @server.error.message, @server.error.backtrace
-        ensure
-          @server.reset_error!
+      return if @server.nil? || !@server.error
+      # Force an explanation for the error being raised as the exception cause
+      begin
+        if config.raise_server_errors
+          raise CapybaraError, "Your application server raised an error - It has been raised in your test code because Capybara.raise_server_errors == true"
         end
+      rescue CapybaraError
+        # needed to get the cause set correctly in JRuby -- otherwise we could just do raise @server.error
+        raise @server.error, @server.error.message, @server.error.backtrace
+      ensure
+        @server.reset_error!
       end
     end
 

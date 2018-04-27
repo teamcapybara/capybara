@@ -44,7 +44,7 @@ $stdout.puts `#{Selenium::WebDriver::Firefox.driver_path} --version` if ENV['CI'
 
 Capybara::SpecHelper.run_specs TestSessions::SeleniumMarionette, "selenium", capybara_skip: skipped_tests
 
-RSpec.describe "Capybara::Session with firefox" do
+RSpec.describe "Capybara::Session with firefox" do # rubocop:disable RSpec/MultipleDescribes
   include Capybara::SpecHelper
   include_examples  "Capybara::Session", TestSessions::SeleniumMarionette, :selenium_marionette
   include_examples  Capybara::RSpecMatchers, TestSessions::SeleniumMarionette, :selenium_marionette
@@ -57,7 +57,7 @@ RSpec.describe Capybara::Selenium::Driver do
 
   describe '#quit' do
     it "should reset browser when quit" do
-      expect(@driver.browser).to be
+      expect(@driver.browser).to be_truthy
       @driver.quit
       # access instance variable directly so we don't create a new browser instance
       expect(@driver.instance_variable_get(:@browser)).to be_nil
@@ -74,7 +74,7 @@ RSpec.describe Capybara::Selenium::Driver do
       end
 
       it "warns UnknownError returned during quit because the browser is probably already gone" do
-        expect_any_instance_of(Capybara::Selenium::Driver).to receive(:warn).with(/random message/)
+        allow(@driver).to receive(:warn)
         allow(@driver.browser).to(
           receive(:quit)
           .and_raise(Selenium::WebDriver::Error::UnknownError, "random message")
@@ -82,10 +82,11 @@ RSpec.describe Capybara::Selenium::Driver do
 
         expect { @driver.quit }.not_to raise_error
         expect(@driver.instance_variable_get(:@browser)).to be_nil
+        expect(@driver).to have_received(:warn).with(/random message/)
       end
 
       it "ignores silenced UnknownError returned during quit because the browser is almost definitely already gone" do
-        expect_any_instance_of(Capybara::Selenium::Driver).not_to receive(:warn)
+        allow(@driver).to receive(:warn)
         allow(@driver.browser).to(
           receive(:quit)
           .and_raise(Selenium::WebDriver::Error::UnknownError, "Error communicating with the remote browser")
@@ -93,6 +94,7 @@ RSpec.describe Capybara::Selenium::Driver do
 
         expect { @driver.quit }.not_to raise_error
         expect(@driver.instance_variable_get(:@browser)).to be_nil
+        expect(@driver).not_to have_received(:warn)
       end
     end
   end

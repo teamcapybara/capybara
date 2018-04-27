@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Capybara::SpecHelper.spec '#become_closed', requires: %i[windows js] do
-  before(:each) do
+  before do
     @window = @session.current_window
     @session.visit('/with_windows')
     @other_window = @session.window_opened_by do
@@ -9,7 +9,7 @@ Capybara::SpecHelper.spec '#become_closed', requires: %i[windows js] do
     end
   end
 
-  after(:each) do
+  after do
     @session.document.synchronize(5, errors: [Capybara::CapybaraError]) do
       raise Capybara::CapybaraError if @session.windows.size != 1
     end
@@ -68,7 +68,7 @@ Capybara::SpecHelper.spec '#become_closed', requires: %i[windows js] do
       Capybara.using_wait_time 0.3 do
         expect do
           expect(@other_window).not_to become_closed
-        end
+        end.not_to raise_error
       end
     end
 

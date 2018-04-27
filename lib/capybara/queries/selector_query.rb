@@ -35,7 +35,7 @@ module Capybara
         @description << "visible " if visible == :visible
         @description << "non-visible " if visible == :hidden
         @description << "#{label} #{locator.inspect}"
-        @description << " with#{" exact" if exact_text == true} text #{options[:text].inspect}" if options[:text]
+        @description << " with#{' exact' if exact_text == true} text #{options[:text].inspect}" if options[:text]
         @description << " with exact text #{options[:exact_text]}" if options[:exact_text].is_a?(String)
         @description << " with id #{options[:id]}" if options[:id]
         @description << " with classes [#{Array(options[:class]).join(',')}]" if options[:class]
@@ -167,9 +167,8 @@ module Capybara
 
       def assert_valid_keys
         super
-        unless VALID_MATCH.include?(match)
-          raise ArgumentError, "invalid option #{match.inspect} for :match, should be one of #{VALID_MATCH.map(&:inspect).join(", ")}"
-        end
+        return if VALID_MATCH.include?(match)
+        raise ArgumentError, "invalid option #{match.inspect} for :match, should be one of #{VALID_MATCH.map(&:inspect).join(', ')}"
       end
 
       def filtered_xpath(expr)

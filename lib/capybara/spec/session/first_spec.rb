@@ -65,20 +65,20 @@ Capybara::SpecHelper.spec '#first' do
     end
 
     it "should find nodes regardless of whether they are invisible when false" do
-      expect(@session.first(:css, "a#invisible", visible: false)).to be
-      expect(@session.first(:css, "a#invisible", visible: false, text: 'hidden link')).to be
-      expect(@session.first(:css, "a#visible", visible: false)).to be
+      expect(@session.first(:css, "a#invisible", visible: false)).to be_truthy
+      expect(@session.first(:css, "a#invisible", visible: false, text: 'hidden link')).to be_truthy
+      expect(@session.first(:css, "a#visible", visible: false)).to be_truthy
     end
 
     it "should find nodes regardless of whether they are invisible when :all" do
-      expect(@session.first(:css, "a#invisible", visible: :all)).to be
-      expect(@session.first(:css, "a#invisible", visible: :all, text: 'hidden link')).to be
-      expect(@session.first(:css, "a#visible", visible: :all)).to be
+      expect(@session.first(:css, "a#invisible", visible: :all)).to be_truthy
+      expect(@session.first(:css, "a#invisible", visible: :all, text: 'hidden link')).to be_truthy
+      expect(@session.first(:css, "a#visible", visible: :all)).to be_truthy
     end
 
     it "should find only hidden nodes when :hidden" do
-      expect(@session.first(:css, "a#invisible", visible: :hidden)).to be
-      expect(@session.first(:css, "a#invisible", visible: :hidden, text: 'hidden link')).to be
+      expect(@session.first(:css, "a#invisible", visible: :hidden)).to be_truthy
+      expect(@session.first(:css, "a#invisible", visible: :hidden, text: 'hidden link')).to be_truthy
       expect do
         @session.first(:css, "a#invisible", visible: :hidden, text: 'not hidden link')
       end.to raise_error Capybara::ElementNotFound
@@ -94,7 +94,7 @@ Capybara::SpecHelper.spec '#first' do
       expect do
         @session.first(:css, "a#invisible", visible: :visible, text: 'hidden link')
       end.to raise_error Capybara::ElementNotFound
-      expect(@session.first(:css, "a#visible", visible: :visible)).to be
+      expect(@session.first(:css, "a#visible", visible: :visible)).to be_truthy
     end
 
     it "should default to Capybara.ignore_hidden_elements" do
@@ -103,8 +103,8 @@ Capybara::SpecHelper.spec '#first' do
         @session.first(:css, "a#invisible")
       end.to raise_error Capybara::ElementNotFound
       Capybara.ignore_hidden_elements = false
-      expect(@session.first(:css, "a#invisible")).to be
-      expect(@session.first(:css, "a")).to be
+      expect(@session.first(:css, "a#invisible")).to be_truthy
+      expect(@session.first(:css, "a")).to be_truthy
     end
   end
 
@@ -115,7 +115,7 @@ Capybara::SpecHelper.spec '#first' do
 
     it "should find the first element using the given locator" do
       @session.within(:xpath, "//div[@id='for_bar']") do
-        expect(@session.first('.//form')).to be
+        expect(@session.first('.//form')).to be_truthy
       end
     end
   end

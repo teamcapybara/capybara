@@ -56,21 +56,21 @@ Capybara::SpecHelper.spec "#uncheck" do
       end
 
       it "should uncheck via clicking the label with :for attribute if possible" do
-        expect(@session.find(:checkbox, 'form_cars_jaguar', checked: true, visible: :hidden)).to be
+        expect(@session.find(:checkbox, 'form_cars_jaguar', checked: true, visible: :hidden)).to be_truthy
         @session.uncheck('form_cars_jaguar')
         @session.click_button('awesome')
         expect(extract_results(@session)['cars']).not_to include('jaguar')
       end
 
       it "should uncheck via clicking the wrapping label if possible" do
-        expect(@session.find(:checkbox, 'form_cars_koenigsegg', checked: true, visible: :hidden)).to be
+        expect(@session.find(:checkbox, 'form_cars_koenigsegg', checked: true, visible: :hidden)).to be_truthy
         @session.uncheck('form_cars_koenigsegg')
         @session.click_button('awesome')
         expect(extract_results(@session)['cars']).not_to include('koenigsegg')
       end
 
       it "should not click the label if unneeded" do
-        expect(@session.find(:checkbox, 'form_cars_tesla', unchecked: true, visible: :hidden)).to be
+        expect(@session.find(:checkbox, 'form_cars_tesla', unchecked: true, visible: :hidden)).to be_truthy
         @session.uncheck('form_cars_tesla')
         @session.click_button('awesome')
         expect(extract_results(@session)['cars']).not_to include('tesla')

@@ -54,11 +54,11 @@ Capybara::SpecHelper.spec '#visit' do
       URI.parse(@session.current_url)
     end
 
-    before(:each) do
+    before do
       Capybara.always_include_port = true
     end
 
-    after(:each) do
+    after do
       Capybara.always_include_port = false
     end
 
@@ -73,52 +73,59 @@ Capybara::SpecHelper.spec '#visit' do
     end
 
     it "should add the server port to a visited url if no port specified", requires: [:server] do
-      expect(@session.driver).to receive(:visit).with("http://www.example.com:#{@session.server.port}")
+      allow(@session.driver).to receive(:visit)
       @session.visit("http://www.example.com")
+      expect(@session.driver).to have_received(:visit).with("http://www.example.com:#{@session.server.port}")
     end
 
     it "should not override the visit specified port even if default for scheme", requires: [:server] do
-      expect(@session.driver).to receive(:visit).with("http://www.example.com:80")
+      allow(@session.driver).to receive(:visit)
       @session.visit('http://www.example.com:80')
+      expect(@session.driver).to have_received(:visit).with("http://www.example.com:80")
     end
 
     it "should give preference to app_host port if specified", requires: [:server] do
+      allow(@session.driver).to receive(:visit)
       Capybara.app_host = "http://www.example.com:6666"
-      expect(@session.driver).to receive(:visit).with("http://www.example.com:6666/random")
       @session.visit('/random')
+      expect(@session.driver).to have_received(:visit).with("http://www.example.com:6666/random")
     end
 
     it "shouldn't override port if no server", requires: [:server] do
       session = Capybara::Session.new(@session.mode, nil)
-      expect(session.driver).to receive(:visit).with("http://www.google.com")
+      allow(session.driver).to receive(:visit)
       session.visit("http://www.google.com")
+      expect(session.driver).to have_received(:visit).with("http://www.google.com")
     end
 
     it "shouldn't override port if no server but app_host is set", requires: [:server] do
       session = Capybara::Session.new(@session.mode, nil)
       Capybara.app_host = "http://www.example.com:6666"
-      expect(session.driver).to receive(:visit).with("http://www.google.com")
+      allow(session.driver).to receive(:visit)
       session.visit("http://www.google.com")
+      expect(session.driver).to have_received(:visit).with("http://www.google.com")
     end
   end
 
   context "when Capybara.always_include_port is false" do
-    before(:each) do
+    before do
       Capybara.always_include_port = false
     end
 
     it "shouldn't overwrite port if app_host is set", requires: [:server] do
       session = Capybara::Session.new(@session.mode, nil)
       Capybara.app_host = "http://www.example.com:6666"
-      expect(session.driver).to receive(:visit).with("http://www.google.com")
+      allow(session.driver).to receive(:visit)
       session.visit("http://www.google.com")
+      expect(session.driver).to have_received(:visit).with("http://www.google.com")
     end
 
     it "shouldn't overwrite port if port specfified", requires: [:server] do
       session = Capybara::Session.new(@session.mode, nil)
       Capybara.app_host = "http://www.example.com:6666"
-      expect(session.driver).to receive(:visit).with("http://www.google.com:99")
+      allow(session.driver).to receive(:visit)
       session.visit("http://www.google.com:99")
+      expect(session.driver).to have_received(:visit).with("http://www.google.com:99")
     end
   end
 

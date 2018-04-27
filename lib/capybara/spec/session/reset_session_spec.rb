@@ -18,8 +18,8 @@ Capybara::SpecHelper.spec '#reset_session!' do
     expect(@session.current_path).to eq('/foo')
 
     @session.reset_session!
-    expect([nil, '', 'about:blank']).to include(@session.current_url)
-    expect(['', nil]).to include(@session.current_path)
+    expect(@session.current_url).to satisfy('be a blank url') { |url| [nil, '', 'about:blank'].include? url }
+    expect(@session.current_path).to satisfy('be a blank path') { |path| ['', nil].include? path }
     expect(@session.current_host).to be_nil
   end
 

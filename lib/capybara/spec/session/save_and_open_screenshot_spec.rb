@@ -34,9 +34,10 @@ Capybara::SpecHelper.spec '#save_and_open_screenshot' do
   context 'when launchy cannot be required' do
     it 'prints out a correct warning message', requires: [:screenshot] do
       file_path = File.join(Dir.tmpdir, 'test.png')
+      allow(@session).to receive(:warn)
       allow(@session).to receive(:require).with('launchy').and_raise(LoadError)
-      expect(@session).to receive(:warn).with("File saved to #{file_path}.\nPlease install the launchy gem to open the file automatically.")
       @session.save_and_open_screenshot(file_path)
+      expect(@session).to have_received(:warn).with("File saved to #{file_path}.\nPlease install the launchy gem to open the file automatically.")
     end
   end
 end

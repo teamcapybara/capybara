@@ -23,11 +23,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       ::Selenium::WebDriver::Error.const_set('ElementClickInterceptedError', Class.new(::Selenium::WebDriver::Error::WebDriverError))
     end
   rescue LoadError => e
-    if e.message =~ /selenium-webdriver/
-      raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
-    else
-      raise e
-    end
+    raise e if e.message !~ /selenium-webdriver/
+    raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
   end
 
   def browser
@@ -360,7 +357,7 @@ private
       if response_text.nil?
         "default_text"
       else
-        "'#{response_text.gsub("\\", "\\\\\\").gsub("'", "\\\\'")}'"
+        "'#{response_text.gsub('\\', '\\\\\\').gsub("'", "\\\\'")}'"
       end
     else
       'null'
@@ -452,11 +449,8 @@ private
         if called
           execute_script('window.capybara && window.capybara.modal_handlers.shift()')
           regexp = text.is_a?(Regexp) ? text : Regexp.escape(text.to_s)
-          if alert_text.match(regexp)
-            alert_text
-          else
-            raise Capybara::ModalNotFound, "Unable to find modal dialog#{" with #{text}" if text}"
-          end
+          raise Capybara::ModalNotFound, "Unable to find modal dialog#{" with #{text}" if text}" unless alert_text.match(regexp)
+          alert_text
         elsif called.nil?
           # page changed so modal_handler data has gone away
           warn "Can't verify modal text when page change occurs - ignoring" if options[:text]

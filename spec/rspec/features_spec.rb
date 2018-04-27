@@ -39,7 +39,7 @@ feature "Capybara's feature DSL" do
   end
 
   scenario "doesn't pollute the Object namespace" do
-    expect(Object.new.respond_to?(:feature, true)).to be_falsey
+    expect(Object.new).not_to respond_to(:feature)
   end
 
   feature 'nested features' do
@@ -78,6 +78,7 @@ feature "Capybara's feature DSL with driver", driver: :culerity do
   end
 end
 
+# rubocop:disable RSpec/RepeatedExample
 xfeature "if xfeature aliases to pending then" do
   scenario "this should be 'temporarily disabled with xfeature'" do
     # dummy
@@ -87,7 +88,7 @@ xfeature "if xfeature aliases to pending then" do
   end
 end
 
-ffeature "if ffeature aliases focused tag then" do
+ffeature "if ffeature aliases focused tag then" do # rubocop:disable RSpec/Focus
   scenario "scenario inside this feature has metatag focus tag" do |example|
     expect(example.metadata[:focus]).to eq true
   end
@@ -96,3 +97,4 @@ ffeature "if ffeature aliases focused tag then" do
     expect(example.metadata[:focus]).to eq true
   end
 end
+# rubocop:enable RSpec/RepeatedExample

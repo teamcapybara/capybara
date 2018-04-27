@@ -128,7 +128,7 @@ Capybara::SpecHelper.spec '#assert_text' do
   end
 
   context 'with multiple count filters' do
-    before(:each) do
+    before do
       @session.visit('/with_html')
     end
 

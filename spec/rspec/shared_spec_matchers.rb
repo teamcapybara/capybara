@@ -5,6 +5,8 @@ require 'capybara/dsl'
 require 'capybara/rspec/matchers'
 require 'benchmark'
 
+# rubocop:disable RSpec/ExpectActual
+
 RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
   include Capybara::DSL
   include Capybara::RSpecMatchers
@@ -548,7 +550,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
       end
 
       context 'with wait' do
-        before(:each) do
+        before do
           @session = session
           @session.visit('/with_js')
         end
@@ -593,7 +595,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
       end
 
       context 'with wait' do
-        before(:each) do
+        before do
           @session = session
           @session.visit('/with_js')
         end
@@ -841,7 +843,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
   end
 
   context "compounding timing" do
-    before(:each) do
+    before do
       @session = session
       @session.visit('/with_js')
       @el = @session.find(:css, '#reload-me')
@@ -934,3 +936,4 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
     end
   end
 end
+# rubocop:enable RSpec/ExpectActual

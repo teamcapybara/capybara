@@ -102,13 +102,6 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
       @session.click_link_or_button('Disabled link')
       expect(@session).to have_content("Bar")
     end
-
-    it "does nothing when button is disabled" do
-      @session.visit('/form')
-      expect do
-        @session.click_link_or_button('Disabled button', disabled: false)
-      end.to raise_error(Capybara::ElementNotFound)
-    end
   end
 
   it "should return the element clicked" do

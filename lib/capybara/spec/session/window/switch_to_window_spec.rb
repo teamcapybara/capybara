@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 Capybara::SpecHelper.spec '#switch_to_window', requires: [:windows] do
-  before(:each) do
+  before do
     @window = @session.current_window
     @session.visit('/with_windows')
-    expect(@session).to have_css('body.loaded')
+    @session.assert_selector(:css, 'body.loaded')
   end
 
-  after(:each) do
+  after do
     (@session.windows - [@window]).each do |w|
       @session.switch_to_window w
       w.close
@@ -32,7 +32,7 @@ Capybara::SpecHelper.spec '#switch_to_window', requires: [:windows] do
       window = @session.open_new_window
       expect(@session.title).to eq('With Windows')
       @session.switch_to_window(window)
-      expect(['', 'about:blank']).to include(@session.title)
+      expect(@session.title).to satisfy('be a blank title') { |title| ['', 'about:blank'].include? title }
     end
 
     it "should raise error when closed window is passed" do
@@ -48,7 +48,7 @@ Capybara::SpecHelper.spec '#switch_to_window', requires: [:windows] do
   end
 
   context "with block" do
-    before(:each) do
+    before do
       @session.find(:css, '#openTwoWindows').click
       sleep(1) # wait for the windows to open
     end

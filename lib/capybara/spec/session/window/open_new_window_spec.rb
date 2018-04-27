@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 Capybara::SpecHelper.spec '#open_new_window', requires: [:windows] do
-  before(:each) do
+  before do
     @window = @session.current_window
     @session.visit('/with_windows')
   end
-  after(:each) do
+  after do
     (@session.windows - [@window]).each do |w|
       @session.switch_to_window w
       w.close
@@ -16,7 +16,7 @@ Capybara::SpecHelper.spec '#open_new_window', requires: [:windows] do
   it 'should open new window with blank url and title' do
     window = @session.open_new_window
     @session.switch_to_window(window)
-    expect(['', 'about:blank']).to include(@session.title)
+    expect(@session.title).to satisfy('be a blank title') { |title| ['', 'about:blank'].include? title }
     expect(@session.current_url).to eq('about:blank')
   end
 
