@@ -62,6 +62,12 @@ Capybara::SpecHelper.spec "#check" do
     expect(extract_results(@session)['pets']).to include('dog', 'cat', 'hamster')
   end
 
+  it "should work without a locator string" do
+    @session.check(id: "form_pets_cat")
+    @session.click_button('awesome')
+    expect(extract_results(@session)['pets']).to include('dog', 'cat', 'hamster')
+  end
+
   it "casts to string" do
     @session.check(:form_pets_cat)
     @session.click_button('awesome')

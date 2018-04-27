@@ -17,6 +17,12 @@ Capybara::SpecHelper.spec "#choose" do
     expect(extract_results(@session)['gender']).to eq('both')
   end
 
+  it "should work without a locator string" do
+    @session.choose(id: "gender_male")
+    @session.click_button('awesome')
+    expect(extract_results(@session)['gender']).to eq('male')
+  end
+
   it "casts to string" do
     @session.choose("Both")
     @session.click_button(:awesome)
