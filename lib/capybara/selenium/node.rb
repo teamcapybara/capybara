@@ -268,7 +268,7 @@ private
         sequence[positions[2] - 1] = date.day
         sequence.each.with_index do |dp, i|
           native.send_keys :left, :left, :left, *Array.new(i, :right)
-          # When the date format contains month name Chrome needs this sleep to show monthname after number's been typed
+          # When the date format contains month name Chrome needs this sleep to show monthname after number's typed
           sleep 0.5
           native.send_keys :backspace, dp.to_s
         end
