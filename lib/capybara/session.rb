@@ -59,7 +59,7 @@ module Capybara
     SESSION_METHODS = %i[
       body html source current_url current_host current_path
       execute_script evaluate_script visit refresh go_back go_forward
-      within within_element within_fieldset within_table within_frame switch_to_frame
+      within within_element within_fieldset within_table within_frame without switch_to_frame
       current_window windows open_new_window switch_to_window within_window window_opened_by
       save_page save_and_open_page save_screenshot
       save_and_open_screenshot reset_session! response_headers
@@ -424,6 +424,16 @@ module Capybara
       ensure
         switch_to_frame(:parent)
       end
+    end
+
+    ##
+    # Execute the given block with no scope. Used to temporarily "escape" from a `within` block.
+    #
+    def without
+      old_scopes = scopes
+      @scopes = [nil]
+      yield
+      @scopes = old_scopes
     end
 
     ##

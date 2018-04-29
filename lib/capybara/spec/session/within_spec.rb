@@ -121,6 +121,16 @@ Capybara::SpecHelper.spec '#within' do
     expect(extract_results(@session)['first_name']).to eq('Dagobert')
   end
 
+  it "should allow escaping from within using without" do
+    @session.within(:css, "#for_foo") do
+      expect(@session).not_to have_content('This page is used')
+      @session.without do
+        expect(@session).to have_content('This page is used')
+      end
+      expect(@session).not_to have_content('This page is used')
+    end
+  end
+
   it "should have #within_element as an alias" do
     expect(Capybara::Session.instance_method(:within)).to eq Capybara::Session.instance_method(:within_element)
     @session.within_element(:css, "#for_foo") do
