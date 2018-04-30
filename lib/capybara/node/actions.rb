@@ -174,8 +174,42 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The option element selected
       def select(value = nil, from: nil, **options)
-        scope = from ? find(:select, from, options) : self
-        scope.find(:option, value, options).select_option
+        scope = if from
+          synchronize(Capybara::Queries::BaseQuery.wait(options, session_options.default_max_wait_time)) do
+            begin
+              find(:select, from, options)
+            rescue Capybara::ElementNotFound => select_error
+              raise if %i[selected with_selected multiple].any? { |option| options.key?(option) }
+              begin
+                find(:datalist_input, from, options)
+              rescue Capybara::ElementNotFound => dlinput_error
+                raise Capybara::ElementNotFound, "#{select_error.message} and #{dlinput_error.message}"
+              end
+            end
+          end
+        else
+          self
+        end
+
+        if scope.respond_to?(:tag_name) && scope.tag_name == "input"
+          begin
+            # TODO: this is a more efficient but won't work with non-JS drivers
+            # datalist_options = session.evaluate_script('Array.prototype.slice.call((arguments[0].list||{}).options || []).filter(function(el){ return !el.disabled }).map(function(el){ return { "value": el.value, "label": el.label} })', scope)
+            datalist_options = session.evaluate_script(DATALIST_OPTIONS_SCRIPT, scope)
+            if (option = datalist_options.find { |o| o['value'] == value || o['label'] == value })
+              scope.set(option["value"])
+            else
+              raise ::Capybara::ElementNotFound, "Unable to find datalist option \"#{value}\""
+            end
+          rescue ::Capybara::NotSupportedByDriverError
+            # Implement for drivers that don't support JS
+            datalist = find(:xpath, XPath.descendant(:datalist)[XPath.attr(:id) == scope[:list]], visible: false)
+            option = datalist.find(:datalist_option, value, disabled: false)
+            scope.set(option.value)
+          end
+        else
+          scope.find(:option, value, options).select_option
+        end
       end
 
       ##
@@ -290,6 +324,12 @@ module Capybara
           el.style.cssText = el.capybara_style_cache;
           delete el.capybara_style_cache;
         }
+      JS
+
+      DATALIST_OPTIONS_SCRIPT = <<-'JS'.freeze
+        Array.prototype.slice.call((arguments[0].list||{}).options || []).
+          filter(function(el){ return !el.disabled }).
+          map(function(el){ return { "value": el.value, "label": el.label} })
       JS
     end
   end
