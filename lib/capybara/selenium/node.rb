@@ -255,7 +255,36 @@ private
 
   def set_date(value) # rubocop:disable Naming/AccessorMethodName
     if value.respond_to?(:to_date)
-      set_text(value.to_date.strftime(SET_FORMATS[driver.browser.browser][:date]))
+      date = value.to_date
+
+      case driver.browser.browser
+      when :chrome
+        native.send_keys :left, :left, :left
+        native.send_keys :backspace, '1', :right, :backspace, '2', :right, :backspace, '3', :left, :left
+        positions = driver.evaluate_script("arguments[0].value", self).split('-').map(&:to_i)
+        sequence = []
+        sequence[positions[0] - 1] = date.year
+        sequence[positions[1] - 1] = date.month
+        sequence[positions[2] - 1] = date.day
+        sequence.each.with_index do |dp, i|
+          native.send_keys :left, :left, :left, *Array.new(i, :right)
+          # When the date format contains month name Chrome needs this sleep to show monthname after number's been typed
+          sleep 0.5
+          native.send_keys :backspace, dp.to_s
+        end
+      when :edge
+        native.send_keys :enter
+        native.send_keys :enter
+        current_value = Date.strptime(driver.evaluate_script("arguments[0].value", self), '%Y-%m-%d')
+        native.send_keys :enter
+        %w[month day year].each do |dp|
+          diff = date.send(dp) - current_value.send(dp)
+          native.send_keys(*Array.new(diff.abs, diff.negative? ? :up : :down) + [:right])
+        end
+        native.send_keys :enter
+      else
+        set_text(date.strftime(SET_FORMATS[driver.browser.browser][:date]))
+      end
     else
       set_text(value)
     end
