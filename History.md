@@ -1,3 +1,12 @@
+# Version 3.0.3
+Release date: 2018-04-30
+
+### Fixes
+
+* Issue in `check` where the locator string could not be omitted
+* Selenium browser type detection when using remote [Ian Ker-Seymer]
+* Potential hang when waiting for requests to complete [Chris Zetter]
+
 # Version 3.0.2
 Release date: 2018-04-13
 
