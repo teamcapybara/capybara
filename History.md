@@ -1,3 +1,11 @@
+# Version 3.1.0
+Release date: unreleased
+
+### Added
+
+* Support for using `select` with text inputs associated with a datalist element
+* `type` filter on `:button` selector
+
 # Version 3.0.3
 Release date: 2018-04-30
 
@@ -12,7 +20,7 @@ Release date: 2018-04-13
 
 ### Fixes
 
-* Fix expression filter descriptions in some selector failure messages
+* Fixexpression filter descriptions in some selector failure messages
 * Fix compounding of negated matechers - Issue #2010
 
 # Version 3.0.1
