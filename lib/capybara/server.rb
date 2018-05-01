@@ -61,10 +61,14 @@ module Capybara
 
     attr_reader :app, :port, :host
 
-    def initialize(app, port = Capybara.server_port, host = Capybara.server_host, server_errors = Capybara.server_errors)
+    def initialize(app, *deprecated_options, port: Capybara.server_port, host: Capybara.server_host, reportable_errors: Capybara.server_errors)
+      warn "Positional arguments, other than the application, to Server#new are deprecated, please use keyword arguments" unless deprecated_options.empty?
       @app = app
       @server_thread = nil # suppress warnings
-      @host, @port, @server_errors = host, port, server_errors
+      @host = deprecated_options[1] || host
+      @reportable_errors = deprecated_options[2] || reportable_errors
+      @using_ssl = false
+      @port = deprecated_options[0] || port
       @port ||= Capybara::Server.ports[port_key]
       @port ||= find_available_port(host)
     end
@@ -77,10 +81,23 @@ module Capybara
       middleware.error
     end
 
+    def using_ssl?
+      @using_ssl
+    end
+
     def responsive?
       return false if @server_thread && @server_thread.join(0)
 
-      res = Net::HTTP.start(host, port) { |http| http.get('/__identify__') }
+      begin
+        res = if !@using_ssl
+          http_connect
+        else
+          https_connect
+        end
+      rescue EOFError, Net::ReadTimeout
+        res = https_connect
+        @using_ssl = true
+      end
 
       if res.is_a?(Net::HTTPSuccess) or res.is_a?(Net::HTTPRedirection)
         return res.body == app.object_id.to_s
@@ -121,8 +138,16 @@ module Capybara
 
   private
 
+    def http_connect
+      Net::HTTP.start(host, port, read_timeout: 2) { |http| http.get('/__identify__') }
+    end
+
+    def https_connect
+      Net::HTTP.start(host, port, use_ssl: true, verify_mode: OpenSSL::SSL::VERIFY_NONE) { |http| http.get('/__identify__') }
+    end
+
     def middleware
-      @middleware ||= Middleware.new(app, @server_errors)
+      @middleware ||= Middleware.new(app, @reportable_errors)
     end
 
     def port_key

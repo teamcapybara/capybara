@@ -84,7 +84,7 @@ module Capybara
         yield config
       end
       @server = if config.run_server and @app and driver.needs_server?
-        Capybara::Server.new(@app, config.server_port, config.server_host, config.server_errors).boot
+        Capybara::Server.new(@app, port: config.server_port, host: config.server_host, reportable_errors: config.server_errors).boot
       else
         nil
       end
@@ -249,7 +249,7 @@ module Capybara
       visit_uri = ::Addressable::URI.parse(visit_uri.to_s)
 
       uri_base = if @server
-        ::Addressable::URI.parse(config.app_host || "http://#{@server.host}:#{@server.port}")
+        ::Addressable::URI.parse(config.app_host || "http#{'s' if @server.using_ssl?}://#{@server.host}:#{@server.port}")
       else
         config.app_host && ::Addressable::URI.parse(config.app_host)
       end

@@ -43,7 +43,7 @@ RSpec.describe Capybara do
 
     it "should default to a proc that calls run_default_server" do
       mock_app = Object.new
-      allow(Capybara).to receive(:run_default_server)
+      allow(Capybara).to receive(:run_default_server).and_return(true)
       Capybara.server.call(mock_app, 8000)
       expect(Capybara).to have_received(:run_default_server).with(mock_app, 8000)
     end
