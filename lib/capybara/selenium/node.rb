@@ -253,11 +253,22 @@ private
     yield
   end
 
-  def set_date(value) # rubocop:disable Naming/AccessorMethodName
-    if value.respond_to?(:to_date)
-      set_text(value.to_date.strftime(SET_FORMATS[driver.browser_name][:date]))
-    else
-      set_text(value)
+  def set_date(new_value) # rubocop:disable Naming/AccessorMethodName
+    new_value = new_value.to_date.strftime('%Y-%m-%d') if new_value.respond_to?(:to_date)
+    begin
+      is_value_changing = new_value != value
+      driver.execute_script(<<-JS, self)
+        arguments[0].dispatchEvent(new Event('focus'));
+        arguments[0].value = '#{new_value}';
+      JS
+      if is_value_changing
+        driver.execute_script(<<-JS, self)
+          arguments[0].dispatchEvent(new Event('input'));
+          arguments[0].dispatchEvent(new Event('change'));
+        JS
+      end
+    rescue Capybara::NotSupportedByDriverError
+      set_text(new_value)
     end
   end
 
