@@ -100,6 +100,14 @@ Capybara::SpecHelper.spec '#has_selector?' do
       end
     end
   end
+
+  context "datalist" do
+    it "should match options" do
+      @session.visit('/form')
+      expect(@session).to have_selector(:datalist_input, with_options: %w[Jaguar Audi Mercedes])
+      expect(@session).not_to have_selector(:datalist_input, with_options: %w[Ford Chevy])
+    end
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_selector?' do

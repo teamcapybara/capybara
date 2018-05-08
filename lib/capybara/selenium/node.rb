@@ -199,7 +199,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       parent = path.first
       selector = node.tag_name
       if parent
-        siblings = parent.find_xpath(node.tag_name)
+        siblings = parent.find_xpath(selector)
         selector += "[#{siblings.index(node) + 1}]" unless siblings.size == 1
       end
       result.push selector

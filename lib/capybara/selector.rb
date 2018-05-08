@@ -136,11 +136,19 @@ end
 Capybara.add_selector(:link) do
   xpath(:title, :alt) do |locator, href: true, enable_aria_label: false, alt: nil, title: nil, **_options|
     xpath = XPath.descendant(:a)
-    xpath = if href.nil?
-      xpath[!XPath.attr(:href)]
-    else
-      xpath[XPath.attr(:href)]
-    end
+    xpath = xpath[
+              case href
+              when nil, false
+                !XPath.attr(:href)
+              when true
+                XPath.attr(:href)
+              when Regexp
+                nil # needs to be handled in filter
+              else
+                XPath.attr(:href) == href.to_s
+              end
+            ]
+
     unless locator.nil?
       locator = locator.to_s
       matchers = [XPath.attr(:id) == locator,
@@ -150,20 +158,15 @@ Capybara.add_selector(:link) do
       matchers |= XPath.attr(:'aria-label').is(locator) if enable_aria_label
       xpath = xpath[matchers]
     end
+
     xpath = xpath[find_by_attr(:title, title)]
     xpath = xpath[XPath.descendant(:img)[XPath.attr(:alt) == alt]] if alt
     xpath
   end
 
   filter(:href) do |node, href|
-    case href
-    when nil
-      true
-    when Regexp
-      node[:href].match href
-    else
-      node.first(:xpath, XPath.self[XPath.attr(:href) == href.to_s], minimum: 0)
-    end
+    # If not a Regexp it's been handled in the main XPath
+    href.is_a?(Regexp) ? node[:href].match(href) : true
   end
 
   describe do |**options|
@@ -380,10 +383,11 @@ Capybara.add_selector(:select) do
     options.sort == actual.sort
   end
 
-  filter(:with_options) do |node, options|
-    finder_settings = { minimum: 0 }
-    finder_settings[:visible] = false unless node.visible?
-    options.all? { |option| node.first(:option, option, finder_settings) }
+  expression_filter(:with_options) do |expr, options|
+    options.each do |option|
+      expr = expr[Capybara::Selector.all[:option].call(option)]
+    end
+    expr
   end
 
   filter(:selected) do |node, selected|
@@ -422,8 +426,11 @@ Capybara.add_selector(:datalist_input) do
     options.sort == actual.sort
   end
 
-  filter(:with_options) do |node, options|
-    options.all? { |option| node.find("//datalist[@id=#{node[:list]}]", visible: :all).first(:datalist_option, option) }
+  expression_filter(:with_options) do |expr, options|
+    options.each do |option|
+      expr = expr[XPath.attr(:list) == XPath.anywhere(:datalist)[Capybara::Selector.all[:datalist_option].call(option)].attr(:id)]
+    end
+    expr
   end
 
   describe do |options: nil, with_options: nil, **opts|
