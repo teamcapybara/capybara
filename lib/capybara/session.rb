@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'capybara/session/matchers'
+require 'capybara/timeout_protector'
 require 'addressable/uri'
 
 module Capybara
@@ -37,6 +38,7 @@ module Capybara
   #
   class Session
     include Capybara::SessionMatchers
+    extend Capybara::TimeoutProtector
 
     NODE_METHODS = %i[
       all first attach_file text check choose
@@ -71,6 +73,7 @@ module Capybara
     ].freeze
     DSL_METHODS = NODE_METHODS + SESSION_METHODS + MODAL_METHODS
 
+    protect_from_timeout(*SESSION_METHODS)
     attr_reader :mode, :app, :server
     attr_accessor :synchronized
 

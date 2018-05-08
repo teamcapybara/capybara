@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'capybara/timeout_protector'
+
 module Capybara
   module Node
     ##
@@ -23,6 +25,9 @@ module Capybara
     #     session.has_css?('#foobar')               # from Capybara::Node::Matchers
     #
     class Base
+      extend Capybara::TimeoutProtector
+
+      protect_from_timeout(*Capybara::Session::NODE_METHODS)
       attr_reader :session, :base, :query_scope
 
       include Capybara::Node::Finders
