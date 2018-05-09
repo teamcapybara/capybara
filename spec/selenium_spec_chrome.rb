@@ -64,40 +64,4 @@ RSpec.describe "Capybara::Session with chrome" do
       end
     end
   end
-
-  describe '#fill_in' do
-    before do
-      @session = TestSessions::Chrome
-      @session.visit('/form')
-    end
-
-    context "Date/Time" do
-      before do
-        @session.execute_script <<-JS
-          window.capybara = {formDateFiredEvents: []};
-          ['focus', 'input', 'change'].forEach(function(eventType) {
-            document.getElementById('form_date')
-              .addEventListener(eventType, function() { window.capybara.formDateFiredEvents.push(eventType) });
-          });
-        JS
-      end
-
-      it "should generate standard events on changing value" do
-        expect {
-          @session.fill_in('form_date', with: Date.today)
-        }.to change {
-          @session.evaluate_script('window.capybara.formDateFiredEvents')
-        }.to %w[focus input change]
-      end
-
-      it "should not generate input and change events if the value is not changed" do
-        expect {
-          @session.fill_in('form_date', with: Date.today)
-          @session.fill_in('form_date', with: Date.today)
-        }.to change {
-          @session.evaluate_script('window.capybara.formDateFiredEvents')
-        }.to %w[focus input change focus]
-      end
-    end
-  end
 end

@@ -1,19 +1,6 @@
 # frozen_string_literal: true
 
 class Capybara::Selenium::Node < Capybara::Driver::Node
-  SET_FORMATS = Hash.new(date: '%Y-%m-%d', time: '%H:%M', datetime: "%m%d%Y\t%I%M%P").merge(
-    firefox: {
-      date: '%Y-%m-%d',
-      time: '%H:%M',
-      datetime: "%m%d%Y\t%I%M%P"
-    },
-    chrome: {
-      date: '%m%d%Y',
-      time: '%I%M%P',
-      datetime: "%m%d%Y\t%I%M%P"
-    }
-  )
-
   def visible_text
     native.text
   end
@@ -253,39 +240,35 @@ private
     yield
   end
 
-  def set_date(new_value) # rubocop:disable Naming/AccessorMethodName
-    new_value = new_value.to_date.strftime('%Y-%m-%d') if new_value.respond_to?(:to_date)
-    begin
-      is_value_changing = new_value != value
-      driver.execute_script(<<-JS, self)
-        arguments[0].dispatchEvent(new Event('focus'));
-        arguments[0].value = '#{new_value}';
-      JS
-      if is_value_changing
-        driver.execute_script(<<-JS, self)
-          arguments[0].dispatchEvent(new Event('input'));
-          arguments[0].dispatchEvent(new Event('change'));
-        JS
-      end
-    rescue Capybara::NotSupportedByDriverError
-      set_text(new_value)
-    end
+  def set_date(value) # rubocop:disable Naming/AccessorMethodName
+    return set_text(value) unless value.respond_to?(:to_date)
+    # TODO: this would be better if locale can be detected and correct keystrokes sent
+    update_value_js(value.to_date.strftime('%Y-%m-%d'))
   end
 
   def set_time(value) # rubocop:disable Naming/AccessorMethodName
-    if value.respond_to?(:to_time)
-      set_text(value.to_time.strftime(SET_FORMATS[driver.browser_name][:time]))
-    else
-      set_text(value)
-    end
+    return set_text(value) unless value.respond_to?(:to_time)
+    # TODO: this would be better if locale can be detected and correct keystrokes sent
+    update_value_js(value.to_time.strftime('%H:%M'))
   end
 
   def set_datetime_local(value) # rubocop:disable Naming/AccessorMethodName
-    if value.respond_to?(:to_time)
-      set_text(value.to_time.strftime(SET_FORMATS[driver.browser_name][:datetime]))
-    else
-      set_text(value)
-    end
+    return set_text(value) unless value.respond_to?(:to_time)
+    # TODO: this would be better if locale can be detected and correct keystrokes sent
+    update_value_js(value.to_time.strftime('%Y-%m-%dT%H:%M'))
+  end
+
+  def update_value_js(value)
+    driver.execute_script(<<-JS, self, value)
+      if (document.activeElement !== arguments[0]){
+        arguments[0].focus();
+      }
+      if (arguments[0].value != arguments[1]) {
+        arguments[0].value = arguments[1]
+        arguments[0].dispatchEvent(new InputEvent('input'));
+        arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      JS
   end
 
   def set_file(value) # rubocop:disable Naming/AccessorMethodName
