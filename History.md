@@ -5,6 +5,7 @@ Release date: unreleased
 
 * Support for using `select` with text inputs associated with a datalist element
 * `type` filter on `:button` selector
+* Support for server operating in https mode
 
 # Version 3.0.3
 Release date: 2018-04-30

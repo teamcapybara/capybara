@@ -158,8 +158,8 @@ module Capybara
 
       ##
       #
-      # If `:from` option is present, `select` finds a select box on the page
-      # and selects a particular option from it.
+      # If `:from` option is present, `select` finds a select box, or text input with associated datalist,
+      # on the page and selects a particular option from it.
       # Otherwise it finds an option inside current scope and selects it.
       # If the select box is a multiple select, +select+ can be called multiple times to select more than
       # one option.
@@ -169,7 +169,7 @@ module Capybara
       #
       # @macro waiting_behavior
       #
-      # @param [String] value                   Which option to select
+      # @param [String] value           Which option to select
       # @option options [String] :from  The id, name or label of the select box
       #
       # @return [Capybara::Node::Element]  The option element selected
