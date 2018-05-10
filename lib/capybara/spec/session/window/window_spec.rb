@@ -119,7 +119,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
 
     it 'should be able to resize window', requires: %i[windows js] do
       width, height = @initial_size
-      @session.current_window.resize_to(width -100, height - 100)
+      @session.current_window.resize_to(width - 100, height - 100)
       sleep 1
       expect(@session.current_window.size).to eq([width - 100, height - 100])
     end

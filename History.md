@@ -1,12 +1,12 @@
 # Version 3.1.0
-Release date: unreleased
+Release date: 2018-05-10
 
 ### Added
 
 * Support for using `select` with text inputs associated with a datalist element
 * `type` filter on `:button` selector
 * Support for server operating in https mode
-* Selenium driver now uses JS to fill_in date and time fields when passed date or time objects [Aleksei Gusev, Thomas Walpole]
+* Selenium driver now uses JS to fill_in/set date and time fields when passed date or time objects [Aleksei Gusev, Thomas Walpole]
 
 # Version 3.0.3
 Release date: 2018-04-30
