@@ -168,7 +168,7 @@ module Capybara
     # @return [Boolean]           Whether or not to use this selector
     #
     def match?(locator)
-      @match and @match.call(locator)
+      @match&.call(locator)
     end
 
     ##

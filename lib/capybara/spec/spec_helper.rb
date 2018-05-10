@@ -86,7 +86,7 @@ module Capybara
         Capybara::Session.class_variable_set(:@@instance_created, false) # Work around limit on when threadsafe can be changed
         Capybara.threadsafe = bool
         session = session.current_session if session.respond_to?(:current_session)
-        session.instance_variable_set(:@config, nil) if session
+        session&.instance_variable_set(:@config, nil)
       end
     end
 

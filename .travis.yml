@@ -4,7 +4,7 @@ dist: trusty
 services:
   - docker
 rvm:
-  - 2.5.0
+  - 2.5.1
   - 2.3.6
   - jruby-9.1.16.0
 gemfile:
@@ -33,7 +33,7 @@ cache:
 matrix:
   include:
     - gemfile: Gemfile
-      rvm: 2.5.0
+      rvm: 2.5.1
       env: CAPYBARA_CHROME_REMOTE=true
     - gemfile: gemfiles/Gemfile.rspec-34
       rvm: 2.3.6
@@ -44,10 +44,10 @@ matrix:
           packages:
             - awesome
     - gemfile: Gemfile
-      rvm: 2.2.2
+      rvm: 2.5.1
       env: HEADLESS=true
     - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: 2.5.0
+      rvm: 2.5.1
       env: CAPYBARA_FF=true
       addons:
         firefox: latest-beta
@@ -70,11 +70,10 @@ matrix:
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-marionette
-    - rvm: rbx-3
     - env: CAPYBARA_CHROME_REMOTE=true
 before_install:
   - gem update --system
-  # - gem update bundler
+  - gem install bundler
   - if [[ $BUNDLE_GEMFILE =~ Gemfile.edge-marionette$ ]]; then
       pushd ..;
       git clone --depth 1 https://github.com/SeleniumHQ/selenium.git;

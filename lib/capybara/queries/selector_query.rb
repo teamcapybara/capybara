@@ -31,7 +31,7 @@ module Capybara
       def label; selector.label || selector.name; end
 
       def description
-        @description = "".dup
+        @description = +""
         @description << "visible " if visible == :visible
         @description << "non-visible " if visible == :hidden
         @description << "#{label} #{locator.inspect}"
