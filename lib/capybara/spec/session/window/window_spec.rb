@@ -109,9 +109,17 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
   end
 
   describe '#resize_to' do
+    before do
+      @initial_size = @session.current_window.size
+    end
+    after do
+      @session.current_window.resize_to(*@initial_size)
+      sleep 0.5
+    end
+
     it 'should be able to resize window', requires: %i[windows js] do
-      width, height = @session.current_window.size
-      @session.current_window.resize_to(width - 100, height - 100)
+      width, height = @initial_size
+      @session.current_window.resize_to(width -100, height - 100)
       sleep 1
       expect(@session.current_window.size).to eq([width - 100, height - 100])
     end
@@ -132,6 +140,14 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
   end
 
   describe '#maximize' do
+    before do
+      @initial_size = @session.current_window.size
+    end
+    after do
+      @session.current_window.resize_to(*@initial_size)
+      sleep 0.5
+    end
+
     it 'should be able to maximize window', requires: %i[windows js] do
       start_width, start_height = 400, 300
       @session.current_window.resize_to(start_width, start_height)
@@ -148,18 +164,17 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
     end
 
     it 'should stay on current window if invoked not for current window', requires: %i[windows js] do
-      cur_window_size = @session.current_window.size
       @other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
-
       @other_window.resize_to(400, 300)
       sleep 0.5
       @other_window.maximize
       sleep 0.5 # The timing on maximize is finicky on Travis -- wait a bit for maximize to occur
 
       expect(@session.current_window).to eq(@window)
-      expect(@session.current_window.size).to eq(cur_window_size)
+      # Maximizing the browser affects all tabs so this may not be valid in real browsers
+      # expect(@session.current_window.size).to eq(@initial_size)
 
       ow_width, ow_height = @other_window.size
       expect(ow_width).to be > 400
