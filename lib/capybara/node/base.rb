@@ -27,7 +27,7 @@ module Capybara
     class Base
       extend Capybara::TimeoutProtector
 
-      protect_from_timeout(*Capybara::Session::NODE_METHODS)
+      # protect_from_timeout(*Capybara::Session::NODE_METHODS)
       attr_reader :session, :base, :query_scope
 
       include Capybara::Node::Finders
@@ -82,20 +82,22 @@ module Capybara
         if session.synchronized
           yield
         else
-          session.synchronized = true
-          timer = Capybara::Helpers.timer(expire_in: seconds)
-          begin
-            yield
-          rescue StandardError => e
-            session.raise_server_error!
-            raise e unless driver.wait? && catch_error?(e, errors)
-            raise e if timer.expired?
-            sleep(0.05)
-            raise Capybara::FrozenInTime, "Time appears to be frozen. Capybara does not work with libraries which freeze time, consider using time travelling instead" if timer.stalled?
-            reload if session_options.automatic_reload
-            retry
-          ensure
-            session.synchronized = false
+          Thread.handle_interrupt(Timeout::Error => :never) do
+            session.synchronized = true
+            timer = Capybara::Helpers.timer(expire_in: seconds)
+            begin
+              yield
+            rescue StandardError => e
+              session.raise_server_error!
+              raise e unless driver.wait? && catch_error?(e, errors)
+              raise e if timer.expired?
+              sleep(0.05)
+              raise Capybara::FrozenInTime, "Time appears to be frozen. Capybara does not work with libraries which freeze time, consider using time travelling instead" if timer.stalled?
+              reload if session_options.automatic_reload
+              retry
+            ensure
+              session.synchronized = false
+            end
           end
         end
       end

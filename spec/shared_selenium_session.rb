@@ -294,6 +294,18 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         expect(@animation_session).to have_no_link('animate me away', wait: 0.5)
       end
     end
+
+    context "with Timeout::timeout", :focus_ do
+      it "is safe" do
+        session.visit('/form')
+        expect do
+          Timeout.timeout(0.1) do
+            session.find(:link, 'No such link', wait: 10)
+          end
+        end.to raise_error Timeout::Error
+        expect(session).to have_field('customer_email')
+      end
+    end
   end
 
   def headless_or_remote?

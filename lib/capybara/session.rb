@@ -73,7 +73,7 @@ module Capybara
     ].freeze
     DSL_METHODS = NODE_METHODS + SESSION_METHODS + MODAL_METHODS
 
-    protect_from_timeout(*SESSION_METHODS)
+    # protect_from_timeout(*SESSION_METHODS)
     attr_reader :mode, :app, :server
     attr_accessor :synchronized
 
