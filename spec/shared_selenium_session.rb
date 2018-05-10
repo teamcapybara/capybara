@@ -129,6 +129,33 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
     end
 
+    context  '#fill_in with Date' do
+      before do
+        session.visit('/form')
+        session.execute_script <<-JS
+          window.capybara_formDateFiredEvents = [];
+          ['focus', 'input', 'change'].forEach(function(eventType) {
+            document.getElementById('form_date')
+              .addEventListener(eventType, function() { window.capybara_formDateFiredEvents.push(eventType); });
+          });
+        JS
+        # work around weird FF issue where it would create an extra focus issue in some cases
+        session.find(:css, 'body').click
+      end
+
+      it "should generate standard events on changing value" do
+        session.fill_in('form_date', with: Date.today)
+        expect(session.evaluate_script('window.capybara_formDateFiredEvents')).to eq %w[focus input change]
+      end
+
+      it "should not generate input and change events if the value is not changed" do
+        session.fill_in('form_date', with: Date.today)
+        session.fill_in('form_date', with: Date.today)
+        # Chrome adds an extra focus for some reason - ok for now
+        expect(session.evaluate_script('window.capybara_formDateFiredEvents')).to eq(%w[focus input change])
+      end
+    end
+
     context "#fill_in with { clear: Array } fill_options" do
       it 'should pass the array through to the element' do
         pending "selenium-webdriver/geckodriver doesn't support complex sets of characters" if marionette?(session)
