@@ -20,6 +20,7 @@ module Capybara
 
     def initialize
       @session_options = Capybara::SessionConfig.new
+      @javascript_driver = nil
     end
 
     attr_writer :reuse_server

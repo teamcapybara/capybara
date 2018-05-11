@@ -18,6 +18,12 @@ RSpec.describe Capybara::Session do
   end
 
   context "current_driver" do
+    around do |example|
+      orig_driver = Capybara.current_driver
+      example.run
+      Capybara.current_driver = orig_driver
+    end
+
     it "is global when threadsafe false" do
       Capybara.threadsafe = false
       Capybara.current_driver = :selenium
@@ -40,6 +46,12 @@ RSpec.describe Capybara::Session do
   end
 
   context "session_name" do
+    around do |example|
+      orig_name = Capybara.session_name
+      example.run
+      Capybara.session_name = orig_name
+    end
+
     it "is global when threadsafe false" do
       Capybara.threadsafe = false
       Capybara.session_name = "sess1"
