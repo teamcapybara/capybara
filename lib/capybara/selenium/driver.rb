@@ -101,7 +101,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def needs_server?; true; end
 
   def execute_script(script, *args)
-    browser.execute_script(script, *args.map { |arg| arg.is_a?(Capybara::Selenium::Node) ? arg.native : arg })
+    browser.execute_script(script, *native_args(args))
   end
 
   def evaluate_script(script, *args)
@@ -111,7 +111,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def evaluate_async_script(script, *args)
     browser.manage.timeouts.script_timeout = Capybara.default_max_wait_time
-    result = browser.execute_async_script(script, *args.map { |arg| arg.is_a?(Capybara::Selenium::Node) ? arg.native : arg })
+    result = browser.execute_async_script(script, *native_args(args))
     unwrap_script_result(result)
   end
 
@@ -326,6 +326,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
 private
+
+  def native_args(args)
+    args.map { |arg| arg.is_a?(Capybara::Selenium::Node) ? arg.native : arg }
+  end
 
   def clear_storage
     if options[:clear_session_storage]
