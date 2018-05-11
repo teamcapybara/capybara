@@ -62,11 +62,12 @@ module Capybara
       if max_idx.nil?
         full_results[*args]
       else
-        @result_cache << @results_enum.next while @result_cache.size <= max_idx
+        loop do
+          break if @result_cache.size > max_idx
+          @result_cache << @results_enum.next
+        end
         @result_cache[*args]
       end
-    rescue StopIteration
-      return nil
     end
     alias :at :[]
 

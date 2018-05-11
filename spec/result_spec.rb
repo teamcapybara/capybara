@@ -70,6 +70,8 @@ RSpec.describe Capybara::Result do
     expect(result[0, 2].map(&:text)).to eq %w[Alpha Beta]
     expect(result[1..3].map(&:text)).to eq %w[Beta Gamma Delta]
     expect(result[-1].text).to eq 'Delta'
+    expect(result[-2, 3].map(&:text)).to eq %w[Gamma Delta]
+    expect(result[1..7].map(&:text)).to eq %w[Beta Gamma Delta]
   end
 
   it 'works with filter blocks' do
@@ -122,12 +124,18 @@ RSpec.describe Capybara::Result do
     skip 'JRuby has an issue with lazy enumerator evaluation' if RUBY_PLATFORM == 'java'
     result[0..1]
     expect(result.instance_variable_get('@result_cache').size).to be 2
+
+    expect(result[0..7].size).to eq 4
+    expect(result.instance_variable_get('@result_cache').size).to be 4
   end
 
   it "should evaluate filters lazily for idx and length" do
     skip 'JRuby has an issue with lazy enumerator evaluation' if RUBY_PLATFORM == 'java'
     result[1, 2]
     expect(result.instance_variable_get('@result_cache').size).to be 3
+
+    expect(result[2, 5].size).to eq 2
+    expect(result.instance_variable_get('@result_cache').size).to be 4
   end
 
   it "should evaluate all elements when #to_a called" do
