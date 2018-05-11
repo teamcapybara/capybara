@@ -47,11 +47,23 @@ module Capybara
     end
 
     def [](*args)
-      if (args.size == 1) && ((idx = args[0]).is_a? Integer) && (idx >= 0)
-        @result_cache << @results_enum.next while @result_cache.size <= idx
-        @result_cache[idx]
-      else
+      idx, length = args
+      max_idx = case idx
+      when Integer
+        if idx >= 0
+          length.nil? ? idx : idx + length - 1
+        else
+          nil
+        end
+      when Range
+        idx.max
+      end
+
+      if max_idx.nil?
         full_results[*args]
+      else
+        @result_cache << @results_enum.next while @result_cache.size <= max_idx
+        @result_cache[*args]
       end
     rescue StopIteration
       return nil

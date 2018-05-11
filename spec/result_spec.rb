@@ -97,7 +97,7 @@ RSpec.describe Capybara::Result do
   end
 
   # Not a great test but it indirectly tests what is needed
-  it "should evaluate filters lazily" do
+  it "should evaluate filters lazily for idx" do
     skip 'JRuby has an issue with lazy enumerator evaluation' if RUBY_PLATFORM == 'java'
     # Not processed until accessed
     expect(result.instance_variable_get('@result_cache').size).to be 0
@@ -113,6 +113,24 @@ RSpec.describe Capybara::Result do
     result[2]
     expect(result.instance_variable_get('@result_cache').size).to be 3
 
+    # All cached when converted to array
+    result.to_a
+    expect(result.instance_variable_get('@result_cache').size).to eq 4
+  end
+
+  it "should evaluate filters lazily for range" do
+    skip 'JRuby has an issue with lazy enumerator evaluation' if RUBY_PLATFORM == 'java'
+    result[0..1]
+    expect(result.instance_variable_get('@result_cache').size).to be 2
+  end
+
+  it "should evaluate filters lazily for idx and length" do
+    skip 'JRuby has an issue with lazy enumerator evaluation' if RUBY_PLATFORM == 'java'
+    result[1, 2]
+    expect(result.instance_variable_get('@result_cache').size).to be 3
+  end
+
+  it "should evaluate all elements when #to_a called" do
     # All cached when converted to array
     result.to_a
     expect(result.instance_variable_get('@result_cache').size).to eq 4
