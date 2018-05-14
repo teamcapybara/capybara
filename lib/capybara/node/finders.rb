@@ -55,7 +55,7 @@ module Capybara
       #
       def ancestor(*args, **options, &optional_filter_block)
         options[:session_options] = session_options
-        synced_resolve Capybara::Queries::AncestorQuery.new(*args, **options, &optional_filter_block)
+        synced_resolve Capybara::Queries::AncestorQuery.new(*args, options, &optional_filter_block)
       end
 
       ##
@@ -81,7 +81,7 @@ module Capybara
       #
       def sibling(*args, **options, &optional_filter_block)
         options[:session_options] = session_options
-        synced_resolve Capybara::Queries::SiblingQuery.new(*args, **options, &optional_filter_block)
+        synced_resolve Capybara::Queries::SiblingQuery.new(*args, options, &optional_filter_block)
       end
 
       ##
@@ -276,7 +276,7 @@ module Capybara
       #
       def first(*args, **options, &optional_filter_block)
         options = { minimum: 1 }.merge(options) unless options_include_minimum?(options)
-        all(*args, **options, &optional_filter_block).first
+        all(*args, options, &optional_filter_block).first
       end
 
     private

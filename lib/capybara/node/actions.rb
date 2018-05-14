@@ -107,7 +107,7 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The element chosen or the label clicked
       def choose(locator = nil, **options)
-        _check_with_label(:radio_button, true, locator, **options)
+        _check_with_label(:radio_button, true, locator, options)
       end
 
       ##
@@ -130,7 +130,7 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The element checked or the label clicked
       def check(locator = nil, **options)
-        _check_with_label(:checkbox, true, locator, **options)
+        _check_with_label(:checkbox, true, locator, options)
       end
 
       ##
@@ -153,7 +153,7 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The element unchecked or the label clicked
       def uncheck(locator = nil, **options)
-        _check_with_label(:checkbox, false, locator, **options)
+        _check_with_label(:checkbox, false, locator, options)
       end
 
       ##
