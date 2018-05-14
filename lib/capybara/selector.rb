@@ -11,7 +11,7 @@ Capybara::Selector::FilterSet.add(:_field) do
   expression_filter(:placeholder) { |xpath, val| xpath[XPath.attr(:placeholder) == val] }
 
   describe do |checked: nil, unchecked: nil, disabled: nil, multiple: nil, **_options|
-    desc, states = "".dup, []
+    desc, states = +"", []
     states << 'checked' if checked || (unchecked == false)
     states << 'not checked' if unchecked || (checked == false)
     states << 'disabled' if disabled == true
@@ -94,7 +94,7 @@ Capybara.add_selector(:field) do
     with.is_a?(Regexp) ? node.value =~ with : node.value == with.to_s
   end
   describe do |type: nil, **options|
-    desc = "".dup
+    desc = +""
     (expression_filters.keys - [:type]).each { |ef| desc << " with #{ef} #{options[ef]}" if options.key?(ef) }
     desc << " of type #{type.inspect}" if type
     desc << " with value #{options[:with].to_s.inspect}" if options.key?(:with)
@@ -170,7 +170,7 @@ Capybara.add_selector(:link) do
   end
 
   describe do |**options|
-    desc = "".dup
+    desc = +""
     desc << " with href #{options[:href].inspect}" if options[:href]
     desc << " with no href attribute" if options.fetch(:href, true).nil?
   end
@@ -217,7 +217,7 @@ Capybara.add_selector(:button) do
   filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| !(value ^ node.disabled?) }
 
   describe do |disabled: nil, **options|
-    desc = "".dup
+    desc = +""
     desc << " that is disabled" if disabled == true
     desc << describe_all_expression_filters(options)
     desc
@@ -277,7 +277,7 @@ Capybara.add_selector(:fillable_field) do
   end
 
   describe do |options|
-    desc = "".dup
+    desc = +""
     desc << describe_all_expression_filters(options)
     desc << " with value #{options[:with].to_s.inspect}" if options.key?(:with)
     desc
@@ -310,7 +310,7 @@ Capybara.add_selector(:radio_button) do
   filter(:option) { |node, value| node.value == value.to_s }
 
   describe do |option: nil, **options|
-    desc = "".dup
+    desc = +""
     desc << " with value #{option.inspect}" if option
     desc << describe_all_expression_filters(options)
     desc
@@ -341,7 +341,7 @@ Capybara.add_selector(:checkbox) do
   filter(:option) { |node, value| node.value == value.to_s }
 
   describe do |option: nil, **options|
-    desc = "".dup
+    desc = +""
     desc << " with value #{option.inspect}" if option
     desc << describe_all_expression_filters(options)
     desc
@@ -401,7 +401,7 @@ Capybara.add_selector(:select) do
   end
 
   describe do |options: nil, with_options: nil, selected: nil, with_selected: nil, **opts|
-    desc = "".dup
+    desc = +""
     desc << " with options #{options.inspect}" if options
     desc << " with at least options #{with_options.inspect}" if with_options
     desc << " with #{selected.inspect} selected" if selected
@@ -434,7 +434,7 @@ Capybara.add_selector(:datalist_input) do
   end
 
   describe do |options: nil, with_options: nil, **opts|
-    desc = "".dup
+    desc = +""
     desc << " with options #{options.inspect}" if options
     desc << " with at least options #{with_options.inspect}" if with_options
     desc << describe_all_expression_filters(opts)
@@ -461,7 +461,7 @@ Capybara.add_selector(:option) do
   filter(:selected, :boolean) { |node, value| !(value ^ node.selected?) }
 
   describe do |**options|
-    desc = "".dup
+    desc = +""
     desc << " that is#{' not' unless options[:disabled]} disabled" if options.key?(:disabled)
     desc << " that is#{' not' unless options[:selected]} selected" if options.key?(:selected)
     desc
@@ -481,7 +481,7 @@ Capybara.add_selector(:datalist_option) do
   filter(:disabled, :boolean) { |node, value| !(value ^ node.disabled?) }
 
   describe do |**options|
-    desc = "".dup
+    desc = +""
     desc << " that is#{' not' unless options[:disabled]} disabled" if options.key?(:disabled)
     desc
   end
@@ -508,7 +508,7 @@ Capybara.add_selector(:file_field) do
   filter_set(:_field, %i[disabled multiple name])
 
   describe do |**options|
-    desc = "".dup
+    desc = +""
     desc << describe_all_expression_filters(options)
     desc
   end
@@ -550,7 +550,7 @@ Capybara.add_selector(:label) do
   end
 
   describe do |**options|
-    desc = "".dup
+    desc = +""
     desc << " for #{options[:for]}" if options[:for]
     desc
   end
@@ -574,7 +574,7 @@ Capybara.add_selector(:table) do
   end
 
   describe do |caption: nil, **_options|
-    desc = "".dup
+    desc = +""
     desc << " with caption #{caption}" if caption
     desc
   end
@@ -598,7 +598,7 @@ Capybara.add_selector(:frame) do
   end
 
   describe do |name: nil, **_options|
-    desc = "".dup
+    desc = +""
     desc << " with name #{name}" if name
     desc
   end

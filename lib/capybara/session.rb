@@ -126,7 +126,7 @@ module Capybara
         driver.reset!
         @touched = false
       end
-      @server.wait_for_pending_requests if @server
+      @server&.wait_for_pending_requests
       raise_server_error!
     end
     alias_method :cleanup!, :reset!

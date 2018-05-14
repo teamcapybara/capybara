@@ -155,6 +155,6 @@ class Capybara::Driver::Base
   end
 
   def session_options
-    (@session && @session.config) || Capybara.session_options
+    @session&.config || Capybara.session_options
   end
 end

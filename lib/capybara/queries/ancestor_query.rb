@@ -13,7 +13,7 @@ module Capybara
       end
 
       def description
-        child_query = @child_node && @child_node.instance_variable_get(:@query)
+        child_query = @child_node&.instance_variable_get(:@query)
         desc = super
         desc += " that is an ancestor of #{child_query.description}" if child_query
         desc

@@ -10,7 +10,7 @@ environment:
     - RUBY_VERSION: 25
       CAPYBARA_IE: true
       BUNDLE_GEMFILE: gemfiles/Gemfile.ie
-    - RUBY_VERSION: 22
+    - RUBY_VERSION: 23
 
 matrix:
   allow_failures:

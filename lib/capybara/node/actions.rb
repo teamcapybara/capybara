@@ -307,7 +307,7 @@ module Capybara
         end
       end
 
-      UPDATE_STYLE_SCRIPT = <<-'JS'.freeze
+      UPDATE_STYLE_SCRIPT = <<-'JS'
         var el = arguments[0];
         el.capybara_style_cache = el.style.cssText;
         var css = arguments[1];
@@ -318,7 +318,7 @@ module Capybara
         }
       JS
 
-      RESET_STYLE_SCRIPT = <<-'JS'.freeze
+      RESET_STYLE_SCRIPT = <<-'JS'
         var el = arguments[0];
         if (el.hasOwnProperty('capybara_style_cache')) {
           el.style.cssText = el.capybara_style_cache;
@@ -326,7 +326,7 @@ module Capybara
         }
       JS
 
-      DATALIST_OPTIONS_SCRIPT = <<-'JS'.freeze
+      DATALIST_OPTIONS_SCRIPT = <<-'JS'
         Array.prototype.slice.call((arguments[0].list||{}).options || []).
           filter(function(el){ return !el.disabled }).
           map(function(el){ return { "value": el.value, "label": el.label} })

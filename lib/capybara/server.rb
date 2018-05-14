@@ -33,7 +33,7 @@ module Capybara
       end
 
       def pending_requests?
-        @counter.value > 0
+        @counter.value.positive?
       end
 
       def call(env)
@@ -86,7 +86,7 @@ module Capybara
     end
 
     def responsive?
-      return false if @server_thread && @server_thread.join(0)
+      return false if @server_thread&.join(0)
 
       begin
         res = if !@using_ssl
@@ -162,7 +162,7 @@ module Capybara
       server = TCPServer.new(host, 0)
       server.addr[1]
     ensure
-      server.close if server
+      server&.close
     end
   end
 end

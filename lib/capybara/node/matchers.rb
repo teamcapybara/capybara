@@ -596,7 +596,7 @@ module Capybara
       #
       def assert_text(*args)
         _verify_text(args) do |count, query|
-          unless query.matches_count?(count) && ((count > 0) || query.expects_none?)
+          unless query.matches_count?(count) && (count.positive? || query.expects_none?)
             raise Capybara::ExpectationNotMet, query.failure_message
           end
         end
@@ -612,7 +612,7 @@ module Capybara
       #
       def assert_no_text(*args)
         _verify_text(args) do |count, query|
-          if query.matches_count?(count) && ((count > 0) || query.expects_none?)
+          if query.matches_count?(count) && (count.positive? || query.expects_none?)
             raise Capybara::ExpectationNotMet, query.negative_failure_message
           end
         end

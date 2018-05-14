@@ -3,7 +3,7 @@ require:
 
 AllCops:
   DisabledByDefault: false
-  TargetRubyVersion: 2.2.2
+  TargetRubyVersion: 2.3.0
   Exclude:
       - 'capybara.gemspec'
 

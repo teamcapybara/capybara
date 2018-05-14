@@ -59,11 +59,11 @@ module Capybara
       # Generates a failure message from the query description and count options.
       #
       def failure_message
-        String.new("expected to find #{description}") << count_message
+        +"expected to find #{description}" << count_message
       end
 
       def negative_failure_message
-        String.new("expected not to find #{description}") << count_message
+        +"expected not to find #{description}" << count_message
       end
 
     private
@@ -73,7 +73,7 @@ module Capybara
       end
 
       def count_message
-        message = "".dup
+        message = +""
         if options[:count]
           message << " #{options[:count]} #{Capybara::Helpers.declension('time', 'times', options[:count])}"
         elsif options[:between]

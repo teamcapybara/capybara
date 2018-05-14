@@ -50,7 +50,7 @@ module Capybara
       idx, length = args
       max_idx = case idx
       when Integer
-        if idx >= 0
+        if !idx.negative?
           length.nil? ? idx : idx + length - 1
         else
           nil
