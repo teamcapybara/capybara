@@ -57,8 +57,8 @@ module Capybara
         message << " in #{@actual_text.inspect}"
 
         details_message = []
-        details_message << case_insensitive_message if @node and !@expected_text.is_a? Regexp
-        details_message << invisible_message if @node and check_visible_text? and report_on_invisible
+        details_message << case_insensitive_message if @node && !@expected_text.is_a?(Regexp)
+        details_message << invisible_message if @node && check_visible_text? && report_on_invisible
         details_message.compact!
 
         message << ". (However, #{details_message.join(' and ')}.)" unless details_message.empty?
@@ -78,7 +78,9 @@ module Capybara
         if invisible_count != @count
           "it was found #{invisible_count} #{Capybara::Helpers.declension('time', 'times', invisible_count)} including non-visible text"
         end
-      rescue # An error getting the non-visible text (if element goes out of scope) should not affect the response
+      rescue StandardError
+        # An error getting the non-visible text (if element goes out of scope) should not affect the response
+        ""
       end
 
       def valid_keys

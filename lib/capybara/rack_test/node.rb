@@ -218,11 +218,11 @@ private
   end
 
   def submits?
-    (tag_name == 'input' and %w[submit image].include?(type)) || (tag_name == 'button' and [nil, "submit"].include?(type))
+    (tag_name == 'input' && %w[submit image].include?(type)) || (tag_name == 'button' && [nil, "submit"].include?(type))
   end
 
   def checkable?
-    tag_name == 'input' and %w[checkbox radio].include?(type)
+    tag_name == 'input' && %w[checkbox radio].include?(type)
   end
 
 protected

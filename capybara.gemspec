@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.email = ["twalpole@gmail.com", "jonas.nicklas@gmail.com"]
   s.description = "Capybara is an integration testing tool for rack based web applications. It simulates how a user would interact with a website"
 
-  s.files = Dir.glob("{lib,spec,.yard}/**/*") + %w(README.md History.md License.txt .yardopts)
+  s.files = Dir.glob("{lib,spec,.yard}/**/*") + %w[README.md History.md License.txt .yardopts]
 
   s.homepage = "https://github.com/teamcapybara/capybara"
   s.require_paths = ["lib"]
@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency("xpath", ["~>3.0"])
 
   s.add_development_dependency("cucumber", [">= 2.3.0"])
-  s.add_development_dependency("erubi")  # dependency specification needed by rbx
+  s.add_development_dependency("erubi") # dependency specification needed by rbx
   s.add_development_dependency("fuubar", [">= 1.0.0"])
   s.add_development_dependency("launchy", [">= 2.0.4"])
   s.add_development_dependency("minitest")
@@ -39,14 +39,12 @@ Gem::Specification.new do |s|
   s.add_development_dependency("webdrivers") if ENV['CI']
   s.add_development_dependency("yard", [">= 0.9.0"])
 
-  if RUBY_ENGINE == 'rbx' then
+  if RUBY_ENGINE == 'rbx'
     s.add_development_dependency("json")
     s.add_development_dependency("racc")
     s.add_development_dependency("rubysl")
   end
 
-  if File.exist?("gem-private_key.pem")
-    s.signing_key = 'gem-private_key.pem'
-  end
+  s.signing_key = 'gem-private_key.pem' if File.exist?("gem-private_key.pem")
   s.cert_chain = ['gem-public_cert.pem']
 end

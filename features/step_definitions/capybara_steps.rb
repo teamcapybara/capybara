@@ -21,5 +21,5 @@ When(/^I use a matcher that fails$/) do
 end
 
 Then(/^the failing exception should be nice$/) do
-  expect(@error_message).to match %r{expected to find visible css \"h1#doesnotexist\"}
+  expect(@error_message).to match(/expected to find visible css \"h1#doesnotexist\"/)
 end

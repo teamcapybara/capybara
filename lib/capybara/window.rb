@@ -120,12 +120,13 @@ module Capybara
       res = yield if block_given?
       prev_size = size
       start_time = Capybara::Helpers.monotonic_time
-      begin
+      loop do
         sleep 0.05
         cur_size = size
         return res if cur_size == prev_size
         prev_size = cur_size
-      end while (Capybara::Helpers.monotonic_time - start_time) < seconds
+        break if (Capybara::Helpers.monotonic_time - start_time) >= seconds
+      end
       raise Capybara::WindowError, "Window size not stable within #{seconds} seconds."
     end
 

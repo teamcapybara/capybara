@@ -234,7 +234,7 @@ Capybara.add_selector(:link_or_button) do
     self.class.all.values_at(:link, :button).map { |selector| selector.xpath.call(locator, options) }.reduce(:union)
   end
 
-  filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| node.tag_name == "a" or !(value ^ node.disabled?) }
+  filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| node.tag_name == "a" || !(value ^ node.disabled?) }
 
   describe { |disabled: nil, **_options| " that is disabled" if disabled == true }
 end

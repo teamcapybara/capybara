@@ -44,7 +44,7 @@ module Capybara
               raise ::Capybara::ElementNotFound unless [matcher_1_matches?, matcher_2_matches?].all?
               true
             end
-          rescue
+          rescue StandardError
             false
           end
         end
@@ -72,7 +72,7 @@ module Capybara
               raise ::Capybara::ElementNotFound unless [matcher_1_matches?, matcher_2_matches?].any?
               true
             end
-          rescue
+          rescue StandardError
             false
           end
         end

@@ -97,10 +97,9 @@ module Capybara
 
       if @query.options[:maximum]
         max_opt = Integer(@query.options[:maximum])
-        begin
-          @result_cache << @results_enum.next while @result_cache.size <= max_opt
-          return 1
-        rescue StopIteration
+        loop do
+          return 1 if @result_cache.size > max_opt
+          @result_cache << @results_enum.next
         end
       end
 
@@ -115,7 +114,7 @@ module Capybara
         return 1
       end
 
-      return 0
+      0
     end
 
     def matches_count?
@@ -130,7 +129,7 @@ module Capybara
         message << ", found #{count} #{Capybara::Helpers.declension('match', 'matches', count)}: " << full_results.map(&:text).map(&:inspect).join(", ")
       end
       unless rest.empty?
-        elements = rest.map { |el| el.text rescue "<<ERROR>>" }.map(&:inspect).join(", ")
+        elements = rest.map { |el| el.text rescue "<<ERROR>>" }.map(&:inspect).join(", ") # rubocop:disable Style/RescueModifier
         message << ". Also found " << elements << ", which matched the selector but not all filters."
       end
       message

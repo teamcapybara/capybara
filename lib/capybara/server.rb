@@ -99,11 +99,11 @@ module Capybara
         @using_ssl = true
       end
 
-      if res.is_a?(Net::HTTPSuccess) or res.is_a?(Net::HTTPRedirection)
+      if res.is_a?(Net::HTTPSuccess) || res.is_a?(Net::HTTPRedirection)
         return res.body == app.object_id.to_s
       end
     rescue SystemCallError
-      return false
+      false
     end
 
     def wait_for_pending_requests

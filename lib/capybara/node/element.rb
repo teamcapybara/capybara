@@ -54,7 +54,7 @@ module Capybara
       # @return [String]              The text of the element
       #
       def text(type = nil)
-        type ||= :all unless session_options.ignore_hidden_elements or session_options.visible_text_only
+        type ||= :all unless session_options.ignore_hidden_elements || session_options.visible_text_only
         synchronize do
           if type == :all
             base.all_text
@@ -355,7 +355,7 @@ module Capybara
           begin
             reloaded = query_scope.reload.first(@query.name, @query.locator, @query.options)
             @base = reloaded.base if reloaded
-          rescue => e
+          rescue StandardError => e
             raise e unless catch_error?(e)
           end
         end
@@ -366,7 +366,7 @@ module Capybara
         %(#<Capybara::Node::Element tag="#{base.tag_name}" path="#{base.path}">)
       rescue NotSupportedByDriverError
         %(#<Capybara::Node::Element tag="#{base.tag_name}">)
-      rescue => e
+      rescue StandardError => e
         raise unless session.driver.invalid_element_errors.any? { |et| e.is_a?(et) }
 
         %(Obsolete #<Capybara::Node::Element>)

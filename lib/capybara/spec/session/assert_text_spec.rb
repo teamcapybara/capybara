@@ -76,7 +76,7 @@ Capybara::SpecHelper.spec '#assert_text' do
     @session.visit('/with_html')
     expect do
       @session.assert_text(/xxxxyzzz/)
-    end.to raise_error(Capybara::ExpectationNotMet, /\Aexpected to find text matching \/xxxxyzzz\/ in "This is a test\\nHeader Class(.+)"\Z/)
+    end.to raise_error(Capybara::ExpectationNotMet, %r{\Aexpected to find text matching /xxxxyzzz/ in "This is a test\\nHeader Class(.+)"\Z})
   end
 
   it "should escape any characters that would have special meaning in a regexp" do

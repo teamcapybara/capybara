@@ -137,7 +137,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         begin
           @browser.manage.delete_all_cookies
           clear_storage
-        rescue Selenium::WebDriver::Error::UnhandledError
+        rescue Selenium::WebDriver::Error::UnhandledError # rubocop:disable Lint/HandleExceptions
           # delete_all_cookies fails when we've previously gone
           # to about:blank, so we rescue this error and do nothing
           # instead.
@@ -167,7 +167,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
             @browser.navigate.to("about:blank")
             sleep 0.1 # slight wait for alert
             @browser.switch_to.alert.accept
-          rescue modal_error # rubocop:disable Metrics/BlockNesting
+          rescue modal_error # rubocop:disable Metrics/BlockNesting, Lint/HandleExceptions
             # alert now gone, should mean navigation happened
           end
         end
@@ -264,7 +264,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def quit
     @browser&.quit
-  rescue Selenium::WebDriver::Error::SessionNotCreatedError, Errno::ECONNREFUSED
+  rescue Selenium::WebDriver::Error::SessionNotCreatedError, Errno::ECONNREFUSED # rubocop:disable Lint/HandleExceptions
     # Browser must have already gone
   rescue Selenium::WebDriver::Error::UnknownError => e
     unless silenced_unknown_error_message?(e.message) # Most likely already gone
@@ -339,6 +339,7 @@ private
         warn "sessionStorage clear requested but is not available for this driver"
       end
     end
+
     if options[:clear_local_storage]
       if @browser.respond_to? :local_storage
         @browser.local_storage.clear

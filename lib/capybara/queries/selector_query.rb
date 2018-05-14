@@ -56,7 +56,7 @@ module Capybara
 
         matches_node_filters?(node) && matches_filter_block?(node)
       rescue *(node.respond_to?(:session) ? node.session.driver.invalid_element_errors : [])
-        return false
+        false
       end
 
       def visible

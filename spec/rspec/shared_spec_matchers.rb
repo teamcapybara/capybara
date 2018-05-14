@@ -215,7 +215,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
         it "fails if has_no_selector? returns false" do
           expect do
             expect("<h1>Text</h1>").not_to have_selector(:css, 'h1')
-          end.to raise_error(%r{expected not to find visible css "h1"})
+          end.to raise_error(/expected not to find visible css "h1"/)
         end
       end
     end
@@ -251,7 +251,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
         it "fails if has_no_selector? returns false" do
           expect do
             expect(page).not_to have_selector(:css, 'h1', text: 'test')
-          end.to raise_error(%r{expected not to find visible css "h1" with text "test"})
+          end.to raise_error(/expected not to find visible css "h1" with text "test"/)
         end
       end
     end

@@ -8,7 +8,7 @@ Capybara::SpecHelper.spec '#save_and_open_screenshot' do
   end
 
   it 'opens file from the default directory', requires: [:screenshot] do
-    expected_file_regex = %r{capybara-\d+\.png}
+    expected_file_regex = /capybara-\d+\.png/
     allow(@session.driver).to receive(:save_screenshot)
     allow(Launchy).to receive(:open)
 

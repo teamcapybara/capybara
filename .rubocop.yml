@@ -46,10 +46,8 @@ Lint/UnusedMethodArgument:
     - 'lib/capybara/driver/node.rb'
 
 Lint/HandleExceptions:
-  Enabled: false
-
-Lint/Loop:
-  Enabled: false
+  Exclude:
+    - 'spec/**/*'
 
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
@@ -68,7 +66,9 @@ Naming/UncommunicativeMethodParamName:
     - 'on'
 
 Style/RescueStandardError:
-  Enabled: false
+    Exclude:
+      - 'spec/**/*'
+      - 'lib/capybara/spec/**/*'
 
 Style/ParallelAssignment:
   Enabled: false
@@ -79,19 +79,13 @@ Style/SingleLineMethods:
 Style/StringLiterals:
   Enabled: false
 
-Style/RegexpLiteral:
-  Enabled: false
-
-Style/RescueModifier:
-  Enabled: false
-
 Style/Alias:
   Enabled: false
 
-Style/AndOr:
-  Enabled: false
-
 Style/Documentation:
+  Exclude:
+    - 'lib/capybara/spec/**/*'
+    - 'spec/**/*'
   Enabled: false
 
 Style/DoubleNegation:
@@ -105,9 +99,6 @@ Style/GuardClause:
 
 Style/EmptyElse:
   EnforcedStyle: empty
-
-Style/RedundantReturn:
-  Enabled: false
 
 Style/ClassAndModuleChildren:
   Enabled: false

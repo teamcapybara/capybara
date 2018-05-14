@@ -21,7 +21,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def value
-    if tag_name == "select" and multiple?
+    if tag_name == "select" && multiple?
       native.find_elements(:css, "option:checked").map { |n| n[:value] || n.text }
     else
       native[:value]
@@ -90,12 +90,13 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
         end
       end
     end
-  rescue => e
+  rescue StandardError => e
     if e.is_a?(::Selenium::WebDriver::Error::ElementClickInterceptedError) ||
        e.message =~ /Other element would receive the click/
       begin
         driver.execute_script("arguments[0].scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'})", self)
-      rescue # Swallow error if scrollIntoView with options isn't supported
+      rescue StandardError # rubocop:disable Lint/HandleExceptions
+        # Swallow error if scrollIntoView with options isn't supported
       end
     end
     raise e
@@ -198,7 +199,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
 private
 
   def boolean_attr(val)
-    val and val != "false"
+    val && (val != "false")
   end
 
   # a reference to the select node if this is an option node

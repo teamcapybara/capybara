@@ -33,7 +33,7 @@ module Capybara
       end
 
       def filter(requires, metadata)
-        if requires and metadata[:capybara_skip]
+        if requires && metadata[:capybara_skip]
           requires.any? do |require|
             metadata[:capybara_skip].include?(require)
           end

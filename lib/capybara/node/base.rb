@@ -81,7 +81,7 @@ module Capybara
           start_time = Capybara::Helpers.monotonic_time
           begin
             yield
-          rescue => e
+          rescue StandardError => e
             session.raise_server_error!
             raise e unless driver.wait? && catch_error?(e, errors)
             raise e if (Capybara::Helpers.monotonic_time - start_time) >= seconds

@@ -40,7 +40,7 @@ module Capybara
       def has_title?(title, **options)
         assert_title(title, options)
       rescue Capybara::ExpectationNotMet
-        return false
+        false
       end
 
       ##
@@ -52,7 +52,7 @@ module Capybara
       def has_no_title?(title, **options)
         assert_no_title(title, options)
       rescue Capybara::ExpectationNotMet
-        return false
+        false
       end
 
     private
@@ -62,7 +62,7 @@ module Capybara
         synchronize(query.wait) do
           yield(query)
         end
-        return true
+        true
       end
     end
   end

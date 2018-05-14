@@ -298,11 +298,11 @@ module Capybara
       end
 
       def ambiguous?(query, result)
-        query.match == :one or query.match == :smart and result.size > 1
+        ((query.match == :one) || (query.match == :smart)) && (result.size > 1)
       end
 
       def prefer_exact?(query)
-        query.match == :smart or query.match == :prefer_exact
+        (query.match == :smart) || (query.match == :prefer_exact)
       end
 
       def options_include_minimum?(opts)

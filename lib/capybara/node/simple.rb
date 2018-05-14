@@ -45,7 +45,7 @@ module Capybara
         attr_name = name.to_s
         if attr_name == 'value'
           value
-        elsif tag_name == 'input' and native[:type] == 'checkbox' and attr_name == 'checked'
+        elsif (tag_name == 'input') && (native[:type] == 'checkbox') && (attr_name == 'checked')
           native['checked'] == 'checked'
         else
           native[attr_name]

@@ -25,14 +25,14 @@ module Capybara
         yield(wrap(actual))
       rescue Capybara::ExpectationNotMet => e
         @failure_message = e.message
-        return false
+        false
       end
 
       def wrap_does_not_match?(actual)
         yield(wrap(actual))
       rescue Capybara::ExpectationNotMet => e
         @failure_message_when_negated = e.message
-        return false
+        false
       end
 
       def session_query_args

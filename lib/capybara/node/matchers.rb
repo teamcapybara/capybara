@@ -508,7 +508,7 @@ module Capybara
       def matches_selector?(*args, &optional_filter_block)
         assert_matches_selector(*args, &optional_filter_block)
       rescue Capybara::ExpectationNotMet
-        return false
+        false
       end
 
       ##
@@ -544,7 +544,7 @@ module Capybara
       def not_matches_selector?(*args, &optional_filter_block)
         assert_not_matches_selector(*args, &optional_filter_block)
       rescue Capybara::ExpectationNotMet
-        return false
+        false
       end
 
       ##

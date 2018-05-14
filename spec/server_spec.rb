@@ -35,7 +35,7 @@ RSpec.describe Capybara::Server do
     ensure
       Capybara.server_host = nil
     end
-  end unless ENV['TRAVIS'] && (RUBY_ENGINE == 'jruby') or Gem.win_platform?
+  end unless (ENV['TRAVIS'] && (RUBY_ENGINE == 'jruby')) || Gem.win_platform?
 
   it "should use specified port" do
     Capybara.server_port = 22789

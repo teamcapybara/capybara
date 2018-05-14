@@ -49,7 +49,7 @@ module Capybara
     def has_current_path?(path, **options)
       assert_current_path(path, options)
     rescue Capybara::ExpectationNotMet
-      return false
+      false
     end
 
     ##
@@ -64,7 +64,7 @@ module Capybara
     def has_no_current_path?(path, **options)
       assert_no_current_path(path, options)
     rescue Capybara::ExpectationNotMet
-      return false
+      false
     end
 
   private
@@ -74,7 +74,7 @@ module Capybara
       document.synchronize(query.wait) do
         yield(query)
       end
-      return true
+      true
     end
   end
 end

@@ -286,7 +286,7 @@ module Capybara
 
       def _reset_style(element)
         session.execute_script(RESET_STYLE_SCRIPT, element)
-      rescue # swallow extra errors
+      rescue StandardError # rubocop:disable Lint/HandleExceptions swallow extra errors
       end
 
       def _check_with_label(selector, checked, locator, allow_label_click: session_options.automatic_label_click, **options)
@@ -294,13 +294,13 @@ module Capybara
           begin
             el = find(selector, locator, options)
             el.set(checked)
-          rescue => e
+          rescue StandardError => e
             raise unless allow_label_click && catch_error?(e)
             begin
               el ||= find(selector, locator, options.merge(visible: :all))
               res = find(:label, for: el, visible: true).click unless el.checked? == checked
               res
-            rescue # swallow extra errors - raise original
+            rescue StandardError # swallow extra errors - raise original
               raise e
             end
           end
