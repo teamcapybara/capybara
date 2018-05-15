@@ -7,19 +7,17 @@ Capybara::SpecHelper.spec '#body' do
     expect(@session.body).to include('Hello world!')
   end
 
-  if "".respond_to?(:encoding)
-    context "encoding of response between ascii and utf8" do
-      it "should be valid with html entities" do
-        @session.visit('/with_html_entities')
-        expect(@session).to have_content('Encoding') # wait for content to appear if visit is async
-        expect { @session.body.encode!("UTF-8") }.not_to raise_error
-      end
+  context "encoding of response between ascii and utf8" do
+    it "should be valid with html entities" do
+      @session.visit('/with_html_entities')
+      expect(@session).to have_content('Encoding') # wait for content to appear if visit is async
+      expect { @session.body.encode!("UTF-8") }.not_to raise_error
+    end
 
-      it "should be valid without html entities" do
-        @session.visit('/with_html')
-        expect(@session).to have_content('This is a test') # wait for content to appear if visit is async
-        expect { @session.body.encode!("UTF-8") }.not_to raise_error
-      end
+    it "should be valid without html entities" do
+      @session.visit('/with_html')
+      expect(@session).to have_content('This is a test') # wait for content to appear if visit is async
+      expect { @session.body.encode!("UTF-8") }.not_to raise_error
     end
   end
 end

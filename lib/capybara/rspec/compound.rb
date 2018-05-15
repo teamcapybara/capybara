@@ -6,7 +6,7 @@ module Capybara
       include ::RSpec::Matchers::Composable
 
       def and(matcher)
-        Capybara::RSpecMatchers::Compound::And.new(self, matcher)
+        And.new(self, matcher)
       end
 
       def and_then(matcher)
@@ -14,7 +14,7 @@ module Capybara
       end
 
       def or(matcher)
-        Capybara::RSpecMatchers::Compound::Or.new(self, matcher)
+        Or.new(self, matcher)
       end
 
       class CapybaraEvaluator

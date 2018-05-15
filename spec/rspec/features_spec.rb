@@ -12,17 +12,13 @@ feature "Capybara's feature DSL" do
     @in_background = true
   end
 
-  def current_example(context)
-    RSpec.respond_to?(:current_example) ? RSpec.current_example : context.example
-  end
-
   scenario "includes Capybara" do
     visit('/')
     expect(page).to have_content('Hello world!')
   end
 
-  scenario "preserves description" do
-    expect(current_example(self).metadata[:full_description])
+  scenario "preserves description" do |ex|
+    expect(ex.metadata[:full_description])
       .to eq("Capybara's feature DSL preserves description")
   end
 
@@ -48,12 +44,12 @@ feature "Capybara's feature DSL" do
       expect(page).to have_content 'Hello world!'
     end
 
-    scenario 'are marked in the metadata as capybara_feature' do
-      expect(current_example(self).metadata[:capybara_feature]).to be_truthy
+    scenario 'are marked in the metadata as capybara_feature' do |ex|
+      expect(ex.metadata[:capybara_feature]).to be_truthy
     end
 
-    scenario 'have a type of :feature' do
-      expect(current_example(self).metadata[:type]).to eq :feature
+    scenario 'have a type of :feature' do |ex|
+      expect(ex.metadata[:type]).to eq :feature
     end
   end
 end
