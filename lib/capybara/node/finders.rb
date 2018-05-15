@@ -245,7 +245,7 @@ module Capybara
         minimum_specified = options_include_minimum?(options)
         options = { minimum: 1 }.merge(options) unless minimum_specified
         options[:session_options] = session_options
-        query = Capybara::Queries::SelectorQuery.new(*args.push(options), &optional_filter_block)
+        query = Capybara::Queries::SelectorQuery.new(*args, options, &optional_filter_block)
         result = nil
         begin
           synchronize(query.wait) do
@@ -298,11 +298,11 @@ module Capybara
       end
 
       def ambiguous?(query, result)
-        ((query.match == :one) || (query.match == :smart)) && (result.size > 1)
+        %i[one smart].include?(query.match) && (result.size > 1)
       end
 
       def prefer_exact?(query)
-        (query.match == :smart) || (query.match == :prefer_exact)
+        %i[smart prefer_exact].include?(query.match)
       end
 
       def options_include_minimum?(opts)

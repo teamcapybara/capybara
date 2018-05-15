@@ -93,11 +93,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   rescue StandardError => e
     if e.is_a?(::Selenium::WebDriver::Error::ElementClickInterceptedError) ||
        e.message =~ /Other element would receive the click/
-      begin
-        driver.execute_script("arguments[0].scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'})", self)
-      rescue StandardError # rubocop:disable Lint/HandleExceptions
-        # Swallow error if scrollIntoView with options isn't supported
-      end
+      scroll_to_center
     end
     raise e
   end
@@ -230,6 +226,11 @@ private
   def scroll_if_needed
     yield
   rescue ::Selenium::WebDriver::Error::MoveTargetOutOfBoundsError
+    scroll_to_center
+    yield
+  end
+
+  def scroll_to_center
     script = <<-'JS'
       try {
         arguments[0].scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
@@ -237,8 +238,11 @@ private
         arguments[0].scrollIntoView(true);
       }
     JS
-    driver.execute_script(script, self)
-    yield
+    begin
+      driver.execute_script(script, self)
+    rescue StandardError # rubocop:disable Lint/HandleExceptions
+      # Swallow error if scrollIntoView with options isn't supported
+    end
   end
 
   def set_date(value) # rubocop:disable Naming/AccessorMethodName
