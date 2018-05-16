@@ -123,7 +123,7 @@ RSpec.describe Capybara::Selenium::Driver do
     end
   end
 
-  context "#refresh", :focus_ do
+  context "#refresh" do
     def extract_results(session)
       expect(session).to have_xpath("//pre[@id='results']")
       YAML.load Nokogiri::HTML(session.body).xpath("//pre[@id='results']").first.inner_html.lstrip
