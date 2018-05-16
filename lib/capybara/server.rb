@@ -89,7 +89,7 @@ module Capybara
       return false if @server_thread&.join(0)
 
       begin
-        res = if !@using_ssl
+        res = if !using_ssl?
           http_connect
         else
           https_connect

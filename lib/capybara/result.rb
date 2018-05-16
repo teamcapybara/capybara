@@ -109,9 +109,8 @@ module Capybara
           break if @result_cache.size > max
           @result_cache << @results_enum.next
         end
-        return 0 if @query.options[:between].include?(@result_cache.size)
-        return -1 if @result_cache.size < min
-        return 1
+        return 0 if @query.options[:between] === @result_cache.size
+        return @result_cache.size <=> min
       end
 
       0

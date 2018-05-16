@@ -123,7 +123,7 @@ RSpec.describe Capybara::Selenium::Driver do
     end
   end
 
-  context "#refresh" do
+  context "#refresh", :focus_ do
     def extract_results(session)
       expect(session).to have_xpath("//pre[@id='results']")
       YAML.load Nokogiri::HTML(session.body).xpath("//pre[@id='results']").first.inner_html.lstrip
@@ -134,11 +134,13 @@ RSpec.describe Capybara::Selenium::Driver do
       @session.visit('/form')
       @session.select('Sweden', from: 'form_region')
       @session.click_button('awesome')
+      sleep 1
       expect do
         @session.accept_confirm(wait: 0.1) do
           @session.refresh
           sleep 2
         end
+        sleep 1
       end.to change { extract_results(@session)['post_count'] }.by(1)
     end
   end

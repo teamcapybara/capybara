@@ -558,7 +558,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
         it 'waits if wait time is more than timeout' do
           @session.click_link("Change title")
           using_wait_time 0 do
-            expect(@session).to have_title('changed title', wait: 0.5)
+            expect(@session).to have_title('changed title', wait: 2)
           end
         end
 
@@ -603,7 +603,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
         it 'waits if wait time is more than timeout' do
           @session.click_link("Change page")
           using_wait_time 0 do
-            expect(@session).to have_current_path('/with_html', wait: 1)
+            expect(@session).to have_current_path('/with_html', wait: 2)
           end
         end
 

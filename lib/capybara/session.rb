@@ -189,14 +189,11 @@ module Capybara
       # Addressable parsing is more lenient than URI
       uri = ::Addressable::URI.parse(current_url)
 
-      # If current_url ends up being nil, won't be able to call .path on a NilClass.
-      return nil if uri.nil?
-
       # Addressable doesn't support opaque URIs - we want nil here
-      return nil if uri.scheme == "about"
+      return nil if uri&.scheme == "about"
 
-      path = uri.path
-      path if path && !path.empty?
+      path = uri&.path
+      path if !path&.empty?
     end
 
     ##
@@ -248,11 +245,10 @@ module Capybara
 
       visit_uri = ::Addressable::URI.parse(visit_uri.to_s)
 
-      uri_base = if @server
-        ::Addressable::URI.parse(config.app_host || "http#{'s' if @server.using_ssl?}://#{@server.host}:#{@server.port}")
-      else
-        config.app_host && ::Addressable::URI.parse(config.app_host)
-      end
+      base = config.app_host
+      base ||= "http#{'s' if @server.using_ssl?}://#{@server.host}:#{@server.port}" if @server
+
+      uri_base = ::Addressable::URI.parse(base)
 
       if uri_base && [nil, 'http', 'https'].include?(visit_uri.scheme)
         if visit_uri.relative?
@@ -475,9 +471,8 @@ module Capybara
     # @raise [ArgumentError]               if both or neither arguments were provided
     #
     def switch_to_window(window = nil, **options, &window_locator)
-      block_given = block_given?
-      raise ArgumentError, "`switch_to_window` can take either a block or a window, not both" if window && block_given
-      raise ArgumentError, "`switch_to_window`: either window or block should be provided" if !window && !block_given
+      raise ArgumentError, "`switch_to_window` can take either a block or a window, not both" if window && block_given?
+      raise ArgumentError, "`switch_to_window`: either window or block should be provided" if !window && !block_given?
       unless scopes.last.nil?
         raise Capybara::ScopeError, "`switch_to_window` is not supposed to be invoked from "\
                                     "`within` or `within_frame` blocks."
@@ -569,7 +564,7 @@ module Capybara
     #
     def execute_script(script, *args)
       @touched = true
-      driver.execute_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ? arg.base : arg })
+      driver.execute_script(script, *driver_args(args))
     end
 
     ##
@@ -583,7 +578,7 @@ module Capybara
     #
     def evaluate_script(script, *args)
       @touched = true
-      result = driver.evaluate_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ? arg.base : arg })
+      result = driver.evaluate_script(script, *driver_args(args))
       element_script_result(result)
     end
 
@@ -596,7 +591,7 @@ module Capybara
     #
     def evaluate_async_script(script, *args)
       @touched = true
-      result = driver.evaluate_async_script(script, *args.map { |arg| arg.is_a?(Capybara::Node::Element) ? arg.base : arg })
+      result = driver.evaluate_async_script(script, *driver_args(args))
       element_script_result(result)
     end
 
@@ -798,6 +793,10 @@ module Capybara
   private
 
     @@instance_created = false
+
+    def driver_args(args)
+      args.map { |arg| arg.is_a?(Capybara::Node::Element) ? arg.base : arg }
+    end
 
     def accept_modal(type, text_or_options, options, &blk)
       driver.accept_modal(type, modal_options(text_or_options, options), &blk)
