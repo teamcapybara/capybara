@@ -78,7 +78,7 @@ module Capybara
         if tag_name == 'textarea'
           native['_capybara_raw_value']
         elsif tag_name == 'select'
-          if native['multiple'] == 'multiple'
+          if multiple?
             native.xpath(".//option[@selected='selected']").map { |option| option[:value] || option.content }
           else
             option = native.xpath(".//option[@selected='selected']").first || native.xpath(".//option").first
@@ -137,6 +137,10 @@ module Capybara
       #
       def selected?
         native.has_attribute?('selected')
+      end
+
+      def multiple?
+        native.has_attribute?('multiple')
       end
 
       def synchronize(_seconds = nil)

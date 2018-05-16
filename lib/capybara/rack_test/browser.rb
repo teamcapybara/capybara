@@ -34,7 +34,7 @@ class Capybara::RackTest::Browser
   end
 
   def follow(method, path, **attributes)
-    return if path.gsub(/^#{Regexp.escape(request_path)}/, '').start_with?('#') || path.downcase.start_with?('javascript:')
+    return if fragment_or_script?(path)
     process_and_follow_redirects(method, path, attributes, 'HTTP_REFERER' => current_url)
   end
 
@@ -63,9 +63,7 @@ class Capybara::RackTest::Browser
     new_uri.host ||= @current_host
     new_uri.port ||= @current_port unless new_uri.default_port == @current_port
 
-    @current_scheme = new_uri.scheme
-    @current_host = new_uri.host
-    @current_port = new_uri.port
+    @current_scheme, @current_host, @current_port = new_uri.select(:scheme, :host, :port)
 
     reset_cache!
     send(method, new_uri.to_s, attributes, env.merge(options[:headers] || {}))
@@ -79,9 +77,7 @@ class Capybara::RackTest::Browser
 
   def reset_host!
     uri = URI.parse(driver.session_options.app_host || driver.session_options.default_host)
-    @current_scheme = uri.scheme
-    @current_host = uri.host
-    @current_port = uri.port
+    @current_scheme, @current_host, @current_port = uri.select(:scheme, :host, :port)
   end
 
   def reset_cache!
@@ -121,5 +117,11 @@ protected
     last_request.path
   rescue Rack::Test::Error
     "/"
+  end
+
+private
+
+  def fragment_or_script?(path)
+    path.gsub(/^#{Regexp.escape(request_path)}/, '').start_with?('#') || path.downcase.start_with?('javascript:')
   end
 end

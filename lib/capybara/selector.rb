@@ -154,9 +154,9 @@ Capybara.add_selector(:link) do
       matchers = [XPath.attr(:id) == locator,
                   XPath.string.n.is(locator),
                   XPath.attr(:title).is(locator),
-                  XPath.descendant(:img)[XPath.attr(:alt).is(locator)]].reduce(:|)
-      matchers |= XPath.attr(:'aria-label').is(locator) if enable_aria_label
-      xpath = xpath[matchers]
+                  XPath.descendant(:img)[XPath.attr(:alt).is(locator)]]
+      matchers << XPath.attr(:'aria-label').is(locator) if enable_aria_label
+      xpath = xpath[matchers.reduce(:|)]
     end
 
     xpath = xpath[find_by_attr(:title, title)]
@@ -188,7 +188,7 @@ end
 # @filter [String] :value Matches the value of an input button
 #
 Capybara.add_selector(:button) do
-  xpath(:value, :title, :type) do |locator, **options|
+  xpath(:value, :title, :type) do |locator, enable_aria_label: false, **options|
     input_btn_xpath = XPath.descendant(:input)[XPath.attr(:type).one_of('submit', 'reset', 'image', 'button')]
     btn_xpath = XPath.descendant(:button)
     image_btn_xpath = XPath.descendant(:input)[XPath.attr(:type) == 'image']
@@ -196,14 +196,14 @@ Capybara.add_selector(:button) do
     unless locator.nil?
       locator = locator.to_s
       locator_matches = XPath.attr(:id).equals(locator) | XPath.attr(:value).is(locator) | XPath.attr(:title).is(locator)
-      locator_matches |= XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
+      locator_matches |= XPath.attr(:'aria-label').is(locator) if enable_aria_label
 
       input_btn_xpath = input_btn_xpath[locator_matches]
 
       btn_xpath = btn_xpath[locator_matches | XPath.string.n.is(locator) | XPath.descendant(:img)[XPath.attr(:alt).is(locator)]]
 
       alt_matches = XPath.attr(:alt).is(locator)
-      alt_matches |= XPath.attr(:'aria-label').is(locator) if options[:enable_aria_label]
+      alt_matches |= XPath.attr(:'aria-label').is(locator) if enable_aria_label
       image_btn_xpath = image_btn_xpath[alt_matches]
     end
 
@@ -384,10 +384,9 @@ Capybara.add_selector(:select) do
   end
 
   expression_filter(:with_options) do |expr, options|
-    options.each do |option|
-      expr = expr[Capybara::Selector.all[:option].call(option)]
+    options.inject(expr) do |xpath, option|
+      xpath[Capybara::Selector.all[:option].call(option)]
     end
-    expr
   end
 
   filter(:selected) do |node, selected|
@@ -427,10 +426,9 @@ Capybara.add_selector(:datalist_input) do
   end
 
   expression_filter(:with_options) do |expr, options|
-    options.each do |option|
-      expr = expr[XPath.attr(:list) == XPath.anywhere(:datalist)[Capybara::Selector.all[:datalist_option].call(option)].attr(:id)]
+    options.inject(expr) do |xpath, option|
+      xpath[XPath.attr(:list) == XPath.anywhere(:datalist)[Capybara::Selector.all[:datalist_option].call(option)].attr(:id)]
     end
-    expr
   end
 
   describe do |options: nil, with_options: nil, **opts|
@@ -544,8 +542,7 @@ Capybara.add_selector(:label) do
         field_or_value.find_xpath('./ancestor::label[1]').include? node.base
       end
     else
-      # Non element values were handled through the expression filter
-      true
+      true # Non element values were handled through the expression filter
     end
   end
 
@@ -566,10 +563,10 @@ end
 # @filter [String, Array<String>] :class  Matches the class(es) provided
 #
 Capybara.add_selector(:table) do
-  xpath(:caption) do |locator, options|
+  xpath(:caption) do |locator, caption: nil, **_options|
     xpath = XPath.descendant(:table)
     xpath = xpath[(XPath.attr(:id) == locator.to_s) | XPath.descendant(:caption).is(locator.to_s)] unless locator.nil?
-    xpath = xpath[XPath.descendant(:caption) == options[:caption]] if options[:caption]
+    xpath = xpath[XPath.descendant(:caption) == caption] if caption
     xpath
   end
 

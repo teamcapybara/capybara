@@ -256,9 +256,9 @@ module Capybara
       def select_datalist_option(input, value)
         datalist_options = session.evaluate_script(DATALIST_OPTIONS_SCRIPT, input)
         if (option = datalist_options.find { |o| o['value'] == value || o['label'] == value })
-          input.set(option["value"])
+          input.set(option['value'])
         else
-          raise ::Capybara::ElementNotFound, "Unable to find datalist option \"#{value}\""
+          raise ::Capybara::ElementNotFound, %(Unable to find datalist option "#{value}")
         end
       rescue ::Capybara::NotSupportedByDriverError
         # Implement for drivers that don't support JS
@@ -298,8 +298,7 @@ module Capybara
             raise unless allow_label_click && catch_error?(e)
             begin
               el ||= find(selector, locator, options.merge(visible: :all))
-              res = find(:label, for: el, visible: true).click unless el.checked? == checked
-              res
+              find(:label, for: el, visible: true).click unless el.checked? == checked
             rescue StandardError # swallow extra errors - raise original
               raise e
             end
@@ -307,7 +306,7 @@ module Capybara
         end
       end
 
-      UPDATE_STYLE_SCRIPT = <<-'JS'
+      UPDATE_STYLE_SCRIPT = <<~'JS'
         var el = arguments[0];
         el.capybara_style_cache = el.style.cssText;
         var css = arguments[1];
@@ -318,7 +317,7 @@ module Capybara
         }
       JS
 
-      RESET_STYLE_SCRIPT = <<-'JS'
+      RESET_STYLE_SCRIPT = <<~'JS'
         var el = arguments[0];
         if (el.hasOwnProperty('capybara_style_cache')) {
           el.style.cssText = el.capybara_style_cache;
@@ -326,7 +325,7 @@ module Capybara
         }
       JS
 
-      DATALIST_OPTIONS_SCRIPT = <<-'JS'
+      DATALIST_OPTIONS_SCRIPT = <<~'JS'
         Array.prototype.slice.call((arguments[0].list||{}).options || []).
           filter(function(el){ return !el.disabled }).
           map(function(el){ return { "value": el.value, "label": el.label} })

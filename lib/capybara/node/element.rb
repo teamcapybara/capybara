@@ -55,13 +55,7 @@ module Capybara
       #
       def text(type = nil)
         type ||= :all unless session_options.ignore_hidden_elements || session_options.visible_text_only
-        synchronize do
-          if type == :all
-            base.all_text
-          else
-            base.visible_text
-          end
-        end
+        synchronize { type == :all ? base.all_text : base.visible_text }
       end
 
       ##

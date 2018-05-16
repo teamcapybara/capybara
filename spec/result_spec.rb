@@ -138,6 +138,12 @@ RSpec.describe Capybara::Result do
     expect(result.instance_variable_get('@result_cache').size).to be 4
   end
 
+  it "should only need to evaluate one result for any?" do
+    skip 'JRuby has an issue with lazy enumerator evaluation' if RUBY_PLATFORM == 'java'
+    result.any?
+    expect(result.instance_variable_get('@result_cache').size).to be 1
+  end
+
   it "should evaluate all elements when #to_a called" do
     # All cached when converted to array
     result.to_a

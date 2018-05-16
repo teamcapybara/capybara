@@ -193,7 +193,7 @@ module Capybara
       return nil if uri&.scheme == "about"
 
       path = uri&.path
-      path if !path&.empty?
+      path unless path&.empty?
     end
 
     ##

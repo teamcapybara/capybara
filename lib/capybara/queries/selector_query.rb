@@ -36,7 +36,7 @@ module Capybara
         @description << "non-visible " if visible == :hidden
         @description << "#{label} #{locator.inspect}"
         @description << " with#{' exact' if exact_text == true} text #{options[:text].inspect}" if options[:text]
-        @description << " with exact text #{options[:exact_text]}" if options[:exact_text].is_a?(String)
+        @description << " with exact text #{exact_text}" if exact_text.is_a?(String)
         @description << " with id #{options[:id]}" if options[:id]
         @description << " with classes [#{Array(options[:class]).join(',')}]" if options[:class]
         @description << selector.description(options)
@@ -172,28 +172,23 @@ module Capybara
       end
 
       def filtered_xpath(expr)
-        if options.key?(:id) || options.key?(:class)
-          expr = "(#{expr})"
-          expr = "#{expr}[#{XPath.attr(:id) == options[:id]}]" if options.key?(:id) && !custom_keys.include?(:id)
-          if options.key?(:class) && !custom_keys.include?(:class)
-            class_xpath = Array(options[:class]).map do |klass|
-              XPath.attr(:class).contains_word(klass)
-            end.reduce(:&)
-            expr = "#{expr}[#{class_xpath}]"
-          end
+        expr = "(#{expr})[#{XPath.attr(:id) == options[:id]}]" if options.key?(:id) && !custom_keys.include?(:id)
+        if options.key?(:class) && !custom_keys.include?(:class)
+          class_xpath = Array(options[:class]).map do |klass|
+            XPath.attr(:class).contains_word(klass)
+          end.reduce(:&)
+          expr = "(#{expr})[#{class_xpath}]"
         end
         expr
       end
 
       def filtered_css(expr)
-        if options.key?(:id) || options.key?(:class)
-          css_selectors = expr.split(',').map(&:rstrip)
-          expr = css_selectors.map do |sel|
-            sel += "##{Capybara::Selector::CSS.escape(options[:id])}" if options.key?(:id) && !custom_keys.include?(:id)
-            sel += Array(options[:class]).map { |k| ".#{Capybara::Selector::CSS.escape(k)}" }.join if options.key?(:class) && !custom_keys.include?(:class)
-            sel
-          end.join(", ")
-        end
+        css_selectors = expr.split(',').map(&:rstrip)
+        expr = css_selectors.map do |sel|
+          sel += "##{Capybara::Selector::CSS.escape(options[:id])}" if options.key?(:id) && !custom_keys.include?(:id)
+          sel += Array(options[:class]).map { |k| ".#{Capybara::Selector::CSS.escape(k)}" }.join if options.key?(:class) && !custom_keys.include?(:class)
+          sel
+        end.join(", ")
         expr
       end
 
@@ -219,25 +214,29 @@ module Capybara
       end
 
       def describe_within?
-        @resolved_node && !(@resolved_node.is_a?(::Capybara::Node::Document) ||
-                            (@resolved_node.is_a?(::Capybara::Node::Simple) && @resolved_node.path == '/'))
+        @resolved_node && !document?(@resolved_node) && !simple_root?(@resolved_node)
       end
 
-      def matches_text_filter(node, text_option)
-        regexp = if text_option.is_a?(Regexp)
-          text_option
-        elsif exact_text == true
-          /\A#{Regexp.escape(text_option.to_s)}\z/
-        else
-          Regexp.escape(text_option.to_s)
-        end
-        text_visible = visible
-        text_visible = :all if text_visible == :hidden
-        node.text(text_visible).match(regexp)
+      def document?(node)
+        node.is_a?(::Capybara::Node::Document)
       end
 
-      def matches_exact_text_filter(node, exact_text_option)
-        regexp = /\A#{Regexp.escape(exact_text_option)}\z/
+      def simple_root?(node)
+        node.is_a?(::Capybara::Node::Simple) && node.path == '/'
+      end
+
+      def matches_text_filter(node, value)
+        return matches_exact_text_filter(node, value) if exact_text == true
+        regexp = value.is_a?(Regexp) ? value : Regexp.escape(value.to_s)
+        matches_text_regexp(node, regexp)
+      end
+
+      def matches_exact_text_filter(node, value)
+        regexp = value.is_a?(Regexp) ? value : /\A#{Regexp.escape(value.to_s)}\z/
+        matches_text_regexp(node, regexp)
+      end
+
+      def matches_text_regexp(node, regexp)
         text_visible = visible
         text_visible = :all if text_visible == :hidden
         node.text(text_visible).match(regexp)

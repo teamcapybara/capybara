@@ -91,7 +91,7 @@ module Capybara
       #
       def assert_selector(*args, &optional_filter_block)
         _verify_selector_result(args, optional_filter_block) do |result, query|
-          unless result.matches_count? && (!result.empty? || query.expects_none?)
+          unless result.matches_count? && (result.any? || query.expects_none?)
             raise Capybara::ExpectationNotMet, result.failure_message
           end
         end
@@ -114,7 +114,7 @@ module Capybara
       #
       def assert_all_of_selectors(*args, wait: nil, **options, &optional_filter_block)
         wait = session_options.default_max_wait_time if wait.nil?
-        selector = args.first.is_a?(Symbol) ? args.shift : session_options.default_selector
+        selector = extract_selector(args)
         synchronize(wait) do
           args.each do |locator|
             assert_selector(selector, locator, options, &optional_filter_block)
@@ -139,7 +139,7 @@ module Capybara
       #
       def assert_none_of_selectors(*args, wait: nil, **options, &optional_filter_block)
         wait = session_options.default_max_wait_time if wait.nil?
-        selector = args.first.is_a?(Symbol) ? args.shift : session_options.default_selector
+        selector = extract_selector(args)
         synchronize(wait) do
           args.each do |locator|
             assert_no_selector(selector, locator, options, &optional_filter_block)
@@ -659,12 +659,15 @@ module Capybara
 
     private
 
+      def extract_selector(args)
+        args.first.is_a?(Symbol) ? args.shift : session_options.default_selector
+      end
+
       def _verify_selector_result(query_args, optional_filter_block)
         query_args = _set_query_session_options(*query_args)
         query = Capybara::Queries::SelectorQuery.new(*query_args, &optional_filter_block)
         synchronize(query.wait) do
-          result = query.resolve_for(self)
-          yield result, query
+          yield query.resolve_for(self), query
         end
         true
       end
@@ -673,8 +676,7 @@ module Capybara
         query_args = _set_query_session_options(*query_args)
         query = Capybara::Queries::MatchQuery.new(*query_args, &optional_filter_block)
         synchronize(query.wait) do
-          result = query.resolve_for(query_scope)
-          yield result
+          yield query.resolve_for(query_scope)
         end
         true
       end
@@ -683,8 +685,7 @@ module Capybara
         query_args = _set_query_session_options(*query_args)
         query = Capybara::Queries::TextQuery.new(*query_args)
         synchronize(query.wait) do
-          count = query.resolve_for(self)
-          yield(count, query)
+          yield query.resolve_for(self), query
         end
         true
       end

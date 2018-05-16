@@ -57,7 +57,7 @@ module Capybara
         message << " in #{@actual_text.inspect}"
 
         details_message = []
-        details_message << case_insensitive_message if @node && !@expected_text.is_a?(Regexp)
+        details_message << case_insensitive_message if @node && check_case_insensitive?
         details_message << invisible_message if @node && check_visible_text? && report_on_invisible
         details_message.compact!
 
@@ -75,12 +75,11 @@ module Capybara
       def invisible_message
         invisible_text = text(@node, :all)
         invisible_count = invisible_text.scan(@search_regexp).size
-        if invisible_count != @count
-          "it was found #{invisible_count} #{Capybara::Helpers.declension('time', 'times', invisible_count)} including non-visible text"
-        end
+        return if invisible_count == @count
+        "it was found #{invisible_count} #{Capybara::Helpers.declension('time', 'times', invisible_count)} including non-visible text"
       rescue StandardError
         # An error getting the non-visible text (if element goes out of scope) should not affect the response
-        ""
+        nil
       end
 
       def valid_keys
@@ -89,6 +88,10 @@ module Capybara
 
       def check_visible_text?
         @type == :visible
+      end
+
+      def check_case_insensitive?
+        !@expected_text.is_a?(Regexp)
       end
 
       def text(node, query_type)

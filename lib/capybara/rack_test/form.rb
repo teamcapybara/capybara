@@ -30,12 +30,9 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
 
     native.xpath(form_elements_xpath).map do |field|
       case field.name
-      when 'input'
-        add_input_param(field, params)
-      when 'select'
-        add_select_param(field, params)
-      when 'textarea'
-        add_textarea_param(field, params)
+      when 'input' then add_input_param(field, params)
+      when 'select' then add_select_param(field, params)
+      when 'textarea' then add_textarea_param(field, params)
       end
     end
     merge_param!(params, button[:name], button[:value] || "") if button[:name]
@@ -44,8 +41,8 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
   end
 
   def submit(button)
-    action = (button && button['formaction']) || native['action']
-    method = (button && button['formmethod']) || request_method
+    action = button&.[]('formaction') || native['action']
+    method = button&.[]('formmethod') || request_method
     driver.submit(method, action.to_s, params(button))
   end
 
@@ -66,6 +63,7 @@ private
   end
 
   def merge_param!(params, key, value)
+    key = key.to_s
     if Rack::Utils.respond_to?(:default_query_parser)
       Rack::Utils.default_query_parser.normalize_params(params, key, value, Rack::Utils.param_depth_limit)
     else
@@ -85,7 +83,7 @@ private
     if %w[radio checkbox].include? field['type']
       if field['checked']
         node = Capybara::RackTest::Node.new(driver, field)
-        merge_param!(params, field['name'].to_s, node.value.to_s)
+        merge_param!(params, field['name'], node.value.to_s)
       end
     elsif %w[submit image].include? field['type']
       # TODO: identify the click button here (in document order, rather
@@ -96,29 +94,29 @@ private
           NilUploadedFile.new
         else
           mime_info = MiniMime.lookup_by_filename(value)
-          Rack::Test::UploadedFile.new(value, (mime_info && mime_info.content_type).to_s)
+          Rack::Test::UploadedFile.new(value, mime_info&.content_type&.to_s)
         end
-        merge_param!(params, field['name'].to_s, file)
+        merge_param!(params, field['name'], file)
       else
-        merge_param!(params, field['name'].to_s, File.basename(field['value'].to_s))
+        merge_param!(params, field['name'], File.basename(field['value'].to_s))
       end
     else
-      merge_param!(params, field['name'].to_s, field['value'].to_s)
+      merge_param!(params, field['name'], field['value'].to_s)
     end
   end
 
   def add_select_param(field, params)
-    if field['multiple'] == 'multiple'
+    if field.has_attribute?('multiple')
       field.xpath(".//option[@selected]").each do |option|
-        merge_param!(params, field['name'].to_s, (option['value'] || option.text).to_s)
+        merge_param!(params, field['name'], (option['value'] || option.text).to_s)
       end
     else
       option = field.xpath('.//option[@selected]').first || field.xpath('.//option').first
-      merge_param!(params, field['name'].to_s, (option['value'] || option.text).to_s) if option
+      merge_param!(params, field['name'], (option['value'] || option.text).to_s) if option
     end
   end
 
   def add_textarea_param(field, params)
-    merge_param!(params, field['name'].to_s, field['_capybara_raw_value'].to_s.gsub(/\n/, "\r\n"))
+    merge_param!(params, field['name'], field['_capybara_raw_value'].to_s.gsub(/\n/, "\r\n"))
   end
 end

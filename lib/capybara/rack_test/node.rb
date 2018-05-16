@@ -228,26 +228,27 @@ private
 protected
 
   def checkbox_or_radio?(field = self)
-    field && (field.checkbox? || field.radio?)
+    field&.checkbox? || field&.radio?
   end
 
   def checkbox?
     input_field? && type == 'checkbox'
   end
 
-  def input_field?
-    tag_name == 'input'
-  end
-
   def radio?
     input_field? && type == 'radio'
+  end
+
+  def text_or_password?
+    input_field? && (type == 'text' || type == 'password')
+  end
+
+  def input_field?
+    tag_name == 'input'
   end
 
   def textarea?
     tag_name == "textarea"
   end
 
-  def text_or_password?
-    input_field? && (type == 'text' || type == 'password')
-  end
 end
