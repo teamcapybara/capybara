@@ -1,0 +1,46 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <title>with_animation</title>
+    <script src="/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/test.js" type="text/javascript" charset="utf-8"></script>
+    <style>
+      .transition.away {
+          width: 0%;
+      }
+
+      a {
+          display: inline-block;
+          width: 100%;
+          overflow: hidden;
+      }
+
+      a:not(.away) {
+        height: 20px;
+      }
+
+      a.transition {
+        transition: all 3s ease-in-out;
+      }
+
+      @keyframes animation {
+          0%   {height: 20px; width: 100%;}
+          100% {height: 0px; width: 0%;}
+      }
+
+      a.animation.away {
+        animation-name: animation;
+        animation-duration: 3s;
+        animation-fill-mode: forwards;
+      }
+    </style>
+  </head>
+
+  <body id="with_animation">
+    <a href='#' class='transition' onclick='this.classList.add("away")'>transition me away</a>
+    <a href='#' class='animation' onclick='this.classList.add("away")'>animate me away</a>
+  </body>
+</html>
+

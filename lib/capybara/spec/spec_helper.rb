@@ -30,6 +30,7 @@ module Capybara
         Capybara.match = :smart
         Capybara.enable_aria_label = false
         Capybara.default_set_options = {}
+        Capybara.disable_animation = false
         reset_threadsafe
       end
 

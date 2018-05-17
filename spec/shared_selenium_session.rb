@@ -256,6 +256,29 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         end.to raise_error(ArgumentError, 'Not allowed to close the primary window')
       end
     end
+
+    context "AnimationDisabler" do
+      before(:context) do # rubocop:disable RSpec/BeforeAfterAll
+        Capybara.disable_animation = true
+        @animation_session = Capybara::Session.new(session.mode, TestApp.new)
+      end
+
+      after(:context) do # rubocop:disable RSpec/BeforeAfterAll
+        Capybara.disable_animation = false
+      end
+
+      it "should disable CSS transitions" do
+        @animation_session.visit('with_animation')
+        @animation_session.click_link('transition me away')
+        expect(@animation_session).to have_no_link('transition me away', wait: 0.5)
+      end
+
+      it "should disable CSS animations", :focus_ do
+        @animation_session.visit('with_animation')
+        @animation_session.click_link('animate me away')
+        expect(@animation_session).to have_no_link('animate me away', wait: 0.5)
+      end
+    end
   end
 
   def headless_or_remote?

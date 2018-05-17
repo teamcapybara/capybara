@@ -24,7 +24,6 @@ Capybara::Selector::FilterSet.add(:_field) do
 end
 
 # rubocop:disable Metrics/BlockLength
-# rubocop:disable Metrics/ParameterLists
 
 Capybara.add_selector(:xpath) do
   xpath { |xpath| xpath }
@@ -457,4 +456,3 @@ Capybara.add_selector(:element) do
   end
 end
 # rubocop:enable Metrics/BlockLength
-# rubocop:enable Metrics/ParameterLists

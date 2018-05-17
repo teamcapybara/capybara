@@ -7,7 +7,7 @@ module Capybara
     OPTIONS = %i[always_include_port run_server default_selector default_max_wait_time ignore_hidden_elements
                  automatic_reload match exact exact_text raise_server_errors visible_text_only
                  automatic_label_click enable_aria_label save_path asset_host default_host app_host
-                 server_host server_port server_errors default_set_options].freeze
+                 server_host server_port server_errors default_set_options disable_animation].freeze
 
     attr_accessor(*OPTIONS)
 
@@ -52,6 +52,8 @@ module Capybara
     #   See {Capybara.configure}
     # @!method default_set_options
     #   See {Capybara.configure}
+    # @!method disable_animation
+    #   See {Capybara.configure}
 
     remove_method :server_host
 
@@ -78,6 +80,12 @@ module Capybara
     def default_host=(url)
       raise ArgumentError, "Capybara.default_host should be set to a url (http://www.example.com). Attempted to set #{url.inspect}." if url && url !~ URI::DEFAULT_PARSER.make_regexp
       @default_host = url
+    end
+
+    remove_method :disable_animation=
+    def disable_animation=(bool)
+      warn "Capybara.disable_animation is a beta feature - it may change/disappear in a future point version" if bool
+      @disable_animation = bool
     end
 
     def initialize_copy(other)

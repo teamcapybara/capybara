@@ -59,7 +59,7 @@ module Capybara
         options
       end
 
-      def add_filter(name, filter_class, *types, matcher: nil, **options, &block) # rubocop:disable Metrics/ParameterLists
+      def add_filter(name, filter_class, *types, matcher: nil, **options, &block)
         types.each { |k| options[k] = true }
         raise "ArgumentError", ":default option is not supported for filters with a :matcher option" if matcher && options[:default]
         if filter_class <= Filters::ExpressionFilter

@@ -14,6 +14,8 @@ Release date: unreleased
 * `:element` selector type which will match on any attribute (other than the reserved names) passed as a filter option
 * `:class` filter option now supports preceding class names with `!` to indicate not having that class
 * `:class` and `:id` filter options now accept `XPath::Expression` objects to allow for more flexibility in matching
+* `Capybara.disable_animation` setting which triggers loading of a middleware that attempts to disable animations in pages.
+  This is very much a beta feature and may change/disappear in the future. [Thomas Walpole]
 
 # Version 3.1.1
 Release date: 2018-05-25

@@ -3,56 +3,11 @@
 require 'uri'
 require 'net/http'
 require 'rack'
+require 'capybara/server/middleware'
+require 'capybara/server/animation_disabler'
 
 module Capybara
   class Server
-    class Middleware
-      class Counter
-        attr_reader :value
-
-        def initialize
-          @value = 0
-          @mutex = Mutex.new
-        end
-
-        def increment
-          @mutex.synchronize { @value += 1 }
-        end
-
-        def decrement
-          @mutex.synchronize { @value -= 1 }
-        end
-      end
-
-      attr_accessor :error
-
-      def initialize(app, server_errors)
-        @app = app
-        @counter = Counter.new
-        @server_errors = server_errors
-      end
-
-      def pending_requests?
-        @counter.value.positive?
-      end
-
-      def call(env)
-        if env["PATH_INFO"] == "/__identify__"
-          [200, {}, [@app.object_id.to_s]]
-        else
-          @counter.increment
-          begin
-            @app.call(env)
-          rescue *@server_errors => e
-            @error ||= e
-            raise e
-          ensure
-            @counter.decrement
-          end
-        end
-      end
-    end
-
     class << self
       def ports
         @ports ||= {}
@@ -61,9 +16,10 @@ module Capybara
 
     attr_reader :app, :port, :host
 
-    def initialize(app, *deprecated_options, port: Capybara.server_port, host: Capybara.server_host, reportable_errors: Capybara.server_errors)
+    def initialize(app, *deprecated_options, port: Capybara.server_port, host: Capybara.server_host, reportable_errors: Capybara.server_errors, extra_middleware: [])
       warn "Positional arguments, other than the application, to Server#new are deprecated, please use keyword arguments" unless deprecated_options.empty?
       @app = app
+      @extra_middleware = extra_middleware
       @server_thread = nil # suppress warnings
       @host = deprecated_options[1] || host
       @reportable_errors = deprecated_options[2] || reportable_errors
@@ -147,7 +103,7 @@ module Capybara
     end
 
     def middleware
-      @middleware ||= Middleware.new(app, @reportable_errors)
+      @middleware ||= Middleware.new(app, @reportable_errors, @extra_middleware)
     end
 
     def port_key

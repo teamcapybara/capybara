@@ -40,6 +40,9 @@ Metrics/ModuleLength:
 Metrics/PerceivedComplexity:
   Enabled: false
 
+Metrics/ParameterLists:
+  Enabled: false
+
 Lint/UnusedMethodArgument:
   Exclude:
     - 'lib/capybara/driver/base.rb'
