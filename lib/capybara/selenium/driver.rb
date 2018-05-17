@@ -137,6 +137,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         begin
           @browser.manage.delete_all_cookies
           clear_storage
+        rescue Selenium::WebDriver::Error::NoSuchAlertError
+          # Handle a bug in Firefox/Geckodriver where it thinks it needs an alert modal to exist
+          # for no good reason
+          retry
         rescue Selenium::WebDriver::Error::UnhandledError # rubocop:disable Lint/HandleExceptions
           # delete_all_cookies fails when we've previously gone
           # to about:blank, so we rescue this error and do nothing
