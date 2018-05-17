@@ -110,7 +110,7 @@ module Capybara
       # The :wait option applies to all of the selectors as a group, so all of the locators must be present
       # within :wait (Defaults to Capybara.default_max_wait_time) seconds.
       #
-      # @overload assert_all_of_selectors([kind = Capybara.default_selector], *locators, options = {})
+      # @overload assert_all_of_selectors([kind = Capybara.default_selector], *locators, **options)
       #
       def assert_all_of_selectors(*args, wait: nil, **options, &optional_filter_block)
         wait = session_options.default_max_wait_time if wait.nil?
@@ -135,7 +135,7 @@ module Capybara
       # The :wait option applies to all of the selectors as a group, so none of the locators must be present
       # within :wait (Defaults to Capybara.default_max_wait_time) seconds.
       #
-      # @overload assert_none_of_selectors([kind = Capybara.default_selector], *locators, options = {})
+      # @overload assert_none_of_selectors([kind = Capybara.default_selector], *locators, **options)
       #
       def assert_none_of_selectors(*args, wait: nil, **options, &optional_filter_block)
         wait = session_options.default_max_wait_time if wait.nil?
@@ -574,7 +574,7 @@ module Capybara
       # ignoring any HTML tags.
       #
       # @!macro text_query_params
-      #   @overload $0(type, text, options = {})
+      #   @overload $0(type, text, **options)
       #     @param [:all, :visible] type               Whether to check for only visible or all text. If this parameter is missing or nil then we use the value of `Capybara.ignore_hidden_elements`, which defaults to `true`, corresponding to `:visible`.
       #     @param [String, Regexp] text               The string/regexp to check for. If it's a string, text is expected to include it. If it's a regexp, text is expected to match it.
       #     @option options [Integer] :count (nil)     Number of times the text is expected to occur
@@ -583,7 +583,7 @@ module Capybara
       #     @option options [Range]   :between (nil)   Range of times that is expected to contain number of times text occurs
       #     @option options [Numeric] :wait (Capybara.default_max_wait_time)      Maximum time that Capybara will wait for text to eq/match given string/regexp argument
       #     @option options [Boolean] :exact (Capybara.exact_text) Whether text must be an exact match or just substring
-      #   @overload $0(text, options = {})
+      #   @overload $0(text, **options)
       #     @param [String, Regexp] text               The string/regexp to check for. If it's a string, text is expected to include it. If it's a regexp, text is expected to match it.
       #     @option options [Integer] :count (nil)     Number of times the text is expected to occur
       #     @option options [Integer] :minimum (nil)   Minimum number of times the text is expected to occur

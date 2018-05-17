@@ -9,9 +9,9 @@ module Capybara
     # the comparison will depend on the :url option
     #
     # @!macro current_path_query_params
-    #   @overload $0(string, options = {})
+    #   @overload $0(string, **options)
     #     @param string [String]           The string that the current 'path' should equal
-    #   @overload $0(regexp, options = {})
+    #   @overload $0(regexp, **options)
     #     @param regexp [Regexp]           The regexp that the current 'path' should match to
     #   @option options [Boolean] :url (true if `string` ia a full url, otherwise false) Whether the compare should be done against the full current url or just the path
     #   @option options [Boolean] :ignore_query (false)  Whether the query portion of the current url/path should be ignored

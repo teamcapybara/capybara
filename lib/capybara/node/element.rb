@@ -50,7 +50,7 @@ module Capybara
       # ignored. This behaviour can be overridden by passing `:all` to this
       # method.
       #
-      # @param [:all, :visible] type  Whether to return only visible or all text
+      # @param type [:all, :visible]  Whether to return only visible or all text
       # @return [String]              The text of the element
       #
       def text(type = nil)
@@ -119,9 +119,11 @@ module Capybara
       # Click the Element
       #
       # @!macro click_modifiers
-      #   @overload $0(*key_modifiers=[], offset={x: nil, y: nil})
-      #     @param [Array<:alt, :control, :meta, :shift>] *key_modifiers  Keys to be held down when clicking
-      #     @param [Hash] offset                          x and y coordinates to offset the click location from the top left corner of the element.  If not specified will click the middle of the element.
+      #   Both x: and y: must be specified if an offset is wanted, if not specified the click will occur at the middle of the element
+      #   @overload $0(*modifier_keys, **offset)
+      #     @param *modifier_keys [:alt, :control, :meta, :shift] ([]) Keys to be held down when clicking
+      #     @option offset [Integer] x  X coordinate to offset the click location from the top left corner of the element
+      #     @option offset [Integer] y  Y coordinate to offset the click location from the top left corner of the element
       # @return [Capybara::Node::Element]  The element
       def click(*keys, **offset)
         synchronize { base.click(keys, offset) }
@@ -155,7 +157,7 @@ module Capybara
       # Send Keystrokes to the Element
       #
       # @overload send_keys(keys, ...)
-      #   @param [String, Symbol, Array<String,Symbol>] keys
+      #   @param keys [String, Symbol, Array<String,Symbol>]
       #
       # Examples:
       #

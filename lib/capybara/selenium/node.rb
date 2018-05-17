@@ -76,13 +76,13 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     native.click if selected?
   end
 
-  def click(keys = [], options = {})
-    if keys.empty? && !has_coords?(options)
+  def click(keys = [], **options)
+    if keys.empty? && !coords?(options)
       native.click
     else
       scroll_if_needed do
         action_with_modifiers(keys, options) do |a|
-          has_coords?(options) ? a.click : a.click(native)
+          coords?(options) ? a.click : a.click(native)
         end
       end
     end
@@ -94,18 +94,18 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     raise e
   end
 
-  def right_click(keys = [], options = {})
+  def right_click(keys = [], **options)
     scroll_if_needed do
       action_with_modifiers(keys, options) do |a|
-        has_coords?(options) ? a.context_click : a.context_click(native)
+        coords?(options) ? a.context_click : a.context_click(native)
       end
     end
   end
 
-  def double_click(keys = [], options = {})
+  def double_click(keys = [], **options)
     scroll_if_needed do
       action_with_modifiers(keys, options) do |a|
-        has_coords?(options) ? a.double_click : a.double_click(native)
+        coords?(options) ? a.double_click : a.double_click(native)
       end
     end
   end
@@ -182,7 +182,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
 
 private
 
-  def has_coords?(options)
+  def coords?(options)
     options[:x] && options[:y]
   end
 

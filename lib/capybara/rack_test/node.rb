@@ -55,7 +55,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     native.remove_attribute('selected')
   end
 
-  def click(keys = [], offset = {})
+  def click(keys = [], **offset)
     raise ArgumentError, "The RackTest driver does not support click options" unless keys.empty? && offset.empty?
 
     if link?
@@ -250,5 +250,4 @@ protected
   def textarea?
     tag_name == "textarea"
   end
-
 end

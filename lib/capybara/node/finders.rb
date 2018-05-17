@@ -88,7 +88,7 @@ module Capybara
       #
       # Find a form field on the page. The field can be found by its name, id or label text.
       #
-      # @overload find_field([locator], options={})
+      # @overload find_field([locator], **options)
       #   @param [String] locator             name, id, placeholder or text of associated label element
       #
       #   @macro waiting_behavior
@@ -119,7 +119,7 @@ module Capybara
       #
       # Find a link on the page. The link can be found by its id or text.
       #
-      # @overload find_link([locator], options={})
+      # @overload find_link([locator], **options)
       #   @param [String] locator            id, title, text, or alt of enclosed img element
       #
       #   @macro waiting_behavior
@@ -142,10 +142,10 @@ module Capybara
       # \<button> element. All buttons can be found by their id, value, or title. \<button> elements can also be found
       # by their text content, and image \<input> elements by their alt attribute
       #
-      # @overload find_button([locator], options={})
+      # @overload find_button([locator], **options)
       #   @param [String] locator            id, value, title, text content, alt of image
       #
-      #   @overload find_button(options={})
+      #   @overload find_button(**options)
       #
       #   @macro waiting_behavior
       #
@@ -178,7 +178,7 @@ module Capybara
       end
 
       ##
-      # @!method all([kind = Capybara.default_selector], locator = nil, options = {})
+      # @!method all([kind = Capybara.default_selector], locator = nil, **options)
       #
       # Find all elements on the page matching the given selector
       # and options.
@@ -235,8 +235,8 @@ module Capybara
       # @option options [Range]   between          Number of matches found must be within the given range
       # @option options [Boolean] exact            Control whether `is` expressions in the given XPath match exactly or partially
       # @option options [Integer, false] wait (Capybara.default_max_wait_time)  The time to wait for matching elements to become available
-      # @overload all([kind = Capybara.default_selector], locator = nil, options = {})
-      # @overload all([kind = Capybara.default_selector], locator = nil, options = {}, &filter_block)
+      # @overload all([kind = Capybara.default_selector], locator = nil, **options)
+      # @overload all([kind = Capybara.default_selector], locator = nil, **options, &filter_block)
       #   @yieldparam element [Capybara::Node::Element]  The element being considered for inclusion in the results
       #   @yieldreturn [Boolean]                     Should the element be considered in the results?
       # @return [Capybara::Result]                   A collection of found elements

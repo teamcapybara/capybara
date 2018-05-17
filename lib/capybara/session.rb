@@ -26,7 +26,7 @@ module Capybara
   #     end
   #
   # Session provides a number of methods for controlling the navigation of the page, such as +visit+,
-  # +current_path, and so on. It also delegate a number of methods to a Capybara::Document, representing
+  # +current_path, and so on. It also delegates a number of methods to a Capybara::Document, representing
   # the current HTML document. This allows interaction:
   #
   #     session.fill_in('q', with: 'Capybara')
@@ -85,8 +85,6 @@ module Capybara
       end
       @server = if config.run_server && @app && driver.needs_server?
         Capybara::Server.new(@app, port: config.server_port, host: config.server_host, reportable_errors: config.server_errors).boot
-      else
-        nil
       end
       @touched = false
     end
@@ -407,7 +405,7 @@ module Capybara
     #
     # @overload within_frame(element)
     #   @param [Capybara::Node::Element]  frame element
-    # @overload within_frame([kind = :frame], locator, options = {})
+    # @overload within_frame([kind = :frame], locator, **options)
     #   @param [Symbol] kind      Optional selector type (:css, :xpath, :field, etc.) - Defaults to :frame
     #   @param [String] locator   The locator for the given selector kind.  For :frame this is the name/id of a frame/iframe element
     # @overload within_frame(index)
@@ -605,11 +603,11 @@ module Capybara
     #     $0 do
     #       click_link('link that triggers appearance of system modal')
     #     end
-    #   @overload $0(text, options = {}, &blk)
+    #   @overload $0(text, **options, &blk)
     #     @param text [String, Regexp]  Text or regex to match against the text in the modal.  If not provided any modal is matched
     #     @option options [Numeric] :wait (Capybara.default_max_wait_time) Maximum time to wait for the modal to appear after executing the block.
     #     @yield Block whose actions will trigger the system modal
-    #   @overload $0(options = {}, &blk)
+    #   @overload $0(**options, &blk)
     #     @option options [Numeric] :wait (Capybara.default_max_wait_time) Maximum time to wait for the modal to appear after executing the block.
     #     @yield Block whose actions will trigger the system modal
     #   @return [String]  the message shown in the modal
