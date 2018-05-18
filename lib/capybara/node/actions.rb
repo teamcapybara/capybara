@@ -255,7 +255,7 @@ module Capybara
       end
 
       def select_datalist_option(input, value)
-        datalist_options = session.evaluate_script(DATALIST_OPTIONS_SCRIPT, input)
+        datalist_options = input.evaluate_script(DATALIST_OPTIONS_SCRIPT)
         if (option = datalist_options.find { |o| o['value'] == value || o['label'] == value })
           input.set(option['value'])
         else
@@ -280,13 +280,13 @@ module Capybara
       end
 
       def _update_style(element, style)
-        session.execute_script(UPDATE_STYLE_SCRIPT, element, style)
+        element.execute_script(UPDATE_STYLE_SCRIPT, style)
       rescue Capybara::NotSupportedByDriverError
         warn "The :make_visible option is not supported by the current driver - ignoring"
       end
 
       def _reset_style(element)
-        session.execute_script(RESET_STYLE_SCRIPT, element)
+        element.execute_script(RESET_STYLE_SCRIPT)
       rescue StandardError # rubocop:disable Lint/HandleExceptions swallow extra errors
       end
 
@@ -308,26 +308,24 @@ module Capybara
       end
 
       UPDATE_STYLE_SCRIPT = <<~'JS'
-        var el = arguments[0];
-        el.capybara_style_cache = el.style.cssText;
-        var css = arguments[1];
+        this.capybara_style_cache = this.style.cssText;
+        var css = arguments[0];
         for (var prop in css){
           if (css.hasOwnProperty(prop)) {
-            el.style[prop] = css[prop]
+            this.style[prop] = css[prop]
           }
         }
       JS
 
       RESET_STYLE_SCRIPT = <<~'JS'
-        var el = arguments[0];
-        if (el.hasOwnProperty('capybara_style_cache')) {
-          el.style.cssText = el.capybara_style_cache;
-          delete el.capybara_style_cache;
+        if (this.hasOwnProperty('capybara_style_cache')) {
+          this.style.cssText = this.capybara_style_cache;
+          delete this.capybara_style_cache;
         }
       JS
 
       DATALIST_OPTIONS_SCRIPT = <<~'JS'
-        Array.prototype.slice.call((arguments[0].list||{}).options || []).
+        Array.prototype.slice.call((this.list||{}).options || []).
           filter(function(el){ return !el.disabled }).
           map(function(el){ return { "value": el.value, "label": el.label} })
       JS
