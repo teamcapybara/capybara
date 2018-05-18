@@ -105,8 +105,9 @@ Capybara::SpecHelper.spec "node" do
     it 'should use global default options' do
       Capybara.default_set_options = { clear: :backspace }
       element = @session.first(:fillable_field, type: 'text')
-      expect(element.base).to receive(:set).with('gorilla', clear: :backspace)
+      allow(element.base).to receive(:set)
       element.set('gorilla')
+      expect(element.base).to have_received(:set).with('gorilla', clear: :backspace)
     end
 
     context "with a contenteditable element", requires: [:js] do
