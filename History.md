@@ -1,3 +1,10 @@
+# Version 3.2.0
+Release date: unreleased
+
+### Added
+
+* New global configuration `default_set_options` used in `Capybara::Node::Element#set` as default `options` hash 
+
 # Version 3.1.0
 Release date: 2018-05-10
 

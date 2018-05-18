@@ -82,6 +82,7 @@ module Capybara
     # [reuse_server = Boolean]  Reuse the server thread between multiple sessions using the same app object (Default: true)
     # [threadsafe = Boolean]  Whether sessions can be configured individually (Default: false)
     # [server = Symbol]  The name of the registered server to use when running the app under test (Default: :webrick)
+    # [default_set_options = Hash]  The default options passed to Node::set (Default: {})
     #
     # === DSL Options
     #
@@ -479,6 +480,7 @@ Capybara.configure do |config|
   config.automatic_label_click = false
   config.enable_aria_label = false
   config.reuse_server = true
+  config.default_set_options = {}
 end
 
 Capybara.register_driver :rack_test do |app|

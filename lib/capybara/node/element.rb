@@ -84,11 +84,12 @@ module Capybara
       # Set the value of the form element to the given value.
       #
       # @param [String] value    The new value
-      # @param [Hash{}] options  Driver specific options for how to set the value
+      # @param [Hash{}] options  Driver specific options for how to set the value. Take default values from {Capybara#default_set_options}
       #
       # @return [Capybara::Node::Element]  The element
       def set(value, **options)
         raise Capybara::ReadOnlyElementError, "Attempt to set readonly element with value: #{value}" if readonly?
+        options = session_options.default_set_options.merge(options)
         synchronize { base.set(value, options) }
         self
       end

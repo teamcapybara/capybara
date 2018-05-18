@@ -29,6 +29,7 @@ module Capybara
         Capybara.visible_text_only = false
         Capybara.match = :smart
         Capybara.enable_aria_label = false
+        Capybara.default_set_options = {}
         reset_threadsafe
       end
 
