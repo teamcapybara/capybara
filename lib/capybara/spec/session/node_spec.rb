@@ -102,9 +102,9 @@ Capybara::SpecHelper.spec "node" do
       expect { @session.first('//textarea[@readonly]').set('changed') }.to raise_error(Capybara::ReadOnlyElementError)
     end
 
-    it 'should use global default options', requires: [:js] do
+    it 'should use global default options' do
       Capybara.default_set_options = { clear: :backspace }
-      element = @session.first('//input')
+      element = @session.first(:fillable_field, type: 'text')
       expect(element.base).to receive(:set).with('gorilla', clear: :backspace)
       element.set('gorilla')
     end

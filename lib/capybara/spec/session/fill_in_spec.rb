@@ -159,6 +159,13 @@ Capybara::SpecHelper.spec "#fill_in" do
     expect(extract_results(@session)['zipcode']).to eq('12345')
   end
 
+  it "fills in a field if default_set_options is nil" do
+    Capybara.default_set_options = nil
+    @session.fill_in(:form_first_name, with: 'Thomas')
+    @session.click_button('awesome')
+    expect(extract_results(@session)['first_name']).to eq('Thomas')
+  end
+
   context 'on a pre-populated textfield with a reformatting onchange', requires: [:js] do
     it 'should only trigger onchange once' do
       @session.visit('/with_js')

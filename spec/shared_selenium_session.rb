@@ -88,6 +88,13 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         expect(session.find(:fillable_field, 'form_first_name').value).to eq('Harry')
       end
 
+      it 'should fill in if the option is set via global option' do
+        Capybara.default_set_options = { clear: :backspace }
+        session.visit('/form')
+        session.fill_in('form_first_name', with: 'Thomas')
+        expect(session.find(:fillable_field, 'form_first_name').value).to eq('Thomas')
+      end
+
       it 'should only trigger onchange once' do
         session.visit('/with_js')
         session.fill_in('with_change_event',

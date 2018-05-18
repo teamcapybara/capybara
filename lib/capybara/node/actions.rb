@@ -77,7 +77,7 @@ module Capybara
       #   @option options [String] name           Match fields that match the name attribute
       #   @option options [String] placeholder    Match fields that match the placeholder attribute
       #   @option options [String, Array<String>] class    Match fields that match the class(es) provided
-      #   @option options [Hash] fill_options     Driver specific options regarding how to fill fields
+      #   @option options [Hash] fill_options     Driver specific options regarding how to fill fields (Defaults come from Capybara.default_set_options)
       #
       # @return [Capybara::Node::Element]  The element filled_in
       def fill_in(locator = nil, with:, fill_options: {}, **options)
