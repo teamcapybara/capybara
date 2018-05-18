@@ -347,6 +347,40 @@ module Capybara
         self
       end
 
+      ##
+      #
+      # Execute the given JS in the context of the element not returning a result. This is useful for scripts that return
+      # complex objects, such as jQuery statements. +execute_script+ should be used over
+      # +evaluate_script+ whenever possible. `this` in the script will refer to the element this is called on.
+      #
+      # @param [String] script   A string of JavaScript to execute
+      # @param args  Optional arguments that will be passed to the script.  Driver support for this is optional and types of objects supported may differ between drivers
+      #
+      def execute_script(script, *args)
+        session.execute_script(<<~JS, self, *args)
+          (function (){
+            #{script}
+          }).apply(arguments[0], Array.prototype.slice.call(arguments,1));
+        JS
+      end
+
+      ##
+      #
+      # Evaluate the given JS in the context of the element and return the result. Be careful when using this with
+      # scripts that return complex objects, such as jQuery statements. +execute_script+ might
+      # be a better alternative. `this` in the script will refer to the element this is called on.
+      #
+      # @param  [String] script   A string of JavaScript to evaluate
+      # @return [Object]          The result of the evaluated JavaScript (may be driver specific)
+      #
+      def evaluate_script(script, *args)
+        session.evaluate_script(<<~JS, self, *args)
+          (function(){
+            return #{script}
+          }).apply(arguments[0], Array.prototype.slice.call(arguments,1));
+        JS
+      end
+
       def reload
         if @allow_reload
           begin
