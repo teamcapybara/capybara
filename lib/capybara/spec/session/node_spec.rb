@@ -102,6 +102,13 @@ Capybara::SpecHelper.spec "node" do
       expect { @session.first('//textarea[@readonly]').set('changed') }.to raise_error(Capybara::ReadOnlyElementError)
     end
 
+    it 'should use global default options', requires: [:js] do
+      Capybara.default_set_options = { clear: :backspace }
+      element = @session.first('//input')
+      expect(element.base).to receive(:set).with('gorilla', clear: :backspace)
+      element.set('gorilla')
+    end
+
     context "with a contenteditable element", requires: [:js] do
       it 'should allow me to change the contents' do
         @session.visit('/with_js')
