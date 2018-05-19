@@ -455,6 +455,48 @@ Capybara::SpecHelper.spec "node" do
     end
   end
 
+  describe "#execute_script", requires: %i[js es_args] do
+    it "should execute the given script in the context of the element and return nothing" do
+      @session.visit('/with_js')
+      expect(@session.find(:css, '#change').execute_script("this.textContent = 'Funky Doodle'")).to be_nil
+      expect(@session).to have_css('#change', text: 'Funky Doodle')
+    end
+
+    it "should pass arguments to the script" do
+      @session.visit('/with_js')
+      @session.find(:css, '#change').execute_script("this.textContent = arguments[0]", "Doodle Funk")
+      expect(@session).to have_css('#change', text: 'Doodle Funk')
+    end
+  end
+
+  describe "#evaluate_script", requires: %i[js es_args] do
+    it "should evaluate the given script in the context of the element and  return whatever it produces" do
+      @session.visit('/with_js')
+      el = @session.find(:css, '#with_change_event')
+      expect(el.evaluate_script("this.value")).to eq('default value')
+    end
+
+    it "should pass arguments to the script" do
+      @session.visit('/with_js')
+      @session.find(:css, '#change').evaluate_script("this.textContent = arguments[0]", "Doodle Funk")
+      expect(@session).to have_css('#change', text: 'Doodle Funk')
+    end
+
+    it "should pass multiple arguments" do
+      @session.visit('/with_js')
+      change = @session.find(:css, '#change')
+      expect(change.evaluate_script("arguments[0] + arguments[1]", 2, 3)).to eq 5
+    end
+
+    it "should support returning elements" do
+      @session.visit('/with_js')
+      change = @session.find(:css, '#change') # ensure page has loaded and element is available
+      el = change.evaluate_script("this")
+      expect(el).to be_instance_of(Capybara::Node::Element)
+      expect(el).to eq(change)
+    end
+  end
+
   describe '#reload', requires: [:js] do
     context "without automatic reload" do
       before { Capybara.automatic_reload = false }
