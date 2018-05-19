@@ -11,10 +11,7 @@ Capybara::SpecHelper.spec '#windows', requires: [:windows] do
     end
   end
   after do
-    (@session.windows - [@window]).each do |w|
-      @session.switch_to_window w
-      w.close
-    end
+    (@session.windows - [@window]).each &:close
     @session.switch_to_window(@window)
   end
 
@@ -22,7 +19,8 @@ Capybara::SpecHelper.spec '#windows', requires: [:windows] do
     expect(@session.windows.map { |window| window.instance_of?(Capybara::Window) }).to eq([true] * 3)
   end
 
-  it 'should switchable windows' do
+  it 'should be able to switch to windows' do
+    sleep 1 # give windows enough time to fully load
     titles = @session.windows.map do |window|
       @session.within_window(window) { @session.title }
     end
