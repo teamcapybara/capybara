@@ -11,7 +11,7 @@ Capybara::SpecHelper.spec '#windows', requires: [:windows] do
     end
   end
   after do
-    (@session.windows - [@window]).each &:close
+    (@session.windows - [@window]).each(&:close)
     @session.switch_to_window(@window)
   end
 
