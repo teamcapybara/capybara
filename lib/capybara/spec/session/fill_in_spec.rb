@@ -169,6 +169,8 @@ Capybara::SpecHelper.spec "#fill_in" do
   context 'on a pre-populated textfield with a reformatting onchange', requires: [:js] do
     it 'should only trigger onchange once' do
       @session.visit('/with_js')
+      # Click somewhere on the page to ensure focus is acquired. Without this FF won't generate change events for some reason???
+      @session.find(:css, 'body').click
       @session.fill_in('with_change_event', with: 'some value')
       # click outside the field to trigger the change event
       @session.find(:css, 'body').click
