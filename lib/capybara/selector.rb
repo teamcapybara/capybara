@@ -601,5 +601,31 @@ Capybara.add_selector(:frame) do
   end
 end
 
+Capybara.add_selector(:element) do
+  xpath do |locator, **_options|
+    XPath.descendant((locator || '@').to_sym)
+  end
+
+  expression_filter(/.+/) do |xpath, name, val|
+    case val
+    when Regexp
+      xpath
+    when XPath::Expression
+      xpath[XPath.attr(name)[val]]
+    else
+      xpath[XPath.attr(name.to_sym) == val]
+    end
+  end
+
+  filter(/.+/) do |node, name, val|
+    val.is_a?(Regexp) ? node[name] =~ val : true
+  end
+
+  describe do |**options|
+    desc = +""
+    desc << describe_all_expression_filters(options)
+    desc
+  end
+end
 # rubocop:enable Metrics/BlockLength
 # rubocop:enable Metrics/ParameterLists

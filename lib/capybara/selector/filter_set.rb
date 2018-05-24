@@ -5,11 +5,13 @@ require 'capybara/selector/filter'
 module Capybara
   class Selector
     class FilterSet
-      attr_reader :descriptions
+      attr_reader :descriptions, :node_filters, :expression_filters
 
       def initialize(name, &block)
         @name = name
         @descriptions = []
+        @expression_filters = {}
+        @node_filters = {}
         instance_eval(&block)
       end
 
@@ -32,18 +34,6 @@ module Capybara
         end.join
       end
 
-      def filters
-        @filters ||= {}
-      end
-
-      def node_filters
-        filters.reject { |_n, f| f.nil? || f.is_a?(Filters::ExpressionFilter) }.freeze
-      end
-
-      def expression_filters
-        filters.select { |_n, f| f.nil? || f.is_a?(Filters::ExpressionFilter) }.freeze
-      end
-
       class << self
         def all
           @filter_sets ||= {} # rubocop:disable Naming/MemoizedInstanceVariableName
@@ -62,15 +52,21 @@ module Capybara
 
       def options_with_defaults(options)
         options = options.dup
-        filters.each do |name, filter|
-          options[name] = filter.default if filter.default? && !options.key?(name)
+        [expression_filters, node_filters].each do |filters|
+          filters.each do |name, filter|
+            options[name] = filter.default if filter.default? && !options.key?(name)
+          end
         end
         options
       end
 
       def add_filter(name, filter_class, *types, **options, &block)
         types.each { |k| options[k] = true }
-        filters[name] = filter_class.new(name, block, options)
+        if filter_class <= Filters::ExpressionFilter
+          @expression_filters[name] = filter_class.new(name, block, options)
+        else
+          @node_filters[name] = filter_class.new(name, block, options)
+        end
       end
     end
   end

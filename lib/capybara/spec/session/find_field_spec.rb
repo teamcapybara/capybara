@@ -39,7 +39,7 @@ Capybara::SpecHelper.spec '#find_field' do
   it "should raise error if filter option is invalid" do
     expect do
       @session.find_field('Dog', disabled: nil)
-    end.to raise_error ArgumentError, "Invalid value nil passed to filter disabled"
+    end.to raise_error ArgumentError, "Invalid value nil passed to NodeFilter disabled"
   end
 
   context "with :exact option" do

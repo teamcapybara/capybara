@@ -6,10 +6,8 @@ module Capybara
   class Selector
     module Filters
       class NodeFilter < Base
-        def matches?(node, value)
-          return true if skip?(value)
-          raise ArgumentError, "Invalid value #{value.inspect} passed to filter #{@name}" unless valid_value?(value)
-          @block.call(node, value)
+        def matches?(node, name, value)
+          apply(node, name, value, true)
         end
       end
     end

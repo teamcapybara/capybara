@@ -126,11 +126,19 @@ module Capybara
       end
 
       def matches_node_filters?(node)
-        node_filters.all? do |name, filter|
-          if options.key?(name)
-            filter.matches?(node, options[name])
+        unapplied_options = options.keys - valid_keys
+
+        node_filters.all? do |filter_name, filter|
+          if filter_name.is_a?(Regexp)
+            unapplied_options.grep(filter_name).all? do |option_name|
+              unapplied_options.delete(option_name)
+              filter.matches?(node, option_name, options[option_name])
+            end
+          elsif options.key?(filter_name)
+            unapplied_options.delete(filter_name)
+            filter.matches?(node, filter_name, options[filter_name])
           elsif filter.default?
-            filter.matches?(node, filter.default)
+            filter.matches?(node, filter_name, filter.default)
           else
             true
           end
@@ -193,11 +201,19 @@ module Capybara
       end
 
       def apply_expression_filters(expr)
+        unapplied_options = options.keys - valid_keys
         expression_filters.inject(expr) do |memo, (name, ef)|
-          if options.key?(name)
-            ef.apply_filter(memo, options[name])
+          if name.is_a?(Regexp)
+            unapplied_options.grep(name).each do |option_name|
+              unapplied_options.delete(option_name)
+              memo = ef.apply_filter(memo, option_name, options[option_name])
+            end
+            memo
+          elsif options.key?(name)
+            unapplied_options.delete(name)
+            ef.apply_filter(memo, name, options[name])
           elsif ef.default?
-            ef.apply_filter(memo, ef.default)
+            ef.apply_filter(memo, name, ef.default)
           else
             memo
           end

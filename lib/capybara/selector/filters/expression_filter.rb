@@ -6,17 +6,15 @@ module Capybara
   class Selector
     module Filters
       class ExpressionFilter < Base
-        def apply_filter(expr, value)
-          return expr if skip?(value)
-          raise "ArgumentError", "Invalid value #{value.inspect} passed to expression filter #{@name}" unless valid_value?(value)
-          @block.call(expr, value)
+        def apply_filter(expr, name, value)
+          apply(expr, name, value, expr)
         end
       end
 
       class IdentityExpressionFilter < ExpressionFilter
         def initialize; end
         def default?; false; end
-        def apply_filter(expr, _value); expr; end
+        def apply_filter(expr, _name, _value); expr; end
       end
     end
   end

@@ -2,26 +2,12 @@
 
 require 'capybara/selector/filter_set'
 require 'capybara/selector/css'
-require 'xpath'
-
-# Patch XPath to allow a nil condition in where
-module XPath
-  class Renderer
-    undef :where if method_defined?(:where)
-    def where(on, condition)
-      condition = condition.to_s
-      if !condition.empty?
-        "#{on}[#{condition}]"
-      else
-        on.to_s
-      end
-    end
-  end
-end
+require 'capybara/selector/xpath'
 
 module Capybara
   class Selector
     attr_reader :name, :format
+    extend Forwardable
 
     class << self
       def all
@@ -56,7 +42,8 @@ module Capybara
     end
 
     def custom_filters
-      @filter_set.filters
+      warn "Deprecated: #custom_filters is not valid when same named expression and node filter exist - don't use"
+      node_filters.merge(expression_filters).freeze
     end
 
     def node_filters
@@ -81,10 +68,10 @@ module Capybara
     # @overload xpath()
     # @return [#call]                             The block that will be called to generate the XPath expression
     #
-    def xpath(*expression_filters, &block)
+    def xpath(*allowed_filters, &block)
       if block
         @format, @expression = :xpath, block
-        expression_filters.flatten.each { |ef| custom_filters[ef] = Filters::IdentityExpressionFilter.new }
+        allowed_filters.flatten.each { |ef| expression_filters[ef] = Filters::IdentityExpressionFilter.new }
       end
       format == :xpath ? @expression : nil
     end
@@ -103,10 +90,10 @@ module Capybara
     # @overload css()
     # @return [#call]                             The block that will be called to generate the CSS selector
     #
-    def css(*expression_filters, &block)
+    def css(*allowed_filters, &block)
       if block
         @format, @expression = :css, block
-        expression_filters.flatten.each { |ef| custom_filters[ef] = nil }
+        allowed_filters.flatten.each { |ef| expression_filters[ef] = nil }
       end
       format == :css ? @expression : nil
     end
@@ -146,6 +133,8 @@ module Capybara
     # @param [Hash] options            The options of the query used to generate the description
     # @return [String]                 Description of the selector when used with the options passed
     #
+
+    def_delegator :@filter_set, :description
     def description(**options)
       @filter_set.description(options)
     end
@@ -173,36 +162,50 @@ module Capybara
 
     ##
     #
-    # Define a non-expression filter for use with this selector
+    # Define a node filter for use with this selector
     #
     # @overload filter(name, *types, options={}, &block)
-    #   @param [Symbol] name            The filter name
+    #   @param [Symbol, Regexp] name            The filter name
     #   @param [Array<Symbol>] types    The types of the filter - currently valid types are [:boolean]
     #   @param [Hash] options ({})      Options of the filter
     #   @option options [Array<>] :valid_values Valid values for this filter
     #   @option options :default        The default value of the filter (if any)
     #   @option options :skip_if        Value of the filter that will cause it to be skipped
     #
-    def filter(name, *types_and_options, &block)
-      add_filter(name, Filters::NodeFilter, *types_and_options, &block)
-    end
+    # If a Symbol is passed for the name the block should accept | node, option_value |, while if a Regexp
+    # is passed for the name the block should accept | node, option_name, option_value |. In either case
+    # the block should return `true` if the node passes the filer or `false` if it doesn't
 
-    def expression_filter(name, *types_and_options, &block)
-      add_filter(name, Filters::ExpressionFilter, *types_and_options, &block)
-    end
+    ##
+    #
+    # Define an expression filter for use with this selector
+    #
+    # @overload expression_filter(name, *types, options={}, &block)
+    #   @param [Symbol, Regexp] name            The filter name
+    #   @param [Array<Symbol>] types    The types of the filter - currently valid types are [:boolean]
+    #   @param [Hash] options ({})      Options of the filter
+    #   @option options [Array<>] :valid_values Valid values for this filter
+    #   @option options :default        The default value of the filter (if any)
+    #   @option options :skip_if        Value of the filter that will cause it to be skipped
+    #
+    # If a Symbol is passed for the name the block should accept | current_expression, option_value |, while if a Regexp
+    # is passed for the name the block should accept | current_expression, option_name, option_value |. In either case
+    # the block should return the modified expression
+
+    def_delegators :@filter_set, :filter, :expression_filter
 
     def filter_set(name, filters_to_use = nil)
       f_set = FilterSet.all[name]
-      f_set.filters.each do |n, filter|
-        custom_filters[n] = filter if filters_to_use.nil? || filters_to_use.include?(n)
+      f_set.expression_filters.each do |n, filter|
+        @filter_set.expression_filters[n] = filter if filters_to_use.nil? || filters_to_use.include?(n)
       end
-
+      f_set.node_filters.each do |n, filter|
+        @filter_set.node_filters[n] = filter if filters_to_use.nil? || filters_to_use.include?(n)
+      end
       f_set.descriptions.each { |desc| @filter_set.describe(&desc) }
     end
 
-    def describe(&block)
-      @filter_set.describe(&block)
-    end
+    def_delegator :@filter_set, :describe
 
     ##
     #
@@ -227,11 +230,6 @@ module Capybara
 
   private
 
-    def add_filter(name, filter_class, *types, **options, &block)
-      types.each { |k| options[k] = true }
-      custom_filters[name] = filter_class.new(name, block, options)
-    end
-
     def locate_field(xpath, locator, enable_aria_label: false, **_options)
       locate_xpath = xpath # Need to save original xpath for the label wrap
       if locator
@@ -251,7 +249,15 @@ module Capybara
     end
 
     def describe_all_expression_filters(**opts)
-      expression_filters.keys.map { |ef| " with #{ef} #{opts[ef]}" if opts.key?(ef) }.join
+      expression_filters.keys.map do |ef_name|
+        if ef_name.is_a?(Regexp)
+          opts.keys.map do |k|
+            " with #{k} #{opts[k]}" if k =~ ef_name && !::Capybara::Queries::SelectorQuery::VALID_KEYS.include?(k)
+          end.join
+        elsif opts.key?(ef_name)
+          " with #{ef_name} #{opts[ef_name]}"
+        end
+      end.join
     end
 
     def find_by_attr(attribute, value)

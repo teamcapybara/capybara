@@ -208,6 +208,33 @@ RSpec.describe Capybara do
           expect { string.find(:button, 'click me', title: 'click me') }.to raise_error(/with title click me/)
         end
       end
+
+      describe ":element selector" do
+        it "finds by any attributes" do
+          expect(string.find(:element, 'input', type: 'submit').value).to eq 'click me'
+        end
+
+        it "still works with system keys" do
+          expect { string.all(:element, 'input', type: 'submit', count: 1) }.not_to raise_error
+        end
+
+        it "includes wildcarded keys in description" do
+          expect { string.find(:element, 'input', not_there: 'bad', count: 1) }
+            .to(raise_error do |e|
+              expect(e).to be_a(Capybara::ElementNotFound)
+              expect(e.message).to include "not_there bad"
+              expect(e.message).not_to include "count 1"
+            end)
+        end
+
+        it "accepts XPath::Expression" do
+          expect(string.find(:element, 'input', type: XPath.starts_with('subm')).value).to eq 'click me'
+          expect(string.find(:element, 'input', type: XPath.ends_with('ext'))[:type]).to eq 'text'
+          expect(string.find(:element, 'input', type: XPath.contains('ckb'))[:type]).to eq 'checkbox'
+          expect(string.find(:element, 'input', title: XPath.contains_word('submit'))[:type]).to eq 'submit'
+          expect(string.find(:element, 'input', title: XPath.contains_word('button'))[:type]).to eq 'submit'
+        end
+      end
     end
   end
 end

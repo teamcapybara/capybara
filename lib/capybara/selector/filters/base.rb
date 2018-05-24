@@ -25,6 +25,16 @@ module Capybara
 
       private
 
+        def apply(subject, name, value, skip_value)
+          return skip_value if skip?(value)
+          raise ArgumentError, "Invalid value #{value.inspect} passed to #{self.class.name.split('::').last} #{name}#{" : #{@name}" if @name.is_a?(Regexp)}" unless valid_value?(value)
+          if @block.arity == 2
+            @block.call(subject, value)
+          else
+            @block.call(subject, name, value)
+          end
+        end
+
         def valid_value?(value)
           !@options.key?(:valid_values) || Array(@options[:valid_values]).include?(value)
         end
