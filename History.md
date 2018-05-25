@@ -11,7 +11,7 @@ Release date: unreleased
 * `execute_javascript` and `evaluate_javascript` can now be called on elements to run the JS in the context of the element [Thomas Walpole]
 
 # Version 3.1.1
-Release date: unreleased
+Release date: 2018-05-25
 
 ### Fixes
 

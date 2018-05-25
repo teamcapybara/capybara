@@ -7,7 +7,7 @@
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jnicklas/capybara?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 **Note** You are viewing the README for the development version of Capybara.  If you are using the current release version
-you can find the README at https://github.com/teamcapybara/capybara/blob/3.0_stable/README.md
+you can find the README at https://github.com/teamcapybara/capybara/blob/3.1_stable/README.md
 
 
 Capybara helps you test web applications by simulating how a real user would
