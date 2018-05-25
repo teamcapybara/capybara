@@ -10,6 +10,13 @@ Release date: unreleased
 * New global configuration `default_set_options` used in `Capybara::Node::Element#set` as default `options` hash [Champier Cyril]
 * `execute_javascript` and `evaluate_javascript` can now be called on elements to run the JS in the context of the element [Thomas Walpole]
 
+# Version 3.1.1
+Release date: unreleased
+
+### Fixes
+
+* Ensure keystrokes are sent when setting time/date fields to a string with the Selenium driver [Thomas Walpole]
+
 # Version 3.1.0
 Release date: 2018-05-10
 
