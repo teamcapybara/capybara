@@ -241,19 +241,19 @@ private
   end
 
   def set_date(value) # rubocop:disable Naming/AccessorMethodName
-    return set_text(value) unless value.respond_to?(:to_date)
+    return set_text(value) if value.is_a?(String) || !value.respond_to?(:to_date)
     # TODO: this would be better if locale can be detected and correct keystrokes sent
     update_value_js(value.to_date.strftime('%Y-%m-%d'))
   end
 
   def set_time(value) # rubocop:disable Naming/AccessorMethodName
-    return set_text(value) unless value.respond_to?(:to_time)
+    return set_text(value) if value.is_a?(String) || !value.respond_to?(:to_time)
     # TODO: this would be better if locale can be detected and correct keystrokes sent
     update_value_js(value.to_time.strftime('%H:%M'))
   end
 
   def set_datetime_local(value) # rubocop:disable Naming/AccessorMethodName
-    return set_text(value) unless value.respond_to?(:to_time)
+    return set_text(value) if value.is_a?(String) || !value.respond_to?(:to_time)
     # TODO: this would be better if locale can be detected and correct keystrokes sent
     update_value_js(value.to_time.strftime('%Y-%m-%dT%H:%M'))
   end

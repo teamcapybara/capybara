@@ -1,3 +1,10 @@
+# Version 3.1.1
+Release date: unreleased
+
+### Fixes
+
+* Ensure keystrokes are sent when setting time/date fields to a string with the Selenium driver [Thomas Walpole]
+
 # Version 3.1.0
 Release date: 2018-05-10
 
