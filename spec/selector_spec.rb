@@ -21,6 +21,9 @@ RSpec.describe Capybara do
             </div>
             <div id="#special">
             </div>
+            <div class="some random words" id="random_words">
+              Something
+            </div>
             <input id="2checkbox" class="2checkbox" type="checkbox"/>
             <input type="radio"/>
             <label for="my_text_input">My Text Input</label>
@@ -37,7 +40,7 @@ RSpec.describe Capybara do
             </select>
             <table>
               <tr><td></td></tr>
-            </table
+            </table>
           </body>
         </html>
       STRING
@@ -51,6 +54,10 @@ RSpec.describe Capybara do
 
       Capybara.add_selector :custom_css_selector do
         css { |selector| selector }
+      end
+
+      Capybara.add_selector :custom_xpath_selector do
+        xpath { |selector| selector }
       end
     end
 
@@ -121,6 +128,16 @@ RSpec.describe Capybara do
           expect(string.find(:custom_css_selector, "div", id: "#special")[:id]).to eq '#special'
           expect(string.find(:custom_css_selector, "input", id: "2checkbox")[:id]).to eq '2checkbox'
         end
+
+        it "accepts XPath expression for xpath based selectors" do
+          expect(string.find(:custom_xpath_selector, './/div', id: XPath.contains('peci'))[:id]).to eq '#special'
+          expect(string.find(:custom_xpath_selector, './/input', id: XPath.ends_with('box'))[:id]).to eq '2checkbox'
+        end
+
+        it "errors XPath expression for CSS based selectors" do
+          expect { string.find(:custom_css_selector, "div", id: XPath.contains('peci')) }
+            .to raise_error(ArgumentError, /not supported/)
+        end
       end
 
       context "with :class option" do
@@ -132,6 +149,16 @@ RSpec.describe Capybara do
         it "works with 'special' characters" do
           expect(string.find(:custom_css_selector, "input", class: ".special")[:id]).to eq 'file'
           expect(string.find(:custom_css_selector, "input", class: "2checkbox")[:id]).to eq '2checkbox'
+        end
+
+        it "accepts XPath expression for xpath based selectors" do
+          expect(string.find(:custom_xpath_selector, './/div', class: XPath.contains('dom wor'))[:id]).to eq 'random_words'
+          expect(string.find(:custom_xpath_selector, './/div', class: XPath.ends_with('words'))[:id]).to eq 'random_words'
+        end
+
+        it "errors XPath expression for CSS based selectors" do
+          expect { string.find(:custom_css_selector, "div", class: XPath.contains('random')) }
+            .to raise_error(ArgumentError, /not supported/)
         end
       end
 
@@ -222,7 +249,7 @@ RSpec.describe Capybara do
           expect { string.find(:element, 'input', not_there: 'bad', count: 1) }
             .to(raise_error do |e|
               expect(e).to be_a(Capybara::ElementNotFound)
-              expect(e.message).to include "not_there bad"
+              expect(e.message).to include "not_there => bad"
               expect(e.message).not_to include "count 1"
             end)
         end

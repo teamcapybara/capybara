@@ -28,7 +28,7 @@ Capybara::SpecHelper.spec '#assert_matches_selector' do
   end
 
   it "should not accept count options" do
-    expect { @element.assert_matches_selector(:css, '.number', count: 1) }.to raise_error(ArgumentError)
+    expect { @element.assert_matches_selector(:css, '.number', count: 1) }.to raise_error(ArgumentError, /count/)
   end
 
   it "should accept a filter block" do

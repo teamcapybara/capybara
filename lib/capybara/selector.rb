@@ -606,7 +606,7 @@ Capybara.add_selector(:element) do
     XPath.descendant((locator || '@').to_sym)
   end
 
-  expression_filter(/.+/) do |xpath, name, val|
+  expression_filter(:attributes, matcher: /.+/) do |xpath, name, val|
     case val
     when Regexp
       xpath
@@ -617,7 +617,7 @@ Capybara.add_selector(:element) do
     end
   end
 
-  filter(/.+/) do |node, name, val|
+  filter(:attributes, matcher: /.+/) do |node, name, val|
     val.is_a?(Regexp) ? node[name] =~ val : true
   end
 

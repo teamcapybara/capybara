@@ -129,8 +129,8 @@ module Capybara
         unapplied_options = options.keys - valid_keys
 
         node_filters.all? do |filter_name, filter|
-          if filter_name.is_a?(Regexp)
-            unapplied_options.grep(filter_name).all? do |option_name|
+          if filter.matcher?
+            unapplied_options.select { |option_name| filter.handles_option?(option_name) }.all? do |option_name|
               unapplied_options.delete(option_name)
               filter.matches?(node, option_name, options[option_name])
             end
@@ -174,27 +174,57 @@ module Capybara
       end
 
       def assert_valid_keys
-        super
-        return if VALID_MATCH.include?(match)
-        raise ArgumentError, "invalid option #{match.inspect} for :match, should be one of #{VALID_MATCH.map(&:inspect).join(', ')}"
+        unless VALID_MATCH.include?(match)
+          raise ArgumentError, "invalid option #{match.inspect} for :match, should be one of #{VALID_MATCH.map(&:inspect).join(', ')}"
+        end
+        unhandled_options = @options.keys - valid_keys
+        unhandled_options -= @options.keys.select do |option_name|
+          expression_filters.any? { |_nmae, ef| ef.handles_option? option_name } ||
+            node_filters.any? { |_name, nf| nf.handles_option? option_name }
+        end
+
+        return if unhandled_options.empty?
+        invalid_names = unhandled_options.map(&:inspect).join(", ")
+        valid_names = valid_keys.map(&:inspect).join(", ")
+        raise ArgumentError, "invalid keys #{invalid_names}, should be one of #{valid_names}"
       end
 
       def filtered_xpath(expr)
-        expr = "(#{expr})[#{XPath.attr(:id) == options[:id]}]" if options.key?(:id) && !custom_keys.include?(:id)
+        if options.key?(:id) && !custom_keys.include?(:id)
+          expr = if options[:id].is_a? XPath::Expression
+            "(#{expr})[#{XPath.attr(:id)[options[:id]]}]"
+          else
+            "(#{expr})[#{XPath.attr(:id) == options[:id]}]"
+          end
+        end
         if options.key?(:class) && !custom_keys.include?(:class)
-          class_xpath = Array(options[:class]).map do |klass|
-            XPath.attr(:class).contains_word(klass)
-          end.reduce(:&)
+          class_xpath = if options[:class].is_a?(XPath::Expression)
+            XPath.attr(:class)[options[:class]]
+          else
+            Array(options[:class]).map do |klass|
+              XPath.attr(:class).contains_word(klass)
+            end.reduce(:&)
+          end
           expr = "(#{expr})[#{class_xpath}]"
         end
         expr
       end
 
       def filtered_css(expr)
+        process_id = options.key?(:id) && !custom_keys.include?(:id)
+        process_class = options.key?(:class) && !custom_keys.include?(:class)
+
+        if process_id && options[:id].is_a?(XPath::Expression)
+          raise ArgumentError, "XPath expressions are not supported for the :id filter with CSS based selectors"
+        end
+        if process_class && options[:class].is_a?(XPath::Expression)
+          raise ArgumentError, "XPath expressions are not supported for the :class filter with CSS based selectors"
+        end
+
         css_selectors = expr.split(',').map(&:rstrip)
         expr = css_selectors.map do |sel|
-          sel += "##{Capybara::Selector::CSS.escape(options[:id])}" if options.key?(:id) && !custom_keys.include?(:id)
-          sel += Array(options[:class]).map { |k| ".#{Capybara::Selector::CSS.escape(k)}" }.join if options.key?(:class) && !custom_keys.include?(:class)
+          sel += "##{Capybara::Selector::CSS.escape(options[:id])}" if process_id
+          sel += Array(options[:class]).map { |k| ".#{Capybara::Selector::CSS.escape(k)}" }.join if process_class
           sel
         end.join(", ")
         expr
@@ -203,8 +233,8 @@ module Capybara
       def apply_expression_filters(expr)
         unapplied_options = options.keys - valid_keys
         expression_filters.inject(expr) do |memo, (name, ef)|
-          if name.is_a?(Regexp)
-            unapplied_options.grep(name).each do |option_name|
+          if ef.matcher?
+            unapplied_options.select { |option_name| ef.handles_option?(option_name) }.each do |option_name|
               unapplied_options.delete(option_name)
               memo = ef.apply_filter(memo, option_name, options[option_name])
             end

@@ -170,6 +170,7 @@ module Capybara
     #   @option options [Array<>] :valid_values Valid values for this filter
     #   @option options :default        The default value of the filter (if any)
     #   @option options :skip_if        Value of the filter that will cause it to be skipped
+    #   @option options [Regexp] :matcher (nil) A Regexp used to check whether a specific option is handled by this filter.  If not provided the filter will be used for options matching the filter name.
     #
     # If a Symbol is passed for the name the block should accept | node, option_value |, while if a Regexp
     # is passed for the name the block should accept | node, option_name, option_value |. In either case
@@ -181,11 +182,13 @@ module Capybara
     #
     # @overload expression_filter(name, *types, options={}, &block)
     #   @param [Symbol, Regexp] name            The filter name
+    #   @param [Regexp] matcher (nil)   A Regexp used to check whether a specific option is handled by this filter
     #   @param [Array<Symbol>] types    The types of the filter - currently valid types are [:boolean]
     #   @param [Hash] options ({})      Options of the filter
     #   @option options [Array<>] :valid_values Valid values for this filter
     #   @option options :default        The default value of the filter (if any)
     #   @option options :skip_if        Value of the filter that will cause it to be skipped
+    #   @option options [Regexp] :matcher (nil) A Regexp used to check whether a specific option is handled by this filter.  If not provided the filter will be used for options matching the filter name.
     #
     # If a Symbol is passed for the name the block should accept | current_expression, option_value |, while if a Regexp
     # is passed for the name the block should accept | current_expression, option_name, option_value |. In either case
@@ -248,10 +251,10 @@ module Capybara
     end
 
     def describe_all_expression_filters(**opts)
-      expression_filters.keys.map do |ef_name|
-        if ef_name.is_a?(Regexp)
+      expression_filters.map do |ef_name, ef|
+        if ef.matcher?
           opts.keys.map do |k|
-            " with #{k} #{opts[k]}" if k =~ ef_name && !::Capybara::Queries::SelectorQuery::VALID_KEYS.include?(k)
+            " with #{ef_name}[#{k} => #{opts[k]}]" if ef.handles_option?(k) && !::Capybara::Queries::SelectorQuery::VALID_KEYS.include?(k)
           end.join
         elsif opts.key?(ef_name)
           " with #{ef_name} #{opts[ef_name]}"

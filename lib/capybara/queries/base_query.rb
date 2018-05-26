@@ -87,8 +87,7 @@ module Capybara
       end
 
       def assert_valid_keys
-        regex_keys, string_keys = valid_keys.group_by { |k| k.is_a? Regexp }.fetch_values(true, false) { [] }
-        invalid_keys = (@options.keys - string_keys).reject { |k| regex_keys.any? { |r| r =~ k } }
+        invalid_keys = @options.keys - valid_keys
         return if invalid_keys.empty?
 
         invalid_names = invalid_keys.map(&:inspect).join(", ")

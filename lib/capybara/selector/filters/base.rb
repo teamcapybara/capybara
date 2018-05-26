@@ -4,8 +4,9 @@ module Capybara
   class Selector
     module Filters
       class Base
-        def initialize(name, block, **options)
+        def initialize(name, matcher, block, **options)
           @name = name
+          @matcher = matcher
           @block = block
           @options = options
           @options[:valid_values] = [true, false] if options[:boolean]
@@ -21,6 +22,18 @@ module Capybara
 
         def skip?(value)
           @options.key?(:skip_if) && value == @options[:skip_if]
+        end
+
+        def matcher?
+          !@matcher.nil?
+        end
+
+        def handles_option?(option_name)
+          if matcher?
+            option_name =~ @matcher
+          else
+            @name == option_name
+          end
         end
 
       private

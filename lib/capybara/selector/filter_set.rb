@@ -60,12 +60,12 @@ module Capybara
         options
       end
 
-      def add_filter(name, filter_class, *types, **options, &block)
+      def add_filter(name, filter_class, *types, matcher: nil, **options, &block) # rubocop:disable Metrics/ParameterLists
         types.each { |k| options[k] = true }
         if filter_class <= Filters::ExpressionFilter
-          @expression_filters[name] = filter_class.new(name, block, options)
+          @expression_filters[name] = filter_class.new(name, matcher, block, options)
         else
-          @node_filters[name] = filter_class.new(name, block, options)
+          @node_filters[name] = filter_class.new(name, matcher, block, options)
         end
       end
     end
