@@ -2,7 +2,6 @@
 
 require 'capybara/selector/filter_set'
 require 'capybara/selector/css'
-require 'capybara/selector/xpath'
 
 module Capybara
   class Selector
