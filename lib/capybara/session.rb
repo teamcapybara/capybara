@@ -331,7 +331,7 @@ module Capybara
       new_scope = args.first.respond_to?(:to_capybara_node) ? args.first.to_capybara_node : find(*args)
       begin
         scopes.push(new_scope)
-        yield
+        yield if block_given?
       ensure
         scopes.pop
       end
@@ -413,7 +413,7 @@ module Capybara
     def within_frame(*args)
       switch_to_frame(_find_frame(*args))
       begin
-        yield
+        yield if block_given?
       ensure
         switch_to_frame(:parent)
       end
@@ -514,7 +514,7 @@ module Capybara
         end
 
         begin
-          yield
+          yield if block_given?
         ensure
           _switch_to_window(original) unless original == window_or_proc
         end
