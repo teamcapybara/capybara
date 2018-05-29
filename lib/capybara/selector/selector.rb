@@ -4,6 +4,157 @@ require 'capybara/selector/filter_set'
 require 'capybara/selector/css'
 
 module Capybara
+  #
+  # ## Built-in Selectors
+  #
+  #   * **:xpath** - Select elements by XPath expression
+  #     * Locator: An XPath expression
+  #
+  #   * **:css** - Select elements by CSS selector
+  #     * Locator: A CSS selector
+  #
+  #   * **:id** - Select element by id
+  #     * Locator: The id of the element to match
+  #
+  #   * **:field** - Select field elements (input [not of type submit, image, or hidden], textarea, select)
+  #     * Locator: Matches against the id, name, or placeholder
+  #     * Filters:
+  #       * :id (String) — Matches the id attribute
+  #       * :name (String) — Matches the name attribute
+  #       * :placeholder (String) — Matches the placeholder attribute
+  #       * :type (String) — Matches the type attribute of the field or element type for 'textarea' and 'select'
+  #       * :readonly (Boolean)
+  #       * :with (String) — Matches the current value of the field
+  #       * :class (String, Array<String>) — Matches the class(es) provided
+  #       * :checked (Boolean) — Match checked fields?
+  #       * :unchecked (Boolean) — Match unchecked fields?
+  #       * :disabled (Boolean) — Match disabled field?
+  #       * :multiple (Boolean) — Match fields that accept multiple values
+  #
+  #   * **:fieldset** - Select fieldset elements
+  #     * Locator: Matches id or contents of wrapped legend
+  #     * Filters:
+  #       * :id (String) — Matches id attribute
+  #       * :legend (String) — Matches contents of wrapped legend
+  #       * :class (String, Array<String>) — Matches the class(es) provided
+  #
+  #   * **:link** - Find links ( <a> elements with an href attribute )
+  #     * Locator: Matches the id or title attributes, or the string content of the link, or the alt attribute of a contained img element
+  #     * Filters:
+  #       * :id (String) — Matches the id attribute
+  #       * :title (String) — Matches the title attribute
+  #       * :alt (String) — Matches the alt attribute of a contained img element
+  #       * :class (String) — Matches the class(es) provided
+  #       * :href (String, Regexp, nil) — Matches the normalized href of the link, if nil will find <a> elements with no href attribute
+  #
+  #   * **:button** - Find buttons ( input [of type submit, reset, image, button] or button elements )
+  #     * Locator: Matches the id, value, or title attributes, string content of a button, or the alt attribute of an image type button or of a descendant image of a button
+  #     * Filters:
+  #       * :id (String) — Matches the id attribute
+  #       * :title (String) — Matches the title attribute
+  #       * :class (String) — Matches the class(es) provided
+  #       * :value (String) — Matches the value of an input button
+  #       * :type
+  #
+  #   * **:link_or_button** - Find links or buttons
+  #     * Locator: See :link and :button selectors
+  #
+  #   * **:fillable_field** - Find text fillable fields ( textarea, input [not of type submit, image, radio, checkbox, hidden, file] )
+  #     * Locator: Matches against the id, name, or placeholder
+  #     * Filters:
+  #       * :id (String) — Matches the id attribute
+  #       * :name (String) — Matches the name attribute
+  #       * :placeholder (String) — Matches the placeholder attribute
+  #       * :with (String) — Matches the current value of the field
+  #       * :type (String) — Matches the type attribute of the field or element type for 'textarea'
+  #       * :class (String, Array<String>) — Matches the class(es) provided
+  #       * :disabled (Boolean) — Match disabled field?
+  #       * :multiple (Boolean) — Match fields that accept multiple values
+  #
+  #   * **:radio_button** - Find radio buttons
+  #     * Locator: Match id, name, or associated label text
+  #     * Filters:
+  #       * :id (String) — Matches the id attribute
+  #       * :name (String) — Matches the name attribute
+  #       * :class (String, Array<String>) — Matches the class(es) provided
+  #       * :checked (Boolean) — Match checked fields?
+  #       * :unchecked (Boolean) — Match unchecked fields?
+  #       * :disabled (Boolean) — Match disabled field?
+  #       * :option (String) — Match the value
+  #
+  #   * **:checkbox** - Find checkboxes
+  #     * Locator: Match id, name, or associated label text
+  #     * Filters:
+  #       * *:id (String) — Matches the id attribute
+  #       * *:name (String) — Matches the name attribute
+  #       * *:class (String, Array<String>) — Matches the class(es) provided
+  #       * *:checked (Boolean) — Match checked fields?
+  #       * *:unchecked (Boolean) — Match unchecked fields?
+  #       * *:disabled (Boolean) — Match disabled field?
+  #       * *:option (String) — Match the value
+  #
+  #   * **:select** - Find select elements
+  #     * Locator: Match id, name, placeholder, or associated label text
+  #     * Filters:
+  #       * :id (String) — Matches the id attribute
+  #       * :name (String) — Matches the name attribute
+  #       * :placeholder (String) — Matches the placeholder attribute
+  #       * :class (String, Array<String>) — Matches the class(es) provided
+  #       * :disabled (Boolean) — Match disabled field?
+  #       * :multiple (Boolean) — Match fields that accept multiple values
+  #       * :options (Array<String>) — Exact match options
+  #       * :with_options (Array<String>) — Partial match options
+  #       * :selected (String, Array<String>) — Match the selection(s)
+  #       * :with_selected (String, Array<String>) — Partial match the selection(s)
+  #
+  #   * **:option** - Find option elements
+  #     * Locator: Match text of option
+  #     * Filters:
+  #       * :disabled (Boolean) — Match disabled option
+  #       * :selected (Boolean) — Match selected option
+  #
+  #   * **:datalist_input**
+  #     * Locator:
+  #     * Filters:
+  #       * :disabled
+  #       * :name
+  #       * :placeholder
+  #
+  #   * **:datalist_option**
+  #     * Locator:
+  #
+  #   * **:file_field** - Find file input elements
+  #     * Locator: Match id, name, or associated label text
+  #     * Filters:
+  #       * :id (String) — Matches the id attribute
+  #       * :name (String) — Matches the name attribute
+  #       * :class (String, Array<String>) — Matches the class(es) provided
+  #       * :disabled (Boolean) — Match disabled field?
+  #       * :multiple (Boolean) — Match field that accepts multiple values
+  #
+  #   * **:label** - Find label elements
+  #     * Locator: Match id or text contents
+  #     * Filters:
+  #       * :for (Element, String) — The element or id of the element associated with the label
+  #
+  #   * **:table** - Find table elements
+  #     * Locator: id or caption text of table
+  #     * Filters:
+  #       * :id (String) — Match id attribute of table
+  #       * :caption (String) — Match text of associated caption
+  #       * :class (String, Array<String>) — Matches the class(es) provided
+  #
+  #   * **:frame** - Find frame/iframe elements
+  #     * Locator: Match id or name
+  #     * Filters:
+  #       * :id (String) — Match id attribute
+  #       * :name (String) — Match name attribute
+  #       * :class (String, Array<String>) — Matches the class(es) provided
+  #
+  #   * **:element**
+  #     * Locator: Type of element ('div', 'a', etc) - if not specified defaults to '*'
+  #     * Filters: Matches on any element attribute
+  #
   class Selector
     attr_reader :name, :format
     extend Forwardable
@@ -129,14 +280,10 @@ module Capybara
     #
     # Description of the selector
     #
-    # @param [Hash] options            The options of the query used to generate the description
-    # @return [String]                 Description of the selector when used with the options passed
-    #
-
+    # @!method description(options)
+    #   @param [Hash] options            The options of the query used to generate the description
+    #   @return [String]                 Description of the selector when used with the options passed
     def_delegator :@filter_set, :description
-    def description(**options)
-      @filter_set.description(options)
-    end
 
     def call(locator, **options)
       if format
@@ -163,7 +310,7 @@ module Capybara
     #
     # Define a node filter for use with this selector
     #
-    # @overload filter(name, *types, options={}, &block)
+    # @!method node_filter(name, *types, options={}, &block)
     #   @param [Symbol, Regexp] name            The filter name
     #   @param [Array<Symbol>] types    The types of the filter - currently valid types are [:boolean]
     #   @param [Hash] options ({})      Options of the filter
@@ -176,11 +323,14 @@ module Capybara
     # is passed for the name the block should accept | node, option_name, option_value |. In either case
     # the block should return `true` if the node passes the filer or `false` if it doesn't
 
+    # @!method filter
+    #   See {Selector#node_filter}
+
     ##
     #
     # Define an expression filter for use with this selector
     #
-    # @overload expression_filter(name, *types, options={}, &block)
+    # @!method expression_filter(name, *types, options={}, &block)
     #   @param [Symbol, Regexp] name            The filter name
     #   @param [Regexp] matcher (nil)   A Regexp used to check whether a specific option is handled by this filter
     #   @param [Array<Symbol>] types    The types of the filter - currently valid types are [:boolean]

@@ -26,52 +26,18 @@ end
 # rubocop:disable Metrics/BlockLength
 # rubocop:disable Metrics/ParameterLists
 
-##
-#
-# Select elements by XPath expression
-#
-# @locator An XPath expression
-#
 Capybara.add_selector(:xpath) do
   xpath { |xpath| xpath }
 end
 
-##
-#
-# Select elements by CSS selector
-#
-# @locator A CSS selector
-#
 Capybara.add_selector(:css) do
   css { |css| css }
 end
 
-##
-#
-# Select element by id
-#
-# @locator The id of the element to match
-#
 Capybara.add_selector(:id) do
   xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
 end
 
-##
-#
-# Select field elements (input [not of type submit, image, or hidden], textarea, select)
-#
-# @locator Matches against the id, name, or placeholder
-# @filter [String] :id  Matches the id attribute
-# @filter [String] :name  Matches the name attribute
-# @filter [String] :placeholder  Matches the placeholder attribute
-# @filter [String] :type Matches the type attribute of the field or element type for 'textarea' and 'select'
-# @filter [Boolean] :readonly
-# @filter [String] :with  Matches the current value of the field
-# @filter [String, Array<String>] :class  Matches the class(es) provided
-# @filter [Boolean] :checked Match checked fields?
-# @filter [Boolean] :unchecked Match unchecked fields?
-# @filter [Boolean] :disabled Match disabled field?
-# @filter [Boolean] :multiple Match fields that accept multiple values
 Capybara.add_selector(:field) do
   xpath do |locator, **options|
     xpath = XPath.descendant(:input, :textarea, :select)[!XPath.attr(:type).one_of('submit', 'image', 'hidden')]
@@ -102,16 +68,6 @@ Capybara.add_selector(:field) do
   end
 end
 
-##
-#
-# Select fieldset elements
-#
-# @locator Matches id or contents of wrapped legend
-#
-# @filter [String] :id Matches id attribute
-# @filter [String] :legend Matches contents of wrapped legend
-# @filter [String, Array<String>] :class Matches the class(es) provided
-#
 Capybara.add_selector(:fieldset) do
   xpath(:legend) do |locator, legend: nil, **_options|
     xpath = XPath.descendant(:fieldset)
@@ -121,18 +77,6 @@ Capybara.add_selector(:fieldset) do
   end
 end
 
-##
-#
-# Find links ( <a> elements with an href attribute )
-#
-# @locator Matches the id or title attributes, or the string content of the link, or the alt attribute of a contained img element
-#
-# @filter [String] :id  Matches the id attribute
-# @filter [String] :title Matches the title attribute
-# @filter [String] :alt Matches the alt attribute of a contained img element
-# @filter [String] :class Matches the class(es) provided
-# @filter [String, Regexp,nil] :href  Matches the normalized href of the link, if nil will find <a> elements with no href attribute
-#
 Capybara.add_selector(:link) do
   xpath(:title, :alt) do |locator, href: true, enable_aria_label: false, alt: nil, title: nil, **_options|
     xpath = XPath.descendant(:a)
@@ -176,17 +120,6 @@ Capybara.add_selector(:link) do
   end
 end
 
-##
-#
-#  Find buttons ( input [of type submit, reset, image, button] or button elements )
-#
-# @locator Matches the id, value, or title attributes, string content of a button, or the alt attribute of an image type button or of a descendant image of a button
-#
-# @filter [String] :id  Matches the id attribute
-# @filter [String] :title Matches the title attribute
-# @filter [String] :class Matches the class(es) provided
-# @filter [String] :value Matches the value of an input button
-#
 Capybara.add_selector(:button) do
   xpath(:value, :title, :type) do |locator, enable_aria_label: false, **options|
     input_btn_xpath = XPath.descendant(:input)[XPath.attr(:type).one_of('submit', 'reset', 'image', 'button')]
@@ -224,10 +157,6 @@ Capybara.add_selector(:button) do
   end
 end
 
-##
-#
-# Find links or buttons
-#
 Capybara.add_selector(:link_or_button) do
   label "link or button"
   xpath do |locator, **options|
@@ -239,20 +168,6 @@ Capybara.add_selector(:link_or_button) do
   describe { |disabled: nil, **_options| " that is disabled" if disabled == true }
 end
 
-##
-#
-# Find text fillable fields ( textarea, input [not of type submit, image, radio, checkbox, hidden, file] )
-#
-# @locator Matches against the id, name, or placeholder
-# @filter [String] :id  Matches the id attribute
-# @filter [String] :name  Matches the name attribute
-# @filter [String] :placeholder  Matches the placeholder attribute
-# @filter [String] :with  Matches the current value of the field
-# @filter [String] :type Matches the type attribute of the field or element type for 'textarea'
-# @filter [String, Array<String>] :class  Matches the class(es) provided
-# @filter [Boolean] :disabled Match disabled field?
-# @filter [Boolean] :multiple Match fields that accept multiple values
-#
 Capybara.add_selector(:fillable_field) do
   label "field"
 
@@ -284,19 +199,6 @@ Capybara.add_selector(:fillable_field) do
   end
 end
 
-##
-#
-# Find radio buttons
-#
-# @locator Match id, name, or associated label text
-# @filter [String] :id  Matches the id attribute
-# @filter [String] :name  Matches the name attribute
-# @filter [String, Array<String>] :class  Matches the class(es) provided
-# @filter [Boolean] :checked Match checked fields?
-# @filter [Boolean] :unchecked Match unchecked fields?
-# @filter [Boolean] :disabled Match disabled field?
-# @filter [String] :option Match the value
-#
 Capybara.add_selector(:radio_button) do
   label "radio button"
 
@@ -317,19 +219,6 @@ Capybara.add_selector(:radio_button) do
   end
 end
 
-##
-#
-# Find checkboxes
-#
-# @locator Match id, name, or associated label text
-# @filter [String] :id  Matches the id attribute
-# @filter [String] :name  Matches the name attribute
-# @filter [String, Array<String>] :class  Matches the class(es) provided
-# @filter [Boolean] :checked Match checked fields?
-# @filter [Boolean] :unchecked Match unchecked fields?
-# @filter [Boolean] :disabled Match disabled field?
-# @filter [String] :option Match the value
-#
 Capybara.add_selector(:checkbox) do
   xpath do |locator, **options|
     xpath = XPath.descendant(:input)[XPath.attr(:type) == 'checkbox']
@@ -348,22 +237,6 @@ Capybara.add_selector(:checkbox) do
   end
 end
 
-##
-#
-# Find select elements
-#
-# @locator Match id, name, placeholder, or associated label text
-# @filter [String] :id  Matches the id attribute
-# @filter [String] :name  Matches the name attribute
-# @filter [String] :placeholder  Matches the placeholder attribute
-# @filter [String, Array<String>] :class  Matches the class(es) provided
-# @filter [Boolean] :disabled Match disabled field?
-# @filter [Boolean] :multiple Match fields that accept multiple values
-# @filter [Array<String>] :options Exact match options
-# @filter [Array<String>] :with_options Partial match options
-# @filter [String, Array<String>] :selected Match the selection(s)
-# @filter [String, Array<String>] :with_selected Partial match the selection(s)
-#
 Capybara.add_selector(:select) do
   label "select box"
 
@@ -440,14 +313,6 @@ Capybara.add_selector(:datalist_input) do
   end
 end
 
-##
-#
-# Find option elements
-#
-# @locator Match text of option
-# @filter [Boolean] :disabled Match disabled option
-# @filter [Boolean] :selected Match selected option
-#
 Capybara.add_selector(:option) do
   xpath do |locator|
     xpath = XPath.descendant(:option)
@@ -485,17 +350,6 @@ Capybara.add_selector(:datalist_option) do
   end
 end
 
-##
-#
-# Find file input elements
-#
-# @locator Match id, name, or associated label text
-# @filter [String] :id  Matches the id attribute
-# @filter [String] :name  Matches the name attribute
-# @filter [String, Array<String>] :class  Matches the class(es) provided
-# @filter [Boolean] :disabled Match disabled field?
-# @filter [Boolean] :multiple Match field that accepts multiple values
-#
 Capybara.add_selector(:file_field) do
   label "file field"
   xpath do |locator, options|
@@ -512,13 +366,6 @@ Capybara.add_selector(:file_field) do
   end
 end
 
-##
-#
-# Find label elements
-#
-# @locator Match id or text contents
-# @filter [Element, String] :for The element or id of the element associated with the label
-#
 Capybara.add_selector(:label) do
   label "label"
   xpath(:for) do |locator, options|
@@ -553,15 +400,6 @@ Capybara.add_selector(:label) do
   end
 end
 
-##
-#
-# Find table elements
-#
-# @locator id or caption text of table
-# @filter [String] :id Match id attribute of table
-# @filter [String] :caption Match text of associated caption
-# @filter [String, Array<String>] :class  Matches the class(es) provided
-#
 Capybara.add_selector(:table) do
   xpath(:caption) do |locator, caption: nil, **_options|
     xpath = XPath.descendant(:table)
@@ -577,15 +415,6 @@ Capybara.add_selector(:table) do
   end
 end
 
-##
-#
-# Find frame/iframe elements
-#
-# @locator Match id or name
-# @filter [String] :id Match id attribute
-# @filter [String] :name Match name attribute
-# @filter [String, Array<String>] :class  Matches the class(es) provided
-#
 Capybara.add_selector(:frame) do
   xpath(:name) do |locator, **options|
     xpath = XPath.descendant(:iframe).union(XPath.descendant(:frame))
