@@ -202,7 +202,11 @@ module Capybara
             XPath.attr(:class)[options[:class]]
           else
             Array(options[:class]).map do |klass|
-              XPath.attr(:class).contains_word(klass)
+              if klass.start_with?('!')
+                !XPath.attr(:class).contains_word(klass.slice(1))
+              else
+                XPath.attr(:class).contains_word(klass)
+              end
             end.reduce(:&)
           end
           expr = "(#{expr})[#{class_xpath}]"
@@ -224,10 +228,16 @@ module Capybara
         css_selectors = expr.split(',').map(&:rstrip)
         expr = css_selectors.map do |sel|
           sel += "##{Capybara::Selector::CSS.escape(options[:id])}" if process_id
-          sel += Array(options[:class]).map { |k| ".#{Capybara::Selector::CSS.escape(k)}" }.join if process_class
+          sel += css_from_classes(Array(options[:class])) if process_class
           sel
         end.join(", ")
         expr
+      end
+
+      def css_from_classes(classes)
+        classes = classes.group_by { |c| c.start_with? '!' }
+        (classes[false].to_a.map { |c| ".#{Capybara::Selector::CSS.escape(c)}" } +
+         classes[true].to_a.map { |c| ":not(.#{Capybara::Selector::CSS.escape(c.slice(1))})" }).join
       end
 
       def apply_expression_filters(expr)

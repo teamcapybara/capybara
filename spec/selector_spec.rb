@@ -16,8 +16,8 @@ RSpec.describe Capybara do
                 <h1 class="a">Totally awesome</h1>
                 <p>Yes it is</p>
               </div>
-              <p class="b">Some Content</p>
-              <p class="b"></p>
+              <p class="b c">Some Content</p>
+              <p class="b d"></p>
             </div>
             <div id="#special">
             </div>
@@ -64,7 +64,7 @@ RSpec.describe Capybara do
     it "supports `filter` as an alias for `node_filter`" do
       expect do
         Capybara.add_selector :filter_alias_selector do
-          css { |_unused| "div"}
+          css { |_unused| "div" }
           filter(:something) { |_node, _value| true }
         end
       end.not_to raise_error
@@ -153,6 +153,13 @@ RSpec.describe Capybara do
         it "works with compound css selectors" do
           expect(string.all(:custom_css_selector, "div, h1", class: 'a').size).to eq 2
           expect(string.all(:custom_css_selector, "h1, div", class: 'a').size).to eq 2
+        end
+
+        it "handles negated classes" do
+          expect(string.all(:custom_css_selector, "div, p", class: ['b', '!c']).size).to eq 2
+          expect(string.all(:custom_css_selector, "div, p", class: ['!c', '!d', 'b']).size).to eq 1
+          expect(string.all(:custom_xpath_selector, XPath.descendant(:div, :p), class: ['b', '!c']).size).to eq 2
+          expect(string.all(:custom_xpath_selector, XPath.descendant(:div, :p), class: ['!c', '!d', 'b']).size).to eq 1
         end
 
         it "works with 'special' characters" do

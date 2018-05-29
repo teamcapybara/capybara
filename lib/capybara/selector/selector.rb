@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Style/AsciiComments
+
 require 'capybara/selector/filter_set'
 require 'capybara/selector/css'
 
@@ -426,3 +428,5 @@ module Capybara
     end
   end
 end
+
+# rubocop:enable Style/AsciiComments
