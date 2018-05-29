@@ -127,7 +127,7 @@ Capybara::SpecHelper.spec '#find' do
     before do
       Capybara.add_selector(:beatle) do
         xpath { |name| ".//li[contains(@class, 'beatle')][contains(text(), '#{name}')]" }
-        filter(:type) { |node, type| node[:class].split(/\s+/).include?(type) }
+        node_filter(:type) { |node, type| node[:class].split(/\s+/).include?(type) }
       end
     end
 
@@ -151,7 +151,7 @@ Capybara::SpecHelper.spec '#find' do
     before do
       Capybara.add_selector(:beatle) do
         xpath { |name| ".//li[contains(@class, 'beatle')][contains(text(), '#{name}')]" }
-        filter(:type, default: "drummer") { |node, type| node[:class].split(/\s+/).include?(type) }
+        node_filter(:type, default: "drummer") { |node, type| node[:class].split(/\s+/).include?(type) }
       end
     end
 
@@ -174,7 +174,7 @@ Capybara::SpecHelper.spec '#find' do
   context "with alternate filter set" do
     before do
       Capybara::Selector::FilterSet.add(:value) do
-        filter(:with) { |node, with| node.value == with.to_s }
+        node_filter(:with) { |node, with| node.value == with.to_s }
       end
 
       Capybara.add_selector(:id_with_field_filters) do

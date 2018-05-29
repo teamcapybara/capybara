@@ -194,7 +194,7 @@ module Capybara
     # is passed for the name the block should accept | current_expression, option_name, option_value |. In either case
     # the block should return the modified expression
 
-    def_delegators :@filter_set, :filter, :expression_filter
+    def_delegators :@filter_set, :node_filter, :expression_filter, :filter
 
     def filter_set(name, filters_to_use = nil)
       f_set = FilterSet.all[name]

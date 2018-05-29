@@ -49,7 +49,7 @@ RSpec.describe Capybara do
     before do
       Capybara.add_selector :custom_selector do
         css { |css_class| "div.#{css_class}" }
-        filter(:not_empty, boolean: true, default: true, skip_if: :all) { |node, value| value ^ (node.text == '') }
+        node_filter(:not_empty, boolean: true, default: true, skip_if: :all) { |node, value| value ^ (node.text == '') }
       end
 
       Capybara.add_selector :custom_css_selector do
@@ -59,6 +59,15 @@ RSpec.describe Capybara do
       Capybara.add_selector :custom_xpath_selector do
         xpath { |selector| selector }
       end
+    end
+
+    it "supports `filter` as an alias for `node_filter`" do
+      expect do
+        Capybara.add_selector :filter_alias_selector do
+          css { |_unused| "div"}
+          filter(:something) { |_node, _value| true }
+        end
+      end.not_to raise_error
     end
 
     describe "adding a selector" do

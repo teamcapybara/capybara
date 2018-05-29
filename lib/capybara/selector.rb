@@ -2,10 +2,10 @@
 
 require 'capybara/selector/selector'
 Capybara::Selector::FilterSet.add(:_field) do
-  filter(:checked, :boolean) { |node, value| !(value ^ node.checked?) }
-  filter(:unchecked, :boolean) { |node, value| (value ^ node.checked?) }
-  filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| !(value ^ node.disabled?) }
-  filter(:multiple, :boolean) { |node, value| !(value ^ node.multiple?) }
+  node_filter(:checked, :boolean) { |node, value| !(value ^ node.checked?) }
+  node_filter(:unchecked, :boolean) { |node, value| (value ^ node.checked?) }
+  node_filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| !(value ^ node.disabled?) }
+  node_filter(:multiple, :boolean) { |node, value| !(value ^ node.multiple?) }
 
   expression_filter(:name) { |xpath, val| xpath[XPath.attr(:name) == val] }
   expression_filter(:placeholder) { |xpath, val| xpath[XPath.attr(:placeholder) == val] }
@@ -89,8 +89,8 @@ Capybara.add_selector(:field) do
 
   filter_set(:_field) # checked/unchecked/disabled/multiple/name/placeholder
 
-  filter(:readonly, :boolean) { |node, value| !(value ^ node.readonly?) }
-  filter(:with) do |node, with|
+  node_filter(:readonly, :boolean) { |node, value| !(value ^ node.readonly?) }
+  node_filter(:with) do |node, with|
     with.is_a?(Regexp) ? node.value =~ with : node.value == with.to_s
   end
   describe do |type: nil, **options|
@@ -164,7 +164,7 @@ Capybara.add_selector(:link) do
     xpath
   end
 
-  filter(:href) do |node, href|
+  node_filter(:href) do |node, href|
     # If not a Regexp it's been handled in the main XPath
     href.is_a?(Regexp) ? node[:href].match(href) : true
   end
@@ -214,7 +214,7 @@ Capybara.add_selector(:button) do
     res_xpath
   end
 
-  filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| !(value ^ node.disabled?) }
+  node_filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| !(value ^ node.disabled?) }
 
   describe do |disabled: nil, **options|
     desc = +""
@@ -234,7 +234,7 @@ Capybara.add_selector(:link_or_button) do
     self.class.all.values_at(:link, :button).map { |selector| selector.xpath.call(locator, options) }.reduce(:union)
   end
 
-  filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| node.tag_name == "a" || !(value ^ node.disabled?) }
+  node_filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| node.tag_name == "a" || !(value ^ node.disabled?) }
 
   describe { |disabled: nil, **_options| " that is disabled" if disabled == true }
 end
@@ -272,7 +272,7 @@ Capybara.add_selector(:fillable_field) do
 
   filter_set(:_field, %i[disabled multiple name placeholder])
 
-  filter(:with) do |node, with|
+  node_filter(:with) do |node, with|
     with.is_a?(Regexp) ? node.value =~ with : node.value == with.to_s
   end
 
@@ -307,7 +307,7 @@ Capybara.add_selector(:radio_button) do
 
   filter_set(:_field, %i[checked unchecked disabled name])
 
-  filter(:option) { |node, value| node.value == value.to_s }
+  node_filter(:option) { |node, value| node.value == value.to_s }
 
   describe do |option: nil, **options|
     desc = +""
@@ -338,7 +338,7 @@ Capybara.add_selector(:checkbox) do
 
   filter_set(:_field, %i[checked unchecked disabled name])
 
-  filter(:option) { |node, value| node.value == value.to_s }
+  node_filter(:option) { |node, value| node.value == value.to_s }
 
   describe do |option: nil, **options|
     desc = +""
@@ -374,7 +374,7 @@ Capybara.add_selector(:select) do
 
   filter_set(:_field, %i[disabled multiple name placeholder])
 
-  filter(:options) do |node, options|
+  node_filter(:options) do |node, options|
     actual = if node.visible?
       node.all(:xpath, './/option', wait: false).map(&:text)
     else
@@ -389,12 +389,12 @@ Capybara.add_selector(:select) do
     end
   end
 
-  filter(:selected) do |node, selected|
+  node_filter(:selected) do |node, selected|
     actual = node.all(:xpath, './/option', visible: false, wait: false).select(&:selected?).map { |option| option.text(:all) }
     Array(selected).sort == actual.sort
   end
 
-  filter(:with_selected) do |node, selected|
+  node_filter(:with_selected) do |node, selected|
     actual = node.all(:xpath, './/option', visible: false, wait: false).select(&:selected?).map { |option| option.text(:all) }
     (Array(selected) - actual).empty?
   end
@@ -420,7 +420,7 @@ Capybara.add_selector(:datalist_input) do
 
   filter_set(:_field, %i[disabled name placeholder])
 
-  filter(:options) do |node, options|
+  node_filter(:options) do |node, options|
     actual = node.find("//datalist[@id=#{node[:list]}]", visible: :all).all(:datalist_option, wait: false).map(&:value)
     options.sort == actual.sort
   end
@@ -455,8 +455,8 @@ Capybara.add_selector(:option) do
     xpath
   end
 
-  filter(:disabled, :boolean) { |node, value| !(value ^ node.disabled?) }
-  filter(:selected, :boolean) { |node, value| !(value ^ node.selected?) }
+  node_filter(:disabled, :boolean) { |node, value| !(value ^ node.disabled?) }
+  node_filter(:selected, :boolean) { |node, value| !(value ^ node.selected?) }
 
   describe do |**options|
     desc = +""
@@ -476,7 +476,7 @@ Capybara.add_selector(:datalist_option) do
     xpath
   end
 
-  filter(:disabled, :boolean) { |node, value| !(value ^ node.disabled?) }
+  node_filter(:disabled, :boolean) { |node, value| !(value ^ node.disabled?) }
 
   describe do |**options|
     desc = +""
@@ -534,7 +534,7 @@ Capybara.add_selector(:label) do
     xpath
   end
 
-  filter(:for) do |node, field_or_value|
+  node_filter(:for) do |node, field_or_value|
     if field_or_value.is_a? Capybara::Node::Element
       if node[:for]
         field_or_value[:id] == node[:for]
@@ -617,7 +617,7 @@ Capybara.add_selector(:element) do
     end
   end
 
-  filter(:attributes, matcher: /.+/) do |node, name, val|
+  node_filter(:attributes, matcher: /.+/) do |node, name, val|
     val.is_a?(Regexp) ? node[name] =~ val : true
   end
 
