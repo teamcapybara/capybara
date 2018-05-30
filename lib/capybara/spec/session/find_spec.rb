@@ -128,6 +128,7 @@ Capybara::SpecHelper.spec '#find' do
       Capybara.add_selector(:beatle) do
         xpath { |name| ".//li[contains(@class, 'beatle')][contains(text(), '#{name}')]" }
         node_filter(:type) { |node, type| node[:class].split(/\s+/).include?(type) }
+        node_filter(:fail) { |node, val| raise Capybara::ElementNotFound, 'fail' }
       end
     end
 
@@ -144,6 +145,10 @@ Capybara::SpecHelper.spec '#find' do
     it "should not find elements that don't match the filter" do
       expect { @session.find(:beatle, 'John', type: 'drummer') }.to raise_error(Capybara::ElementNotFound)
       expect { @session.find(:beatle, 'George', type: 'drummer') }.to raise_error(Capybara::ElementNotFound)
+    end
+
+    it "should not raise an ElementNotFound error from in a filter" do
+      expect { @session.find(:beatle, 'John', fail: 'something') }.to raise_error(Capybara::ElementNotFound, /beatle "John"/)
     end
   end
 
