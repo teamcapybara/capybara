@@ -7,11 +7,9 @@ module Capybara
     module Filters
       class NodeFilter < Base
         def matches?(node, name, value)
-          begin
-            apply(node, name, value, true)
-          rescue Capybara::ElementNotFound
-            false
-          end
+          apply(node, name, value, true)
+        rescue Capybara::ElementNotFound
+          false
         end
       end
     end

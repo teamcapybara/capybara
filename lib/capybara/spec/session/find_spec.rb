@@ -128,7 +128,7 @@ Capybara::SpecHelper.spec '#find' do
       Capybara.add_selector(:beatle) do
         xpath { |name| ".//li[contains(@class, 'beatle')][contains(text(), '#{name}')]" }
         node_filter(:type) { |node, type| node[:class].split(/\s+/).include?(type) }
-        node_filter(:fail) { |node, val| raise Capybara::ElementNotFound, 'fail' }
+        node_filter(:fail) { |_node, _val| raise Capybara::ElementNotFound, 'fail' }
       end
     end
 
