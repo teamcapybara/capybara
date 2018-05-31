@@ -4,11 +4,16 @@ Release date: unreleased
 ### Changed
 
 * Ruby 2.3.0+ is now required
+* `ElementNotFound` errors raised in selector filters are interpreted as non-matches
 
 ### Added
 
 * New global configuration `default_set_options` used in `Capybara::Node::Element#set` as default `options` hash [Champier Cyril]
 * `execute_javascript` and `evaluate_javascript` can now be called on elements to run the JS in the context of the element [Thomas Walpole]
+* Filters in custom selectors now support a `matcher` Regexp to handle multiple filter options
+* `:element` selector type which will match on any attribute (other than the reserved names) passed as a filter option
+* `:class` filter option now supports preceding class names with `!` to indicate not having that class
+* `:class` and `:id` filter options now accept `XPath::Expression` objects to allow for more flexibility in matching
 
 # Version 3.1.1
 Release date: 2018-05-25
