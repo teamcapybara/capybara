@@ -361,60 +361,6 @@ private
     end
   end
 
-  def insert_modal_handlers(accept, response_text)
-    prompt_response = if accept
-      if response_text.nil?
-        "default_text"
-      else
-        "'#{response_text.gsub('\\', '\\\\\\').gsub("'", "\\\\'")}'"
-      end
-    else
-      'null'
-    end
-
-    script = <<-JS
-      if (typeof window.capybara  === 'undefined') {
-        window.capybara = {
-          modal_handlers: [],
-          current_modal_status: function() {
-            return [this.modal_handlers[0].called, this.modal_handlers[0].modal_text];
-          },
-          add_handler: function(handler) {
-            this.modal_handlers.unshift(handler);
-          },
-          remove_handler: function(handler) {
-            window.alert = handler.alert;
-            window.confirm = handler.confirm;
-            window.prompt = handler.prompt;
-          },
-          handler_called: function(handler, str) {
-            handler.called = true;
-            handler.modal_text = str;
-            this.remove_handler(handler);
-          }
-        };
-      };
-
-      var modal_handler = {
-        prompt: window.prompt,
-        confirm: window.confirm,
-        alert: window.alert,
-        called: false
-      }
-      window.capybara.add_handler(modal_handler);
-
-      window.alert = window.confirm = function(str = "") {
-        window.capybara.handler_called(modal_handler, str.toString());
-        return #{accept ? 'true' : 'false'};
-      }
-      window.prompt = function(str = "", default_text = "") {
-        window.capybara.handler_called(modal_handler, str.toString());
-        return #{prompt_response};
-      }
-    JS
-    execute_script script
-  end
-
   def within_given_window(handle)
     original_handle = current_window_handle
     if handle == original_handle
@@ -442,34 +388,6 @@ private
       end
     rescue Selenium::WebDriver::Error::TimeOutError
       raise Capybara::ModalNotFound, "Unable to find modal dialog#{" with #{text}" if text}"
-    end
-  end
-
-  def find_headless_modal(text: nil, **options)
-    # Selenium has its own built in wait (2 seconds)for a modal to show up, so this wait is really the minimum time
-    # Actual wait time may be longer than specified
-    wait = Selenium::WebDriver::Wait.new(
-      timeout: options.fetch(:wait, session_options.default_max_wait_time) || 0,
-      ignore: modal_error
-    )
-    begin
-      wait.until do
-        called, alert_text = evaluate_script('window.capybara && window.capybara.current_modal_status()')
-        if called
-          execute_script('window.capybara && window.capybara.modal_handlers.shift()')
-          regexp = text.is_a?(Regexp) ? text : Regexp.escape(text.to_s)
-          raise Capybara::ModalNotFound, "Unable to find modal dialog#{" with #{text}" if text}" unless alert_text.match(regexp)
-          alert_text
-        elsif called.nil?
-          # page changed so modal_handler data has gone away
-          warn "Can't verify modal text when page change occurs - ignoring" if options[:text]
-          ""
-        else
-          nil
-        end
-      end
-    rescue Selenium::WebDriver::Error::TimeOutError
-      raise Capybara::ModalNotFound, "Unable to find modal dialog#{" with #{options[:text]}" if options[:text]}"
     end
   end
 
