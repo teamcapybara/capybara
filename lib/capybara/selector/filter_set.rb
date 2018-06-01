@@ -52,8 +52,8 @@ module Capybara
       def options_with_defaults(options)
         options = options.dup
         [expression_filters, node_filters].each do |filters|
-          filters.each do |name, filter|
-            options[name] = filter.default if filter.default? && !options.key?(name)
+          filters.select { |_n, f| f.default? }.each do |name, filter|
+            options[name] = filter.default unless options.key?(name)
           end
         end
         options

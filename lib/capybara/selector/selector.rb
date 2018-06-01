@@ -194,7 +194,7 @@ module Capybara
     end
 
     def custom_filters
-      warn "Deprecated: #custom_filters is not valid when same named expression and node filter exist - don't use"
+      warn "Deprecated: Selector#custom_filters is not valid when same named expression and node filter exist - don't use"
       node_filters.merge(expression_filters).freeze
     end
 
@@ -350,12 +350,9 @@ module Capybara
 
     def filter_set(name, filters_to_use = nil)
       f_set = FilterSet.all[name]
-      f_set.expression_filters.each do |n, filter|
-        @filter_set.expression_filters[n] = filter if filters_to_use.nil? || filters_to_use.include?(n)
-      end
-      f_set.node_filters.each do |n, filter|
-        @filter_set.node_filters[n] = filter if filters_to_use.nil? || filters_to_use.include?(n)
-      end
+      filter_selector = filters_to_use.nil? ? ->(*) { true } : ->(n, _) { filters_to_use.include? n }
+      @filter_set.expression_filters.merge!(f_set.expression_filters.select(&filter_selector))
+      @filter_set.node_filters.merge!(f_set.node_filters.select(&filter_selector))
       f_set.descriptions.each { |desc| @filter_set.describe(&desc) }
     end
 
@@ -375,31 +372,24 @@ module Capybara
     end
 
     def default_visibility(fallback = Capybara.ignore_hidden_elements)
-      if @default_visibility.nil?
-        fallback
-      else
-        @default_visibility
-      end
+      return @default_visibility unless @default_visibility.nil?
+      fallback
     end
 
   private
 
     def locate_field(xpath, locator, enable_aria_label: false, **_options)
+      return xpath if locator.nil?
       locate_xpath = xpath # Need to save original xpath for the label wrap
-      if locator
-        locator = locator.to_s
-        attr_matchers = [XPath.attr(:id) == locator,
-                         XPath.attr(:name) == locator,
-                         XPath.attr(:placeholder) == locator,
-                         XPath.attr(:id) == XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for)].reduce(:|)
-        attr_matchers |= XPath.attr(:'aria-label').is(locator) if enable_aria_label
+      locator = locator.to_s
+      attr_matchers = [XPath.attr(:id) == locator,
+                       XPath.attr(:name) == locator,
+                       XPath.attr(:placeholder) == locator,
+                       XPath.attr(:id) == XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for)].reduce(:|)
+      attr_matchers |= XPath.attr(:'aria-label').is(locator) if enable_aria_label
 
-        locate_xpath = locate_xpath[attr_matchers]
-        locate_xpath = locate_xpath.union(XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(xpath))
-      end
-
-      # locate_xpath = [:name, :placeholder].inject(locate_xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
-      locate_xpath
+      locate_xpath = locate_xpath[attr_matchers]
+      locate_xpath + XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(xpath)
     end
 
     def describe_all_expression_filters(**opts)
