@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.email = ["twalpole@gmail.com", "jonas.nicklas@gmail.com"]
   s.description = "Capybara is an integration testing tool for rack based web applications. It simulates how a user would interact with a website"
 
-  s.files = Dir.glob("{lib,spec,.yard}/**/*") + %w[README.md History.md License.txt .yardopts]
+  s.files = Dir.glob("{lib,spec}/**/*") + %w[README.md History.md License.txt]
 
   s.homepage = "https://github.com/teamcapybara/capybara"
   s.require_paths = ["lib"]

@@ -1,5 +1,5 @@
 # Version 3.2.0
-Release date: unreleased
+Release date: 2018-06-01
 
 ### Changed
 
@@ -10,10 +10,10 @@ Release date: unreleased
 
 * New global configuration `default_set_options` used in `Capybara::Node::Element#set` as default `options` hash [Champier Cyril]
 * `execute_javascript` and `evaluate_javascript` can now be called on elements to run the JS in the context of the element [Thomas Walpole]
-* Filters in custom selectors now support a `matcher` Regexp to handle multiple filter options
-* `:element` selector type which will match on any attribute (other than the reserved names) passed as a filter option
-* `:class` filter option now supports preceding class names with `!` to indicate not having that class
-* `:class` and `:id` filter options now accept `XPath::Expression` objects to allow for more flexibility in matching
+* Filters in custom selectors now support a `matcher` Regexp to handle multiple filter options [Thomas Walpole]
+* `:element` selector type which will match on any attribute (other than the reserved names) passed as a filter option [Thomas Walpole]
+* `:class` filter option now supports preceding class names with `!` to indicate not having that class [Thomas Walpole]
+* `:class` and `:id` filter options now accept `XPath::Expression` objects to allow for more flexibility in matching [Thomas Walpole]
 * `Capybara.disable_animation` setting which triggers loading of a middleware that attempts to disable animations in pages.
   This is very much a beta feature and may change/disappear in the future. [Thomas Walpole]
 
