@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir.glob("{lib,spec,.yard}/**/*") + %w(README.md History.md License.txt .yardopts)
 
-  s.homepage = "http://teamcapybara.github.io/capybara"
+  s.homepage = "https://github.com/teamcapybara/capybara"
   s.metadata = {
     "changelog_uri" => "https://github.com/teamcapybara/capybara/blob/master/History.md",
     "source_code_uri" => "https://github.com/teamcapybara/capybara"
