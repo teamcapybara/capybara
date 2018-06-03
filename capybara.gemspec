@@ -16,6 +16,10 @@ Gem::Specification.new do |s|
   s.files = Dir.glob("{lib,spec}/**/*") + %w[README.md History.md License.txt]
 
   s.homepage = "https://github.com/teamcapybara/capybara"
+  s.metadata = {
+    "changelog_uri" => "https://github.com/teamcapybara/capybara/blob/master/History.md",
+    "source_code_uri" => "https://github.com/teamcapybara/capybara"
+  }
   s.require_paths = ["lib"]
   s.summary = "Capybara aims to simplify the process of integration testing Rack applications, such as Rails, Sinatra or Merb"
 
