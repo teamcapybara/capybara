@@ -497,6 +497,21 @@ Capybara::SpecHelper.spec "node" do
     end
   end
 
+  describe "#evaluate_async_script", requires: %i[js es_args] do
+    it "should evaluate the given script in the context of the element" do
+      @session.visit('/with_js')
+      el = @session.find(:css, '#with_change_event')
+      expect(el.evaluate_async_script("arguments[0](this.value)")).to eq('default value')
+    end
+
+    it "should support returning elements after asynchronous operation" do
+      @session.visit('/with_js')
+      change = @session.find(:css, '#change') # ensure page has loaded and element is available
+      el = change.evaluate_async_script("var cb = arguments[0]; setTimeout(function(el){ cb(el) }, 100, this)")
+      expect(el).to eq(change)
+    end
+  end
+
   describe '#reload', requires: [:js] do
     context "without automatic reload" do
       before { Capybara.automatic_reload = false }

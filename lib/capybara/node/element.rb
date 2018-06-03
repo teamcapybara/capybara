@@ -381,6 +381,24 @@ module Capybara
         JS
       end
 
+      ##
+      #
+      # Evaluate the given JavaScript in the context of the element and obtain the result from a
+      # callback function which will be passed as the last argument to the script. `this` in the
+      # script will refer to the element this is called on
+      #
+      # @param  [String] script   A string of JavaScript to evaluate
+      # @return [Object]          The result of the evaluated JavaScript (may be driver specific)
+      #
+      def evaluate_async_script(script, *args)
+        session.evaluate_async_script(<<~JS, self, *args)
+          (function (){
+            #{script}
+          }).apply(arguments[0], Array.prototype.slice.call(arguments,1));
+        JS
+      end
+
+
       def reload
         if @allow_reload
           begin
