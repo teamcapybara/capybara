@@ -273,7 +273,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         expect(@animation_session).to have_no_link('transition me away', wait: 0.5)
       end
 
-      it "should disable CSS animations", :focus_ do
+      it "should disable CSS animations" do
         @animation_session.visit('with_animation')
         @animation_session.click_link('animate me away')
         expect(@animation_session).to have_no_link('animate me away', wait: 0.5)
