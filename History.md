@@ -1,3 +1,11 @@
+# Version 3.2.1
+Release date: 2018-06-04
+
+### Fixes
+
+* Only split CSS selectors when :class or :id options are given. Restores 3.1.1 functionality for now but the underlying issue
+  will require a larger fix, hopefully coming soon. - Issue #2044 [Thomas Walpole]
+
 # Version 3.2.0
 Release date: 2018-06-01
 
