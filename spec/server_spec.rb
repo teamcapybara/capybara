@@ -219,7 +219,6 @@ RSpec.describe Capybara::Server do
     it "should attempt an HTTPS connection if HTTP connection returns #{err}" do
       app = -> { [200, {}, ['Hello, world']] }
       ordered_errors = [Errno::ECONNREFUSED, err]
-      # allow(Net::HTTP).to receive(:start).with(anything, anything, hash_excluding(:use_ssl)).and_yield { raise Errno::ECONNREFUSED }
       allow(Net::HTTP).to receive(:start).with(anything, anything, hash_excluding(:use_ssl)) do
         raise ordered_errors.shift
       end

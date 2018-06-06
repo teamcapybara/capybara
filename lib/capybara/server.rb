@@ -5,6 +5,7 @@ require 'net/http'
 require 'rack'
 require 'capybara/server/middleware'
 require 'capybara/server/animation_disabler'
+require 'capybara/server/checker'
 
 module Capybara
   class Server
@@ -23,10 +24,10 @@ module Capybara
       @server_thread = nil # suppress warnings
       @host = deprecated_options[1] || host
       @reportable_errors = deprecated_options[2] || reportable_errors
-      @using_ssl = false
       @port = deprecated_options[0] || port
       @port ||= Capybara::Server.ports[port_key]
       @port ||= find_available_port(host)
+      @checker = Checker.new(@host, @port)
     end
 
     def reset_error!
@@ -38,22 +39,12 @@ module Capybara
     end
 
     def using_ssl?
-      @using_ssl
+      @checker.ssl?
     end
 
     def responsive?
       return false if @server_thread&.join(0)
-
-      begin
-        res = if !using_ssl?
-          http_connect
-        else
-          https_connect
-        end
-      rescue EOFError, Net::ReadTimeout
-        res = https_connect
-        @using_ssl = true
-      end
+      res = @checker.request { |http| http.get('/__identify__') }
 
       if res.is_a?(Net::HTTPSuccess) || res.is_a?(Net::HTTPRedirection)
         return res.body == app.object_id.to_s
@@ -93,14 +84,6 @@ module Capybara
     end
 
   private
-
-    def http_connect
-      Net::HTTP.start(host, port, read_timeout: 2) { |http| http.get('/__identify__') }
-    end
-
-    def https_connect
-      Net::HTTP.start(host, port, use_ssl: true, verify_mode: OpenSSL::SSL::VERIFY_NONE) { |http| http.get('/__identify__') }
-    end
 
     def middleware
       @middleware ||= Middleware.new(app, @reportable_errors, @extra_middleware)
