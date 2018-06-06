@@ -370,6 +370,12 @@ Capybara::SpecHelper.spec "node" do
       expect(locations[:x].to_f).to be_within(1).of(5)
       expect(locations[:y].to_f).to be_within(1).of(5)
     end
+
+    it "should be able to click a table row", requires: [:js] do
+      @session.visit('/tables')
+      tr = @session.find(:css, '#agent_table tr:first-child').click
+      expect(tr).to have_css('label', text: 'Clicked')
+    end
   end
 
   describe '#double_click', requires: [:js] do
