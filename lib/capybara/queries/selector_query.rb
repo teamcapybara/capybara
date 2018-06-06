@@ -225,14 +225,14 @@ module Capybara
           raise ArgumentError, "XPath expressions are not supported for the :class filter with CSS based selectors"
         end
 
-        if process_class || process_id
-          css_selectors = expr.split(',').map(&:rstrip)
-          expr = css_selectors.map do |sel|
-            sel += "##{Capybara::Selector::CSS.escape(options[:id])}" if process_id
+        if process_id || process_class
+          expr = ::Capybara::Selector::CSS.split(expr).map do |sel|
+            sel += "##{::Capybara::Selector::CSS.escape(options[:id])}" if process_id
             sel += css_from_classes(Array(options[:class])) if process_class
             sel
           end.join(", ")
         end
+
         expr
       end
 
