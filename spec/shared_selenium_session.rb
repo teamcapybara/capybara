@@ -247,6 +247,11 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         session.find(:link, 'Go to root').click
         expect(session).to have_current_path('/')
       end
+
+      it "should be able to click a table row" do
+        session.visit('/tables')
+        expect { session.find(:css, '#agent_table tr:first-child').click }.not_to raise_error
+      end
     end
 
     context "Windows" do

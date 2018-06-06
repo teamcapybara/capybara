@@ -145,3 +145,16 @@ RSpec.describe Capybara::Selenium::Driver do
     end
   end
 end
+
+RSpec.describe Capybara::Selenium::Node do
+  context "#click" do
+    it "warns when attempting on a table row" do
+      session = TestSessions::SeleniumMarionette
+      session.visit('/tables')
+      tr = session.find(:css, '#agent_table tr:first-child')
+      allow(tr.base).to receive(:warn)
+      tr.click
+      expect(tr.base).to have_received(:warn).with /Clicking the first cell in the row instead/
+    end
+  end
+end
