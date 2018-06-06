@@ -92,12 +92,6 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       scroll_to_center
     end
 
-    if driver.marionette? && e.is_a?(::Selenium::WebDriver::Error::ElementNotInteractableError) && (tag_name == "tr")
-      warn "You are attempting to click a table row which has issues in geckodriver/marionette - see https://github.com/mozilla/geckodriver/issues/1228. " \
-           "Your test should probably be clicking on a table cell like a user would. Clicking the first cell in the row instead."
-      return find_css('th:first-child,td:first-child')[0].click
-    end
-
     raise e
   end
 
@@ -140,18 +134,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   alias :checked? :selected?
 
   def disabled?
-    return true unless native.enabled?
-
-    # workaround for selenium-webdriver/geckodriver reporting elements as enabled when they are nested in disabling elements
-    if driver.marionette?
-      if %w[option optgroup].include? tag_name
-        find_xpath("parent::*[self::optgroup or self::select]")[0].disabled?
-      else
-        !find_xpath("parent::fieldset[@disabled] | ancestor::*[not(self::legend) or preceding-sibling::legend][parent::fieldset[@disabled]]").empty?
-      end
-    else
-      false
-    end
+    !native.enabled?
   end
 
   def content_editable?
@@ -272,17 +255,12 @@ private
         arguments[0].dispatchEvent(new InputEvent('input'));
         arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
       }
-      JS
+    JS
   end
 
   def set_file(value) # rubocop:disable Naming/AccessorMethodName
     path_names = value.to_s.empty? ? [] : value
-    if driver.marionette?
-      native.clear
-      Array(path_names).each { |p| native.send_keys(p) }
-    else
-      native.send_keys(Array(path_names).join("\n"))
-    end
+    native.send_keys(Array(path_names).join("\n"))
   end
 
   def set_content_editable(value) # rubocop:disable Naming/AccessorMethodName

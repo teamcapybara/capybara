@@ -154,7 +154,7 @@ RSpec.describe Capybara::Selenium::Node do
       tr = session.find(:css, '#agent_table tr:first-child')
       allow(tr.base).to receive(:warn)
       tr.click
-      expect(tr.base).to have_received(:warn).with /Clicking the first cell in the row instead/
+      expect(tr.base).to have_received(:warn).with(/Clicking the first cell in the row instead/)
     end
   end
 end

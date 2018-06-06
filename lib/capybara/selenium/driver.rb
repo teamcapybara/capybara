@@ -10,7 +10,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     clear_session_storage: false
   }.freeze
   SPECIAL_OPTIONS = %i[browser clear_local_storage clear_session_storage].freeze
-
   attr_reader :app, :options
 
   def self.load_selenium
@@ -36,11 +35,12 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
       @processed_options = options.reject { |key, _val| SPECIAL_OPTIONS.include?(key) }
       @browser = Selenium::WebDriver.for(options[:browser], @processed_options)
-
       @w3c = ((defined?(Selenium::WebDriver::Remote::W3CCapabilities) && @browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3CCapabilities)) ||
               (defined?(Selenium::WebDriver::Remote::W3C::Capabilities) && @browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3C::Capabilities)))
-      main = Process.pid
 
+      @node_class = ::Capybara::Selenium::MarionetteNode if marionette?
+
+      main = Process.pid
       at_exit do
         # Store the exit status of the test run since it goes away after calling the at_exit proc...
         @exit_status = $ERROR_INFO.status if $ERROR_INFO.is_a?(SystemExit)
@@ -59,6 +59,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     @exit_status = nil
     @frame_handles = {}
     @options = DEFAULT_OPTIONS.merge(options)
+    @node_class = ::Capybara::Selenium::Node
   end
 
   def visit(path)
@@ -90,11 +91,11 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def find_xpath(selector)
-    browser.find_elements(:xpath, selector).map { |node| Capybara::Selenium::Node.new(self, node) }
+    browser.find_elements(:xpath, selector).map(&method(:build_node))
   end
 
   def find_css(selector)
-    browser.find_elements(:css, selector).map { |node| Capybara::Selenium::Node.new(self, node) }
+    browser.find_elements(:css, selector).map(&method(:build_node))
   end
 
   def wait?; true; end
@@ -299,37 +300,31 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     Selenium::WebDriver::Error::NoSuchWindowError
   end
 
-  # @api private
+private
+
   def marionette?
     firefox? && browser && @w3c
   end
 
-  # @api private
   def firefox?
     browser_name == :firefox
   end
 
-  # @api private
   def chrome?
     browser_name == :chrome
   end
 
-  # @api private
   def edge?
     browser_name == :edge
   end
 
-  # @api private
   def ie?
     browser_name == :ie
   end
 
-  # @api private
   def browser_name
     browser.browser
   end
-
-private
 
   def native_args(args)
     args.map { |arg| arg.is_a?(Capybara::Selenium::Node) ? arg.native : arg }
@@ -406,9 +401,13 @@ private
     when Hash
       arg.each { |k, v| arg[k] = unwrap_script_result(v) }
     when Selenium::WebDriver::Element
-      Capybara::Selenium::Node.new(self, arg)
+      build_node(arg)
     else
       arg
     end
+  end
+
+  def build_node(native_node)
+    @node_class.new(self, native_node)
   end
 end
