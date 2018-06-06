@@ -398,7 +398,6 @@ module Capybara
         JS
       end
 
-
       def reload
         if @allow_reload
           begin

@@ -74,5 +74,30 @@ module Capybara
     else
       def monotonic_time; Time.now.to_f; end
     end
+
+    def timer(expire_in:)
+      Timer.new(expire_in)
+    end
+
+    class Timer
+      def initialize(expire_in)
+        @start = current
+        @expire_in = expire_in
+      end
+
+      def expired?
+        current - @start >= @expire_in
+      end
+
+      def stalled?
+        @start == current
+      end
+
+    private
+
+      def current
+        Capybara::Helpers.monotonic_time
+      end
+    end
   end
 end

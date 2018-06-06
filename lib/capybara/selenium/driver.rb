@@ -129,7 +129,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     end
 
     navigated = false
-    start_time = Capybara::Helpers.monotonic_time
+    timer = Capybara::Helpers.timer(expire_in: 10)
     begin
       unless navigated
         # Only trigger a navigation if we haven't done it already, otherwise it
@@ -152,7 +152,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
       # Ensure the page is empty and trigger an UnhandledAlertError for any modals that appear during unload
       until find_xpath("/html/body/*").empty?
-        raise Capybara::ExpectationNotMet, 'Timed out waiting for Selenium session reset' if (Capybara::Helpers.monotonic_time - start_time) >= 10
+        raise Capybara::ExpectationNotMet, 'Timed out waiting for Selenium session reset' if timer.expired?
         sleep 0.05
       end
     rescue Selenium::WebDriver::Error::UnhandledAlertError, Selenium::WebDriver::Error::UnexpectedAlertOpenError

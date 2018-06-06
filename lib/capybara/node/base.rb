@@ -78,15 +78,15 @@ module Capybara
           yield
         else
           session.synchronized = true
-          start_time = Capybara::Helpers.monotonic_time
+          timer = Capybara::Helpers.timer(expire_in: seconds)
           begin
             yield
           rescue StandardError => e
             session.raise_server_error!
             raise e unless driver.wait? && catch_error?(e, errors)
-            raise e if (Capybara::Helpers.monotonic_time - start_time) >= seconds
+            raise e if timer.expired?
             sleep(0.05)
-            raise Capybara::FrozenInTime, "Time appears to be frozen. Capybara does not work with libraries which freeze time, consider using time travelling instead" if Capybara::Helpers.monotonic_time == start_time
+            raise Capybara::FrozenInTime, "Time appears to be frozen. Capybara does not work with libraries which freeze time, consider using time travelling instead" if timer.stalled?
             reload if session_options.automatic_reload
             retry
           ensure
