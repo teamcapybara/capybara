@@ -38,6 +38,10 @@ class TestApp < Sinatra::Base
     redirect '/landed'
   end
 
+  post '/redirect_307' do
+    redirect '/landed', 307
+  end
+
   get '/referer_base' do
     '<a href="/get_referer">direct link</a>' \
     '<a href="/redirect_to_get_referer">link via redirect</a>' \
@@ -67,6 +71,10 @@ class TestApp < Sinatra::Base
 
   get '/landed' do
     "You landed"
+  end
+
+  post '/landed' do
+    "You post landed: #{params.dig(:form, 'data')}"
   end
 
   get '/with-quotes' do
