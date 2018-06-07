@@ -223,7 +223,7 @@ module Capybara
     def xpath(*allowed_filters, &block)
       if block
         @format, @expression = :xpath, block
-        allowed_filters.flatten.each { |ef| expression_filters[ef] = Filters::IdentityExpressionFilter.new }
+        allowed_filters.flatten.each { |ef| expression_filters[ef] = Filters::IdentityExpressionFilter.new(ef) }
       end
       format == :xpath ? @expression : nil
     end
