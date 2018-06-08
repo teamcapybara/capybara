@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
+require 'capybara/rspec/compound'
+
 module Capybara
   module RSpecMatchers
     class Matcher
-      if defined?(::RSpec::Expectations::Version)
-        require 'capybara/rspec/compound'
-        include ::Capybara::RSpecMatchers::Compound
-      end
+      include ::Capybara::RSpecMatchers::Compound if defined?(::Capybara::RSpecMatchers::Compound)
 
       attr_reader :failure_message, :failure_message_when_negated
 
@@ -199,10 +198,7 @@ module Capybara
     end
 
     class NegatedMatcher
-      if defined?(::RSpec::Expectations::Version)
-        require 'capybara/rspec/compound'
-        include ::Capybara::RSpecMatchers::Compound
-      end
+      include ::Capybara::RSpecMatchers::Compound if defined?(::Capybara::RSpecMatchers::Compound)
 
       def initialize(matcher)
         @matcher = matcher

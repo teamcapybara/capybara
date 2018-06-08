@@ -9,10 +9,8 @@ RSpec.shared_context "Capybara Features", capybara_feature: true do
 end
 
 # ensure shared_context is included if default shared_context_metadata_behavior is changed
-if RSpec::Core::Version::STRING.to_f >= 3.5
-  RSpec.configure do |config|
-    config.include_context "Capybara Features", capybara_feature: true
-  end
+RSpec.configure do |config|
+  config.include_context "Capybara Features", capybara_feature: true if config.respond_to?(:include_context)
 end
 
 RSpec.configure do |config|
