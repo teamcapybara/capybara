@@ -42,6 +42,10 @@ class TestApp < Sinatra::Base
     redirect '/landed', 307
   end
 
+  post '/redirect_308' do
+    redirect '/landed', 308
+  end
+
   get '/referer_base' do
     '<a href="/get_referer">direct link</a>' \
     '<a href="/redirect_to_get_referer">link via redirect</a>' \

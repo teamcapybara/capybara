@@ -396,9 +396,14 @@ Capybara::SpecHelper.spec '#click_button' do
     expect(@session.current_url).to match(%r{/landed$})
   end
 
-  it "should follow redirects that maintain method" do
+  it "should follow temporary redirects that maintain method" do
     @session.click_button('Go 307')
-    expect(@session).to have_content('You post landed: 307')
+    expect(@session).to have_content('You post landed: TWTW')
+  end
+
+  it "should follow permanent redirects that maintain method" do
+    @session.click_button('Go 308')
+    expect(@session).to have_content('You post landed: TWTW')
   end
 
   it "should post pack to the same URL when no action given" do
