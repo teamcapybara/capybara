@@ -1,3 +1,16 @@
+# Version 3.3.0
+Release date: unreleased
+
+### Added
+
+* RackTest driver now handles 307/308 redirects
+* `execute_async_script` can now be called on elements to run the JS in the context of the element
+
+### Fixes
+
+* Selenium driver with Firefox workaround for clicking on table row - https://github.com/mozilla/geckodriver/issues/1228
+* :class and :id filters applied to CSS based selectors now correctly handle the CSS comma
+
 # Version 3.2.1
 Release date: 2018-06-04
 
@@ -17,7 +30,7 @@ Release date: 2018-06-01
 ### Added
 
 * New global configuration `default_set_options` used in `Capybara::Node::Element#set` as default `options` hash [Champier Cyril]
-* `execute_javascript` and `evaluate_javascript` can now be called on elements to run the JS in the context of the element [Thomas Walpole]
+* `execute_script` and `evaluate_script` can now be called on elements to run the JS in the context of the element [Thomas Walpole]
 * Filters in custom selectors now support a `matcher` Regexp to handle multiple filter options [Thomas Walpole]
 * `:element` selector type which will match on any attribute (other than the reserved names) passed as a filter option [Thomas Walpole]
 * `:class` filter option now supports preceding class names with `!` to indicate not having that class [Thomas Walpole]
