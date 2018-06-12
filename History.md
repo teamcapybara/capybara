@@ -10,6 +10,7 @@ Release date: unreleased
 
 * Selenium driver with Firefox workaround for clicking on table row - https://github.com/mozilla/geckodriver/issues/1228
 * :class and :id filters applied to CSS based selectors now correctly handle the CSS comma
+* Selenium driver handles namespaces when generating an elements `#path` - Issue #2048
 
 # Version 3.2.1
 Release date: 2018-06-04
