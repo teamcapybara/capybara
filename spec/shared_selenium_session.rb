@@ -182,6 +182,13 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         element = session.find(:link, 'Second Link')
         expect(element.path).to eq('/html/body/div[2]/a[1]')
       end
+
+      it "handles namespaces" do
+        session.visit "/with_namespace"
+        rect = session.find(:css, "div svg rect")
+        expect(rect.path).to eq("/html/body/div/./*[((local-name(.) = 'svg') and (namespace-uri(.) = 'http://www.w3.org/2000/svg'))]/./*[((local-name(.) = 'rect') and (namespace-uri(.) = 'http://www.w3.org/2000/svg'))][1]")
+        expect(session.find(:xpath, rect.path)).to eq rect
+      end
     end
 
     describe "all with disappearing elements" do

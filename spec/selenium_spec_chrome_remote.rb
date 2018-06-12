@@ -50,7 +50,7 @@ RSpec.describe "Capybara::Session with chrome" do
   include_examples  "Capybara::Session", TestSessions::Chrome, CHROME_REMOTE_DRIVER
   include_examples  Capybara::RSpecMatchers, TestSessions::Chrome, CHROME_REMOTE_DRIVER
 
-  it 'is considered to be chrome', :focus_ do
+  it 'is considered to be chrome' do
     expect(session.driver.send(:chrome?)).to be_truthy
   end
 end
