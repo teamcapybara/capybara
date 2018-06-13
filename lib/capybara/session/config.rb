@@ -7,8 +7,8 @@ module Capybara
     OPTIONS = %i[always_include_port run_server default_selector default_max_wait_time ignore_hidden_elements
                  automatic_reload match exact exact_text raise_server_errors visible_text_only
                  automatic_label_click enable_aria_label save_path asset_host default_host app_host
-                 server_host server_port server_errors default_set_options disable_animation test_id
-                 predicates_wait default_normalize_ws].freeze
+                 server_host server_port server_errors default_set_options disable_animation clear_storage_on_reset
+                 test_id predicates_wait default_normalize_ws].freeze
 
     attr_accessor(*OPTIONS)
 
@@ -58,6 +58,8 @@ module Capybara
     # @!method test_id
     #   See {Capybara.configure}
     # @!method default_normalize_ws
+    #   See {Capybara.configure}
+    # @!method clear_storage_on_reset
     #   See {Capybara.configure}
 
     remove_method :server_host

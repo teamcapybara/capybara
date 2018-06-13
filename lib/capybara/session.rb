@@ -862,16 +862,12 @@ module Capybara
     end
 
     def clear_storage(only_clear = nil)
-      if
-        begin
-          driver.clear_storage(only_clear) do
-            uri = "/__clear_storage__#{ "/#{only_clear}" if !only_clear.nil?}"
-            driver.visit(computed_uri(uri))
-          end
-        rescue => e
-          warn "Session storage may not have been cleared due to #{e.message}"
-        end
+      driver.clear_storage(only_clear) do
+        uri = "/__clear_storage__#{"/#{only_clear}" unless only_clear.nil?}"
+        driver.visit(computed_uri(uri))
       end
+    rescue StandardError => e
+      warn "Session storage may not have been cleared due to #{e.message}"
     end
 
     def _find_frame(*args)
