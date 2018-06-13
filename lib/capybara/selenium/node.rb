@@ -160,7 +160,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     default_ns = path.last[:namespaceURI]
     while (node = path.shift)
       parent = path.first
-      selector = node.tag_name
+      selector = node[:tagName]
       if node[:namespaceURI] != default_ns
         selector = XPath.child.where((XPath.local_name == selector) & (XPath.namespace_uri == node[:namespaceURI])).to_s
         selector

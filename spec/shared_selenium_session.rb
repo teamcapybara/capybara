@@ -180,14 +180,22 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         # this is here because it is testing for an XPath that is specific to the algorithm used in the selenium driver
         session.visit('/path')
         element = session.find(:link, 'Second Link')
-        expect(element.path).to eq('/html/body/div[2]/a[1]')
+        expect(element.path).to eq('/HTML/BODY/DIV[2]/A[1]')
       end
 
       it "handles namespaces" do
         session.visit "/with_namespace"
         rect = session.find(:css, "div svg rect")
-        expect(rect.path).to eq("/html/body/div/./*[((local-name(.) = 'svg') and (namespace-uri(.) = 'http://www.w3.org/2000/svg'))]/./*[((local-name(.) = 'rect') and (namespace-uri(.) = 'http://www.w3.org/2000/svg'))][1]")
+        expect(rect.path).to eq("/HTML/BODY/DIV/./*[((local-name(.) = 'svg') and (namespace-uri(.) = 'http://www.w3.org/2000/svg'))]/./*[((local-name(.) = 'rect') and (namespace-uri(.) = 'http://www.w3.org/2000/svg'))][1]")
         expect(session.find(:xpath, rect.path)).to eq rect
+      end
+
+      it "handles case sensitive element names" do
+        session.visit "/with_namespace"
+        els = session.all(:css, "div *", visible: :all)
+        expect { els.map(&:path) }.not_to raise_error
+        lg = session.find(:css, "div linearGradient", visible: :all)
+        expect(session.find(:xpath, lg.path, visible: :all)).to eq lg
       end
     end
 
