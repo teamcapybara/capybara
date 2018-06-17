@@ -15,9 +15,7 @@ Capybara.register_driver :selenium_chrome do |app|
   driver = Capybara::Selenium::Driver.new(app, browser: :chrome)
   # TODO: Fix this when selenium with `download_path =` support is released
   bridge = driver.browser.send(:bridge)
-  params = { 'cmd' =>'Page.setDownloadBehavior',
-             "params" => {"behavior" => 'allow', 'downloadPath' => Capybara.save_path }
-           }
+  params = { cmd: 'Page.setDownloadBehavior', params: { behavior: 'allow', downloadPath: Capybara.save_path } }
   command = +'/session/:session_id/chromium/send_command'
   command[':session_id'] = bridge.session_id
   bridge.http.call(:post, command, params)
@@ -33,16 +31,13 @@ Capybara.register_driver :selenium_chrome_headless do |app|
 
   # TODO: Fix this when selenium with `download_path =` support is released
   bridge = driver.browser.send(:bridge)
-  params = { 'cmd' =>'Page.setDownloadBehavior',
-             "params" => {"behavior" => 'allow', 'downloadPath' => Capybara.save_path }
-           }
+  params = { cmd: 'Page.setDownloadBehavior', params: { behavior: 'allow', downloadPath: Capybara.save_path } }
   command = +'/session/:session_id/chromium/send_command'
   command[':session_id'] = bridge.session_id
   bridge.http.call(:post, command, params)
 
   driver
 end
-
 
 Capybara.register_driver :selenium_chrome_clear_storage do |app|
   chrome_options = {

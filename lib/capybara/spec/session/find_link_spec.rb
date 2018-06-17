@@ -49,4 +49,22 @@ Capybara::SpecHelper.spec '#find_link' do
       expect(@session.find_link(href: '#anchor').text).to eq "Normal Anchor"
     end
   end
+
+  context "download filter" do
+    it "finds a download link" do
+      expect(@session.find_link("Download Me", download: true).text).to eq "Download Me"
+    end
+
+    it "doesn't find a download link if download is false" do
+      expect { @session.find_link("Download Me", download: false) }.to raise_error Capybara::ElementNotFound
+    end
+
+    it "finds a renaming download link" do
+      expect(@session.find_link(download: "other.csv").text).to eq "Download Other"
+    end
+
+    it "raises if passed an invalid value" do
+      expect { @session.find_link(download: 37) }.to raise_error ArgumentError
+    end
+  end
 end

@@ -49,7 +49,8 @@ module Capybara
         end
 
         def valid_value?(value)
-          !@options.key?(:valid_values) || Array(@options[:valid_values]).include?(value)
+          return true unless @options.key?(:valid_values)
+          Array(@options[:valid_values]).any? { |valid| valid === value } # rubocop:disable Style/CaseEquality
         end
       end
     end

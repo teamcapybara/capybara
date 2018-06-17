@@ -112,6 +112,15 @@ Capybara.add_selector(:link) do
     href.is_a?(Regexp) ? node[:href].match(href) : true
   end
 
+  expression_filter(:download, valid_values: [true, false, String]) do |expr, download|
+    mod = case download
+    when true then XPath.attr(:download)
+    when false then !XPath.attr(:download)
+    when String then XPath.attr(:download) == download
+    end
+    expr[mod]
+  end
+
   describe do |**options|
     desc = +""
     desc << " with href #{options[:href].inspect}" if options[:href]
