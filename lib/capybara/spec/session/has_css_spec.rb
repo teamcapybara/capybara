@@ -115,12 +115,6 @@ Capybara::SpecHelper.spec '#has_css?' do
   end
 
   it "should allow escapes in the CSS selector" do
-    if (defined?(TestClass) && @session.is_a?(TestClass)) || @session.driver.is_a?(Capybara::RackTest::Driver)
-      # Nokogiri doesn't unescape CSS selectors when converting from CSS to XPath
-      # See: https://github.com/teamcapybara/capybara/issues/1866
-      # Also: https://github.com/sparklemotion/nokogiri/pull/1646
-      pending "Current Nokogiri doesn't handle escapes in CSS attribute selectors correctly"
-    end
     expect(@session).to have_css('p[data-random="abc\\\\def"]')
     expect(@session).to have_css("p[data-random='#{Capybara::Selector::CSS.escape('abc\def')}']")
   end
