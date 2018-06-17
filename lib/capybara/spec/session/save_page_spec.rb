@@ -3,11 +3,13 @@
 Capybara::SpecHelper.spec '#save_page' do
   let(:alternative_path) { File.join(Dir.pwd, "save_and_open_page_tmp") }
   before do
+    @old_save_path = Capybara.save_path
+    Capybara.save_path = nil
     @session.visit("/foo")
   end
 
   after do
-    Capybara.save_path = nil
+    Capybara.save_path = @old_save_path
     Dir.glob("capybara-*.html").each do |file|
       FileUtils.rm(file)
     end

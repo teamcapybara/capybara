@@ -3,11 +3,13 @@
 Capybara::SpecHelper.spec '#save_screenshot', requires: [:screenshot] do
   let(:alternative_path) { File.join(Dir.pwd, "save_screenshot_tmp") }
   before do
+    @old_save_path = Capybara.save_path
+    Capybara.save_path = nil
     @session.visit '/foo'
   end
 
   after do
-    Capybara.save_path = nil
+    Capybara.save_path = @old_save_path
     FileUtils.rm_rf alternative_path
   end
 

@@ -7,6 +7,8 @@ require "capybara/rspec" # Required here instead of in rspec_spec to avoid RSpec
 require "capybara/spec/test_app"
 require "nokogiri"
 
+Capybara.save_path = File.join(Dir.pwd, 'save_path_tmp')
+
 module Capybara
   module SpecHelper
     class << self

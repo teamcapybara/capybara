@@ -203,4 +203,15 @@ Capybara::SpecHelper.spec '#click_link' do
     el = @session.find(:link, 'Normal Anchor')
     expect(@session.click_link('Normal Anchor')).to eq el
   end
+
+  it "can download a file", requires: [:download] do
+    # This requires the driver used for the test to be configured
+    # to download documents with the mime type "text/csv"
+    download_file = File.join(Capybara.save_path, 'download.csv')
+    expect(File).not_to exist(download_file)
+    @session.click_link('Download Me')
+    sleep 2
+    expect(File).to exist(download_file)
+    FileUtils.rm_rf download_file
+  end
 end

@@ -11,6 +11,39 @@ CHROME_DRIVER = ENV['HEADLESS'] ? :selenium_chrome_headless : :selenium_chrome
 #   Selenium::WebDriver::Chrome.path='/usr/bin/google-chrome-beta'
 # end
 
+Capybara.register_driver :selenium_chrome do |app|
+  driver = Capybara::Selenium::Driver.new(app, browser: :chrome)
+  # TODO: Fix this when selenium with `download_path =` support is released
+  bridge = driver.browser.send(:bridge)
+  params = { 'cmd' =>'Page.setDownloadBehavior',
+             "params" => {"behavior" => 'allow', 'downloadPath' => Capybara.save_path }
+           }
+  command = +'/session/:session_id/chromium/send_command'
+  command[':session_id'] = bridge.session_id
+  bridge.http.call(:post, command, params)
+
+  driver
+end
+
+Capybara.register_driver :selenium_chrome_headless do |app|
+  browser_options = ::Selenium::WebDriver::Chrome::Options.new
+  browser_options.args << '--headless'
+  browser_options.args << '--disable-gpu' if Gem.win_platform?
+  driver = Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
+
+  # TODO: Fix this when selenium with `download_path =` support is released
+  bridge = driver.browser.send(:bridge)
+  params = { 'cmd' =>'Page.setDownloadBehavior',
+             "params" => {"behavior" => 'allow', 'downloadPath' => Capybara.save_path }
+           }
+  command = +'/session/:session_id/chromium/send_command'
+  command[':session_id'] = bridge.session_id
+  bridge.http.call(:post, command, params)
+
+  driver
+end
+
+
 Capybara.register_driver :selenium_chrome_clear_storage do |app|
   chrome_options = {
     browser: :chrome,

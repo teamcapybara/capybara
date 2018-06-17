@@ -16,6 +16,7 @@ skipped_tests = %i[
   server
   hover
   about_scheme
+  download
 ]
 Capybara::SpecHelper.run_specs TestSessions::RackTest, "RackTest", capybara_skip: skipped_tests
 

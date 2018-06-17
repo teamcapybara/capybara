@@ -10,13 +10,19 @@ browser_options.args << '--headless' if ENV['HEADLESS']
 browser_options.add_preference 'dom.file.createInChild', true
 # browser_options.add_option("log", {"level": "trace"})
 
+browser_options.profile = Selenium::WebDriver::Firefox::Profile.new.tap do |profile|
+  profile['browser.download.dir'] = Capybara.save_path
+  profile['browser.download.folderList'] = 2
+  profile['browser.helperApps.neverAsk.saveToDisk'] = 'text/csv'
+end
+
 Capybara.register_driver :selenium_marionette do |app|
   # ::Selenium::WebDriver.logger.level = "debug"
   Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
     desired_capabilities: { marionette: true, 'moz:webdriverClick': true },
-    options: browser_options
+    options: browser_options,
     # Get a trace level log from geckodriver
     # :driver_opts => { args: ['-vv'] }
   )

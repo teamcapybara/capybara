@@ -8,7 +8,7 @@ class TestClass
 end
 
 Capybara::SpecHelper.run_specs TestClass.new, "DSL", capybara_skip: %i[
-  js modals screenshot frames windows send_keys server hover about_scheme psc
+  js modals screenshot frames windows send_keys server hover about_scheme psc download
 ]
 
 RSpec.describe Capybara::DSL do

@@ -165,6 +165,12 @@ class TestApp < Sinatra::Base
     HTML
   end
 
+  get '/download.csv' do
+    content_type "text/csv"
+    'This, is, comma, separated' \
+    'Thomas, Walpole, was , here'
+  end
+
   get '/:view' do |view|
     erb view.to_sym, locals: { referrer: request.referrer }
   end
