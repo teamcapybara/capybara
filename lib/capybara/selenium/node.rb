@@ -28,6 +28,13 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     end
   end
 
+  def style(styles)
+    styles.inject({}) do |memo, style|
+      memo[style] = native.css_value(style)
+      memo
+    end
+  end
+
   ##
   #
   # Set the value of the form element to the given value.

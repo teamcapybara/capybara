@@ -26,6 +26,10 @@ module Capybara
         raise NotImplementedError
       end
 
+      def style(styles)
+        raise NotImplementedError
+      end
+
       # @param value String or Array. Array is only allowed if node has 'multiple' attribute
       # @param options [Hash{}] Driver specific options for how to set a value on a node
       def set(value, **options)

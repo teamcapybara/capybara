@@ -73,6 +73,27 @@ module Capybara
 
       ##
       #
+      # Retrieve the given CSS styles
+      #
+      #     element.style('color') # => Computed value of CSS 'color' style
+      #
+      def style(*styles)
+        styles = styles.flatten.map(&:to_s)
+        raise ArgumentError, "You must specify at least one CSS style" if styles.empty?
+        result = begin
+          synchronize { base.style(styles) }
+        rescue NotImplementedError => e
+          begin
+            evaluate_script(STYLE_SCRIPT, *styles)
+          rescue Capybara::NotSupportedByDriverError
+            raise e
+          end
+        end
+        styles.length == 1 ? result[styles[0]] : result
+      end
+
+      ##
+      #
       # @return [String]    The value of the form element
       #
       def value
@@ -419,6 +440,20 @@ module Capybara
 
         %(Obsolete #<Capybara::Node::Element>)
       end
+
+    private
+
+      STYLE_SCRIPT = <<~JS
+        (function(){
+          var s = window.getComputedStyle(this);
+          var result = {};
+          for (var i = arguments.length; i--; ) {
+            var property_name = arguments[i];
+            result[property_name] = s.getPropertyValue(property_name);
+          }
+          return result;
+        }).apply(this, arguments)
+        JS
     end
   end
 end

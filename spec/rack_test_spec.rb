@@ -17,6 +17,7 @@ skipped_tests = %i[
   hover
   about_scheme
   download
+  css
 ]
 Capybara::SpecHelper.run_specs TestSessions::RackTest, "RackTest", capybara_skip: skipped_tests
 
@@ -124,6 +125,14 @@ RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
         normal = @session.find(:css, '#normal')
         expect(normal.value).to eq 'hello'
         expect(normal.text).to eq 'banana'
+      end
+    end
+
+    describe '#style' do
+      it "should raise an error" do
+        @session.visit('/with_html')
+        el = @session.find(:css, '#first')
+        expect { el.style('display') }.to raise_error NotImplementedError, /not process CSS/
       end
     end
   end
