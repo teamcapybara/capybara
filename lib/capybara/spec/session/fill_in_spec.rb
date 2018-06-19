@@ -188,7 +188,9 @@ Capybara::SpecHelper.spec "#fill_in" do
 
   context "with ignore_hidden_fields" do
     before { Capybara.ignore_hidden_elements = true }
+
     after  { Capybara.ignore_hidden_elements = false }
+
     it "should not find a hidden field" do
       msg = "Unable to find visible field \"Super Secret\" that is not disabled"
       expect do

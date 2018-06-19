@@ -44,6 +44,7 @@ Capybara::SpecHelper.spec '#text' do
 
   context "with css as default selector" do
     before { Capybara.default_selector = :css }
+
     it "should print the text of the page" do
       @session.visit('/with_simple_html')
       expect(@session.text).to eq('Bar')

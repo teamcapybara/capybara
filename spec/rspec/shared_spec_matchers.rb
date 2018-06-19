@@ -324,6 +324,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
         context "with default selector CSS" do
           before { Capybara.default_selector = :css }
+
           it "fails if has_content? returns false" do
             expect do
               expect(page).to have_content('No such Text')
@@ -459,6 +460,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
         context "with default selector CSS" do
           before { Capybara.default_selector = :css }
+
           it "fails if has_text? returns false" do
             expect do
               expect(page).to have_text('No such Text')

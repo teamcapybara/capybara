@@ -6,6 +6,7 @@ Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
     @session.visit('/with_windows')
     @session.assert_selector(:css, 'body.loaded')
   end
+
   after do
     (@session.windows - [@window]).each do |w|
       @session.switch_to_window w

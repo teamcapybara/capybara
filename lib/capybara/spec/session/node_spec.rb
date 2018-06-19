@@ -185,6 +185,7 @@ Capybara::SpecHelper.spec "node" do
         expect(@session.find('//option', text: 'Disabled Child Option')).to be_disabled
       end
     end
+
     it "should be boolean" do
       @session.visit('/form')
       expect(@session.find('//select[@id="form_disabled_select"]/option').disabled?).to be true
@@ -521,6 +522,7 @@ Capybara::SpecHelper.spec "node" do
   describe '#reload', requires: [:js] do
     context "without automatic reload" do
       before { Capybara.automatic_reload = false }
+
       it "should reload the current context of the node" do
         @session.visit('/with_js')
         node = @session.find(:css, '#reload-me')

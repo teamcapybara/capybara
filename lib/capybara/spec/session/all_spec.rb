@@ -59,6 +59,7 @@ Capybara::SpecHelper.spec "#all" do
 
   context "with css as default selector" do
     before { Capybara.default_selector = :css }
+
     it "should find the first element using the given locator" do
       expect(@session.all('h1').first.text).to eq('This is a test')
       expect(@session.all("input[id='test_field']").first.value).to eq('monkey')
@@ -102,6 +103,7 @@ Capybara::SpecHelper.spec "#all" do
         expect { @session.all(:css, 'h1, p', count: 5) }.to raise_error(Capybara::ExpectationNotMet)
       end
     end
+
     context ':minimum' do
       it 'should succeed when the number of elements founds matches the expectation' do
         expect { @session.all(:css, 'h1, p', minimum: 0) }.not_to raise_error
@@ -110,6 +112,7 @@ Capybara::SpecHelper.spec "#all" do
         expect { @session.all(:css, 'h1, p', minimum: 5) }.to raise_error(Capybara::ExpectationNotMet)
       end
     end
+
     context ':maximum' do
       it 'should succeed when the number of elements founds matches the expectation' do
         expect { @session.all(:css, 'h1, p', maximum: 4) }.not_to raise_error
@@ -118,6 +121,7 @@ Capybara::SpecHelper.spec "#all" do
         expect { @session.all(:css, 'h1, p', maximum: 0) }.to raise_error(Capybara::ExpectationNotMet)
       end
     end
+
     context ':between' do
       it 'should succeed when the number of elements founds matches the expectation' do
         expect { @session.all(:css, 'h1, p', between: 2..7) }.not_to raise_error

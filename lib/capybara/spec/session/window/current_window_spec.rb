@@ -5,6 +5,7 @@ Capybara::SpecHelper.spec '#current_window', requires: [:windows] do
     @window = @session.current_window
     @session.visit('/with_windows')
   end
+
   after do
     (@session.windows - [@window]).each do |w|
       @session.switch_to_window w

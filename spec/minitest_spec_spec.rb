@@ -11,6 +11,7 @@ class MinitestSpecTest < Minitest::Spec
   before do
     visit('/form')
   end
+
   after do
     Capybara.reset_sessions!
   end

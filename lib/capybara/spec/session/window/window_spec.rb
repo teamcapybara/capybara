@@ -5,6 +5,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
     @window = @session.current_window
     @session.visit('/with_windows')
   end
+
   after do
     (@session.windows - [@window]).each do |w|
       @session.switch_to_window w
@@ -112,6 +113,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
     before do
       @initial_size = @session.current_window.size
     end
+
     after do
       @session.current_window.resize_to(*@initial_size)
       sleep 0.5
@@ -143,6 +145,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
     before do
       @initial_size = @session.current_window.size
     end
+
     after do
       @session.current_window.resize_to(*@initial_size)
       sleep 0.5

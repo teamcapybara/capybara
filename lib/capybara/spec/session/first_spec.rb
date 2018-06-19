@@ -51,6 +51,7 @@ Capybara::SpecHelper.spec '#first' do
 
   context "with css as default selector" do
     before { Capybara.default_selector = :css }
+
     it "should find the first element using the given locator" do
       expect(@session.first('h1').text).to eq('This is a test')
       expect(@session.first("input[id='test_field']").value).to eq('monkey')

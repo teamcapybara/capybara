@@ -69,6 +69,7 @@ Capybara::SpecHelper.spec '#save_page' do
 
   context "asset_host contains a string" do
     before { Capybara.asset_host = "http://example.com" }
+
     after { Capybara.asset_host = nil }
 
     it "prepends base tag with value from asset_host to the head" do

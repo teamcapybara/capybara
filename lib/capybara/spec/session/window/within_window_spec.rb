@@ -10,6 +10,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
       raise Capybara::CapybaraError if @session.windows.size != 3
     end
   end
+
   after do
     (@session.windows - [@window]).each do |w|
       @session.switch_to_window w

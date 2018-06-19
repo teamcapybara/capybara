@@ -73,6 +73,7 @@ RSpec.describe Capybara::Selenium::Driver do
       before do
         @original_browser = @driver.browser
       end
+
       after do
         # Ensure browser is actually quit so we don't leave hanging processe
         RSpec::Mocks.space.proxy_for(@original_browser).reset
