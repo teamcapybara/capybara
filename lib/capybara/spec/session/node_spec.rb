@@ -53,12 +53,12 @@ Capybara::SpecHelper.spec "node" do
 
   describe "#style", requires: [:css] do
     it "should return the computed style value" do
-      expect(@session.find(:css, '#first').style('display')).to eq 'block'
-      expect(@session.find(:css, '#second').style(:display)).to eq 'inline'
+      expect(@session.find(:css, '#first').style('display')).to eq('display' => 'block')
+      expect(@session.find(:css, '#second').style(:display)).to eq('display' => 'inline')
     end
 
     it "should return multiple style values" do
-      expect(@session.find(:css, '#first').style('display', :'line-height')).to eq({ 'display' => 'block', 'line-height' => '25px' })
+      expect(@session.find(:css, '#first').style('display', :'line-height')).to eq('display' => 'block', 'line-height' => '25px')
     end
   end
 

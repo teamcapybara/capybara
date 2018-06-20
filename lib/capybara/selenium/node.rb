@@ -29,9 +29,8 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def style(styles)
-    styles.inject({}) do |memo, style|
-      memo[style] = native.css_value(style)
-      memo
+    styles.each_with_object({}) do |style, result|
+      result[style] = native.css_value(style)
     end
   end
 

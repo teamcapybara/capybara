@@ -11,6 +11,7 @@ Release date: unreleased
 * `execute_async_script` can now be called on elements to run the JS in the context of the element
 * `:download` filter option on `:link' selector
 * Window#fullscreen
+* `Element#style` and associated matchers
 
 ### Fixes
 

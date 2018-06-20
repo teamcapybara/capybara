@@ -75,12 +75,15 @@ module Capybara
       #
       # Retrieve the given CSS styles
       #
-      #     element.style('color') # => Computed value of CSS 'color' style
+      #     element.style('color', 'font-size') # => Computed values of CSS 'color' and 'font-size' styles
+      #
+      # @param [String]  Names of the desired CSS properties
+      # @return [Hash]   Hash of the CSS property names to computed values
       #
       def style(*styles)
         styles = styles.flatten.map(&:to_s)
         raise ArgumentError, "You must specify at least one CSS style" if styles.empty?
-        result = begin
+        begin
           synchronize { base.style(styles) }
         rescue NotImplementedError => e
           begin
@@ -89,7 +92,6 @@ module Capybara
             raise e
           end
         end
-        styles.length == 1 ? result[styles[0]] : result
       end
 
       ##
@@ -441,8 +443,6 @@ module Capybara
         %(Obsolete #<Capybara::Node::Element>)
       end
 
-    private
-
       STYLE_SCRIPT = <<~JS
         (function(){
           var s = window.getComputedStyle(this);
@@ -453,7 +453,7 @@ module Capybara
           }
           return result;
         }).apply(this, arguments)
-        JS
+      JS
     end
   end
 end

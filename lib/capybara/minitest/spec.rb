@@ -15,7 +15,8 @@ module Capybara
         [%W[assert_#{assertion} must_have_#{assertion}],
          %W[refute_#{assertion} wont_have_#{assertion}]]
       end + [%w[assert_all_of_selectors must_have_all_of_selectors],
-             %w[assert_none_of_selectors must_have_none_of_selectors]] +
+             %w[assert_none_of_selectors must_have_none_of_selectors],
+             %w[assert_style must_have_style]] +
       %w[selector xpath css].flat_map do |assertion|
         [%W[assert_matches_#{assertion} must_match_#{assertion}],
          %W[refute_matches_#{assertion} wont_match_#{assertion}]]
@@ -163,6 +164,12 @@ module Capybara
       #
       # @!method wont_have_current_path
       #   see {Capybara::SessionMatchers#assert_no_current_path}
+
+      ##
+      # Expectation that element has style
+      #
+      # @!method must_have_style
+      #   see {Capybara::SessionMatchers#assert_style}
     end
   end
 end
