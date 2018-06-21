@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require "uri"
-require "English"
+require 'uri'
+require 'English'
 
 class Capybara::Selenium::Driver < Capybara::Driver::Base
   DEFAULT_OPTIONS = {
@@ -38,7 +38,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       @w3c = ((defined?(Selenium::WebDriver::Remote::W3CCapabilities) && @browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3CCapabilities)) ||
               (defined?(Selenium::WebDriver::Remote::W3C::Capabilities) && @browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3C::Capabilities)))
 
-      @node_class = ::Capybara::Selenium::MarionetteNode if marionette?
+      extend ChromeDriver if chrome?
+      extend MarionetteDriver if marionette?
 
       main = Process.pid
       at_exit do
@@ -124,11 +125,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     # Use instance variable directly so we avoid starting the browser just to reset the session
     return unless @browser
 
-    if firefox? || chrome?
-      switch_to_window(window_handles.first)
-      window_handles.slice(1..-1).each { |win| close_window(win) }
-    end
-
     navigated = false
     timer = Capybara::Helpers.timer(expire_in: 10)
     begin
@@ -213,23 +209,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def resize_window_to(handle, width, height)
     within_given_window(handle) do
-      # Don't set the size if already set - See https://github.com/mozilla/geckodriver/issues/643
-      if marionette? && (window_size(handle) == [width, height])
-        {}
-      else
-        begin
-          browser.manage.window.resize_to(width, height)
-        rescue Selenium::WebDriver::Error::UnknownError => e
-          if chrome? && e.message =~ /failed to change window state/
-            # Chromedriver doesn't wait long enough for state to change when coming out of fullscreen
-            # and raises unnecessary error. Wait a bit and try again.
-            sleep 0.5
-            browser.manage.window.resize_to(width, height)
-          else
-            raise
-          end
-        end
-      end
+      browser.manage.window.resize_to(width, height)
     end
   end
 
@@ -242,17 +222,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def fullscreen_window(handle)
     within_given_window(handle) do
-      window = browser.manage.window
-      bridge = browser.send(:bridge)
-
-      if bridge.respond_to?(:full_screen_window)
-        window.full_screen
-      elsif chrome?
-        result = bridge.http.call(:post, "session/#{bridge.session_id}/window/fullscreen", {})
-        result['value']
-      else
-        raise Capybara::NotSupportedByDriverError, "Fullscreen is not supported by Capybara::Selenium::Driver for #{browser_name}"
-      end
+      browser.manage.window.full_screen
     end
   end
 
@@ -435,6 +405,9 @@ private
   end
 
   def build_node(native_node)
-    @node_class.new(self, native_node)
+    ::Capybara::Selenium::Node.new(self, native_node)
   end
 end
+
+require 'capybara/selenium/driver_specializations/chrome_driver'
+require 'capybara/selenium/driver_specializations/marionette_driver'
