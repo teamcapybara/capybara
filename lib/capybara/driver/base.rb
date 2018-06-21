@@ -90,7 +90,11 @@ class Capybara::Driver::Base
   end
 
   def maximize_window(handle)
-    raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#maximize_current_window'
+    raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#maximize_window'
+  end
+
+  def fullscreen_window(handle)
+    raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#fullscreen_window'
   end
 
   def close_window(handle)
