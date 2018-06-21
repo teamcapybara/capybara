@@ -217,7 +217,18 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       if marionette? && (window_size(handle) == [width, height])
         {}
       else
-        browser.manage.window.resize_to(width, height)
+        begin
+          browser.manage.window.resize_to(width, height)
+        rescue Selenium::WebDriver::Error::UnknownError => e
+          if chrome? && e.message =~ /failed to change window state/
+            # Chromedriver doesn't wait long enough for state to change when coming out of fullscreen
+            # and raises unnecessary error. Wait a bit and try again.
+            sleep 0.5
+            browser.manage.window.resize_to(width, height)
+          else
+            raise
+          end
+        end
       end
     end
   end
@@ -227,6 +238,22 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       browser.manage.window.maximize
     end
     sleep 0.1 # work around for https://code.google.com/p/selenium/issues/detail?id=7405
+  end
+
+  def fullscreen_window(handle)
+    within_given_window(handle) do
+      window = browser.manage.window
+      bridge = browser.send(:bridge)
+
+      if bridge.respond_to?(:full_screen_window)
+        window.full_screen
+      elsif chrome?
+        result = bridge.http.call(:post, "session/#{bridge.session_id}/window/fullscreen", {})
+        result['value']
+      else
+        raise Capybara::NotSupportedByDriverError, "Fullscreen is not supported by Capybara::Selenium::Driver for #{browser_name}"
+      end
+    end
   end
 
   def close_window(handle)

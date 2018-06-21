@@ -184,4 +184,21 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
       expect(ow_height).to be > 300
     end
   end
+
+  describe '#fullscreen' do
+    before do
+      @initial_size = @session.current_window.size
+    end
+
+    after do
+      @session.current_window.resize_to(*@initial_size)
+      sleep 0.5
+    end
+
+    it "should be able to fullscreen the window" do
+      expect do
+        @session.current_window.fullscreen
+      end.not_to raise_error
+    end
+  end
 end

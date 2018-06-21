@@ -101,6 +101,17 @@ module Capybara
       wait_for_stable_size { @driver.maximize_window(handle) }
     end
 
+    ##
+    # Fullscreen window.
+    #
+    # If a particular driver doesn't have concept of fullscreen it may not support this method.
+    #
+    # @macro about_current
+    #
+    def fullscreen
+      @driver.fullscreen_window(handle)
+    end
+
     def eql?(other)
       other.is_a?(self.class) && @session == other.session && @handle == other.handle
     end
