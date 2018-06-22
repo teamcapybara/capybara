@@ -14,13 +14,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def self.load_selenium
     require 'selenium-webdriver'
-    # Fix for selenium-webdriver 3.4.0 which misnamed these
-    unless defined?(::Selenium::WebDriver::Error::ElementNotInteractableError)
-      ::Selenium::WebDriver::Error.const_set('ElementNotInteractableError', Class.new(::Selenium::WebDriver::Error::WebDriverError))
-    end
-    unless defined?(::Selenium::WebDriver::Error::ElementClickInterceptedError)
-      ::Selenium::WebDriver::Error.const_set('ElementClickInterceptedError', Class.new(::Selenium::WebDriver::Error::WebDriverError))
-    end
+    warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade." if Gem::Version.new(Selenium::WebDriver::VERSION) < Gem::Version.new('3.5.0')
   rescue LoadError => e
     raise e if e.message !~ /selenium-webdriver/
     raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
@@ -35,8 +29,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
       @processed_options = options.reject { |key, _val| SPECIAL_OPTIONS.include?(key) }
       @browser = Selenium::WebDriver.for(options[:browser], @processed_options)
-      @w3c = ((defined?(Selenium::WebDriver::Remote::W3CCapabilities) && @browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3CCapabilities)) ||
-              (defined?(Selenium::WebDriver::Remote::W3C::Capabilities) && @browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3C::Capabilities)))
 
       extend ChromeDriver if chrome?
       extend MarionetteDriver if marionette?
@@ -299,8 +291,12 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
 private
 
+  def w3c?
+    browser && browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3C::Capabilities)
+  end
+
   def marionette?
-    firefox? && browser && @w3c
+    firefox? && w3c?
   end
 
   def firefox?
@@ -346,11 +342,7 @@ private
   end
 
   def modal_error
-    if defined?(Selenium::WebDriver::Error::NoSuchAlertError)
-      Selenium::WebDriver::Error::NoSuchAlertError
-    else
-      Selenium::WebDriver::Error::NoAlertPresentError
-    end
+    Selenium::WebDriver::Error::NoSuchAlertError
   end
 
   def within_given_window(handle)
