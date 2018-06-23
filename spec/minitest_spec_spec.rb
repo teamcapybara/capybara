@@ -116,6 +116,12 @@ class MinitestSpecTest < Minitest::Spec
   it "handles failures" do
     page.must_have_select('non_existing_form_title')
   end
+
+  it "supports style expectations" do
+    skip "Rack test doesn't support style" if Capybara.current_driver == :rack_test
+    visit('/with_html')
+    find(:css, '#second').must_have_style('display' => 'inline')
+  end
 end
 
 RSpec.describe 'capybara/minitest/spec' do
@@ -130,7 +136,7 @@ RSpec.describe 'capybara/minitest/spec' do
     reporter.start
     MinitestSpecTest.run reporter, {}
     reporter.report
-    expect(output.string).to include("18 runs, 41 assertions, 1 failures, 0 errors, 0 skips")
+    expect(output.string).to include("19 runs, 41 assertions, 1 failures, 0 errors, 1 skips")
     # Make sure error messages are displayed
     expect(output.string).to include('expected to find visible select box "non_existing_form_title" that is not disabled but there were no matches')
   end

@@ -112,6 +112,12 @@ class MinitestTest < Minitest::Test
     assert_matches_xpath(find(:select, 'form_title'), './/select[@id="form_title"]')
     refute_matches_xpath(find(:select, 'form_title'), './/select[@id="form_other_title"]')
   end
+
+  def test_assert_style
+    skip "Rack test doesn't support style" if Capybara.current_driver == :rack_test
+    visit('/with_html')
+    assert_style(find(:css, '#second'), display: 'inline')
+  end
 end
 
 RSpec.describe 'capybara/minitest' do
@@ -126,6 +132,6 @@ RSpec.describe 'capybara/minitest' do
     reporter.start
     MinitestTest.run reporter, {}
     reporter.report
-    expect(output.string).to include("17 runs, 44 assertions, 0 failures, 0 errors, 0 skips")
+    expect(output.string).to include("18 runs, 44 assertions, 0 failures, 0 errors, 1 skips")
   end
 end

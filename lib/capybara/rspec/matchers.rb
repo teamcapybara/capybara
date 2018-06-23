@@ -225,6 +225,24 @@ module Capybara
       end
     end
 
+    class HaveStyle < Matcher
+      def initialize(*args)
+        @args = args
+      end
+
+      def matches?(actual)
+        wrap_matches?(actual) { |el| el.assert_style(*@args) }
+      end
+
+      def does_not_match?(_actual)
+        raise ArgumentError, "The have_style matcher does not support use with not_to/should_not"
+      end
+
+      def description
+        "have style"
+      end
+    end
+
     class BecomeClosed
       def initialize(options)
         @options = options
@@ -353,6 +371,12 @@ module Capybara
     # See {Capybara::Node::Matchers#has_table?}
     def have_table(locator = nil, **options, &optional_filter_block)
       HaveSelector.new(:table, locator, options, &optional_filter_block)
+    end
+
+    # RSpec matcher for element style
+    # See {Capybara::Node::Matchers#has_style?}
+    def have_style(styles, **options)
+      HaveStyle.new(styles, options)
     end
 
     %w[selector css xpath text title current_path link button field checked_field unchecked_field select table].each do |matcher_type|

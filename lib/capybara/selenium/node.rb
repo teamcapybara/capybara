@@ -28,6 +28,12 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     end
   end
 
+  def style(styles)
+    styles.each_with_object({}) do |style, result|
+      result[style] = native.css_value(style)
+    end
+  end
+
   ##
   #
   # Set the value of the form element to the given value.

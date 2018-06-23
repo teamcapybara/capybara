@@ -24,6 +24,10 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     string_node[name]
   end
 
+  def style(_styles)
+    raise NotImplementedError, "The rack_test driver does not process CSS"
+  end
+
   def value
     string_node.value
   end

@@ -81,9 +81,15 @@ module Capybara
       # @!method assert_xpath
       #   see {Capybara::Node::Matchers#assert_not_matches_selector}
 
+      ## Assert element has the provided CSS styles
+      #
+      # @!method assert_style
+      #   see {Capybara::Node::Matchers#assert_style}
+
       %w[assert_selector assert_no_selector
          assert_all_of_selectors assert_none_of_selectors
-         assert_matches_selector assert_not_matches_selector].each do |assertion_name|
+         assert_matches_selector assert_not_matches_selector
+         assert_style].each do |assertion_name|
         class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
           def #{assertion_name} *args, &optional_filter_block
             self.assertions +=1

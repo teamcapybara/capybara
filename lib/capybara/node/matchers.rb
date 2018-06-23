@@ -58,6 +58,21 @@ module Capybara
 
       ##
       #
+      # Checks if a an element has the specified CSS styles
+      #
+      #     element.has_style?( 'color' => 'rgb(0,0,255)', 'font-size' => /px/ )
+      #
+      # @param styles [Hash]
+      # @return [Boolean]                       If the styles match
+      #
+      def has_style?(styles, **options)
+        assert_style(styles, **options)
+      rescue Capybara::ExpectationNotMet
+        false
+      end
+
+      ##
+      #
       # Asserts that a given selector is on the page or a descendant of the current node.
       #
       #     page.assert_selector('p#foo')
@@ -95,6 +110,24 @@ module Capybara
             raise Capybara::ExpectationNotMet, result.failure_message
           end
         end
+      end
+
+      ##
+      #
+      # Asserts that an element has the specified CSS styles
+      #
+      #     element.assert_style( 'color' => 'rgb(0,0,255)', 'font-size' => /px/ )
+      #
+      # @param styles [Hash]
+      # @raise [Capybara::ExpectationNotMet]    If the element doesn't have the specified styles
+      #
+      def assert_style(styles, **options)
+        query_args = _set_query_session_options(styles, options)
+        query = Capybara::Queries::StyleQuery.new(*query_args)
+        synchronize(query.wait) do
+          raise Capybara::ExpectationNotMet, query.failure_message unless query.resolves_for?(self)
+        end
+        true
       end
 
       # Asserts that all of the provided selectors are present on the given page
