@@ -1,17 +1,17 @@
 # Version 3.3.0
-Release date: unreleased
-
-### Changed
-
-* Minimum "supported" `selenium-webdriver` is raised to 3.5.0 (but you really should be using newer than that)
+Release date: 2018-06-25
 
 ### Added
 
 * RackTest driver now handles 307/308 redirects
 * `execute_async_script` can now be called on elements to run the JS in the context of the element
 * `:download` filter option on `:link' selector
-* Window#fullscreen
+* `Window#fullscreen`
 * `Element#style` and associated matchers
+
+### Changed
+
+* Minimum "supported" `selenium-webdriver` is raised to 3.5.0 (but you really should be using newer than that)
 
 ### Fixes
 
