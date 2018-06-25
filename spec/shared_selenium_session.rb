@@ -264,27 +264,27 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
     end
 
-    describe "#attach_file" do
-      before do
-        session.visit('/form')
-      end
-
-      after do
-        session.driver.browser.file_detector = nil if session.driver.browser.respond_to?(:file_detector=)
-      end
-
-      it "uploads the file when file_detector is used", :focus_ do
-        skip "Only test on remote drivers" unless session.driver.browser.respond_to?(:file_detector=)
-        session.driver.browser.file_detector = lambda do |args|
-          # args => ["/path/to/file"]
-          str = args.first.to_s
-          str if File.exist?(str)
-        end
-        session.attach_file "form_image", with_os_path_separators(__FILE__)
-        session.click_button('awesome')
-        expect(extract_results(session)['image']).to eq(File.basename(__FILE__))
-      end
-    end
+    # describe "#attach_file" do
+    #   before do
+    #     session.visit('/form')
+    #   end
+    #
+    #   after do
+    #     session.driver.browser.file_detector = nil if session.driver.browser.respond_to?(:file_detector=)
+    #   end
+    #
+    #   it "uploads the file when file_detector is used", :focus_ do
+    #     skip "Only test on remote drivers" unless session.driver.browser.respond_to?(:file_detector=)
+    #     session.driver.browser.file_detector = lambda do |args|
+    #       # args => ["/path/to/file"]
+    #       str = args.first.to_s
+    #       str if File.exist?(str)
+    #     end
+    #     session.attach_file "form_image", with_os_path_separators(__FILE__)
+    #     session.click_button('awesome')
+    #     expect(extract_results(session)['image']).to eq(File.basename(__FILE__))
+    #   end
+    # end
 
     context "Windows" do
       it "can't close the primary window" do

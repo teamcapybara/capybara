@@ -39,6 +39,19 @@ module TestSessions
   Chrome = Capybara::Session.new(CHROME_REMOTE_DRIVER, TestApp)
 end
 
+TestSessions::Chrome.driver.browser.file_detector = lambda do |args|
+          # args => ["/path/to/file"]
+          str = args.first.to_s
+          str if File.exist?(str)
+        end
+
+session.driver.browser.file_detector = lambda do |args|
+  # args => ["/path/to/file"]
+  str = args.first.to_s
+  str if File.exist?(str)
+end
+
+
 skipped_tests = %i[response_headers status_code trigger download]
 # skip window tests when headless for now - closing a window not supported by chromedriver/chrome
 skipped_tests << :windows if ENV['TRAVIS'] && (ENV['SKIP_WINDOW'] || ENV['HEADLESS'])
