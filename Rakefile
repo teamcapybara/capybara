@@ -14,7 +14,7 @@ RSpec::Core::RakeTask.new(:spec_marionette) do |t|
   t.pattern = './spec{,/*/**}/*{_spec.rb,_spec_marionette.rb}'
 end
 
-%w[chrome ie edge chrome_remote].each do |driver|
+%w[chrome ie edge chrome_remote firefox_remote].each do |driver|
   RSpec::Core::RakeTask.new(:"spec_#{driver}") do |t|
     t.rspec_opts = rspec_opts
     t.pattern = "./spec/*{_spec_#{driver}.rb}"
@@ -46,6 +46,8 @@ task :travis do
     Rake::Task[:spec_edge].invoke
   elsif ENV['CAPYBARA_CHROME_REMOTE']
     Rake::Task[:spec_chrome_remote].invoke
+  elsif ENV['CAPYBARA_FIREFOX_REMOTE']
+    Rake::Task[:spec_firefox_remote].invoke
   else
     Rake::Task[:spec_chrome].invoke
   end

@@ -10,7 +10,7 @@ def selenium_host
 end
 
 def selenium_port
-  ENV.fetch('SELENIUM_PORT', 4444)
+  ENV.fetch('SELENIUM_PORT', 4445)
 end
 
 def ensure_selenium_running!
@@ -21,11 +21,11 @@ rescue
         '  $ docker-compose up -d selenium'
 end
 
-Capybara.register_driver :selenium_chrome_remote do |app|
+Capybara.register_driver :selenium_firefox_remote do |app|
   ensure_selenium_running!
 
   url = "http://#{selenium_host}:#{selenium_port}/wd/hub"
-  caps = Selenium::WebDriver::Remote::Capabilities.chrome
+  caps = Selenium::WebDriver::Remote::Capabilities.firefox
 
   Capybara::Selenium::Driver.new app,
                                  browser: :remote,
@@ -33,24 +33,25 @@ Capybara.register_driver :selenium_chrome_remote do |app|
                                  url: url
 end
 
-CHROME_REMOTE_DRIVER = :selenium_chrome_remote
+FIREFOX_REMOTE_DRIVER = :selenium_firefox_remote
 
 module TestSessions
-  Chrome = Capybara::Session.new(CHROME_REMOTE_DRIVER, TestApp)
+  Firefox = Capybara::Session.new(FIREFOX_REMOTE_DRIVER, TestApp)
 end
 
 skipped_tests = %i[response_headers status_code trigger download]
 # skip window tests when headless for now - closing a window not supported by chromedriver/chrome
 skipped_tests << :windows if ENV['TRAVIS'] && (ENV['SKIP_WINDOW'] || ENV['HEADLESS'])
 
-Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_REMOTE_DRIVER.to_s, capybara_skip: skipped_tests
+Capybara::SpecHelper.run_specs TestSessions::Firefox, FIREFOX_REMOTE_DRIVER.to_s, capybara_skip: skipped_tests
 
-RSpec.describe "Capybara::Session with remote Chrome" do
+RSpec.describe "Capybara::Session with remote firefox" do
   include Capybara::SpecHelper
-  include_examples  "Capybara::Session", TestSessions::Chrome, CHROME_REMOTE_DRIVER
-  include_examples  Capybara::RSpecMatchers, TestSessions::Chrome, CHROME_REMOTE_DRIVER
+  include_examples  "Capybara::Session", TestSessions::Firefox, FIREFOX_REMOTE_DRIVER
+  include_examples  Capybara::RSpecMatchers, TestSessions::Firefox, FIREFOX_REMOTE_DRIVER
 
-  it 'is considered to be chrome' do
-    expect(session.driver.send(:chrome?)).to be_truthy
+  it 'is considered to be firefox' do
+    expect(session.driver.send(:firefox?)).to be_truthy
+    expect(session.driver.send(:marionette?)).to be_truthy
   end
 end
