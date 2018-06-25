@@ -18,7 +18,7 @@ def ensure_selenium_running!
 rescue
   raise 'Selenium is not running. ' \
         "You can run a selenium server easily with: \n" \
-        '  $ docker-compose up -d selenium'
+        '  $ docker-compose up -d selenium_chrome'
 end
 
 Capybara.register_driver :selenium_chrome_remote do |app|
@@ -40,17 +40,10 @@ module TestSessions
 end
 
 TestSessions::Chrome.driver.browser.file_detector = lambda do |args|
-          # args => ["/path/to/file"]
-          str = args.first.to_s
-          str if File.exist?(str)
-        end
-
-session.driver.browser.file_detector = lambda do |args|
   # args => ["/path/to/file"]
   str = args.first.to_s
   str if File.exist?(str)
 end
-
 
 skipped_tests = %i[response_headers status_code trigger download]
 # skip window tests when headless for now - closing a window not supported by chromedriver/chrome

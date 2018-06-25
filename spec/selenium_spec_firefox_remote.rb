@@ -18,7 +18,7 @@ def ensure_selenium_running!
 rescue
   raise 'Selenium is not running. ' \
         "You can run a selenium server easily with: \n" \
-        '  $ docker-compose up -d selenium'
+        '  $ docker-compose up -d selenium_firefox'
 end
 
 Capybara.register_driver :selenium_firefox_remote do |app|
