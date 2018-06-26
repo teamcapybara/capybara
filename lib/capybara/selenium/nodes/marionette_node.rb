@@ -28,7 +28,7 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
     native.clear
     Array(path_names).each do |path|
       unless driver.browser.respond_to?(:upload)
-        if (fd =  bridge.file_detector)
+        if (fd = bridge.file_detector)
           local_file = fd.call([path])
           path = upload(local_file) if local_file
         end
@@ -38,6 +38,7 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
   end
 
 private
+
   def bridge
     driver.browser.send(:bridge)
   end
@@ -47,7 +48,7 @@ private
       raise Error::WebDriverError, "you may only upload files: #{local_file.inspect}"
     end
 
-    result = bridge.http.call(:post, "session/#{bridge.session_id}/file", {file: Selenium::WebDriver::Zipper.zip_file(local_file)})
+    result = bridge.http.call(:post, "session/#{bridge.session_id}/file", file: Selenium::WebDriver::Zipper.zip_file(local_file))
     result['value']
   end
 end

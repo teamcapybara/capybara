@@ -49,6 +49,15 @@ skipped_tests = %i[response_headers status_code trigger download]
 # skip window tests when headless for now - closing a window not supported by chromedriver/chrome
 skipped_tests << :windows if ENV['TRAVIS'] && (ENV['SKIP_WINDOW'] || ENV['HEADLESS'])
 
+RSpec.configure do |config|
+  config.define_derived_metadata do |metadata|
+    case metadata[:full_description]
+    when /^Capybara::Session selenium_chrome_remote #attach_file with multipart form should not break when using HTML5 multiple file input uploading multiple files$/
+      metadata[:pending] = "Selenium with Remote Chrome doesn't support multiple file upload"
+    end
+  end
+end
+
 Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_REMOTE_DRIVER.to_s, capybara_skip: skipped_tests
 
 RSpec.describe "Capybara::Session with remote Chrome" do

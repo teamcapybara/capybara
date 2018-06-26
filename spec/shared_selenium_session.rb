@@ -325,5 +325,4 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
   def with_os_path_separators(path)
     Gem.win_platform? ? path.to_s.tr('/', '\\') : path.to_s
   end
-
 end

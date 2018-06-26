@@ -88,12 +88,11 @@ Capybara::SpecHelper.spec "#attach_file" do
 
     it "should not append files to already attached" do
       @session.attach_file "Multiple Documents", with_os_path_separators(@test_file_path)
-      @session.attach_file("Multiple Documents",
-                           [@test_file_path, @another_test_file_path].map { |f| with_os_path_separators(f) })
+      @session.attach_file "Multiple Documents", with_os_path_separators(@another_test_file_path)
       @session.click_button('Upload Multiple')
-      expect(@session.body).to include("2 | ") # number of files
-      expect(@session.body).to include(File.read(@test_file_path))
+      expect(@session.body).to include("1 | ") # number of files
       expect(@session.body).to include(File.read(@another_test_file_path))
+      expect(@session.body).not_to include(File.read(@test_file_path))
     end
   end
 
