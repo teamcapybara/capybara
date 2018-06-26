@@ -38,16 +38,16 @@ Cucumber::Rake::Task.new(:cucumber) do |task|
 end
 
 task :travis do
-  if ENV['CAPYBARA_FF']
+  if ENV['CAPYBARA_REMOTE'] && ENV['CAPYBARA_FF']
+    Rake::Task[:spec_firefox_remote].invoke
+  elsif ENV['CAPYBARA_FF']
     Rake::Task[:spec_marionette].invoke
   elsif ENV['CAPYBARA_IE']
     Rake::Task[:spec_ie].invoke
   elsif ENV['CAPYBARA_EDGE']
     Rake::Task[:spec_edge].invoke
-  elsif ENV['CAPYBARA_CHROME_REMOTE']
+  elsif ENV['CAPYBARA_REMOTE']
     Rake::Task[:spec_chrome_remote].invoke
-  elsif ENV['CAPYBARA_FIREFOX_REMOTE']
-    Rake::Task[:spec_firefox_remote].invoke
   else
     Rake::Task[:spec_chrome].invoke
   end
