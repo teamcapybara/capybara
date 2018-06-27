@@ -1,10 +1,16 @@
 ---
-version: "2.1"
+version: "3"
 
 services:
-  selenium:
+  selenium_chrome:
     network_mode: "host"
     image: "selenium/${SELENIUM_IMAGE:-standalone-chrome-debug}"
     volumes:
       - "/dev/shm:/dev/shm"
-      - "${PWD}:${PWD}" # For making attach_file specs work
+  selenium_firefox:
+    network_mode: "host"
+    image: "selenium/${SELENIUM_IMAGE:-standalone-firefox-debug}"
+    volumes:
+      - "/dev/shm:/dev/shm"
+    environment:
+      - SE_OPTS=-port 4445

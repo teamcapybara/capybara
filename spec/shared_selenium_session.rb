@@ -299,4 +299,5 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
   def headless_or_remote?
     !ENV['HEADLESS'].nil? || session.driver.options[:browser] == :remote
   end
+
 end

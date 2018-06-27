@@ -26,6 +26,29 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
   def set_file(value) # rubocop:disable Naming/AccessorMethodName
     path_names = value.to_s.empty? ? [] : value
     native.clear
-    Array(path_names).each { |p| native.send_keys(p) }
+    Array(path_names).each do |path|
+      unless driver.browser.respond_to?(:upload)
+        if (fd = bridge.file_detector)
+          local_file = fd.call([path])
+          path = upload(local_file) if local_file
+        end
+      end
+      native.send_keys(path)
+    end
+  end
+
+private
+
+  def bridge
+    driver.browser.send(:bridge)
+  end
+
+  def upload(local_file)
+    unless File.file?(local_file)
+      raise Error::WebDriverError, "you may only upload files: #{local_file.inspect}"
+    end
+
+    result = bridge.http.call(:post, "session/#{bridge.session_id}/file", file: Selenium::WebDriver::Zipper.zip_file(local_file))
+    result['value']
   end
 end

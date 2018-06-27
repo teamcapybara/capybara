@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'capybara/selenium/nodes/chrome_node'
+
 module Capybara::Selenium::Driver::ChromeDriver
   def fullscreen_window(handle)
     within_given_window(handle) do
@@ -31,5 +33,11 @@ module Capybara::Selenium::Driver::ChromeDriver
     switch_to_window(window_handles.first)
     window_handles.slice(1..-1).each { |win| close_window(win) }
     super
+  end
+
+private
+
+  def build_node(native_node)
+    ::Capybara::Selenium::ChromeNode.new(self, native_node)
   end
 end
