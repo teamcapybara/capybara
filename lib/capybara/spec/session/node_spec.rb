@@ -177,6 +177,11 @@ Capybara::SpecHelper.spec "node" do
       expect(@session.find('//option', text: "A.2")).not_to be_disabled
     end
 
+    it "should see a disabled fieldset as disabled" do
+      @session.visit('/form')
+      expect(@session.find(:css, '#form_disabled_fieldset')).to be_disabled
+    end
+
     context "in a disabled fieldset" do
       # https://html.spec.whatwg.org/#the-fieldset-element
       it "should see elements not in first legend as disabled" do
