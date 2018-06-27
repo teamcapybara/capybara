@@ -370,7 +370,6 @@ New line after and before textarea tag
     </label>
   </p>
 
-
   <p>
     <label for="form_disabled_file">
       Disabled File
@@ -378,38 +377,35 @@ New line after and before textarea tag
     </label>
   </p>
 
-  <p>
+  <fieldset>
+    <input name="form[enabled_fieldset_child]" id="form_enabled_fieldset_child"/>
+  </fieldset>
+
+  <fieldset disabled="disabled" id="form_disabled_fieldset">
+    <legend>Disabled Child</legend>
+    <input name="form[disabled_fieldset_child]" id="form_disabled_fieldset_child"/>
+    <select>
+      <option>Disabled Child Option</option>
+    </select>
+  </fieldset>
+
+  <fieldset disabled="disabled">
+    <legend>
+      Nested Disabled
+      <input type="checkbox" name="form[disabled_fieldeset_legend_child]" id="form_disabled_fieldset_legend_child"/>
+    </legend>
+    <legend>
+      Another Legend
+      <input type="checkbox" name="form[disabled_fieldeset_second_legend_child]" id="form_disabled_fieldset_second_legend_child"/>
+    </legend>
     <fieldset>
-        <input name="form[enabled_fieldset_child]" id="form_enabled_fieldset_child"/>
-    </fieldset>
-  </p>
-
-
-  <p>
-    <fieldset disabled="disabled" id="form_disabled_fieldset">
-      <legend>Disabled Child</legend>
-      <input name="form[disabled_fieldset_child]" id="form_disabled_fieldset_child"/>
-      <select>
-        <option>Disabled Child Option</option>
-      </select>
-    </fieldset>
-
-    <fieldset disabled="disabled">
       <legend>
-        Nested Disabled
-        <input type="checkbox" name="form[disabled_fieldeset_legend_child]" id="form_disabled_fieldset_legend_child"/>
+        Disabled?
+        <input id="form_disabled_fieldset_descendant_legend_child">
       </legend>
-      <legend>
-        Another Legend
-        <input type="checkbox" name="form[disabled_fieldeset_second_legend_child]" id="form_disabled_fieldset_second_legend_child"/>
-      </legend>
-      <p>
-        <fieldset>
-          <input name="form[disabled_fieldset_descendant]" id="form_disabled_fieldset_descendant"/>
-        </fieldset>
-      </p>
+      <input name="form[disabled_fieldset_descendant]" id="form_disabled_fieldset_descendant"/>
     </fieldset>
-  </p>
+  </fieldset>
 
   <p>
     <select>
@@ -461,7 +457,7 @@ New line after and before textarea tag
 </form>
 
 <form id="form2" action="/form" method="post">
-  <input type="text" name="form[which_form]" value="form2" id="form_which_form"/>
+  <input type="text" name="form[which_form]" value="form2" id="form_which_form2"/>
   <input type="submit" name="form[unused]" value="unused"/>
   <button type="submit" name="form[other_form_button]" value="other_form_button" form="form1">Form1</button>
 </form>

@@ -74,6 +74,8 @@ Capybara.add_selector(:fieldset) do
     xpath = xpath[XPath.child(:legend)[XPath.string.n.is(legend)]] if legend
     xpath
   end
+
+  node_filter(:disabled, :boolean) { |node, value| !(value ^ node.disabled?) }
 end
 
 Capybara.add_selector(:link) do

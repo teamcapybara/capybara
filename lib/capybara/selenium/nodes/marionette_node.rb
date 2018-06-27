@@ -13,8 +13,10 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
   end
 
   def disabled?
-    return true if super
+    # Not sure exactly what version of FF fixed the below issue, but it is definitely fixed in 61+
+    return super unless driver.browser.capabilities[:browser_version].to_f < 61.0
 
+    return true if super
     # workaround for selenium-webdriver/geckodriver reporting elements as enabled when they are nested in disabling elements
     if %w[option optgroup].include? tag_name
       find_xpath("parent::*[self::optgroup or self::select]")[0].disabled?

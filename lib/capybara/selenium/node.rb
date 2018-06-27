@@ -142,8 +142,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def disabled?
     return true unless native.enabled?
     # WebDriver only defines `disabled?` for form controls but fieldset makes sense too
-    return boolean_attr(self[:disabled]) if tag_name == 'fieldset'
-    false
+    tag_name == 'fieldset' && find_xpath("ancestor-or-self::fieldset[@disabled]").any?
   end
 
   def content_editable?

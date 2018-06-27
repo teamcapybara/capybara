@@ -208,6 +208,12 @@ Capybara::SpecHelper.spec "node" do
       expect(@session.find('//select[@id="form_disabled_select2"]/option').disabled?).to be true
       expect(@session.find('//select[@id="form_title"]/option[1]').disabled?).to be false
     end
+
+    it "should be disabled for all elements that are CSS :disabled" do
+      @session.visit('/form')
+      # sanity check
+      expect(@session.all(:css, ':disabled')).to all(be_disabled)
+    end
   end
 
   describe "#visible?" do
