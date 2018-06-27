@@ -97,14 +97,14 @@ before_script:
   - if [[ $CAPYBARA_REMOTE = true ]]; then
       docker-compose up -d
 
-      TIMEOUT=10
+      TIMEOUT=20
 
       until wget --spider http://localhost:4444 > /dev/null 2>&1 || [ $TIMEOUT -eq 0 ]; do
         echo "Waiting for selenium server, $((TIMEOUT--)) remaining attempts...";
         sleep 1;
       done
 
-      TIMEOUT=10
+      TIMEOUT=20
 
       until wget --spider http://localhost:4445 > /dev/null 2>&1 || [ $TIMEOUT -eq 0 ]; do
         echo "Waiting for selenium server, $((TIMEOUT--)) remaining attempts...";
