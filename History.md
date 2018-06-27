@@ -4,6 +4,7 @@ Release date: unreleased
 ### Fixed
 
 * `selenium-webdriver` version check [ahorek]
+* Selenium driver correctly responds to `disabled?` for fieldset elements - Issue #2059 [Thomas Walpole]
 
 # Version 3.3.0
 Release date: 2018-06-25
