@@ -1,3 +1,10 @@
+# Version 3.4.0
+Release date: unreleased
+
+### Added
+
+* Wrokarounnd Selenium lack of support for `file_detector` with remote geckodriver
+
 # Version 3.3.1
 Release date: 2018-06-27
 
