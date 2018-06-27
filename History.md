@@ -1,5 +1,5 @@
 # Version 3.3.1
-Release date: unreleased
+Release date: 2018-06-27
 
 ### Fixed
 
