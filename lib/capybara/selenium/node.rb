@@ -140,7 +140,10 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   alias :checked? :selected?
 
   def disabled?
-    !native.enabled?
+    return true unless native.enabled?
+    # WebDriver only defines `disabled?` for form controls but fieldset makes sense too
+    return boolean_attr(self[:disabled]) if tag_name == 'fieldset'
+    false
   end
 
   def content_editable?
