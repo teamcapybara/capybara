@@ -1,3 +1,10 @@
+# Version 3.3.1
+Release date: unreleased
+
+### Fixed
+
+* `selenium-webdriver` version check [ahorek]
+
 # Version 3.3.0
 Release date: 2018-06-25
 
