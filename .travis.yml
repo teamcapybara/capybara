@@ -95,21 +95,11 @@ before_script:
       awesome &
     fi
   - if [[ $CAPYBARA_REMOTE = true ]]; then
-      docker-compose up -d
-
-      TIMEOUT=20
-
-      until wget --spider http://localhost:4444 > /dev/null 2>&1 || [ $TIMEOUT -eq 0 ]; do
-        echo "Waiting for selenium server, $((TIMEOUT--)) remaining attempts...";
-        sleep 1;
-      done
-
-      TIMEOUT=20
-
-      until wget --spider http://localhost:4445 > /dev/null 2>&1 || [ $TIMEOUT -eq 0 ]; do
-        echo "Waiting for selenium server, $((TIMEOUT--)) remaining attempts...";
-        sleep 1;
-      done
+      if [[ $CAPYBARA_FF = true ]]; then
+        docker-compose up -d selenium_firefox;
+      else
+        docker-compose up -d selenium_chrome;
+      fi;
     fi
 
 script: "bundle exec rake travis"

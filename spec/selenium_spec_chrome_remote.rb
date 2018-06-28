@@ -14,11 +14,20 @@ def selenium_port
 end
 
 def ensure_selenium_running!
-  TCPSocket.open(selenium_host, selenium_port)
-rescue
-  raise 'Selenium is not running. ' \
-        "You can run a selenium server easily with: \n" \
-        '  $ docker-compose up -d selenium_chrome'
+  timer = Capybara::Helpers.timer(expire_in: 20)
+  begin
+    TCPSocket.open(selenium_host, selenium_port)
+  rescue
+    if timer.expired?
+      raise 'Selenium is not running. ' \
+          "You can run a selenium server easily with: \n" \
+          '  $ docker-compose up -d selenium_chrome'
+    else
+      puts "Waiting for Selenium docker instance..."
+      sleep 1
+      retry
+    end
+  end
 end
 
 Capybara.register_driver :selenium_chrome_remote do |app|

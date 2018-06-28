@@ -1,6 +1,4 @@
----
 version: "3"
-
 services:
   selenium_chrome:
     network_mode: "host"
