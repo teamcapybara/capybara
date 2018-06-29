@@ -5,7 +5,6 @@ services:
   - docker
 rvm:
   - 2.5.1
-  - 2.3.6
   - jruby-9.1.16.0
 gemfile:
   - Gemfile
@@ -41,7 +40,7 @@ matrix:
         - CAPYBARA_REMOTE=true
         - CAPYBARA_FF=true
     - gemfile: gemfiles/Gemfile.rspec-34
-      rvm: 2.3.6
+      rvm: 2.3.7
       env: CAPYBARA_FF=true
       addons:
         firefox: latest
@@ -68,7 +67,7 @@ matrix:
           packages:
             - awesome
     - gemfile: Gemfile
-      rvm: 2.4.3
+      rvm: 2.4.4
       env: CAPYBARA_FF=true HEADLESS=true
       addons:
         firefox: latest
