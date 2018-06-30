@@ -231,7 +231,7 @@ module Capybara
         # Allow user to update the CSS style of the file input since they are so often hidden on a page
         if make_visible
           ff = find(:file_field, locator, options.merge(visible: :all))
-          while_visible(ff, make_visible) { |el| el.set(path) }
+          while_visible(ff, make_visible, options) { |el| el.set(path) }
         else
           find(:file_field, locator, options).set(path)
         end
@@ -268,14 +268,16 @@ module Capybara
         input.set(option.value)
       end
 
-      def while_visible(element, visible_css)
+      def while_visible(element, visible_css, options)
         visible_css = { opacity: 1, display: 'block', visibility: 'visible' } if visible_css == true
         _update_style(element, visible_css)
-        raise ExpectationNotMet, "The style changes in :make_visible did not make the file input visible" unless element.visible?
-        begin
-          yield element
-        ensure
-          _reset_style(element)
+        synchronize(Capybara::Queries::BaseQuery.wait(options, session_options.default_max_wait_time)) do
+          raise ExpectationNotMet, "The style changes in :make_visible did not make the file input visible" unless element.visible?
+          begin
+            yield element
+          ensure
+            _reset_style(element)
+          end
         end
       end
 
