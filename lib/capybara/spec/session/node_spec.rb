@@ -377,6 +377,7 @@ Capybara::SpecHelper.spec "node" do
     end
 
     it "should allow multiple modifiers", requires: [:js] do
+      pending "Firefox doesn't generate an event for shift+control+click" if marionette_gte?(62, @session)
       @session.visit('with_js')
       @session.find(:css, '#click-test').click(:control, :alt, :meta, :shift)
       # Selenium with Chrome on OSX ctrl-click generates a right click so just verify all keys but not click type
