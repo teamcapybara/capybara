@@ -163,5 +163,13 @@ RSpec.describe Capybara::Selenium::Node do
       tr.click
       expect(tr.base).to have_received(:warn).with(/Clicking the first cell in the row instead/)
     end
+
+    it "should allow multiple modifiers", requires: [:js] do
+      session = TestSessions::SeleniumMarionette
+      session.visit('with_js')
+      # Firefox doesn't generate an event for control+shift+click
+      session.find(:css, '#click-test').click(:alt, :ctrl, :meta)
+      expect(session).to have_link("Has been alt control meta clicked")
+    end
   end
 end
