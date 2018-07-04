@@ -80,9 +80,9 @@ module Capybara
       #   @option options [Hash] fill_options     Driver specific options regarding how to fill fields (Defaults come from Capybara.default_set_options)
       #
       # @return [Capybara::Node::Element]  The element filled_in
-      def fill_in(locator = nil, with:, fill_options: {}, **options)
-        options[:with] = options.delete(:currently_with) if options.key?(:currently_with)
-        find(:fillable_field, locator, options).set(with, fill_options)
+      def fill_in(locator = nil, with:, currently_with: nil, fill_options: {}, **find_options)
+        find_options[:with] = currently_with if currently_with
+        find(:fillable_field, locator, find_options).set(with, fill_options)
       end
 
       # @!macro label_click
