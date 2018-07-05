@@ -182,9 +182,10 @@ RSpec.describe Capybara::Selenium::Node do
     it "should allow multiple modifiers", requires: [:js] do
       session = TestSessions::SeleniumMarionette
       session.visit('with_js')
-      # Firefox doesn't generate an event for control+shift+click
+      # Firefox v62+ doesn't generate an event for control+shift+click
       session.find(:css, '#click-test').click(:alt, :ctrl, :meta)
-      expect(session).to have_link("Has been alt control meta clicked")
+      # it also triggers a contextmenu event when control is held so don't check click type
+      expect(session).to have_link("Has been alt control meta")
     end
   end
 end
