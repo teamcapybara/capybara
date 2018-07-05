@@ -27,13 +27,13 @@ module Capybara
 
       ##
       #
-      # Finds a link by id, text or title and clicks it. Also looks at image
+      # Finds a link by id, Capybara.test_id attribute, text or title and clicks it. Also looks at image
       # alt text inside the link.
       #
       # @macro waiting_behavior
       #
       # @overload click_link([locator], options)
-      #   @param [String] locator         text, id, title or nested image's alt attribute
+      #   @param [String] locator         text, id, Capybara.test_id attribute, title or nested image's alt attribute
       #   @param options                  See {Capybara::Node::Finders#find_link}
       #
       # @return [Capybara::Node::Element]  The element clicked
@@ -45,7 +45,7 @@ module Capybara
       #
       # Finds a button on the page and clicks it.
       # This can be any \<input> element of type submit, reset, image, button or it can be a
-      # \<button> element. All buttons can be found by their id, value, or title. \<button> elements can also be found
+      # \<button> element. All buttons can be found by their id, Capybara.test_id attribute, value, or title. \<button> elements can also be found
       # by their text content, and image \<input> elements by their alt attribute
       #
       # @macro waiting_behavior
@@ -61,7 +61,7 @@ module Capybara
       ##
       #
       # Locate a text field or text area and fill it in with the given text
-      # The field can be found via its name, id or label text.
+      # The field can be found via its name, id, Capybara.test_id attribute, or label text.
       #
       #     page.fill_in 'Name', with: 'Bob'
       #
@@ -170,7 +170,7 @@ module Capybara
       # @macro waiting_behavior
       #
       # @param value [String] Which option to select
-      # @param from: [String]  The id, name or label of the select box
+      # @param from: [String]  The id, Capybara.test_id atrtribute, name or label of the select box
       #
       # @return [Capybara::Node::Element]  The option element selected
       def select(value = nil, from: nil, **options)
@@ -194,7 +194,7 @@ module Capybara
       # @macro waiting_behavior
       #
       # @param value [String]      Which option to unselect
-      # @param from: [String]      The id, name or label of the select box
+      # @param from: [String]      The id, Capybara.test_id attribute, name or label of the select box
       #
       # @return [Capybara::Node::Element]  The option element unselected
       def unselect(value = nil, from: nil, **options)

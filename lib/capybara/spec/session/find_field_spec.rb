@@ -10,6 +10,7 @@ Capybara::SpecHelper.spec '#find_field' do
     expect(@session.find_field('form_description').value).to eq('Descriptive text goes here')
     expect(@session.find_field('Region')[:name]).to eq('form[region]')
     expect(@session.find_field('With Asterisk*')).to be_truthy
+    expect(@session.find_field('my_test_id')).to be_truthy
   end
 
   context "aria_label attribute with Capybara.enable_aria_label" do

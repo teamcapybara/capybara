@@ -440,4 +440,20 @@ Capybara::SpecHelper.spec '#find' do
       @session.find(:unknown, '//h1')
     end.to raise_error(ArgumentError)
   end
+
+  context "with Capybara.test_id" do
+    it "should not match when nil" do
+      Capybara.test_id = nil
+      expect(@session).not_to have_field('test_id')
+    end
+
+    it "should default to `data-test-id` attribute" do
+      expect(@session.find(:field, 'test_id')[:id]).to eq 'test_field'
+    end
+
+    it "should use a different attribute if set" do
+      Capybara.test_id = 'data-other-test-id'
+      expect(@session.find(:field, 'test_id')[:id]).to eq 'normal'
+    end
+  end
 end

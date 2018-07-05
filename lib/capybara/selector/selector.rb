@@ -19,7 +19,7 @@ module Capybara
   #     * Locator: The id of the element to match
   #
   #   * **:field** - Select field elements (input [not of type submit, image, or hidden], textarea, select)
-  #     * Locator: Matches against the id, name, or placeholder
+  #     * Locator: Matches against the id, Capybara.test_id attribute, name, or placeholder
   #     * Filters:
   #       * :id (String) — Matches the id attribute
   #       * :name (String) — Matches the name attribute
@@ -50,7 +50,7 @@ module Capybara
   #       * :href (String, Regexp, nil) — Matches the normalized href of the link, if nil will find <a> elements with no href attribute
   #
   #   * **:button** - Find buttons ( input [of type submit, reset, image, button] or button elements )
-  #     * Locator: Matches the id, value, or title attributes, string content of a button, or the alt attribute of an image type button or of a descendant image of a button
+  #     * Locator: Matches the id, Capybara.test_id attribute, value, or title attributes, string content of a button, or the alt attribute of an image type button or of a descendant image of a button
   #     * Filters:
   #       * :id (String) — Matches the id attribute
   #       * :title (String) — Matches the title attribute
@@ -62,7 +62,7 @@ module Capybara
   #     * Locator: See :link and :button selectors
   #
   #   * **:fillable_field** - Find text fillable fields ( textarea, input [not of type submit, image, radio, checkbox, hidden, file] )
-  #     * Locator: Matches against the id, name, or placeholder
+  #     * Locator: Matches against the id, Capybara.test_id attribute, name, or placeholder
   #     * Filters:
   #       * :id (String) — Matches the id attribute
   #       * :name (String) — Matches the name attribute
@@ -74,7 +74,7 @@ module Capybara
   #       * :multiple (Boolean) — Match fields that accept multiple values
   #
   #   * **:radio_button** - Find radio buttons
-  #     * Locator: Match id, name, or associated label text
+  #     * Locator: Match id, Capybara.test_id attribute, name, or associated label text
   #     * Filters:
   #       * :id (String) — Matches the id attribute
   #       * :name (String) — Matches the name attribute
@@ -85,7 +85,7 @@ module Capybara
   #       * :option (String) — Match the value
   #
   #   * **:checkbox** - Find checkboxes
-  #     * Locator: Match id, name, or associated label text
+  #     * Locator: Match id, Capybara.test_id attribute, name, or associated label text
   #     * Filters:
   #       * *:id (String) — Matches the id attribute
   #       * *:name (String) — Matches the name attribute
@@ -96,7 +96,7 @@ module Capybara
   #       * *:option (String) — Match the value
   #
   #   * **:select** - Find select elements
-  #     * Locator: Match id, name, placeholder, or associated label text
+  #     * Locator: Match id, Capybara.test_id attribute, name, placeholder, or associated label text
   #     * Filters:
   #       * :id (String) — Matches the id attribute
   #       * :name (String) — Matches the name attribute
@@ -126,7 +126,7 @@ module Capybara
   #     * Locator:
   #
   #   * **:file_field** - Find file input elements
-  #     * Locator: Match id, name, or associated label text
+  #     * Locator: Match id, Capybara.test_id attribute, name, or associated label text
   #     * Filters:
   #       * :id (String) — Matches the id attribute
   #       * :name (String) — Matches the name attribute
@@ -387,6 +387,7 @@ module Capybara
                        XPath.attr(:placeholder) == locator,
                        XPath.attr(:id) == XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for)].reduce(:|)
       attr_matchers |= XPath.attr(:'aria-label').is(locator) if enable_aria_label
+      attr_matchers |= XPath.attr(Capybara.test_id) == locator if Capybara.test_id
 
       locate_xpath = locate_xpath[attr_matchers]
       locate_xpath + XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(xpath)

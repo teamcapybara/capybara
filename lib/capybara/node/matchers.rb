@@ -382,7 +382,7 @@ module Capybara
       ##
       #
       # Checks if the page or current node has a radio button or
-      # checkbox with the given label, value or id, that is currently
+      # checkbox with the given label, value, id, or Capybara.test_id attribute that is currently
       # checked.
       #
       # @param [String] locator           The label, name or id of a checked field
@@ -395,7 +395,7 @@ module Capybara
       ##
       #
       # Checks if the page or current node has no radio button or
-      # checkbox with the given label, value or id, that is currently
+      # checkbox with the given label, value or id, or Capybara.test_id attribute that is currently
       # checked.
       #
       # @param [String] locator           The label, name or id of a checked field
@@ -408,7 +408,7 @@ module Capybara
       ##
       #
       # Checks if the page or current node has a radio button or
-      # checkbox with the given label, value or id, that is currently
+      # checkbox with the given label, value or id, or Capybara.test_id attribute that is currently
       # unchecked.
       #
       # @param [String] locator           The label, name or id of an unchecked field
@@ -421,7 +421,7 @@ module Capybara
       ##
       #
       # Checks if the page or current node has no radio button or
-      # checkbox with the given label, value or id, that is currently
+      # checkbox with the given label, value or id, or Capybara.test_id attribute that is currently
       # unchecked.
       #
       # @param [String] locator           The label, name or id of an unchecked field

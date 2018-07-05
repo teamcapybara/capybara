@@ -33,6 +33,7 @@ module Capybara
         Capybara.enable_aria_label = false
         Capybara.default_set_options = {}
         Capybara.disable_animation = false
+        Capybara.test_id = 'data-test-id'
         reset_threadsafe
       end
 
