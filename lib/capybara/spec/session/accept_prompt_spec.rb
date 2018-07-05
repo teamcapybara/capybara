@@ -41,7 +41,6 @@ Capybara::SpecHelper.spec '#accept_prompt', requires: [:modals] do
   end
 
   it "should accept the prompt with a blank response when there is a default" do
-    pending "Geckodriver doesn't set a blank response currently" if marionette?(@session)
     @session.accept_prompt with: '' do
       @session.click_link('Open defaulted prompt')
     end

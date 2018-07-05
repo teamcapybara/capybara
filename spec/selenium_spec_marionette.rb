@@ -48,7 +48,22 @@ skipped_tests << :windows if ENV['TRAVIS'] && ENV['SKIP_WINDOW']
 
 $stdout.puts `#{Selenium::WebDriver::Firefox.driver_path} --version` if ENV['CI']
 
-Capybara::SpecHelper.run_specs TestSessions::SeleniumMarionette, "selenium", capybara_skip: skipped_tests
+Capybara::SpecHelper.run_specs TestSessions::SeleniumMarionette, "selenium", capybara_skip: skipped_tests do |example|
+  case example.metadata[:full_description]
+  when 'Capybara::Session selenium node #send_keys should generate key events',
+       'Capybara::Session selenium node #send_keys should allow for multiple simultaneous keys',
+       'Capybara::Session selenium node #send_keys should send special characters'
+    pending "selenium-webdriver/geckodriver doesn't support complex sets of characters"
+  when 'Capybara::Session selenium node #click should allow multiple modifiers'
+    pending "Firefox doesn't generate an event for shift+control+click" if marionette_gte?(62, @session)
+  when /^Capybara::Session selenium node #double_click/
+    pending "selenium-webdriver/geckodriver doesn't generate double click event" if marionette_lt?(59, @session)
+  when 'Capybara::Session selenium #refresh it reposts'
+    skip 'Firefox insists on prompting without providing a way to suppress'
+  when 'Capybara::Session selenium #accept_prompt should accept the prompt with a blank response when there is a default'
+    pending "Geckodriver doesn't set a blank response currently"
+  end
+end
 
 RSpec.describe "Capybara::Session with firefox" do # rubocop:disable RSpec/MultipleDescribes
   include Capybara::SpecHelper

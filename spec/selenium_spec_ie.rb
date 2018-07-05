@@ -22,7 +22,12 @@ skipped_tests = %i[response_headers status_code trigger modals hover form_attrib
 
 $stdout.puts `#{Selenium::WebDriver::IE.driver_path} --version` if ENV['CI']
 
-Capybara::SpecHelper.run_specs TestSessions::SeleniumIE, "selenium", capybara_skip: skipped_tests
+Capybara::SpecHelper.run_specs TestSessions::SeleniumIE, "selenium", capybara_skip: skipped_tests do |example|
+  case example.metadata[:description]
+  when /#refresh it reposts$/
+    skip "Firefox and Edge insist on prompting without providing a way to suppress"
+  end
+end
 
 RSpec.describe "Capybara::Session with Internet Explorer", capybara_skip: skipped_tests do
   include Capybara::SpecHelper

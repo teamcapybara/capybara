@@ -45,10 +45,10 @@ end
 FIREFOX_REMOTE_DRIVER = :selenium_firefox_remote
 
 module TestSessions
-  Firefox = Capybara::Session.new(FIREFOX_REMOTE_DRIVER, TestApp)
+  RemoteFirefox = Capybara::Session.new(FIREFOX_REMOTE_DRIVER, TestApp)
 end
 
-TestSessions::Firefox.driver.browser.file_detector = lambda do |args|
+TestSessions::RemoteFirefox.driver.browser.file_detector = lambda do |args|
   # args => ["/path/to/file"]
   str = args.first.to_s
   str if File.exist?(str)
@@ -58,12 +58,27 @@ skipped_tests = %i[response_headers status_code trigger download]
 # skip window tests when headless for now - closing a window not supported by chromedriver/chrome
 skipped_tests << :windows if ENV['TRAVIS'] && (ENV['SKIP_WINDOW'] || ENV['HEADLESS'])
 
-Capybara::SpecHelper.run_specs TestSessions::Firefox, FIREFOX_REMOTE_DRIVER.to_s, capybara_skip: skipped_tests
+Capybara::SpecHelper.run_specs TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVER.to_s, capybara_skip: skipped_tests do |example|
+  case example.metadata[:full_description]
+  when 'Capybara::Session selenium_firefox_remote node #send_keys should generate key events',
+       'Capybara::Session selenium_firefox_remote node #send_keys should allow for multiple simultaneous keys',
+       'Capybara::Session selenium_firefox_remote node #send_keys should send special characters'
+    pending "selenium-webdriver/geckodriver doesn't support complex sets of characters"
+  when 'Capybara::Session selenium_firefox_remote node #click should allow multiple modifiers'
+    pending "Firefox doesn't generate an event for shift+control+click" if marionette_gte?(62, @session)
+  when /^Capybara::Session selenium node #double_click/
+    pending "selenium-webdriver/geckodriver doesn't generate double click event" if marionette_lt?(59, @session)
+  when 'Capybara::Session selenium_firefox_remote #refresh it reposts'
+    skip 'Firefox insists on prompting without providing a way to suppress'
+  when 'Capybara::Session selenium_firefox_remote #accept_prompt should accept the prompt with a blank response when there is a default'
+    pending "Geckodriver doesn't set a blank response currently"
+  end
+end
 
 RSpec.describe "Capybara::Session with remote firefox" do
   include Capybara::SpecHelper
-  include_examples  "Capybara::Session", TestSessions::Firefox, FIREFOX_REMOTE_DRIVER
-  include_examples  Capybara::RSpecMatchers, TestSessions::Firefox, FIREFOX_REMOTE_DRIVER
+  include_examples  "Capybara::Session", TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVER
+  include_examples  Capybara::RSpecMatchers, TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVER
 
   it 'is considered to be firefox' do
     expect(session.driver.send(:firefox?)).to be_truthy

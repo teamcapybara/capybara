@@ -97,7 +97,6 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
   end
 
   it "doesn't raise exception on a nil current_url" do
-    skip "Only makes sense when there is a real driver" unless @session.respond_to?(:driver)
     allow(@session.driver).to receive(:current_url).and_return(nil)
     @session.visit("/")
     expect { @session.current_url }.not_to raise_exception

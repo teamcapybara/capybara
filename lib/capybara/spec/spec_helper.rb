@@ -51,14 +51,15 @@ module Capybara
         @specs << [name, options, block]
       end
 
-      def run_specs(session, name, **options)
+      def run_specs(session, name, **options, &filter_block)
         specs = @specs
         RSpec.describe Capybara::Session, name, options do # rubocop:disable RSpec/EmptyExampleGroup
           include Capybara::SpecHelper
           include Capybara::RSpecMatchers
           # rubocop:disable RSpec/ScatteredSetup
-          before do
+          before do |example|
             @session = session
+            instance_exec(example, &filter_block) if filter_block
           end
 
           after do

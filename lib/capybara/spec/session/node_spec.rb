@@ -377,7 +377,6 @@ Capybara::SpecHelper.spec "node" do
     end
 
     it "should allow multiple modifiers", requires: [:js] do
-      pending "Firefox doesn't generate an event for shift+control+click" if marionette_gte?(62, @session)
       @session.visit('with_js')
       @session.find(:css, '#click-test').click(:control, :alt, :meta, :shift)
       # Selenium with Chrome on OSX ctrl-click generates a right click so just verify all keys but not click type
@@ -403,10 +402,6 @@ Capybara::SpecHelper.spec "node" do
   end
 
   describe '#double_click', requires: [:js] do
-    before do
-      pending "selenium-webdriver/geckodriver doesn't generate double click event" if marionette_lt?(59, @session)
-    end
-
     it "should double click an element" do
       @session.visit('/with_js')
       @session.find(:css, '#click-test').double_click
@@ -464,21 +459,18 @@ Capybara::SpecHelper.spec "node" do
     end
 
     it "should send special characters" do
-      pending "selenium-webdriver/geckodriver doesn't support complex sets of characters" if marionette?(@session)
       @session.visit('/form')
       @session.find(:css, '#address1_city').send_keys('Ocean', :space, 'sie', :left, 'd')
       expect(@session.find(:css, '#address1_city').value).to eq 'Ocean side'
     end
 
     it "should allow for multiple simultaneous keys" do
-      pending "selenium-webdriver/geckodriver doesn't support complex sets of characters" if marionette?(@session)
       @session.visit('/form')
       @session.find(:css, '#address1_city').send_keys([:shift, 'o'], 'ceanside')
       expect(@session.find(:css, '#address1_city').value).to eq 'Oceanside'
     end
 
     it "should generate key events", requires: %i[send_keys js] do
-      pending "selenium-webdriver/geckodriver doesn't support complex sets of characters" if marionette?(@session)
       @session.visit('/with_js')
       @session.find(:css, '#with-key-events').send_keys([:shift, 't'], [:shift, 'w'])
       expect(@session.find(:css, '#key-events-output')).to have_text('keydown:16 keydown:84 keydown:16 keydown:87')

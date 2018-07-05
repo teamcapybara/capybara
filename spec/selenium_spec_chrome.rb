@@ -45,7 +45,12 @@ skipped_tests << :windows if ENV['TRAVIS'] && (ENV['SKIP_WINDOW'] || ENV['HEADLE
 
 $stdout.puts `#{Selenium::WebDriver::Chrome.driver_path} --version` if ENV['CI']
 
-Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_DRIVER.to_s, capybara_skip: skipped_tests
+Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_DRIVER.to_s, capybara_skip: skipped_tests do |example|
+  case example.metadata[:description]
+  when /should fetch a response when sequentially visiting same destination with a target/
+    skip "Chrome/chromedriver has an issue visiting URL with target after visiting same URL without target" if chrome_lt?(65.0, @session)
+  end
+end
 
 RSpec.describe "Capybara::Session with chrome" do
   include Capybara::SpecHelper

@@ -29,7 +29,6 @@ Capybara::SpecHelper.spec '#visit' do
   end
 
   it "should fetch a response when sequentially visiting same destination with a target" do
-    skip "Chrome/chromedriver has an issue visiting URL with target after visiting same URL without target" if chrome_lt?(65.0, @session)
     @session.visit('/form')
     expect(@session).to have_css('#form_title')
     @session.visit('/form#form_title')
