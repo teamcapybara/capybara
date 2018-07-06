@@ -46,7 +46,7 @@ Capybara::SpecHelper.spec '#assert_all_of_selectors' do
       Capybara.using_wait_time(0.1) do
         @session.visit('/with_js')
         @session.click_link('Click me')
-        @session.assert_all_of_selectors(:css, "a#clickable", "a#has-been-clicked", '#drag', wait: 0.9)
+        @session.assert_all_of_selectors(:css, "a#clickable", "a#has-been-clicked", '#drag', wait: 1.5)
       end
     end
   end

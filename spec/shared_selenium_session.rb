@@ -102,7 +102,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
                         fill_options: { clear: :backspace })
         # click outside the field to trigger the change event
         session.find(:css, 'body').click
-        expect(session.find(:css, '.change_event_triggered', match: :one)).to have_text 'some value'
+        expect(session.find(:css, '.change_event_triggered', match: :one, wait: 5)).to have_text 'some value'
       end
 
       it 'should trigger change when clearing field' do
@@ -112,7 +112,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
                         fill_options: { clear: :backspace })
         # click outside the field to trigger the change event
         session.find(:css, 'body').click
-        expect(session).to have_selector(:css, '.change_event_triggered', match: :one)
+        expect(session).to have_selector(:css, '.change_event_triggered', match: :one, wait: 5)
       end
 
       it 'should trigger input event field_value.length times' do
