@@ -397,6 +397,8 @@ module Capybara
           scopes.slice!(idx..-1)
           driver.switch_to_frame(:top)
         end
+      else
+        raise ArgumentError, "You must provide a frame element, :parent, or :top when calling switch_to_frame"
       end
     end
 
@@ -846,6 +848,8 @@ module Capybara
     end
 
     def _find_frame(*args)
+      return find(:frame) if args.length.zero?
+
       case args[0]
       when Capybara::Node::Element
         args[0]

@@ -54,6 +54,20 @@ Capybara::SpecHelper.spec '#within_frame', requires: [:frames] do
     end
   end
 
+  it "should default to the :frame selector when no options passed" do
+    container = @session.find(:css, '#divInMainWindow')
+    @session.within(container) do
+      # Ensure only one frame in scope
+      @session.within_frame do
+        expect(@session).to have_css('body#parentBody')
+      end
+    end
+    expect {
+      # Multiple frames in scope here
+      @session.within_frame do; end
+    }.to raise_error Capybara::Ambiguous
+  end
+
   it "should find multiple nested frames" do
     @session.within_frame 'parentFrame' do
       @session.within_frame 'childFrame' do
