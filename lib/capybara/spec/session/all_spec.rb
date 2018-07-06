@@ -16,6 +16,7 @@ Capybara::SpecHelper.spec "#all" do
   end
 
   it "should wait for matching elements to appear", requires: [:js] do
+    Capybara.default_max_wait_time = 2
     @session.visit('/with_js')
     @session.click_link('Click me')
     expect(@session.all(:css, "a#has-been-clicked")).not_to be_empty

@@ -24,6 +24,7 @@ Capybara::SpecHelper.spec '#find' do
   end
 
   it "should wait for asynchronous load", requires: [:js] do
+    Capybara.default_max_wait_time = 2
     @session.visit('/with_js')
     @session.click_link('Click me')
     expect(@session.find(:css, "a#has-been-clicked").text).to include('Has been clicked')
@@ -55,7 +56,7 @@ Capybara::SpecHelper.spec '#find' do
     it "should find element if it appears before given wait duration" do
       @session.visit('/with_js')
       @session.click_link('Click me')
-      expect(@session.find(:css, "a#has-been-clicked", wait: 2.0).text).to include('Has been clicked')
+      expect(@session.find(:css, "a#has-been-clicked", wait: 3.0).text).to include('Has been clicked')
     end
   end
 

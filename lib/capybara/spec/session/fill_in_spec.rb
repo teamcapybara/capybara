@@ -142,6 +142,7 @@ Capybara::SpecHelper.spec "#fill_in" do
   end
 
   it "should wait for asynchronous load", requires: [:js] do
+    Capybara.default_max_wait_time = 2
     @session.visit('/with_js')
     @session.click_link('Click me')
     @session.fill_in('new_field', with: 'Testing...')

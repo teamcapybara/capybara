@@ -24,6 +24,7 @@ Capybara::SpecHelper.spec '#has_css?' do
   end
 
   it "should wait for content to appear", requires: [:js] do
+    Capybara.default_max_wait_time = 2
     @session.visit('/with_js')
     @session.click_link('Click me')
     expect(@session).to have_css("input[type='submit'][value='New Here']")
@@ -144,6 +145,7 @@ Capybara::SpecHelper.spec '#has_no_css?' do
   end
 
   it "should wait for content to disappear", requires: [:js] do
+    Capybara.default_max_wait_time = 2
     @session.visit('/with_js')
     @session.click_link('Click me')
     expect(@session).to have_no_css("p#change")

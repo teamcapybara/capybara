@@ -87,6 +87,7 @@ Capybara::SpecHelper.spec '#assert_text' do
   end
 
   it "should wait for text to appear", requires: [:js] do
+    Capybara.default_max_wait_time = 2
     @session.visit('/with_js')
     @session.click_link('Click me')
     expect(@session.assert_text('Has been clicked')).to eq(true)

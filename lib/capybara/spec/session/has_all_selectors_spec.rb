@@ -56,7 +56,7 @@ Capybara::SpecHelper.spec '#have_all_selectors' do
       Capybara.using_wait_time(0.1) do
         @session.visit('/with_js')
         @session.click_link('Click me')
-        expect(@session).to have_all_of_selectors(:css, "a#clickable", "a#has-been-clicked", '#drag', wait: 0.9)
+        expect(@session).to have_all_of_selectors(:css, "a#clickable", "a#has-been-clicked", '#drag', wait: 5)
       end
     end
   end

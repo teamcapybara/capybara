@@ -207,7 +207,7 @@ Capybara::SpecHelper.spec '#has_text?' do
       Capybara.using_wait_time(0.1) do
         @session.visit('/with_js')
         @session.click_link('Click me')
-        expect(@session).to have_text('Has been clicked', wait: 0.9)
+        expect(@session).to have_text('Has been clicked', wait: 2)
       end
     end
   end
@@ -312,6 +312,7 @@ Capybara::SpecHelper.spec '#has_no_text?' do
   end
 
   it "should wait for text to disappear", requires: [:js] do
+    Capybara.default_max_wait_time = 2
     @session.visit('/with_js')
     @session.click_link('Click me')
     expect(@session).to have_no_text("I changed it")
