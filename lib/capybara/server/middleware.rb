@@ -36,7 +36,7 @@ module Capybara
       end
 
       def call(env)
-        if env["PATH_INFO"] == "/__identify__"
+        if env['PATH_INFO'] == '/__identify__'
           [200, {}, [@app.object_id.to_s]]
         else
           @counter.increment

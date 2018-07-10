@@ -7,15 +7,15 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
   # which should probably be provided to Rack::Test in its non-GET request methods.
   class NilUploadedFile < Rack::Test::UploadedFile
     def initialize
-      @empty_file = Tempfile.new("nil_uploaded_file")
+      @empty_file = Tempfile.new('nil_uploaded_file')
       @empty_file.close
     end
 
-    def original_filename; ""; end
-    def content_type; "application/octet-stream"; end
+    def original_filename; ''; end
+    def content_type; 'application/octet-stream'; end
     def path; @empty_file.path; end
     def size; 0; end
-    def read; ""; end
+    def read; ''; end
   end
 
   def params(button)
@@ -35,7 +35,7 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
       when 'textarea' then add_textarea_param(field, params)
       end
     end
-    merge_param!(params, button[:name], button[:value] || "") if button[:name]
+    merge_param!(params, button[:name], button[:value] || '') if button[:name]
 
     params.to_params_hash
   end
@@ -47,7 +47,7 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
   end
 
   def multipart?
-    self[:enctype] == "multipart/form-data"
+    self[:enctype] == 'multipart/form-data'
   end
 
 private
@@ -107,7 +107,7 @@ private
 
   def add_select_param(field, params)
     if field.has_attribute?('multiple')
-      field.xpath(".//option[@selected]").each do |option|
+      field.xpath('.//option[@selected]').each do |option|
         merge_param!(params, field['name'], (option['value'] || option.text).to_s)
       end
     else

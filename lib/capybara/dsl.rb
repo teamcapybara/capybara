@@ -5,12 +5,12 @@ require 'capybara'
 module Capybara
   module DSL
     def self.included(base)
-      warn "including Capybara::DSL in the global scope is not recommended!" if base == Object
+      warn 'including Capybara::DSL in the global scope is not recommended!' if base == Object
       super
     end
 
     def self.extended(base)
-      warn "extending the main object with Capybara::DSL is not recommended!" if base == TOPLEVEL_BINDING.eval("self")
+      warn 'extending the main object with Capybara::DSL is not recommended!' if base == TOPLEVEL_BINDING.eval('self')
       super
     end
 

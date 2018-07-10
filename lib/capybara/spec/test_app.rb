@@ -57,7 +57,7 @@ class TestApp < Sinatra::Base
   end
 
   get '/get_referer' do
-    request.referer.nil? ? "No referer" : "Got referer: #{request.referer}"
+    request.referer.nil? ? 'No referer' : "Got referer: #{request.referer}"
   end
 
   get '/host' do
@@ -67,14 +67,14 @@ class TestApp < Sinatra::Base
   get '/redirect/:times/times' do
     times = params[:times].to_i
     if times.zero?
-      "redirection complete"
+      'redirection complete'
     else
       redirect "/redirect/#{times - 1}/times"
     end
   end
 
   get '/landed' do
-    "You landed"
+    'You landed'
   end
 
   post '/landed' do
@@ -101,12 +101,12 @@ class TestApp < Sinatra::Base
     redirect '/redirect_again'
   end
 
-  delete "/delete" do
-    "The requested object was deleted"
+  delete '/delete' do
+    'The requested object was deleted'
   end
 
-  get "/delete" do
-    "Not deleted"
+  get '/delete' do
+    'Not deleted'
   end
 
   get '/redirect_back' do
@@ -141,11 +141,11 @@ class TestApp < Sinatra::Base
   end
 
   get '/error' do
-    raise TestAppError, "some error"
+    raise TestAppError, 'some error'
   end
 
   get '/other_error' do
-    raise TestAppOtherError.new("something", "other error")
+    raise TestAppOtherError.new('something', 'other error')
   end
 
   get '/load_error' do
@@ -166,7 +166,7 @@ class TestApp < Sinatra::Base
   end
 
   get '/download.csv' do
-    content_type "text/csv"
+    content_type 'text/csv'
     'This, is, comma, separated' \
     'Thomas, Walpole, was , here'
   end
@@ -177,7 +177,7 @@ class TestApp < Sinatra::Base
 
   post '/form' do
     @@form_post_count += 1
-    '<pre id="results">' + params[:form].merge("post_count" => @@form_post_count).to_yaml + '</pre>'
+    '<pre id="results">' + params[:form].merge('post_count' => @@form_post_count).to_yaml + '</pre>'
   end
 
   post '/upload_empty' do
@@ -191,23 +191,24 @@ class TestApp < Sinatra::Base
   post '/upload' do
     begin
       buffer = []
-      buffer << "Content-type: #{params[:form][:document][:type]}"
-      buffer << "File content: #{params[:form][:document][:tempfile].read}"
+      buffer << "Content-type: #{params.dig(:form, :document, :type)}"
+      buffer << "File content: #{params.dig(:form, :document, :tempfile).read}"
       buffer.join(' | ')
-    rescue
+    rescue StandardError
       'No file uploaded'
     end
   end
 
   post '/upload_multiple' do
     begin
-      buffer = [params[:form][:multiple_documents].size.to_s]
-      params[:form][:multiple_documents].each do |doc|
+      docs = params.dig(:form, :multiple_documents)
+      buffer = [docs.size.to_s]
+      docs.each do |doc|
         buffer << "Content-type: #{doc[:type]}"
         buffer << "File content: #{doc[:tempfile].read}"
       end
       buffer.join(' | ')
-    rescue
+    rescue StandardError
       'No files uploaded'
     end
   end

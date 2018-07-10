@@ -89,11 +89,11 @@ module Capybara
       end
 
       def does_not_match?(_actual)
-        raise ArgumentError, "The have_all_selectors matcher does not support use with not_to/should_not"
+        raise ArgumentError, 'The have_all_selectors matcher does not support use with not_to/should_not'
       end
 
       def description
-        "have all selectors"
+        'have all selectors'
       end
     end
 
@@ -108,11 +108,11 @@ module Capybara
       end
 
       def does_not_match?(_actual)
-        raise ArgumentError, "The have_none_of_selectors matcher does not support use with not_to/should_not"
+        raise ArgumentError, 'The have_none_of_selectors matcher does not support use with not_to/should_not'
       end
 
       def description
-        "have no selectors"
+        'have no selectors'
       end
     end
 
@@ -235,11 +235,11 @@ module Capybara
       end
 
       def does_not_match?(_actual)
-        raise ArgumentError, "The have_style matcher does not support use with not_to/should_not"
+        raise ArgumentError, 'The have_style matcher does not support use with not_to/should_not'
       end
 
       def description
-        "have style"
+        'have style'
       end
     end
 

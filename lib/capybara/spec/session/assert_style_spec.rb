@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Capybara::SpecHelper.spec '#assert_style', requires: [:css] do
-  it "should not raise if the elements style contains the given properties" do
+  it 'should not raise if the elements style contains the given properties' do
     @session.visit('/with_html')
     expect do
       @session.find(:css, '#first').assert_style(display: 'block')
@@ -15,10 +15,10 @@ Capybara::SpecHelper.spec '#assert_style', requires: [:css] do
     end.to raise_error(Capybara::ExpectationNotMet, 'Expected node to have styles {"display"=>"inline"}. Actual styles were {"display"=>"block"}')
   end
 
-  it "should wait for style", requires: %i[css js] do
+  it 'should wait for style', requires: %i[css js] do
     @session.visit('/with_js')
     el = @session.find(:css, '#change')
-    @session.click_link("Change size")
+    @session.click_link('Change size')
     expect do
       el.assert_style({ 'font-size': '50px' }, wait: 3)
     end.not_to raise_error

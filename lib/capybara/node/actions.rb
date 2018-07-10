@@ -176,7 +176,7 @@ module Capybara
       def select(value = nil, from: nil, **options)
         el = from ? find_select_or_datalist_input(from, options) : self
 
-        if el.respond_to?(:tag_name) && (el.tag_name == "input")
+        if el.respond_to?(:tag_name) && (el.tag_name == 'input')
           select_datalist_option(el, value)
         else
           el.find(:option, value, options).select_option
@@ -258,11 +258,9 @@ module Capybara
 
       def select_datalist_option(input, value)
         datalist_options = input.evaluate_script(DATALIST_OPTIONS_SCRIPT)
-        if (option = datalist_options.find { |o| o['value'] == value || o['label'] == value })
-          input.set(option['value'])
-        else
-          raise ::Capybara::ElementNotFound, %(Unable to find datalist option "#{value}")
-        end
+        option = datalist_options.find { |o| o.values_at('value', 'label').include?(value) }
+        raise ::Capybara::ElementNotFound, %(Unable to find datalist option "#{value}") unless option
+        input.set(option['value'])
       rescue ::Capybara::NotSupportedByDriverError
         # Implement for drivers that don't support JS
         datalist = find(:xpath, XPath.descendant(:datalist)[XPath.attr(:id) == input[:list]], visible: false)
@@ -273,7 +271,7 @@ module Capybara
       def while_visible(element, visible_css)
         visible_css = { opacity: 1, display: 'block', visibility: 'visible' } if visible_css == true
         _update_style(element, visible_css)
-        raise ExpectationNotMet, "The style changes in :make_visible did not make the file input visible" unless element.visible?
+        raise ExpectationNotMet, 'The style changes in :make_visible did not make the file input visible' unless element.visible?
         begin
           yield element
         ensure
@@ -284,7 +282,7 @@ module Capybara
       def _update_style(element, style)
         element.execute_script(UPDATE_STYLE_SCRIPT, style)
       rescue Capybara::NotSupportedByDriverError
-        warn "The :make_visible option is not supported by the current driver - ignoring"
+        warn 'The :make_visible option is not supported by the current driver - ignoring'
       end
 
       def _reset_style(element)

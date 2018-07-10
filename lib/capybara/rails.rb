@@ -3,7 +3,7 @@
 require 'capybara/dsl'
 
 Capybara.app = Rack::Builder.new do
-  map "/" do
+  map '/' do
     run Rails.application
   end
 end.to_app

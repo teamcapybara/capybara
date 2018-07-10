@@ -84,7 +84,7 @@ module Capybara
 
     remove_method :disable_animation=
     def disable_animation=(bool)
-      warn "Capybara.disable_animation is a beta feature - it may change/disappear in a future point version" if bool
+      warn 'Capybara.disable_animation is a beta feature - it may change/disappear in a future point version' if bool
       @disable_animation = bool
     end
 
@@ -97,7 +97,7 @@ module Capybara
   class ReadOnlySessionConfig < SimpleDelegator
     SessionConfig::OPTIONS.each do |m|
       define_method "#{m}=" do |_|
-        raise "Per session settings are only supported when Capybara.threadsafe == true"
+        raise 'Per session settings are only supported when Capybara.threadsafe == true'
       end
     end
   end

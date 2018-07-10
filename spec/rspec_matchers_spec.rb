@@ -3,22 +3,22 @@
 require 'spec_helper'
 
 RSpec.describe 'Capybara RSpec Matchers', type: :feature do
-  context "after called on session" do
-    it "HaveSelector should allow getting a description of the matcher" do
+  context 'after called on session' do
+    it 'HaveSelector should allow getting a description of the matcher' do
       visit('/with_html')
       matcher = have_selector(:css, 'h2.head', minimum: 3)
       expect(page).to matcher
       expect { matcher.description }.not_to raise_error
     end
 
-    it "HaveText should allow getting a description" do
+    it 'HaveText should allow getting a description' do
       visit('/with_html')
-      matcher = have_text("Lorem")
+      matcher = have_text('Lorem')
       expect(page).to matcher
       expect { matcher.description }.not_to raise_error
     end
 
-    it "should produce the same error for .to have_no_xxx and .not_to have_xxx" do
+    it 'should produce the same error for .to have_no_xxx and .not_to have_xxx' do
       visit('/with_html')
       not_to_msg = error_msg_for { expect(page).not_to have_selector(:css, '#referrer') }
       have_no_msg = error_msg_for { expect(page).to have_no_selector(:css, '#referrer') }
@@ -30,8 +30,8 @@ RSpec.describe 'Capybara RSpec Matchers', type: :feature do
     end
   end
 
-  context "after called on element" do
-    it "HaveSelector should allow getting a description" do
+  context 'after called on element' do
+    it 'HaveSelector should allow getting a description' do
       visit('/with_html')
       el = find(:css, '#first')
       matcher = have_selector(:css, 'a#foo')
@@ -39,7 +39,7 @@ RSpec.describe 'Capybara RSpec Matchers', type: :feature do
       expect { matcher.description }.not_to raise_error
     end
 
-    it "MatchSelector should allow getting a description" do
+    it 'MatchSelector should allow getting a description' do
       visit('/with_html')
       el = find(:css, '#first')
       matcher = match_selector(:css, '#first')
@@ -47,10 +47,10 @@ RSpec.describe 'Capybara RSpec Matchers', type: :feature do
       expect { matcher.description }.not_to raise_error
     end
 
-    it "HaveText should allow getting a description" do
+    it 'HaveText should allow getting a description' do
       visit('/with_html')
       el = find(:css, '#first')
-      matcher = have_text("Lorem")
+      matcher = have_text('Lorem')
       expect(el).to matcher
       expect { matcher.description }.not_to raise_error
     end

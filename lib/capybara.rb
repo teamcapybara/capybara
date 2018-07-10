@@ -445,23 +445,22 @@ Capybara.register_server :puma do |app, port, host, **options|
   begin
     require 'rack/handler/puma'
   rescue LoadError
-    raise LoadError, "Capybara is unable to load `puma` for its server, please add `puma` to your project or specify a different server via something like `Capybara.server = :webrick`."
+    raise LoadError, 'Capybara is unable to load `puma` for its server, please add `puma` to your project or specify a different server via something like `Capybara.server = :webrick`.'
   end
   # If we just run the Puma Rack handler it installs signal handlers which prevent us from being able to interrupt tests.
   # Therefore construct and run the Server instance ourselves.
   # Rack::Handler::Puma.run(app, { Host: host, Port: port, Threads: "0:4", workers: 0, daemon: false }.merge(options))
 
-  conf = Rack::Handler::Puma.config(app, { Host: host, Port: port, Threads: "0:4", workers: 0, daemon: false }.merge(options))
+  conf = Rack::Handler::Puma.config(app, { Host: host, Port: port, Threads: '0:4', workers: 0, daemon: false }.merge(options))
   events = conf.options[:Silent] ? ::Puma::Events.strings : ::Puma::Events.stdio
 
-  events.log "Capybara starting Puma..."
+  events.log 'Capybara starting Puma...'
   events.log "* Version #{Puma::Const::PUMA_VERSION} , codename: #{Puma::Const::CODE_NAME}"
   events.log "* Min threads: #{conf.options[:min_threads]}, max threads: #{conf.options[:max_threads]}"
 
   Puma::Server.new(conf.app, events, conf.options).tap do |s|
     s.binder.parse conf.options[:binds], s.events
-    s.min_threads = conf.options[:min_threads]
-    s.max_threads = conf.options[:max_threads]
+    s.min_threads, s.max_threads = conf.options[:min_threads], conf.options[:max_threads]
   end.run.join
 end
 
@@ -472,7 +471,7 @@ Capybara.configure do |config|
   config.default_selector = :css
   config.default_max_wait_time = 2
   config.ignore_hidden_elements = true
-  config.default_host = "http://www.example.com"
+  config.default_host = 'http://www.example.com'
   config.automatic_reload = true
   config.match = :smart
   config.exact = false

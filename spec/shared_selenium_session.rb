@@ -1,33 +1,33 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require "selenium-webdriver"
+require 'selenium-webdriver'
 
-RSpec.shared_examples "Capybara::Session" do |session, mode|
+RSpec.shared_examples 'Capybara::Session' do |session, mode|
   let(:session) { session }
 
   context 'with selenium driver' do
     describe '#driver' do
-      it "should be a selenium driver" do
+      it 'should be a selenium driver' do
         expect(session.driver).to be_an_instance_of(Capybara::Selenium::Driver)
       end
     end
 
     describe '#mode' do
-      it "should remember the mode" do
+      it 'should remember the mode' do
         expect(session.mode).to eq(mode)
       end
     end
 
-    describe "#reset!" do
-      it "freshly reset session should not be touched" do
+    describe '#reset!' do
+      it 'freshly reset session should not be touched' do
         session.instance_variable_set(:@touched, true)
         session.reset!
         expect(session.instance_variable_get(:@touched)).to eq false
       end
     end
 
-    describe "exit codes" do
+    describe 'exit codes' do
       before do
         @current_dir = Dir.getwd
         Dir.chdir(File.join(File.dirname(__FILE__), '..'))
@@ -38,14 +38,14 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         Dir.chdir(@current_dir)
       end
 
-      it "should have return code 1 when running selenium_driver_rspec_failure.rb" do
+      it 'should have return code 1 when running selenium_driver_rspec_failure.rb' do
         skip if headless_or_remote?
 
         system(@env, 'rspec spec/fixtures/selenium_driver_rspec_failure.rb', out: File::NULL, err: File::NULL)
         expect($CHILD_STATUS.exitstatus).to eq(1)
       end
 
-      it "should have return code 0 when running selenium_driver_rspec_success.rb" do
+      it 'should have return code 0 when running selenium_driver_rspec_success.rb' do
         skip if headless_or_remote?
 
         system(@env, 'rspec spec/fixtures/selenium_driver_rspec_success.rb', out: File::NULL, err: File::NULL)
@@ -53,16 +53,16 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
     end
 
-    describe "#accept_alert", requires: [:modals] do
-      it "supports a blockless mode" do
+    describe '#accept_alert', requires: [:modals] do
+      it 'supports a blockless mode' do
         session.visit('/with_js')
         session.click_link('Open alert')
         session.accept_alert
         expect { session.driver.browser.switch_to.alert }.to raise_error(session.driver.send(:modal_error))
       end
 
-      it "can be called before visiting" do
-        session.accept_alert "Initial alert" do
+      it 'can be called before visiting' do
+        session.accept_alert 'Initial alert' do
           session.visit('/initial_alert')
         end
         expect(session).to have_text('Initial alert page')
@@ -79,7 +79,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
     end
 
-    context "#fill_in with { :clear => :backspace } fill_option", requires: [:js] do
+    context '#fill_in with { :clear => :backspace } fill_option', requires: [:js] do
       before do
         # Firefox has an issue with change events if the main window doesn't think it's focused
         session.execute_script('window.focus()')
@@ -95,16 +95,14 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
 
       it 'should fill in a field, replacing an existing value, even with caret position' do
         session.visit('/form')
-        el = session.find(:css, '#form_first_name')
-        move_caret_to_the_beginning_js = <<-JS
+        session.find(:css, '#form_first_name').execute_script <<-JS
           this.focus();
           this.setSelectionRange(0, 0);
         JS
-        el.execute_script(move_caret_to_the_beginning_js)
 
         session.fill_in('form_first_name',
-          with: 'Harry',
-          fill_options: { clear: :backspace })
+                        with: 'Harry',
+                        fill_options: { clear: :backspace })
         expect(session.find(:fillable_field, 'form_first_name').value).to eq('Harry')
       end
 
@@ -146,7 +144,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
     end
 
-    context "#fill_in with { clear: :none } fill_options" do
+    context '#fill_in with { clear: :none } fill_options' do
       it 'should append to content in a field' do
         session.visit('/form')
         session.fill_in('form_first_name',
@@ -159,8 +157,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
     context  '#fill_in with Date' do
       before do
         session.visit('/form')
-        fd = session.find(:css, '#form_date')
-        fd.execute_script <<-JS
+        session.find(:css, '#form_date').execute_script <<-JS
           window.capybara_formDateFiredEvents = [];
           var fd = this;
           ['focus', 'input', 'change'].forEach(function(eventType) {
@@ -171,12 +168,12 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         session.find(:css, 'body').click
       end
 
-      it "should generate standard events on changing value" do
+      it 'should generate standard events on changing value' do
         session.fill_in('form_date', with: Date.today)
         expect(session.evaluate_script('window.capybara_formDateFiredEvents')).to eq %w[focus input change]
       end
 
-      it "should not generate input and change events if the value is not changed" do
+      it 'should not generate input and change events if the value is not changed' do
         session.fill_in('form_date', with: Date.today)
         session.fill_in('form_date', with: Date.today)
         # Chrome adds an extra focus for some reason - ok for now
@@ -184,7 +181,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
     end
 
-    context "#fill_in with { clear: Array } fill_options" do
+    context '#fill_in with { clear: Array } fill_options' do
       it 'should pass the array through to the element' do
         pending "selenium-webdriver/geckodriver doesn't support complex sets of characters" if marionette?(session)
         # this is mainly for use with [[:control, 'a'], :backspace] - however since that is platform dependant I'm testing with something less useful
@@ -196,53 +193,53 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
     end
 
-    describe "#path" do
-      it "returns xpath" do
+    describe '#path' do
+      it 'returns xpath' do
         # this is here because it is testing for an XPath that is specific to the algorithm used in the selenium driver
         session.visit('/path')
         element = session.find(:link, 'Second Link')
         expect(element.path).to eq('/HTML/BODY/DIV[2]/A[1]')
       end
 
-      it "handles namespaces" do
-        session.visit "/with_namespace"
-        rect = session.find(:css, "div svg rect")
+      it 'handles namespaces' do
+        session.visit '/with_namespace'
+        rect = session.find(:css, 'div svg rect')
         expect(rect.path).to eq("/HTML/BODY/DIV/./*[((local-name(.) = 'svg') and (namespace-uri(.) = 'http://www.w3.org/2000/svg'))]/./*[((local-name(.) = 'rect') and (namespace-uri(.) = 'http://www.w3.org/2000/svg'))][1]")
         expect(session.find(:xpath, rect.path)).to eq rect
       end
 
-      it "handles case sensitive element names" do
-        session.visit "/with_namespace"
-        els = session.all(:css, "div *", visible: :all)
+      it 'handles case sensitive element names' do
+        session.visit '/with_namespace'
+        els = session.all(:css, 'div *', visible: :all)
         expect { els.map(&:path) }.not_to raise_error
-        lg = session.find(:css, "div linearGradient", visible: :all)
+        lg = session.find(:css, 'div linearGradient', visible: :all)
         expect(session.find(:xpath, lg.path, visible: :all)).to eq lg
       end
     end
 
-    describe "all with disappearing elements" do
-      it "ignores stale elements in results" do
+    describe 'all with disappearing elements' do
+      it 'ignores stale elements in results' do
         session.visit('/path')
         elements = session.all(:link) { |_node| raise Selenium::WebDriver::Error::StaleElementReferenceError }
         expect(elements.size).to eq 0
       end
     end
 
-    describe "#evaluate_script" do
-      it "can return an element" do
+    describe '#evaluate_script' do
+      it 'can return an element' do
         session.visit('/form')
         element = session.evaluate_script("document.getElementById('form_title')")
         expect(element).to eq session.find(:id, 'form_title')
       end
 
-      it "can return arrays of nested elements" do
+      it 'can return arrays of nested elements' do
         session.visit('/form')
         elements = session.evaluate_script('document.querySelectorAll("#form_city option")')
         expect(elements).to all(be_instance_of Capybara::Node::Element)
         expect(elements).to eq session.find(:css, '#form_city').all(:css, 'option').to_a
       end
 
-      it "can return hashes with elements" do
+      it 'can return hashes with elements' do
         session.visit('/form')
         result = session.evaluate_script("{ a: document.getElementById('form_title'), b: {c: document.querySelectorAll('#form_city option')}}")
         expect(result).to eq(
@@ -253,31 +250,31 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         )
       end
 
-      describe "#evaluate_async_script" do
-        it "will timeout if the script takes too long" do
+      describe '#evaluate_async_script' do
+        it 'will timeout if the script takes too long' do
           session.visit('/with_js')
           expect do
             session.using_wait_time(1) do
-              session.evaluate_async_script("var cb = arguments[0]; setTimeout(function(){ cb(null) }, 3000)")
+              session.evaluate_async_script('var cb = arguments[0]; setTimeout(function(){ cb(null) }, 3000)')
             end
           end.to raise_error Selenium::WebDriver::Error::ScriptTimeoutError
         end
       end
     end
 
-    describe "Element#inspect" do
-      it "outputs obsolete elements" do
+    describe 'Element#inspect' do
+      it 'outputs obsolete elements' do
         session.visit('/form')
         el = session.find(:button, 'Click me!').click
         expect(session).to have_no_button('Click me!')
         allow(el).to receive(:synchronize)
-        expect(el.inspect).to eq "Obsolete #<Capybara::Node::Element>"
+        expect(el.inspect).to eq 'Obsolete #<Capybara::Node::Element>'
         expect(el).not_to have_received(:synchronize)
       end
     end
 
-    describe "Element#click" do
-      it "should handle fixed headers/footers" do
+    describe 'Element#click' do
+      it 'should handle fixed headers/footers' do
         session.visit('/with_fixed_header_footer')
         # session.click_link('Go to root')
         session.find(:link, 'Go to root').click
@@ -285,7 +282,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
     end
 
-    context "Windows" do
+    context 'Windows' do
       it "can't close the primary window" do
         expect do
           session.current_window.close
@@ -293,7 +290,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
       end
     end
 
-    context "AnimationDisabler" do
+    context 'AnimationDisabler' do
       before(:context) do # rubocop:disable RSpec/BeforeAfterAll
         Capybara.disable_animation = true
         @animation_session = Capybara::Session.new(session.mode, TestApp.new)
@@ -303,13 +300,13 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         Capybara.disable_animation = false
       end
 
-      it "should disable CSS transitions" do
+      it 'should disable CSS transitions' do
         @animation_session.visit('with_animation')
         @animation_session.click_link('transition me away')
         expect(@animation_session).to have_no_link('transition me away', wait: 0.5)
       end
 
-      it "should disable CSS animations" do
+      it 'should disable CSS animations' do
         @animation_session.visit('with_animation')
         @animation_session.click_link('animate me away')
         expect(@animation_session).to have_no_link('animate me away', wait: 0.5)

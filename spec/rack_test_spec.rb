@@ -19,7 +19,7 @@ skipped_tests = %i[
   download
   css
 ]
-Capybara::SpecHelper.run_specs TestSessions::RackTest, "RackTest", capybara_skip: skipped_tests
+Capybara::SpecHelper.run_specs TestSessions::RackTest, 'RackTest', capybara_skip: skipped_tests
 
 RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
   context 'with rack test driver' do
@@ -28,36 +28,36 @@ RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
     end
 
     describe '#driver' do
-      it "should be a rack test driver" do
+      it 'should be a rack test driver' do
         expect(@session.driver).to be_an_instance_of(Capybara::RackTest::Driver)
       end
     end
 
     describe '#mode' do
-      it "should remember the mode" do
+      it 'should remember the mode' do
         expect(@session.mode).to eq(:rack_test)
       end
     end
 
     describe '#click_link' do
-      it "should use data-method if option is true" do
+      it 'should use data-method if option is true' do
         @session.driver.options[:respect_data_method] = true
-        @session.visit "/with_html"
-        @session.click_link "A link with data-method"
+        @session.visit '/with_html'
+        @session.click_link 'A link with data-method'
         expect(@session.html).to include('The requested object was deleted')
       end
 
-      it "should not use data-method if option is false" do
+      it 'should not use data-method if option is false' do
         @session.driver.options[:respect_data_method] = false
-        @session.visit "/with_html"
-        @session.click_link "A link with data-method"
+        @session.visit '/with_html'
+        @session.click_link 'A link with data-method'
         expect(@session.html).to include('Not deleted')
       end
 
       it "should use data-method if available even if it's capitalized" do
         @session.driver.options[:respect_data_method] = true
-        @session.visit "/with_html"
-        @session.click_link "A link with capitalized data-method"
+        @session.visit '/with_html'
+        @session.click_link 'A link with capitalized data-method'
         expect(@session.html).to include('The requested object was deleted')
       end
 
@@ -66,38 +66,38 @@ RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
       end
     end
 
-    describe "#fill_in" do
-      it "should warn that :fill_options are not supported" do
+    describe '#fill_in' do
+      it 'should warn that :fill_options are not supported' do
         allow_any_instance_of(Capybara::RackTest::Node).to receive(:warn)
-        @session.visit "/with_html"
+        @session.visit '/with_html'
         field = @session.fill_in 'test_field', with: 'not_monkey', fill_options: { random: true }
         expect(@session).to have_field('test_field', with: 'not_monkey')
         expect(field.base).to have_received(:warn).with("Options passed to Node#set but the RackTest driver doesn't support any - ignoring")
       end
     end
 
-    describe "#attach_file" do
-      context "with multipart form" do
-        it "should submit an empty form-data section if no file is submitted" do
-          @session.visit("/form")
-          @session.click_button("Upload Empty")
+    describe '#attach_file' do
+      context 'with multipart form' do
+        it 'should submit an empty form-data section if no file is submitted' do
+          @session.visit('/form')
+          @session.click_button('Upload Empty')
           expect(@session.html).to include('Successfully ignored empty file field.')
         end
       end
 
-      it "should not submit an obsolete mime type" do
+      it 'should not submit an obsolete mime type' do
         @test_jpg_file_path = File.expand_path('fixtures/capybara.csv', File.dirname(__FILE__))
-        @session.visit("/form")
-        @session.attach_file "form_document", @test_jpg_file_path
+        @session.visit('/form')
+        @session.attach_file 'form_document', @test_jpg_file_path
         @session.click_button('Upload Single')
-        expect(@session).to have_content("Content-type: text/csv")
+        expect(@session).to have_content('Content-type: text/csv')
       end
     end
 
-    describe "#click" do
-      context "on a label" do
-        it "should toggle the associated checkbox" do
-          @session.visit("/form")
+    describe '#click' do
+      context 'on a label' do
+        it 'should toggle the associated checkbox' do
+          @session.visit('/form')
           expect(@session).to have_unchecked_field('form_pets_cat')
           @session.find(:label, 'Cat').click
           expect(@session).to have_checked_field('form_pets_cat')
@@ -107,8 +107,8 @@ RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
           expect(@session).to have_checked_field('form_cars_mclaren', visible: :hidden)
         end
 
-        it "should toggle the associated radio" do
-          @session.visit("/form")
+        it 'should toggle the associated radio' do
+          @session.visit('/form')
           expect(@session).to have_unchecked_field('gender_male')
           @session.find(:label, 'Male').click
           expect(@session).to have_checked_field('gender_male')
@@ -119,7 +119,7 @@ RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
     end
 
     describe '#text' do
-      it "should return original text content for textareas" do
+      it 'should return original text content for textareas' do
         @session.visit('/with_html')
         @session.find_field('normal', type: 'textarea', with: 'banana').set('hello')
         normal = @session.find(:css, '#normal')
@@ -129,7 +129,7 @@ RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
     end
 
     describe '#style' do
-      it "should raise an error" do
+      it 'should raise an error' do
         @session.visit('/with_html')
         el = @session.find(:css, '#first')
         expect { el.style('display') }.to raise_error NotImplementedError, /not process CSS/
@@ -172,7 +172,7 @@ RSpec.describe Capybara::RackTest::Driver do
   end
 
   describe ':follow_redirects option' do
-    it "defaults to following redirects" do
+    it 'defaults to following redirects' do
       @driver = Capybara::RackTest::Driver.new(TestApp)
 
       @driver.visit('/redirect')
@@ -180,7 +180,7 @@ RSpec.describe Capybara::RackTest::Driver do
       expect(@driver.current_url).to match %r{/landed$}
     end
 
-    it "is possible to not follow redirects" do
+    it 'is possible to not follow redirects' do
       @driver = Capybara::RackTest::Driver.new(TestApp, follow_redirects: false)
 
       @driver.visit('/redirect')
@@ -190,36 +190,36 @@ RSpec.describe Capybara::RackTest::Driver do
   end
 
   describe ':redirect_limit option' do
-    context "with default redirect limit" do
+    context 'with default redirect limit' do
       before do
         @driver = Capybara::RackTest::Driver.new(TestApp)
       end
 
-      it "should follow 5 redirects" do
-        @driver.visit("/redirect/5/times")
+      it 'should follow 5 redirects' do
+        @driver.visit('/redirect/5/times')
         expect(@driver.html).to include('redirection complete')
       end
 
-      it "should not follow more than 6 redirects" do
+      it 'should not follow more than 6 redirects' do
         expect do
-          @driver.visit("/redirect/6/times")
+          @driver.visit('/redirect/6/times')
         end.to raise_error(Capybara::InfiniteRedirectError)
       end
     end
 
-    context "with 21 redirect limit" do
+    context 'with 21 redirect limit' do
       before do
         @driver = Capybara::RackTest::Driver.new(TestApp, redirect_limit: 21)
       end
 
-      it "should follow 21 redirects" do
-        @driver.visit("/redirect/21/times")
+      it 'should follow 21 redirects' do
+        @driver.visit('/redirect/21/times')
         expect(@driver.html).to include('redirection complete')
       end
 
-      it "should not follow more than 21 redirects" do
+      it 'should not follow more than 21 redirects' do
         expect do
-          @driver.visit("/redirect/22/times")
+          @driver.visit('/redirect/22/times')
         end.to raise_error(Capybara::InfiniteRedirectError)
       end
     end
@@ -235,7 +235,7 @@ end
 RSpec.describe Capybara::RackTest::CSSHandlers do
   include CSSHandlerIncludeTester
 
-  it "should not be extended by global includes" do
+  it 'should not be extended by global includes' do
     expect(Capybara::RackTest::CSSHandlers.new).not_to respond_to(:dont_extend_css_handler)
   end
 end

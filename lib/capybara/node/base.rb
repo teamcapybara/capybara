@@ -86,7 +86,7 @@ module Capybara
             raise e unless driver.wait? && catch_error?(e, errors)
             raise e if timer.expired?
             sleep(0.05)
-            raise Capybara::FrozenInTime, "Time appears to be frozen. Capybara does not work with libraries which freeze time, consider using time travelling instead" if timer.stalled?
+            raise Capybara::FrozenInTime, 'Time appears to be frozen. Capybara does not work with libraries which freeze time, consider using time travelling instead' if timer.stalled?
             reload if session_options.automatic_reload
             retry
           ensure

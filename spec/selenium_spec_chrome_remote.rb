@@ -17,13 +17,13 @@ def ensure_selenium_running!
   timer = Capybara::Helpers.timer(expire_in: 20)
   begin
     TCPSocket.open(selenium_host, selenium_port)
-  rescue
+  rescue StandardError
     if timer.expired?
       raise 'Selenium is not running. ' \
           "You can run a selenium server easily with: \n" \
           '  $ docker-compose up -d selenium_chrome'
     else
-      puts "Waiting for Selenium docker instance..."
+      puts 'Waiting for Selenium docker instance...'
       sleep 1
       retry
     end
@@ -65,9 +65,9 @@ Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_REMOTE_DRIVER.to_s, 
   end
 end
 
-RSpec.describe "Capybara::Session with remote Chrome" do
+RSpec.describe 'Capybara::Session with remote Chrome' do
   include Capybara::SpecHelper
-  include_examples  "Capybara::Session", TestSessions::Chrome, CHROME_REMOTE_DRIVER
+  include_examples  'Capybara::Session', TestSessions::Chrome, CHROME_REMOTE_DRIVER
   include_examples  Capybara::RSpecMatchers, TestSessions::Chrome, CHROME_REMOTE_DRIVER
 
   it 'is considered to be chrome' do

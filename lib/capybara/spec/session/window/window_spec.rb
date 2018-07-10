@@ -21,7 +21,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
       end
     end
 
-    it "should become false after window was closed" do
+    it 'should become false after window was closed' do
       expect do
         @session.switch_to_window @other_window
         @other_window.close
@@ -30,7 +30,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
   end
 
   describe '#closed?' do
-    it "should become true after window was closed" do
+    it 'should become true after window was closed' do
       @other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
@@ -89,7 +89,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
 
   describe '#size' do
     def win_size
-      @session.evaluate_script("[window.outerWidth || window.innerWidth, window.outerHeight || window.innerHeight]")
+      @session.evaluate_script('[window.outerWidth || window.innerWidth, window.outerHeight || window.innerHeight]')
     end
 
     it 'should return size of whole window', requires: %i[windows js] do
@@ -195,7 +195,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
       sleep 0.5
     end
 
-    it "should be able to fullscreen the window" do
+    it 'should be able to fullscreen the window' do
       expect do
         @session.current_window.fullscreen
       end.not_to raise_error

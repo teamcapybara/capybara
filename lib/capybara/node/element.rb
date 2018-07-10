@@ -82,7 +82,7 @@ module Capybara
       #
       def style(*styles)
         styles = styles.flatten.map(&:to_s)
-        raise ArgumentError, "You must specify at least one CSS style" if styles.empty?
+        raise ArgumentError, 'You must specify at least one CSS style' if styles.empty?
         begin
           synchronize { base.style(styles) }
         rescue NotImplementedError => e

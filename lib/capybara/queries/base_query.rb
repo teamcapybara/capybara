@@ -73,15 +73,16 @@ module Capybara
       end
 
       def count_message
-        message = +""
-        if options[:count]
-          message << " #{options[:count]} #{Capybara::Helpers.declension('time', 'times', options[:count])}"
-        elsif options[:between]
-          message << " between #{options[:between].first} and #{options[:between].last} times"
-        elsif options[:maximum]
-          message << " at most #{options[:maximum]} #{Capybara::Helpers.declension('time', 'times', options[:maximum])}"
-        elsif options[:minimum]
-          message << " at least #{options[:minimum]} #{Capybara::Helpers.declension('time', 'times', options[:minimum])}"
+        message = +''
+        count, between, maximum, minimum = options.values_at(:count, :between, :maximum, :minimum)
+        if count
+          message << " #{count} #{Capybara::Helpers.declension('time', 'times', count)}"
+        elsif between
+          message << " between #{between.first} and #{between.last} times"
+        elsif maximum
+          message << " at most #{maximum} #{Capybara::Helpers.declension('time', 'times', maximum)}"
+        elsif minimum
+          message << " at least #{minimum} #{Capybara::Helpers.declension('time', 'times', minimum)}"
         end
         message
       end
@@ -90,8 +91,8 @@ module Capybara
         invalid_keys = @options.keys - valid_keys
         return if invalid_keys.empty?
 
-        invalid_names = invalid_keys.map(&:inspect).join(", ")
-        valid_names = valid_keys.map(&:inspect).join(", ")
+        invalid_names = invalid_keys.map(&:inspect).join(', ')
+        valid_names = valid_keys.map(&:inspect).join(', ')
         raise ArgumentError, "invalid keys #{invalid_names}, should be one of #{valid_names}"
       end
     end

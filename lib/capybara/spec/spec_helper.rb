@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require "rspec"
-require "rspec/expectations"
-require "capybara"
-require "capybara/rspec" # Required here instead of in rspec_spec to avoid RSpec deprecation warning
-require "capybara/spec/test_app"
-require "nokogiri"
+require 'rspec'
+require 'rspec/expectations'
+require 'capybara'
+require 'capybara/rspec' # Required here instead of in rspec_spec to avoid RSpec deprecation warning
+require 'capybara/spec/test_app'
+require 'nokogiri'
 
 Capybara.save_path = File.join(Dir.pwd, 'save_path_tmp')
 
@@ -152,4 +152,4 @@ module Capybara
   end
 end
 
-Dir[File.dirname(__FILE__) + "/session/**/*.rb"].each { |file| require_relative file }
+Dir[File.dirname(__FILE__) + '/session/**/*.rb'].each { |file| require_relative file }

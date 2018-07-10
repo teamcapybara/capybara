@@ -31,10 +31,10 @@ module Capybara
       def label; selector.label || selector.name; end
 
       def description(applied = false)
-        @description = +""
+        @description = +''
         if !applied || @applied_filters
-          @description << "visible " if visible == :visible
-          @description << "non-visible " if visible == :hidden
+          @description << 'visible ' if visible == :visible
+          @description << 'non-visible ' if visible == :hidden
         end
         @description << "#{label} #{locator.inspect}"
         if !applied || @applied_filters
@@ -44,7 +44,7 @@ module Capybara
         @description << " with id #{options[:id]}" if options[:id]
         @description << " with classes [#{Array(options[:class]).join(',')}]" if options[:class]
         @description << selector.description(skip_node_filters: applied && (@applied_filters != :node), **options)
-        @description << " that also matches the custom filter block" if @filter_block && (!applied || (@applied_filters == :node))
+        @description << ' that also matches the custom filter block' if @filter_block && (!applied || (@applied_filters == :node))
         @description << " within #{@resolved_node.inspect}" if describe_within?
         @description
       end
@@ -203,8 +203,8 @@ module Capybara
         end
 
         return if unhandled_options.empty?
-        invalid_names = unhandled_options.map(&:inspect).join(", ")
-        valid_names = valid_keys.map(&:inspect).join(", ")
+        invalid_names = unhandled_options.map(&:inspect).join(', ')
+        valid_names = valid_keys.map(&:inspect).join(', ')
         raise ArgumentError, "invalid keys #{invalid_names}, should be one of #{valid_names}"
       end
 
@@ -238,10 +238,10 @@ module Capybara
         process_class = options.key?(:class) && !custom_keys.include?(:class)
 
         if process_id && options[:id].is_a?(XPath::Expression)
-          raise ArgumentError, "XPath expressions are not supported for the :id filter with CSS based selectors"
+          raise ArgumentError, 'XPath expressions are not supported for the :id filter with CSS based selectors'
         end
         if process_class && options[:class].is_a?(XPath::Expression)
-          raise ArgumentError, "XPath expressions are not supported for the :class filter with CSS based selectors"
+          raise ArgumentError, 'XPath expressions are not supported for the :class filter with CSS based selectors'
         end
 
         if process_id || process_class
@@ -249,7 +249,7 @@ module Capybara
             sel += "##{::Capybara::Selector::CSS.escape(options[:id])}" if process_id
             sel += css_from_classes(Array(options[:class])) if process_class
             sel
-          end.join(", ")
+          end.join(', ')
         end
 
         expr

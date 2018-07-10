@@ -15,8 +15,8 @@ Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
     @session.switch_to_window(@window)
   end
 
-  let(:zero_windows_message) { "block passed to #window_opened_by opened 0 windows instead of 1" }
-  let(:two_windows_message) { "block passed to #window_opened_by opened 2 windows instead of 1" }
+  let(:zero_windows_message) { 'block passed to #window_opened_by opened 0 windows instead of 1' }
+  let(:two_windows_message) { 'block passed to #window_opened_by opened 2 windows instead of 1' }
 
   context 'with :wait option' do
     it 'should raise error if value of :wait is less than timeout' do

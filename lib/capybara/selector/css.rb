@@ -5,7 +5,7 @@ module Capybara
     class CSS
       def self.escape(str)
         value = str.dup
-        out = +""
+        out = +''
         out << value.slice!(0...1) if value =~ /^[-_]/
         out << (value[0] =~ NMSTART ? value.slice!(0...1) : escape_char(value.slice!(0...1)))
         out << value.gsub(/[^a-zA-Z0-9_-]/) { |c| escape_char c }
@@ -13,7 +13,7 @@ module Capybara
       end
 
       def self.escape_char(c)
-        c =~ %r{[ -/:-~]} ? "\\#{c}" : format("\\%06x", c.ord)
+        c =~ %r{[ -/:-~]} ? "\\#{c}" : format('\\%06x', c.ord)
       end
 
       def self.split(css)
@@ -31,7 +31,7 @@ module Capybara
         def split(css)
           selectors = []
           StringIO.open(css) do |str|
-            selector = ""
+            selector = ''
             while (c = str.getc)
               case c
               when '['
@@ -44,7 +44,7 @@ module Capybara
                 selector += c + str.getc
               when ','
                 selectors << selector.strip
-                selector = ""
+                selector = ''
               else
                 selector += c
               end

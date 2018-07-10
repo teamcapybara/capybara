@@ -36,9 +36,9 @@ class MinitestTest < Minitest::Test
 
   def test_assert_xpath
     assert_xpath('.//select[@id="form_title"]')
-    assert_xpath('.//select', count: 1) { |el| el[:id] == "form_title" }
+    assert_xpath('.//select', count: 1) { |el| el[:id] == 'form_title' }
     assert_no_xpath('.//select[@id="not_form_title"]')
-    assert_no_xpath('.//select') { |el| el[:id] == "not_form_title" }
+    assert_no_xpath('.//select') { |el| el[:id] == 'not_form_title' }
     refute_xpath('.//select[@id="not_form_title"]')
   end
 
@@ -126,12 +126,12 @@ RSpec.describe 'capybara/minitest' do
     Capybara.app = TestApp
   end
 
-  it "should support minitest" do
+  it 'should support minitest' do
     output = StringIO.new
     reporter = Minitest::SummaryReporter.new(output)
     reporter.start
     MinitestTest.run reporter, {}
     reporter.report
-    expect(output.string).to include("18 runs, 44 assertions, 0 failures, 0 errors, 1 skips")
+    expect(output.string).to include('18 runs, 44 assertions, 0 failures, 0 errors, 1 skips')
   end
 end

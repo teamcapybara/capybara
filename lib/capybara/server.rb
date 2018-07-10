@@ -18,7 +18,7 @@ module Capybara
     attr_reader :app, :port, :host
 
     def initialize(app, *deprecated_options, port: Capybara.server_port, host: Capybara.server_host, reportable_errors: Capybara.server_errors, extra_middleware: [])
-      warn "Positional arguments, other than the application, to Server#new are deprecated, please use keyword arguments" unless deprecated_options.empty?
+      warn 'Positional arguments, other than the application, to Server#new are deprecated, please use keyword arguments' unless deprecated_options.empty?
       @app = app
       @extra_middleware = extra_middleware
       @server_thread = nil # suppress warnings
@@ -56,7 +56,7 @@ module Capybara
     def wait_for_pending_requests
       timer = Capybara::Helpers.timer(expire_in: 60)
       while pending_requests?
-        raise "Requests did not finish in 60 seconds" if timer.expired?
+        raise 'Requests did not finish in 60 seconds' if timer.expired?
         sleep 0.01
       end
     end
@@ -71,7 +71,7 @@ module Capybara
 
         timer = Capybara::Helpers.timer(expire_in: 60)
         until responsive?
-          raise "Rack application timed out during boot" if timer.expired?
+          raise 'Rack application timed out during boot' if timer.expired?
           @server_thread.join(0.1)
         end
       end

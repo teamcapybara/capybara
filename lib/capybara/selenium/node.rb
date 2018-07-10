@@ -6,11 +6,11 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def all_text
-    text = driver.execute_script("return arguments[0].textContent", self)
+    text = driver.execute_script('return arguments[0].textContent', self)
     text.gsub(/[\u200b\u200e\u200f]/, '')
         .gsub(/[\ \n\f\t\v\u2028\u2029]+/, ' ')
-        .gsub(/\A[[:space:]&&[^\u00a0]]+/, "")
-        .gsub(/[[:space:]&&[^\u00a0]]+\z/, "")
+        .gsub(/\A[[:space:]&&[^\u00a0]]+/, '')
+        .gsub(/[[:space:]&&[^\u00a0]]+\z/, '')
         .tr("\u00a0", ' ')
   end
 
@@ -21,8 +21,8 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def value
-    if tag_name == "select" && multiple?
-      native.find_elements(:css, "option:checked").map { |n| n[:value] || n.text }
+    if tag_name == 'select' && multiple?
+      native.find_elements(:css, 'option:checked').map { |n| n[:value] || n.text }
     else
       native[:value]
     end
@@ -78,7 +78,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def unselect_option
-    raise Capybara::UnselectNotAllowed, "Cannot unselect option from single select box." unless select_node.multiple?
+    raise Capybara::UnselectNotAllowed, 'Cannot unselect option from single select box.' unless select_node.multiple?
     native.click if selected?
   end
 
@@ -142,7 +142,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def disabled?
     return true unless native.enabled?
     # WebDriver only defines `disabled?` for form controls but fieldset makes sense too
-    tag_name == 'fieldset' && find_xpath("ancestor-or-self::fieldset[@disabled]").any?
+    tag_name == 'fieldset' && find_xpath('ancestor-or-self::fieldset[@disabled]').any?
   end
 
   def content_editable?
@@ -191,7 +191,7 @@ private
   end
 
   def boolean_attr(val)
-    val && (val != "false")
+    val && (val != 'false')
   end
 
   # a reference to the select node if this is an option node

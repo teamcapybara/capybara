@@ -3,8 +3,8 @@
 require 'spec_helper'
 
 RSpec.describe Capybara::Server do
-  it "should spool up a rack server" do
-    @app = proc { |_env| [200, {}, ["Hello Server!"]] }
+  it 'should spool up a rack server' do
+    @app = proc { |_env| [200, {}, ['Hello Server!']] }
     @server = Capybara::Server.new(@app).boot
 
     @res = Net::HTTP.start(@server.host, @server.port) { |http| http.get('/') }
@@ -12,14 +12,16 @@ RSpec.describe Capybara::Server do
     expect(@res.body).to include('Hello Server')
   end
 
-  it "should do nothing when no server given" do
+  it 'should do nothing when no server given' do
     expect do
       @server = Capybara::Server.new(nil).boot
     end.not_to raise_error
   end
 
-  it "should bind to the specified host" do
+  it 'should bind to the specified host' do
     # TODO: travis with jruby in container mode has an issue with this test
+    skip 'This platform has an issue with this test' if (ENV['TRAVIS'] && (RUBY_ENGINE == 'jruby')) || Gem.win_platform?
+
     begin
       app = proc { |_env| [200, {}, ['Hello Server!']] }
 
@@ -35,12 +37,12 @@ RSpec.describe Capybara::Server do
     ensure
       Capybara.server_host = nil
     end
-  end unless (ENV['TRAVIS'] && (RUBY_ENGINE == 'jruby')) || Gem.win_platform?
+  end
 
-  it "should use specified port" do
+  it 'should use specified port' do
     Capybara.server_port = 22789
 
-    @app = proc { |_env| [200, {}, ["Hello Server!"]] }
+    @app = proc { |_env| [200, {}, ['Hello Server!']] }
     @server = Capybara::Server.new(@app).boot
 
     @res = Net::HTTP.start(@server.host, 22789) { |http| http.get('/') }
@@ -49,8 +51,8 @@ RSpec.describe Capybara::Server do
     Capybara.server_port = nil
   end
 
-  it "should use given port" do
-    @app = proc { |_env| [200, {}, ["Hello Server!"]] }
+  it 'should use given port' do
+    @app = proc { |_env| [200, {}, ['Hello Server!']] }
     @server = Capybara::Server.new(@app, port: 22790).boot
 
     @res = Net::HTTP.start(@server.host, 22790) { |http| http.get('/') }
@@ -59,9 +61,9 @@ RSpec.describe Capybara::Server do
     Capybara.server_port = nil
   end
 
-  it "should find an available port" do
-    @app1 = proc { |_env| [200, {}, ["Hello Server!"]] }
-    @app2 = proc { |_env| [200, {}, ["Hello Second Server!"]] }
+  it 'should find an available port' do
+    @app1 = proc { |_env| [200, {}, ['Hello Server!']] }
+    @app2 = proc { |_env| [200, {}, ['Hello Second Server!']] }
 
     @server1 = Capybara::Server.new(@app1).boot
     @server2 = Capybara::Server.new(@app2).boot
@@ -73,10 +75,10 @@ RSpec.describe Capybara::Server do
     expect(@res2.body).to include('Hello Second Server')
   end
 
-  it "should support SSL" do
+  it 'should support SSL' do
     begin
-      key = File.join(Dir.pwd, "spec", "fixtures", "key.pem")
-      cert = File.join(Dir.pwd, "spec", "fixtures", "certificate.pem")
+      key = File.join(Dir.pwd, 'spec', 'fixtures', 'key.pem')
+      cert = File.join(Dir.pwd, 'spec', 'fixtures', 'certificate.pem')
       Capybara.server = :puma, { Host: "ssl://#{Capybara.server_host}?key=#{key}&cert=#{cert}" }
       app = proc { |_env| [200, {}, ['Hello SSL Server!']] }
       server = Capybara::Server.new(app).boot
@@ -95,7 +97,7 @@ RSpec.describe Capybara::Server do
     end
   end
 
-  context "When Capybara.reuse_server is true" do
+  context 'When Capybara.reuse_server is true' do
     before do
       @old_reuse_server = Capybara.reuse_server
       Capybara.reuse_server = true
@@ -105,8 +107,8 @@ RSpec.describe Capybara::Server do
       Capybara.reuse_server = @old_reuse_server
     end
 
-    it "should use the existing server if it already running" do
-      @app = proc { |_env| [200, {}, ["Hello Server!"]] }
+    it 'should use the existing server if it already running' do
+      @app = proc { |_env| [200, {}, ['Hello Server!']] }
 
       @server1 = Capybara::Server.new(@app).boot
       @server2 = Capybara::Server.new(@app).boot
@@ -120,14 +122,14 @@ RSpec.describe Capybara::Server do
       expect(@server1.port).to eq(@server2.port)
     end
 
-    it "detects and waits for all reused server sessions pending requests" do
+    it 'detects and waits for all reused server sessions pending requests' do
       done = 0
 
       app = proc do |env|
         request = Rack::Request.new(env)
         sleep request.params['wait_time'].to_f
         done += 1
-        [200, {}, ["Hello Server!"]]
+        [200, {}, ['Hello Server!']]
       end
 
       server1 = Capybara::Server.new(app).boot
@@ -142,7 +144,7 @@ RSpec.describe Capybara::Server do
     end
   end
 
-  context "When Capybara.reuse_server is false" do
+  context 'When Capybara.reuse_server is false' do
     before do
       @old_reuse_server = Capybara.reuse_server
       Capybara.reuse_server = false
@@ -152,8 +154,8 @@ RSpec.describe Capybara::Server do
       Capybara.reuse_server = @old_reuse_server
     end
 
-    it "should not reuse an already running server" do
-      @app = proc { |_env| [200, {}, ["Hello Server!"]] }
+    it 'should not reuse an already running server' do
+      @app = proc { |_env| [200, {}, ['Hello Server!']] }
 
       @server1 = Capybara::Server.new(@app).boot
       @server2 = Capybara::Server.new(@app).boot
@@ -167,14 +169,14 @@ RSpec.describe Capybara::Server do
       expect(@server1.port).not_to eq(@server2.port)
     end
 
-    it "detects and waits for only one sessions pending requests" do
+    it 'detects and waits for only one sessions pending requests' do
       done = 0
 
       app = proc do |env|
         request = Rack::Request.new(env)
         sleep request.params['wait_time'].to_f
         done += 1
-        [200, {}, ["Hello Server!"]]
+        [200, {}, ['Hello Server!']]
       end
 
       server1 = Capybara::Server.new(app).boot
@@ -192,7 +194,7 @@ RSpec.describe Capybara::Server do
     end
   end
 
-  it "should raise server errors when the server errors before the timeout" do
+  it 'should raise server errors when the server errors before the timeout' do
     begin
       Capybara.register_server :kaboom do
         sleep 0.1
@@ -208,7 +210,7 @@ RSpec.describe Capybara::Server do
     end
   end
 
-  it "is not #responsive? when Net::HTTP raises a SystemCallError" do
+  it 'is not #responsive? when Net::HTTP raises a SystemCallError' do
     app = -> { [200, {}, ['Hello, world']] }
     server = Capybara::Server.new(app)
     allow(Net::HTTP).to receive(:start).and_raise(SystemCallError.allocate)

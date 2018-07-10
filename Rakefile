@@ -5,7 +5,7 @@ require 'rspec/core/rake_task'
 require 'cucumber/rake/task'
 require 'yard'
 
-desc "Run all examples with Firefox non-marionette"
+desc 'Run all examples with Firefox non-marionette'
 
 rspec_opts = %w[--color]
 

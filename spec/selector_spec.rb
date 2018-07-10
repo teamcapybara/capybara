@@ -61,17 +61,17 @@ RSpec.describe Capybara do
       end
     end
 
-    it "supports `filter` as an alias for `node_filter`" do
+    it 'supports `filter` as an alias for `node_filter`' do
       expect do
         Capybara.add_selector :filter_alias_selector do
-          css { |_unused| "div" }
+          css { |_unused| 'div' }
           filter(:something) { |_node, _value| true }
         end
       end.not_to raise_error
     end
 
-    describe "adding a selector" do
-      it "can set default visiblity" do
+    describe 'adding a selector' do
+      it 'can set default visiblity' do
         Capybara.add_selector :hidden_field do
           visible :hidden
           css { |_sel| 'input[type="hidden"]' }
@@ -82,8 +82,8 @@ RSpec.describe Capybara do
       end
     end
 
-    describe "modify_selector" do
-      it "allows modifying a selector" do
+    describe 'modify_selector' do
+      it 'allows modifying a selector' do
         el = string.find(:custom_selector, 'a')
         expect(el.tag_name).to eq 'div'
         Capybara.modify_selector :custom_selector do
@@ -103,21 +103,21 @@ RSpec.describe Capybara do
       end
     end
 
-    describe "builtin selectors" do
-      context "when locator is nil" do
-        it "devolves to just finding element types" do
+    describe 'builtin selectors' do
+      context 'when locator is nil' do
+        it 'devolves to just finding element types' do
           selectors = {
             field: ".//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')]",
-            fieldset: ".//fieldset",
-            link: ".//a[./@href]",
+            fieldset: './/fieldset',
+            link: './/a[./@href]',
             link_or_button: ".//a[./@href] | .//input[./@type = 'submit' or ./@type = 'reset' or ./@type = 'image' or ./@type = 'button'] | .//button",
             fillable_field: ".//*[self::input | self::textarea][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'radio' or ./@type = 'checkbox' or ./@type = 'hidden' or ./@type = 'file')]",
             radio_button: ".//input[./@type = 'radio']",
             checkbox: ".//input[./@type = 'checkbox']",
-            select: ".//select",
-            option: ".//option",
+            select: './/select',
+            option: './/option',
             file_field: ".//input[./@type = 'file']",
-            table: ".//table"
+            table: './/table'
           }
           selectors.each do |selector, xpath|
             results = string.all(selector, nil).to_a.map(&:native)
@@ -127,53 +127,53 @@ RSpec.describe Capybara do
         end
       end
 
-      context "with :id option" do
-        it "works with compound css selectors" do
-          expect(string.all(:custom_css_selector, "div, h1", id: 'page').size).to eq 1
-          expect(string.all(:custom_css_selector, "h1, div", id: 'page').size).to eq 1
+      context 'with :id option' do
+        it 'works with compound css selectors' do
+          expect(string.all(:custom_css_selector, 'div, h1', id: 'page').size).to eq 1
+          expect(string.all(:custom_css_selector, 'h1, div', id: 'page').size).to eq 1
         end
 
         it "works with 'special' characters" do
-          expect(string.find(:custom_css_selector, "div", id: "#special")[:id]).to eq '#special'
-          expect(string.find(:custom_css_selector, "input", id: "2checkbox")[:id]).to eq '2checkbox'
+          expect(string.find(:custom_css_selector, 'div', id: '#special')[:id]).to eq '#special'
+          expect(string.find(:custom_css_selector, 'input', id: '2checkbox')[:id]).to eq '2checkbox'
         end
 
-        it "accepts XPath expression for xpath based selectors" do
+        it 'accepts XPath expression for xpath based selectors' do
           expect(string.find(:custom_xpath_selector, './/div', id: XPath.contains('peci'))[:id]).to eq '#special'
           expect(string.find(:custom_xpath_selector, './/input', id: XPath.ends_with('box'))[:id]).to eq '2checkbox'
         end
 
-        it "errors XPath expression for CSS based selectors" do
-          expect { string.find(:custom_css_selector, "div", id: XPath.contains('peci')) }
+        it 'errors XPath expression for CSS based selectors' do
+          expect { string.find(:custom_css_selector, 'div', id: XPath.contains('peci')) }
             .to raise_error(ArgumentError, /not supported/)
         end
       end
 
-      context "with :class option" do
-        it "works with compound css selectors" do
-          expect(string.all(:custom_css_selector, "div, h1", class: 'a').size).to eq 2
-          expect(string.all(:custom_css_selector, "h1, div", class: 'a').size).to eq 2
+      context 'with :class option' do
+        it 'works with compound css selectors' do
+          expect(string.all(:custom_css_selector, 'div, h1', class: 'a').size).to eq 2
+          expect(string.all(:custom_css_selector, 'h1, div', class: 'a').size).to eq 2
         end
 
-        it "handles negated classes" do
-          expect(string.all(:custom_css_selector, "div, p", class: ['b', '!c']).size).to eq 2
-          expect(string.all(:custom_css_selector, "div, p", class: ['!c', '!d', 'b']).size).to eq 1
+        it 'handles negated classes' do
+          expect(string.all(:custom_css_selector, 'div, p', class: ['b', '!c']).size).to eq 2
+          expect(string.all(:custom_css_selector, 'div, p', class: ['!c', '!d', 'b']).size).to eq 1
           expect(string.all(:custom_xpath_selector, XPath.descendant(:div, :p), class: ['b', '!c']).size).to eq 2
           expect(string.all(:custom_xpath_selector, XPath.descendant(:div, :p), class: ['!c', '!d', 'b']).size).to eq 1
         end
 
         it "works with 'special' characters" do
-          expect(string.find(:custom_css_selector, "input", class: ".special")[:id]).to eq 'file'
-          expect(string.find(:custom_css_selector, "input", class: "2checkbox")[:id]).to eq '2checkbox'
+          expect(string.find(:custom_css_selector, 'input', class: '.special')[:id]).to eq 'file'
+          expect(string.find(:custom_css_selector, 'input', class: '2checkbox')[:id]).to eq '2checkbox'
         end
 
-        it "accepts XPath expression for xpath based selectors" do
+        it 'accepts XPath expression for xpath based selectors' do
           expect(string.find(:custom_xpath_selector, './/div', class: XPath.contains('dom wor'))[:id]).to eq 'random_words'
           expect(string.find(:custom_xpath_selector, './/div', class: XPath.ends_with('words'))[:id]).to eq 'random_words'
         end
 
-        it "errors XPath expression for CSS based selectors" do
-          expect { string.find(:custom_css_selector, "div", class: XPath.contains('random')) }
+        it 'errors XPath expression for CSS based selectors' do
+          expect { string.find(:custom_css_selector, 'div', class: XPath.contains('random')) }
             .to raise_error(ArgumentError, /not supported/)
         end
       end
@@ -181,96 +181,96 @@ RSpec.describe Capybara do
       # :css, :xpath, :id, :field, :fieldset, :link, :button, :link_or_button, :fillable_field, :radio_button, :checkbox, :select,
       # :option, :file_field, :label, :table, :frame
 
-      describe ":css selector" do
-        it "finds by CSS locator" do
-          expect(string.find(:css, "input#my_text_input")[:name]).to eq 'form[my_text_input]'
+      describe ':css selector' do
+        it 'finds by CSS locator' do
+          expect(string.find(:css, 'input#my_text_input')[:name]).to eq 'form[my_text_input]'
         end
       end
 
-      describe ":xpath selector" do
-        it "finds by XPath locator" do
+      describe ':xpath selector' do
+        it 'finds by XPath locator' do
           expect(string.find(:xpath, './/input[@id="my_text_input"]')[:name]).to eq 'form[my_text_input]'
         end
       end
 
-      describe ":id selector" do
-        it "finds by locator" do
-          expect(string.find(:id, "my_text_input")[:name]).to eq 'form[my_text_input]'
+      describe ':id selector' do
+        it 'finds by locator' do
+          expect(string.find(:id, 'my_text_input')[:name]).to eq 'form[my_text_input]'
         end
       end
 
-      describe ":field selector" do
-        it "finds by locator" do
+      describe ':field selector' do
+        it 'finds by locator' do
           expect(string.find(:field, 'My Text Input')[:id]).to eq 'my_text_input'
           expect(string.find(:field, 'my_text_input')[:id]).to eq 'my_text_input'
           expect(string.find(:field, 'form[my_text_input]')[:id]).to eq 'my_text_input'
         end
 
-        it "finds by id" do
+        it 'finds by id' do
           expect(string.find(:field, id: 'my_text_input')[:name]).to eq 'form[my_text_input]'
         end
 
-        it "finds by name" do
+        it 'finds by name' do
           expect(string.find(:field, name: 'form[my_text_input]')[:id]).to eq 'my_text_input'
         end
 
-        it "finds by placeholder" do
+        it 'finds by placeholder' do
           expect(string.find(:field, placeholder: 'my text')[:id]).to eq 'my_text_input'
         end
 
-        it "finds by type" do
+        it 'finds by type' do
           expect(string.find(:field, type: 'file')[:id]).to eq 'file'
           expect(string.find(:field, type: 'select')[:id]).to eq 'select'
         end
       end
 
-      describe ":option selector" do
-        it "finds disabled options" do
+      describe ':option selector' do
+        it 'finds disabled options' do
           expect(string.find(:option, disabled: true).value).to eq 'b'
         end
 
-        it "finds selected options" do
+        it 'finds selected options' do
           expect(string.find(:option, selected: true).value).to eq 'c'
         end
 
-        it "finds not selected and not disabled options" do
+        it 'finds not selected and not disabled options' do
           expect(string.find(:option, disabled: false, selected: false).value).to eq 'a'
         end
       end
 
-      describe ":button selector" do
-        it "finds by value" do
+      describe ':button selector' do
+        it 'finds by value' do
           expect(string.find(:button, 'click me').value).to eq 'click me'
         end
 
-        it "finds by title" do
+        it 'finds by title' do
           expect(string.find(:button, 'submit button').value).to eq 'click me'
         end
 
-        it "includes non-matching parameters in failure message" do
+        it 'includes non-matching parameters in failure message' do
           expect { string.find(:button, 'click me', title: 'click me') }.to raise_error(/with title click me/)
         end
       end
 
-      describe ":element selector" do
-        it "finds by any attributes" do
+      describe ':element selector' do
+        it 'finds by any attributes' do
           expect(string.find(:element, 'input', type: 'submit').value).to eq 'click me'
         end
 
-        it "still works with system keys" do
+        it 'still works with system keys' do
           expect { string.all(:element, 'input', type: 'submit', count: 1) }.not_to raise_error
         end
 
-        it "includes wildcarded keys in description" do
+        it 'includes wildcarded keys in description' do
           expect { string.find(:element, 'input', not_there: 'bad', count: 1) }
             .to(raise_error do |e|
               expect(e).to be_a(Capybara::ElementNotFound)
-              expect(e.message).to include "not_there => bad"
-              expect(e.message).not_to include "count 1"
+              expect(e.message).to include 'not_there => bad'
+              expect(e.message).not_to include 'count 1'
             end)
         end
 
-        it "accepts XPath::Expression" do
+        it 'accepts XPath::Expression' do
           expect(string.find(:element, 'input', type: XPath.starts_with('subm')).value).to eq 'click me'
           expect(string.find(:element, 'input', type: XPath.ends_with('ext'))[:type]).to eq 'text'
           expect(string.find(:element, 'input', type: XPath.contains('ckb'))[:type]).to eq 'checkbox'

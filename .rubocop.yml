@@ -3,7 +3,7 @@ require:
 
 AllCops:
   DisabledByDefault: false
-  TargetRubyVersion: 2.3.0
+  TargetRubyVersion: 2.3
   Exclude:
       - 'capybara.gemspec'
 
@@ -48,10 +48,6 @@ Lint/UnusedMethodArgument:
     - 'lib/capybara/driver/base.rb'
     - 'lib/capybara/driver/node.rb'
 
-Lint/HandleExceptions:
-  Exclude:
-    - 'spec/**/*'
-
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
 
@@ -68,18 +64,10 @@ Naming/UncommunicativeMethodParamName:
     - 'y'
     - 'on'
 
-Style/RescueStandardError:
-    Exclude:
-      - 'spec/**/*'
-      - 'lib/capybara/spec/**/*'
-
 Style/ParallelAssignment:
   Enabled: false
 
 Style/SingleLineMethods:
-  Enabled: false
-
-Style/StringLiterals:
   Enabled: false
 
 Style/Alias:
@@ -97,9 +85,6 @@ Style/DoubleNegation:
 Style/ClassVars:
   Enabled: false
 
-Style/GuardClause:
-  Enabled: false
-
 Style/EmptyElse:
   EnforcedStyle: empty
 
@@ -107,11 +92,6 @@ Style/ClassAndModuleChildren:
   Enabled: false
 
 Style/NumericLiterals:
-  Exclude:
-    - 'lib/capybara/spec/**/*'
-    - 'spec/**/*'
-
-Style/MultilineIfModifier:
   Exclude:
     - 'lib/capybara/spec/**/*'
     - 'spec/**/*'

@@ -27,7 +27,7 @@ module Capybara
     attr_writer :reuse_server
 
     def threadsafe=(bool)
-      raise "Threadsafe setting cannot be changed once a session is created" if (bool != threadsafe) && Session.instance_created?
+      raise 'Threadsafe setting cannot be changed once a session is created' if (bool != threadsafe) && Session.instance_created?
       @threadsafe = bool
     end
 

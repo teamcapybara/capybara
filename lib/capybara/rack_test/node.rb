@@ -7,16 +7,16 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     native.text
           .gsub(/[\u200b\u200e\u200f]/, '')
           .gsub(/[\ \n\f\t\v\u2028\u2029]+/, ' ')
-          .gsub(/\A[[:space:]&&[^\u00a0]]+/, "")
-          .gsub(/[[:space:]&&[^\u00a0]]+\z/, "")
+          .gsub(/\A[[:space:]&&[^\u00a0]]+/, '')
+          .gsub(/[[:space:]&&[^\u00a0]]+\z/, '')
           .tr("\u00a0", ' ')
   end
 
   def visible_text
     displayed_text.gsub(/\ +/, ' ')
                   .gsub(/[\ \n]*\n[\ \n]*/, "\n")
-                  .gsub(/\A[[:space:]&&[^\u00a0]]+/, "")
-                  .gsub(/[[:space:]&&[^\u00a0]]+\z/, "")
+                  .gsub(/\A[[:space:]&&[^\u00a0]]+/, '')
+                  .gsub(/[[:space:]&&[^\u00a0]]+\z/, '')
                   .tr("\u00a0", ' ')
   end
 
@@ -25,7 +25,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   end
 
   def style(_styles)
-    raise NotImplementedError, "The rack_test driver does not process CSS"
+    raise NotImplementedError, 'The rack_test driver does not process CSS'
   end
 
   def value
@@ -51,16 +51,16 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   def select_option
     return if disabled?
     deselect_options unless select_node.multiple?
-    native["selected"] = 'selected'
+    native['selected'] = 'selected'
   end
 
   def unselect_option
-    raise Capybara::UnselectNotAllowed, "Cannot unselect option from single select box." unless select_node.multiple?
+    raise Capybara::UnselectNotAllowed, 'Cannot unselect option from single select box.' unless select_node.multiple?
     native.remove_attribute('selected')
   end
 
   def click(keys = [], **offset)
-    raise ArgumentError, "The RackTest driver does not support click options" unless keys.empty? && offset.empty?
+    raise ArgumentError, 'The RackTest driver does not support click options' unless keys.empty? && offset.empty?
 
     if link?
       follow_link
@@ -94,9 +94,9 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     return true if string_node.disabled?
 
     if %w[option optgroup].include? tag_name
-      find_xpath("parent::*[self::optgroup or self::select or self::datalist]")[0].disabled?
+      find_xpath('parent::*[self::optgroup or self::select or self::datalist]')[0].disabled?
     else
-      !find_xpath("parent::fieldset[@disabled] | ancestor::*[not(self::legend) or preceding-sibling::legend][parent::fieldset[@disabled]]").empty?
+      !find_xpath('parent::fieldset[@disabled] | ancestor::*[not(self::legend) or preceding-sibling::legend][parent::fieldset[@disabled]]').empty?
     end
   end
 
@@ -140,7 +140,7 @@ protected
 private
 
   def deselect_options
-    select_node.find_xpath(".//option[@selected]").each { |node| node.native.remove_attribute("selected") }
+    select_node.find_xpath('.//option[@selected]').each { |node| node.native.remove_attribute('selected') }
   end
 
   def string_node
@@ -166,7 +166,7 @@ private
 
   def set_radio(_value) # rubocop:disable Naming/AccessorMethodName
     other_radios_xpath = XPath.generate { |x| x.anywhere(:input)[x.attr(:name) == self[:name]] }.to_s
-    driver.dom.xpath(other_radios_xpath).each { |node| node.remove_attribute("checked") }
+    driver.dom.xpath(other_radios_xpath).each { |node| node.remove_attribute('checked') }
     native['checked'] = 'checked'
   end
 
@@ -202,7 +202,7 @@ private
   end
 
   def follow_link
-    method = self["data-method"] if driver.options[:respect_data_method]
+    method = self['data-method'] if driver.options[:respect_data_method]
     method ||= :get
     driver.follow(method, self[:href].to_s)
   end
@@ -211,7 +211,7 @@ private
     labelled_control = if native[:for]
       find_xpath("//input[@id='#{native[:for]}']")
     else
-      find_xpath(".//input")
+      find_xpath('.//input')
     end.first
 
     labelled_control.set(!labelled_control.checked?) if checkbox_or_radio?(labelled_control)
@@ -222,7 +222,7 @@ private
   end
 
   def submits?
-    (tag_name == 'input' && %w[submit image].include?(type)) || (tag_name == 'button' && [nil, "submit"].include?(type))
+    (tag_name == 'input' && %w[submit image].include?(type)) || (tag_name == 'button' && [nil, 'submit'].include?(type))
   end
 
   def checkable?
@@ -252,6 +252,6 @@ protected
   end
 
   def textarea?
-    tag_name == "textarea"
+    tag_name == 'textarea'
   end
 end

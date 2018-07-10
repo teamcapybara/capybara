@@ -123,13 +123,13 @@ module Capybara
     def failure_message
       message = @query.failure_message
       if count.zero?
-        message << " but there were no matches"
+        message << ' but there were no matches'
       else
-        message << ", found #{count} #{Capybara::Helpers.declension('match', 'matches', count)}: " << full_results.map(&:text).map(&:inspect).join(", ")
+        message << ", found #{count} #{Capybara::Helpers.declension('match', 'matches', count)}: " << full_results.map(&:text).map(&:inspect).join(', ')
       end
       unless rest.empty?
-        elements = rest.map { |el| el.text rescue "<<ERROR>>" }.map(&:inspect).join(", ") # rubocop:disable Style/RescueModifier
-        message << ". Also found " << elements << ", which matched the selector but not all filters."
+        elements = rest.map { |el| el.text rescue '<<ERROR>>' }.map(&:inspect).join(', ') # rubocop:disable Style/RescueModifier
+        message << '. Also found ' << elements << ', which matched the selector but not all filters.'
       end
       message
     end

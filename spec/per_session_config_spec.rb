@@ -4,8 +4,8 @@ require 'spec_helper'
 require 'capybara/dsl'
 
 RSpec.describe Capybara::SessionConfig do
-  describe "threadsafe" do
-    it "defaults to global session options" do
+  describe 'threadsafe' do
+    it 'defaults to global session options' do
       Capybara.threadsafe = true
       session = Capybara::Session.new(:rack_test, TestApp)
       %i[default_host app_host always_include_port run_server
@@ -19,7 +19,7 @@ RSpec.describe Capybara::SessionConfig do
 
     it "doesn't change global session when changed" do
       Capybara.threadsafe = true
-      host = "http://my.example.com"
+      host = 'http://my.example.com'
       session = Capybara::Session.new(:rack_test, TestApp) do |config|
         config.default_host = host
         config.automatic_label_click = !config.automatic_label_click
@@ -35,7 +35,7 @@ RSpec.describe Capybara::SessionConfig do
       Capybara.threadsafe = false
       expect do
         Capybara::Session.new(:rack_test, TestApp) { |config| }
-      end.to raise_error "A configuration block is only accepted when Capybara.threadsafe == true"
+      end.to raise_error 'A configuration block is only accepted when Capybara.threadsafe == true'
     end
 
     it "doesn't allow session config when false" do
@@ -49,7 +49,7 @@ RSpec.describe Capybara::SessionConfig do
       end.to raise_error(/Session configuration is only supported when Capybara.threadsafe == true/)
     end
 
-    it "uses the config from the session" do
+    it 'uses the config from the session' do
       Capybara.threadsafe = true
       session = Capybara::Session.new(:rack_test, TestApp) do |config|
         config.default_selector = :link

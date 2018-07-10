@@ -291,7 +291,7 @@ module Capybara
       if format
         @expression.call(locator, options)
       else
-        warn "Selector has no format"
+        warn 'Selector has no format'
       end
     end
 

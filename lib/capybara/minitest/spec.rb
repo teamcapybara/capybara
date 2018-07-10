@@ -175,13 +175,13 @@ module Capybara
 end
 
 class Capybara::Session
-  include Capybara::Minitest::Expectations unless ENV["MT_NO_EXPECTATIONS"]
+  include Capybara::Minitest::Expectations unless ENV['MT_NO_EXPECTATIONS']
 end
 
 class Capybara::Node::Base
-  include Capybara::Minitest::Expectations unless ENV["MT_NO_EXPECTATIONS"]
+  include Capybara::Minitest::Expectations unless ENV['MT_NO_EXPECTATIONS']
 end
 
 class Capybara::Node::Simple
-  include Capybara::Minitest::Expectations unless ENV["MT_NO_EXPECTATIONS"]
+  include Capybara::Minitest::Expectations unless ENV['MT_NO_EXPECTATIONS']
 end

@@ -50,7 +50,7 @@ module Capybara
       end
 
       def build_message(report_on_invisible)
-        message = +""
+        message = +''
         unless (COUNT_KEYS & @options.keys).empty?
           message << " but found #{@count} #{Capybara::Helpers.declension('time', 'times', @count)}"
         end

@@ -48,18 +48,18 @@ $stdout.puts `#{Selenium::WebDriver::Chrome.driver_path} --version` if ENV['CI']
 Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_DRIVER.to_s, capybara_skip: skipped_tests do |example|
   case example.metadata[:description]
   when /should fetch a response when sequentially visiting same destination with a target/
-    skip "Chrome/chromedriver has an issue visiting URL with target after visiting same URL without target" if chrome_lt?(65.0, @session)
+    skip 'Chrome/chromedriver has an issue visiting URL with target after visiting same URL without target' if chrome_lt?(65.0, @session)
   end
 end
 
-RSpec.describe "Capybara::Session with chrome" do
+RSpec.describe 'Capybara::Session with chrome' do
   include Capybara::SpecHelper
-  include_examples  "Capybara::Session", TestSessions::Chrome, CHROME_DRIVER
+  include_examples  'Capybara::Session', TestSessions::Chrome, CHROME_DRIVER
   include_examples  Capybara::RSpecMatchers, TestSessions::Chrome, CHROME_DRIVER
 
-  context "storage" do
-    describe "#reset!" do
-      it "does not clear either storage by default" do
+  context 'storage' do
+    describe '#reset!' do
+      it 'does not clear either storage by default' do
         @session = TestSessions::Chrome
         @session.visit('/with_js')
         @session.find(:css, '#set-storage').click
@@ -71,7 +71,7 @@ RSpec.describe "Capybara::Session with chrome" do
         expect(@session.evaluate_script('Object.keys(sessionStorage)')).not_to be_empty
       end
 
-      it "clears storage when set" do
+      it 'clears storage when set' do
         @session = Capybara::Session.new(:selenium_chrome_clear_storage, TestApp)
         @session.visit('/with_js')
         @session.find(:css, '#set-storage').click

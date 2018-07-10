@@ -520,7 +520,7 @@ module Capybara
       #
       def assert_matches_selector(*args, &optional_filter_block)
         _verify_match_result(args, optional_filter_block) do |result|
-          raise Capybara::ExpectationNotMet, "Item does not match the provided selector" unless result.include? self
+          raise Capybara::ExpectationNotMet, 'Item does not match the provided selector' unless result.include? self
         end
       end
 

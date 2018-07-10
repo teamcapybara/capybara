@@ -14,7 +14,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def self.load_selenium
     require 'selenium-webdriver'
-    warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade." if Gem.loaded_specs["selenium-webdriver"].version < Gem::Version.new('3.5.0')
+    warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade." if Gem.loaded_specs['selenium-webdriver'].version < Gem::Version.new('3.5.0')
   rescue LoadError => e
     raise e if e.message !~ /selenium-webdriver/
     raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
@@ -135,12 +135,12 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
           # to about:blank, so we rescue this error and do nothing
           # instead.
         end
-        @browser.navigate.to("about:blank")
+        @browser.navigate.to('about:blank')
       end
       navigated = true
 
       # Ensure the page is empty and trigger an UnhandledAlertError for any modals that appear during unload
-      until find_xpath("/html/body/*").empty?
+      until find_xpath('/html/body/*').empty?
         raise Capybara::ExpectationNotMet, 'Timed out waiting for Selenium session reset' if timer.expired?
         sleep 0.05
       end
@@ -153,11 +153,11 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         sleep 0.25 # allow time for the modal to be handled
       rescue modal_error
         # The alert is now gone
-        if current_url != "about:blank"
+        if current_url != 'about:blank'
           begin
             # If navigation has not occurred attempt again and accept alert
             # since FF may have dismissed the alert at first attempt
-            @browser.navigate.to("about:blank")
+            @browser.navigate.to('about:blank')
             sleep 0.1 # slight wait for alert
             @browser.switch_to.alert.accept
           rescue modal_error # rubocop:disable Metrics/BlockNesting, Lint/HandleExceptions
@@ -219,7 +219,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def close_window(handle)
-    raise ArgumentError, "Not allowed to close the primary window" if handle == window_handles.first
+    raise ArgumentError, 'Not allowed to close the primary window' if handle == window_handles.first
     within_given_window(handle) do
       browser.close
     end
@@ -328,15 +328,15 @@ private
       if @browser.respond_to? :session_storage
         @browser.session_storage.clear
       else
-        warn "sessionStorage clear requested but is not available for this driver"
+        warn 'sessionStorage clear requested but is not available for this driver'
       end
     end
 
-    if options[:clear_local_storage]
+    if options[:clear_local_storage] # rubocop:disable Style/GuardClause
       if @browser.respond_to? :local_storage
         @browser.local_storage.clear
       else
-        warn "localStorage clear requested but is not available for this driver"
+        warn 'localStorage clear requested but is not available for this driver'
       end
     end
   end

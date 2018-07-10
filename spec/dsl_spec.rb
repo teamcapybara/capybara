@@ -7,12 +7,12 @@ class TestClass
   include Capybara::DSL
 end
 
-Capybara::SpecHelper.run_specs TestClass.new, "DSL", capybara_skip: %i[
+Capybara::SpecHelper.run_specs TestClass.new, 'DSL', capybara_skip: %i[
   js modals screenshot frames windows send_keys server hover about_scheme psc download css
 ] do |example|
   case example.metadata[:full_description]
   when /doesn't raise exception on a nil current_url$/
-    skip "Only makes sense when there is a real driver"
+    skip 'Only makes sense when there is a real driver'
   end
 end
 
@@ -26,42 +26,42 @@ RSpec.describe Capybara::DSL do
   end
 
   describe '#default_driver' do
-    it "should default to rack_test" do
+    it 'should default to rack_test' do
       expect(Capybara.default_driver).to eq(:rack_test)
     end
 
-    it "should be changeable" do
+    it 'should be changeable' do
       Capybara.default_driver = :culerity
       expect(Capybara.default_driver).to eq(:culerity)
     end
   end
 
   describe '#current_driver' do
-    it "should default to the default driver" do
+    it 'should default to the default driver' do
       expect(Capybara.current_driver).to eq(:rack_test)
       Capybara.default_driver = :culerity
       expect(Capybara.current_driver).to eq(:culerity)
     end
 
-    it "should be changeable" do
+    it 'should be changeable' do
       Capybara.current_driver = :culerity
       expect(Capybara.current_driver).to eq(:culerity)
     end
   end
 
   describe '#javascript_driver' do
-    it "should default to selenium" do
+    it 'should default to selenium' do
       expect(Capybara.javascript_driver).to eq(:selenium)
     end
 
-    it "should be changeable" do
+    it 'should be changeable' do
       Capybara.javascript_driver = :culerity
       expect(Capybara.javascript_driver).to eq(:culerity)
     end
   end
 
   describe '#use_default_driver' do
-    it "should restore the default driver" do
+    it 'should restore the default driver' do
       Capybara.current_driver = :culerity
       Capybara.use_default_driver
       expect(Capybara.current_driver).to eq(:rack_test)
@@ -89,8 +89,8 @@ RSpec.describe Capybara::DSL do
     it 'should reset the driver even if an exception occurs' do
       driver_before_block = Capybara.current_driver
       begin
-        Capybara.using_driver(:selenium) { raise "ohnoes!" }
-      rescue Exception # rubocop:disable Lint/RescueException
+        Capybara.using_driver(:selenium) { raise 'ohnoes!' }
+      rescue Exception # rubocop:disable Lint/RescueException,Lint/HandleExceptions
       end
       expect(Capybara.current_driver).to eq(driver_before_block)
     end
@@ -122,7 +122,7 @@ RSpec.describe Capybara::DSL do
       Capybara.default_max_wait_time = @previous_wait_time
     end
 
-    it "should switch the wait time and switch it back" do
+    it 'should switch the wait time and switch it back' do
       in_block = nil
       Capybara.using_wait_time 6 do
         in_block = Capybara.default_max_wait_time
@@ -131,40 +131,40 @@ RSpec.describe Capybara::DSL do
       expect(Capybara.default_max_wait_time).to eq(@previous_wait_time)
     end
 
-    it "should ensure wait time is reset" do
+    it 'should ensure wait time is reset' do
       expect do
         Capybara.using_wait_time 6 do
-          raise "hell"
+          raise 'hell'
         end
-      end.to raise_error(RuntimeError, "hell")
+      end.to raise_error(RuntimeError, 'hell')
       expect(Capybara.default_max_wait_time).to eq(@previous_wait_time)
     end
   end
 
   describe '#app' do
-    it "should be changeable" do
-      Capybara.app = "foobar"
+    it 'should be changeable' do
+      Capybara.app = 'foobar'
       expect(Capybara.app).to eq('foobar')
     end
   end
 
   describe '#current_session' do
-    it "should choose a session object of the current driver type" do
+    it 'should choose a session object of the current driver type' do
       expect(Capybara.current_session).to be_a(Capybara::Session)
     end
 
-    it "should use #app as the application" do
+    it 'should use #app as the application' do
       Capybara.app = proc {}
       expect(Capybara.current_session.app).to eq(Capybara.app)
     end
 
-    it "should change with the current driver" do
+    it 'should change with the current driver' do
       expect(Capybara.current_session.mode).to eq(:rack_test)
       Capybara.current_driver = :selenium
       expect(Capybara.current_session.mode).to eq(:selenium)
     end
 
-    it "should be persistent even across driver changes" do
+    it 'should be persistent even across driver changes' do
       object_id = Capybara.current_session.object_id
       expect(Capybara.current_session.object_id).to eq(object_id)
       Capybara.current_driver = :selenium
@@ -175,7 +175,7 @@ RSpec.describe Capybara::DSL do
       expect(Capybara.current_session.object_id).to eq(object_id)
     end
 
-    it "should change when changing application" do
+    it 'should change when changing application' do
       object_id = Capybara.current_session.object_id
       expect(Capybara.current_session.object_id).to eq(object_id)
       Capybara.app = proc {}
@@ -183,7 +183,7 @@ RSpec.describe Capybara::DSL do
       expect(Capybara.current_session.app).to eq(Capybara.app)
     end
 
-    it "should change when the session name changes" do
+    it 'should change when the session name changes' do
       object_id = Capybara.current_session.object_id
       Capybara.session_name = :administrator
       expect(Capybara.session_name).to eq(:administrator)
@@ -194,8 +194,8 @@ RSpec.describe Capybara::DSL do
     end
   end
 
-  describe "#using_session" do
-    it "should change the session name for the duration of the block" do
+  describe '#using_session' do
+    it 'should change the session name for the duration of the block' do
       expect(Capybara.session_name).to eq(:default)
       Capybara.using_session(:administrator) do
         expect(Capybara.session_name).to eq(:administrator)
@@ -203,23 +203,23 @@ RSpec.describe Capybara::DSL do
       expect(Capybara.session_name).to eq(:default)
     end
 
-    it "should reset the session to the default, even if an exception occurs" do
+    it 'should reset the session to the default, even if an exception occurs' do
       begin
         Capybara.using_session(:raise) do
           raise
         end
-      rescue Exception # rubocop:disable Lint/RescueException
+      rescue Exception # rubocop:disable Lint/RescueException,Lint/HandleExceptions
       end
       expect(Capybara.session_name).to eq(:default)
     end
 
-    it "should yield the passed block" do
+    it 'should yield the passed block' do
       called = false
       Capybara.using_session(:administrator) { called = true }
       expect(called).to eq(true)
     end
 
-    it "should be nestable" do
+    it 'should be nestable' do
       Capybara.using_session(:outer) do
         expect(Capybara.session_name).to eq(:outer)
         Capybara.using_session(:inner) do
@@ -231,8 +231,8 @@ RSpec.describe Capybara::DSL do
     end
   end
 
-  describe "#session_name" do
-    it "should default to :default" do
+  describe '#session_name' do
+    it 'should default to :default' do
       expect(Capybara.session_name).to eq(:default)
     end
   end
@@ -242,7 +242,7 @@ RSpec.describe Capybara::DSL do
       @session = Class.new { include Capybara::DSL }.new
     end
 
-    it "should be possible to include it in another class" do
+    it 'should be possible to include it in another class' do
       @session.visit('/with_html')
       @session.click_link('ullamco')
       expect(@session.body).to include('Another World')

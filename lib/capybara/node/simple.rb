@@ -81,7 +81,7 @@ module Capybara
           if multiple?
             native.xpath(".//option[@selected='selected']").map { |option| option[:value] || option.content }
           else
-            option = native.xpath(".//option[@selected='selected']").first || native.xpath(".//option").first
+            option = native.xpath(".//option[@selected='selected']").first || native.xpath('.//option').first
             option[:value] || option.content if option
           end
         elsif tag_name == 'input' && %w[radio checkbox].include?(native[:type])
@@ -100,7 +100,7 @@ module Capybara
       # @return [Boolean]     Whether the element is visible
       #
       def visible?(check_ancestors = true)
-        return false if (tag_name == 'input') && (native[:type] == "hidden")
+        return false if (tag_name == 'input') && (native[:type] == 'hidden')
 
         if check_ancestors
           !native.xpath("boolean(./ancestor-or-self::*[contains(@style, 'display:none') or contains(@style, 'display: none') or @hidden or name()='script' or name()='head'])")

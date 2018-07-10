@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rspec/expectations'
-require "capybara/spec/spec_helper"
+require 'capybara/spec/spec_helper'
 require 'webdrivers' if ENV['CI']
 
 RSpec.configure do |config|

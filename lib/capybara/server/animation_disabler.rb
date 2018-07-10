@@ -21,7 +21,7 @@ module Capybara
     private
 
       def html_content?
-        !!(@headers["Content-Type"] =~ /html/)
+        !!(@headers['Content-Type'] =~ /html/)
       end
 
       def insert_disable(html)

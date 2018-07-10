@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "capybara/spec/test_app"
+require 'capybara/spec/test_app'
 
 Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
   before :all do # rubocop:disable RSpec/BeforeAfterAll
@@ -14,7 +14,7 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
     @servers.map { |s| "http://#{s.host}:#{s.port}" }
   end
 
-  def should_be_on(server_index, path = "/host", scheme = "http")
+  def should_be_on(server_index, path = '/host', scheme = 'http')
     # Check that we are on /host on the given server
     s = @servers[server_index]
 
@@ -31,12 +31,12 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
     @session.visit("#{bases[0]}/host_links?absolute_host=#{bases[1]}")
   end
 
-  it "is affected by visiting a page directly" do
+  it 'is affected by visiting a page directly' do
     @session.visit("#{bases[0]}/host")
     should_be_on 0
   end
 
-  it "returns to the app host when visiting a relative url" do
+  it 'returns to the app host when visiting a relative url' do
     Capybara.app_host = bases[1]
     @session.visit("#{bases[0]}/host")
     should_be_on 0
@@ -45,66 +45,66 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
     Capybara.app_host = nil
   end
 
-  it "is affected by setting Capybara.app_host" do
+  it 'is affected by setting Capybara.app_host' do
     Capybara.app_host = bases[0]
-    @session.visit("/host")
+    @session.visit('/host')
     should_be_on 0
     Capybara.app_host = bases[1]
-    @session.visit("/host")
+    @session.visit('/host')
     should_be_on 1
     Capybara.app_host = nil
   end
 
-  it "is unaffected by following a relative link" do
+  it 'is unaffected by following a relative link' do
     visit_host_links
-    @session.click_link("Relative Host")
+    @session.click_link('Relative Host')
     should_be_on 0
   end
 
-  it "is affected by following an absolute link" do
+  it 'is affected by following an absolute link' do
     visit_host_links
-    @session.click_link("Absolute Host")
+    @session.click_link('Absolute Host')
     should_be_on 1
   end
 
-  it "is unaffected by posting through a relative form" do
+  it 'is unaffected by posting through a relative form' do
     visit_host_links
-    @session.click_button("Relative Host")
+    @session.click_button('Relative Host')
     should_be_on 0
   end
 
-  it "is affected by posting through an absolute form" do
+  it 'is affected by posting through an absolute form' do
     visit_host_links
-    @session.click_button("Absolute Host")
+    @session.click_button('Absolute Host')
     should_be_on 1
   end
 
-  it "is affected by following a redirect" do
+  it 'is affected by following a redirect' do
     @session.visit("#{bases[0]}/redirect")
-    should_be_on 0, "/landed"
+    should_be_on 0, '/landed'
   end
 
-  it "is affected by pushState", requires: [:js] do
-    @session.visit("/with_js")
+  it 'is affected by pushState', requires: [:js] do
+    @session.visit('/with_js')
     @session.execute_script("window.history.pushState({}, '', '/pushed')")
-    expect(@session.current_path).to eq("/pushed")
+    expect(@session.current_path).to eq('/pushed')
   end
 
-  it "is affected by replaceState", requires: [:js] do
-    @session.visit("/with_js")
+  it 'is affected by replaceState', requires: [:js] do
+    @session.visit('/with_js')
     @session.execute_script("window.history.replaceState({}, '', '/replaced')")
-    expect(@session.current_path).to eq("/replaced")
+    expect(@session.current_path).to eq('/replaced')
   end
 
   it "doesn't raise exception on a nil current_url" do
     allow(@session.driver).to receive(:current_url).and_return(nil)
-    @session.visit("/")
+    @session.visit('/')
     expect { @session.current_url }.not_to raise_exception
     expect { @session.current_path }.not_to raise_exception
   end
 
-  context "within iframe", requires: [:frames] do
-    it "should get the url of the top level browsing context" do
+  context 'within iframe', requires: [:frames] do
+    it 'should get the url of the top level browsing context' do
       @session.visit('/within_frames')
       expect(@session.current_url).to match(/within_frames\z/)
       @session.within_frame('frameOne') do

@@ -10,7 +10,7 @@ module Capybara
         super(options)
         @expected_path = expected_path
         @options = {
-          url: !@expected_path.is_a?(Regexp) && !::Addressable::URI.parse(@expected_path || "").hostname.nil?,
+          url: !@expected_path.is_a?(Regexp) && !::Addressable::URI.parse(@expected_path || '').hostname.nil?,
           ignore_query: false
         }.merge(options)
         assert_valid_keys

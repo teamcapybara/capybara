@@ -18,7 +18,7 @@ Capybara::SpecHelper.spec '#current_window', requires: [:windows] do
     expect(@session.current_window).to be_instance_of(Capybara::Window)
   end
 
-  it "should be modified by switching to another window" do
+  it 'should be modified by switching to another window' do
     window = @session.window_opened_by { @session.find(:css, '#openWindow').click }
 
     expect do

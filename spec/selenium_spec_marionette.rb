@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require "selenium-webdriver"
+require 'selenium-webdriver'
 require 'shared_selenium_session'
 require 'rspec/shared_spec_matchers'
 
@@ -48,7 +48,7 @@ skipped_tests << :windows if ENV['TRAVIS'] && ENV['SKIP_WINDOW']
 
 $stdout.puts `#{Selenium::WebDriver::Firefox.driver_path} --version` if ENV['CI']
 
-Capybara::SpecHelper.run_specs TestSessions::SeleniumMarionette, "selenium", capybara_skip: skipped_tests do |example|
+Capybara::SpecHelper.run_specs TestSessions::SeleniumMarionette, 'selenium', capybara_skip: skipped_tests do |example|
   case example.metadata[:full_description]
   when 'Capybara::Session selenium node #send_keys should generate key events',
        'Capybara::Session selenium node #send_keys should allow for multiple simultaneous keys',
@@ -65,9 +65,9 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumMarionette, "selenium", cap
   end
 end
 
-RSpec.describe "Capybara::Session with firefox" do # rubocop:disable RSpec/MultipleDescribes
+RSpec.describe 'Capybara::Session with firefox' do # rubocop:disable RSpec/MultipleDescribes
   include Capybara::SpecHelper
-  include_examples  "Capybara::Session", TestSessions::SeleniumMarionette, :selenium_marionette
+  include_examples  'Capybara::Session', TestSessions::SeleniumMarionette, :selenium_marionette
   include_examples  Capybara::RSpecMatchers, TestSessions::SeleniumMarionette, :selenium_marionette
 end
 
@@ -77,14 +77,14 @@ RSpec.describe Capybara::Selenium::Driver do
   end
 
   describe '#quit' do
-    it "should reset browser when quit" do
+    it 'should reset browser when quit' do
       expect(@driver.browser).to be_truthy
       @driver.quit
       # access instance variable directly so we don't create a new browser instance
       expect(@driver.instance_variable_get(:@browser)).to be_nil
     end
 
-    context "with errors" do
+    context 'with errors' do
       before do
         @original_browser = @driver.browser
       end
@@ -95,11 +95,11 @@ RSpec.describe Capybara::Selenium::Driver do
         @original_browser.quit
       end
 
-      it "warns UnknownError returned during quit because the browser is probably already gone" do
+      it 'warns UnknownError returned during quit because the browser is probably already gone' do
         allow(@driver).to receive(:warn)
         allow(@driver.browser).to(
           receive(:quit)
-          .and_raise(Selenium::WebDriver::Error::UnknownError, "random message")
+          .and_raise(Selenium::WebDriver::Error::UnknownError, 'random message')
         )
 
         expect { @driver.quit }.not_to raise_error
@@ -107,11 +107,11 @@ RSpec.describe Capybara::Selenium::Driver do
         expect(@driver).to have_received(:warn).with(/random message/)
       end
 
-      it "ignores silenced UnknownError returned during quit because the browser is almost definitely already gone" do
+      it 'ignores silenced UnknownError returned during quit because the browser is almost definitely already gone' do
         allow(@driver).to receive(:warn)
         allow(@driver.browser).to(
           receive(:quit)
-          .and_raise(Selenium::WebDriver::Error::UnknownError, "Error communicating with the remote browser")
+          .and_raise(Selenium::WebDriver::Error::UnknownError, 'Error communicating with the remote browser')
         )
 
         expect { @driver.quit }.not_to raise_error
@@ -121,9 +121,9 @@ RSpec.describe Capybara::Selenium::Driver do
     end
   end
 
-  context "storage" do
-    describe "#reset!" do
-      it "does not clear either storage by default" do
+  context 'storage' do
+    describe '#reset!' do
+      it 'does not clear either storage by default' do
         @session = TestSessions::SeleniumMarionette
         @session.visit('/with_js')
         @session.find(:css, '#set-storage').click
@@ -133,7 +133,7 @@ RSpec.describe Capybara::Selenium::Driver do
         expect(@session.driver.browser.session_storage.keys).not_to be_empty
       end
 
-      it "clears storage when set" do
+      it 'clears storage when set' do
         @session = Capybara::Session.new(:selenium_marionette_clear_storage, TestApp)
         @session.visit('/with_js')
         @session.find(:css, '#set-storage').click
@@ -145,13 +145,13 @@ RSpec.describe Capybara::Selenium::Driver do
     end
   end
 
-  context "#refresh" do
+  context '#refresh' do
     def extract_results(session)
       expect(session).to have_xpath("//pre[@id='results']")
       YAML.load Nokogiri::HTML(session.body).xpath("//pre[@id='results']").first.inner_html.lstrip
     end
 
-    it "can repost by accepting confirm" do
+    it 'can repost by accepting confirm' do
       @session = TestSessions::SeleniumMarionette
       @session.visit('/form')
       @session.select('Sweden', from: 'form_region')
@@ -169,8 +169,8 @@ RSpec.describe Capybara::Selenium::Driver do
 end
 
 RSpec.describe Capybara::Selenium::Node do
-  context "#click" do
-    it "warns when attempting on a table row" do
+  context '#click' do
+    it 'warns when attempting on a table row' do
       session = TestSessions::SeleniumMarionette
       session.visit('/tables')
       tr = session.find(:css, '#agent_table tr:first-child')
@@ -179,13 +179,13 @@ RSpec.describe Capybara::Selenium::Node do
       expect(tr.base).to have_received(:warn).with(/Clicking the first cell in the row instead/)
     end
 
-    it "should allow multiple modifiers", requires: [:js] do
+    it 'should allow multiple modifiers', requires: [:js] do
       session = TestSessions::SeleniumMarionette
       session.visit('with_js')
       # Firefox v62+ doesn't generate an event for control+shift+click
       session.find(:css, '#click-test').click(:alt, :ctrl, :meta)
       # it also triggers a contextmenu event when control is held so don't check click type
-      expect(session).to have_link("Has been alt control meta")
+      expect(session).to have_link('Has been alt control meta')
     end
   end
 end

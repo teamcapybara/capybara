@@ -46,9 +46,9 @@ class Capybara::RackTest::Browser
     driver.redirect_limit.times do
       if last_response.redirect?
         if [307, 308].include? last_response.status
-          process(last_request.request_method, last_response["Location"], last_request.params, env)
+          process(last_request.request_method, last_response['Location'], last_request.params, env)
         else
-          process(:get, last_response["Location"], {}, env)
+          process(:get, last_response['Location'], {}, env)
         end
       end
     end
@@ -61,8 +61,8 @@ class Capybara::RackTest::Browser
     if path.empty?
       new_uri.path = request_path
     else
-      new_uri.path = request_path if path.start_with?("?")
-      new_uri.path = "/" if new_uri.path.empty?
+      new_uri.path = request_path if path.start_with?('?')
+      new_uri.path = '/' if new_uri.path.empty?
       new_uri.path = request_path.sub(%r{/[^/]*$}, '/') + new_uri.path unless new_uri.path.start_with?('/')
     end
     new_uri.scheme ||= @current_scheme
@@ -78,7 +78,7 @@ class Capybara::RackTest::Browser
   def current_url
     last_request.url
   rescue Rack::Test::Error
-    ""
+    ''
   end
 
   def reset_host!
@@ -105,7 +105,7 @@ class Capybara::RackTest::Browser
   def html
     last_response.body
   rescue Rack::Test::Error
-    ""
+    ''
   end
 
   def title
@@ -122,7 +122,7 @@ protected
   def request_path
     last_request.path
   rescue Rack::Test::Error
-    "/"
+    '/'
   end
 
 private

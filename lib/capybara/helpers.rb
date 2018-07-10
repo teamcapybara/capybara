@@ -15,7 +15,7 @@ module Capybara
     # @return [String]         Normalized text
     #
     def normalize_whitespace(text)
-      warn "DEPRECATED: Capybara::Helpers::normalize_whitespace is deprecated, please update your driver"
+      warn 'DEPRECATED: Capybara::Helpers::normalize_whitespace is deprecated, please update your driver'
       text.to_s.gsub(/[[:space:]]+/, ' ').strip
     end
 
@@ -33,7 +33,7 @@ module Capybara
       return text if text.is_a?(Regexp)
 
       escaped = Regexp.escape(text)
-      escaped = escaped.gsub("\\ ", "[[:blank:]]") if all_whitespace
+      escaped = escaped.gsub('\\ ', '[[:blank:]]') if all_whitespace
       escaped = "\\A#{escaped}\\z" if exact
       Regexp.new(escaped, options)
     end
@@ -48,7 +48,7 @@ module Capybara
     # @return [String]         The modified HTML code
     #
     def inject_asset_host(html, host: Capybara.asset_host)
-      if host && Nokogiri::HTML(html).css("base").empty?
+      if host && Nokogiri::HTML(html).css('base').empty?
         match = html.match(/<head[^<]*?>/)
         return html.clone.insert match.end(0), "<base href='#{host}' />" if match
       end

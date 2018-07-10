@@ -75,12 +75,12 @@ module Capybara
     attr_accessor :synchronized
 
     def initialize(mode, app = nil)
-      raise TypeError, "The second parameter to Session::new should be a rack app if passed." if app && !app.respond_to?(:call)
+      raise TypeError, 'The second parameter to Session::new should be a rack app if passed.' if app && !app.respond_to?(:call)
       @@instance_created = true
       @mode = mode
       @app = app
       if block_given?
-        raise "A configuration block is only accepted when Capybara.threadsafe == true" unless Capybara.threadsafe
+        raise 'A configuration block is only accepted when Capybara.threadsafe == true' unless Capybara.threadsafe
         yield config
       end
       @server = if config.run_server && @app && driver.needs_server?
@@ -141,7 +141,7 @@ module Capybara
       # Force an explanation for the error being raised as the exception cause
       begin
         if config.raise_server_errors
-          raise CapybaraError, "Your application server raised an error - It has been raised in your test code because Capybara.raise_server_errors == true"
+          raise CapybaraError, 'Your application server raised an error - It has been raised in your test code because Capybara.raise_server_errors == true'
         end
       rescue CapybaraError
         # needed to get the cause set correctly in JRuby -- otherwise we could just do raise @server.error
@@ -190,7 +190,7 @@ module Capybara
       uri = ::Addressable::URI.parse(current_url)
 
       # Addressable doesn't support opaque URIs - we want nil here
-      return nil if uri&.scheme == "about"
+      return nil if uri&.scheme == 'about'
 
       path = uri&.path
       path unless path&.empty?
@@ -383,7 +383,7 @@ module Capybara
       when :parent
         if scopes.last != :frame
           raise Capybara::ScopeError, "`switch_to_frame(:parent)` cannot be called from inside a descendant frame's "\
-                                      "`within` block."
+                                      '`within` block.'
         end
         scopes.pop
         driver.switch_to_frame(:parent)
@@ -392,13 +392,13 @@ module Capybara
         if idx
           if scopes.slice(idx..-1).any? { |scope| ![:frame, nil].include?(scope) }
             raise Capybara::ScopeError, "`switch_to_frame(:top)` cannot be called from inside a descendant frame's "\
-                                        "`within` block."
+                                        '`within` block.'
           end
           scopes.slice!(idx..-1)
           driver.switch_to_frame(:top)
         end
       else
-        raise ArgumentError, "You must provide a frame element, :parent, or :top when calling switch_to_frame"
+        raise ArgumentError, 'You must provide a frame element, :parent, or :top when calling switch_to_frame'
       end
     end
 
@@ -473,11 +473,11 @@ module Capybara
     # @raise [ArgumentError]               if both or neither arguments were provided
     #
     def switch_to_window(window = nil, **options, &window_locator)
-      raise ArgumentError, "`switch_to_window` can take either a block or a window, not both" if window && block_given?
-      raise ArgumentError, "`switch_to_window`: either window or block should be provided" if !window && !block_given?
+      raise ArgumentError, '`switch_to_window` can take either a block or a window, not both' if window && block_given?
+      raise ArgumentError, '`switch_to_window`: either window or block should be provided' if !window && !block_given?
       unless scopes.last.nil?
-        raise Capybara::ScopeError, "`switch_to_window` is not supposed to be invoked from "\
-                                    "`within` or `within_frame` blocks."
+        raise Capybara::ScopeError, '`switch_to_window` is not supposed to be invoked from '\
+                                    '`within` or `within_frame` blocks.'
       end
 
       _switch_to_window(window, options, &window_locator)
@@ -514,7 +514,7 @@ module Capybara
         when Proc
           _switch_to_window { window_or_proc.call }
         else
-          raise ArgumentError("`#within_window` requires a `Capybara::Window` instance or a lambda")
+          raise ArgumentError('`#within_window` requires a `Capybara::Window` instance or a lambda')
         end
 
         begin
@@ -548,7 +548,7 @@ module Capybara
       document.synchronize(wait_time, errors: [Capybara::WindowError]) do
         opened_handles = (driver.window_handles - old_handles)
         if opened_handles.size != 1
-          raise Capybara::WindowError, "block passed to #window_opened_by "\
+          raise Capybara::WindowError, 'block passed to #window_opened_by '\
                                        "opened #{opened_handles.size} windows instead of 1"
         end
         Window.new(self, opened_handles.first)
@@ -776,7 +776,7 @@ module Capybara
     #  if set at initialization time, so look at the configuration block that can be passed to the initializer too
     #
     def configure
-      raise "Session configuration is only supported when Capybara.threadsafe == true" unless Capybara.threadsafe
+      raise 'Session configuration is only supported when Capybara.threadsafe == true' unless Capybara.threadsafe
       yield config
     end
 
@@ -815,7 +815,7 @@ module Capybara
     end
 
     def open_file(path)
-      require "launchy"
+      require 'launchy'
       Launchy.open(path)
     rescue LoadError
       warn "File saved to #{path}.\nPlease install the launchy gem to open the file automatically."
@@ -826,7 +826,7 @@ module Capybara
     end
 
     def default_fn(extension)
-      timestamp = Time.new.strftime("%Y%m%d%H%M%S")
+      timestamp = Time.new.strftime('%Y%m%d%H%M%S')
       "capybara-#{timestamp}#{rand(10**10)}.#{extension}"
     end
 
@@ -866,8 +866,8 @@ module Capybara
     end
 
     def _switch_to_window(window = nil, **options)
-      raise Capybara::ScopeError, "Window cannot be switched inside a `within_frame` block" if scopes.include?(:frame)
-      raise Capybara::ScopeError, "Window cannot be switch inside a `within` block" unless scopes.last.nil?
+      raise Capybara::ScopeError, 'Window cannot be switched inside a `within_frame` block' if scopes.include?(:frame)
+      raise Capybara::ScopeError, 'Window cannot be switch inside a `within` block' unless scopes.last.nil?
 
       if window
         driver.switch_to_window(window.handle)
@@ -886,7 +886,7 @@ module Capybara
             raise e
           else
             driver.switch_to_window(original_window_handle)
-            raise Capybara::WindowError, "Could not find a window matching block/lambda"
+            raise Capybara::WindowError, 'Could not find a window matching block/lambda'
           end
         end
       end
