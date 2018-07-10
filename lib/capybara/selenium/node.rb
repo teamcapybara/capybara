@@ -204,6 +204,11 @@ private
       native.clear
     elsif clear == :backspace
       # Clear field by sending the correct number of backspace keys.
+      # Move caret to the end of the field before. Not supported on all input types (email for exemple).
+      if %w(text search password tel url).include?(self[:type])
+        caret_to_the_end = 'arguments[0].setSelectionRange(arguments[0].value.length, arguments[0].value.length)'
+        driver.execute_script caret_to_the_end, self
+      end
       backspaces = [:backspace] * self.value.to_s.length
       native.send_keys(*(backspaces + [value.to_s]))
     elsif clear == :none
