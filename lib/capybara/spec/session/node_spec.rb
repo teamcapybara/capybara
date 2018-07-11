@@ -100,7 +100,6 @@ Capybara::SpecHelper.spec "node" do
     end
 
     it "should fill the field even if the caret was not at the end", requires: [:js] do
-      @session.first('//input').set('monkey')
       @session.execute_script("var el = document.getElementById('test_field'); el.focus(); el.setSelectionRange(0, 0);")
       @session.first('//input').set('')
       expect(@session.first('//input').value).to eq('')
