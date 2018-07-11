@@ -104,11 +104,6 @@ Capybara::SpecHelper.spec "node" do
       @session.execute_script("var el = document.getElementById('test_field'); el.focus(); el.setSelectionRange(0, 0);")
       @session.first('//input').set('')
       expect(@session.first('//input').value).to eq('')
-
-      @session.first('//input').set('monkey')
-      @session.execute_script("var el = document.getElementById('test_field'); el.focus(); el.setSelectionRange(0, 0);")
-      @session.first('//input').set('', clear: :backspace)
-      expect(@session.first('//input').value).to eq('')
     end
 
     it "should raise if the text field is readonly" do
