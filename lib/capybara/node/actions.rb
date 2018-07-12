@@ -205,7 +205,9 @@ module Capybara
       ##
       #
       # Find a file field on the page and attach a file given its path. The file field can
-      # be found via its name, id or label text.
+      # be found via its name, id or label text. In the case of the file field being hidden for
+      # styling reasons the `make_visible` option can be used to temporarily change the CSS of
+      # the file field, attach the file, and then revert the CSS back to original.
       #
       #     page.attach_file(locator, '/path/to/file.png')
       #
