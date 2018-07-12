@@ -138,6 +138,6 @@ RSpec.describe 'capybara/minitest/spec' do
     reporter.report
     expect(output.string).to include("19 runs, 41 assertions, 1 failures, 0 errors, 1 skips")
     # Make sure error messages are displayed
-    expect(output.string).to include('expected to find visible select box "non_existing_form_title" that is not disabled but there were no matches')
+    expect(output.string).to include('expected to find select box "non_existing_form_title" but there were no matches')
   end
 end

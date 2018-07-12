@@ -138,6 +138,10 @@ module Capybara
       failure_message.sub(/(to find)/, 'not \1')
     end
 
+    def unfiltered_size
+      @elements.length
+    end
+
   private
 
     def full_results

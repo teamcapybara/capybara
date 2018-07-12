@@ -30,22 +30,31 @@ module Capybara
       def name; selector.name; end
       def label; selector.label || selector.name; end
 
-      def description
+      def description(applied = false)
         @description = +""
-        @description << "visible " if visible == :visible
-        @description << "non-visible " if visible == :hidden
+        if !applied || @applied_filters
+          @description << "visible " if visible == :visible
+          @description << "non-visible " if visible == :hidden
+        end
         @description << "#{label} #{locator.inspect}"
-        @description << " with#{' exact' if exact_text == true} text #{options[:text].inspect}" if options[:text]
-        @description << " with exact text #{exact_text}" if exact_text.is_a?(String)
+        if !applied || @applied_filters
+          @description << " with#{' exact' if exact_text == true} text #{options[:text].inspect}" if options[:text]
+          @description << " with exact text #{exact_text}" if exact_text.is_a?(String)
+        end
         @description << " with id #{options[:id]}" if options[:id]
         @description << " with classes [#{Array(options[:class]).join(',')}]" if options[:class]
-        @description << selector.description(options)
-        @description << " that also matches the custom filter block" if @filter_block
+        @description << selector.description(skip_node_filters: applied && (@applied_filters != :node), **options)
+        @description << " that also matches the custom filter block" if @filter_block && (!applied || (@applied_filters == :node))
         @description << " within #{@resolved_node.inspect}" if describe_within?
         @description
       end
 
+      def applied_description
+        description(true)
+      end
+
       def matches_filters?(node)
+        @applied_filters ||= :system
         return false if options[:text] && !matches_text_filter(node, options[:text])
         return false if exact_text.is_a?(String) && !matches_exact_text_filter(node, exact_text)
 
@@ -54,6 +63,7 @@ module Capybara
         when :hidden then return false if node.visible?
         end
 
+        @applied_filters = :node
         matches_node_filters?(node) && matches_filter_block?(node)
       rescue *(node.respond_to?(:session) ? node.session.driver.invalid_element_errors : [])
         false
@@ -88,6 +98,7 @@ module Capybara
 
       # @api private
       def resolve_for(node, exact = nil)
+        @applied_filters = false
         @resolved_node = node
         node.synchronize do
           children = if selector.format == :css
@@ -108,6 +119,14 @@ module Capybara
       # @api private
       def supports_exact?
         @expression.respond_to? :to_xpath
+      end
+
+      def failure_message
+        +"expected to find #{applied_description}" << count_message
+      end
+
+      def negative_failure_message
+        +"expected not to find #{applied_description}" << count_message
       end
 
     private

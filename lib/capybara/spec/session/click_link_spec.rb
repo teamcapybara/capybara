@@ -69,7 +69,7 @@ Capybara::SpecHelper.spec '#click_link' do
 
   context "with a locator that doesn't exist" do
     it "should raise an error" do
-      msg = "Unable to find visible link \"does not exist\""
+      msg = "Unable to find link \"does not exist\""
       expect do
         @session.click_link('does not exist')
       end.to raise_error(Capybara::ElementNotFound, msg)

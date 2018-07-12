@@ -31,7 +31,7 @@ Capybara::SpecHelper.spec "#choose" do
 
   context "with a locator that doesn't exist" do
     it "should raise an error" do
-      msg = "Unable to find visible radio button \"does not exist\" that is not disabled"
+      msg = "Unable to find radio button \"does not exist\""
       expect do
         @session.choose('does not exist')
       end.to raise_error(Capybara::ElementNotFound, msg)
@@ -89,7 +89,7 @@ Capybara::SpecHelper.spec "#choose" do
       end
 
       it "should raise error if not allowed to click label" do
-        expect { @session.choose("party_democrat", allow_label_click: false) }.to raise_error(Capybara::ElementNotFound, 'Unable to find visible radio button "party_democrat" that is not disabled')
+        expect { @session.choose("party_democrat", allow_label_click: false) }.to raise_error(Capybara::ElementNotFound, 'Unable to find visible radio button "party_democrat"')
       end
     end
   end

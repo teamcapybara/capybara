@@ -159,11 +159,12 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
     context  '#fill_in with Date' do
       before do
         session.visit('/form')
-        session.execute_script <<-JS
+        fd = session.find(:css, '#form_date')
+        fd.execute_script <<-JS
           window.capybara_formDateFiredEvents = [];
+          var fd = this;
           ['focus', 'input', 'change'].forEach(function(eventType) {
-            document.getElementById('form_date')
-              .addEventListener(eventType, function() { window.capybara_formDateFiredEvents.push(eventType); });
+            fd.addEventListener(eventType, function() { window.capybara_formDateFiredEvents.push(eventType); });
           });
         JS
         # work around weird FF issue where it would create an extra focus issue in some cases

@@ -94,7 +94,7 @@ Capybara::SpecHelper.spec "#select" do
     it "should not find an input without a datalist" do
       expect do
         @session.select("Thomas", from: 'form_first_name')
-      end.to raise_error(/Unable to find visible input box with datalist completion "form_first_name" that is not disabled/)
+      end.to raise_error(/Unable to find input box with datalist completion "form_first_name"/)
     end
 
     it "should not select an option that doesn't exist" do
@@ -112,7 +112,7 @@ Capybara::SpecHelper.spec "#select" do
 
   context "with a locator that doesn't exist" do
     it "should raise an error" do
-      msg = /Unable to find visible select box "does not exist" that is not disabled/
+      msg = /Unable to find select box "does not exist"/
       expect do
         @session.select('foo', from: 'does not exist')
       end.to raise_error(Capybara::ElementNotFound, msg)
@@ -121,7 +121,7 @@ Capybara::SpecHelper.spec "#select" do
 
   context "with an option that doesn't exist" do
     it "should raise an error" do
-      msg = /^Unable to find visible option "Does not Exist" within/
+      msg = /^Unable to find option "Does not Exist" within/
       expect do
         @session.select('Does not Exist', from: 'form_locale')
       end.to raise_error(Capybara::ElementNotFound, msg)

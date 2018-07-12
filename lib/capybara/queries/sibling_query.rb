@@ -14,7 +14,7 @@ module Capybara
         end
       end
 
-      def description
+      def description(applied = false)
         desc = super
         sibling_query = @sibling_node&.instance_variable_get(:@query)
         desc += " that is a sibling of #{sibling_query.description}" if sibling_query

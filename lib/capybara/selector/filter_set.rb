@@ -5,11 +5,12 @@ require 'capybara/selector/filter'
 module Capybara
   class Selector
     class FilterSet
-      attr_reader :descriptions, :node_filters, :expression_filters
+      attr_reader :descriptions, :node_filter_descriptions, :node_filters, :expression_filters
 
       def initialize(name, &block)
         @name = name
         @descriptions = []
+        @node_filter_descriptions = []
         @expression_filters = {}
         @node_filters = {}
         instance_eval(&block)
@@ -24,13 +25,19 @@ module Capybara
         add_filter(name, Filters::ExpressionFilter, *types_and_options, &block)
       end
 
-      def describe(&block)
-        descriptions.push block
+      def describe(node_filters: false, &block)
+        if node_filters
+          node_filter_descriptions.push block
+        else
+          descriptions.push block
+        end
       end
 
-      def description(**options)
+      def description(skip_node_filters: false, **options)
         opts = options_with_defaults(options)
-        @descriptions.map { |desc| desc.call(opts).to_s }.join
+        d = @descriptions.map { |desc| desc.call(opts).to_s }.join
+        d += @node_filter_descriptions.map { |desc| desc.call(opts).to_s }.join unless skip_node_filters
+        d
       end
 
       class << self

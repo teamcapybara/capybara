@@ -56,7 +56,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
     context "when `true`" do
       it "does not click on link which matches approximately" do
         @session.visit('/with_html')
-        msg = "Unable to find visible link or button \"abore\""
+        msg = "Unable to find link or button \"abore\""
         expect do
           @session.click_link_or_button('abore', exact: true)
         end.to raise_error(Capybara::ElementNotFound, msg)
@@ -64,7 +64,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
 
       it "does not click on approximately matching button" do
         @session.visit('/form')
-        msg = "Unable to find visible link or button \"awe\""
+        msg = "Unable to find link or button \"awe\""
 
         expect do
           @session.click_link_or_button('awe', exact: true)
@@ -76,7 +76,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
   context "with a locator that doesn't exist" do
     it "should raise an error" do
       @session.visit('/with_html')
-      msg = "Unable to find visible link or button \"does not exist\""
+      msg = "Unable to find link or button \"does not exist\""
       expect do
         @session.click_link_or_button('does not exist')
       end.to raise_error(Capybara::ElementNotFound, msg)
