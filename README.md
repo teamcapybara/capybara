@@ -387,7 +387,7 @@ See the section on adding and configuring drivers.
 
 ### <a name="selenium"></a>Selenium
 
-At the moment, Capybara supports [Selenium 2.0+
+Capybara supports [Selenium 2.0+
 (Webdriver)](http://seleniumhq.org/docs/01_introducing_selenium.html#selenium-2-aka-selenium-webdriver),
 *not* Selenium RC. In order to use Selenium, you'll need to install the
 `selenium-webdriver` gem, and add it to your Gemfile if you're using bundler.
