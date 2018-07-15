@@ -90,12 +90,12 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
 
       it 'should fill in a field, replacing an existing value, even with caret position' do
         session.visit('/form')
-        move_caret_at_the_beginning_js = <<-JS
-          var element = document.getElementById('form_first_name');
-          element.focus();
-          element.setSelectionRange(0, 0);
+        el = session.find('#form_first_name')
+        move_caret_to_the_beginning_js = <<-JS
+          this.focus();
+          this.setSelectionRange(0, 0);
         JS
-        session.execute_script(move_caret_at_the_beginning_js)
+        el.execute_script(move_caret_to_the_beginning_js)
 
         session.fill_in('form_first_name',
           with: 'Harry',
