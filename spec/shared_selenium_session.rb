@@ -88,7 +88,7 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         expect(session.find(:fillable_field, 'form_first_name').value).to eq('Harry')
       end
 
-      it 'should fill in a field, replacing an existing value, even with caret position', focus_: true do
+      it 'should fill in a field, replacing an existing value, even with caret position' do
         session.visit('/form')
         move_caret_at_the_beginning_js = <<-JS
           var element = document.getElementById('form_first_name');
