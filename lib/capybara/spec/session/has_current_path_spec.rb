@@ -81,7 +81,8 @@ Capybara::SpecHelper.spec '#has_current_path?' do
   end
 
   it "should not raise an exception if the current_url is nil" do
-    allow_any_instance_of(Capybara::Session).to receive(:current_url).and_return(nil)
+    current_session = @session.is_a?(Capybara::Session) ? @session : @session.page
+    allow(current_session).to receive(:current_url).and_return(nil)
 
     # Without ignore_query option
     expect do
@@ -121,8 +122,9 @@ Capybara::SpecHelper.spec '#has_no_current_path?' do
   end
 
   it "should not raise an exception if the current_url is nil" do
-    allow_any_instance_of(Capybara::Session).to receive(:current_url).and_return(nil)
+    current_session = @session.is_a?(Capybara::Session) ? @session : @session.page
 
+    allow(current_session).to receive(:current_url).and_return(nil)
     # Without ignore_query option
     expect do
       expect(@session).not_to have_current_path('/with_js')
