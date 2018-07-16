@@ -205,7 +205,7 @@ private
     elsif clear == :backspace
       # Clear field by sending the correct number of backspace keys.
       backspaces = [:backspace] * self.value.to_s.length
-      native.send_keys(*(backspaces + [value.to_s]))
+      native.send_keys(*([:end] + backspaces + [value.to_s]))
     elsif clear == :none
       native.send_keys(value.to_s)
     elsif clear.is_a? Array

@@ -93,6 +93,21 @@ RSpec.shared_examples "Capybara::Session" do |session, mode|
         expect(session.find(:fillable_field, 'form_first_name').value).to eq('Harry')
       end
 
+      it 'should fill in a field, replacing an existing value, even with caret position' do
+        session.visit('/form')
+        el = session.find(:css, '#form_first_name')
+        move_caret_to_the_beginning_js = <<-JS
+          this.focus();
+          this.setSelectionRange(0, 0);
+        JS
+        el.execute_script(move_caret_to_the_beginning_js)
+
+        session.fill_in('form_first_name',
+          with: 'Harry',
+          fill_options: { clear: :backspace })
+        expect(session.find(:fillable_field, 'form_first_name').value).to eq('Harry')
+      end
+
       it 'should fill in if the option is set via global option' do
         Capybara.default_set_options = { clear: :backspace }
         session.visit('/form')
