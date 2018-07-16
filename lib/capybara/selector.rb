@@ -10,7 +10,7 @@ Capybara::Selector::FilterSet.add(:_field) do
   expression_filter(:name) { |xpath, val| xpath[XPath.attr(:name) == val] }
   expression_filter(:placeholder) { |xpath, val| xpath[XPath.attr(:placeholder) == val] }
 
-  describe do |checked: nil, unchecked: nil, disabled: nil, multiple: nil, **_options|
+  describe(node_filters: true) do |checked: nil, unchecked: nil, disabled: nil, multiple: nil, **|
     desc, states = +"", []
     states << 'checked' if checked || (unchecked == false)
     states << 'not checked' if unchecked || (checked == false)
@@ -58,17 +58,21 @@ Capybara.add_selector(:field) do
   node_filter(:with) do |node, with|
     with.is_a?(Regexp) ? node.value =~ with : node.value == with.to_s
   end
+
   describe do |type: nil, **options|
     desc = +""
     (expression_filters.keys - [:type]).each { |ef| desc << " with #{ef} #{options[ef]}" if options.key?(ef) }
     desc << " of type #{type.inspect}" if type
-    desc << " with value #{options[:with].to_s.inspect}" if options.key?(:with)
     desc
+  end
+
+  describe_node_filters do |**options|
+    " with value #{options[:with].to_s.inspect}" if options.key?(:with)
   end
 end
 
 Capybara.add_selector(:fieldset) do
-  xpath(:legend) do |locator, legend: nil, **_options|
+  xpath(:legend) do |locator, legend: nil, **|
     locator_matchers = (XPath.attr(:id) == locator.to_s) | XPath.child(:legend)[XPath.string.n.is(locator.to_s)]
     locator_matchers |= XPath.attr(Capybara.test_id) == locator if Capybara.test_id
     xpath = XPath.descendant(:fieldset)
@@ -81,7 +85,7 @@ Capybara.add_selector(:fieldset) do
 end
 
 Capybara.add_selector(:link) do
-  xpath(:title, :alt) do |locator, href: true, enable_aria_label: false, alt: nil, title: nil, **_options|
+  xpath(:title, :alt) do |locator, href: true, enable_aria_label: false, alt: nil, title: nil, **|
     xpath = XPath.descendant(:a)
     xpath = xpath[
               case href
@@ -128,8 +132,13 @@ Capybara.add_selector(:link) do
 
   describe do |**options|
     desc = +""
-    desc << " with href #{options[:href].inspect}" if options[:href]
+    desc << " with href #{options[:href].inspect}" if options[:href] && !options[:href].is_a?(Regexp)
     desc << " with no href attribute" if options.fetch(:href, true).nil?
+    desc
+  end
+
+  describe_node_filters do |href: nil, **|
+    " with href matching #{href.inspect}" if href.is_a? Regexp
   end
 end
 
@@ -163,11 +172,9 @@ Capybara.add_selector(:button) do
 
   node_filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| !(value ^ node.disabled?) }
 
-  describe do |disabled: nil, **options|
-    desc = +""
-    desc << " that is disabled" if disabled == true
-    desc << describe_all_expression_filters(options)
-    desc
+  describe_expression_filters
+  describe_node_filters do |disabled: nil, **|
+    " that is disabled" if disabled == true
   end
 end
 
@@ -179,7 +186,9 @@ Capybara.add_selector(:link_or_button) do
 
   node_filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| node.tag_name == "a" || !(value ^ node.disabled?) }
 
-  describe { |disabled: nil, **_options| " that is disabled" if disabled == true }
+  describe_node_filters do |disabled: nil, **|
+    " that is disabled" if disabled == true
+  end
 end
 
 Capybara.add_selector(:fillable_field) do
@@ -205,11 +214,9 @@ Capybara.add_selector(:fillable_field) do
     with.is_a?(Regexp) ? node.value =~ with : node.value == with.to_s
   end
 
-  describe do |options|
-    desc = +""
-    desc << describe_all_expression_filters(options)
-    desc << " with value #{options[:with].to_s.inspect}" if options.key?(:with)
-    desc
+  describe_expression_filters
+  describe_node_filters do |**options|
+    " with value #{options[:with].to_s.inspect}" if options.key?(:with)
   end
 end
 
@@ -225,11 +232,9 @@ Capybara.add_selector(:radio_button) do
 
   node_filter(:option) { |node, value| node.value == value.to_s }
 
-  describe do |option: nil, **options|
-    desc = +""
-    desc << " with value #{option.inspect}" if option
-    desc << describe_all_expression_filters(options)
-    desc
+  describe_expression_filters
+  describe_node_filters do |option: nil, **|
+    " with value #{option.inspect}" if option
   end
 end
 
@@ -243,11 +248,9 @@ Capybara.add_selector(:checkbox) do
 
   node_filter(:option) { |node, value| node.value == value.to_s }
 
-  describe do |option: nil, **options|
-    desc = +""
-    desc << " with value #{option.inspect}" if option
-    desc << describe_all_expression_filters(options)
-    desc
+  describe_expression_filters
+  describe_node_filters do |option: nil, **|
+    " with value #{option.inspect}" if option
   end
 end
 
@@ -286,13 +289,18 @@ Capybara.add_selector(:select) do
     (Array(selected) - actual).empty?
   end
 
-  describe do |options: nil, with_options: nil, selected: nil, with_selected: nil, **opts|
+  describe do |with_options: nil, **opts|
+    desc = +""
+    desc << " with at least options #{with_options.inspect}" if with_options
+    desc << describe_all_expression_filters(opts)
+    desc
+  end
+
+  describe_node_filters do |options: nil, selected: nil, with_selected: nil, **|
     desc = +""
     desc << " with options #{options.inspect}" if options
-    desc << " with at least options #{with_options.inspect}" if with_options
     desc << " with #{selected.inspect} selected" if selected
     desc << " with at least #{with_selected.inspect} selected" if with_selected
-    desc << describe_all_expression_filters(opts)
     desc
   end
 end
@@ -318,12 +326,15 @@ Capybara.add_selector(:datalist_input) do
     end
   end
 
-  describe do |options: nil, with_options: nil, **opts|
+  describe do |with_options: nil, **opts|
     desc = +""
-    desc << " with options #{options.inspect}" if options
     desc << " with at least options #{with_options.inspect}" if with_options
     desc << describe_all_expression_filters(opts)
     desc
+  end
+
+  describe_node_filters do |options: nil, **|
+    " with options #{options.inspect}" if options
   end
 end
 
@@ -337,7 +348,7 @@ Capybara.add_selector(:option) do
   node_filter(:disabled, :boolean) { |node, value| !(value ^ node.disabled?) }
   node_filter(:selected, :boolean) { |node, value| !(value ^ node.selected?) }
 
-  describe do |**options|
+  describe_node_filters do |**options|
     desc = +""
     desc << " that is#{' not' unless options[:disabled]} disabled" if options.key?(:disabled)
     desc << " that is#{' not' unless options[:selected]} selected" if options.key?(:selected)
@@ -357,10 +368,8 @@ Capybara.add_selector(:datalist_option) do
 
   node_filter(:disabled, :boolean) { |node, value| !(value ^ node.disabled?) }
 
-  describe do |**options|
-    desc = +""
-    desc << " that is#{' not' unless options[:disabled]} disabled" if options.key?(:disabled)
-    desc
+  describe_node_filters do |**options|
+    " that is#{' not' unless options[:disabled]} disabled" if options.key?(:disabled)
   end
 end
 
@@ -373,11 +382,7 @@ Capybara.add_selector(:file_field) do
 
   filter_set(:_field, %i[disabled multiple name])
 
-  describe do |**options|
-    desc = +""
-    desc << describe_all_expression_filters(options)
-    desc
-  end
+  describe_expression_filters
 end
 
 Capybara.add_selector(:label) do
@@ -411,15 +416,13 @@ Capybara.add_selector(:label) do
     end
   end
 
-  describe do |**options|
-    desc = +""
-    desc << " for #{options[:for]}" if options[:for]
-    desc
+  describe_node_filters do |**options|
+    " for #{options[:for]}" if options[:for]
   end
 end
 
 Capybara.add_selector(:table) do
-  xpath(:caption) do |locator, caption: nil, **_options|
+  xpath(:caption) do |locator, caption: nil, **|
     xpath = XPath.descendant(:table)
     unless locator.nil?
       locator_matchers = (XPath.attr(:id) == locator.to_s) | XPath.descendant(:caption).is(locator.to_s)
@@ -430,10 +433,8 @@ Capybara.add_selector(:table) do
     xpath
   end
 
-  describe do |caption: nil, **_options|
-    desc = +""
-    desc << " with caption #{caption}" if caption
-    desc
+  describe do |caption: nil, **|
+    " with caption \"#{caption}\"" if caption
   end
 end
 
@@ -449,15 +450,13 @@ Capybara.add_selector(:frame) do
     xpath
   end
 
-  describe do |name: nil, **_options|
-    desc = +""
-    desc << " with name #{name}" if name
-    desc
+  describe do |name: nil, **|
+    " with name #{name}" if name
   end
 end
 
 Capybara.add_selector(:element) do
-  xpath do |locator, **_options|
+  xpath do |locator, **|
     XPath.descendant((locator || '@').to_sym)
   end
 
@@ -476,10 +475,6 @@ Capybara.add_selector(:element) do
     val.is_a?(Regexp) ? node[name] =~ val : true
   end
 
-  describe do |**options|
-    desc = +""
-    desc << describe_all_expression_filters(options)
-    desc
-  end
+  describe_expression_filters
 end
 # rubocop:enable Metrics/BlockLength

@@ -354,9 +354,24 @@ module Capybara
       @filter_set.expression_filters.merge!(f_set.expression_filters.select(&filter_selector))
       @filter_set.node_filters.merge!(f_set.node_filters.select(&filter_selector))
       f_set.descriptions.each { |desc| @filter_set.describe(&desc) }
+      f_set.node_filter_descriptions.each { |desc| @filter_set.describe(node_filters: true, &desc) }
     end
 
     def_delegator :@filter_set, :describe
+
+    def describe_expression_filters(&block)
+      if block_given?
+        describe(node_filters: false, &block)
+      else
+        describe(node_filters: false) do |**options|
+          describe_all_expression_filters(options)
+        end
+      end
+    end
+
+    def describe_node_filters(&block)
+      describe(node_filters: true, &block)
+    end
 
     ##
     #

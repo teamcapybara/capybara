@@ -62,7 +62,7 @@ Capybara::SpecHelper.spec '#ancestor' do
     el = @session.find(:css, '#child')
     expect do
       el.ancestor(:xpath, '//div[@id="nosuchthing"]')
-    end.to raise_error(Capybara::ElementNotFound, "Unable to find visible xpath \"//div[@id=\\\"nosuchthing\\\"]\" that is an ancestor of visible css \"#child\"")
+    end.to raise_error(Capybara::ElementNotFound, "Unable to find xpath \"//div[@id=\\\"nosuchthing\\\"]\" that is an ancestor of visible css \"#child\"")
   end
 
   context "within a scope" do

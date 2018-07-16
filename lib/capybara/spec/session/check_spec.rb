@@ -76,7 +76,7 @@ Capybara::SpecHelper.spec "#check" do
 
   context "with a locator that doesn't exist" do
     it "should raise an error" do
-      msg = "Unable to find visible checkbox \"does not exist\" that is not disabled"
+      msg = "Unable to find checkbox \"does not exist\""
       expect do
         @session.check('does not exist')
       end.to raise_error(Capybara::ElementNotFound, msg)
@@ -85,9 +85,10 @@ Capybara::SpecHelper.spec "#check" do
 
   context "with a disabled checkbox" do
     it "should raise an error" do
+      msg = "Unable to find visible checkbox \"Disabled Checkbox\" that is not disabled"
       expect do
         @session.check('Disabled Checkbox')
-      end.to raise_error(Capybara::ElementNotFound)
+      end.to raise_error(Capybara::ElementNotFound, msg)
     end
   end
 
@@ -149,11 +150,11 @@ Capybara::SpecHelper.spec "#check" do
       end
 
       it "should raise original error when no label available" do
-        expect { @session.check('form_cars_ariel') }.to raise_error(Capybara::ElementNotFound, 'Unable to find visible checkbox "form_cars_ariel" that is not disabled')
+        expect { @session.check('form_cars_ariel') }.to raise_error(Capybara::ElementNotFound, 'Unable to find visible checkbox "form_cars_ariel"')
       end
 
       it "should raise error if not allowed to click label" do
-        expect { @session.check('form_cars_mclaren', allow_label_click: false) }.to raise_error(Capybara::ElementNotFound, 'Unable to find visible checkbox "form_cars_mclaren" that is not disabled')
+        expect { @session.check('form_cars_mclaren', allow_label_click: false) }.to raise_error(Capybara::ElementNotFound, 'Unable to find visible checkbox "form_cars_mclaren"')
       end
     end
 
@@ -165,7 +166,11 @@ Capybara::SpecHelper.spec "#check" do
       end
 
       it "should raise error if checkbox not visible" do
-        expect { @session.check('form_cars_mclaren') }.to raise_error(Capybara::ElementNotFound, 'Unable to find visible checkbox "form_cars_mclaren" that is not disabled')
+        expect { @session.check('form_cars_mclaren') }.to raise_error(Capybara::ElementNotFound, 'Unable to find visible checkbox "form_cars_mclaren"')
+      end
+
+      it "should include node filter in error if verified" do
+        expect { @session.check('form_cars_maserati') }.to raise_error(Capybara::ElementNotFound, 'Unable to find visible checkbox "form_cars_maserati" that is not disabled')
       end
 
       context "with allow_label_click == true" do
