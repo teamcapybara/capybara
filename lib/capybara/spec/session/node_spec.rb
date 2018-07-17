@@ -498,6 +498,13 @@ Capybara::SpecHelper.spec 'node' do
       expect(el.evaluate_script('this.value')).to eq('default value')
     end
 
+    it 'should ignore leading whitespace' do
+      @session.visit('/with_js')
+      expect(@session.find(:css, '#change').evaluate_script('
+        2 + 3
+      ')).to eq 5
+    end
+
     it 'should pass arguments to the script' do
       @session.visit('/with_js')
       @session.find(:css, '#change').evaluate_script('this.textContent = arguments[0]', 'Doodle Funk')
