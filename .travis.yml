@@ -76,7 +76,7 @@ matrix:
     - gemfile: gemfiles/Gemfile.edge-marionette
 before_install:
   - gem update --system
-  - gem install bundler
+  - gem install bundler -v 1.16.2
   - if [[ $BUNDLE_GEMFILE =~ Gemfile.edge-marionette$ ]]; then
       pushd ..;
       git clone --depth 1 https://github.com/SeleniumHQ/selenium.git;
