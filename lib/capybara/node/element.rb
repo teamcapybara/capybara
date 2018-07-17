@@ -399,7 +399,7 @@ module Capybara
       def evaluate_script(script, *args)
         session.evaluate_script(<<~JS, self, *args)
           (function(){
-            return #{script}
+            return #{script.strip}
           }).apply(arguments[0], Array.prototype.slice.call(arguments,1));
         JS
       end
