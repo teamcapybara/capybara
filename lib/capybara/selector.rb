@@ -10,7 +10,7 @@ Capybara::Selector::FilterSet.add(:_field) do
   expression_filter(:name) { |xpath, val| xpath[XPath.attr(:name) == val] }
   expression_filter(:placeholder) { |xpath, val| xpath[XPath.attr(:placeholder) == val] }
 
-  describe(node_filters: true) do |checked: nil, unchecked: nil, disabled: nil, multiple: nil, **|
+  describe(:node_filters) do |checked: nil, unchecked: nil, disabled: nil, multiple: nil, **|
     desc, states = +'', []
     states << 'checked' if checked || (unchecked == false)
     states << 'not checked' if unchecked || (checked == false)
@@ -59,7 +59,7 @@ Capybara.add_selector(:field) do
     with.is_a?(Regexp) ? node.value =~ with : node.value == with.to_s
   end
 
-  describe do |type: nil, **options|
+  describe_expression_filters do |type: nil, **options|
     desc = +''
     (expression_filters.keys - [:type]).each { |ef| desc << " with #{ef} #{options[ef]}" if options.key?(ef) }
     desc << " of type #{type.inspect}" if type
@@ -130,7 +130,7 @@ Capybara.add_selector(:link) do
     expr[mod]
   end
 
-  describe do |**options|
+  describe_expression_filters do |**options|
     desc = +''
     desc << " with href #{options[:href].inspect}" if options[:href] && !options[:href].is_a?(Regexp)
     desc << ' with no href attribute' if options.fetch(:href, true).nil?
@@ -289,7 +289,7 @@ Capybara.add_selector(:select) do
     (Array(selected) - actual).empty?
   end
 
-  describe do |with_options: nil, **opts|
+  describe_expression_filters do |with_options: nil, **opts|
     desc = +''
     desc << " with at least options #{with_options.inspect}" if with_options
     desc << describe_all_expression_filters(opts)
@@ -326,7 +326,7 @@ Capybara.add_selector(:datalist_input) do
     end
   end
 
-  describe do |with_options: nil, **opts|
+  describe_expression_filters do |with_options: nil, **opts|
     desc = +''
     desc << " with at least options #{with_options.inspect}" if with_options
     desc << describe_all_expression_filters(opts)
@@ -416,8 +416,11 @@ Capybara.add_selector(:label) do
     end
   end
 
+  describe_expression_filters do |**options|
+    " for element with id of \"#{options[:for]}\"" if options.key?(:for) && !options[:for].is_a?(Capybara::Node::Element)
+  end
   describe_node_filters do |**options|
-    " for #{options[:for]}" if options[:for]
+    " for element #{options[:for]}" if options[:for]&.is_a?(Capybara::Node::Element)
   end
 end
 
@@ -433,7 +436,7 @@ Capybara.add_selector(:table) do
     xpath
   end
 
-  describe do |caption: nil, **|
+  describe_expression_filters do |caption: nil, **|
     " with caption \"#{caption}\"" if caption
   end
 end
@@ -450,7 +453,7 @@ Capybara.add_selector(:frame) do
     xpath
   end
 
-  describe do |name: nil, **|
+  describe_expression_filters do |name: nil, **|
     " with name #{name}" if name
   end
 end

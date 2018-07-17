@@ -349,28 +349,23 @@ module Capybara
     def_delegators :@filter_set, :node_filter, :expression_filter, :filter
 
     def filter_set(name, filters_to_use = nil)
-      f_set = FilterSet.all[name]
-      filter_selector = filters_to_use.nil? ? ->(*) { true } : ->(n, _) { filters_to_use.include? n }
-      @filter_set.expression_filters.merge!(f_set.expression_filters.select(&filter_selector))
-      @filter_set.node_filters.merge!(f_set.node_filters.select(&filter_selector))
-      f_set.descriptions.each { |desc| @filter_set.describe(&desc) }
-      f_set.node_filter_descriptions.each { |desc| @filter_set.describe(node_filters: true, &desc) }
+      @filter_set.import(name, filters_to_use)
     end
 
     def_delegator :@filter_set, :describe
 
     def describe_expression_filters(&block)
       if block_given?
-        describe(node_filters: false, &block)
+        describe(:expression_filters, &block)
       else
-        describe(node_filters: false) do |**options|
+        describe(:expression_filters) do |**options|
           describe_all_expression_filters(options)
         end
       end
     end
 
     def describe_node_filters(&block)
-      describe(node_filters: true, &block)
+      describe(:node_filters, &block)
     end
 
     ##

@@ -5,14 +5,13 @@ require 'capybara/selector/filter'
 module Capybara
   class Selector
     class FilterSet
-      attr_reader :descriptions, :node_filter_descriptions, :node_filters, :expression_filters
+      attr_reader :node_filters, :expression_filters
 
       def initialize(name, &block)
         @name = name
-        @descriptions = []
-        @node_filter_descriptions = []
-        @expression_filters = {}
         @node_filters = {}
+        @expression_filters = {}
+        @descriptions = Hash.new { |h, k| h[k] = [] }
         instance_eval(&block)
       end
 
@@ -25,19 +24,43 @@ module Capybara
         add_filter(name, Filters::ExpressionFilter, *types_and_options, &block)
       end
 
-      def describe(node_filters: false, &block)
-        if node_filters
+      def describe(what = nil, &block)
+        case what
+        when nil
+          undeclared_descriptions.push block
+        when :node_filters
           node_filter_descriptions.push block
+        when :expression_filters
+          expression_filter_descriptions.push block
         else
-          descriptions.push block
+          raise ArgumentError, 'Unknown description type'
         end
       end
 
-      def description(skip_node_filters: false, **options)
+      def description(node_filters: true, expression_filters: true, **options)
         opts = options_with_defaults(options)
-        d = @descriptions.map { |desc| desc.call(opts).to_s }.join
-        d += @node_filter_descriptions.map { |desc| desc.call(opts).to_s }.join unless skip_node_filters
+        d = +''
+        d += undeclared_descriptions.map { |desc| desc.call(opts).to_s }.join
+        d += expression_filter_descriptions.map { |desc| desc.call(opts).to_s }.join if expression_filters
+        d += node_filter_descriptions.map { |desc| desc.call(opts).to_s }.join if node_filters
         d
+      end
+
+      def descriptions
+        warn 'DEPRECATED: FilterSet#descriptions is deprecated without replacement'
+        [undeclared_descriptions, node_filter_descriptions, expression_filter_descriptions].flatten
+      end
+
+      def import(name, filters = nil)
+        f_set = self.class.all[name]
+        filter_selector = filters.nil? ? ->(*) { true } : ->(n, _) { filters.include? n }
+
+        expression_filters.merge!(f_set.expression_filters.select(&filter_selector))
+        node_filters.merge!(f_set.node_filters.select(&filter_selector))
+
+        f_set.undeclared_descriptions.each { |desc| describe(&desc) }
+        f_set.expression_filter_descriptions.each { |desc| describe(:expression_filters, &desc) }
+        f_set.node_filter_descriptions.each { |desc| describe(:node_filters, &desc) }
       end
 
       class << self
@@ -52,6 +75,20 @@ module Capybara
         def remove(name)
           all.delete(name.to_sym)
         end
+      end
+
+    protected
+
+      def undeclared_descriptions
+        @descriptions[:undeclared]
+      end
+
+      def node_filter_descriptions
+        @descriptions[:node_filters]
+      end
+
+      def expression_filter_descriptions
+        @descriptions[:expression_filters]
       end
 
     private

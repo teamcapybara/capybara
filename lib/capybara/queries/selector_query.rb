@@ -43,7 +43,7 @@ module Capybara
         end
         @description << " with id #{options[:id]}" if options[:id]
         @description << " with classes [#{Array(options[:class]).join(',')}]" if options[:class]
-        @description << selector.description(skip_node_filters: applied && (@applied_filters != :node), **options)
+        @description << selector.description(node_filters: !applied || (@applied_filters == :node), **options)
         @description << ' that also matches the custom filter block' if @filter_block && (!applied || (@applied_filters == :node))
         @description << " within #{@resolved_node.inspect}" if describe_within?
         @description

@@ -5,6 +5,7 @@ Release date: unreleased
 
 * Make selenium driver :backspace clear stategy work even if caret location is in middle of field content [Champier Cyril]
 * Selenium issue with fieldset nested in disabled fieldset not being considered disabled
+
 ### Added
 
 * Work around Selenium lack of support for `file_detector` with remote geckodriver
