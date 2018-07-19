@@ -441,11 +441,7 @@ Capybara::SpecHelper.spec '#find' do
     end.to raise_error(ArgumentError)
   end
 
-  context 'with Capybara.test_id', :focus_ do
-    it 'should default to nil' do
-      expect(Capybara.test_id).to be_nil
-    end
-
+  context 'with Capybara.test_id' do
     it 'should not match on it when nil' do
       Capybara.test_id = nil
       expect(@session).not_to have_field('test_id')

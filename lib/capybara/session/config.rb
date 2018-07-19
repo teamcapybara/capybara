@@ -90,7 +90,6 @@ module Capybara
       @disable_animation = bool
     end
 
-
     remove_method :test_id=
     ##
     #

@@ -72,7 +72,7 @@ Capybara.add_selector(:field) do
 end
 
 Capybara.add_selector(:fieldset) do
-  xpath(:legend) do |locator, legend: nil, test_id: nil, **|
+  xpath(:legend) do |locator, legend: nil, **|
     locator_matchers = (XPath.attr(:id) == locator.to_s) | XPath.child(:legend)[XPath.string.n.is(locator.to_s)]
     locator_matchers |= XPath.attr(test_id) == locator if test_id
     xpath = XPath.descendant(:fieldset)
@@ -85,7 +85,7 @@ Capybara.add_selector(:fieldset) do
 end
 
 Capybara.add_selector(:link) do
-  xpath(:title, :alt) do |locator, href: true, enable_aria_label: false, test_id: nil, alt: nil, title: nil, **|
+  xpath(:title, :alt) do |locator, href: true, alt: nil, title: nil, **|
     xpath = XPath.descendant(:a)
     xpath = xpath[
               case href
@@ -143,7 +143,7 @@ Capybara.add_selector(:link) do
 end
 
 Capybara.add_selector(:button) do
-  xpath(:value, :title, :type) do |locator, enable_aria_label: false, test_id: nil, **options|
+  xpath(:value, :title, :type) do |locator, **options|
     input_btn_xpath = XPath.descendant(:input)[XPath.attr(:type).one_of('submit', 'reset', 'image', 'button')]
     btn_xpath = XPath.descendant(:button)
     image_btn_xpath = XPath.descendant(:input)[XPath.attr(:type) == 'image']
@@ -387,7 +387,7 @@ end
 
 Capybara.add_selector(:label) do
   label 'label'
-  xpath(:for) do |locator, test_id: nil, **options|
+  xpath(:for) do |locator, options|
     xpath = XPath.descendant(:label)
     unless locator.nil?
       locator_matchers = XPath.string.n.is(locator.to_s) | (XPath.attr(:id) == locator.to_s)
@@ -425,7 +425,7 @@ Capybara.add_selector(:label) do
 end
 
 Capybara.add_selector(:table) do
-  xpath(:caption) do |locator, caption: nil, test_id: nil, **|
+  xpath(:caption) do |locator, caption: nil, **|
     xpath = XPath.descendant(:table)
     unless locator.nil?
       locator_matchers = (XPath.attr(:id) == locator.to_s) | XPath.descendant(:caption).is(locator.to_s)
@@ -442,7 +442,7 @@ Capybara.add_selector(:table) do
 end
 
 Capybara.add_selector(:frame) do
-  xpath(:name) do |locator, test_id: nil, **options|
+  xpath(:name) do |locator, **options|
     xpath = XPath.descendant(:iframe).union(XPath.descendant(:frame))
     unless locator.nil?
       locator_matchers = (XPath.attr(:id) == locator.to_s) | (XPath.attr(:name) == locator.to_s)

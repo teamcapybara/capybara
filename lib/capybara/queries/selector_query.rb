@@ -8,7 +8,12 @@ module Capybara
       VALID_KEYS = COUNT_KEYS + %i[text id class visible exact exact_text match wait filter_set]
       VALID_MATCH = %i[first smart prefer_exact one].freeze
 
-      def initialize(*args, session_options:, **options, &filter_block)
+      def initialize(*args,
+                     session_options:,
+                     enable_aria_label: session_options.enable_aria_label,
+                     test_id: session_options.test_id,
+                     **options,
+                     &filter_block)
         @resolved_node = nil
         @options = options.dup
         super(@options)
@@ -20,7 +25,7 @@ module Capybara
 
         raise ArgumentError, "Unused parameters passed to #{self.class.name} : #{args}" unless args.empty?
 
-        @expression = @selector.call(@locator, @options.merge(enable_aria_label: session_options.enable_aria_label, test_id: session_options.test_id))
+        @expression = @selector.call(@locator, @options.merge(selector_config: { enable_aria_label: enable_aria_label, test_id: test_id }))
 
         warn_exact_usage
 

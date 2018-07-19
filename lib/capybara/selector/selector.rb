@@ -190,6 +190,10 @@ module Capybara
       @expression = nil
       @expression_filters = {}
       @default_visibility = nil
+      @config = {
+        enable_aria_label: false,
+        test_id: nil
+      }
       instance_eval(&block)
     end
 
@@ -287,7 +291,8 @@ module Capybara
     #   @return [String]                 Description of the selector when used with the options passed
     def_delegator :@filter_set, :description
 
-    def call(locator, **options)
+    def call(locator, selector_config: {}, **options)
+      @config.merge! selector_config
       if format
         @expression.call(locator, options)
       else
@@ -388,7 +393,15 @@ module Capybara
 
   private
 
-    def locate_field(xpath, locator, enable_aria_label: false, test_id: nil, **_options)
+    def enable_aria_label
+      @config[:enable_aria_label]
+    end
+
+    def test_id
+      @config[:test_id]
+    end
+
+    def locate_field(xpath, locator, **_options)
       return xpath if locator.nil?
       locate_xpath = xpath # Need to save original xpath for the label wrap
       locator = locator.to_s
