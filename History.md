@@ -11,7 +11,7 @@ Release date: unreleased
 * Work around Selenium lack of support for `file_detector` with remote geckodriver
 * `#within_frame` locator is optional when only one frame exists
 * `Capybara.test_id` option that allows for matching the Capybara provided selector types
-  on an arbitrary attribute - defaults to `data-test-id`
+  on an arbitrary attribute - defaults to nil, set to something like 'data-test-id' if using test ids in your project
 
 # Version 3.3.1
 Release date: 2018-06-27

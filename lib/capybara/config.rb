@@ -7,12 +7,11 @@ module Capybara
   class Config
     extend Forwardable
 
-    OPTIONS = %i[app reuse_server threadsafe default_wait_time server default_driver javascript_driver test_id].freeze
+    OPTIONS = %i[app reuse_server threadsafe default_wait_time server default_driver javascript_driver].freeze
 
     attr_accessor :app
     attr_reader :reuse_server, :threadsafe
     attr_reader :session_options
-    attr_reader :test_id
     attr_writer :default_driver, :javascript_driver
 
     SessionConfig::OPTIONS.each do |method|
@@ -78,18 +77,6 @@ module Capybara
     #
     def javascript_driver
       @javascript_driver || :selenium
-    end
-
-    ##
-    #
-    # Set an attribue to be optionally matched against the locator for builtin selector types.
-    # This attribute will be checked by builtin selector types whenever id would normally be checked.
-    # If `nil` then it will be ignored.
-    #
-    #  @params [String, Symbol, nil] id Name of the attribute to use as the test id
-    #
-    def test_id=(id)
-      @test_id = id&.to_sym
     end
 
     def deprecate(method, alternate_method, once = false)

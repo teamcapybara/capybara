@@ -72,9 +72,9 @@ Capybara.add_selector(:field) do
 end
 
 Capybara.add_selector(:fieldset) do
-  xpath(:legend) do |locator, legend: nil, **|
+  xpath(:legend) do |locator, legend: nil, test_id: nil, **|
     locator_matchers = (XPath.attr(:id) == locator.to_s) | XPath.child(:legend)[XPath.string.n.is(locator.to_s)]
-    locator_matchers |= XPath.attr(Capybara.test_id) == locator if Capybara.test_id
+    locator_matchers |= XPath.attr(test_id) == locator if test_id
     xpath = XPath.descendant(:fieldset)
     xpath = xpath[locator_matchers] unless locator.nil?
     xpath = xpath[XPath.child(:legend)[XPath.string.n.is(legend)]] if legend
@@ -85,7 +85,7 @@ Capybara.add_selector(:fieldset) do
 end
 
 Capybara.add_selector(:link) do
-  xpath(:title, :alt) do |locator, href: true, enable_aria_label: false, alt: nil, title: nil, **|
+  xpath(:title, :alt) do |locator, href: true, enable_aria_label: false, test_id: nil, alt: nil, title: nil, **|
     xpath = XPath.descendant(:a)
     xpath = xpath[
               case href
@@ -107,7 +107,7 @@ Capybara.add_selector(:link) do
                   XPath.attr(:title).is(locator),
                   XPath.descendant(:img)[XPath.attr(:alt).is(locator)]]
       matchers << XPath.attr(:'aria-label').is(locator) if enable_aria_label
-      matchers << XPath.attr(Capybara.test_id) == locator if Capybara.test_id
+      matchers << XPath.attr(test_id) == locator if test_id
       xpath = xpath[matchers.reduce(:|)]
     end
 
@@ -143,7 +143,7 @@ Capybara.add_selector(:link) do
 end
 
 Capybara.add_selector(:button) do
-  xpath(:value, :title, :type) do |locator, enable_aria_label: false, **options|
+  xpath(:value, :title, :type) do |locator, enable_aria_label: false, test_id: nil, **options|
     input_btn_xpath = XPath.descendant(:input)[XPath.attr(:type).one_of('submit', 'reset', 'image', 'button')]
     btn_xpath = XPath.descendant(:button)
     image_btn_xpath = XPath.descendant(:input)[XPath.attr(:type) == 'image']
@@ -152,7 +152,7 @@ Capybara.add_selector(:button) do
       locator = locator.to_s
       locator_matchers = XPath.attr(:id).equals(locator) | XPath.attr(:value).is(locator) | XPath.attr(:title).is(locator)
       locator_matchers |= XPath.attr(:'aria-label').is(locator) if enable_aria_label
-      locator_matchers |= XPath.attr(Capybara.test_id) == locator if Capybara.test_id
+      locator_matchers |= XPath.attr(test_id) == locator if test_id
 
       input_btn_xpath = input_btn_xpath[locator_matchers]
 
@@ -387,11 +387,11 @@ end
 
 Capybara.add_selector(:label) do
   label 'label'
-  xpath(:for) do |locator, options|
+  xpath(:for) do |locator, test_id: nil, **options|
     xpath = XPath.descendant(:label)
     unless locator.nil?
       locator_matchers = XPath.string.n.is(locator.to_s) | (XPath.attr(:id) == locator.to_s)
-      locator_matchers |= XPath.attr(Capybara.test_id) == locator if Capybara.test_id
+      locator_matchers |= XPath.attr(test_id) == locator if test_id
       xpath = xpath[locator_matchers]
     end
     if options.key?(:for) && !options[:for].is_a?(Capybara::Node::Element)
@@ -425,11 +425,11 @@ Capybara.add_selector(:label) do
 end
 
 Capybara.add_selector(:table) do
-  xpath(:caption) do |locator, caption: nil, **|
+  xpath(:caption) do |locator, caption: nil, test_id: nil, **|
     xpath = XPath.descendant(:table)
     unless locator.nil?
       locator_matchers = (XPath.attr(:id) == locator.to_s) | XPath.descendant(:caption).is(locator.to_s)
-      locator_matchers |= XPath.attr(Capybara.test_id) == locator if Capybara.test_id
+      locator_matchers |= XPath.attr(test_id) == locator if test_id
       xpath = xpath[locator_matchers]
     end
     xpath = xpath[XPath.descendant(:caption) == caption] if caption
@@ -442,11 +442,11 @@ Capybara.add_selector(:table) do
 end
 
 Capybara.add_selector(:frame) do
-  xpath(:name) do |locator, **options|
+  xpath(:name) do |locator, test_id: nil, **options|
     xpath = XPath.descendant(:iframe).union(XPath.descendant(:frame))
     unless locator.nil?
       locator_matchers = (XPath.attr(:id) == locator.to_s) | (XPath.attr(:name) == locator.to_s)
-      locator_matchers |= XPath.attr(Capybara.test_id) == locator if Capybara.test_id
+      locator_matchers |= XPath.attr(test_id) == locator if test_id
       xpath = xpath[locator_matchers]
     end
     xpath = expression_filters.keys.inject(xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }

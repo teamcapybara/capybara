@@ -7,7 +7,7 @@ module Capybara
     OPTIONS = %i[always_include_port run_server default_selector default_max_wait_time ignore_hidden_elements
                  automatic_reload match exact exact_text raise_server_errors visible_text_only
                  automatic_label_click enable_aria_label save_path asset_host default_host app_host
-                 server_host server_port server_errors default_set_options disable_animation].freeze
+                 server_host server_port server_errors default_set_options disable_animation test_id].freeze
 
     attr_accessor(*OPTIONS)
 
@@ -54,6 +54,8 @@ module Capybara
     #   See {Capybara.configure}
     # @!method disable_animation
     #   See {Capybara.configure}
+    # @!method test_id
+    #   See {Capybara.configure}
 
     remove_method :server_host
 
@@ -86,6 +88,20 @@ module Capybara
     def disable_animation=(bool)
       warn 'Capybara.disable_animation is a beta feature - it may change/disappear in a future point version' if bool
       @disable_animation = bool
+    end
+
+
+    remove_method :test_id=
+    ##
+    #
+    # Set an attribue to be optionally matched against the locator for builtin selector types.
+    # This attribute will be checked by builtin selector types whenever id would normally be checked.
+    # If `nil` then it will be ignored.
+    #
+    #  @params [String, Symbol, nil] id Name of the attribute to use as the test id
+    #
+    def test_id=(id)
+      @test_id = id&.to_sym
     end
 
     def initialize_copy(other)

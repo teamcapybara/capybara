@@ -20,7 +20,7 @@ module Capybara
 
         raise ArgumentError, "Unused parameters passed to #{self.class.name} : #{args}" unless args.empty?
 
-        @expression = @selector.call(@locator, @options.merge(enable_aria_label: session_options.enable_aria_label))
+        @expression = @selector.call(@locator, @options.merge(enable_aria_label: session_options.enable_aria_label, test_id: session_options.test_id))
 
         warn_exact_usage
 

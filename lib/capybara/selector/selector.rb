@@ -388,7 +388,7 @@ module Capybara
 
   private
 
-    def locate_field(xpath, locator, enable_aria_label: false, **_options)
+    def locate_field(xpath, locator, enable_aria_label: false, test_id: nil, **_options)
       return xpath if locator.nil?
       locate_xpath = xpath # Need to save original xpath for the label wrap
       locator = locator.to_s
@@ -397,7 +397,7 @@ module Capybara
                        XPath.attr(:placeholder) == locator,
                        XPath.attr(:id) == XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for)].reduce(:|)
       attr_matchers |= XPath.attr(:'aria-label').is(locator) if enable_aria_label
-      attr_matchers |= XPath.attr(Capybara.test_id) == locator if Capybara.test_id
+      attr_matchers |= XPath.attr(test_id) == locator if test_id
 
       locate_xpath = locate_xpath[attr_matchers]
       locate_xpath + XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(xpath)
