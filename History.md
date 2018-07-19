@@ -5,13 +5,14 @@ Release date: unreleased
 
 * Make selenium driver :backspace clear stategy work even if caret location is in middle of field content [Champier Cyril]
 * Selenium issue with fieldset nested in disabled fieldset not being considered disabled
+* `Session#evaluate_script` and `Element#evaluate_script` now strip leading/trailing whitespace from scripts [Ian Lesperance]
 
 ### Added
 
 * Work around Selenium lack of support for `file_detector` with remote geckodriver
 * `#within_frame` locator is optional when only one frame exists
-* `Capybara.test_id` option that allows for matching the Capybara provided selector types
-  on an arbitrary attribute - defaults to nil, set to something like 'data-test-id' if using test ids in your project
+* `Capybara.test_id` option that allows for matching the Capybara provided selector types on an arbitrary attribute
+  (defaults to nil), set to your test id attribute ('data-test-id, etc) if using test id attributes in your project
 
 # Version 3.3.1
 Release date: 2018-06-27
