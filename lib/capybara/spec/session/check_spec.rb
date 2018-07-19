@@ -195,6 +195,13 @@ Capybara::SpecHelper.spec '#check' do
           @session.click_button('awesome')
           expect(extract_results(@session)['cars']).to include('pagani')
         end
+
+        it 'should check via the label if input is visible but blocked by another element' do
+          expect(@session.find(:checkbox, 'form_cars_bugatti', unchecked: true, visible: :all)).to be_truthy
+          @session.check('form_cars_bugatti', allow_label_click: true)
+          @session.click_button('awesome')
+          expect(extract_results(@session)['cars']).to include('bugatti')
+        end
       end
     end
   end
