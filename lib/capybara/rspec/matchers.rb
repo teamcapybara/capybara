@@ -9,6 +9,11 @@ module Capybara
 
       attr_reader :failure_message, :failure_message_when_negated
 
+      def initialize(*args, &filter_block)
+        @args = args.dup
+        @filter_block = filter_block
+      end
+
       def wrap(actual)
         actual = actual.to_capybara_node if actual.respond_to?(:to_capybara_node)
         @context_el = if actual.respond_to?(:has_selector?)
@@ -56,11 +61,6 @@ module Capybara
     end
 
     class HaveSelector < Matcher
-      def initialize(*args, &filter_block)
-        @args = args
-        @filter_block = filter_block
-      end
-
       def matches?(actual)
         wrap_matches?(actual) { |el| el.assert_selector(*@args, &@filter_block) }
       end
@@ -79,11 +79,6 @@ module Capybara
     end
 
     class HaveAllSelectors < Matcher
-      def initialize(*args, &filter_block)
-        @args = args
-        @filter_block = filter_block
-      end
-
       def matches?(actual)
         wrap_matches?(actual) { |el| el.assert_all_of_selectors(*@args, &@filter_block) }
       end
@@ -98,11 +93,6 @@ module Capybara
     end
 
     class HaveNoSelectors < Matcher
-      def initialize(*args, &filter_block)
-        @args = args
-        @filter_block = filter_block
-      end
-
       def matches?(actual)
         wrap_matches?(actual) { |el| el.assert_none_of_selectors(*@args, &@filter_block) }
       end
@@ -135,11 +125,6 @@ module Capybara
     end
 
     class HaveText < Matcher
-      def initialize(*args)
-        @args = args.dup
-        @content = args[0].is_a?(Symbol) ? args[1] : args[0]
-      end
-
       def matches?(actual)
         wrap_matches?(actual) { |el| el.assert_text(*@args) }
       end
@@ -149,22 +134,21 @@ module Capybara
       end
 
       def description
-        "text #{format(@content)}"
+        "text #{format(text)}"
       end
 
       def format(content)
         content.inspect
       end
+
+    private
+
+      def text
+        @args[0].is_a?(Symbol) ? @args[1] : @args[0]
+      end
     end
 
     class HaveTitle < Matcher
-      def initialize(*args)
-        @args = args
-
-        # are set just for backwards compatability
-        @title = args.first
-      end
-
       def matches?(actual)
         wrap_matches?(actual) { |el| el.assert_title(*@args) }
       end
@@ -174,16 +158,17 @@ module Capybara
       end
 
       def description
-        "have title #{@title.inspect}"
+        "have title #{title.inspect}"
+      end
+
+    private
+
+      def title
+        @args.first
       end
     end
 
     class HaveCurrentPath < Matcher
-      def initialize(*args)
-        @args = args
-        @current_path = args.first
-      end
-
       def matches?(actual)
         wrap_matches?(actual) { |el| el.assert_current_path(*@args) }
       end
@@ -193,7 +178,13 @@ module Capybara
       end
 
       def description
-        "have current path #{@current_path.inspect}"
+        "have current path #{current_path.inspect}"
+      end
+
+    private
+
+      def current_path
+        @args.first
       end
     end
 
@@ -201,6 +192,7 @@ module Capybara
       include ::Capybara::RSpecMatchers::Compound if defined?(::Capybara::RSpecMatchers::Compound)
 
       def initialize(matcher)
+        super()
         @matcher = matcher
       end
 
@@ -226,10 +218,6 @@ module Capybara
     end
 
     class HaveStyle < Matcher
-      def initialize(*args)
-        @args = args
-      end
-
       def matches?(actual)
         wrap_matches?(actual) { |el| el.assert_style(*@args) }
       end
