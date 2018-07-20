@@ -99,7 +99,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def evaluate_script(script, *args)
-    result = execute_script("return #{script.strip}", *args)
+    result = execute_script("return #{script}", *args)
     unwrap_script_result(result)
   end
 

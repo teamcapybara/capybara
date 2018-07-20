@@ -1,3 +1,10 @@
+# Version 3.4.1
+Release date: 2018-07-20
+
+### Fixed
+
+* `Session#evaluate_script` now strips the script in `Session` rather than only in the Selenium driver
+
 # Version 3.4.0
 Release date: 2018-07-19
 

@@ -580,7 +580,7 @@ module Capybara
     #
     def evaluate_script(script, *args)
       @touched = true
-      result = driver.evaluate_script(script, *driver_args(args))
+      result = driver.evaluate_script(script.strip, *driver_args(args))
       element_script_result(result)
     end
 
