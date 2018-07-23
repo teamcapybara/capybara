@@ -5,6 +5,7 @@ Release date: unreleased
 
 * Workaround geckodriver/firefox send_keys issues as much as possible using the Selenium actions API
 * Workaround lack of HTML5 native drag and drop events when using Selenium driver with Chrome and FF >= 62
+* `Capybara.predicates_wait` option which sets whether or not Capybaras matcher predicate methods (`has_css?`, `has_selector?`, `has_text?`, etc.) default to using waiting/retrying behavior (defaults to true)
 
 # Version 3.5.1
 Release date: 2018-08-03

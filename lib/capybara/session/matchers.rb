@@ -47,9 +47,7 @@ module Capybara
     # @return [Boolean]
     #
     def has_current_path?(path, **options)
-      assert_current_path(path, options)
-    rescue Capybara::ExpectationNotMet
-      false
+      make_predicate(options) { assert_current_path(path, options) }
     end
 
     ##
@@ -62,9 +60,7 @@ module Capybara
     # @return [Boolean]
     #
     def has_no_current_path?(path, **options)
-      assert_no_current_path(path, options)
-    rescue Capybara::ExpectationNotMet
-      false
+      make_predicate(options) { assert_no_current_path(path, options) }
     end
 
   private
@@ -75,6 +71,13 @@ module Capybara
         yield(query)
       end
       true
+    end
+
+    def make_predicate(options)
+      options[:wait] = 0 unless options.key?(:wait) || config.predicates_wait
+      yield
+    rescue Capybara::ExpectationNotMet
+      false
     end
   end
 end
