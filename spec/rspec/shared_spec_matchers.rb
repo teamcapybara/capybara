@@ -496,11 +496,11 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
       expect(have_link('Just a link').description).to eq('have visible link "Just a link"')
     end
 
-    it 'passes if there is such a button' do
+    it 'passes if there is such a link' do
       expect(html).to have_link('Just a link')
     end
 
-    it 'fails if there is no such button' do
+    it 'fails if there is no such link' do
       expect do
         expect(html).to have_link('No such Link')
       end.to raise_error(/expected to find link "No such Link"/)
