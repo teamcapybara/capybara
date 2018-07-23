@@ -47,6 +47,14 @@ class MinitestTest < Minitest::Test
     assert_no_css('select#not_form_title')
   end
 
+  def test_assert_selector
+    assert_selector(:css, 'select#form_title')
+    assert_selector(:xpath, './/select[@id="form_title"]')
+    assert_no_selector(:css, 'select#not_form_title')
+    assert_no_selector(:xpath, './/select[@id="not_form_title"]')
+    refute_selector(:css, 'select#not_form_title')
+  end
+
   def test_assert_link
     visit('/with_html')
     assert_link('A link')
@@ -132,6 +140,6 @@ RSpec.describe 'capybara/minitest' do
     reporter.start
     MinitestTest.run reporter, {}
     reporter.report
-    expect(output.string).to include('18 runs, 44 assertions, 0 failures, 0 errors, 1 skips')
+    expect(output.string).to include('19 runs, 49 assertions, 0 failures, 0 errors, 1 skips')
   end
 end

@@ -73,8 +73,12 @@ Capybara::SpecHelper.spec '#assert_selector' do
 end
 
 Capybara::SpecHelper.spec '#refute_selector' do
-  it 'should be an alias of #assert_no_selector' do
-    expect(Capybara::Node::Matchers.instance_method(:refute_selector)).to eq Capybara::Node::Matchers.instance_method(:assert_no_selector)
+  it 'should warn not to use' do
+    @session.visit('/with_html')
+    doc = @session.document
+    allow(doc).to receive(:warn)
+    doc.refute_selector(:xpath, '//abbr')
+    expect(doc).to have_received(:warn)
   end
 end
 

@@ -344,7 +344,9 @@ module Capybara
       ##
       #
       # Trigger any event on the current element, for example mouseover or focus
-      # events. Does not work in Selenium.
+      # events. Not supported with the Selenium driver, and SHOULDN'T BE USED IN TESTING unless you
+      # fully understand why you're using it, that it can allow actions a user could never
+      # perform, and that it may completely invalidate your test.
       #
       # @param [String] event       The name of the event to trigger
       #
