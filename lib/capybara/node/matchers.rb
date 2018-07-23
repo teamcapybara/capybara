@@ -203,7 +203,6 @@ module Capybara
           end
         end
       end
-      alias_method :refute_selector, :assert_no_selector
 
       ##
       #
@@ -529,7 +528,25 @@ module Capybara
           raise Capybara::ExpectationNotMet, 'Item matched the provided selector' if result.include? self
         end
       end
-      alias_method :refute_matches_selector, :assert_not_matches_selector
+
+
+      # Deprecated
+      # TODO: remove
+      def refute_selector(*args, &optional_filter_block)
+        warn "`refute_selector` was never meant to be in this scope unless "
+             "using minitest.  Either replace with `assert_no_selector` "
+             "or require 'capybara/minitest'."
+        assert_no_selector(*args, &optional_filter_block)
+      end
+
+      # Deprecated
+      # TODO: remove
+      def refute_matches_elector(*args, &optional_filter_block)
+        warn "`refute_matches_selector` was never meant to be in this scope unless "
+             "using minitest.  Either replace with `assert_not_matches_selector` "
+             "or require 'capybara/minitest'."
+        assert_not_matches_selector(*args, &optional_filter_block)
+      end
 
       ##
       #
