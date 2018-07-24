@@ -24,6 +24,17 @@ Capybara::SpecHelper.spec '#match_selector?' do
     expect(@element).to match_selector('span.number')
   end
 
+  it 'should work with elements located via a sibling selector' do
+    sibling = @element.sibling(:css, 'span', text: 'Other span')
+    expect(sibling).to match_selector(:xpath, '//span')
+    expect(sibling).to match_selector(:css, 'span')
+  end
+
+  it 'should work with the html element' do
+    html = @session.find('/html')
+    expect(html).to match_selector(:css, 'html')
+  end
+
   context 'with text' do
     it 'should discard all matches where the given string is not contained' do
       expect(@element).to match_selector('//span', text: '42')
