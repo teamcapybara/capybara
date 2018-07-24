@@ -1,3 +1,10 @@
+# Version 3.4.2
+Release date: unreleased
+
+### Fixed
+
+* `match_xxx` selectors and `matches_xxx?` predicates work correctly with elements found using a sibling selector - Issue #2073
+
 # Version 3.4.1
 Release date: 2018-07-20
 
