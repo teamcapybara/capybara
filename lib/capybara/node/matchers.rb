@@ -529,12 +529,11 @@ module Capybara
         end
       end
 
-
       # Deprecated
       # TODO: remove
       def refute_selector(*args, &optional_filter_block)
-        warn "`refute_selector` was never meant to be in this scope unless "
-             "using minitest.  Either replace with `assert_no_selector` "
+        warn '`refute_selector` was never meant to be in this scope unless ' \
+             'using minitest.  Either replace with `assert_no_selector` ' \
              "or require 'capybara/minitest'."
         assert_no_selector(*args, &optional_filter_block)
       end
@@ -542,8 +541,8 @@ module Capybara
       # Deprecated
       # TODO: remove
       def refute_matches_elector(*args, &optional_filter_block)
-        warn "`refute_matches_selector` was never meant to be in this scope unless "
-             "using minitest.  Either replace with `assert_not_matches_selector` "
+        warn '`refute_matches_selector` was never meant to be in this scope unless ' \
+             'using minitest.  Either replace with `assert_not_matches_selector` ' \
              "or require 'capybara/minitest'."
         assert_not_matches_selector(*args, &optional_filter_block)
       end
@@ -726,7 +725,7 @@ module Capybara
         query_args = _set_query_session_options(*query_args)
         query = Capybara::Queries::MatchQuery.new(*query_args, &optional_filter_block)
         synchronize(query.wait) do
-          yield query.resolve_for(self.first(:xpath, './parent::*', minimum: 0) || query_scope)
+          yield query.resolve_for(first(:xpath, './parent::*', minimum: 0) || query_scope)
         end
         true
       end
