@@ -24,6 +24,7 @@ module Capybara
       def resolve_for(node)
         @node = node
         @actual_text = text(node, @type)
+        @actual_text.gsub!(/[[:space:]]+/, ' ').strip! if options[:collapse_ws]
         @count = @actual_text.scan(@search_regexp).size
       end
 
@@ -83,7 +84,7 @@ module Capybara
       end
 
       def valid_keys
-        COUNT_KEYS + %i[wait exact]
+        COUNT_KEYS + %i[wait exact collapse_ws]
       end
 
       def check_visible_text?

@@ -34,6 +34,11 @@ Capybara::SpecHelper.spec '#has_text?' do
     expect(@session).to have_text('text with   whitespace')
   end
 
+  it 'should search whitespace collapsed text' do
+    @session.visit('/with_html')
+    expect(@session).to have_text('text with whitespace', collapse_ws: true)
+  end
+
   it 'should be false if the given text is not on the page' do
     @session.visit('/with_html')
     expect(@session).not_to have_text('xxxxyzzz')

@@ -10,6 +10,11 @@ Capybara::SpecHelper.spec '#assert_text' do
     expect(@session.assert_text('text with   whitespace')).to eq(true)
   end
 
+  it 'should support collapsing whitespace' do
+    @session.visit('/with_html')
+    expect(@session.assert_text('text with whitespace', collapse_ws: true)).to eq(true)
+  end
+
   it 'should take scopes into account' do
     @session.visit('/with_html')
     @session.within("//a[@title='awesome title']") do
@@ -72,7 +77,7 @@ Capybara::SpecHelper.spec '#assert_text' do
     expect(@session.assert_text(/Lorem/)).to eq(true)
   end
 
-  it "should be raise error if the text in the page doesn't match given regexp" do
+  it "should raise error if the text in the page doesn't match given regexp" do
     @session.visit('/with_html')
     expect do
       @session.assert_text(/xxxxyzzz/)
