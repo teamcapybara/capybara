@@ -60,7 +60,9 @@ skipped_tests << :windows if ENV['TRAVIS'] && (ENV['SKIP_WINDOW'] || ENV['HEADLE
 
 Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_REMOTE_DRIVER.to_s, capybara_skip: skipped_tests do |example|
   case example.metadata[:full_description]
-  when 'Capybara::Session selenium_chrome_remote #attach_file with multipart form should not break when using HTML5 multiple file input uploading multiple files'
+  when 'Capybara::Session selenium_chrome_remote #attach_file with multipart form should not break when using HTML5 multiple file input uploading multiple files',
+       'Capybara::Session selenium_chrome_remote #attach_file with multipart form should fire change once for each set of files uploaded',
+       'Capybara::Session selenium_chrome_remote #attach_file with multipart form should fire change once when uploading multiple files from empty'
     pending "Selenium with Remote Chrome doesn't support multiple file upload"
   end
 end

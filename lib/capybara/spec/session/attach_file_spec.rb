@@ -94,6 +94,21 @@ Capybara::SpecHelper.spec '#attach_file' do
       expect(@session.body).to include(File.read(@another_test_file_path))
       expect(@session.body).not_to include(File.read(@test_file_path))
     end
+
+    it 'should fire change once when uploading multiple files from empty', requires: [:js] do
+      @session.visit('with_js')
+      @session.attach_file('multiple-file',
+                           [@test_file_path, @another_test_file_path].map { |f| with_os_path_separators(f) })
+      expect(@session).to have_css('.file_change', count: 1)
+    end
+
+    it 'should fire change once for each set of files uploaded', requires: [:js] do
+      @session.visit('with_js')
+      @session.attach_file('multiple-file', [@test_jpg_file_path].map { |f| with_os_path_separators(f) })
+      @session.attach_file('multiple-file',
+                           [@test_file_path, @another_test_file_path].map { |f| with_os_path_separators(f) })
+      expect(@session).to have_css('.file_change', count: 2)
+    end
   end
 
   context "with a locator that doesn't exist" do

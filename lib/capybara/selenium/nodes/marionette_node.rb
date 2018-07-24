@@ -26,8 +26,10 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
   end
 
   def set_file(value) # rubocop:disable Naming/AccessorMethodName
+    native.clear # By default files are appended so we have to clear here
+    return super if driver.browser.capabilities[:browser_version].to_f >= 62.0
+
     path_names = value.to_s.empty? ? [] : value
-    native.clear
     Array(path_names).each do |path|
       unless driver.browser.respond_to?(:upload)
         if (fd = bridge.file_detector)

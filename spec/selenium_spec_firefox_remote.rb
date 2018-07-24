@@ -72,6 +72,9 @@ Capybara::SpecHelper.run_specs TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVE
     skip 'Firefox insists on prompting without providing a way to suppress'
   when 'Capybara::Session selenium_firefox_remote #accept_prompt should accept the prompt with a blank response when there is a default'
     pending "Geckodriver doesn't set a blank response currently"
+  when 'Capybara::Session selenium_firefox_remote #attach_file with multipart form should fire change once for each set of files uploaded',
+       'Capybara::Session selenium_firefox_remote #attach_file with multipart form should fire change once when uploading multiple files from empty'
+    pending 'Due to having to work around selenium remote lack of multiple file upload support the change event count is off'
   end
 end
 
