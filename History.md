@@ -1,3 +1,14 @@
+# Version 3.5.0
+Release date: unreleased
+
+### Added
+
+* text predicates and matchers (`has_text?`, `has_content?`, `assert_text`, etc) now support a `collapse_ws` option
+
+### Fixed
+
+* `attach_file` with Selenium and local Firefox 62 now correctly generates only one change event when attaching multiple files
+
 # Version 3.4.2
 Release date: 2018-07-24
 
