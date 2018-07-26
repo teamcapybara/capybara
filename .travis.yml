@@ -60,12 +60,23 @@ matrix:
             - awesome
     - gemfile: gemfiles/Gemfile.edge-marionette
       rvm: ruby-head
+      env:
+        - CAPYBARA_FF=true
+        - CAPYBARA_REMOTE=true
+    - gemfile: gemfiles/Gemfile.edge-marionette
+      rvm: ruby-head
+      env:
+        - CAPYBARA_REMOTE=true
+        - HEADLESS=true
+    - gemfile: gemfiles/Gemfile.edge-marionette
+      rvm: ruby-head
       env: CAPYBARA_FF=true
       addons:
         firefox: latest-nightly
         apt:
           packages:
             - awesome
+
     - gemfile: Gemfile
       rvm: 2.4.4
       env: CAPYBARA_FF=true HEADLESS=true

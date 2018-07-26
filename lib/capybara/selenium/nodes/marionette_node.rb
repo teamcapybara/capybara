@@ -29,6 +29,7 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
     native.clear # By default files are appended so we have to clear here
     return super if driver.browser.capabilities[:browser_version].to_f >= 62.0
 
+    # Workaround lack of support for multiple upload by uploading one at a time
     path_names = value.to_s.empty? ? [] : value
     Array(path_names).each do |path|
       unless driver.browser.respond_to?(:upload)
@@ -49,7 +50,7 @@ private
 
   def upload(local_file)
     unless File.file?(local_file)
-      raise Error::WebDriverError, "you may only upload files: #{local_file.inspect}"
+      raise ArgumentError, "You may only upload files: #{local_file.inspect}"
     end
 
     result = bridge.http.call(:post, "session/#{bridge.session_id}/file", file: Selenium::WebDriver::Zipper.zip_file(local_file))

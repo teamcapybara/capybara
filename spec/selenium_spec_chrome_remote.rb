@@ -30,6 +30,10 @@ def ensure_selenium_running!
   end
 end
 
+def selenium_gte?(version)
+  defined?(Selenium::WebDriver::VERSION) && (Selenium::WebDriver::VERSION.to_f >= version)
+end
+
 Capybara.register_driver :selenium_chrome_remote do |app|
   ensure_selenium_running!
 
@@ -63,7 +67,7 @@ Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_REMOTE_DRIVER.to_s, 
   when 'Capybara::Session selenium_chrome_remote #attach_file with multipart form should not break when using HTML5 multiple file input uploading multiple files',
        'Capybara::Session selenium_chrome_remote #attach_file with multipart form should fire change once for each set of files uploaded',
        'Capybara::Session selenium_chrome_remote #attach_file with multipart form should fire change once when uploading multiple files from empty'
-    pending "Selenium with Remote Chrome doesn't support multiple file upload"
+    pending "Selenium with Remote Chrome doesn't support multiple file upload" unless selenium_gte?(3.14)
   end
 end
 
