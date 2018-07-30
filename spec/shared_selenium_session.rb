@@ -169,11 +169,13 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
 
       it 'should generate standard events on changing value' do
+        pending "IE 11 doesn't support date input type" if ie?(session)
         session.fill_in('form_date', with: Date.today)
         expect(session.evaluate_script('window.capybara_formDateFiredEvents')).to eq %w[focus input change]
       end
 
       it 'should not generate input and change events if the value is not changed' do
+        pending "IE 11 doesn't support date input type" if ie?(session)
         session.fill_in('form_date', with: Date.today)
         session.fill_in('form_date', with: Date.today)
         # Chrome adds an extra focus for some reason - ok for now
@@ -202,13 +204,15 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
 
       it 'handles namespaces' do
+        pending "IE 11 doesn't handle all XPath querys (namespace-uri, etc)" if ie?(session)
         session.visit '/with_namespace'
-        rect = session.find(:css, 'div svg rect')
+        rect = session.find(:css, 'div svg rect:first-of-type')
         expect(rect.path).to eq("/HTML/BODY/DIV/./*[((local-name(.) = 'svg') and (namespace-uri(.) = 'http://www.w3.org/2000/svg'))]/./*[((local-name(.) = 'rect') and (namespace-uri(.) = 'http://www.w3.org/2000/svg'))][1]")
         expect(session.find(:xpath, rect.path)).to eq rect
       end
 
       it 'handles case sensitive element names' do
+        pending "IE 11 doesn't handle all XPath querys (namespace-uri, etc)" if ie?(session)
         session.visit '/with_namespace'
         els = session.all(:css, 'div *', visible: :all)
         expect { els.map(&:path) }.not_to raise_error

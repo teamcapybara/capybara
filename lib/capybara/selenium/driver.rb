@@ -312,7 +312,7 @@ private
   end
 
   def ie?
-    browser_name == :ie
+    %i[internet_explorer ie].include?(browser_name)
   end
 
   def browser_name

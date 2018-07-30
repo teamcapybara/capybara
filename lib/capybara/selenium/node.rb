@@ -176,7 +176,14 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
 
       if parent
         siblings = parent.find_xpath(selector)
-        selector += "[#{siblings.index(node) + 1}]" unless siblings.size == 1
+        selector += case siblings.size
+          when 0
+            '[ERROR]' # IE doesn't support full XPath (namespace-uri, etc)
+          when 1
+            '' # index not necessary when only one matching element
+          else
+            "[#{siblings.index(node) + 1}]"
+          end
       end
       result.push selector
     end

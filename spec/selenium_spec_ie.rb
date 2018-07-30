@@ -22,10 +22,18 @@ skipped_tests = %i[response_headers status_code trigger modals hover form_attrib
 
 $stdout.puts `#{Selenium::WebDriver::IE.driver_path} --version` if ENV['CI']
 
+TestSessions::SeleniumIE.current_window.resize_to(1600, 1200)
+
 Capybara::SpecHelper.run_specs TestSessions::SeleniumIE, 'selenium', capybara_skip: skipped_tests do |example|
-  case example.metadata[:description]
+  case example.metadata[:full_description]
   when /#refresh it reposts$/
     skip 'Firefox and Edge insist on prompting without providing a way to suppress'
+  when /#click_link can download a file$/
+    skip 'Not sure how to configure IE for automatic downloading'
+  when /#fill_in with Date /
+    pending "IE 11 doesn't support date input types"
+  when /#click_link_or_button with :disabled option happily clicks on links which incorrectly have the disabled attribute$/
+    pending "IE 11 obeys non-standard disabled attribute on anchor tag"
   end
 end
 
