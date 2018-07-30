@@ -12,7 +12,7 @@ Capybara::SpecHelper.spec '#assert_text' do
 
   it 'should support collapsing whitespace' do
     @session.visit('/with_html')
-    expect(@session.assert_text('text with whitespace', collapse_ws: true)).to eq(true)
+    expect(@session.assert_text('text with whitespace', normalize_ws: true)).to eq(true)
   end
 
   it 'should take scopes into account' do

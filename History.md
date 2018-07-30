@@ -3,7 +3,7 @@ Release date: unreleased
 
 ### Added
 
-* text predicates and matchers (`has_text?`, `has_content?`, `assert_text`, etc) now support a `collapse_ws` option
+* text predicates and matchers (`has_text?`, `has_content?`, `assert_text`, etc) now support a `normalize_ws` option
 
 ### Fixed
 
