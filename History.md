@@ -1,5 +1,5 @@
 # Version 3.5.0
-Release date: unreleased
+Release date: 2018-08-01
 
 ### Added
 
@@ -7,7 +7,7 @@ Release date: unreleased
 
 ### Fixed
 
-* `attach_file` with Selenium and local Firefox 62 now correctly generates only one change event when attaching multiple files
+* `attach_file` with Selenium and local Firefox 62+ now correctly generates only one change event when attaching multiple files
 
 # Version 3.4.2
 Release date: 2018-07-24

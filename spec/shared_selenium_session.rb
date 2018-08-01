@@ -39,14 +39,14 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
 
       it 'should have return code 1 when running selenium_driver_rspec_failure.rb' do
-        skip "only setup for local non-headless" if headless_or_remote?
+        skip 'only setup for local non-headless' if headless_or_remote?
 
         system(@env, 'rspec spec/fixtures/selenium_driver_rspec_failure.rb', out: File::NULL, err: File::NULL)
         expect($CHILD_STATUS.exitstatus).to eq(1)
       end
 
       it 'should have return code 0 when running selenium_driver_rspec_success.rb' do
-        skip "only setup for local non-headless" if headless_or_remote?
+        skip 'only setup for local non-headless' if headless_or_remote?
 
         system(@env, 'rspec spec/fixtures/selenium_driver_rspec_success.rb', out: File::NULL, err: File::NULL)
         expect($CHILD_STATUS.exitstatus).to eq(0)

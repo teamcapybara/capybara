@@ -33,7 +33,7 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumIE, 'selenium', capybara_sk
   when /#fill_in with Date /
     pending "IE 11 doesn't support date input types"
   when /#click_link_or_button with :disabled option happily clicks on links which incorrectly have the disabled attribute$/
-    pending "IE 11 obeys non-standard disabled attribute on anchor tag"
+    pending 'IE 11 obeys non-standard disabled attribute on anchor tag'
   end
 end
 
