@@ -47,7 +47,6 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   #   Array => an array of keys to send before the value being set, e.g. [[:command, 'a'], :backspace]
   def set(value, **options)
     raise ArgumentError, "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}" if value.is_a?(Array) && !multiple?
-
     case tag_name
     when 'input'
       case self[:type]
@@ -212,17 +211,17 @@ private
     elsif clear == :backspace
       # Clear field by sending the correct number of backspace keys.
       backspaces = [:backspace] * self.value.to_s.length
-      native.send_keys(*([:end] + backspaces + [value.to_s]))
+      send_keys(*([:end] + backspaces + [value.to_s]))
     elsif clear == :none
-      native.send_keys(value.to_s)
+      send_keys(value.to_s)
     elsif clear.is_a? Array
-      native.send_keys(*clear, value.to_s)
+      send_keys(*clear, value.to_s)
     else
       # Clear field by JavaScript assignment of the value property.
       # Script can change a readonly element which user input cannot, so
       # don't execute if readonly.
       driver.execute_script "arguments[0].value = ''", self
-      native.send_keys(value.to_s)
+      send_keys(value.to_s)
     end
   end
 

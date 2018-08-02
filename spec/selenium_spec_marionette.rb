@@ -50,10 +50,6 @@ $stdout.puts `#{Selenium::WebDriver::Firefox.driver_path} --version` if ENV['CI'
 
 Capybara::SpecHelper.run_specs TestSessions::SeleniumMarionette, 'selenium', capybara_skip: skipped_tests do |example|
   case example.metadata[:full_description]
-  when 'Capybara::Session selenium node #send_keys should generate key events',
-       'Capybara::Session selenium node #send_keys should allow for multiple simultaneous keys',
-       'Capybara::Session selenium node #send_keys should send special characters'
-    pending "selenium-webdriver/geckodriver doesn't support complex sets of characters"
   when 'Capybara::Session selenium node #click should allow multiple modifiers'
     pending "Firefox doesn't generate an event for shift+control+click" if marionette_gte?(62, @session)
   when /^Capybara::Session selenium node #double_click/
