@@ -42,7 +42,50 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
     end
   end
 
+  def send_keys(*args)
+    # https://github.com/mozilla/geckodriver/issues/846
+    return super(*args.map { |arg| arg == :space ? ' ' : arg }) if args.none? { |s| s.is_a? Array }
+
+    native.click
+    actions = driver.browser.action
+    args.each do |keys|
+      _send_keys(keys, actions)
+    end
+    actions.perform
+  end
+
 private
+
+  def _send_keys(keys, actions, down_keys = nil)
+    case keys
+    when String
+      keys = keys.upcase if down_keys&.include?(:shift) # https://bugzilla.mozilla.org/show_bug.cgi?id=1405370
+      actions.send_keys(keys)
+    when :space
+      actions.send_keys(' ') # https://github.com/mozilla/geckodriver/issues/846
+    when :control, :left_control, :right_control,
+         :alt, :left_alt, :right_alt,
+         :shift, :left_shift, :right_shift,
+         :meta, :left_meta, :right_meta,
+         :command
+      if down_keys.nil?
+        actions.send_keys(keys)
+      else
+        down_keys << keys
+        actions.key_down(keys)
+      end
+    when Symbol
+      actions.send_keys(keys)
+    when Array
+      local_down_keys = []
+      keys.each do |sub_keys|
+        _send_keys(sub_keys, actions, local_down_keys)
+      end
+      local_down_keys.each { |key| actions.key_up(key) }
+    else
+      raise ArgumentError, 'Unknown keys type'
+    end
+  end
 
   def bridge
     driver.browser.send(:bridge)

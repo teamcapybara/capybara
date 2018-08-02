@@ -60,10 +60,6 @@ skipped_tests << :windows if ENV['TRAVIS'] && (ENV['SKIP_WINDOW'] || ENV['HEADLE
 
 Capybara::SpecHelper.run_specs TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVER.to_s, capybara_skip: skipped_tests do |example|
   case example.metadata[:full_description]
-  when 'Capybara::Session selenium_firefox_remote node #send_keys should generate key events',
-       'Capybara::Session selenium_firefox_remote node #send_keys should allow for multiple simultaneous keys',
-       'Capybara::Session selenium_firefox_remote node #send_keys should send special characters'
-    pending "selenium-webdriver/geckodriver doesn't support complex sets of characters"
   when 'Capybara::Session selenium_firefox_remote node #click should allow multiple modifiers'
     pending "Firefox doesn't generate an event for shift+control+click" if marionette_gte?(62, @session)
   when /^Capybara::Session selenium node #double_click/
