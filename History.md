@@ -1,3 +1,10 @@
+# Version 3.5.1
+Release date: 2018-08-03
+
+### Fixed
+
+* Fixed misspelled method name `refute_matches_elector` => `refute_matches_selector`
+
 # Version 3.5.0
 Release date: 2018-08-01
 
