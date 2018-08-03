@@ -20,8 +20,8 @@ module Capybara
       #
       # @return [String]    The text of the document
       #
-      def text(type = nil)
-        find(:xpath, '/html').text(type)
+      def text(type = nil, normalize_ws: false)
+        find(:xpath, '/html').text(type, normalize_ws: normalize_ws)
       end
 
       ##

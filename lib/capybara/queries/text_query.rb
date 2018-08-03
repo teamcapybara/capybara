@@ -5,12 +5,7 @@ module Capybara
   module Queries
     class TextQuery < BaseQuery
       def initialize(type = nil, expected_text, session_options:, **options) # rubocop:disable Style/OptionalArguments
-        @type = if type.nil?
-          Capybara.ignore_hidden_elements || Capybara.visible_text_only ? :visible : :all
-        else
-          type
-        end
-
+        @type = type.nil? ? default_type : type
         @expected_text = expected_text.is_a?(Regexp) ? expected_text : expected_text.to_s
         @options = options
         super(@options)
@@ -23,8 +18,7 @@ module Capybara
 
       def resolve_for(node)
         @node = node
-        @actual_text = text(node, @type)
-        @actual_text.gsub!(/[[:space:]]+/, ' ').strip! if options[:normalize_ws]
+        @actual_text = text
         @count = @actual_text.scan(@search_regexp).size
       end
 
@@ -74,7 +68,7 @@ module Capybara
       end
 
       def invisible_message
-        invisible_text = text(@node, :all)
+        invisible_text = text(query_type: :all)
         invisible_count = invisible_text.scan(@search_regexp).size
         return if invisible_count == @count
         "it was found #{invisible_count} #{Capybara::Helpers.declension('time', 'times', invisible_count)} including non-visible text"
@@ -95,8 +89,12 @@ module Capybara
         !@expected_text.is_a?(Regexp)
       end
 
-      def text(node, query_type)
-        node.text(query_type)
+      def text(node: @node, query_type: @type)
+        node.text(query_type, normalize_ws: options[:normalize_ws])
+      end
+
+      def default_type
+        Capybara.ignore_hidden_elements || Capybara.visible_text_only ? :visible : :all
       end
     end
   end

@@ -53,9 +53,10 @@ module Capybara
       # @param type [:all, :visible]  Whether to return only visible or all text
       # @return [String]              The text of the element
       #
-      def text(type = nil)
+      def text(type = nil, normalize_ws: false)
         type ||= :all unless session_options.ignore_hidden_elements || session_options.visible_text_only
-        synchronize { type == :all ? base.all_text : base.visible_text }
+        t = synchronize { type == :all ? base.all_text : base.visible_text }
+        normalize_ws ? t.gsub(/[[:space:]]+/, ' ').strip : t
       end
 
       ##
