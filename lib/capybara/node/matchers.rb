@@ -540,7 +540,7 @@ module Capybara
 
       # Deprecated
       # TODO: remove
-      def refute_matches_elector(*args, &optional_filter_block)
+      def refute_matches_selector(*args, &optional_filter_block)
         warn '`refute_matches_selector` was never meant to be in this scope unless ' \
              'using minitest.  Either replace with `assert_not_matches_selector` ' \
              "or require 'capybara/minitest'."
