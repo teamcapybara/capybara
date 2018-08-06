@@ -1,3 +1,10 @@
+# Version 3.6.0
+Release date: unreleased
+
+### Added
+
+* Workaround geckodriver/firefox send_keys issues as much as possible using the Selenium actions API
+
 # Version 3.5.1
 Release date: 2018-08-03
 
