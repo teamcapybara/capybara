@@ -13,6 +13,7 @@ gem 'rspec-support', github: 'rspec/rspec-support'
 gem 'rspec-mocks', github: 'rspec/rspec-mocks'
 gem 'rspec-expectations', github: 'rspec/rspec-expectations'
 gem 'cucumber', github: 'cucumber/cucumber-ruby'
-
+gem 'cucumber-core', github: 'cucumber/cucumber-ruby-core'
+gem 'cucumber-wire', github: 'cucumber/cucumber-ruby-wire'
 gem 'puma', github: 'puma/puma'
 
