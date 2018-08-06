@@ -159,6 +159,12 @@ class Capybara::Driver::Base
   end
 
   def session_options
-    @session&.config || Capybara.session_options
+    session&.config || Capybara.session_options
+  end
+
+private
+
+  def session
+    @session ||= nil
   end
 end

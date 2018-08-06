@@ -46,7 +46,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def initialize(app, **options)
     self.class.load_selenium
-    @session = nil
     @app = app
     @browser = nil
     @exit_status = nil
