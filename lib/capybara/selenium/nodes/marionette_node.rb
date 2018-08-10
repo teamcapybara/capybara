@@ -14,7 +14,7 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
 
   def disabled?
     # Not sure exactly what version of FF fixed the below issue, but it is definitely fixed in 61+
-    return super unless driver.browser.capabilities[:browser_version].to_f < 61.0
+    return super unless browser_version < 61.0
 
     return true if super
     # workaround for selenium-webdriver/geckodriver reporting elements as enabled when they are nested in disabling elements
@@ -27,7 +27,7 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
 
   def set_file(value) # rubocop:disable Naming/AccessorMethodName
     native.clear # By default files are appended so we have to clear here
-    return super if driver.browser.capabilities[:browser_version].to_f >= 62.0
+    return super if browser_version >= 62.0
 
     # Workaround lack of support for multiple upload by uploading one at a time
     path_names = value.to_s.empty? ? [] : value
@@ -52,6 +52,13 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
       _send_keys(keys, actions)
     end
     actions.perform
+  end
+
+  def drag_to(element)
+    return super unless (browser_version >= 62.0) && (self[:draggable] == 'true')
+
+    scroll_if_needed { driver.browser.action.click_and_hold(native).perform }
+    driver.execute_script HTML5_DRAG_DROP_SCRIPT, self, element
   end
 
 private
@@ -99,4 +106,30 @@ private
     result = bridge.http.call(:post, "session/#{bridge.session_id}/file", file: Selenium::WebDriver::Zipper.zip_file(local_file))
     result['value']
   end
+
+  def browser_version
+    driver.browser.capabilities[:browser_version].to_f
+  end
+
+  HTML5_DRAG_DROP_SCRIPT = <<~JS
+    var source = arguments[0];
+    var target = arguments[1];
+
+    var dt = new DataTransfer();
+    var opts = { cancelable: true, bubbles: true, dataTransfer: dt };
+
+    var dragEvent = new DragEvent('dragstart', opts);
+    source.dispatchEvent(dragEvent);
+    target.scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
+    var dragOverEvent = new DragEvent('dragover', opts);
+    target.dispatchEvent(dragOverEvent);
+    var dragLeaveEvent = new DragEvent('dragleave', opts);
+    target.dispatchEvent(dragLeaveEvent);
+    if (dragOverEvent.defaultPrevented) {
+      var dropEvent = new DragEvent('drop', opts);
+      target.dispatchEvent(dropEvent);
+    }
+    var dragEndEvent = new DragEvent('dragend', opts);
+    source.dispatchEvent(dragEndEvent);
+  JS
 end

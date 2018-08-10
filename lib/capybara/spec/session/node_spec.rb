@@ -306,7 +306,7 @@ Capybara::SpecHelper.spec 'node' do
       element = @session.find('//div[@id="drag"]')
       target = @session.find('//div[@id="drop"]')
       element.drag_to(target)
-      expect(@session.find('//div[contains(., "Dropped!")]')).not_to be_nil
+      expect(@session).to have_xpath('//div[contains(., "Dropped!")]')
     end
 
     it 'should drag and drop if scrolling is needed' do
@@ -314,7 +314,7 @@ Capybara::SpecHelper.spec 'node' do
       element = @session.find('//div[@id="drag_scroll"]')
       target = @session.find('//div[@id="drop_scroll"]')
       element.drag_to(target)
-      expect(@session.find('//div[contains(., "Dropped!")]')).not_to be_nil
+      expect(@session).to have_xpath('//div[contains(., "Dropped!")]')
     end
   end
 

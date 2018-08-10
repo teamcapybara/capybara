@@ -285,6 +285,36 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
     end
 
+    describe 'Element#drag_to', :focus_ do
+      it 'should HTML5 drag and drop an object' do
+        pending "Firefox < 62 doesn't support a DataTransfer constuctor" if marionette_lt?(62.0, session)
+        session.visit('/with_js')
+        element = session.find('//div[@id="drag_html5"]')
+        target = session.find('//div[@id="drop_html5"]')
+        element.drag_to(target)
+        expect(session).to have_xpath('//div[contains(., "HTML5 Dropped drag_html5")]')
+      end
+
+      it 'should not HTML5 drag and drop on a non HTML5 drop element' do
+        session.visit('/with_js')
+        element = session.find('//div[@id="drag_html5"]')
+        target = session.find('//div[@id="drop_html5"]')
+        target.execute_script("$(this).removeClass('drop');")
+        element.drag_to(target)
+        sleep 1
+        expect(session).not_to have_xpath('//div[contains(., "HTML5 Dropped drag_html5")]')
+      end
+
+      it 'should HTML6 drag and drop when scrolling needed' do
+        pending "Firefox < 62 doesn't support a DataTransfer constuctor" if marionette_lt?(62.0, session)
+        session.visit('/with_js')
+        element = session.find('//div[@id="drag_html5_scroll"]')
+        target = session.find('//div[@id="drop_html5_scroll"]')
+        element.drag_to(target)
+        expect(session).to have_xpath('//div[contains(., "HTML5 Dropped drag_html5_scroll")]')
+      end
+    end
+
     context 'Windows' do
       it "can't close the primary window" do
         expect do
