@@ -4,6 +4,7 @@ Release date: unreleased
 ### Added
 
 * Workaround geckodriver/firefox send_keys issues as much as possible using the Selenium actions API
+* Workaround lack of HTML5 native drag and drop events when using Selenium driver with Chrome and FF >= 62
 
 # Version 3.5.1
 Release date: 2018-08-03
