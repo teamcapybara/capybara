@@ -285,7 +285,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
     end
 
-    describe 'Element#drag_to', :focus_ do
+    describe 'Element#drag_to' do
       it 'should HTML5 drag and drop an object' do
         pending "Firefox < 62 doesn't support a DataTransfer constuctor" if marionette_lt?(62.0, session)
         session.visit('/with_js')
