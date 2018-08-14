@@ -23,6 +23,15 @@ module Capybara::Selenium::Driver::MarionetteDriver
     super
   end
 
+  def refresh
+    # Accept any "will repost content" confirmation that occurs
+    accept_modal :confirm, wait: 0.1 do
+      super
+    end
+  rescue Capybara::ModalNotFound # rubocop:disable Lint/HandleExceptions
+    # No modal was opened - page has refreshed - ignore
+  end
+
 private
 
   def build_node(native_node)

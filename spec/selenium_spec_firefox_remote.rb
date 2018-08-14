@@ -64,8 +64,6 @@ Capybara::SpecHelper.run_specs TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVE
     pending "Firefox doesn't generate an event for shift+control+click" if marionette_gte?(62, @session)
   when /^Capybara::Session selenium node #double_click/
     pending "selenium-webdriver/geckodriver doesn't generate double click event" if marionette_lt?(59, @session)
-  when 'Capybara::Session selenium_firefox_remote #refresh it reposts'
-    skip 'Firefox insists on prompting without providing a way to suppress'
   when 'Capybara::Session selenium_firefox_remote #accept_prompt should accept the prompt with a blank response when there is a default'
     pending "Geckodriver doesn't set a blank response currently"
   when 'Capybara::Session selenium_firefox_remote #attach_file with multipart form should fire change once for each set of files uploaded',

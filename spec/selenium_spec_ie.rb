@@ -27,7 +27,7 @@ TestSessions::SeleniumIE.current_window.resize_to(1600, 1200)
 Capybara::SpecHelper.run_specs TestSessions::SeleniumIE, 'selenium', capybara_skip: skipped_tests do |example|
   case example.metadata[:full_description]
   when /#refresh it reposts$/
-    skip 'Firefox and Edge insist on prompting without providing a way to suppress'
+    skip 'IE insists on prompting without providing a way to suppress'
   when /#click_link can download a file$/
     skip 'Not sure how to configure IE for automatic downloading'
   when /#fill_in with Date /

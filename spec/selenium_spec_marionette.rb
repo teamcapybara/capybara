@@ -54,8 +54,6 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumMarionette, 'selenium', cap
     pending "Firefox doesn't generate an event for shift+control+click" if marionette_gte?(62, @session)
   when /^Capybara::Session selenium node #double_click/
     pending "selenium-webdriver/geckodriver doesn't generate double click event" if marionette_lt?(59, @session)
-  when 'Capybara::Session selenium #refresh it reposts'
-    skip 'Firefox insists on prompting without providing a way to suppress'
   when 'Capybara::Session selenium #accept_prompt should accept the prompt with a blank response when there is a default'
     pending "Geckodriver doesn't set a blank response currently"
   when 'Capybara::Session selenium #attach_file with multipart form should fire change once for each set of files uploaded'
@@ -143,28 +141,6 @@ RSpec.describe Capybara::Selenium::Driver do
         expect(@session.driver.browser.local_storage.keys).to be_empty
         expect(@session.driver.browser.session_storage.keys).to be_empty
       end
-    end
-  end
-
-  context '#refresh' do
-    def extract_results(session)
-      expect(session).to have_xpath("//pre[@id='results']")
-      YAML.load Nokogiri::HTML(session.body).xpath("//pre[@id='results']").first.inner_html.lstrip
-    end
-
-    it 'can repost by accepting confirm' do
-      @session = TestSessions::SeleniumMarionette
-      @session.visit('/form')
-      @session.select('Sweden', from: 'form_region')
-      @session.click_button('awesome')
-      sleep 1
-      expect do
-        @session.accept_confirm(wait: 0.1) do
-          @session.refresh
-          sleep 2
-        end
-        sleep 1
-      end.to change { extract_results(@session)['post_count'] }.by(1)
     end
   end
 end
