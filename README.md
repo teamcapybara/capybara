@@ -7,7 +7,7 @@
 [![SemVer](https://api.dependabot.com/badges/compatibility_score?dependency-name=capybara&package-manager=bundler&version-scheme=semver)](https://dependabot.com/compatibility-score.html?dependency-name=capybara&package-manager=bundler&version-scheme=semver)
 
 **Note** You are viewing the README for the development version of Capybara.  If you are using the current release version
-you can find the README at https://github.com/teamcapybara/capybara/blob/3.5_stable/README.md
+you can find the README at https://github.com/teamcapybara/capybara/blob/3.6_stable/README.md
 
 
 Capybara helps you test web applications by simulating how a real user would
@@ -389,8 +389,19 @@ See the section on adding and configuring drivers.
 
 Capybara supports [Selenium 3.5+
 (Webdriver)](https://www.seleniumhq.org/projects/webdriver/).
-In order to use Selenium, you'll need to install the`selenium-webdriver` gem,
+In order to use Selenium, you'll need to install the `selenium-webdriver` gem,
 and add it to your Gemfile if you're using bundler.
+
+Capybara pre-registers a number of named drives that use Selenium - they are:
+
+  * :selenium                 => Selenium driving Firefox
+  * :selenium_chrome          => Selenium driving Chrome
+  * :selenium_chrome_headless => Selenium driving Chrome in a headless configuration
+
+These should work (with relevant software installation) in a local desktop configuration but you may
+need to customize them if using in a CI environment where additional options may need to be passed
+to the browsers.  See the section on adding and configuring drivers.
+
 
 **Note**: drivers which run the server in a different thread may not share the
 same transaction as your tests, causing data not to be shared between your test
@@ -1000,6 +1011,7 @@ end
 However, it's also possible to give this configuration a different name.
 
 ```ruby
+# Note: Capybara registers this by default
 Capybara.register_driver :selenium_chrome do |app|
   Capybara::Selenium::Driver.new(app, :browser => :chrome)
 end
