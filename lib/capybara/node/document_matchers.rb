@@ -38,9 +38,7 @@ module Capybara
       # @return [Boolean]
       #
       def has_title?(title, **options)
-        assert_title(title, options)
-      rescue Capybara::ExpectationNotMet
-        false
+        make_predicate(options) { assert_title(title, options) }
       end
 
       ##
@@ -50,9 +48,7 @@ module Capybara
       # @return [Boolean]
       #
       def has_no_title?(title, **options)
-        assert_no_title(title, options)
-      rescue Capybara::ExpectationNotMet
-        false
+        make_predicate(options) { assert_no_title(title, options) }
       end
 
     private

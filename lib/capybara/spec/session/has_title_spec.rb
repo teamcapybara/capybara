@@ -7,6 +7,7 @@ Capybara::SpecHelper.spec '#has_title?' do
 
   it 'should be true if the page has the given title' do
     expect(@session).to have_title('with_js')
+    expect(@session.has_title?('with_js')).to be true
   end
 
   it 'should allow regexp matches' do
@@ -21,6 +22,7 @@ Capybara::SpecHelper.spec '#has_title?' do
 
   it 'should be false if the page has not the given title' do
     expect(@session).not_to have_title('monkey')
+    expect(@session.has_title?('monkey')).to be false
   end
 
   it 'should default to exact: false matching' do
@@ -31,6 +33,8 @@ Capybara::SpecHelper.spec '#has_title?' do
   it 'should match exactly if exact: true option passed' do
     expect(@session).to have_title('with_js', exact: true)
     expect(@session).not_to have_title('with_', exact: true)
+    expect(@session.has_title?('with_js', exact: true)).to be true
+    expect(@session.has_title?('with_', exact: true)).to be false
   end
 
   it 'should match partial if exact: false option passed' do
@@ -62,5 +66,6 @@ Capybara::SpecHelper.spec '#has_no_title?' do
 
   it 'should be true if the page has not the given title' do
     expect(@session).to have_no_title('monkey')
+    expect(@session.has_no_title?('monkey')).to be true
   end
 end
