@@ -130,6 +130,10 @@ RSpec.describe 'capybara/minitest/spec' do
     Capybara.app = TestApp
   end
 
+  after do
+    Capybara.use_default_driver
+  end
+
   it 'should support minitest spec' do
     output = StringIO.new
     reporter = Minitest::SummaryReporter.new(output)
