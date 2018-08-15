@@ -460,7 +460,7 @@ end
 
 Capybara.add_selector(:element) do
   xpath do |locator, **|
-    XPath.descendant((locator || '@').to_sym)
+    locator ? XPath.descendant(locator.to_sym) : XPath.descendant
   end
 
   expression_filter(:attributes, matcher: /.+/) do |xpath, name, val|

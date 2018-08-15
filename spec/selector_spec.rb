@@ -261,6 +261,10 @@ RSpec.describe Capybara do
           expect { string.all(:element, 'input', type: 'submit', count: 1) }.not_to raise_error
         end
 
+        it 'works without element type' do
+          expect(string.find(:element, type: 'submit').value).to eq 'click me'
+        end
+
         it 'includes wildcarded keys in description' do
           expect { string.find(:element, 'input', not_there: 'bad', count: 1) }
             .to(raise_error do |e|
