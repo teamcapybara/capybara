@@ -265,11 +265,21 @@ RSpec.describe Capybara do
           expect(string.find(:element, type: 'submit').value).to eq 'click me'
         end
 
+        it 'validates attribute presence when true' do
+          expect(string.find(:element, name: true)[:id]).to eq 'my_text_input'
+        end
+
+        it 'validates attribute absence when false' do
+          expect(string.find(:element, 'option', disabled: false, selected: false).value).to eq 'a'
+        end
+
         it 'includes wildcarded keys in description' do
-          expect { string.find(:element, 'input', not_there: 'bad', count: 1) }
+          expect { string.find(:element, 'input', not_there: 'bad', presence: true, absence: false, count: 1) }
             .to(raise_error do |e|
               expect(e).to be_a(Capybara::ElementNotFound)
               expect(e.message).to include 'not_there => bad'
+              expect(e.message).to include 'with presence attribute'
+              expect(e.message).to include 'without absence attribute'
               expect(e.message).not_to include 'count 1'
             end)
         end

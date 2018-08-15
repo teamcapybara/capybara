@@ -467,6 +467,10 @@ Capybara.add_selector(:element) do
     case val
     when Regexp
       xpath
+    when true
+      xpath[XPath.attr(name)]
+    when false
+      xpath[!XPath.attr(name)]
     when XPath::Expression
       xpath[XPath.attr(name)[val]]
     else
@@ -478,6 +482,12 @@ Capybara.add_selector(:element) do
     val.is_a?(Regexp) ? node[name] =~ val : true
   end
 
-  describe_expression_filters
+  describe_expression_filters do |**options|
+    booleans, values = options.partition {|k,v| [true, false].include? v }.map &:to_h
+    desc = describe_all_expression_filters(values)
+    desc += booleans.map do |k, v|
+      v ? " with #{k} attribute" : "without #{k} attribute"
+    end.join
+  end
 end
 # rubocop:enable Metrics/BlockLength
