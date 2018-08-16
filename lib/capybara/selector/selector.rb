@@ -337,7 +337,7 @@ module Capybara
     #
     # Define an expression filter for use with this selector
     #
-    # @!method expression_filter(name, *types, options={}, &block)
+    # @!method expression_filter(name, *types, matcher: nil, **options, &block)
     #   @param [Symbol, Regexp] name            The filter name
     #   @param [Regexp] matcher (nil)   A Regexp used to check whether a specific option is handled by this filter
     #   @param [Array<Symbol>] types    The types of the filter - currently valid types are [:boolean]

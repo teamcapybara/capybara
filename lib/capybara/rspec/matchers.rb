@@ -280,27 +280,71 @@ module Capybara
       MatchSelector.new(*args, &optional_filter_block)
     end
 
-    # RSpec matcher for whether elements(s) matching a given xpath selector exist
-    # See {Capybara::Node::Matchers#has_xpath?}
-    def have_xpath(xpath, **options, &optional_filter_block)
-      HaveSelector.new(:xpath, xpath, options, &optional_filter_block)
+    %i[css xpath].each do |selector|
+      define_method "have_#{selector}" do |expr, **options, &optional_filter_block|
+        HaveSelector.new(selector, expr, options, &optional_filter_block)
+      end
+
+      define_method "match_#{selector}" do |expr, **options, &optional_filter_block|
+        MatchSelector.new(selector, expr, options, &optional_filter_block)
+      end
     end
 
-    # RSpec matcher for whether the current element matches a given xpath selector
-    def match_xpath(xpath, **options, &optional_filter_block)
-      MatchSelector.new(:xpath, xpath, options, &optional_filter_block)
+    # @!method have_xpath(xpath, **options, &optional_filter_block)
+    #   RSpec matcher for whether elements(s) matching a given xpath selector exist
+    #   See {Capybara::Node::Matchers#has_xpath?}
+
+    # @!method have_css(css, **options, &optional_filter_block)
+    #   RSpec matcher for whether elements(s) matching a given css selector exist
+    #   See {Capybara::Node::Matchers#has_css?}
+
+    # @!method match_xpath(xpath, **options, &optional_filter_block)
+    #   RSpec matcher for whether the current element matches a given xpath selector
+    #   See {Capybara::Node::Matchers#matches_xpath?}
+
+    # @!method match_css(css, **options, &optional_filter_block)
+    #   RSpec matcher for whether the current element matches a given css selector
+    #   See {Capybara::Node::Matchers#matches_css?}
+
+    %i[link button field select table].each do |selector|
+      define_method "have_#{selector}" do |locator = nil, **options, &optional_filter_block|
+        HaveSelector.new(selector, locator, options, &optional_filter_block)
+      end
     end
 
-    # RSpec matcher for whether elements(s) matching a given css selector exist
-    # See {Capybara::Node::Matchers#has_css?}
-    def have_css(css, **options, &optional_filter_block)
-      HaveSelector.new(:css, css, options, &optional_filter_block)
+    # @!method have_link(locator = nil, **options, &optional_filter_block)
+    #   RSpec matcher for links
+    #   See {Capybara::Node::Matchers#has_link?}
+
+    # @!method have_button(locator = nil, **options, &optional_filter_block)
+    #   RSpec matcher for buttons
+    #   See {Capybara::Node::Matchers#has_button?}
+
+    # @!method have_field(locator = nil, **options, &optional_filter_block)
+    #   RSpec matcher for links
+    #   See {Capybara::Node::Matchers#has_field?}
+
+    # @!method have_select(locator = nil, **options, &optional_filter_block)
+    #   RSpec matcher for select elements
+    #   See {Capybara::Node::Matchers#has_select?}
+
+    # @!method have_table(locator = nil, **options, &optional_filter_block)
+    #   RSpec matcher for table elements
+    #   See {Capybara::Node::Matchers#has_table?}
+
+    %i[checked unchecked].each do |state|
+      define_method "have_#{state}_field" do |locator = nil, **options, &optional_filter_block|
+        HaveSelector.new(:field, locator, options.merge(state => true), &optional_filter_block)
+      end
     end
 
-    # RSpec matcher for whether the current element matches a given css selector
-    def match_css(css, **options, &optional_filter_block)
-      MatchSelector.new(:css, css, options, &optional_filter_block)
-    end
+    # @!method have_checked_field(locator = nil, **options, &optional_filter_block)
+    #   RSpec matcher for checked fields
+    #   See {Capybara::Node::Matchers#has_checked_field?}
+
+    # @!method have_unchecked_field(locator = nil, **options, &optional_filter_block)
+    #   RSpec matcher for unchecked fields
+    #   See {Capybara::Node::Matchers#has_unchecked_field?}
 
     # RSpec matcher for text content
     # See {Capybara::SessionMatchers#assert_text}
@@ -317,48 +361,6 @@ module Capybara
     # See {Capybara::SessionMatchers#assert_current_path}
     def have_current_path(path, **options)
       HaveCurrentPath.new(path, options)
-    end
-
-    # RSpec matcher for links
-    # See {Capybara::Node::Matchers#has_link?}
-    def have_link(locator = nil, **options, &optional_filter_block)
-      HaveSelector.new(:link, locator, options, &optional_filter_block)
-    end
-
-    # RSpec matcher for buttons
-    # See {Capybara::Node::Matchers#has_button?}
-    def have_button(locator = nil, **options, &optional_filter_block)
-      HaveSelector.new(:button, locator, options, &optional_filter_block)
-    end
-
-    # RSpec matcher for links
-    # See {Capybara::Node::Matchers#has_field?}
-    def have_field(locator = nil, **options, &optional_filter_block)
-      HaveSelector.new(:field, locator, options, &optional_filter_block)
-    end
-
-    # RSpec matcher for checked fields
-    # See {Capybara::Node::Matchers#has_checked_field?}
-    def have_checked_field(locator = nil, **options, &optional_filter_block)
-      HaveSelector.new(:field, locator, options.merge(checked: true), &optional_filter_block)
-    end
-
-    # RSpec matcher for unchecked fields
-    # See {Capybara::Node::Matchers#has_unchecked_field?}
-    def have_unchecked_field(locator = nil, **options, &optional_filter_block)
-      HaveSelector.new(:field, locator, options.merge(unchecked: true), &optional_filter_block)
-    end
-
-    # RSpec matcher for select elements
-    # See {Capybara::Node::Matchers#has_select?}
-    def have_select(locator = nil, **options, &optional_filter_block)
-      HaveSelector.new(:select, locator, options, &optional_filter_block)
-    end
-
-    # RSpec matcher for table elements
-    # See {Capybara::Node::Matchers#has_table?}
-    def have_table(locator = nil, **options, &optional_filter_block)
-      HaveSelector.new(:table, locator, options, &optional_filter_block)
     end
 
     # RSpec matcher for element style

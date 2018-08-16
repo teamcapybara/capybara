@@ -78,8 +78,8 @@ module Capybara
       #
       #     element.style('color', 'font-size') # => Computed values of CSS 'color' and 'font-size' styles
       #
-      # @param [String]  Names of the desired CSS properties
-      # @return [Hash]   Hash of the CSS property names to computed values
+      # @param [Array<String>] styles   Names of the desired CSS properties
+      # @return [Hash]            Hash of the CSS property names to computed values
       #
       def style(*styles)
         styles = styles.flatten.map(&:to_s)
@@ -108,7 +108,7 @@ module Capybara
       # Set the value of the form element to the given value.
       #
       # @param [String] value    The new value
-      # @param [Hash{}] options  Driver specific options for how to set the value. Take default values from {Capybara#default_set_options}
+      # @param [Hash{}] options  Driver specific options for how to set the value. Take default values from `Capybara#default_set_options` - See {Capybara::configure}
       #
       # @return [Capybara::Node::Element]  The element
       def set(value, **options)

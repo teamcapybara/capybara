@@ -170,7 +170,7 @@ module Capybara
       # @macro waiting_behavior
       #
       # @param value [String] Which option to select
-      # @param from: [String]  The id, Capybara.test_id atrtribute, name or label of the select box
+      # @param from [String]  The id, Capybara.test_id atrtribute, name or label of the select box
       #
       # @return [Capybara::Node::Element]  The option element selected
       def select(value = nil, from: nil, **options)
@@ -193,8 +193,8 @@ module Capybara
       #
       # @macro waiting_behavior
       #
-      # @param value [String]      Which option to unselect
-      # @param from: [String]      The id, Capybara.test_id attribute, name or label of the select box
+      # @param value [String]     Which option to unselect
+      # @param from [String]      The id, Capybara.test_id attribute, name or label of the select box
       #
       # @return [Capybara::Node::Element]  The option element unselected
       def unselect(value = nil, from: nil, **options)

@@ -483,9 +483,9 @@ Capybara.add_selector(:element) do
   end
 
   describe_expression_filters do |**options|
-    booleans, values = options.partition {|k,v| [true, false].include? v }.map &:to_h
+    booleans, values = options.partition { |_k, v| [true, false].include? v }.map(&:to_h)
     desc = describe_all_expression_filters(values)
-    desc += booleans.map do |k, v|
+    desc + booleans.map do |k, v|
       v ? " with #{k} attribute" : "without #{k} attribute"
     end.join
   end

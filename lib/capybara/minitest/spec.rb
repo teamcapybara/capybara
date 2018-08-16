@@ -169,7 +169,7 @@ module Capybara
       # Expectation that element has style
       #
       # @!method must_have_style
-      #   see {Capybara::SessionMatchers#assert_style}
+      #   see {Capybara::Node::Matchers#assert_style}
     end
   end
 end
