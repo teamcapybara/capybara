@@ -3,8 +3,20 @@
 module Capybara
   class Server
     class AnimationDisabler
+      def self.selector_for(css_or_bool)
+        case css_or_bool
+        when String
+          css_or_bool
+        when true
+          '*'
+        else
+          raise CapybaraError, 'Capybara.disable_animation supports either a String (the css selector to disable) or a boolean'
+        end
+      end
+
       def initialize(app)
         @app = app
+        @disable_markup = DISABLE_MARKUP_TEMPLATE % AnimationDisabler.selector_for(Capybara.disable_animation)
       end
 
       def call(env)
@@ -20,18 +32,20 @@ module Capybara
 
     private
 
+      attr_reader :disable_markup
+
       def html_content?
         !!(@headers['Content-Type'] =~ /html/)
       end
 
       def insert_disable(html)
-        html.sub(%r{(</head>)}, DISABLE_MARKUP + '\\1')
+        html.sub(%r{(</head>)}, disable_markup + '\\1')
       end
 
-      DISABLE_MARKUP = <<~HTML
+      DISABLE_MARKUP_TEMPLATE = <<~HTML
         <script defer>(typeof jQuery !== 'undefined') && (jQuery.fx.off = true);</script>
         <style>
-          * {
+           %s {
              transition: none !important;
              animation-duration: 0s !important;
              animation-delay: 0s !important;

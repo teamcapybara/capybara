@@ -86,9 +86,9 @@ module Capybara
     end
 
     remove_method :disable_animation=
-    def disable_animation=(bool)
-      warn 'Capybara.disable_animation is a beta feature - it may change/disappear in a future point version' if bool
-      @disable_animation = bool
+    def disable_animation=(bool_or_allowlist)
+      warn 'Capybara.disable_animation is a beta feature - it may change/disappear in a future point version' if bool_or_allowlist
+      @disable_animation = bool_or_allowlist
     end
 
     remove_method :test_id=
