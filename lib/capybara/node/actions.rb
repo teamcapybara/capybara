@@ -214,8 +214,8 @@ module Capybara
       # @overload attach_file([locator], paths, **options)
       #   @macro waiting_behavior
       #
-      #   @param [String] locator       Which field to attach the file to
-      #   @param [String, Array<String>] paths          The path(s) of the file(s) that will be attached, or an array of paths
+      #   @param [String] locator                  Which field to attach the file to
+      #   @param [String, Array<String>] paths     The path(s) of the file(s) that will be attached
       #
       #   @option options [Symbol] match (Capybara.match)     The matching strategy to use (:one, :first, :prefer_exact, :smart).
       #   @option options [Boolean] exact (Capybara.exact)    Match the exact label name/contents or accept a partial match.

@@ -55,9 +55,7 @@ module Capybara
 
       def _verify_title(title, options)
         query = Capybara::Queries::TitleQuery.new(title, options)
-        synchronize(query.wait) do
-          yield(query)
-        end
+        synchronize(query.wait) { yield(query) }
         true
       end
     end

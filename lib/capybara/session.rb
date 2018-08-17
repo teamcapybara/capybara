@@ -137,7 +137,7 @@ module Capybara
     # Raise errors encountered in the server
     #
     def raise_server_error!
-      return if @server.nil? || !@server.error
+      return unless @server&.error
       # Force an explanation for the error being raised as the exception cause
       begin
         if config.raise_server_errors

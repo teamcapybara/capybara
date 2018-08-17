@@ -49,7 +49,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     @app = app
     @browser = nil
     @exit_status = nil
-    @frame_handles = {}
+    @frame_handles = Hash.new { |hash, handle| hash[handle] = [] }
     @options = DEFAULT_OPTIONS.merge(options)
     @node_class = ::Capybara::Selenium::Node
   end
@@ -170,19 +170,19 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def switch_to_frame(frame)
+    handles = @frame_handles[current_window_handle]
     case frame
     when :top
-      @frame_handles[browser.window_handle] = []
+      handles.clear
       browser.switch_to.default_content
     when :parent
       # would love to use browser.switch_to.parent_frame here
       # but it has an issue if the current frame is removed from within it
-      @frame_handles[browser.window_handle].pop
+      handles.pop
       browser.switch_to.default_content
-      @frame_handles[browser.window_handle].each { |fh| browser.switch_to.frame(fh) }
+      handles.each { |fh| browser.switch_to.frame(fh) }
     else
-      @frame_handles[browser.window_handle] ||= []
-      @frame_handles[browser.window_handle] << frame.native
+      handles << frame.native
       browser.switch_to.frame(frame.native)
     end
   end

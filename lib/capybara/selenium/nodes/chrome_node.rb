@@ -13,7 +13,7 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
   def drag_to(element)
     return super unless self[:draggable] == 'true'
 
-    scroll_if_needed { driver.browser.action.click_and_hold(native).perform }
+    scroll_if_needed { browser_action.click_and_hold(native).perform }
     driver.execute_script HTML5_DRAG_DROP_SCRIPT, self, element
   end
 

@@ -323,7 +323,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
     end
 
-    describe 'Capybara#disable_animation', :focus_ do
+    describe 'Capybara#disable_animation' do
       context 'when set to `true`' do
         before(:context) do # rubocop:disable RSpec/BeforeAfterAll
           # NOTE: Although Capybara.SpecHelper.reset! sets Capybara.disable_animation to false,

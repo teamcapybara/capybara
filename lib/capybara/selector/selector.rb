@@ -185,7 +185,6 @@ module Capybara
       @match = nil
       @label = nil
       @failure_message = nil
-      @description = nil
       @format = nil
       @expression = nil
       @expression_filters = {}

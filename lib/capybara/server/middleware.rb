@@ -20,7 +20,7 @@ module Capybara
         end
       end
 
-      attr_accessor :error
+      attr_reader :error
 
       def initialize(app, server_errors, extra_middleware = [])
         @app = app
@@ -33,6 +33,10 @@ module Capybara
 
       def pending_requests?
         @counter.value.positive?
+      end
+
+      def clear_error
+        @error = nil
       end
 
       def call(env)

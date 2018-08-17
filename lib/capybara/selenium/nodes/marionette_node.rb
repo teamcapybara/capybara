@@ -47,17 +47,15 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
     return super(*args.map { |arg| arg == :space ? ' ' : arg }) if args.none? { |arg| arg.is_a? Array }
 
     native.click
-    actions = driver.browser.action
-    args.each do |keys|
+    args.each_with_object(browser_action) do |keys, actions|
       _send_keys(keys, actions)
-    end
-    actions.perform
+    end.perform
   end
 
   def drag_to(element)
     return super unless (browser_version >= 62.0) && (self[:draggable] == 'true')
 
-    scroll_if_needed { driver.browser.action.click_and_hold(native).perform }
+    scroll_if_needed { browser_action.click_and_hold(native).perform }
     driver.execute_script HTML5_DRAG_DROP_SCRIPT, self, element
   end
 

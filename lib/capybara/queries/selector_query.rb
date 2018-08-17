@@ -3,8 +3,7 @@
 module Capybara
   module Queries
     class SelectorQuery < Queries::BaseQuery
-      attr_accessor :selector, :locator, :options, :expression, :find, :negative
-
+      attr_reader :expression, :selector, :locator, :options
       VALID_KEYS = COUNT_KEYS + %i[text id class visible exact exact_text match wait filter_set]
       VALID_MATCH = %i[first smart prefer_exact one].freeze
 
@@ -25,7 +24,7 @@ module Capybara
 
         raise ArgumentError, "Unused parameters passed to #{self.class.name} : #{args}" unless args.empty?
 
-        @expression = @selector.call(@locator, @options.merge(selector_config: { enable_aria_label: enable_aria_label, test_id: test_id }))
+        @expression = selector.call(@locator, @options.merge(selector_config: { enable_aria_label: enable_aria_label, test_id: test_id }))
 
         warn_exact_usage
 
@@ -36,22 +35,22 @@ module Capybara
       def label; selector.label || selector.name; end
 
       def description(applied = false)
-        @description = +''
-        if !applied || @applied_filters
-          @description << 'visible ' if visible == :visible
-          @description << 'non-visible ' if visible == :hidden
+        desc = +''
+        if !applied || applied_filters
+          desc << 'visible ' if visible == :visible
+          desc << 'non-visible ' if visible == :hidden
         end
-        @description << "#{label} #{locator.inspect}"
-        if !applied || @applied_filters
-          @description << " with#{' exact' if exact_text == true} text #{options[:text].inspect}" if options[:text]
-          @description << " with exact text #{exact_text}" if exact_text.is_a?(String)
+        desc << "#{label} #{locator.inspect}"
+        if !applied || applied_filters
+          desc << " with#{' exact' if exact_text == true} text #{options[:text].inspect}" if options[:text]
+          desc << " with exact text #{exact_text}" if exact_text.is_a?(String)
         end
-        @description << " with id #{options[:id]}" if options[:id]
-        @description << " with classes [#{Array(options[:class]).join(',')}]" if options[:class]
-        @description << selector.description(node_filters: !applied || (@applied_filters == :node), **options)
-        @description << ' that also matches the custom filter block' if @filter_block && (!applied || (@applied_filters == :node))
-        @description << " within #{@resolved_node.inspect}" if describe_within?
-        @description
+        desc << " with id #{options[:id]}" if options[:id]
+        desc << " with classes [#{Array(options[:class]).join(',')}]" if options[:class]
+        desc << selector.description(node_filters: !applied || (applied_filters == :node), **options)
+        desc << ' that also matches the custom filter block' if @filter_block && (!applied || (applied_filters == :node))
+        desc << " within #{@resolved_node.inspect}" if describe_within?
+        desc
       end
 
       def applied_description
@@ -136,6 +135,10 @@ module Capybara
 
     private
 
+      def applied_filters
+        @applied_filters ||= false
+      end
+
       def find_selector(locator)
         selector = if locator.is_a?(Symbol)
           Selector.all.fetch(locator) { |sel_type| raise ArgumentError, "Unknown selector type (:#{sel_type})" }
@@ -171,7 +174,6 @@ module Capybara
 
       def matches_filter_block?(node)
         return true unless @filter_block
-
         if node.respond_to?(:session)
           node.session.using_wait_time(0) { @filter_block.call(node) }
         else
@@ -201,9 +203,9 @@ module Capybara
         unless VALID_MATCH.include?(match)
           raise ArgumentError, "invalid option #{match.inspect} for :match, should be one of #{VALID_MATCH.map(&:inspect).join(', ')}"
         end
-        unhandled_options = @options.keys - valid_keys
-        unhandled_options -= @options.keys.select do |option_name|
-          expression_filters.any? { |_nmae, ef| ef.handles_option? option_name } ||
+        unhandled_options = @options.keys.reject do |option_name|
+          valid_keys.include?(option_name) ||
+            expression_filters.any? { |_name, ef| ef.handles_option? option_name } ||
             node_filters.any? { |_name, nf| nf.handles_option? option_name }
         end
 
@@ -266,22 +268,21 @@ module Capybara
          classes[true].to_a.map { |cl| ":not(.#{Capybara::Selector::CSS.escape(cl.slice(1))})" }).join
       end
 
-      def apply_expression_filters(expr)
+      def apply_expression_filters(expression)
         unapplied_options = options.keys - valid_keys
-        expression_filters.inject(expr) do |memo, (name, ef)|
+        expression_filters.inject(expression) do |expr, (name, ef)|
           if ef.matcher?
-            unapplied_options.select { |option_name| ef.handles_option?(option_name) }.each do |option_name|
+            unapplied_options.select { |option_name| ef.handles_option?(option_name) }.inject(expr) do |memo, option_name|
               unapplied_options.delete(option_name)
-              memo = ef.apply_filter(memo, option_name, options[option_name])
+              ef.apply_filter(memo, option_name, options[option_name])
             end
-            memo
           elsif options.key?(name)
             unapplied_options.delete(name)
-            ef.apply_filter(memo, name, options[name])
+            ef.apply_filter(expr, name, options[name])
           elsif ef.default?
-            ef.apply_filter(memo, name, ef.default)
+            ef.apply_filter(expr, name, ef.default)
           else
-            memo
+            expr
           end
         end
       end

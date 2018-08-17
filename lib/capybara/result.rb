@@ -62,10 +62,7 @@ module Capybara
       if max_idx.nil?
         full_results[*args]
       else
-        loop do
-          break if @result_cache.size > max_idx
-          @result_cache << @results_enum.next
-        end
+        load_up_to(max_idx + 1)
         @result_cache[*args]
       end
     end
@@ -77,40 +74,26 @@ module Capybara
 
     def compare_count
       # Only check filters for as many elements as necessary to determine result
-      if @query.options[:count]
-        count_opt = Integer(@query.options[:count])
-        loop do
-          break if @result_cache.size > count_opt
-          @result_cache << @results_enum.next
-        end
-        return @result_cache.size <=> count_opt
+      if (count = @query.options[:count])
+        count = Integer(count)
+        return load_up_to(count + 1) <=> count
       end
 
-      if @query.options[:minimum]
-        min_opt = Integer(@query.options[:minimum])
-        begin
-          @result_cache << @results_enum.next while @result_cache.size < min_opt
-        rescue StopIteration
-          return -1
-        end
+      if (min = @query.options[:minimum])
+        min = Integer(min)
+        return -1 if load_up_to(min) < min
       end
 
-      if @query.options[:maximum]
-        max_opt = Integer(@query.options[:maximum])
-        loop do
-          return 1 if @result_cache.size > max_opt
-          @result_cache << @results_enum.next
-        end
+      if (max = @query.options[:maximum])
+        max = Integer(max)
+        return 1 if load_up_to(max + 1) > max
       end
 
-      if @query.options[:between]
-        min, max = @query.options[:between].minmax
-        loop do
-          break if @result_cache.size > max
-          @result_cache << @results_enum.next
-        end
-        return 0 if @query.options[:between].include? @result_cache.size
-        return @result_cache.size <=> min
+      if (between = @query.options[:between])
+        min, max = between.minmax
+        size = load_up_to(max + 1)
+        return 0 if between.include? size
+        return size <=> min
       end
 
       0
@@ -143,6 +126,14 @@ module Capybara
     end
 
   private
+
+    def load_up_to(num)
+      loop do
+        break if @result_cache.size >= num
+        @result_cache << @results_enum.next
+      end
+      @result_cache.size
+    end
 
     def full_results
       loop { @result_cache << @results_enum.next }

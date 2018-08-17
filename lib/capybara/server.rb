@@ -31,7 +31,7 @@ module Capybara
     end
 
     def reset_error!
-      middleware.error = nil
+      middleware.clear_error
     end
 
     def error
