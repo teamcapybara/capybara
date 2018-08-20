@@ -55,8 +55,8 @@ module Capybara
       #
       def text(type = nil, normalize_ws: false)
         type ||= :all unless session_options.ignore_hidden_elements || session_options.visible_text_only
-        t = synchronize { type == :all ? base.all_text : base.visible_text }
-        normalize_ws ? t.gsub(/[[:space:]]+/, ' ').strip : t
+        txt = synchronize { type == :all ? base.all_text : base.visible_text }
+        normalize_ws ? txt.gsub(/[[:space:]]+/, ' ').strip : txt
       end
 
       ##
@@ -86,11 +86,11 @@ module Capybara
         raise ArgumentError, 'You must specify at least one CSS style' if styles.empty?
         begin
           synchronize { base.style(styles) }
-        rescue NotImplementedError => e
+        rescue NotImplementedError => err
           begin
             evaluate_script(STYLE_SCRIPT, *styles)
           rescue Capybara::NotSupportedByDriverError
-            raise e
+            raise err
           end
         end
       end
@@ -429,8 +429,8 @@ module Capybara
           begin
             reloaded = query_scope.reload.first(@query.name, @query.locator, @query.options)
             @base = reloaded.base if reloaded
-          rescue StandardError => e
-            raise e unless catch_error?(e)
+          rescue StandardError => err
+            raise err unless catch_error?(err)
           end
         end
         self
@@ -440,9 +440,8 @@ module Capybara
         %(#<Capybara::Node::Element tag="#{base.tag_name}" path="#{base.path}">)
       rescue NotSupportedByDriverError
         %(#<Capybara::Node::Element tag="#{base.tag_name}">)
-      rescue StandardError => e
-        raise unless session.driver.invalid_element_errors.any? { |et| e.is_a?(et) }
-
+      rescue StandardError => err
+        raise unless session.driver.invalid_element_errors.any? { |et| err.is_a?(et) }
         %(Obsolete #<Capybara::Node::Element>)
       end
 

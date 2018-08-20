@@ -23,9 +23,9 @@ module Capybara
 
       def self.wait(options, default = Capybara.default_max_wait_time)
         # if no value or nil for the :wait option is passed it should default to the default
-        w = options.fetch(:wait, nil)
-        w = default if w.nil?
-        w || 0
+        wait = options.fetch(:wait, nil)
+        wait = default if wait.nil?
+        wait || 0
       end
 
       ##
@@ -69,7 +69,7 @@ module Capybara
     private
 
       def count_specified?
-        COUNT_KEYS.any? { |k| options.key? k }
+        COUNT_KEYS.any? { |key| options.key? key }
       end
 
       def count_message

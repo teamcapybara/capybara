@@ -21,7 +21,7 @@ if defined?(::RSpec::Expectations::Version)
         class CapybaraEvaluator
           def initialize(actual)
             @actual = actual
-            @match_results = Hash.new { |h, matcher| h[matcher] = matcher.matches?(@actual) }
+            @match_results = Hash.new { |hsh, matcher| hsh[matcher] = matcher.matches?(@actual) }
           end
 
           def matcher_matches?(matcher)

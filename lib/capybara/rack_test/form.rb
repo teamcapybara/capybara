@@ -22,10 +22,10 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
     params = make_params
 
     form_element_types = %i[input select textarea]
-    form_elements_xpath = XPath.generate do |x|
-      xpath = x.descendant(*form_element_types).where(!x.attr(:form))
-      xpath += x.anywhere(*form_element_types).where(x.attr(:form) == native[:id]) if native[:id]
-      xpath.where(!x.attr(:disabled))
+    form_elements_xpath = XPath.generate do |xp|
+      xpath = xp.descendant(*form_element_types).where(!xp.attr(:form))
+      xpath += xp.anywhere(*form_element_types).where(xp.attr(:form) == native[:id]) if native[:id]
+      xpath.where(!xp.attr(:disabled))
     end.to_s
 
     native.xpath(form_elements_xpath).map do |field|

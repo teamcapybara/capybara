@@ -44,7 +44,7 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
 
   def send_keys(*args)
     # https://github.com/mozilla/geckodriver/issues/846
-    return super(*args.map { |arg| arg == :space ? ' ' : arg }) if args.none? { |s| s.is_a? Array }
+    return super(*args.map { |arg| arg == :space ? ' ' : arg }) if args.none? { |arg| arg.is_a? Array }
 
     native.click
     actions = driver.browser.action

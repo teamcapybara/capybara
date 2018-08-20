@@ -211,11 +211,11 @@ module Capybara
       #
       #     page.attach_file(locator, '/path/to/file.png')
       #
-      # @overload attach_file([locator], path, **options)
+      # @overload attach_file([locator], paths, **options)
       #   @macro waiting_behavior
       #
       #   @param [String] locator       Which field to attach the file to
-      #   @param [String] path          The path of the file that will be attached, or an array of paths
+      #   @param [String, Array<String>] paths          The path(s) of the file(s) that will be attached, or an array of paths
       #
       #   @option options [Symbol] match (Capybara.match)     The matching strategy to use (:one, :first, :prefer_exact, :smart).
       #   @option options [Boolean] exact (Capybara.exact)    Match the exact label name/contents or accept a partial match.
@@ -226,16 +226,16 @@ module Capybara
       #   @option options [true, Hash] make_visible   A Hash of CSS styles to change before attempting to attach the file, if `true` { opacity: 1, display: 'block', visibility: 'visible' } is used (may not be supported by all drivers)
       #
       #   @return [Capybara::Node::Element]  The file field element
-      def attach_file(locator = nil, path, make_visible: nil, **options) # rubocop:disable Style/OptionalArguments
-        Array(path).each do |p|
-          raise Capybara::FileNotFound, "cannot attach file, #{p} does not exist" unless File.exist?(p.to_s)
+      def attach_file(locator = nil, paths, make_visible: nil, **options) # rubocop:disable Style/OptionalArguments
+        Array(paths).each do |path|
+          raise Capybara::FileNotFound, "cannot attach file, #{path} does not exist" unless File.exist?(path.to_s)
         end
         # Allow user to update the CSS style of the file input since they are so often hidden on a page
         if make_visible
           ff = find(:file_field, locator, options.merge(visible: :all))
-          while_visible(ff, make_visible) { |el| el.set(path) }
+          while_visible(ff, make_visible) { |el| el.set(paths) }
         else
-          find(:file_field, locator, options).set(path)
+          find(:file_field, locator, options).set(paths)
         end
       end
 
@@ -258,7 +258,7 @@ module Capybara
 
       def select_datalist_option(input, value)
         datalist_options = input.evaluate_script(DATALIST_OPTIONS_SCRIPT)
-        option = datalist_options.find { |o| o.values_at('value', 'label').include?(value) }
+        option = datalist_options.find { |opt| opt.values_at('value', 'label').include?(value) }
         raise ::Capybara::ElementNotFound, %(Unable to find datalist option "#{value}") unless option
         input.set(option['value'])
       rescue ::Capybara::NotSupportedByDriverError
@@ -295,13 +295,13 @@ module Capybara
           begin
             el = find(selector, locator, options)
             el.set(checked)
-          rescue StandardError => e
-            raise unless allow_label_click && catch_error?(e)
+          rescue StandardError => err
+            raise unless allow_label_click && catch_error?(err)
             begin
               el ||= find(selector, locator, options.merge(visible: :all))
               find(:label, for: el, visible: true).click unless el.checked? == checked
             rescue StandardError # swallow extra errors - raise original
-              raise e
+              raise err
             end
           end
         end

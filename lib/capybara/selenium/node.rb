@@ -22,7 +22,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
 
   def value
     if tag_name == 'select' && multiple?
-      native.find_elements(:css, 'option:checked').map { |n| n[:value] || n.text }
+      native.find_elements(:css, 'option:checked').map { |el| el[:value] || el.text }
     else
       native[:value]
     end
@@ -86,32 +86,32 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       native.click
     else
       scroll_if_needed do
-        action_with_modifiers(keys, options) do |a|
-          coords?(options) ? a.click : a.click(native)
+        action_with_modifiers(keys, options) do |action|
+          coords?(options) ? action.click : action.click(native)
         end
       end
     end
-  rescue StandardError => e
-    if e.is_a?(::Selenium::WebDriver::Error::ElementClickInterceptedError) ||
-       e.message =~ /Other element would receive the click/
+  rescue StandardError => err
+    if err.is_a?(::Selenium::WebDriver::Error::ElementClickInterceptedError) ||
+       err.message =~ /Other element would receive the click/
       scroll_to_center
     end
 
-    raise e
+    raise err
   end
 
   def right_click(keys = [], **options)
     scroll_if_needed do
-      action_with_modifiers(keys, options) do |a|
-        coords?(options) ? a.context_click : a.context_click(native)
+      action_with_modifiers(keys, options) do |action|
+        coords?(options) ? action.context_click : action.context_click(native)
       end
     end
   end
 
   def double_click(keys = [], **options)
     scroll_if_needed do
-      action_with_modifiers(keys, options) do |a|
-        coords?(options) ? a.double_click : a.double_click(native)
+      action_with_modifiers(keys, options) do |action|
+        coords?(options) ? action.double_click : action.double_click(native)
       end
     end
   end
@@ -149,11 +149,11 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def find_xpath(locator)
-    native.find_elements(:xpath, locator).map { |n| self.class.new(driver, n) }
+    native.find_elements(:xpath, locator).map { |el| self.class.new(driver, el) }
   end
 
   def find_css(locator)
-    native.find_elements(:css, locator).map { |n| self.class.new(driver, n) }
+    native.find_elements(:css, locator).map { |el| self.class.new(driver, el) }
   end
 
   def ==(other)
@@ -312,8 +312,8 @@ private
     modifiers_up(actions, keys)
     actions.perform
   ensure
-    a = driver.browser.action
-    a.release_actions if a.respond_to?(:release_actions)
+    act = driver.browser.action
+    act.release_actions if act.respond_to?(:release_actions)
   end
 
   def modifiers_down(actions, keys)

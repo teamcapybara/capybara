@@ -105,11 +105,11 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   end
 
   def find_xpath(locator)
-    native.xpath(locator).map { |n| self.class.new(driver, n) }
+    native.xpath(locator).map { |el| self.class.new(driver, el) }
   end
 
   def find_css(locator)
-    native.css(locator, Capybara::RackTest::CSSHandlers.new).map { |n| self.class.new(driver, n) }
+    native.css(locator, Capybara::RackTest::CSSHandlers.new).map { |el| self.class.new(driver, el) }
   end
 
   def ==(other)
@@ -165,7 +165,7 @@ private
   end
 
   def set_radio(_value) # rubocop:disable Naming/AccessorMethodName
-    other_radios_xpath = XPath.generate { |x| x.anywhere(:input)[x.attr(:name) == self[:name]] }.to_s
+    other_radios_xpath = XPath.generate { |xp| xp.anywhere(:input)[xp.attr(:name) == self[:name]] }.to_s
     driver.dom.xpath(other_radios_xpath).each { |node| node.remove_attribute('checked') }
     native['checked'] = 'checked'
   end
@@ -185,11 +185,11 @@ private
       value = value.to_s[0...self[:maxlength].to_i]
     end
     if value.is_a?(Array) # Assert multiple attribute is present
-      value.each do |v|
+      value.each do |val|
         new_native = native.clone
         new_native.remove_attribute('value')
         native.add_next_sibling(new_native)
-        new_native['value'] = v.to_s
+        new_native['value'] = val.to_s
       end
       native.remove
     else

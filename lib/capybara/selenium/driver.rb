@@ -15,8 +15,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def self.load_selenium
     require 'selenium-webdriver'
     warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade." if Gem.loaded_specs['selenium-webdriver'].version < Gem::Version.new('3.5.0')
-  rescue LoadError => e
-    raise e if e.message !~ /selenium-webdriver/
+  rescue LoadError => err
+    raise err if err.message !~ /selenium-webdriver/
     raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
   end
 
@@ -259,10 +259,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     @browser&.quit
   rescue Selenium::WebDriver::Error::SessionNotCreatedError, Errno::ECONNREFUSED # rubocop:disable Lint/HandleExceptions
     # Browser must have already gone
-  rescue Selenium::WebDriver::Error::UnknownError => e
-    unless silenced_unknown_error_message?(e.message) # Most likely already gone
+  rescue Selenium::WebDriver::Error::UnknownError => err
+    unless silenced_unknown_error_message?(err.message) # Most likely already gone
       # probably already gone but not sure - so warn
-      warn "Ignoring Selenium UnknownError during driver quit: #{e.message}"
+      warn "Ignoring Selenium UnknownError during driver quit: #{err.message}"
     end
   ensure
     @browser = nil
@@ -375,7 +375,7 @@ private
   end
 
   def silenced_unknown_error_message?(msg)
-    silenced_unknown_error_messages.any? { |r| msg =~ r }
+    silenced_unknown_error_messages.any? { |regex| msg =~ regex }
   end
 
   def silenced_unknown_error_messages
@@ -385,9 +385,9 @@ private
   def unwrap_script_result(arg)
     case arg
     when Array
-      arg.map { |e| unwrap_script_result(e) }
+      arg.map { |arr| unwrap_script_result(arr) }
     when Hash
-      arg.each { |k, v| arg[k] = unwrap_script_result(v) }
+      arg.each { |key, value| arg[key] = unwrap_script_result(value) }
     when Selenium::WebDriver::Element
       build_node(arg)
     else

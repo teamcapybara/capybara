@@ -8,12 +8,12 @@ module Capybara
         out = +''
         out << value.slice!(0...1) if value =~ /^[-_]/
         out << (value[0] =~ NMSTART ? value.slice!(0...1) : escape_char(value.slice!(0...1)))
-        out << value.gsub(/[^a-zA-Z0-9_-]/) { |c| escape_char c }
+        out << value.gsub(/[^a-zA-Z0-9_-]/) { |char| escape_char char }
         out
       end
 
-      def self.escape_char(c)
-        c =~ %r{[ -/:-~]} ? "\\#{c}" : format('\\%06x', c.ord)
+      def self.escape_char(char)
+        char =~ %r{[ -/:-~]} ? "\\#{char}" : format('\\%06x', char.ord)
       end
 
       def self.split(css)
@@ -32,21 +32,21 @@ module Capybara
           selectors = []
           StringIO.open(css) do |str|
             selector = ''
-            while (c = str.getc)
-              case c
+            while (char = str.getc)
+              case char
               when '['
                 selector += parse_square(str)
               when '('
                 selector += parse_paren(str)
               when '"', "'"
-                selector += parse_string(c, str)
+                selector += parse_string(char, str)
               when '\\'
-                selector += c + str.getc
+                selector += char + str.getc
               when ','
                 selectors << selector.strip
                 selector = ''
               else
-                selector += c
+                selector += char
               end
             end
             selectors << selector.strip
@@ -66,16 +66,16 @@ module Capybara
 
         def parse_block(start, final, strio)
           block = start
-          while (c = strio.getc)
-            case c
+          while (char = strio.getc)
+            case char
             when final
-              return block + c
+              return block + char
             when '\\'
-              block += c + strio.getc
+              block += char + strio.getc
             when '"', "'"
-              block += parse_string(c, strio)
+              block += parse_string(char, strio)
             else
-              block += c
+              block += char
             end
           end
           raise ArgumentError, "Invalid CSS Selector - Block end '#{final}' not found"
@@ -83,9 +83,9 @@ module Capybara
 
         def parse_string(quote, strio)
           string = quote
-          while (c = strio.getc)
-            string += c
-            case c
+          while (char = strio.getc)
+            string += char
+            case char
             when quote
               return string
             when '\\'

@@ -254,7 +254,8 @@ module Capybara
         if visit_uri.relative?
           uri_base.port ||= @server.port if @server && config.always_include_port
 
-          visit_uri_parts = visit_uri.to_hash.delete_if { |_k, v| v.nil? }
+          # TODO: Use compact when Ruby 2.4 is required
+          visit_uri_parts = visit_uri.to_hash.delete_if { |_k, value| value.nil? }
 
           # Useful to people deploying to a subdirectory
           # and/or single page apps where only the url fragment changes
@@ -675,8 +676,8 @@ module Capybara
     # @return [String]      the path to which the file was saved
     #
     def save_page(path = nil)
-      prepare_path(path, 'html').tap do |p|
-        File.write(p, Capybara::Helpers.inject_asset_host(body, host: config.asset_host), mode: 'wb')
+      prepare_path(path, 'html').tap do |p_path|
+        File.write(p_path, Capybara::Helpers.inject_asset_host(body, host: config.asset_host), mode: 'wb')
       end
     end
 
@@ -691,7 +692,7 @@ module Capybara
     # @param [String] path  the path to where it should be saved
     #
     def save_and_open_page(path = nil)
-      save_page(path).tap { |p| open_file(p) }
+      save_page(path).tap { |s_path| open_file(s_path) }
     end
 
     ##
@@ -706,7 +707,7 @@ module Capybara
     # @param [Hash] options   a customizable set of options
     # @return [String]        the path to which the file was saved
     def save_screenshot(path = nil, **options)
-      prepare_path(path, 'png').tap { |p| driver.save_screenshot(p, options) }
+      prepare_path(path, 'png').tap { |p_path| driver.save_screenshot(p_path, options) }
     end
 
     ##
@@ -722,7 +723,7 @@ module Capybara
     #
     def save_and_open_screenshot(path = nil, **options)
       # rubocop:disable Lint/Debugger
-      save_screenshot(path, options).tap { |p| open_file(p) }
+      save_screenshot(path, options).tap { |s_path| open_file(s_path) }
       # rubocop:enable Lint/Debugger
     end
 
@@ -822,7 +823,7 @@ module Capybara
     end
 
     def prepare_path(path, extension)
-      File.expand_path(path || default_fn(extension), config.save_path).tap { |p| FileUtils.mkdir_p(File.dirname(p)) }
+      File.expand_path(path || default_fn(extension), config.save_path).tap { |p_path| FileUtils.mkdir_p(File.dirname(p_path)) }
     end
 
     def default_fn(extension)
@@ -837,9 +838,9 @@ module Capybara
     def element_script_result(arg)
       case arg
       when Array
-        arg.map { |e| element_script_result(e) }
+        arg.map { |subarg| element_script_result(subarg) }
       when Hash
-        arg.each { |k, v| arg[k] = element_script_result(v) }
+        arg.each { |key, value| arg[key] = element_script_result(value) }
       when Capybara::Driver::Node
         Capybara::Node::Element.new(self, arg, nil, nil)
       else
@@ -881,9 +882,9 @@ module Capybara
               driver.switch_to_window handle
               return Window.new(self, handle) if yield
             end
-          rescue StandardError => e
+          rescue StandardError => err
             driver.switch_to_window(original_window_handle)
-            raise e
+            raise err
           else
             driver.switch_to_window(original_window_handle)
             raise Capybara::WindowError, 'Could not find a window matching block/lambda'

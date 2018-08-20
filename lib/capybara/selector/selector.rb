@@ -419,8 +419,8 @@ module Capybara
     def describe_all_expression_filters(**opts)
       expression_filters.map do |ef_name, ef|
         if ef.matcher?
-          opts.keys.map do |k|
-            " with #{ef_name}[#{k} => #{opts[k]}]" if ef.handles_option?(k) && !::Capybara::Queries::SelectorQuery::VALID_KEYS.include?(k)
+          opts.keys.map do |key|
+            " with #{ef_name}[#{key} => #{opts[key]}]" if ef.handles_option?(key) && !::Capybara::Queries::SelectorQuery::VALID_KEYS.include?(key)
           end.join
         elsif opts.key?(ef_name)
           " with #{ef_name} #{opts[ef_name]}"

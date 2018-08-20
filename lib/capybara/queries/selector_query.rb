@@ -140,7 +140,7 @@ module Capybara
         selector = if locator.is_a?(Symbol)
           Selector.all.fetch(locator) { |sel_type| raise ArgumentError, "Unknown selector type (:#{sel_type})" }
         else
-          Selector.all.values.find { |s| s.match?(locator) }
+          Selector.all.values.find { |sel| sel.match?(locator) }
         end
         selector || Selector.all[session_options.default_selector]
       end
@@ -261,9 +261,9 @@ module Capybara
       end
 
       def css_from_classes(classes)
-        classes = classes.group_by { |c| c.start_with? '!' }
-        (classes[false].to_a.map { |c| ".#{Capybara::Selector::CSS.escape(c)}" } +
-         classes[true].to_a.map { |c| ":not(.#{Capybara::Selector::CSS.escape(c.slice(1))})" }).join
+        classes = classes.group_by { |cl| cl.start_with? '!' }
+        (classes[false].to_a.map { |cl| ".#{Capybara::Selector::CSS.escape(cl)}" } +
+         classes[true].to_a.map { |cl| ":not(.#{Capybara::Selector::CSS.escape(cl.slice(1))})" }).join
       end
 
       def apply_expression_filters(expr)

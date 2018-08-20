@@ -7,8 +7,8 @@ module Capybara::Selenium::Driver::ChromeDriver
     within_given_window(handle) do
       begin
         super
-      rescue NoMethodError => e
-        raise unless e.message =~ /full_screen_window/
+      rescue NoMethodError => err
+        raise unless err.message =~ /full_screen_window/
         bridge = browser.send(:bridge)
         result = bridge.http.call(:post, "session/#{bridge.session_id}/window/fullscreen", {})
         result['value']
@@ -18,8 +18,8 @@ module Capybara::Selenium::Driver::ChromeDriver
 
   def resize_window_to(handle, width, height)
     super
-  rescue Selenium::WebDriver::Error::UnknownError => e
-    raise unless e.message =~ /failed to change window state/
+  rescue Selenium::WebDriver::Error::UnknownError => err
+    raise unless err.message =~ /failed to change window state/
     # Chromedriver doesn't wait long enough for state to change when coming out of fullscreen
     # and raises unnecessary error. Wait a bit and try again.
     sleep 0.5

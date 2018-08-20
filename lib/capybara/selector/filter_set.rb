@@ -11,7 +11,7 @@ module Capybara
         @name = name
         @node_filters = {}
         @expression_filters = {}
-        @descriptions = Hash.new { |h, k| h[k] = [] }
+        @descriptions = Hash.new { |hsh, key| hsh[key] = [] }
         instance_eval(&block)
       end
 
@@ -39,11 +39,11 @@ module Capybara
 
       def description(node_filters: true, expression_filters: true, **options)
         opts = options_with_defaults(options)
-        d = +''
-        d += undeclared_descriptions.map { |desc| desc.call(opts).to_s }.join
-        d += expression_filter_descriptions.map { |desc| desc.call(opts).to_s }.join if expression_filters
-        d += node_filter_descriptions.map { |desc| desc.call(opts).to_s }.join if node_filters
-        d
+        description = +''
+        description += undeclared_descriptions.map { |desc| desc.call(opts).to_s }.join
+        description += expression_filter_descriptions.map { |desc| desc.call(opts).to_s }.join if expression_filters
+        description += node_filter_descriptions.map { |desc| desc.call(opts).to_s }.join if node_filters
+        description
       end
 
       def descriptions
@@ -53,7 +53,7 @@ module Capybara
 
       def import(name, filters = nil)
         f_set = self.class.all[name]
-        filter_selector = filters.nil? ? ->(*) { true } : ->(n, _) { filters.include? n }
+        filter_selector = filters.nil? ? ->(*) { true } : ->(filter_name, _) { filters.include? filter_name }
 
         expression_filters.merge!(f_set.expression_filters.select(&filter_selector))
         node_filters.merge!(f_set.node_filters.select(&filter_selector))
@@ -96,7 +96,7 @@ module Capybara
       def options_with_defaults(options)
         options = options.dup
         [expression_filters, node_filters].each do |filters|
-          filters.select { |_n, f| f.default? }.each do |name, filter|
+          filters.select { |_n, filter| filter.default? }.each do |name, filter|
             options[name] = filter.default unless options.key?(name)
           end
         end
@@ -104,7 +104,7 @@ module Capybara
       end
 
       def add_filter(name, filter_class, *types, matcher: nil, **options, &block)
-        types.each { |k| options[k] = true }
+        types.each { |type| options[type] = true }
         raise 'ArgumentError', ':default option is not supported for filters with a :matcher option' if matcher && options[:default]
         if filter_class <= Filters::ExpressionFilter
           @expression_filters[name] = filter_class.new(name, matcher, block, options)

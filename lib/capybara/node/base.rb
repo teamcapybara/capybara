@@ -81,10 +81,10 @@ module Capybara
           timer = Capybara::Helpers.timer(expire_in: seconds)
           begin
             yield
-          rescue StandardError => e
+          rescue StandardError => err
             session.raise_server_error!
-            raise e unless driver.wait? && catch_error?(e, errors)
-            raise e if timer.expired?
+            raise err unless driver.wait? && catch_error?(err, errors)
+            raise err if timer.expired?
             sleep(0.05)
             raise Capybara::FrozenInTime, 'Time appears to be frozen. Capybara does not work with libraries which freeze time, consider using time travelling instead' if timer.stalled?
             reload if session_options.automatic_reload

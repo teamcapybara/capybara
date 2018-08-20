@@ -27,15 +27,15 @@ module Capybara
 
       def wrap_matches?(actual)
         yield(wrap(actual))
-      rescue Capybara::ExpectationNotMet => e
-        @failure_message = e.message
+      rescue Capybara::ExpectationNotMet => err
+        @failure_message = err.message
         false
       end
 
       def wrap_does_not_match?(actual)
         yield(wrap(actual))
-      rescue Capybara::ExpectationNotMet => e
-        @failure_message_when_negated = e.message
+      rescue Capybara::ExpectationNotMet => err
+        @failure_message_when_negated = err.message
         false
       end
 

@@ -306,7 +306,7 @@ module Capybara
       end
 
       def options_include_minimum?(opts)
-        %i[count minimum between].any? { |k| opts.key?(k) }
+        %i[count minimum between].any? { |key| opts.key?(key) }
       end
     end
   end
