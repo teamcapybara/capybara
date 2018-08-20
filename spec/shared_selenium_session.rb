@@ -305,7 +305,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         expect(session).not_to have_xpath('//div[contains(., "HTML5 Dropped drag_html5")]')
       end
 
-      it 'should HTML6 drag and drop when scrolling needed' do
+      it 'should HTML5 drag and drop when scrolling needed' do
         pending "Firefox < 62 doesn't support a DataTransfer constuctor" if marionette_lt?(62.0, session)
         session.visit('/with_js')
         element = session.find('//div[@id="drag_html5_scroll"]')
