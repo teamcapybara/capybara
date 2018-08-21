@@ -1,3 +1,10 @@
+# Version 3.7.0
+Release date: unreleased
+
+### Added
+
+* `Capybara.disable_animation` can be set to a CSS selector to identify which elements will have animation disabled [Michael Glass]
+
 # Version 3.6.0
 Release date: 2018-08-14
 
