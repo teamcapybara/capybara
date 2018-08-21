@@ -323,31 +323,33 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
     end
 
-    context 'AnimationDisabler' do
-      before(:context) do # rubocop:disable RSpec/BeforeAfterAll
-        # NOTE: Although Capybara.SpecHelper.reset! sets Capybara.disable_animation to false,
-        # it doesn't affect any of these tests because the settings are applied per-session
-        Capybara.disable_animation = true
-        @animation_session = Capybara::Session.new(session.mode, TestApp.new)
+    describe 'Capybara#disable_animation', :focus_ do
+      context 'when set to `true`' do
+        before(:context) do # rubocop:disable RSpec/BeforeAfterAll
+          # NOTE: Although Capybara.SpecHelper.reset! sets Capybara.disable_animation to false,
+          # it doesn't affect any of these tests because the settings are applied per-session
+          Capybara.disable_animation = true
+          @animation_session = Capybara::Session.new(session.mode, TestApp.new)
+        end
+
+        after(:context) do # rubocop:disable RSpec/BeforeAfterAll
+          @animation_session = nil
+        end
+
+        it 'should disable CSS transitions' do
+          @animation_session.visit('with_animation')
+          @animation_session.click_link('transition me away')
+          expect(@animation_session).to have_no_link('transition me away', wait: 0.5)
+        end
+
+        it 'should disable CSS animations' do
+          @animation_session.visit('with_animation')
+          @animation_session.click_link('animate me away')
+          expect(@animation_session).to have_no_link('animate me away', wait: 0.5)
+        end
       end
 
-      after(:context) do # rubocop:disable RSpec/BeforeAfterAll
-        @animation_session = nil
-      end
-
-      it 'should disable CSS transitions' do
-        @animation_session.visit('with_animation')
-        @animation_session.click_link('transition me away')
-        expect(@animation_session).to have_no_link('transition me away', wait: 0.5)
-      end
-
-      it 'should disable CSS animations' do
-        @animation_session.visit('with_animation')
-        @animation_session.click_link('animate me away')
-        expect(@animation_session).to have_no_link('animate me away', wait: 0.5)
-      end
-
-      context 'if we pass in css that matches css on screen' do
+      context 'if we pass in css that matches elements' do
         before(:context) do # rubocop:disable RSpec/BeforeAfterAll
           # NOTE: Although Capybara.SpecHelper.reset! sets Capybara.disable_animation to false,
           # it doesn't affect any of these tests because the settings are applied per-session
@@ -372,7 +374,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         end
       end
 
-      context 'if we pass in css that does not matches css on screen' do
+      context 'if we pass in css that does not match elements' do
         before(:context) do # rubocop:disable RSpec/BeforeAfterAll
           # NOTE: Although Capybara.SpecHelper.reset! sets Capybara.disable_animation to false,
           # it doesn't affect any of these tests because the settings are applied per-session
@@ -384,16 +386,20 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           @animation_session_without_matching_css = nil
         end
 
-        it 'should disable CSS transitions' do
+        it 'should not disable CSS transitions' do
           @animation_session_without_matching_css.visit('with_animation')
           @animation_session_without_matching_css.click_link('transition me away')
-          expect(@animation_session_without_matching_css).to have_link('transition me away', wait: 0.5)
+          sleep 0.5 # Wait long enough for click to have been processed
+          expect(@animation_session_without_matching_css).to have_link('transition me away', wait: false)
+          expect(@animation_session_without_matching_css).to have_no_link('transition me away', wait: 5)
         end
 
-        it 'should disable CSS animations' do
+        it 'should not disable CSS animations' do
           @animation_session_without_matching_css.visit('with_animation')
           @animation_session_without_matching_css.click_link('animate me away')
-          expect(@animation_session_without_matching_css).to have_link('animate me away', wait: 0.5)
+          sleep 0.5 # Wait long enough for click to have been processed
+          expect(@animation_session_without_matching_css).to have_link('animate me away', wait: false)
+          expect(@animation_session_without_matching_css).to have_no_link('animate me away', wait: 5)
         end
       end
     end
