@@ -59,8 +59,7 @@ module Capybara
 
       def matches_filters?(node)
         @applied_filters ||= :system
-        return false unless matches_text_filter?(node) && matches_exact_text_filter?(node)
-        return false unless matches_visible_filter?(node)
+        return false unless matches_text_filter?(node) && matches_exact_text_filter?(node) && matches_visible_filter?(node)
         @applied_filters = :node
         matches_node_filters?(node) && matches_filter_block?(node)
       rescue *(node.respond_to?(:session) ? node.session.driver.invalid_element_errors : [])
@@ -99,17 +98,7 @@ module Capybara
         @applied_filters = false
         @resolved_node = node
         node.synchronize do
-          children = if selector.format == :css
-            node.find_css(css)
-          else
-            node.find_xpath(xpath(exact))
-          end.map do |child|
-            if node.is_a?(Capybara::Node::Base)
-              Capybara::Node::Element.new(node.session, child, node, self)
-            else
-              Capybara::Node::Simple.new(child)
-            end
-          end
+          children = find_nodes_by_selector_format(node, exact).map(&method(:to_element))
           Capybara::Result.new(children, self)
         end
       end
@@ -140,6 +129,22 @@ module Capybara
           Selector.all.values.find { |sel| sel.match?(locator) }
         end
         selector || Selector.all[session_options.default_selector]
+      end
+
+      def find_nodes_by_selector_format(node, exact)
+        if selector.format == :css
+          node.find_css(css)
+        else
+          node.find_xpath(xpath(exact))
+        end
+      end
+
+      def to_element(node)
+        if @resolved_node.is_a?(Capybara::Node::Base)
+          Capybara::Node::Element.new(@resolved_node.session, node, @resolved_node, self)
+        else
+          Capybara::Node::Simple.new(node)
+        end
       end
 
       def valid_keys
@@ -218,32 +223,16 @@ module Capybara
           end
           expr = "(#{expr})[#{id_xpath}]"
         end
-        if use_default_class_filter?
-          class_xpath = if options[:class].is_a?(XPath::Expression)
-            XPath.attr(:class)[options[:class]]
-          else
-            xpath_from_classes
-          end
-          expr = "(#{expr})[#{class_xpath}]"
-        end
+        expr = "(#{expr})[#{xpath_from_classes}]" if use_default_class_filter?
         expr
       end
 
       def filtered_css(expr)
-        if use_default_id_filter? && options[:id].is_a?(XPath::Expression)
-          raise ArgumentError, 'XPath expressions are not supported for the :id filter with CSS based selectors'
-        end
-        if use_default_class_filter? && options[:class].is_a?(XPath::Expression)
-          raise ArgumentError, 'XPath expressions are not supported for the :class filter with CSS based selectors'
-        end
-
-        expr = ::Capybara::Selector::CSS.split(expr).map do |sel|
-          sel += "##{::Capybara::Selector::CSS.escape(options[:id])}" if use_default_id_filter?
+        ::Capybara::Selector::CSS.split(expr).map do |sel|
+          sel += css_from_id if use_default_id_filter?
           sel += css_from_classes if use_default_class_filter?
           sel
         end.join(', ')
-
-        expr
       end
 
       def use_default_id_filter?
@@ -255,12 +244,25 @@ module Capybara
       end
 
       def css_from_classes
+        if options[:class].is_a?(XPath::Expression)
+          raise ArgumentError, 'XPath expressions are not supported for the :class filter with CSS based selectors'
+        end
+
         classes = Array(options[:class]).group_by { |cl| cl.start_with? '!' }
         (classes[false].to_a.map { |cl| ".#{Capybara::Selector::CSS.escape(cl)}" } +
          classes[true].to_a.map { |cl| ":not(.#{Capybara::Selector::CSS.escape(cl.slice(1))})" }).join
       end
 
+      def css_from_id
+        if options[:id].is_a?(XPath::Expression)
+          raise ArgumentError, 'XPath expressions are not supported for the :id filter with CSS based selectors'
+        end
+        "##{::Capybara::Selector::CSS.escape(options[:id])}"
+      end
+
       def xpath_from_classes
+        return XPath.attr(:class)[options[:class]] if options[:class].is_a?(XPath::Expression)
+
         Array(options[:class]).map do |klass|
           if klass.start_with?('!')
             !XPath.attr(:class).contains_word(klass.slice(1))
