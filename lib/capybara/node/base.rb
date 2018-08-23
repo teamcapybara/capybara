@@ -74,24 +74,22 @@ module Capybara
       # @raise  [Capybara::FrozenInTime]  If the return value of `Time.now` appears stuck
       #
       def synchronize(seconds = session_options.default_max_wait_time, errors: nil)
-        if session.synchronized
+        return yield if session.synchronized
+
+        session.synchronized = true
+        timer = Capybara::Helpers.timer(expire_in: seconds)
+        begin
           yield
-        else
-          session.synchronized = true
-          timer = Capybara::Helpers.timer(expire_in: seconds)
-          begin
-            yield
-          rescue StandardError => err
-            session.raise_server_error!
-            raise err unless driver.wait? && catch_error?(err, errors)
-            raise err if timer.expired?
-            sleep(0.05)
-            raise Capybara::FrozenInTime, 'Time appears to be frozen. Capybara does not work with libraries which freeze time, consider using time travelling instead' if timer.stalled?
-            reload if session_options.automatic_reload
-            retry
-          ensure
-            session.synchronized = false
-          end
+        rescue StandardError => err
+          session.raise_server_error!
+          raise err unless driver.wait? && catch_error?(err, errors)
+          raise err if timer.expired?
+          sleep(0.05)
+          raise Capybara::FrozenInTime, 'Time appears to be frozen. Capybara does not work with libraries which freeze time, consider using time travelling instead' if timer.stalled?
+          reload if session_options.automatic_reload
+          retry
+        ensure
+          session.synchronized = false
         end
       end
 

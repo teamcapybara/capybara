@@ -79,11 +79,11 @@ module Capybara
         if tag_name == 'textarea'
           native['_capybara_raw_value']
         elsif tag_name == 'select'
+          selected_options = find_xpath('.//option[@selected]')
           if multiple?
-            native.xpath(".//option[@selected='selected']").map { |option| option[:value] || option.content }
+            selected_options.map(&method(:option_value))
           else
-            option = native.xpath(".//option[@selected='selected']").first || native.xpath('.//option').first
-            option[:value] || option.content if option
+            option_value(selected_options.first || find_xpath('.//option').first)
           end
         elsif tag_name == 'input' && %w[radio checkbox].include?(native[:type])
           native[:value] || 'on'
@@ -104,7 +104,7 @@ module Capybara
         return false if (tag_name == 'input') && (native[:type] == 'hidden')
 
         if check_ancestors
-          !native.xpath("boolean(./ancestor-or-self::*[contains(@style, 'display:none') or contains(@style, 'display: none') or @hidden or name()='script' or name()='head'])")
+          !find_xpath("boolean(./ancestor-or-self::*[contains(@style, 'display:none') or contains(@style, 'display: none') or @hidden or name()='script' or name()='head'])")
         else
           # No need for an xpath if only checking the current element
           !(native.has_attribute?('hidden') || (native[:style] =~ /display:\s?none/) || %w[script head].include?(tag_name))
@@ -176,6 +176,13 @@ module Capybara
       # @api private
       def session_options
         Capybara.session_options
+      end
+
+    private
+
+      def option_value(option)
+        return nil if option.nil?
+        option[:value] || option.content
       end
     end
   end

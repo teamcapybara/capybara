@@ -254,7 +254,6 @@ module Capybara
         if visit_uri.relative?
           uri_base.port ||= @server.port if @server && config.always_include_port
 
-          # TODO: Use compact when Ruby 2.4 is required
           visit_uri_parts = visit_uri.to_hash.delete_if { |_k, value| value.nil? }
 
           # Useful to people deploying to a subdirectory

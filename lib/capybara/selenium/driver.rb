@@ -122,18 +122,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       unless navigated
         # Only trigger a navigation if we haven't done it already, otherwise it
         # can trigger an endless series of unload modals
-        begin
-          @browser.manage.delete_all_cookies
-          clear_storage
-        # rescue Selenium::WebDriver::Error::NoSuchAlertError
-        #   # Handle a bug in Firefox/Geckodriver where it thinks it needs an alert modal to exist
-        #   # for no good reason
-        #   retry
-        rescue Selenium::WebDriver::Error::UnhandledError # rubocop:disable Lint/HandleExceptions
-          # delete_all_cookies fails when we've previously gone
-          # to about:blank, so we rescue this error and do nothing
-          # instead.
-        end
+        clear_browser_state
         @browser.navigate.to('about:blank')
       end
       navigated = true
@@ -151,18 +140,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         @browser.switch_to.alert.accept
         sleep 0.25 # allow time for the modal to be handled
       rescue modal_error
-        # The alert is now gone
-        if current_url != 'about:blank'
-          begin
-            # If navigation has not occurred attempt again and accept alert
-            # since FF may have dismissed the alert at first attempt
-            @browser.navigate.to('about:blank')
-            sleep 0.1 # slight wait for alert
-            @browser.switch_to.alert.accept
-          rescue modal_error # rubocop:disable Metrics/BlockNesting, Lint/HandleExceptions
-            # alert now gone, should mean navigation happened
-          end
-        end
+        # The alert is now gone.
+        # If navigation has not occurred attempt again and accept alert
+        # since FF may have dismissed the alert at first attempt.
+        navigate_with_accept('about:blank') if current_url != 'about:blank'
       end
       # try cleaning up the browser again
       retry
@@ -291,7 +272,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 private
 
   def w3c?
-    browser && browser.capabilities.is_a?(Selenium::WebDriver::Remote::W3C::Capabilities)
+    browser&.capabilities.is_a?(Selenium::WebDriver::Remote::W3C::Capabilities)
   end
 
   def marionette?
@@ -322,6 +303,15 @@ private
     args.map { |arg| arg.is_a?(Capybara::Selenium::Node) ? arg.native : arg }
   end
 
+  def clear_browser_state
+    @browser.manage.delete_all_cookies
+    clear_storage
+  rescue Selenium::WebDriver::Error::UnhandledError # rubocop:disable Lint/HandleExceptions
+    # delete_all_cookies fails when we've previously gone
+    # to about:blank, so we rescue this error and do nothing
+    # instead.
+  end
+
   def clear_storage
     if options[:clear_session_storage]
       if @browser.respond_to? :session_storage
@@ -338,6 +328,14 @@ private
         warn 'localStorage clear requested but is not available for this driver'
       end
     end
+  end
+
+  def navigate_with_accept(url)
+    @browser.navigate.to(url)
+    sleep 0.1 # slight wait for alert
+    @browser.switch_to.alert.accept
+  rescue modal_error # rubocop:disable Lint/HandleExceptions
+    # alert now gone, should mean navigation happened
   end
 
   def modal_error
