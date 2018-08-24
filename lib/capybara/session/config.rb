@@ -8,7 +8,7 @@ module Capybara
                  automatic_reload match exact exact_text raise_server_errors visible_text_only
                  automatic_label_click enable_aria_label save_path asset_host default_host app_host
                  server_host server_port server_errors default_set_options disable_animation test_id
-                 predicates_wait].freeze
+                 predicates_wait default_normalize_ws].freeze
 
     attr_accessor(*OPTIONS)
 
@@ -56,6 +56,8 @@ module Capybara
     # @!method disable_animation
     #   See {Capybara.configure}
     # @!method test_id
+    #   See {Capybara.configure}
+    # @!method default_normalize_ws
     #   See {Capybara.configure}
 
     remove_method :server_host

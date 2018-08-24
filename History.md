@@ -4,6 +4,7 @@ Release date: unreleased
 ### Added
 
 * `Capybara.disable_animation` can be set to a CSS selector to identify which elements will have animation disabled [Michael Glass]
+* `Capybara.default_normalize_ws` option which sets whether or not text predicates and matchers (`has_text?`, `has_content?`, `assert_text`, etc) use `normalize_ws` option by default
 
 # Version 3.6.0
 Release date: 2018-08-14

@@ -15,6 +15,20 @@ Capybara::SpecHelper.spec '#assert_text' do
     expect(@session.assert_text('text with whitespace', normalize_ws: true)).to eq(true)
   end
 
+  context 'with enabled default collapsing whitespace' do
+    before { Capybara.default_normalize_ws = true }
+
+    it 'should be true if the given unnormalized text is on the page' do
+      @session.visit('/with_html')
+      expect(@session.assert_text('text with   whitespace', normalize_ws: false)).to eq(true)
+    end
+
+    it 'should support collapsing whitespace' do
+      @session.visit('/with_html')
+      expect(@session.assert_text('text with whitespace')).to eq(true)
+    end
+  end
+
   it 'should take scopes into account' do
     @session.visit('/with_html')
     @session.within("//a[@title='awesome title']") do
