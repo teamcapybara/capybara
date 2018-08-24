@@ -3,6 +3,9 @@ version: "2"
 checks:
   method-count:
     enabled: false
+  file-lines:
+    config:
+      threshold: 500
 engines:
   bundler-audit:
     enabled: false

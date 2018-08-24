@@ -244,26 +244,19 @@ module Capybara
       @touched = true
 
       visit_uri = ::Addressable::URI.parse(visit_uri.to_s)
+      base_uri = ::Addressable::URI.parse(config.app_host || server_url)
 
-      base = config.app_host
-      base ||= "http#{'s' if @server.using_ssl?}://#{@server.host}:#{@server.port}" if @server
-
-      uri_base = ::Addressable::URI.parse(base)
-
-      if uri_base && [nil, 'http', 'https'].include?(visit_uri.scheme)
+      if base_uri && [nil, 'http', 'https'].include?(visit_uri.scheme)
         if visit_uri.relative?
-          uri_base.port ||= @server.port if @server && config.always_include_port
-
           visit_uri_parts = visit_uri.to_hash.delete_if { |_k, value| value.nil? }
 
           # Useful to people deploying to a subdirectory
           # and/or single page apps where only the url fragment changes
-          visit_uri_parts[:path] = uri_base.path + visit_uri.path
+          visit_uri_parts[:path] = base_uri.path + visit_uri.path
 
-          visit_uri = uri_base.merge(visit_uri_parts)
-        elsif @server && config.always_include_port
-          visit_uri.port ||= @server.port
+          visit_uri = base_uri.merge(visit_uri_parts)
         end
+        adjust_server_port(visit_uri)
       end
 
       driver.visit(visit_uri.to_s)
@@ -544,8 +537,7 @@ module Capybara
       old_handles = driver.window_handles
       yield
 
-      wait_time = Capybara::Queries::BaseQuery.wait(options, config.default_max_wait_time)
-      document.synchronize(wait_time, errors: [Capybara::WindowError]) do
+      synchronize_windows(options) do
         opened_handles = (driver.window_handles - old_handles)
         if opened_handles.size != 1
           raise Capybara::WindowError, 'block passed to #window_opened_by '\
@@ -847,6 +839,14 @@ module Capybara
       end
     end
 
+    def server_url
+      "http#{'s' if @server.using_ssl?}://#{@server.host}:#{@server.port}" if @server
+    end
+
+    def adjust_server_port(uri)
+      uri.port ||= @server.port if @server && config.always_include_port
+    end
+
     def _find_frame(*args)
       return find(:frame) if args.length.zero?
 
@@ -865,31 +865,37 @@ module Capybara
       end
     end
 
-    def _switch_to_window(window = nil, **options)
+    def _switch_to_window(window = nil, **options, &window_locator)
       raise Capybara::ScopeError, 'Window cannot be switched inside a `within_frame` block' if scopes.include?(:frame)
-      raise Capybara::ScopeError, 'Window cannot be switch inside a `within` block' unless scopes.last.nil?
+      raise Capybara::ScopeError, 'Window cannot be switched inside a `within` block' unless scopes.last.nil?
 
       if window
         driver.switch_to_window(window.handle)
         window
       else
-        wait_time = Capybara::Queries::BaseQuery.wait(options, config.default_max_wait_time)
-        document.synchronize(wait_time, errors: [Capybara::WindowError]) do
+        synchronize_windows(options) do
           original_window_handle = driver.current_window_handle
           begin
-            driver.window_handles.each do |handle|
-              driver.switch_to_window handle
-              return Window.new(self, handle) if yield
-            end
-          rescue StandardError => err
+            _switch_to_window_by_locator(&window_locator)
+          rescue StandardError
             driver.switch_to_window(original_window_handle)
-            raise err
-          else
-            driver.switch_to_window(original_window_handle)
-            raise Capybara::WindowError, 'Could not find a window matching block/lambda'
+            raise
           end
         end
       end
+    end
+
+    def _switch_to_window_by_locator
+      driver.window_handles.each do |handle|
+        driver.switch_to_window handle
+        return Window.new(self, handle) if yield
+      end
+      raise Capybara::WindowError, 'Could not find a window matching block/lambda'
+    end
+
+    def synchronize_windows(options, &block)
+      wait_time = Capybara::Queries::BaseQuery.wait(options, config.default_max_wait_time)
+      document.synchronize(wait_time, errors: [Capybara::WindowError], &block)
     end
   end
 end
