@@ -74,12 +74,12 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def select_option
-    native.click unless selected? || disabled?
+    click unless selected? || disabled?
   end
 
   def unselect_option
     raise Capybara::UnselectNotAllowed, 'Cannot unselect option from single select box.' unless select_node.multiple?
-    native.click if selected?
+    click if selected?
   end
 
   def click(keys = [], **options)
@@ -210,15 +210,13 @@ private
       # Clear field by sending the correct number of backspace keys.
       backspaces = [:backspace] * self.value.to_s.length
       send_keys(*([:end] + backspaces + [value]))
-    elsif clear == :none
-      send_keys(value)
     elsif clear.is_a? Array
       send_keys(*clear, value)
     else
       # Clear field by JavaScript assignment of the value property.
       # Script can change a readonly element which user input cannot, so
       # don't execute if readonly.
-      driver.execute_script "arguments[0].value = ''", self
+      driver.execute_script "arguments[0].value = ''", self unless clear == :none
       send_keys(value)
     end
   end

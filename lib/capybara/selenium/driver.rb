@@ -313,20 +313,23 @@ private
   end
 
   def clear_storage
-    if options[:clear_session_storage]
-      if @browser.respond_to? :session_storage
-        @browser.session_storage.clear
-      else
-        warn 'sessionStorage clear requested but is not available for this driver'
-      end
-    end
+    clear_session_storage if options[:clear_session_storage]
+    clear_local_storage if options[:clear_local_storage]
+  end
 
-    if options[:clear_local_storage] # rubocop:disable Style/GuardClause
-      if @browser.respond_to? :local_storage
-        @browser.local_storage.clear
-      else
-        warn 'localStorage clear requested but is not available for this driver'
-      end
+  def clear_session_storage
+    if @browser.respond_to? :session_storage
+      @browser.session_storage.clear
+    else
+      warn 'sessionStorage clear requested but is not available for this driver'
+    end
+  end
+
+  def clear_local_storage
+    if @browser.respond_to? :local_storage
+      @browser.local_storage.clear
+    else
+      warn 'localStorage clear requested but is not available for this driver'
     end
   end
 
