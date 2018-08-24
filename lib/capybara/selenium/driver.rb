@@ -21,27 +21,13 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def browser
-    unless @browser
-      # if firefox?
-      #   options[:desired_capabilities] ||= {}
-      #   options[:desired_capabilities][:unexpectedAlertBehaviour] = "ignore"
-      # end
-
-      @processed_options = options.reject { |key, _val| SPECIAL_OPTIONS.include?(key) }
-      @browser = Selenium::WebDriver.for(options[:browser], @processed_options)
-
-      extend ChromeDriver if chrome?
-      extend MarionetteDriver if marionette?
-
-      main = Process.pid
-      at_exit do
-        # Store the exit status of the test run since it goes away after calling the at_exit proc...
-        @exit_status = $ERROR_INFO.status if $ERROR_INFO.is_a?(SystemExit)
-        quit if Process.pid == main
-        exit @exit_status if @exit_status # Force exit with stored status
+    @browser ||= begin
+      processed_options = options.reject { |key, _val| SPECIAL_OPTIONS.include?(key) }
+      Selenium::WebDriver.for(options[:browser], processed_options).tap do |driver|
+        specialize_driver(driver)
+        setup_exit_handler
       end
     end
-    @browser
   end
 
   def initialize(app, **options)
@@ -271,34 +257,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
 private
 
-  def w3c?
-    browser&.capabilities.is_a?(Selenium::WebDriver::Remote::W3C::Capabilities)
-  end
-
-  def marionette?
-    firefox? && w3c?
-  end
-
-  def firefox?
-    browser_name == :firefox
-  end
-
-  def chrome?
-    browser_name == :chrome
-  end
-
-  def edge?
-    browser_name == :edge
-  end
-
-  def ie?
-    %i[internet_explorer ie].include?(browser_name)
-  end
-
-  def browser_name
-    browser.browser
-  end
-
   def native_args(args)
     args.map { |arg| arg.is_a?(Capybara::Selenium::Node) ? arg.native : arg }
   end
@@ -398,6 +356,25 @@ private
 
   def build_node(native_node)
     ::Capybara::Selenium::Node.new(self, native_node)
+  end
+
+  def specialize_driver(sel_driver)
+    case sel_driver.browser
+    when :chrome
+      extend ChromeDriver
+    when :firefox
+      extend MarionetteDriver if sel_driver.capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
+    end
+  end
+
+  def setup_exit_handler
+    main = Process.pid
+    at_exit do
+      # Store the exit status of the test run since it goes away after calling the at_exit proc...
+      @exit_status = $ERROR_INFO.status if $ERROR_INFO.is_a?(SystemExit)
+      quit if Process.pid == main
+      exit @exit_status if @exit_status # Force exit with stored status
+    end
   end
 end
 

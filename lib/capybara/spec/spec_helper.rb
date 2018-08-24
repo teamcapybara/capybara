@@ -119,38 +119,6 @@ module Capybara
       expect(session).to have_xpath("//pre[@id='results']")
       YAML.load Nokogiri::HTML(session.body).xpath("//pre[@id='results']").first.inner_html.lstrip
     end
-
-    def marionette?(session)
-      session.respond_to?(:driver) && session.driver.respond_to?(:marionette?, true) && session.driver.send(:marionette?)
-    end
-
-    def marionette_lt?(version, session)
-      marionette?(session) && (session.driver.browser.capabilities[:browser_version].to_f < version)
-    end
-
-    def marionette_gte?(version, session)
-      marionette?(session) && (session.driver.browser.capabilities[:browser_version].to_f >= version)
-    end
-
-    def chrome?(session)
-      session.respond_to?(:driver) && session.driver.respond_to?(:chrome?, true) && session.driver.send(:chrome?)
-    end
-
-    def chrome_lt?(version, session)
-      chrome?(session) && (session.driver.browser.capabilities[:version].to_f < version)
-    end
-
-    def chrome_gte?(version, session)
-      chrome?(session) && (session.driver.browser.capabilities[:version].to_f >= version)
-    end
-
-    def edge?(session)
-      session.respond_to?(:driver) && session.driver.respond_to?(:edge?, true) && session.driver.send(:edge?)
-    end
-
-    def ie?(session)
-      session.respond_to?(:driver) && session.driver.respond_to?(:ie?, true) && session.driver.send(:ie?)
-    end
   end
 end
 

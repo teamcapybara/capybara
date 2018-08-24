@@ -78,7 +78,6 @@ RSpec.describe 'Capybara::Session with remote firefox' do
   include_examples  Capybara::RSpecMatchers, TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVER
 
   it 'is considered to be firefox' do
-    expect(session.driver.send(:firefox?)).to be_truthy
-    expect(session.driver.send(:marionette?)).to be_truthy
+    expect(session.driver.browser.browser).to eq :firefox
   end
 end
