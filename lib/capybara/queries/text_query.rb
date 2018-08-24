@@ -90,7 +90,8 @@ module Capybara
       end
 
       def text(node: @node, query_type: @type)
-        node.text(query_type, normalize_ws: options[:normalize_ws])
+        normalize_ws = options.fetch(:normalize_ws, session_options.default_normalize_ws)
+        node.text(query_type, normalize_ws: normalize_ws)
       end
 
       def default_type

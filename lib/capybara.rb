@@ -85,6 +85,7 @@ module Capybara
     # [default_set_options = Hash]  The default options passed to Node::set (Default: {})
     # [test_id = Symbol/String/nil] Optional attribute to match locator aginst with builtin selectors along with id (Default: nil)
     # [predicates_wait = Boolean]  Whether Capybaras predicate matchers use waiting behavior by default (Default: true)
+    # [default_normalize_ws = Boolean] Whether text predicates and matchers use normalize whitespace behaviour (Default: false)
     #
     # === DSL Options
     #
@@ -486,6 +487,7 @@ Capybara.configure do |config|
   config.default_set_options = {}
   config.test_id = nil
   config.predicates_wait = true
+  config.default_normalize_ws = false
 end
 
 Capybara.register_driver :rack_test do |app|
