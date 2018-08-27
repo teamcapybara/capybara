@@ -78,6 +78,23 @@ Capybara::SpecHelper.spec '#has_selector?' do
         expect(@session).to have_selector(:css, 'p a#foo', 'extra')
       end.to raise_error ArgumentError, /extra/
     end
+
+    context 'with whitespace normalization' do
+      context 'Capybara.default_normalize_ws = false' do
+        it 'should support normalize_ws option' do
+          Capybara.default_normalize_ws = false
+          expect(@session).not_to have_selector(:id, 'second', text: 'text with whitespace')
+          expect(@session).to have_selector(:id, 'second', text: 'text with whitespace', normalize_ws: true)
+        end
+      end
+      context 'Capybara.default_normalize_ws = true' do
+        it 'should support normalize_ws option' do
+          Capybara.default_normalize_ws = true
+          expect(@session).to have_selector(:id, 'second', text: 'text with whitespace')
+          expect(@session).not_to have_selector(:id, 'second', text: 'text with whitespace', normalize_ws: false)
+        end
+      end
+    end
   end
 
   context 'with exact_text' do

@@ -4,7 +4,7 @@ module Capybara
   module Queries
     class SelectorQuery < Queries::BaseQuery
       attr_reader :expression, :selector, :locator, :options
-      VALID_KEYS = COUNT_KEYS + %i[text id class visible exact exact_text match wait filter_set]
+      VALID_KEYS = COUNT_KEYS + %i[text id class visible exact exact_text normalize_ws match wait filter_set]
       VALID_MATCH = %i[first smart prefer_exact one].freeze
 
       def initialize(*args,
@@ -338,10 +338,14 @@ module Capybara
         matches_text_regexp?(node, regexp)
       end
 
+      def normalize_ws
+        options.fetch(:normalize_ws, session_options.default_normalize_ws)
+      end
+
       def matches_text_regexp?(node, regexp)
         text_visible = visible
         text_visible = :all if text_visible == :hidden
-        !!node.text(text_visible).match(regexp)
+        !!node.text(text_visible, normalize_ws: normalize_ws).match(regexp)
       end
     end
   end
