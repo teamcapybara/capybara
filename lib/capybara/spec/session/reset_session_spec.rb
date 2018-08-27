@@ -87,6 +87,10 @@ Capybara::SpecHelper.spec '#reset_session!' do
       Capybara.reuse_server = false
     end
 
+    after do
+      Capybara.reuse_server = @reuse_server
+    end
+
     it 'raises any standard errors caught inside the server during a second session', requires: [:server] do
       Capybara.using_driver(@session.mode) do
         Capybara.using_session(:another_session) do
@@ -99,10 +103,6 @@ Capybara::SpecHelper.spec '#reset_session!' do
           expect(@another_session.current_path).to eq('/')
         end
       end
-    end
-
-    after do
-      Capybara.reuse_server = @reuse_server
     end
   end
 

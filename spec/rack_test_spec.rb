@@ -40,6 +40,10 @@ RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
     end
 
     describe '#click_link' do
+      after do
+        @session.driver.options[:respect_data_method] = false
+      end
+
       it 'should use data-method if option is true' do
         @session.driver.options[:respect_data_method] = true
         @session.visit '/with_html'
@@ -59,10 +63,6 @@ RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
         @session.visit '/with_html'
         @session.click_link 'A link with capitalized data-method'
         expect(@session.html).to include('The requested object was deleted')
-      end
-
-      after do
-        @session.driver.options[:respect_data_method] = false
       end
     end
 

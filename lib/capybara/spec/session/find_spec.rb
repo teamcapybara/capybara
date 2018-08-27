@@ -208,11 +208,12 @@ Capybara::SpecHelper.spec '#find' do
   context 'with css as default selector' do
     before { Capybara.default_selector = :css }
 
+    after { Capybara.default_selector = :xpath }
+
     it 'should find the first element using the given locator' do
       expect(@session.find('h1').text).to eq('This is a test')
       expect(@session.find("input[id='test_field']").value).to eq('monkey')
     end
-    after { Capybara.default_selector = :xpath }
   end
 
   it 'should raise ElementNotFound with a useful default message if nothing was found' do

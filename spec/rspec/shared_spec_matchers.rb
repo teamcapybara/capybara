@@ -325,12 +325,13 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
         context 'with default selector CSS' do
           before { Capybara.default_selector = :css }
 
+          after { Capybara.default_selector = :xpath }
+
           it 'fails if has_content? returns false' do
             expect do
               expect(page).to have_content('No such Text')
             end.to raise_error(/expected to find text "No such Text" in "(.*)This is a test(.*)"/)
           end
-          after { Capybara.default_selector = :xpath }
         end
       end
 
@@ -461,12 +462,13 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
         context 'with default selector CSS' do
           before { Capybara.default_selector = :css }
 
+          after { Capybara.default_selector = :xpath }
+
           it 'fails if has_text? returns false' do
             expect do
               expect(page).to have_text('No such Text')
             end.to raise_error(/expected to find text "No such Text" in "(.*)This is a test(.*)"/)
           end
-          after { Capybara.default_selector = :xpath }
         end
       end
 

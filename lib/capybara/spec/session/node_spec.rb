@@ -545,6 +545,8 @@ Capybara::SpecHelper.spec 'node' do
     context 'without automatic reload' do
       before { Capybara.automatic_reload = false }
 
+      after { Capybara.automatic_reload = true }
+
       it 'should reload the current context of the node' do
         @session.visit('/with_js')
         node = @session.find(:css, '#reload-me')
@@ -574,7 +576,6 @@ Capybara::SpecHelper.spec 'node' do
           expect(error).to be_an_invalid_element_error(@session)
         end)
       end
-      after { Capybara.automatic_reload = true }
     end
 
     context 'with automatic reload' do

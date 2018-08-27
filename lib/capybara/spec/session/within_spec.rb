@@ -60,13 +60,14 @@ Capybara::SpecHelper.spec '#within' do
   context 'with the default selector set to CSS' do
     before { Capybara.default_selector = :css }
 
+    after { Capybara.default_selector = :xpath }
+
     it 'should use CSS' do
       @session.within('#for_bar li', text: 'With Simple HTML') do
         @session.click_link('Go')
       end
       expect(@session).to have_content('Bar')
     end
-    after { Capybara.default_selector = :xpath }
   end
 
   context 'with nested scopes' do

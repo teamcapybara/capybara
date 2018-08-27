@@ -9,11 +9,12 @@ Capybara::SpecHelper.spec '#title' do
   context 'with css as default selector' do
     before { Capybara.default_selector = :css }
 
+    after { Capybara.default_selector = :xpath }
+
     it 'should get the title of the page' do
       @session.visit('/with_title')
       expect(@session.title).to eq('Test Title')
     end
-    after { Capybara.default_selector = :xpath }
   end
 
   context 'within iframe', requires: [:frames] do
