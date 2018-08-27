@@ -223,6 +223,7 @@ module Capybara
       # @param [String] locator                    The locator for the specified selector
       # @option options [String, Regexp] text      Only find elements which contain this text or match this regexp
       # @option options [String, Boolean] exact_text (Capybara.exact_text) When String the elements contained text must match exactly, when Boolean controls whether the :text option must match exactly
+      # @option options [Boolean] normalize_ws (Capybara.default_normalize_ws)  Whether the `text`/`exact_text` options are compared against elment text with whitespace normalized or as returned by the driver
       # @option options [Boolean, Symbol] visible  Only find elements with the specified visibility:
       #                                              * true - only finds visible elements.
       #                                              * false - finds invisible _and_ visible elements.
