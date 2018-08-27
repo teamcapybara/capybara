@@ -87,6 +87,7 @@ Capybara::SpecHelper.spec '#has_selector?' do
           expect(@session).to have_selector(:id, 'second', text: 'text with whitespace', normalize_ws: true)
         end
       end
+
       context 'Capybara.default_normalize_ws = true' do
         it 'should support normalize_ws option' do
           Capybara.default_normalize_ws = true
