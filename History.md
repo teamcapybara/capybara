@@ -7,6 +7,10 @@ Release date: unreleased
 * `Capybara.default_normalize_ws` option which sets whether or not text predicates and matchers (`has_text?`, `has_content?`, `assert_text`, etc) use `normalize_ws` option by default. Defaults to false. [Stegalin Ivan]
 * Selector based predicates, matchers, and finders now support the `:normalize_ws` option for the `:text`/`:exact_text` filters. Defaults to the `Capybara.default_normalize_ws`setting above.
 
+### Fixed
+
+* All CSS styles applied by the `Element#attach_file` `:make_visible` option will now have `!important` priority set to ensure they override any other specified style
+
 # Version 3.6.0
 Release date: 2018-08-14
 
