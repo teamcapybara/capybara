@@ -312,7 +312,7 @@ module Capybara
         var css = arguments[0];
         for (var prop in css){
           if (css.hasOwnProperty(prop)) {
-            this.style[prop] = css[prop]
+            this.style.setProperty(prop, css[prop], "important");
           }
         }
       JS
