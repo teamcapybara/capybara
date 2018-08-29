@@ -49,7 +49,7 @@ module Capybara
       if res.is_a?(Net::HTTPSuccess) || res.is_a?(Net::HTTPRedirection)
         return res.body == app.object_id.to_s
       end
-    rescue SystemCallError
+    rescue SystemCallError, Net::ReadTimeout, OpenSSL::SSL::SSLError
       false
     end
 
