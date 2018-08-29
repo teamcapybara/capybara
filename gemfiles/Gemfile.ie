@@ -2,5 +2,3 @@ source 'https://rubygems.org'
 
 gem 'bundler', '~> 1.1'
 gemspec path: '..'
-
-gem 'webdrivers', git: 'git://github.com/hron/webdrivers', branch: 'iedriver-sorting-fix' if ENV['CI']
