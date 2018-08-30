@@ -24,6 +24,10 @@ addons:
       - google-chrome-beta
       - awesome
 
+branches:
+  except:
+    - /^ie_/
+
 cache:
   bundler: true
   directories:
