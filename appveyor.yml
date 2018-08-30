@@ -17,6 +17,11 @@ matrix:
     - CAPYBARA_IE: true
     - CAPYBARA_EDGE: true
 
+init:
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/set-screenresolution.ps1'))
+  - ps: Set-ScreenResolution 1600 1200
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
 install:
   - set PATH=C:\Ruby%RUBY_VERSION%\bin;%PATH%
   - cinst Firefox GoogleChrome

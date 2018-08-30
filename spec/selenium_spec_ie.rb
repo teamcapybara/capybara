@@ -21,6 +21,8 @@ module TestSessions
   SeleniumIE = Capybara::Session.new(:selenium_ie, TestApp)
 end
 
+TestSessions::SeleniumIE.current_window.resize_to(800, 500)
+
 skipped_tests = %i[response_headers status_code trigger modals hover form_attribute windows]
 
 $stdout.puts `#{Selenium::WebDriver::IE.driver_path} --version` if ENV['CI']
@@ -74,6 +76,6 @@ RSpec.describe Capybara::Selenium::Node do
     session = TestSessions::SeleniumIE
     session.visit('/with_js')
     session.find(:css, '#click-test').double_click(:shift)
-    expect(@session).to have_link('Has been shift double clicked')
+    expect(session).to have_link('Has been shift double clicked')
   end
 end
