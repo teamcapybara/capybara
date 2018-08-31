@@ -126,7 +126,10 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def drag_to(element)
-    scroll_if_needed { browser_action.drag_and_drop(native, element.native).perform }
+    # Due to W3C spec compliance - The Actions API no longer scrolls to elements when necessary
+    # which means Seleniums `drag_and_drop` is now broken - do it manually
+    scroll_if_needed { browser_action.click_and_hold(native).perform }
+    element.scroll_if_needed { browser_action.move_to(element.native).release.perform }
   end
 
   def tag_name
@@ -191,6 +194,15 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     '/' + result.reverse.join('/')
   end
 
+protected
+
+  def scroll_if_needed
+    yield
+  rescue ::Selenium::WebDriver::Error::MoveTargetOutOfBoundsError
+    scroll_to_center
+    yield
+  end
+
 private
 
   def boolean_attr(val)
@@ -219,13 +231,6 @@ private
       driver.execute_script "arguments[0].value = ''", self unless clear == :none
       send_keys(value)
     end
-  end
-
-  def scroll_if_needed
-    yield
-  rescue ::Selenium::WebDriver::Error::MoveTargetOutOfBoundsError
-    scroll_to_center
-    yield
   end
 
   def scroll_to_center
