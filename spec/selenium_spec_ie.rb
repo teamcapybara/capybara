@@ -46,11 +46,11 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumIE, 'selenium', capybara_sk
   when /#double_click should allow multiple modifiers$/
     skip "Windows can't :alt double click due to being properties shortcut"
   when /via clicking the wrapping label if possible$/
-    pending "IEDriver has an issue with the click location of elements with multiple children if the first child is a text node and the page is scrolled"
+    pending 'IEDriver has an issue with the click location of elements with multiple children if the first child is a text node and the page is scrolled'
   end
 end
 
-RSpec.describe 'Capybara::Session with Internet Explorer', capybara_skip: skipped_tests do
+RSpec.describe 'Capybara::Session with Internet Explorer', capybara_skip: skipped_tests do # rubocop:disable RSpec/MultipleDescribes
   include Capybara::SpecHelper
   include_examples 'Capybara::Session', TestSessions::SeleniumIE, :selenium_ie
   include_examples Capybara::RSpecMatchers, TestSessions::SeleniumIE, :selenium_ie

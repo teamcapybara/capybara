@@ -65,7 +65,7 @@ Capybara::SpecHelper.run_specs TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVE
   when /^Capybara::Session selenium node #double_click/
     pending "selenium-webdriver/geckodriver doesn't generate double click event" if marionette_lt?(59, @session)
   when 'Capybara::Session selenium_firefox_remote #accept_prompt should accept the prompt with a blank response when there is a default'
-    pending "Geckodriver doesn't set a blank response currently - https://bugzilla.mozilla.org/show_bug.cgi?id=1486485"
+    pending "Geckodriver doesn't set a blank response in FF < 63 - https://bugzilla.mozilla.org/show_bug.cgi?id=1486485" if marionette_lt?(63, @session)
   when 'Capybara::Session selenium_firefox_remote #attach_file with multipart form should fire change once for each set of files uploaded',
        'Capybara::Session selenium_firefox_remote #attach_file with multipart form should fire change once when uploading multiple files from empty'
     pending 'Due to having to work around selenium remote lack of multiple file upload support the change event count is off'
