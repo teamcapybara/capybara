@@ -68,6 +68,13 @@ Capybara::SpecHelper.spec '#check' do
     expect(extract_results(@session)['pets']).to include('dog', 'cat', 'hamster')
   end
 
+  it 'should be able to check itself if no locator specified' do
+    cb = @session.find(:id, 'form_pets_cat')
+    cb.check
+    @session.click_button('awesome')
+    expect(extract_results(@session)['pets']).to include('dog', 'cat', 'hamster')
+  end
+
   it 'casts to string' do
     @session.check(:form_pets_cat)
     @session.click_button('awesome')
@@ -138,6 +145,20 @@ Capybara::SpecHelper.spec '#check' do
       it 'should check via clicking the wrapping label if possible' do
         expect(@session.find(:checkbox, 'form_cars_mclaren', unchecked: true, visible: :hidden)).to be_truthy
         @session.check('form_cars_mclaren')
+        @session.click_button('awesome')
+        expect(extract_results(@session)['cars']).to include('mclaren')
+      end
+
+      it 'should check via clicking the label with :for attribute if locator nil' do
+        cb = @session.find(:checkbox, 'form_cars_tesla', unchecked: true, visible: :hidden)
+        cb.check
+        @session.click_button('awesome')
+        expect(extract_results(@session)['cars']).to include('tesla')
+      end
+
+      it 'should check self via clicking the wrapping label if locator nil' do
+        cb = @session.find(:checkbox, 'form_cars_mclaren', unchecked: true, visible: :hidden)
+        cb.check
         @session.click_button('awesome')
         expect(extract_results(@session)['cars']).to include('mclaren')
       end

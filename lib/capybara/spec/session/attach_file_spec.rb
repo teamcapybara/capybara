@@ -22,6 +22,13 @@ Capybara::SpecHelper.spec '#attach_file' do
       expect(extract_results(@session)['image']).to eq(File.basename(__FILE__))
     end
 
+    it 'should be able to set on element if no locator passed' do
+      ff = @session.find(:file_field, 'Image')
+      ff.attach_file(with_os_path_separators(__FILE__))
+      @session.click_button('awesome')
+      expect(extract_results(@session)['image']).to eq(File.basename(__FILE__))
+    end
+
     it 'casts to string' do
       @session.attach_file :form_image, with_os_path_separators(__FILE__)
       @session.click_button('awesome')

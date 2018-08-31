@@ -62,6 +62,7 @@ module Capybara
       #
       # Locate a text field or text area and fill it in with the given text
       # The field can be found via its name, id, Capybara.test_id attribute, or label text.
+      # If no locator is provided will operate on self or a descendant
       #
       #     page.fill_in 'Name', with: 'Bob'
       #
@@ -82,6 +83,7 @@ module Capybara
       # @return [Capybara::Node::Element]  The element filled_in
       def fill_in(locator = nil, with:, currently_with: nil, fill_options: {}, **find_options)
         find_options[:with] = currently_with if currently_with
+        find_options[:allow_self] = true if locator.nil?
         find(:fillable_field, locator, find_options).set(with, fill_options)
       end
 
@@ -90,8 +92,9 @@ module Capybara
 
       ##
       #
-      # Find a radio button and mark it as checked. The radio button can be found
-      # via name, id or label text.
+      # Find a descendant radio button and mark it as checked. The radio button can be found
+      # via name, id or label text. If no locator is provided this will match against self or
+      # a descendant.
       #
       #     page.choose('Male')
       #
@@ -112,8 +115,9 @@ module Capybara
 
       ##
       #
-      # Find a check box and mark it as checked. The check box can be found
-      # via name, id or label text.
+      # Find a descendant check box and mark it as checked. The check box can be found
+      # via name, id or label text. If no locator is provided this will match against
+      # self or a descendant.
       #
       #     page.check('German')
       #
@@ -135,8 +139,9 @@ module Capybara
 
       ##
       #
-      # Find a check box and mark uncheck it. The check box can be found
-      # via name, id or label text.
+      # Find a descendant check box and mark uncheck it. The check box can be found
+      # via name, id or label text. If no locator is provided this will match against
+      # self or a descendant.
       #
       #     page.uncheck('German')
       #
@@ -204,10 +209,11 @@ module Capybara
 
       ##
       #
-      # Find a file field on the page and attach a file given its path. The file field can
+      # Find a descendant file field on the page and attach a file given its path. The file field can
       # be found via its name, id or label text. In the case of the file field being hidden for
       # styling reasons the `make_visible` option can be used to temporarily change the CSS of
-      # the file field, attach the file, and then revert the CSS back to original.
+      # the file field, attach the file, and then revert the CSS back to original. If no locator is
+      # passed this will match self or a descendant.
       #
       #     page.attach_file(locator, '/path/to/file.png')
       #
@@ -230,6 +236,7 @@ module Capybara
         Array(paths).each do |path|
           raise Capybara::FileNotFound, "cannot attach file, #{path} does not exist" unless File.exist?(path.to_s)
         end
+        options[:allow_self] = true if locator.nil?
         # Allow user to update the CSS style of the file input since they are so often hidden on a page
         if make_visible
           ff = find(:file_field, locator, options.merge(visible: :all))
@@ -291,6 +298,8 @@ module Capybara
       end
 
       def _check_with_label(selector, checked, locator, allow_label_click: session_options.automatic_label_click, **options)
+        options[:allow_self] = true if locator.nil?
+
         synchronize(Capybara::Queries::BaseQuery.wait(options, session_options.default_max_wait_time)) do
           begin
             el = find(selector, locator, options)
@@ -299,7 +308,7 @@ module Capybara
             raise unless allow_label_click && catch_error?(err)
             begin
               el ||= find(selector, locator, options.merge(visible: :all))
-              find(:label, for: el, visible: true).click unless el.checked? == checked
+              el.session.find(:label, for: el, visible: true).click unless el.checked? == checked
             rescue StandardError # swallow extra errors - raise original
               raise err
             end

@@ -23,6 +23,13 @@ Capybara::SpecHelper.spec '#choose' do
     expect(extract_results(@session)['gender']).to eq('male')
   end
 
+  it 'should be able to choose self when no locator string specified' do
+    rb = @session.find(:id, 'gender_male')
+    rb.choose
+    @session.click_button('awesome')
+    expect(extract_results(@session)['gender']).to eq('male')
+  end
+
   it 'casts to string' do
     @session.choose('Both')
     @session.click_button(:awesome)
@@ -82,8 +89,15 @@ Capybara::SpecHelper.spec '#choose' do
         Capybara.automatic_label_click = old_click_label
       end
 
-      it 'should select by clicking the link if available' do
+      it 'should select by clicking the label if available' do
         @session.choose('party_democrat')
+        @session.click_button('awesome')
+        expect(extract_results(@session)['party']).to eq('democrat')
+      end
+
+      it 'should select self by clicking the label if no locator specified' do
+        cb = @session.find(:id, 'party_democrat', visible: :hidden)
+        cb.choose
         @session.click_button('awesome')
         expect(extract_results(@session)['party']).to eq('democrat')
       end

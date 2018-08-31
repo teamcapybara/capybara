@@ -26,6 +26,14 @@ Capybara::SpecHelper.spec '#uncheck' do
     expect(extract_results(@session)['pets']).not_to include('hamster')
   end
 
+  it 'should be able to uncheck itself if no locator specified' do
+    cb = @session.find(:id, 'form_pets_hamster')
+    cb.uncheck
+    @session.click_button('awesome')
+    expect(extract_results(@session)['pets']).to include('dog')
+    expect(extract_results(@session)['pets']).not_to include('hamster')
+  end
+
   it 'casts to string' do
     @session.uncheck(:form_pets_hamster)
     @session.click_button('awesome')
