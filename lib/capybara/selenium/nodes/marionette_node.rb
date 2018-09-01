@@ -7,7 +7,7 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
     if tag_name == 'tr'
       warn 'You are attempting to click a table row which has issues in geckodriver/marionette - see https://github.com/mozilla/geckodriver/issues/1228. ' \
            'Your test should probably be clicking on a table cell like a user would. Clicking the first cell in the row instead.'
-      return find_css('th:first-child,td:first-child')[0].click
+      return find_css('th:first-child,td:first-child')[0].click(keys, options)
     end
     raise
   end
@@ -61,6 +61,13 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
   end
 
 private
+
+  def click_with_options(click_options)
+    # Firefox/marionette has an issue clicking with offset near viewport edge
+    # scroll element to middle just in case
+    scroll_to_center if click_options.coords?
+    super
+  end
 
   def _send_keys(keys, actions, down_keys = nil)
     case keys

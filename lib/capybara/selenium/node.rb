@@ -85,11 +85,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def click(keys = [], **options)
     click_options = ClickOptions.new(keys, options)
     return native.click if click_options.empty?
-    scroll_if_needed do
-      action_with_modifiers(click_options) do |action|
-        click_options.coords? ? action.click : action.click(native)
-      end
-    end
+    click_with_options(click_options)
   rescue StandardError => err
     if err.is_a?(::Selenium::WebDriver::Error::ElementClickInterceptedError) ||
        err.message =~ /Other element would receive the click/
@@ -101,19 +97,15 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
 
   def right_click(keys = [], **options)
     click_options = ClickOptions.new(keys, options)
-    scroll_if_needed do
-      action_with_modifiers(click_options) do |action|
-        click_options.coords? ? action.context_click : action.context_click(native)
-      end
+    click_with_options(click_options) do |action|
+      click_options.coords? ? action.context_click : action.context_click(native)
     end
   end
 
   def double_click(keys = [], **options)
     click_options = ClickOptions.new(keys, options)
-    scroll_if_needed do
-      action_with_modifiers(click_options) do |action|
-        click_options.coords? ? action.double_click : action.double_click(native)
-      end
+    click_with_options(click_options) do |action|
+      click_options.coords? ? action.double_click : action.double_click(native)
     end
   end
 
@@ -230,6 +222,18 @@ private
       # don't execute if readonly.
       driver.execute_script "arguments[0].value = ''", self unless clear == :none
       send_keys(value)
+    end
+  end
+
+  def click_with_options(click_options)
+    scroll_if_needed do
+      action_with_modifiers(click_options) do |action|
+        if block_given?
+          yield action
+        else
+          click_options.coords? ? action.click : action.click(native)
+        end
+      end
     end
   end
 
