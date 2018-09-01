@@ -58,6 +58,7 @@ module Capybara
       end
 
       def matches_filters?(node)
+        return true if (@resolved_node&.== node) && options[:allow_self]
         @applied_filters ||= :system
         return false unless matches_text_filter?(node) && matches_exact_text_filter?(node) && matches_visible_filter?(node)
         @applied_filters = :node
@@ -210,7 +211,7 @@ module Capybara
 
         return if unhandled_options.empty?
         invalid_names = unhandled_options.map(&:inspect).join(', ')
-        valid_names = valid_keys.map(&:inspect).join(', ')
+        valid_names = (valid_keys - [:allow_self]).map(&:inspect).join(', ')
         raise ArgumentError, "invalid keys #{invalid_names}, should be one of #{valid_names}"
       end
 

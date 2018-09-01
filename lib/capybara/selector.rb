@@ -194,8 +194,12 @@ end
 Capybara.add_selector(:fillable_field) do
   label 'field'
 
-  xpath do |locator, **options|
-    xpath = XPath.descendant(:input, :textarea)[!XPath.attr(:type).one_of('submit', 'image', 'radio', 'checkbox', 'hidden', 'file')]
+  xpath(:allow_self) do |locator, **options|
+    xpath = if options[:allow_self]
+      XPath.descendant_or_self(:input, :textarea)
+    else
+      XPath.descendant(:input, :textarea)
+    end[!XPath.attr(:type).one_of('submit', 'image', 'radio', 'checkbox', 'hidden', 'file')]
     locate_field(xpath, locator, options)
   end
 
@@ -223,8 +227,12 @@ end
 Capybara.add_selector(:radio_button) do
   label 'radio button'
 
-  xpath do |locator, **options|
-    xpath = XPath.descendant(:input)[XPath.attr(:type) == 'radio']
+  xpath(:allow_self) do |locator, **options|
+    xpath = if options[:allow_self]
+      XPath.descendant_or_self(:input)
+    else
+      XPath.descendant(:input)
+    end[XPath.attr(:type) == 'radio']
     locate_field(xpath, locator, options)
   end
 
@@ -239,8 +247,12 @@ Capybara.add_selector(:radio_button) do
 end
 
 Capybara.add_selector(:checkbox) do
-  xpath do |locator, **options|
-    xpath = XPath.descendant(:input)[XPath.attr(:type) == 'checkbox']
+  xpath(:allow_self) do |locator, **options|
+    xpath = if options[:allow_self]
+      XPath.descendant_or_self(:input)
+    else
+      XPath.descendant(:input)
+    end[XPath.attr(:type) == 'checkbox']
     locate_field(xpath, locator, options)
   end
 
@@ -375,8 +387,12 @@ end
 
 Capybara.add_selector(:file_field) do
   label 'file field'
-  xpath do |locator, options|
-    xpath = XPath.descendant(:input)[XPath.attr(:type) == 'file']
+  xpath(:allow_self) do |locator, options|
+    xpath = if options[:allow_self]
+      XPath.descendant_or_self(:input)
+    else
+      XPath.descendant(:input)
+    end[XPath.attr(:type) == 'file']
     locate_field(xpath, locator, options)
   end
 

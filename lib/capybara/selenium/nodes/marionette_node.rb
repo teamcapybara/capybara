@@ -27,7 +27,7 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
 
   def set_file(value) # rubocop:disable Naming/AccessorMethodName
     # By default files are appended so we have to clear here if its multiple and already set
-    native.clear if multiple? && driver.evaluate_script("arguments[0].files", self).any?
+    native.clear if multiple? && driver.evaluate_script('arguments[0].files', self).any?
     return super if browser_version >= 62.0
 
     # Workaround lack of support for multiple upload by uploading one at a time

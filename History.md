@@ -6,10 +6,13 @@ Release date: unreleased
 * `Capybara.disable_animation` can be set to a CSS selector to identify which elements will have animation disabled [Michael Glass]
 * `Capybara.default_normalize_ws` option which sets whether or not text predicates and matchers (`has_text?`, `has_content?`, `assert_text`, etc) use `normalize_ws` option by default. Defaults to false. [Stegalin Ivan]
 * Selector based predicates, matchers, and finders now support the `:normalize_ws` option for the `:text`/`:exact_text` filters. Defaults to the `Capybara.default_normalize_ws`setting above.
+* Element `choose`/`check`/`uncheck`/`attach_file`/`fill_in` can now operate on the element they're called on or a descendant if no locator is passed.
 
 ### Fixed
 
-* All CSS styles applied by the `Element#attach_file` `:make_visible` option will now have `!important` priority set to ensure they override any other specified style
+* All CSS styles applied by the `Element#attach_file` `:make_visible` option will now have `!important` priority set to ensure they override any other specified style.
+* Firefox file inputs are only manually cleared when necessary.
+*
 
 # Version 3.6.0
 Release date: 2018-08-14

@@ -137,6 +137,13 @@ Capybara::SpecHelper.spec '#fill_in' do
     expect(extract_results(@session)['schmooo']).to eq('Schmooo for all')
   end
 
+  it 'should be able to fill in element called on when no locator passed' do
+    field = @session.find(:fillable_field, 'form[password]')
+    field.fill_in(with: 'supasikrit')
+    @session.click_button('awesome')
+    expect(extract_results(@session)['password']).to eq('supasikrit')
+  end
+
   it "should throw an exception if a hash containing 'with' is not provided" do
     expect { @session.fill_in 'Name' }.to raise_error(ArgumentError, /with/)
   end
