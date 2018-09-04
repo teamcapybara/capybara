@@ -10,6 +10,13 @@ Capybara::SpecHelper.spec '#has_css?' do
     expect(@session).to have_css('p a#foo')
   end
 
+  it 'should take a symbol as the selector' do
+    # This was never a specifically accepted format but it has worked for a
+    # lot of versions. Probably should keep it until at least 4.0
+    # TODO: consider not supporting symbol for the CSS selector.
+    expect(@session).to have_css(:p)
+  end
+
   it 'should be false if the given selector is not on the page' do
     expect(@session).not_to have_css('abbr')
     expect(@session).not_to have_css('p a#doesnotexist')
