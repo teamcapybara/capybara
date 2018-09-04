@@ -30,7 +30,7 @@ module Capybara
       class Splitter
         def split(css)
           selectors = []
-          StringIO.open(css) do |str|
+          StringIO.open(css.to_s) do |str|
             selector = ''
             while (char = str.getc)
               case char
