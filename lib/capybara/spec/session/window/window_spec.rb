@@ -135,6 +135,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
 
       # #size returns values larger than availWidth, availHeight with Chromedriver
       @session.within_window(@other_window) do
+        sleep 1
         expect(@session.current_window.size).to eq([400, 300])
         # expect(@session.evaluate_script("[window.outerWidth, window.outerHeight]")).to eq([400,300])
       end
