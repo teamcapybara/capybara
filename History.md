@@ -1,3 +1,10 @@
+# Version 3.7.1
+Release date: 2018-09-05
+
+### Fixed
+
+* Restored ability to pass symbol as the CSS selector when calling `has_css?`/`have_css`/etc - Issue #2093
+
 # Version 3.7.0
 Release date: 2018-09-02
 
