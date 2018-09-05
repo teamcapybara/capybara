@@ -126,18 +126,15 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
       expect(@session.current_window.size).to eq([width - 100, height - 100])
     end
 
-    it 'should stay on current window if invoked not for current window', requires: %i[windows js] do
+    it 'should stay on current window if invoked not for current window', :focus_, requires: %i[windows js] do
       @other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
-      @other_window.resize_to(400, 300)
+      @other_window.resize_to(450, 300)
       expect(@session.current_window).to eq(@window)
 
-      # #size returns values larger than availWidth, availHeight with Chromedriver
       @session.within_window(@other_window) do
-        sleep 1
-        expect(@session.current_window.size).to eq([400, 300])
-        # expect(@session.evaluate_script("[window.outerWidth, window.outerHeight]")).to eq([400,300])
+        expect(@session.current_window.size).to eq([450, 300])
       end
     end
   end
