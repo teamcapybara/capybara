@@ -130,11 +130,11 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
       @other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
-      @other_window.resize_to(450, 300)
+      @other_window.resize_to(600, 300)
       expect(@session.current_window).to eq(@window)
 
       @session.within_window(@other_window) do
-        expect(@session.current_window.size).to eq([450, 300])
+        expect(@session.current_window.size).to eq([600, 300])
       end
     end
   end
