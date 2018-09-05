@@ -129,14 +129,12 @@ module Capybara
 
     def wait_for_stable_size(seconds = session.config.default_max_wait_time)
       res = yield if block_given?
-      prev_size = size
-      start_time = Capybara::Helpers.monotonic_time
+      timer = Capybara::Helpers.timer(expire_in: seconds)
       loop do
+        prev_size = size
         sleep 0.05
-        cur_size = size
-        return res if cur_size == prev_size
-        prev_size = cur_size
-        break if (Capybara::Helpers.monotonic_time - start_time) >= seconds
+        return res if prev_size == size
+        break if timer.expired?
       end
       raise Capybara::WindowError, "Window size not stable within #{seconds} seconds."
     end
