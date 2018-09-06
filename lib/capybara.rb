@@ -453,7 +453,12 @@ Capybara.register_server :puma do |app, port, host, **options|
   # Therefore construct and run the Server instance ourselves.
   # Rack::Handler::Puma.run(app, { Host: host, Port: port, Threads: "0:4", workers: 0, daemon: false }.merge(options))
 
-  conf = Rack::Handler::Puma.config(app, { Host: host, Port: port, Threads: '0:4', workers: 0, daemon: false }.merge(options))
+  conf = if Rack::Handler::Puma.respond_to?(:config)
+    Rack::Handler::Puma.config(app, { Host: host, Port: port, Threads: '0:4', workers: 0, daemon: false }.merge(options))
+  else
+    Rack::Handler::Puma.run(app, { Host: host, Port: port, Threads: '0:4', workers: 0, daemon: false }.merge(options))
+  end
+
   events = conf.options[:Silent] ? ::Puma::Events.strings : ::Puma::Events.stdio
 
   events.log 'Capybara starting Puma...'
