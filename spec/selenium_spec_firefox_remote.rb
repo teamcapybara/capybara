@@ -62,13 +62,13 @@ Capybara::SpecHelper.run_specs TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVE
   case example.metadata[:full_description]
   when 'Capybara::Session selenium_firefox_remote node #click should allow multiple modifiers'
     pending "Firefox doesn't generate an event for shift+control+click" if marionette_gte?(62, @session)
-  when /^Capybara::Session selenium node #double_click/
-    pending "selenium-webdriver/geckodriver doesn't generate double click event" if marionette_lt?(59, @session)
   when 'Capybara::Session selenium_firefox_remote #accept_prompt should accept the prompt with a blank response when there is a default'
     pending "Geckodriver doesn't set a blank response in FF < 63 - https://bugzilla.mozilla.org/show_bug.cgi?id=1486485" if marionette_lt?(63, @session)
-  when 'Capybara::Session selenium_firefox_remote #attach_file with multipart form should fire change once for each set of files uploaded',
-       'Capybara::Session selenium_firefox_remote #attach_file with multipart form should fire change once when uploading multiple files from empty'
-    pending 'Due to having to work around selenium remote lack of multiple file upload support the change event count is off'
+  when 'Capybara::Session selenium_firefox_remote #attach_file with multipart form should fire change once for each set of files uploaded'
+    pending 'Gekcodriver appends files so we have to first call clear for multiple files which creates an extra change ' \
+            'if files are already set'
+  when 'Capybara::Session selenium_firefox_remote #attach_file with multipart form should fire change once when uploading multiple files from empty'
+    pending "FF < 62 doesn't support setting all files at once" if marionette_lt?(62, @session)
   end
 end
 
