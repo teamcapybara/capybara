@@ -52,8 +52,6 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumMarionette, 'selenium', cap
   case example.metadata[:full_description]
   when 'Capybara::Session selenium node #click should allow multiple modifiers'
     pending "Firefox doesn't generate an event for shift+control+click" if marionette_gte?(62, @session)
-  when /^Capybara::Session selenium node #double_click/
-    pending "selenium-webdriver/geckodriver doesn't generate double click event" if marionette_lt?(59, @session)
   when 'Capybara::Session selenium #accept_prompt should accept the prompt with a blank response when there is a default'
     pending "Geckodriver doesn't set a blank response in FF < 63 - https://bugzilla.mozilla.org/show_bug.cgi?id=1486485" if marionette_lt?(63, @session)
   when 'Capybara::Session selenium #attach_file with multipart form should fire change once for each set of files uploaded'
