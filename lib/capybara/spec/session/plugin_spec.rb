@@ -28,11 +28,29 @@ Capybara::SpecHelper.spec 'Plugin', requires: [:js] do
     expect(@session).to have_field(type: 'select', with: 'FL', visible: false)
   end
 
+  it 'should remain selected if called twice on a single select' do
+    @session.select 'Florida', from: 'Click this to focus the single select element', using: :select2
+    @session.select 'Florida', from: 'Click this to focus the single select element', using: :select2
+    expect(@session).to have_field(type: 'select', with: 'FL', visible: false)
+  end
+
   it 'should work with multiple select' do
     @session.select 'Pennsylvania', from: 'Click this to focus the multiple select element', using: :select2
     @session.select 'California', from: 'Click this to focus the multiple select element', using: :select2
-
     expect(@session).to have_select(multiple: true, selected: %w[Pennsylvania California], visible: false)
+    @session.unselect 'Pennsylvania', from: 'Click this to focus the multiple select element', using: :select2
+    expect(@session).to have_select(multiple: true, selected: %w[California], visible: false)
+    @session.unselect 'California', from: 'Click this to focus the multiple select element', using: :select2
+    expect(@session).to have_select(multiple: true, selected: %w[], visible: false)
+  end
+
+  it 'should not reselect if already selected' do
+    @session.select 'Pennsylvania', from: 'Click this to focus the multiple select element', using: :select2
+    @session.select 'Pennsylvania', from: 'Click this to focus the multiple select element', using: :select2
+    expect(@session).to have_select(multiple: true, selected: %w[Pennsylvania], visible: false)
+    @session.unselect 'Pennsylvania', from: 'Click this to focus the multiple select element', using: :select2
+    @session.unselect 'Pennsylvania', from: 'Click this to focus the multiple select element', using: :select2
+    expect(@session).to have_select(multiple: true, selected: %w[], visible: false)
   end
 
   it 'should work with id' do
