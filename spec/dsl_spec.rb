@@ -8,14 +8,8 @@ class TestClass
 end
 
 Capybara::SpecHelper.run_specs TestClass.new, 'DSL', capybara_skip: %i[
-  js modals screenshot frames windows send_keys server hover about_scheme psc download css
-] do |example|
-  case example.metadata[:full_description]
-  when /doesn't raise exception on a nil current_url$/,
-       /#refute_selector should warn not to use$/
-    skip 'Only makes sense when there is a real driver'
-  end
-end
+  js modals screenshot frames windows send_keys server hover about_scheme psc download css driver
+]
 
 RSpec.describe Capybara::DSL do
   after do

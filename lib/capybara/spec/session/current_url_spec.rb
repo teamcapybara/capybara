@@ -96,7 +96,7 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
     expect(@session.current_path).to eq('/replaced')
   end
 
-  it "doesn't raise exception on a nil current_url" do
+  it "doesn't raise exception on a nil current_url", requires: [:driver] do
     allow(@session.driver).to receive(:current_url).and_return(nil)
     @session.visit('/')
     expect { @session.current_url }.not_to raise_exception

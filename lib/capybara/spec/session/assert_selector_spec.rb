@@ -72,7 +72,7 @@ Capybara::SpecHelper.spec '#assert_selector' do
   end
 end
 
-Capybara::SpecHelper.spec '#refute_selector' do
+Capybara::SpecHelper.spec '#refute_selector', requires: [:driver] do
   it 'should warn not to use' do
     @session.visit('/with_html')
     doc = @session.document
