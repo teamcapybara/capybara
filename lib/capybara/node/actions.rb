@@ -64,7 +64,11 @@ module Capybara
       # The field can be found via its name, id, Capybara.test_id attribute, or label text.
       # If no locator is provided will operate on self or a descendant
       #
+      #     # will fill in a descendant fillable field with name, id, or label text matching 'Name'
       #     page.fill_in 'Name', with: 'Bob'
+      #
+      #     # will fill in `el` if it's a fillable field
+      #     el.fill_in with: 'Tom'
       #
       #
       # @overload fill_in([locator], with:, **options)
@@ -96,7 +100,11 @@ module Capybara
       # via name, id or label text. If no locator is provided this will match against self or
       # a descendant.
       #
+      #     # will choose a descendant radio button with a name, id, or label text matching 'Male'
       #     page.choose('Male')
+      #
+      #     # will choose `el` if it's a radio button element
+      #     el.choose()
       #
       # @overload choose([locator], **options)
       #   @param [String] locator           Which radio button to choose
@@ -119,7 +127,11 @@ module Capybara
       # via name, id or label text. If no locator is provided this will match against
       # self or a descendant.
       #
+      #     # will check a descendant checkbox with a name, id, or label text matching 'German'
       #     page.check('German')
+      #
+      #     # will check `el` if it's a checkbox element
+      #     el.check()
       #
       #
       # @overload check([locator], **options)
@@ -139,11 +151,15 @@ module Capybara
 
       ##
       #
-      # Find a descendant check box and mark uncheck it. The check box can be found
+      # Find a descendant check box and uncheck it. The check box can be found
       # via name, id or label text. If no locator is provided this will match against
       # self or a descendant.
       #
+      #     # will uncheck a descendant checkbox with a name, id, or label text matching 'German'
       #     page.uncheck('German')
+      #
+      #     # will uncheck `el` if it's a checkbox element
+      #     el.uncheck()
       #
       #
       # @overload uncheck([locator], **options)
@@ -215,7 +231,11 @@ module Capybara
       # the file field, attach the file, and then revert the CSS back to original. If no locator is
       # passed this will match self or a descendant.
       #
-      #     page.attach_file(locator, '/path/to/file.png')
+      #     # will attach file to a descendant file input element that has a name, id, or label_text matching 'My File'
+      #     page.attach_file('My File', '/path/to/file.png')
+      #
+      #     # will attach file to el if it's a file input element
+      #     el.attach_file('/path/to/file.png')
       #
       # @overload attach_file([locator], paths, **options)
       #   @macro waiting_behavior
