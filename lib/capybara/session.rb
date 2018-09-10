@@ -364,7 +364,7 @@ module Capybara
     # @overload switch_to_frame(element)
     #   @param [Capybara::Node::Element]  iframe/frame element to switch to
     # @overload switch_to_frame(:parent)
-    #   Switch to the parent element
+    #   Switch to the parent frame
     # @overload switch_to_frame(:top)
     #   Switch to the top level document
     #
