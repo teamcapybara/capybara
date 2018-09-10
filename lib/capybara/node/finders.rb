@@ -309,6 +309,10 @@ module Capybara
       def options_include_minimum?(opts)
         %i[count minimum between].any? { |key| opts.key?(key) }
       end
+
+      def parent
+        first(:xpath, './parent::*', minimum: 0)
+      end
     end
   end
 end
