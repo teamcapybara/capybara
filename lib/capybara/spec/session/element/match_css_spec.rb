@@ -22,4 +22,10 @@ Capybara::SpecHelper.spec '#match_css?' do
     expect(@element).to match_css('span') { |el| el[:class] == 'number' }
     expect(@element).not_to match_css('span') { |el| el[:class] == 'not_number' }
   end
+
+  it 'should work with root element found via ancestor' do
+    el = @session.find(:css, 'body').find(:xpath, '..')
+    expect(el).to match_css('html')
+    expect { expect(el).to not_match_css('html') }.to raise_exception(RSpec::Expectations::ExpectationNotMetError)
+  end
 end

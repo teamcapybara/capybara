@@ -1,3 +1,10 @@
+# Version 3.7.2
+Release date: unreleased
+
+### Fixed
+
+* Fix MatchQuery based matchers when used on a root element found using any type of parent/ancestor query - Issue #2097
+
 # Version 3.7.1
 Release date: 2018-09-05
 

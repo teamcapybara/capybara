@@ -713,7 +713,7 @@ module Capybara
         query_args = _set_query_session_options(*query_args)
         query = Capybara::Queries::MatchQuery.new(*query_args, &optional_filter_block)
         synchronize(query.wait) do
-          yield query.resolve_for(first(:xpath, './parent::*', minimum: 0) || query_scope)
+          yield query.resolve_for(first(:xpath, './parent::*', minimum: 0) || session&.document || query_scope)
         end
         true
       end
