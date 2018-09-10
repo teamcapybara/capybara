@@ -6,7 +6,7 @@ module Capybara
       def self.prepended(mod)
         mod.public_instance_methods.each do |method_name|
           define_method method_name do |*args, **options|
-            plugin_name = options.delete(:using) { |_using| Capybara.default_plugin[method_name] }
+            plugin_name = options.delete(:using) { |_using| session_options.default_plugin[method_name] }
             if plugin_name
               plugin = Capybara.plugins[plugin_name]
               raise ArgumentError, "Plugin not loaded: #{plugin_name}" unless plugin
