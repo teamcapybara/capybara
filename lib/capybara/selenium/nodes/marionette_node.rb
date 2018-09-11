@@ -1,6 +1,9 @@
 # frozen_string_literal: true
+require 'capybara/selenium/extensions/html5_drag'
 
 class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
+  include Html5Drag
+
   def click(keys = [], **options)
     super
   rescue ::Selenium::WebDriver::Error::ElementNotInteractableError
@@ -54,10 +57,8 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
   end
 
   def drag_to(element)
-    return super unless (browser_version >= 62.0) && (self[:draggable] == 'true')
-
-    scroll_if_needed { browser_action.click_and_hold(native).perform }
-    driver.execute_script HTML5_DRAG_DROP_SCRIPT, self, element
+    return super unless (browser_version >= 62.0) && draggable?
+    html5_drag_to(element)
   end
 
 private
@@ -116,26 +117,4 @@ private
   def browser_version
     driver.browser.capabilities[:browser_version].to_f
   end
-
-  HTML5_DRAG_DROP_SCRIPT = <<~JS
-    var source = arguments[0];
-    var target = arguments[1];
-
-    var dt = new DataTransfer();
-    var opts = { cancelable: true, bubbles: true, dataTransfer: dt };
-
-    var dragEvent = new DragEvent('dragstart', opts);
-    source.dispatchEvent(dragEvent);
-    target.scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
-    var dragOverEvent = new DragEvent('dragover', opts);
-    target.dispatchEvent(dragOverEvent);
-    var dragLeaveEvent = new DragEvent('dragleave', opts);
-    target.dispatchEvent(dragLeaveEvent);
-    if (dragOverEvent.defaultPrevented) {
-      var dropEvent = new DragEvent('drop', opts);
-      target.dispatchEvent(dropEvent);
-    }
-    var dragEndEvent = new DragEvent('dragend', opts);
-    source.dispatchEvent(dragEndEvent);
-  JS
 end
