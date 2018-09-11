@@ -316,6 +316,14 @@ Capybara::SpecHelper.spec 'node' do
       element.drag_to(target)
       expect(@session).to have_xpath('//div[contains(., "Dropped!")]')
     end
+
+    it 'should drag a link' do
+      @session.visit('/with_js')
+      link = @session.find_link('drag_link')
+      target = @session.find(:id, 'drop')
+      link.drag_to target
+      expect(@session).to have_xpath('//div[contains(., "Dropped!")]')
+    end
   end
 
   describe '#hover', requires: [:hover] do

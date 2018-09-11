@@ -313,6 +313,15 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         element.drag_to(target)
         expect(session).to have_xpath('//div[contains(., "HTML5 Dropped drag_html5_scroll")]')
       end
+
+      it 'should drag HTML5 default draggable elements' do
+        pending "Firefox < 62 doesn't support a DataTransfer constuctor" if marionette_lt?(62.0, session)
+        session.visit('/with_js')
+        link = session.find_link('drag_link_html5')
+        target = session.find(:id, 'drop_html5')
+        link.drag_to target
+        expect(session).to have_xpath('//div[contains(., "HTML5 Dropped")]')
+      end
     end
 
     context 'Windows' do
