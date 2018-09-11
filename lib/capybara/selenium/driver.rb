@@ -143,11 +143,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       handles.clear
       browser.switch_to.default_content
     when :parent
-      # would love to use browser.switch_to.parent_frame here
-      # but it has an issue if the current frame is removed from within it
       handles.pop
-      browser.switch_to.default_content
-      handles.each { |fh| browser.switch_to.frame(fh) }
+      browser.switch_to.parent_frame
     else
       handles << frame.native
       browser.switch_to.frame(frame.native)
