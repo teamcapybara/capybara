@@ -16,6 +16,7 @@ module Capybara
     end
 
     def marionette_gte?(version, session)
+      puts "#{session.driver.browser.capabilities[:browser_version].to_f} >= #{version}" if marionette?(session)
       marionette?(session) && (session.driver.browser.capabilities[:browser_version].to_f >= version)
     end
 
