@@ -12,6 +12,7 @@ module Capybara
       def unselect(scope, value, **options)
         select2 = find_select2(scope, value, options)
         raise Capybara::UnselectNotAllowed, 'Cannot unselect option from single select box.' unless select2.has_css?('.select2-selection--multiple')
+
         select2.click
         option = scope.find(:select2_option, value)
         option[:"aria-selected"] == 'true' ? option.click : select2.click

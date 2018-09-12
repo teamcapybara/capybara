@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 require 'capybara/plugins/select2'
+require 'capybara/plugins/react_select'
 
-Capybara::SpecHelper.spec 'Plugin', requires: [:js] do
+Capybara::SpecHelper.spec 'Plugin', requires: [:js], focus_: true do
   before do
     @session.visit('https://select2.org/appearance')
   end
@@ -82,5 +83,45 @@ Capybara::SpecHelper.spec 'Plugin', requires: [:js] do
     Capybara.default_plugin[:select] = :select2
     @session.select 'Miss', from: 'Title', using: nil
     expect(@session.find_field('Title').value).to eq('Miss')
+  end
+
+  context 'with react select 2' do
+    before do
+      @session.visit('https://react-select.com/home')
+    end
+
+    it 'should select an option' do
+      @session.select 'Red', from: 'color', using: :react_select
+      expect(@session).to have_field('color', type: 'hidden', with: 'red')
+    end
+
+    it 'should remain selected if called twice on a single select' do
+      @session.select 'Blue', from: 'color', using: :react_select
+      @session.select 'Blue', from: 'color', using: :react_select
+      expect(@session).to have_field('color', type: 'hidden', with: 'blue')
+    end
+
+    it 'should work with multiple select' do
+      @session.within @session.first(:css, 'div.basic-multi-select') do
+        @session.select 'Green', from: 'colors', using: :react_select
+        @session.select 'Silver', from: 'colors', using: :react_select
+        expect(@session).to have_field('colors', with: 'green', type: 'hidden')
+        expect(@session).to have_field('colors', with: 'silver', type: 'hidden')
+      end
+    end
+
+    it 'should unselect an option' do
+      @session.within @session.first(:css, 'div.basic-multi-select') do
+        @session.select 'Green', from: 'colors', using: :react_select
+        expect(@session).to have_field('colors', with: 'green', type: 'hidden')
+        @session.unselect 'Green', from: 'colors', using: :react_select
+        expect(@session).to have_no_field('colors', with: 'green', type: 'hidden')
+      end
+    end
+
+    it 'should work with name' do
+      @session.select 'Purple', from: 'color', using: :react_select
+      expect(@session).to have_css('input[type=hidden][name=color]', visible: false) { |el| el.value == 'purple' }
+    end
   end
 end
