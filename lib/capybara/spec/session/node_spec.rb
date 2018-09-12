@@ -300,7 +300,7 @@ Capybara::SpecHelper.spec 'node' do
     end
   end
 
-  describe '#drag_to', requires: %i[js drag] do
+  describe '#drag_to', requires: %i[js drag], focus_: true do
     it 'should drag and drop an object' do
       @session.visit('/with_js')
       element = @session.find('//div[@id="drag"]')
