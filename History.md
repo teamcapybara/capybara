@@ -5,6 +5,8 @@ Release date: unreleased
 
 * Fix MatchQuery based matchers when used on a root element found using any type of parent/ancestor query - Issue #2097
 
+* Fix Chrome/FF HTML5 drag simulation for elements (a, img) which default to draggable - Issue #2098
+
 # Version 3.7.1
 Release date: 2018-09-05
 
