@@ -11,6 +11,7 @@ class Capybara::Selenium::Node
         element.scroll_if_needed { browser_action.move_to(element.native).release.perform }
       else
         driver.execute_script HTML5_DRAG_DROP_SCRIPT, self, element
+        browser_action.release.perform
       end
     end
 
@@ -20,11 +21,9 @@ class Capybara::Selenium::Node
     end
 
     MOUSEDOWN_TRACKER = <<~JS
-      if (!window.hasOwnProperty('capybara_mousedown_prevented')){
-        document.addEventListener('mousedown', function(ev){
-          window.capybara_mousedown_prevented = ev.defaultPrevented;
-        })
-      }
+      document.addEventListener('mousedown', ev => {
+        window.capybara_mousedown_prevented = ev.defaultPrevented;
+      }, { once: true, passive: true })
     JS
 
     HTML5_DRAG_DROP_SCRIPT = <<~JS
