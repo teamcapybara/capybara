@@ -14,9 +14,9 @@ class Capybara::Selenium::Node
       end
     end
 
-    def draggable?
+    def html5_draggable?
       # Workaround https://github.com/SeleniumHQ/selenium/issues/6396
-      driver.evaluate_script('arguments[0]["draggable"]', self) == true
+      native.property('draggable')
     end
 
     MOUSEDOWN_TRACKER = <<~JS

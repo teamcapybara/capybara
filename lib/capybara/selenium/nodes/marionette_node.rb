@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'capybara/selenium/extensions/html5_drag'
 
 class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
@@ -57,7 +58,7 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
   end
 
   def drag_to(element)
-    return super unless (browser_version >= 62.0) && draggable?
+    return super unless (browser_version >= 62.0) && html5_draggable?
     html5_drag_to(element)
   end
 

@@ -15,7 +15,7 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
   end
 
   def drag_to(element)
-    return super unless draggable?
+    return super unless html5_draggable?
     html5_drag_to(element)
   end
 
