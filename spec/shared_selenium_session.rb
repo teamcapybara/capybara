@@ -202,9 +202,17 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         expect(element.path).to eq('/HTML/BODY/DIV[2]/A[1]')
       end
 
-      it 'handles namespaces' do
+      it 'handles namespaces in xhtml' do
         pending "IE 11 doesn't handle all XPath querys (namespace-uri, etc)" if ie?(session)
         session.visit '/with_namespace'
+        rect = session.find(:css, 'div svg rect:first-of-type')
+        expect(rect.path).to eq("/HTML/BODY/DIV/./*[((local-name(.) = 'svg') and (namespace-uri(.) = 'http://www.w3.org/2000/svg'))]/./*[((local-name(.) = 'rect') and (namespace-uri(.) = 'http://www.w3.org/2000/svg'))][1]")
+        expect(session.find(:xpath, rect.path)).to eq rect
+      end
+
+      it 'handles default namespaces in html5' do
+        pending "IE 11 doesn't handle all XPath querys (namespace-uri, etc)" if ie?(session)
+        session.visit '/with_html5_svg'
         rect = session.find(:css, 'div svg rect:first-of-type')
         expect(rect.path).to eq("/HTML/BODY/DIV/./*[((local-name(.) = 'svg') and (namespace-uri(.) = 'http://www.w3.org/2000/svg'))]/./*[((local-name(.) = 'rect') and (namespace-uri(.) = 'http://www.w3.org/2000/svg'))][1]")
         expect(session.find(:xpath, rect.path)).to eq rect
@@ -410,6 +418,17 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           expect(@animation_session_without_matching_css).to have_link('animate me away', wait: false)
           expect(@animation_session_without_matching_css).to have_no_link('animate me away', wait: 5)
         end
+      end
+    end
+
+    describe ":element selector" do
+      it "can find html5 svg elements" do
+        session.visit('with_html5_svg')
+        expect(session).to have_selector(:element, :svg)
+        expect(session).to have_selector(:element, :rect, visible: true)
+        expect(session).to have_selector(:element, :rect, visible: :hidden)
+        expect(session).to have_selector(:element, :circle)
+        expect(session).to have_selector(:element, :linearGradient, visible: false)
       end
     end
   end
