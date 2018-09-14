@@ -294,8 +294,12 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
     end
 
     describe 'Element#drag_to' do
+      before do
+        skip "Firefox < 62 doesn't support a DataTransfer constuctor" if marionette_lt?(62.0, session)
+        skip "IE doesn't support a DataTransfer constuctor" if ie?(session)
+      end
+
       it 'should HTML5 drag and drop an object' do
-        pending "Firefox < 62 doesn't support a DataTransfer constuctor" if marionette_lt?(62.0, session)
         session.visit('/with_js')
         element = session.find('//div[@id="drag_html5"]')
         target = session.find('//div[@id="drop_html5"]')
@@ -314,7 +318,6 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
 
       it 'should HTML5 drag and drop when scrolling needed' do
-        pending "Firefox < 62 doesn't support a DataTransfer constuctor" if marionette_lt?(62.0, session)
         session.visit('/with_js')
         element = session.find('//div[@id="drag_html5_scroll"]')
         target = session.find('//div[@id="drop_html5_scroll"]')
@@ -323,7 +326,6 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
 
       it 'should drag HTML5 default draggable elements' do
-        pending "Firefox < 62 doesn't support a DataTransfer constuctor" if marionette_lt?(62.0, session)
         session.visit('/with_js')
         link = session.find_link('drag_link_html5')
         target = session.find(:id, 'drop_html5')
@@ -421,14 +423,13 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
     end
 
-    describe ":element selector" do
-      it "can find html5 svg elements" do
+    describe ':element selector' do
+      it 'can find html5 svg elements' do
         session.visit('with_html5_svg')
         expect(session).to have_selector(:element, :svg)
         expect(session).to have_selector(:element, :rect, visible: true)
-        expect(session).to have_selector(:element, :rect, visible: :hidden)
         expect(session).to have_selector(:element, :circle)
-        expect(session).to have_selector(:element, :linearGradient, visible: false)
+        expect(session).to have_selector(:element, :linearGradient, visible: :all)
       end
     end
   end

@@ -51,7 +51,7 @@ $stdout.puts `#{Selenium::WebDriver::Firefox.driver_path} --version` if ENV['CI'
 Capybara::SpecHelper.run_specs TestSessions::SeleniumMarionette, 'selenium', capybara_skip: skipped_tests do |example|
   case example.metadata[:full_description]
   when 'Capybara::Session selenium node #click should allow multiple modifiers'
-    pending "Firefox doesn't generate an event for shift+control+click" if marionette_gte?(62, @session)
+    pending "Firefox doesn't generate an event for shift+control+click" if marionette_gte?(62, @session) && !Gem.win_platform?
   when /^Capybara::Session selenium node #double_click/
     pending "selenium-webdriver/geckodriver doesn't generate double click event" if marionette_lt?(59, @session)
   when 'Capybara::Session selenium #accept_prompt should accept the prompt with a blank response when there is a default'
@@ -63,6 +63,8 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumMarionette, 'selenium', cap
     pending "FF < 62 doesn't support setting all files at once" if marionette_lt?(62, @session)
   when 'Capybara::Session selenium #accept_confirm should work with nested modals'
     skip 'Broken in FF 63 - https://bugzilla.mozilla.org/show_bug.cgi?id=1487358' if marionette_gte?(63, @session)
+  when 'Capybara::Session selenium #click_link can download a file'
+    skip 'Need to figure out testing of file downloading on windows platform' if Gem.win_platform?
   end
 end
 

@@ -468,7 +468,7 @@ end
 
 Capybara.add_selector(:element) do
   xpath do |locator, **|
-    xp = XPath.descendant.where(locator ? XPath.local_name == locator.to_s : nil)
+    XPath.descendant.where(locator ? XPath.local_name == locator.to_s : nil)
   end
 
   expression_filter(:attributes, matcher: /.+/) do |xpath, name, val|

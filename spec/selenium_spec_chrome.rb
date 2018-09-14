@@ -45,7 +45,12 @@ skipped_tests << :windows if ENV['TRAVIS'] && (ENV['SKIP_WINDOW'] || ENV['HEADLE
 
 $stdout.puts `#{Selenium::WebDriver::Chrome.driver_path} --version` if ENV['CI']
 
-Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_DRIVER.to_s, capybara_skip: skipped_tests
+Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_DRIVER.to_s, capybara_skip: skipped_tests do |example|
+  case example.metadata[:full_description]
+  when /#click_link can download a file$/
+    skip 'Need to figure out testing of file downloading on windows platform' if Gem.win_platform?
+  end
+end
 
 RSpec.describe 'Capybara::Session with chrome' do
   include Capybara::SpecHelper
