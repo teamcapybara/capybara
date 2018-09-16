@@ -430,7 +430,6 @@ module Capybara
   require 'capybara/rack_test/css_handlers.rb'
 
   require 'capybara/selenium/node'
-  require 'capybara/selenium/nodes/marionette_node'
   require 'capybara/selenium/driver'
 end
 

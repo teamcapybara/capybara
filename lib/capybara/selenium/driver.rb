@@ -28,6 +28,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         setup_exit_handler
       end
     end
+    @browser
   end
 
   def initialize(app, **options)
@@ -360,6 +361,7 @@ private
     when :chrome
       extend ChromeDriver
     when :firefox
+      require 'capybara/selenium/patches/pause_duration_fix' if sel_driver.capabilities['moz:geckodriverVersion']&.start_with?('0.22.')
       extend MarionetteDriver if sel_driver.capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
     end
   end
