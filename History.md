@@ -1,3 +1,11 @@
+# Version 3.8.0
+Release date: unreleased
+
+### Added
+
+* Workaround gecodriver 0.22 issue with undefined pause durations
+* :element selector ignores XML namespaces
+
 # Version 3.7.2
 Release date: 2018-09-12
 
@@ -28,7 +36,6 @@ Release date: 2018-09-02
 
 * All CSS styles applied by the `Element#attach_file` `:make_visible` option will now have `!important` priority set to ensure they override any other specified style.
 * Firefox file inputs are only manually cleared when necessary.
-*
 
 # Version 3.6.0
 Release date: 2018-08-14
