@@ -61,7 +61,7 @@ skipped_tests << :windows if ENV['TRAVIS'] && (ENV['SKIP_WINDOW'] || ENV['HEADLE
 Capybara::SpecHelper.run_specs TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVER.to_s, capybara_skip: skipped_tests do |example|
   case example.metadata[:full_description]
   when 'Capybara::Session selenium_firefox_remote node #click should allow multiple modifiers'
-    pending "Firefox doesn't generate an event for shift+control+click" if marionette_gte?(62, @session)
+    skip "Firefox doesn't generate an event for shift+control+click" if marionette_gte?(62, @session)
   when 'Capybara::Session selenium_firefox_remote #accept_prompt should accept the prompt with a blank response when there is a default'
     pending "Geckodriver doesn't set a blank response in FF < 63 - https://bugzilla.mozilla.org/show_bug.cgi?id=1486485" if marionette_lt?(63, @session)
   when 'Capybara::Session selenium_firefox_remote #attach_file with multipart form should fire change once for each set of files uploaded'
