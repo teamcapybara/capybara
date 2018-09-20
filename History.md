@@ -1,10 +1,14 @@
 # Version 3.8.0
-Release date: unreleased
+Release date: 2018-09-20
 
 ### Added
 
 * Workaround gecodriver 0.22 issue with undefined pause durations
 * :element selector ignores XML namespaces
+
+### Fixed
+
+* Added Errno::ECONNRESET to the errors which will allows https server detection
 
 # Version 3.7.2
 Release date: 2018-09-12
