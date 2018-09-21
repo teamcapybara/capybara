@@ -444,6 +444,25 @@ module Capybara
     def find_by_class_attr(classes)
       Array(classes).map { |klass| XPath.attr(:class).contains_word(klass) }.reduce(:&)
     end
+
+    def regexp_to_substrings(regexp)
+      return [] unless regexp.options.zero?
+
+      regexp.source.match(CONVERTIBLE_REGEXP) do |match|
+        match.captures.reject(&:empty?)
+      end || []
+    end
+
+    CONVERTIBLE_REGEXP = /
+      \A
+        \^?                   # start
+        ([^\[\]\\^$.|?*+()]*) # leading literal characters
+        [^|]*?                # do not try to convert expressions with alternates
+        (?<!\\)               # skip metacharacters - ie has preceding slash
+        ([^\[\]\\^$.|?*+()]*) # trailing literal characters
+        \$?                   # end
+      \z
+    /x
   end
 end
 

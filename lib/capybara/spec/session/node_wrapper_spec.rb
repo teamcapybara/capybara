@@ -34,6 +34,6 @@ Capybara::SpecHelper.spec '#to_capybara_node' do
     end.to raise_error(/^expected to find css "#second" within #<Capybara::Node::Element/)
     expect do
       expect(para).to have_link(href: %r{/without_simple_html})
-    end.to raise_error(%r{^expected to find visible link nil with href matching /\\/without_simple_html/ within #<Capybara::Node::Element})
+    end.to raise_error(%r{^expected to find link nil with href matching /\\/without_simple_html/ within #<Capybara::Node::Element})
   end
 end

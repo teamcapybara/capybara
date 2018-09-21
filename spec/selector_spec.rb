@@ -257,6 +257,16 @@ RSpec.describe Capybara do
           expect(string.find(:element, 'input', type: 'submit').value).to eq 'click me'
         end
 
+        it 'supports regexp matching' do
+          expect(string.find(:element, 'input', type: /sub/).value).to eq 'click me'
+          expect(string.find(:element, 'input', title: /sub\w.*button/).value).to eq 'click me'
+          expect(string.find(:element, 'input', title: /sub.* b.*ton/).value).to eq 'click me'
+          expect(string.find(:element, 'input', title: /sub.*mit.*/).value).to eq 'click me'
+          expect(string.find(:element, 'input', title: /^submit button$/).value).to eq 'click me'
+          expect(string.find(:element, 'input', title: /^(?:submit|other) button$/).value).to eq 'click me'
+          expect(string.find(:element, 'input', title: /SuBmIt/i).value).to eq 'click me'
+        end
+
         it 'still works with system keys' do
           expect { string.all(:element, 'input', type: 'submit', count: 1) }.not_to raise_error
         end
