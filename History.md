@@ -3,7 +3,7 @@ Release date: 2018-09-20
 
 ### Added
 
-* Workaround gecodriver 0.22 issue with undefined pause durations
+* Workaround geckodriver 0.22 issue with undefined pause durations
 * :element selector ignores XML namespaces
 
 ### Fixed
