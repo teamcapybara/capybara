@@ -1,3 +1,10 @@
+# Version 3.8.1
+Release date: unreleased
+
+### Fixed
+
+* Fix setting of date fields with a string when using Selenium regression [Micah Geisel]
+
 # Version 3.8.0
 Release date: 2018-09-20
 
