@@ -84,4 +84,32 @@ RSpec.describe 'Capybara::Session with chrome' do
       end
     end
   end
+
+  describe 'filling in Chrome-specific date and time fields with keystrokes' do
+    let(:datetime) { Time.new(1983, 6, 19, 6, 30) }
+
+    before do
+      @session = TestSessions::Chrome
+      @session.visit('/form')
+    end
+
+    it 'should fill in a date input with a String' do
+      @session.fill_in('form_date', with: "06/19/1983")
+      @session.click_button('awesome')
+      expect(Date.parse(extract_results(@session)['date'])).to eq datetime.to_date
+    end
+
+    it 'should fill in a time input with a String' do
+      @session.fill_in('form_time', with: "06:30A")
+      @session.click_button('awesome')
+      results = extract_results(@session)['time']
+      expect(Time.parse(results).strftime('%r')).to eq datetime.strftime('%r')
+    end
+
+    it 'should fill in a datetime input with a String' do
+      @session.fill_in('form_datetime', with: "06/19/1983\t06:30A")
+      @session.click_button('awesome')
+      expect(Time.parse(extract_results(@session)['datetime'])).to eq datetime
+    end
+  end
 end

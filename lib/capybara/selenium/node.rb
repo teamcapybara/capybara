@@ -355,6 +355,10 @@ private
       @value = value
     end
 
+    def to_s
+      value.to_s
+    end
+
     def dateable?
       !value.is_a?(String) && value.respond_to?(:to_date)
     end
