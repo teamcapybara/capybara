@@ -1,3 +1,10 @@
+# Version 3.8.1
+Release date: 2018-09-22
+
+### Fixed
+
+* Filling in of date fields with a string when using selenium chrome regression [Micah Geisel]
+
 # Version 3.8.0
 Release date: 2018-09-20
 
