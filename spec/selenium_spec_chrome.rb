@@ -94,13 +94,13 @@ RSpec.describe 'Capybara::Session with chrome' do
     end
 
     it 'should fill in a date input with a String' do
-      @session.fill_in('form_date', with: "06/19/1983")
+      @session.fill_in('form_date', with: '06/19/1983')
       @session.click_button('awesome')
       expect(Date.parse(extract_results(@session)['date'])).to eq datetime.to_date
     end
 
     it 'should fill in a time input with a String' do
-      @session.fill_in('form_time', with: "06:30A")
+      @session.fill_in('form_time', with: '06:30A')
       @session.click_button('awesome')
       results = extract_results(@session)['time']
       expect(Time.parse(results).strftime('%r')).to eq datetime.strftime('%r')

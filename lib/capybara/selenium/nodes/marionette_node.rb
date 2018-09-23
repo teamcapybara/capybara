@@ -52,9 +52,7 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
     return super(*args.map { |arg| arg == :space ? ' ' : arg }) if args.none? { |arg| arg.is_a? Array }
 
     native.click
-    args.each_with_object(browser_action) do |keys, actions|
-      _send_keys(keys, actions)
-    end.perform
+    _send_keys(args).perform
   end
 
   def drag_to(element)
@@ -71,35 +69,29 @@ private
     super
   end
 
-  def _send_keys(keys, actions, down_keys = nil)
+  def _send_keys(keys, actions = browser_action, down_keys = ModifierKeysStack.new)
     case keys
-    when String
-      keys = keys.upcase if down_keys&.include?(:shift) # https://bugzilla.mozilla.org/show_bug.cgi?id=1405370
-      actions.send_keys(keys)
-    when :space
-      actions.send_keys(' ') # https://github.com/mozilla/geckodriver/issues/846
     when :control, :left_control, :right_control,
          :alt, :left_alt, :right_alt,
          :shift, :left_shift, :right_shift,
          :meta, :left_meta, :right_meta,
          :command
-      if down_keys.nil?
-        actions.send_keys(keys)
-      else
-        down_keys << keys
-        actions.key_down(keys)
-      end
+      down_keys.press(keys)
+      actions.key_down(keys)
+    when String
+      # https://bugzilla.mozilla.org/show_bug.cgi?id=1405370
+      keys = keys.upcase if (browser_version < 64.0) && down_keys&.include?(:shift)
+      actions.send_keys(keys)
     when Symbol
       actions.send_keys(keys)
     when Array
-      local_down_keys = []
-      keys.each do |sub_keys|
-        _send_keys(sub_keys, actions, local_down_keys)
-      end
-      local_down_keys.each { |key| actions.key_up(key) }
+      down_keys.push
+      keys.each { |sub_keys| _send_keys(sub_keys, actions, down_keys) }
+      down_keys.pop.reverse_each { |key| actions.key_up(key) }
     else
       raise ArgumentError, 'Unknown keys type'
     end
+    actions
   end
 
   def bridge
@@ -118,4 +110,27 @@ private
   def browser_version
     driver.browser.capabilities[:browser_version].to_f
   end
+
+  class ModifierKeysStack
+    def initialize
+      @stack = []
+    end
+
+    def include?(key)
+      @stack.flatten.include?(key)
+    end
+
+    def press(key)
+      @stack.last.push(key)
+    end
+
+    def push
+      @stack.push []
+    end
+
+    def pop
+      @stack.pop
+    end
+  end
+  private_constant :ModifierKeysStack
 end

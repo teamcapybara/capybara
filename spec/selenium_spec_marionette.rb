@@ -169,4 +169,13 @@ RSpec.describe Capybara::Selenium::Node do
       expect(session).to have_link('Has been alt control meta')
     end
   end
+
+  context '#send_keys' do
+    it 'should process space' do
+      session = TestSessions::SeleniumMarionette
+      session.visit('/form')
+      session.find(:css, '#address1_city').send_keys('ocean', [:shift, :space, 'side'])
+      expect(session.find(:css, '#address1_city').value).to eq 'ocean SIDE'
+    end
+  end
 end
