@@ -35,6 +35,7 @@ class Capybara::RackTest::Browser
 
   def follow(method, path, **attributes)
     return if fragment_or_script?(path)
+
     process_and_follow_redirects(method, path, attributes, 'HTTP_REFERER' => current_url)
   end
 

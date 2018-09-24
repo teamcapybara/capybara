@@ -84,6 +84,7 @@ module Capybara
       def style(*styles)
         styles = styles.flatten.map(&:to_s)
         raise ArgumentError, 'You must specify at least one CSS style' if styles.empty?
+
         begin
           synchronize { base.style(styles) }
         rescue NotImplementedError => err
@@ -113,6 +114,7 @@ module Capybara
       # @return [Capybara::Node::Element]  The element
       def set(value, **options)
         raise Capybara::ReadOnlyElementError, "Attempt to set readonly element with value: #{value}" if readonly?
+
         options = session_options.default_set_options.to_h.merge(options)
         synchronize { base.set(value, options) }
         self
@@ -442,6 +444,7 @@ module Capybara
         %(#<Capybara::Node::Element tag="#{base.tag_name}">)
       rescue StandardError => err
         raise unless session.driver.invalid_element_errors.any? { |et| err.is_a?(et) }
+
         %(Obsolete #<Capybara::Node::Element>)
       end
 

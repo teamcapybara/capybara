@@ -22,6 +22,7 @@ module Capybara
       def call(env)
         @status, @headers, @body = @app.call(env)
         return [@status, @headers, @body] unless html_content?
+
         response = Rack::Response.new([], @status, @headers)
 
         @body.each { |html| response.write insert_disable(html) }

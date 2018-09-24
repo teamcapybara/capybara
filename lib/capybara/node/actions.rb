@@ -274,6 +274,7 @@ module Capybara
             find(:select, from, options)
           rescue Capybara::ElementNotFound => select_error
             raise if %i[selected with_selected multiple].any? { |option| options.key?(option) }
+
             begin
               find(:datalist_input, from, options)
             rescue Capybara::ElementNotFound => dlinput_error
@@ -287,6 +288,7 @@ module Capybara
         datalist_options = input.evaluate_script(DATALIST_OPTIONS_SCRIPT)
         option = datalist_options.find { |opt| opt.values_at('value', 'label').include?(value) }
         raise ::Capybara::ElementNotFound, %(Unable to find datalist option "#{value}") unless option
+
         input.set(option['value'])
       rescue ::Capybara::NotSupportedByDriverError
         # Implement for drivers that don't support JS
@@ -299,6 +301,7 @@ module Capybara
         visible_css = { opacity: 1, display: 'block', visibility: 'visible' } if visible_css == true
         _update_style(element, visible_css)
         raise ExpectationNotMet, 'The style changes in :make_visible did not make the file input visible' unless element.visible?
+
         begin
           yield element
         ensure
@@ -326,6 +329,7 @@ module Capybara
             el.set(checked)
           rescue StandardError => err
             raise unless allow_label_click && catch_error?(err)
+
             begin
               el ||= find(selector, locator, options.merge(visible: :all))
               el.session.find(:label, for: el, visible: true).click unless el.checked? == checked

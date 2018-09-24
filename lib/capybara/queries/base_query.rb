@@ -51,6 +51,7 @@ module Capybara
         return false if options[:maximum] && (Integer(options[:maximum]) < count)
         return false if options[:minimum] && (Integer(options[:minimum]) > count)
         return false if options[:between] && !options[:between].include?(count)
+
         true
       end
 

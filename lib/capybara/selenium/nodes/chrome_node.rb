@@ -11,11 +11,13 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
     if err.message =~ /File not found : .+\n.+/m
       raise ArgumentError, "Selenium < 3.14 with remote Chrome doesn't support multiple file upload"
     end
+
     raise
   end
 
   def drag_to(element)
     return super unless html5_draggable?
+
     html5_drag_to(element)
   end
 

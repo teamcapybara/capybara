@@ -14,6 +14,7 @@ module Capybara
         unless invalid_options.empty?
           raise ArgumentError, "Match queries don't support quantity options. Invalid keys - #{invalid_options.join(', ')}"
         end
+
         super
       end
 

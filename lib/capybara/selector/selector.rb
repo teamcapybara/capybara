@@ -387,6 +387,7 @@ module Capybara
 
     def default_visibility(fallback = Capybara.ignore_hidden_elements)
       return @default_visibility unless @default_visibility.nil?
+
       fallback
     end
 
@@ -402,6 +403,7 @@ module Capybara
 
     def locate_field(xpath, locator, **_options)
       return xpath if locator.nil?
+
       locate_xpath = xpath # Need to save original xpath for the label wrap
       locator = locator.to_s
       attr_matchers = [XPath.attr(:id) == locator,

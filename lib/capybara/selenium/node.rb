@@ -48,6 +48,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   #   Array => an array of keys to send before the value being set, e.g. [[:command, 'a'], :backspace]
   def set(value, **options)
     raise ArgumentError, "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}" if value.is_a?(Array) && !multiple?
+
     case tag_name
     when 'input'
       case self[:type]
@@ -79,12 +80,14 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
 
   def unselect_option
     raise Capybara::UnselectNotAllowed, 'Cannot unselect option from single select box.' unless select_node.multiple?
+
     click if selected?
   end
 
   def click(keys = [], **options)
     click_options = ClickOptions.new(keys, options)
     return native.click if click_options.empty?
+
     click_with_options(click_options)
   rescue StandardError => err
     if err.is_a?(::Selenium::WebDriver::Error::ElementClickInterceptedError) ||
@@ -136,6 +139,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
 
   def disabled?
     return true unless native.enabled?
+
     # WebDriver only defines `disabled?` for form controls but fieldset makes sense too
     tag_name == 'fieldset' && find_xpath('ancestor-or-self::fieldset[@disabled]').any?
   end
@@ -255,6 +259,7 @@ private
   def set_date(value) # rubocop:disable Naming/AccessorMethodName
     value = SettableValue.new(value)
     return set_text(value) unless value.dateable?
+
     # TODO: this would be better if locale can be detected and correct keystrokes sent
     update_value_js(value.to_date_str)
   end
@@ -262,6 +267,7 @@ private
   def set_time(value) # rubocop:disable Naming/AccessorMethodName
     value = SettableValue.new(value)
     return set_text(value) unless value.timeable?
+
     # TODO: this would be better if locale can be detected and correct keystrokes sent
     update_value_js(value.to_time_str)
   end
@@ -269,6 +275,7 @@ private
   def set_datetime_local(value) # rubocop:disable Naming/AccessorMethodName
     value = SettableValue.new(value)
     return set_text(value) unless value.timeable?
+
     # TODO: this would be better if locale can be detected and correct keystrokes sent
     update_value_js(value.to_datetime_str)
   end

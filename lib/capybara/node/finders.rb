@@ -252,10 +252,12 @@ module Capybara
           synchronize(query.wait) do
             result = query.resolve_for(self)
             raise Capybara::ExpectationNotMet, result.failure_message unless result.matches_count?
+
             result
           end
         rescue Capybara::ExpectationNotMet
           raise if minimum_specified || (result.compare_count == 1)
+
           Result.new([], nil)
         end
       end

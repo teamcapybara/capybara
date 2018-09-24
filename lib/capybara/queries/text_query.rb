@@ -64,6 +64,7 @@ module Capybara
         insensitive_regexp = Capybara::Helpers.to_regexp(@expected_text, options: Regexp::IGNORECASE)
         insensitive_count = @actual_text.scan(insensitive_regexp).size
         return if insensitive_count == @count
+
         "it was found #{insensitive_count} #{Capybara::Helpers.declension('time', 'times', insensitive_count)} using a case insensitive search"
       end
 
@@ -71,6 +72,7 @@ module Capybara
         invisible_text = text(query_type: :all)
         invisible_count = invisible_text.scan(@search_regexp).size
         return if invisible_count == @count
+
         "it was found #{invisible_count} #{Capybara::Helpers.declension('time', 'times', invisible_count)} including non-visible text"
       rescue StandardError
         # An error getting the non-visible text (if element goes out of scope) should not affect the response

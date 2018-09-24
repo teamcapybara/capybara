@@ -41,6 +41,7 @@ module Capybara
         def apply(subject, name, value, skip_value)
           return skip_value if skip?(value)
           raise ArgumentError, "Invalid value #{value.inspect} passed to #{self.class.name.split('::').last} #{name}#{" : #{@name}" if @name.is_a?(Regexp)}" unless valid_value?(value)
+
           if @block.arity == 2
             @block.call(subject, value)
           else
@@ -50,6 +51,7 @@ module Capybara
 
         def valid_value?(value)
           return true unless @options.key?(:valid_values)
+
           Array(@options[:valid_values]).any? { |valid| valid === value } # rubocop:disable Style/CaseEquality
         end
       end

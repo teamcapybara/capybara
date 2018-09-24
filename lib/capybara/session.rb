@@ -76,11 +76,13 @@ module Capybara
 
     def initialize(mode, app = nil)
       raise TypeError, 'The second parameter to Session::new should be a rack app if passed.' if app && !app.respond_to?(:call)
+
       @@instance_created = true
       @mode = mode
       @app = app
       if block_given?
         raise 'A configuration block is only accepted when Capybara.threadsafe == true' unless Capybara.threadsafe
+
         yield config
       end
       @server = if config.run_server && @app && driver.needs_server?
@@ -138,6 +140,7 @@ module Capybara
     #
     def raise_server_error!
       return unless @server&.error
+
       # Force an explanation for the error being raised as the exception cause
       begin
         if config.raise_server_errors
@@ -468,6 +471,7 @@ module Capybara
     def switch_to_window(window = nil, **options, &window_locator)
       raise ArgumentError, '`switch_to_window` can take either a block or a window, not both' if window && block_given?
       raise ArgumentError, '`switch_to_window`: either window or block should be provided' if !window && !block_given?
+
       unless scopes.last.nil?
         raise Capybara::ScopeError, '`switch_to_window` is not supposed to be invoked from '\
                                     '`within` or `within_frame` blocks.'
@@ -769,6 +773,7 @@ module Capybara
     #
     def configure
       raise 'Session configuration is only supported when Capybara.threadsafe == true' unless Capybara.threadsafe
+
       yield config
     end
 

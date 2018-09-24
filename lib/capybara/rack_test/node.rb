@@ -50,12 +50,14 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
 
   def select_option
     return if disabled?
+
     deselect_options unless select_node.multiple?
     native['selected'] = 'selected'
   end
 
   def unselect_option
     raise Capybara::UnselectNotAllowed, 'Cannot unselect option from single select box.' unless select_node.multiple?
+
     native.remove_attribute('selected')
   end
 

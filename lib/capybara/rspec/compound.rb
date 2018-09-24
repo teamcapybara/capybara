@@ -43,6 +43,7 @@ if defined?(::RSpec::Expectations::Version)
               syncer.synchronize do
                 @evaluator.reset
                 raise ::Capybara::ElementNotFound unless [matcher_1_matches?, matcher_2_matches?].all?
+
                 true
               end
             rescue StandardError
@@ -71,6 +72,7 @@ if defined?(::RSpec::Expectations::Version)
               syncer.synchronize do
                 @evaluator.reset
                 raise ::Capybara::ElementNotFound unless [matcher_1_matches?, matcher_2_matches?].any?
+
                 true
               end
             rescue StandardError

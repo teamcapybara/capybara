@@ -44,6 +44,7 @@ module Capybara
 
     def responsive?
       return false if @server_thread&.join(0)
+
       res = @checker.request { |http| http.get('/__identify__') }
 
       if res.is_a?(Net::HTTPSuccess) || res.is_a?(Net::HTTPRedirection)
@@ -57,6 +58,7 @@ module Capybara
       timer = Capybara::Helpers.timer(expire_in: 60)
       while pending_requests?
         raise 'Requests did not finish in 60 seconds' if timer.expired?
+
         sleep 0.01
       end
     end
@@ -72,6 +74,7 @@ module Capybara
         timer = Capybara::Helpers.timer(expire_in: 60)
         until responsive?
           raise 'Rack application timed out during boot' if timer.expired?
+
           @server_thread.join(0.1)
         end
       end

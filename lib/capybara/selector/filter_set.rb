@@ -106,6 +106,7 @@ module Capybara
       def add_filter(name, filter_class, *types, matcher: nil, **options, &block)
         types.each { |type| options[type] = true }
         raise 'ArgumentError', ':default option is not supported for filters with a :matcher option' if matcher && options[:default]
+
         if filter_class <= Filters::ExpressionFilter
           @expression_filters[name] = filter_class.new(name, matcher, block, options)
         else

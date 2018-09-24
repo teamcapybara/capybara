@@ -9,6 +9,7 @@ module Capybara::Selenium::Driver::ChromeDriver
         super
       rescue NoMethodError => err
         raise unless err.message =~ /full_screen_window/
+
         bridge = browser.send(:bridge)
         result = bridge.http.call(:post, "session/#{bridge.session_id}/window/fullscreen", {})
         result['value']
@@ -20,6 +21,7 @@ module Capybara::Selenium::Driver::ChromeDriver
     super
   rescue Selenium::WebDriver::Error::UnknownError => err
     raise unless err.message =~ /failed to change window state/
+
     # Chromedriver doesn't wait long enough for state to change when coming out of fullscreen
     # and raises unnecessary error. Wait a bit and try again.
     sleep 0.5

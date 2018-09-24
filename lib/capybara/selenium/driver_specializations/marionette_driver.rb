@@ -34,6 +34,7 @@ module Capybara::Selenium::Driver::MarionetteDriver
 
   def switch_to_frame(frame)
     return super unless frame == :parent
+
     # geckodriver/firefox has an issue if the current frame is removed from within it
     # so we have to move to the default_content and iterate back through the frames
     handles = @frame_handles[current_window_handle]

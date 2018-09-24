@@ -93,6 +93,7 @@ module Capybara
         min, max = between.minmax
         size = load_up_to(max + 1)
         return 0 if between.include? size
+
         return size <=> min
       end
 
@@ -130,6 +131,7 @@ module Capybara
     def load_up_to(num)
       loop do
         break if @result_cache.size >= num
+
         @result_cache << @results_enum.next
       end
       @result_cache.size

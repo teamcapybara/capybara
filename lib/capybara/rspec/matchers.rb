@@ -242,6 +242,7 @@ module Capybara
         timer = Capybara::Helpers.timer(expire_in: @wait_time)
         while window.exists?
           return false if timer.expired?
+
           sleep 0.05
         end
         true

@@ -59,8 +59,10 @@ module Capybara
 
       def matches_filters?(node)
         return true if (@resolved_node&.== node) && options[:allow_self]
+
         @applied_filters ||= :system
         return false unless matches_text_filter?(node) && matches_exact_text_filter?(node) && matches_visible_filter?(node)
+
         @applied_filters = :node
         matches_node_filters?(node) && matches_filter_block?(node)
       rescue *(node.respond_to?(:session) ? node.session.driver.invalid_element_errors : [])
@@ -174,6 +176,7 @@ module Capybara
 
       def matches_filter_block?(node)
         return true unless @filter_block
+
         if node.respond_to?(:session)
           node.session.using_wait_time(0) { @filter_block.call(node) }
         else
@@ -203,6 +206,7 @@ module Capybara
         unless VALID_MATCH.include?(match)
           raise ArgumentError, "invalid option #{match.inspect} for :match, should be one of #{VALID_MATCH.map(&:inspect).join(', ')}"
         end
+
         unhandled_options = @options.keys.reject do |option_name|
           valid_keys.include?(option_name) ||
             expression_filters.any? { |_name, ef| ef.handles_option? option_name } ||
@@ -210,6 +214,7 @@ module Capybara
         end
 
         return if unhandled_options.empty?
+
         invalid_names = unhandled_options.map(&:inspect).join(', ')
         valid_names = (valid_keys - [:allow_self]).map(&:inspect).join(', ')
         raise ArgumentError, "invalid keys #{invalid_names}, should be one of #{valid_names}"
@@ -258,6 +263,7 @@ module Capybara
         if options[:id].is_a?(XPath::Expression)
           raise ArgumentError, 'XPath expressions are not supported for the :id filter with CSS based selectors'
         end
+
         "##{::Capybara::Selector::CSS.escape(options[:id])}"
       end
 
@@ -294,6 +300,7 @@ module Capybara
 
       def warn_exact_usage
         return unless options.key?(:exact) && !supports_exact?
+
         warn "The :exact option only has an effect on queries using the XPath#is method. Using it with the query \"#{expression}\" has no effect."
       end
 
@@ -317,12 +324,14 @@ module Capybara
         value = options[:text]
         return true unless value
         return matches_text_exactly?(node, value) if exact_text == true
+
         regexp = value.is_a?(Regexp) ? value : Regexp.escape(value.to_s)
         matches_text_regexp?(node, regexp)
       end
 
       def matches_exact_text_filter?(node)
         return true unless exact_text.is_a?(String)
+
         matches_text_exactly?(node, exact_text)
       end
 

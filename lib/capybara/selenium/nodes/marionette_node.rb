@@ -21,6 +21,7 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
     return super unless browser_version < 61.0
 
     return true if super
+
     # workaround for selenium-webdriver/geckodriver reporting elements as enabled when they are nested in disabling elements
     if %w[option optgroup].include? tag_name
       find_xpath('parent::*[self::optgroup or self::select]')[0].disabled?
@@ -57,6 +58,7 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
 
   def drag_to(element)
     return super unless (browser_version >= 62.0) && html5_draggable?
+
     html5_drag_to(element)
   end
 

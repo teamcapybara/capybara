@@ -87,6 +87,7 @@ module Capybara
 
       def expired?
         raise Capybara::FrozenInTime, 'Time appears to be frozen. Capybara does not work with libraries which freeze time, consider using time travelling instead' if stalled?
+
         current - @start >= @expire_in
       end
 
