@@ -334,6 +334,20 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
     end
 
+    describe 'Capybara#Node#attach_file' do
+      it 'can attach a directory', :focus_ do
+        pending "Geckodriver doesn't support uploading a directory" if marionette?(session)
+        pending "Selenium remote doesn't support transferring a directory" if remote?(session)
+        pending "Headless Chrome doesn't support directory upload - https://bugs.chromium.org/p/chromedriver/issues/detail?id=2521&q=directory%20upload&colspec=ID%20Status%20Pri%20Owner%20Summary" if chrome?(session) && ENV['HEADLESS']
+
+        session.visit('/form')
+        @test_file_dir = File.expand_path('./fixtures', File.dirname(__FILE__))
+        session.attach_file('Directory Upload', @test_file_dir)
+        session.click_button('Upload Multiple')
+        expect(session.body).to include('5 | ') # number of files
+      end
+    end
+
     context 'Windows' do
       it "can't close the primary window" do
         expect do

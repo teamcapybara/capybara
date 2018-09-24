@@ -42,6 +42,10 @@ module Capybara
     def browser_name(session)
       session.driver.browser.browser if session.respond_to?(:driver)
     end
+
+    def remote?(session)
+      session.driver.browser.is_a? ::Selenium::WebDriver::Remote::Driver
+    end
   end
 end
 
