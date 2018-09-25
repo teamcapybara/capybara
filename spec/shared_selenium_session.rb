@@ -335,7 +335,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
     end
 
     describe 'Capybara#Node#attach_file' do
-      it 'can attach a directory', :focus_ do
+      it 'can attach a directory' do
         pending "Geckodriver doesn't support uploading a directory" if marionette?(session)
         pending "Selenium remote doesn't support transferring a directory" if remote?(session)
         pending "Headless Chrome doesn't support directory upload - https://bugs.chromium.org/p/chromedriver/issues/detail?id=2521&q=directory%20upload&colspec=ID%20Status%20Pri%20Owner%20Summary" if chrome?(session) && ENV['HEADLESS']
