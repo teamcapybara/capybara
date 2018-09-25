@@ -70,7 +70,7 @@ module Capybara
       end
 
       def visible
-        case (vis = options.fetch(:visible) { @selector.default_visibility(session_options.ignore_hidden_elements) })
+        case (vis = options.fetch(:visible) { @selector.default_visibility(session_options.ignore_hidden_elements, options) })
         when true then :visible
         when false then :all
         else vis

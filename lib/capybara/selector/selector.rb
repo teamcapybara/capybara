@@ -381,14 +381,17 @@ module Capybara
     #                                              * :all - finds visible and invisible elements.
     #                                              * :hidden - only finds invisible elements.
     #                                              * :visible - only finds visible elements.
-    def visible(default_visibility)
-      @default_visibility = default_visibility
+    def visible(default_visibility = nil, &block)
+      @default_visibility = block || default_visibility
     end
 
-    def default_visibility(fallback = Capybara.ignore_hidden_elements)
-      return @default_visibility unless @default_visibility.nil?
-
-      fallback
+    def default_visibility(fallback = Capybara.ignore_hidden_elements, options = {})
+      vis = if @default_visibility&.respond_to?(:call)
+        @default_visibility.call(options)
+      else
+        @default_visibility
+      end
+      vis.nil? ? fallback : vis
     end
 
   private

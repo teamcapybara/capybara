@@ -38,8 +38,11 @@ Capybara.add_selector(:id) do
 end
 
 Capybara.add_selector(:field) do
+  visible { |options| :hidden if options[:type] == 'hidden' }
   xpath do |locator, **options|
-    xpath = XPath.descendant(:input, :textarea, :select)[!XPath.attr(:type).one_of('submit', 'image', 'hidden')]
+    invalid_types = %w[submit image]
+    invalid_types << 'hidden' unless options[:type] == 'hidden'
+    xpath = XPath.descendant(:input, :textarea, :select)[!XPath.attr(:type).one_of(*invalid_types)]
     locate_field(xpath, locator, options)
   end
 
