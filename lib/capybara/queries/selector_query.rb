@@ -251,7 +251,7 @@ module Capybara
 
         classes = Array(options[:class]).group_by { |cl| cl.start_with? '!' }
         (classes[false].to_a.map { |cl| ".#{Capybara::Selector::CSS.escape(cl)}" } +
-         classes[true].to_a.map { |cl| ":not(.#{Capybara::Selector::CSS.escape(cl.slice(1))})" }).join
+         classes[true].to_a.map { |cl| ":not(.#{Capybara::Selector::CSS.escape(cl.slice(1..-1))})" }).join
       end
 
       def css_from_id
@@ -266,7 +266,7 @@ module Capybara
 
         Array(options[:class]).map do |klass|
           if klass.start_with?('!')
-            !XPath.attr(:class).contains_word(klass.slice(1))
+            !XPath.attr(:class).contains_word(klass.slice(1..-1))
           else
             XPath.attr(:class).contains_word(klass)
           end
