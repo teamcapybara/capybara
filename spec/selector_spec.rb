@@ -31,6 +31,7 @@ RSpec.describe Capybara do
             <input type="file" id="file" class=".special file"/>
             <input type="hidden" id="hidden_field" value="this is hidden"/>
             <input type="submit" value="click me" title="submit button"/>
+            <input type="button" value="don't click me" title="Other button 1"/>
             <a href="#">link</a>
             <fieldset></fieldset>
             <select id="select">
@@ -264,7 +265,9 @@ RSpec.describe Capybara do
           expect(string.find(:element, 'input', title: /sub.*mit.*/).value).to eq 'click me'
           expect(string.find(:element, 'input', title: /^submit button$/).value).to eq 'click me'
           expect(string.find(:element, 'input', title: /^(?:submit|other) button$/).value).to eq 'click me'
-          expect(string.find(:element, 'input', title: /SuBmIt/i).value).to eq 'click me'
+          expect(string.find(:element, 'input', title: /SuB.*mIt/i).value).to eq 'click me'
+          expect(string.find(:element, 'input', title: /^Su.*Bm.*It/i).value).to eq 'click me'
+          expect(string.find(:element, 'input', title: /^Ot.*he.*r b.*\d/i).value).to eq "don't click me"
         end
 
         it 'still works with system keys' do
@@ -299,7 +302,7 @@ RSpec.describe Capybara do
           expect(string.find(:element, 'input', type: XPath.ends_with('ext'))[:type]).to eq 'text'
           expect(string.find(:element, 'input', type: XPath.contains('ckb'))[:type]).to eq 'checkbox'
           expect(string.find(:element, 'input', title: XPath.contains_word('submit'))[:type]).to eq 'submit'
-          expect(string.find(:element, 'input', title: XPath.contains_word('button'))[:type]).to eq 'submit'
+          expect(string.find(:element, 'input', title: XPath.contains_word('button 1'))[:type]).to eq 'button'
         end
       end
     end
