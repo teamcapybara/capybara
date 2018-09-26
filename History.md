@@ -1,5 +1,5 @@
 # Version 3.8.2
-Release date: unreleased
+Release date: 2018-09-26
 
 ### Fixed
 
