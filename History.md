@@ -1,3 +1,10 @@
+# Version 3.8.2
+Release date: unreleased
+
+### Fixed
+
+* Fixed negated class selector option - Issue #2103
+
 # Version 3.8.1
 Release date: 2018-09-22
 

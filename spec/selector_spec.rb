@@ -11,13 +11,13 @@ RSpec.describe Capybara do
             <title>selectors</title>
           </head>
           <body>
-            <div class="a" id="page">
-              <div class="b" id="content">
-                <h1 class="a">Totally awesome</h1>
+            <div class="aa" id="page">
+              <div class="bb" id="content">
+                <h1 class="aa">Totally awesome</h1>
                 <p>Yes it is</p>
               </div>
-              <p class="b c">Some Content</p>
-              <p class="b d"></p>
+              <p class="bb cc">Some Content</p>
+              <p class="bb dd"></p>
             </div>
             <div id="#special">
             </div>
@@ -84,12 +84,12 @@ RSpec.describe Capybara do
 
     describe 'modify_selector' do
       it 'allows modifying a selector' do
-        el = string.find(:custom_selector, 'a')
+        el = string.find(:custom_selector, 'aa')
         expect(el.tag_name).to eq 'div'
         Capybara.modify_selector :custom_selector do
           css { |css_class| "h1.#{css_class}" }
         end
-        el = string.find(:custom_selector, 'a')
+        el = string.find(:custom_selector, 'aa')
         expect(el.tag_name).to eq 'h1'
       end
 
@@ -97,9 +97,9 @@ RSpec.describe Capybara do
         Capybara.modify_selector :custom_selector do
           css { |css_class| "p.#{css_class}" }
         end
-        expect(string).to have_selector(:custom_selector, 'b', count: 1)
-        expect(string).to have_selector(:custom_selector, 'b', not_empty: false, count: 1)
-        expect(string).to have_selector(:custom_selector, 'b', not_empty: :all, count: 2)
+        expect(string).to have_selector(:custom_selector, 'bb', count: 1)
+        expect(string).to have_selector(:custom_selector, 'bb', not_empty: false, count: 1)
+        expect(string).to have_selector(:custom_selector, 'bb', not_empty: :all, count: 2)
       end
     end
 
@@ -151,15 +151,15 @@ RSpec.describe Capybara do
 
       context 'with :class option' do
         it 'works with compound css selectors' do
-          expect(string.all(:custom_css_selector, 'div, h1', class: 'a').size).to eq 2
-          expect(string.all(:custom_css_selector, 'h1, div', class: 'a').size).to eq 2
+          expect(string.all(:custom_css_selector, 'div, h1', class: 'aa').size).to eq 2
+          expect(string.all(:custom_css_selector, 'h1, div', class: 'aa').size).to eq 2
         end
 
         it 'handles negated classes' do
-          expect(string.all(:custom_css_selector, 'div, p', class: ['b', '!c']).size).to eq 2
-          expect(string.all(:custom_css_selector, 'div, p', class: ['!c', '!d', 'b']).size).to eq 1
-          expect(string.all(:custom_xpath_selector, XPath.descendant(:div, :p), class: ['b', '!c']).size).to eq 2
-          expect(string.all(:custom_xpath_selector, XPath.descendant(:div, :p), class: ['!c', '!d', 'b']).size).to eq 1
+          expect(string.all(:custom_css_selector, 'div, p', class: ['bb', '!cc']).size).to eq 2
+          expect(string.all(:custom_css_selector, 'div, p', class: ['!cc', '!dd', 'bb']).size).to eq 1
+          expect(string.all(:custom_xpath_selector, XPath.descendant(:div, :p), class: ['bb', '!cc']).size).to eq 2
+          expect(string.all(:custom_xpath_selector, XPath.descendant(:div, :p), class: ['!cc', '!dd', 'bb']).size).to eq 1
         end
 
         it "works with 'special' characters" do
