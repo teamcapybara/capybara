@@ -31,15 +31,15 @@ module Capybara
           orig_source = nil
           while source != orig_source
             orig_source = source.dup
-            while source.gsub!(/\([^())]*\)[*?]/, '.'); end # replace optional groups with wildcard
-            while source.gsub!(/(\([^())]*\))\{(\d*)\}/) { |_m| (Regexp.last_match(1) * Regexp.last_match(2).to_i) }; end # replace fixed count groups with copies
-            while source.gsub!(/(\([^())]*\))\{(\d*)(?:,\d*)\}/) { |_m| (Regexp.last_match(1) * Regexp.last_match(2).to_i) + '.' }; end # replace counted groups with minimum copies and wildcard
-            while source.gsub!(/\([^())]*\|[^)]*\)/, '.'); end # replace groups containing alternation with wildcard
-            while source.gsub!(/\(([^())]*)\)\+/, '\1.'); end # replace one or more repeating groups with text followed by wildcard
-            while source.gsub!(/\(([^())]*)\)(?![+{?*])/, '\1'); end # replace non repeating groups with text
+            while source.gsub!(/\([^()]*\)[*?]\??/, '.'); end # replace optional groups with wildcard
+            while source.gsub!(/(\([^()]*\))\{(\d*)\}/) { |_m| (Regexp.last_match(1) * Regexp.last_match(2).to_i) }; end # replace fixed count groups with copies
+            while source.gsub!(/(\([^()]*\))\{(\d*)(?:,\d*)\}\??/) { |_m| (Regexp.last_match(1) * Regexp.last_match(2).to_i) + '.' }; end # replace counted groups with minimum copies and wildcard
+            while source.gsub!(/\([^()]*\|[^)]*\)/, '.'); end # replace groups containing alternation with wildcard
+            while source.gsub!(/\(([^()]*)\)\+\??/, '\1.'); end # replace one or more repeating groups with text followed by wildcard
+            while source.gsub!(/\(([^()]*)\)(?![+{?*])/, '\1'); end # replace non repeating groups with text
           end
-          source.gsub!(/.[*?]/, '.') # replace optional character with wildcard
-          source.gsub!(/(.)\+/, '\1.') # replace one or more with character plus wildcard
+          source.gsub!(/.[*?]\??/, '.') # replace optional character with wildcard
+          source.gsub!(/(.)\+\??/, '\1.') # replace one or more with character plus wildcard
           source.gsub!(/(.)\{(\d*)(?:,\d*)?\}/) { |_m| (Regexp.last_match(1) * Regexp.last_match(2).to_i) + '.' } # replace counted character with with minimum copies and wildcard
           return [] if source.include?('|') # can't handle alternation here
 

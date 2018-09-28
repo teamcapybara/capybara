@@ -73,6 +73,16 @@ RSpec.describe Capybara::Selector::RegexpDisassembler do
     )
   end
 
+  it 'handles non-greedy repetition' do
+    verify_strings(
+      /abc.*?/ => %w[abc],
+      /abc+?/ => %w[abc],
+      /abc*?cde/ => %w[ab cde],
+      /(abc)+?def/ => %w[abc def],
+      /ab(cde)*?fg/ => %w[ab fg]
+    )
+  end
+
   it 'handles alternation' do
     verify_strings(
       /abc|def/ => [],
