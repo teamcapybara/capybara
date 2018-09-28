@@ -22,7 +22,8 @@ module Capybara
         @substrings ||= begin
           source = @regexp_source.dup
           source.gsub!(/\\[^pgk]/, '.') # replace escaped characters with wildcard
-          source.gsub!(/\\p\{[[:alpha:]]+\}/, '.') # replace character properties with wildcard
+          source.gsub!(/\\[gk](?:<[^>]*>)?/, '.') # replace sub expressions and back references with wildcard
+          source.gsub!(/\\p\{[[:alpha:]]+\}?/, '.') # replace character properties with wildcard
           source.gsub!(/\[\[:[a-z]+:\]\]/, '.') # replace posix classes with wildcard
           while source.gsub!(/\[(?:[^\[\]]+)\]/, '.'); end # replace character classes with wildcard
           source.gsub!(/\(\?<?[=!][^)]*\)/, '') # remove lookahead/lookbehind assertions

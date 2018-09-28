@@ -126,6 +126,18 @@ RSpec.describe Capybara::Selector::RegexpDisassembler do
     )
   end
 
+  it 'handles backreferences' do
+    verify_strings(
+      /a(?<group>abc).\k<group>.+/ => %w[aabc]
+    )
+  end
+
+  it 'handles subexpressions' do
+    verify_strings(
+      /\A(?<paren>a\g<paren>*b)+\z/ => %w[a b]
+    )
+  end
+
   it 'handles anchors' do
     verify_strings(
       /^abc/ => %w[abc],
