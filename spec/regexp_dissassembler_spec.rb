@@ -61,6 +61,7 @@ RSpec.describe Capybara::Selector::RegexpDisassembler do
   it 'handles repitition' do
     verify_strings(
       /abc{3}/ => %w[abccc],
+      /abc{3}d/ => %w[abcccd],
       /abc{0}/ => %w[ab],
       /abc{,2}/ => %w[ab],
       /abc{2,}/ => %w[abcc],
@@ -69,7 +70,9 @@ RSpec.describe Capybara::Selector::RegexpDisassembler do
       /ab(cde){,4}/ => %w[ab],
       /(ab){,2}cd/ => %w[cd],
       /(abc){2,3}/ => %w[abcabc],
-      /(abc){3}/ => %w[abcabcabc]
+      /(abc){3}/ => %w[abcabcabc],
+      /ab{2,3}cd/ => %w[abb cd],
+      /(ab){2,3}cd/ => %w[abab cd]
     )
   end
 
