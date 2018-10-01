@@ -61,6 +61,7 @@ module Capybara
         return true if (@resolved_node&.== node) && options[:allow_self]
 
         @applied_filters ||= :system
+        return false unless matches_id_filter?(node)
         return false unless matches_text_filter?(node) && matches_exact_text_filter?(node) && matches_visible_filter?(node)
 
         @applied_filters = :node
@@ -221,14 +222,7 @@ module Capybara
       end
 
       def filtered_xpath(expr)
-        if use_default_id_filter?
-          id_xpath = if options[:id].is_a? XPath::Expression
-            XPath.attr(:id)[options[:id]]
-          else
-            XPath.attr(:id) == options[:id]
-          end
-          expr = "(#{expr})[#{id_xpath}]"
-        end
+        expr = "(#{expr})[#{xpath_from_id}]" if use_default_id_filter?
         expr = "(#{expr})[#{xpath_from_classes}]" if use_default_class_filter?
         expr
       end
@@ -260,11 +254,25 @@ module Capybara
       end
 
       def css_from_id
-        if options[:id].is_a?(XPath::Expression)
+        case options[:id]
+        when XPath::Expression
           raise ArgumentError, 'XPath expressions are not supported for the :id filter with CSS based selectors'
+        when Regexp
+          Selector::RegexpDisassembler.new(options[:id]).substrings.map { |str| "[@id*='#{str}']" }.join
+        else
+          "##{::Capybara::Selector::CSS.escape(options[:id])}"
         end
+      end
 
-        "##{::Capybara::Selector::CSS.escape(options[:id])}"
+      def xpath_from_id
+        case options[:id]
+        when XPath::Expression
+          XPath.attr(:id)[options[:id]]
+        when Regexp
+          XPath.attr(:id)[Selector::RegexpDisassembler.new(options[:id]).conditions]
+        else
+          XPath.attr(:id) == (options[:id])
+        end
       end
 
       def xpath_from_classes
@@ -318,6 +326,11 @@ module Capybara
 
       def simple_root?(node)
         node.is_a?(::Capybara::Node::Simple) && node.path == '/'
+      end
+
+      def matches_id_filter?(node)
+        return true unless use_default_id_filter? && options[:id].is_a?(Regexp)
+        node[:id] =~ options[:id]
       end
 
       def matches_text_filter?(node)
