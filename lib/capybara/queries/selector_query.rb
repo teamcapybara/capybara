@@ -61,7 +61,7 @@ module Capybara
         return true if (@resolved_node&.== node) && options[:allow_self]
 
         @applied_filters ||= :system
-        return false unless matches_id_filter?(node)
+        return false unless matches_id_filter?(node) && matches_class_filter?(node)
         return false unless matches_text_filter?(node) && matches_exact_text_filter?(node) && matches_visible_filter?(node)
 
         @applied_filters = :node
@@ -244,13 +244,18 @@ module Capybara
       end
 
       def css_from_classes
-        if options[:class].is_a?(XPath::Expression)
+        case options[:class]
+        when XPath::Expression
           raise ArgumentError, 'XPath expressions are not supported for the :class filter with CSS based selectors'
-        end
-
-        classes = Array(options[:class]).group_by { |cl| cl.start_with? '!' }
-        (classes[false].to_a.map { |cl| ".#{Capybara::Selector::CSS.escape(cl)}" } +
-         classes[true].to_a.map { |cl| ":not(.#{Capybara::Selector::CSS.escape(cl.slice(1..-1))})" }).join
+        when Regexp
+          r = Selector::RegexpDisassembler.new(options[:class]).substrings.map { |str| "[@class*='#{str}']" }.join
+          puts "CSS was #{r}"
+          r
+        else
+          classes = Array(options[:class]).group_by { |cl| cl.start_with? '!' }
+          (classes[false].to_a.map { |cl| ".#{Capybara::Selector::CSS.escape(cl)}" } +
+           classes[true].to_a.map { |cl| ":not(.#{Capybara::Selector::CSS.escape(cl.slice(1..-1))})" }).join
+         end
       end
 
       def css_from_id
@@ -276,15 +281,20 @@ module Capybara
       end
 
       def xpath_from_classes
-        return XPath.attr(:class)[options[:class]] if options[:class].is_a?(XPath::Expression)
-
-        Array(options[:class]).map do |klass|
-          if klass.start_with?('!')
-            !XPath.attr(:class).contains_word(klass.slice(1..-1))
-          else
-            XPath.attr(:class).contains_word(klass)
-          end
-        end.reduce(:&)
+        case options[:class]
+        when XPath::Expression
+          XPath.attr(:class)[options[:class]]
+        when Regexp
+          XPath.attr(:class)[Selector::RegexpDisassembler.new(options[:class]).conditions]
+        else
+          Array(options[:class]).map do |klass|
+            if klass.start_with?('!')
+              !XPath.attr(:class).contains_word(klass.slice(1..-1))
+            else
+              XPath.attr(:class).contains_word(klass)
+            end
+          end.reduce(:&)
+        end
       end
 
       def apply_expression_filters(expression)
@@ -331,6 +341,11 @@ module Capybara
       def matches_id_filter?(node)
         return true unless use_default_id_filter? && options[:id].is_a?(Regexp)
         node[:id] =~ options[:id]
+      end
+
+      def matches_class_filter?(node)
+        return true unless use_default_class_filter? && options[:class].is_a?(Regexp)
+        node[:class] =~ options[:class]
       end
 
       def matches_text_filter?(node)

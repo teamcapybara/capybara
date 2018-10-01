@@ -185,6 +185,14 @@ RSpec.describe Capybara do
           expect { string.find(:custom_css_selector, 'div', class: XPath.contains('random')) }
             .to raise_error(ArgumentError, /not supported/)
         end
+
+        it 'accepts Regexp for XPath based selectors' do
+          expect(string.find(:custom_xpath_selector, './/div', class: /dom wor/)[:id]).to eq 'random_words'
+        end
+
+        it 'accepts Regexp for CSS base selectors' do
+          expect(string.find(:custom_css_selector, 'div', class: /random/)[:id]).to eq 'random_words'
+        end
       end
 
       # :css, :xpath, :id, :field, :fieldset, :link, :button, :link_or_button, :fillable_field, :radio_button, :checkbox, :select,
