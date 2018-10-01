@@ -299,7 +299,7 @@ module Capybara
     # @return [Capybara::Session]     The currently used session
     #
     def current_session
-      session_pool["#{current_driver}:#{session_name}:#{app.object_id}"] ||= Capybara::Session.new(current_driver, app)
+      specified_session || session_pool["#{current_driver}:#{session_name}:#{app.object_id}"]
     end
 
     ##
@@ -337,22 +337,25 @@ module Capybara
 
     ##
     #
-    # Yield a block using a specific session name.
+    # Yield a block using a specific session name or Capybara::Session instance.
     #
-    def using_session(name)
+    def using_session(name_or_session)
       previous_session_info = {
+        specified_session: specified_session,
         session_name: session_name,
         current_driver: current_driver,
         app: app
       }
-      self.session_name = name
+      self.specified_session = self.session_name = nil
+      if name_or_session.is_a? Capybara::Session
+        self.specified_session = name_or_session
+      else
+        self.session_name = name_or_session
+      end
       yield
     ensure
-      self.session_name = previous_session_info[:session_name]
-      if threadsafe
-        self.current_driver = previous_session_info[:current_driver]
-        self.app = previous_session_info[:app]
-      end
+      self.session_name, self.specified_session = previous_session_info.values_at(:session_name, :specified_session)
+      self.current_driver, self.app = previous_session_info.values_at(:current_driver, :app) if threadsafe
     end
 
     ##
@@ -381,7 +384,25 @@ module Capybara
     end
 
     def session_pool
-      @session_pool ||= {}
+      @session_pool ||= Hash.new do |hash, name|
+        hash[name] = Capybara::Session.new(current_driver, app)
+      end
+    end
+
+    def specified_session
+      if threadsafe
+        Thread.current['capybara_specified_session']
+      else
+        @specified_session
+      end
+    end
+
+    def specified_session=(session)
+      if threadsafe
+        Thread.current['capybara_specified_session'] = session
+      else
+        @specified_session = session
+      end
     end
   end
 

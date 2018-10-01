@@ -224,6 +224,15 @@ RSpec.describe Capybara::DSL do
       end
       expect(Capybara.session_name).to eq(:default)
     end
+
+    it 'should allow a session object' do
+      original_session = Capybara.current_session
+      new_session = Capybara::Session.new(:rack_test, proc {})
+      Capybara.using_session(new_session) do
+        expect(Capybara.current_session).to eq(new_session)
+      end
+      expect(Capybara.current_session).to eq(original_session)
+    end
   end
 
   describe '#session_name' do

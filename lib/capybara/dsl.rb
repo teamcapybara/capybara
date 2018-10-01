@@ -18,8 +18,8 @@ module Capybara
     #
     # Shortcut to working in a different session.
     #
-    def using_session(name, &block)
-      Capybara.using_session(name, &block)
+    def using_session(name_or_session, &block)
+      Capybara.using_session(name_or_session, &block)
     end
 
     # Shortcut to using a different wait time.
