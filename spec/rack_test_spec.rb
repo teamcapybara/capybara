@@ -19,7 +19,12 @@ skipped_tests = %i[
   download
   css
 ]
-Capybara::SpecHelper.run_specs TestSessions::RackTest, 'RackTest', capybara_skip: skipped_tests
+Capybara::SpecHelper.run_specs TestSessions::RackTest, 'RackTest', capybara_skip: skipped_tests do |example|
+  case example.metadata[:full_description]
+  when /has_css\? should support case insensitive :class and :id options/
+    pending "Nokogiri doesn't support case insensitive CSS attribute matchers"
+  end
+end
 
 RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
   context 'with rack test driver' do

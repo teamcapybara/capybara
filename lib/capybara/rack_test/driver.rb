@@ -75,6 +75,10 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
 
   def find_css(selector)
     browser.find(:css, selector)
+  rescue Nokogiri::CSS::SyntaxError
+    raise unless selector.include?(' i]')
+
+    raise ArgumentError, "This driver doesn't support case insensitive attribute matching when using CSS base selectors"
   end
 
   def html

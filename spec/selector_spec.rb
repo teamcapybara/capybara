@@ -148,6 +148,15 @@ RSpec.describe Capybara do
           expect { string.find(:custom_css_selector, 'div', id: XPath.contains('peci')) }
             .to raise_error(ArgumentError, /not supported/)
         end
+
+        it 'accepts Regexp for xpath based selectors' do
+          expect(string.find(:custom_xpath_selector, './/div', id: /peci/)[:id]).to eq '#special'
+          expect(string.find(:custom_xpath_selector, './/div', id: /pEcI/i)[:id]).to eq '#special'
+        end
+
+        it 'accepts Regexp for css based selectors' do
+          expect(string.find(:custom_css_selector, 'div', id: /sp.*al/)[:id]).to eq '#special'
+        end
       end
 
       context 'with :class option' do
@@ -176,6 +185,15 @@ RSpec.describe Capybara do
         it 'errors XPath expression for CSS based selectors' do
           expect { string.find(:custom_css_selector, 'div', class: XPath.contains('random')) }
             .to raise_error(ArgumentError, /not supported/)
+        end
+
+        it 'accepts Regexp for XPath based selectors' do
+          expect(string.find(:custom_xpath_selector, './/div', class: /dom wor/)[:id]).to eq 'random_words'
+          expect(string.find(:custom_xpath_selector, './/div', class: /dOm WoR/i)[:id]).to eq 'random_words'
+        end
+
+        it 'accepts Regexp for CSS base selectors' do
+          expect(string.find(:custom_css_selector, 'div', class: /random/)[:id]).to eq 'random_words'
         end
       end
 
@@ -207,8 +225,12 @@ RSpec.describe Capybara do
           expect(string.find(:field, 'form[my_text_input]')[:id]).to eq 'my_text_input'
         end
 
-        it 'finds by id' do
+        it 'finds by id string' do
           expect(string.find(:field, id: 'my_text_input')[:name]).to eq 'form[my_text_input]'
+        end
+
+        it 'finds by id regexp' do
+          expect(string.find(:field, id: /my_text_inp/)[:name]).to eq 'form[my_text_input]'
         end
 
         it 'finds by name' do

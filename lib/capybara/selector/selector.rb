@@ -446,8 +446,12 @@ module Capybara
       Array(classes).map { |klass| XPath.attr(:class).contains_word(klass) }.reduce(:&)
     end
 
-    def regexp_to_conditions(regexp)
-      RegexpDisassembler.new(regexp).conditions
+    def regexp_to_xpath_conditions(regexp)
+      condition = XPath.current
+      condition = condition.uppercase if regexp.casefold?
+      RegexpDisassembler.new(regexp).substrings.map do |str|
+        condition.contains(str)
+      end.reduce(:&)
     end
   end
 end

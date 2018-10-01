@@ -1,21 +1,11 @@
 # frozen_string_literal: true
 
-require 'xpath'
-
 module Capybara
   class Selector
     class RegexpDisassembler
       def initialize(regexp)
         @regexp = regexp
         @regexp_source = regexp.source
-      end
-
-      def conditions
-        condition = XPath.current
-        condition = condition.uppercase if @regexp.casefold?
-        substrings.map do |str|
-          condition.contains(@regexp.casefold? ? str.upcase : str)
-        end.reduce(:&)
       end
 
       def substrings
@@ -37,7 +27,9 @@ module Capybara
           end
           return [] if source.include?('|') # can't handle alternation here
 
-          source.match(/\A\^?(.*?)\$?\Z/).captures[0].split('.').reject(&:empty?).uniq
+          strs = source.match(/\A\^?(.*?)\$?\Z/).captures[0].split('.').reject(&:empty?).uniq
+          strs = strs.map(&:upcase) if @regexp.casefold?
+          strs
         end
       end
 
