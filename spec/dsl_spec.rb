@@ -9,7 +9,12 @@ end
 
 Capybara::SpecHelper.run_specs TestClass.new, 'DSL', capybara_skip: %i[
   js modals screenshot frames windows send_keys server hover about_scheme psc download css driver
-]
+] do |example|
+  case example.metadata[:full_description]
+  when /has_css\? should support case insensitive :class and :id options/
+    pending "Nokogiri doesn't support case insensitive CSS attribute matchers"
+  end
+end
 
 RSpec.describe Capybara::DSL do
   after do

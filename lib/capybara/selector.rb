@@ -97,7 +97,7 @@ Capybara.add_selector(:link) do
               when true
                 XPath.attr(:href)
               when Regexp
-                XPath.attr(:href)[regexp_to_conditions(href)]
+                XPath.attr(:href)[regexp_to_xpath_conditions(href)]
               else
                 XPath.attr(:href) == href.to_s
               end
@@ -138,7 +138,7 @@ Capybara.add_selector(:link) do
     if (href = options[:href])
       if !href.is_a?(Regexp)
         desc << " with href #{href.inspect}"
-      elsif regexp_to_conditions(href)
+      elsif regexp_to_xpath_conditions(href)
         desc << " with href matching #{href.inspect}"
       end
     end
@@ -147,7 +147,7 @@ Capybara.add_selector(:link) do
   end
 
   describe_node_filters do |href: nil, **|
-    " with href matching #{href.inspect}" if href.is_a?(Regexp) && regexp_to_conditions(href).nil?
+    " with href matching #{href.inspect}" if href.is_a?(Regexp) && regexp_to_xpath_conditions(href).nil?
   end
 end
 
@@ -483,7 +483,7 @@ Capybara.add_selector(:element) do
   expression_filter(:attributes, matcher: /.+/) do |xpath, name, val|
     case val
     when Regexp
-      xpath[XPath.attr(name)[regexp_to_conditions(val)]]
+      xpath[XPath.attr(name)[regexp_to_xpath_conditions(val)]]
     when true
       xpath[XPath.attr(name)]
     when false

@@ -23,6 +23,22 @@ Capybara::SpecHelper.spec '#has_css?' do
     expect(@session).not_to have_css('p.nosuchclass')
   end
 
+  it 'should support :id option' do
+    expect(@session).to have_css('h2', id: 'h2one')
+    expect(@session).to have_css('h2')
+    expect(@session).to have_css('h2', id: /h2o/)
+  end
+
+  it 'should support :class option' do
+    expect(@session).to have_css('li', class: 'guitarist')
+    expect(@session).to have_css('li', class: /guitar/)
+  end
+
+  it 'should support case insensitive :class and :id options' do
+    expect(@session).to have_css('li', class: /UiTaRI/i)
+    expect(@session).to have_css('h2', id: /2ON/i)
+  end
+
   it 'should respect scopes' do
     @session.within "//p[@id='first']" do
       expect(@session).to have_css('a#foo')

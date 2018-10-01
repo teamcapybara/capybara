@@ -40,13 +40,17 @@ Capybara::SpecHelper.spec Capybara::Selector do
   end
 
   describe 'field selectors' do
-    context "with :id option" do
+    context 'with :id option' do
       it 'can find specifically by id' do
         expect(@session.find(:field, id: 'customer_email').value).to eq 'ben@ben.com'
       end
 
       it 'can find by regex' do
         expect(@session.find(:field, id: /ustomer.emai/).value).to eq 'ben@ben.com'
+      end
+
+      it 'can find by case-insensitive id' do
+        expect(@session.find(:field, id: /StOmer.emAI/i).value).to eq 'ben@ben.com'
       end
     end
 

@@ -248,14 +248,13 @@ module Capybara
         when XPath::Expression
           raise ArgumentError, 'XPath expressions are not supported for the :class filter with CSS based selectors'
         when Regexp
-          r = Selector::RegexpDisassembler.new(options[:class]).substrings.map { |str| "[@class*='#{str}']" }.join
-          puts "CSS was #{r}"
-          r
+          strs = Selector::RegexpDisassembler.new(options[:class]).substrings
+          strs.map { |str| "[class*='#{str}'#{' i' if options[:class].casefold?}]" }.join
         else
           classes = Array(options[:class]).group_by { |cl| cl.start_with? '!' }
           (classes[false].to_a.map { |cl| ".#{Capybara::Selector::CSS.escape(cl)}" } +
-           classes[true].to_a.map { |cl| ":not(.#{Capybara::Selector::CSS.escape(cl.slice(1..-1))})" }).join
-         end
+          classes[true].to_a.map { |cl| ":not(.#{Capybara::Selector::CSS.escape(cl.slice(1..-1))})" }).join
+        end
       end
 
       def css_from_id
@@ -263,7 +262,9 @@ module Capybara
         when XPath::Expression
           raise ArgumentError, 'XPath expressions are not supported for the :id filter with CSS based selectors'
         when Regexp
-          Selector::RegexpDisassembler.new(options[:id]).substrings.map { |str| "[@id*='#{str}']" }.join
+          Selector::RegexpDisassembler.new(options[:id]).substrings.map do |str|
+            "[id*='#{str}'#{' i' if options[:id].casefold?}]"
+          end.join
         else
           "##{::Capybara::Selector::CSS.escape(options[:id])}"
         end
@@ -274,9 +275,9 @@ module Capybara
         when XPath::Expression
           XPath.attr(:id)[options[:id]]
         when Regexp
-          XPath.attr(:id)[Selector::RegexpDisassembler.new(options[:id]).conditions]
+          XPath.attr(:id)[regexp_to_xpath_conditions(options[:id])]
         else
-          XPath.attr(:id) == (options[:id])
+          XPath.attr(:id) == options[:id]
         end
       end
 
@@ -285,7 +286,7 @@ module Capybara
         when XPath::Expression
           XPath.attr(:class)[options[:class]]
         when Regexp
-          XPath.attr(:class)[Selector::RegexpDisassembler.new(options[:class]).conditions]
+          XPath.attr(:class)[regexp_to_xpath_conditions(options[:class])]
         else
           Array(options[:class]).map do |klass|
             if klass.start_with?('!')
@@ -340,11 +341,13 @@ module Capybara
 
       def matches_id_filter?(node)
         return true unless use_default_id_filter? && options[:id].is_a?(Regexp)
+
         node[:id] =~ options[:id]
       end
 
       def matches_class_filter?(node)
         return true unless use_default_class_filter? && options[:class].is_a?(Regexp)
+
         node[:class] =~ options[:class]
       end
 
@@ -384,6 +387,14 @@ module Capybara
         text_visible = visible
         text_visible = :all if text_visible == :hidden
         !!node.text(text_visible, normalize_ws: normalize_ws).match(regexp)
+      end
+
+      def regexp_to_xpath_conditions(regexp)
+        condition = XPath.current
+        condition = condition.uppercase if regexp.casefold?
+        Selector::RegexpDisassembler.new(regexp).substrings.map do |str|
+          condition.contains(str)
+        end.reduce(:&)
       end
     end
   end

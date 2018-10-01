@@ -151,6 +151,7 @@ RSpec.describe Capybara do
 
         it 'accepts Regexp for xpath based selectors' do
           expect(string.find(:custom_xpath_selector, './/div', id: /peci/)[:id]).to eq '#special'
+          expect(string.find(:custom_xpath_selector, './/div', id: /pEcI/i)[:id]).to eq '#special'
         end
 
         it 'accepts Regexp for css based selectors' do
@@ -188,6 +189,7 @@ RSpec.describe Capybara do
 
         it 'accepts Regexp for XPath based selectors' do
           expect(string.find(:custom_xpath_selector, './/div', class: /dom wor/)[:id]).to eq 'random_words'
+          expect(string.find(:custom_xpath_selector, './/div', class: /dOm WoR/i)[:id]).to eq 'random_words'
         end
 
         it 'accepts Regexp for CSS base selectors' do
