@@ -263,12 +263,16 @@ private
   end
 
   def clear_browser_state
-    @browser.manage.delete_all_cookies
+    delete_all_cookies
     clear_storage
   rescue Selenium::WebDriver::Error::UnhandledError # rubocop:disable Lint/HandleExceptions
     # delete_all_cookies fails when we've previously gone
     # to about:blank, so we rescue this error and do nothing
     # instead.
+  end
+
+  def delete_all_cookies
+    @browser.manage.delete_all_cookies
   end
 
   def clear_storage
