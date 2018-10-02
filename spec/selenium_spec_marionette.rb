@@ -65,6 +65,8 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumMarionette, 'selenium', cap
     skip 'Broken in FF 63 - https://bugzilla.mozilla.org/show_bug.cgi?id=1487358' if marionette_gte?(63, @session)
   when 'Capybara::Session selenium #click_link can download a file'
     skip 'Need to figure out testing of file downloading on windows platform' if Gem.win_platform?
+  when 'Capybara::Session selenium #reset_session! removes ALL cookies'
+    pending "Geckodriver doesn't provide a way to remove cookies outside the current domain"
   end
 end
 

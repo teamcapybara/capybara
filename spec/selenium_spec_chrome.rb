@@ -112,22 +112,4 @@ RSpec.describe 'Capybara::Session with chrome' do
       expect(Time.parse(extract_results(@session)['datetime'])).to eq datetime
     end
   end
-
-  describe '#reset_session!' do
-    it 'removes all cookies' do
-      @session = TestSessions::Chrome
-      domains = ['localhost', '127.0.0.1']
-      domains.each do |domain|
-        @session.visit("http://#{domain}:#{@session.server.port}/set_cookie")
-        @session.visit("http://#{domain}:#{@session.server.port}/get_cookie")
-        expect(@session).to have_content('test_cookie')
-      end
-      @session.reset_session!
-      domains.each do |domain|
-        @session.visit("http://#{domain}:#{@session.server.port}/get_cookie")
-        expect(@session.body).not_to include('test_cookie')
-      end
-    end
-  end
-
 end

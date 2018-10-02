@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Capybara::SpecHelper.spec '#reset_session!' do
-  it 'removes cookies' do
+  it 'removes cookies from current domain' do
     @session.visit('/set_cookie')
     @session.visit('/get_cookie')
     expect(@session).to have_content('test_cookie')
@@ -9,6 +9,20 @@ Capybara::SpecHelper.spec '#reset_session!' do
     @session.reset_session!
     @session.visit('/get_cookie')
     expect(@session.body).not_to include('test_cookie')
+  end
+
+  it 'removes ALL cookies', requires: [:server] do
+    domains = ['localhost', '127.0.0.1']
+    domains.each do |domain|
+      @session.visit("http://#{domain}:#{@session.server.port}/set_cookie")
+      @session.visit("http://#{domain}:#{@session.server.port}/get_cookie")
+      expect(@session).to have_content('test_cookie')
+    end
+    @session.reset_session!
+    domains.each do |domain|
+      @session.visit("http://#{domain}:#{@session.server.port}/get_cookie")
+      expect(@session.body).not_to include('test_cookie')
+    end
   end
 
   it 'resets current url, host, path' do
