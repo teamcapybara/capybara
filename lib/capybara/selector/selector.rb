@@ -5,6 +5,8 @@
 require 'capybara/selector/filter_set'
 require 'capybara/selector/css'
 require 'capybara/selector/regexp_disassembler'
+require 'capybara/selector/builders/xpath_builder'
+require 'capybara/selector/builders/css_builder'
 
 module Capybara
   #
@@ -395,6 +397,18 @@ module Capybara
       vis.nil? ? fallback : vis
     end
 
+    # @api private
+    def builder
+      case format
+      when :css
+        Capybara::Selector::CSSBuilder
+      when :xpath
+        Capybara::Selector::XPathBuilder
+      else
+        raise NotImplementedError, "No builder exists for selector of type #{format}"
+      end
+    end
+
   private
 
     def enable_aria_label
@@ -444,14 +458,6 @@ module Capybara
 
     def find_by_class_attr(classes)
       Array(classes).map { |klass| XPath.attr(:class).contains_word(klass) }.reduce(:&)
-    end
-
-    def regexp_to_xpath_conditions(regexp)
-      condition = XPath.current
-      condition = condition.uppercase if regexp.casefold?
-      RegexpDisassembler.new(regexp).substrings.map do |str|
-        condition.contains(str)
-      end.reduce(:&)
     end
   end
 end

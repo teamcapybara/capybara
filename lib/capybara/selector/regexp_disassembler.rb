@@ -2,6 +2,7 @@
 
 module Capybara
   class Selector
+    # @api private
     class RegexpDisassembler
       def initialize(regexp)
         @regexp = regexp
