@@ -1,11 +1,11 @@
 # Version 3.9.0
-Release date: unreleased
+Release date: 2018-10-03
 
 ### Added
 
-* Selenium with Chrome removes all cookies at session reset instead of just cookies from current domain
-* Support for Regexp for system :id and :class filters
-* `using_session` now accepts a session object or the name of the session
+* Selenium with Chrome removes all cookies at session reset instead of just cookies from current domain if possible
+* Support for Regexp for system :id and :class filters where possible
+* `using_session` now accepts a session object as well as the name of the session for users who  manually manage sessions
 * The `:field` selector will now find `type = "hidden"` fields if the `type: "hidden"` filter option is provided
 
 # Version 3.8.2
