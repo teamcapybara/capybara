@@ -8,6 +8,7 @@ require 'capybara/server/animation_disabler'
 require 'capybara/server/checker'
 
 module Capybara
+  # @api private
   class Server
     class << self
       def ports
