@@ -13,6 +13,10 @@ module Capybara
       def ports
         @ports ||= {}
       end
+
+      def middlewares
+        @middlewares ||= {}
+      end
     end
 
     attr_reader :app, :port, :host
@@ -85,11 +89,11 @@ module Capybara
   private
 
     def middleware
-      @middleware ||= Middleware.new(app, @reportable_errors, @extra_middleware)
+      Capybara::Server.middlewares[port] ||= Middleware.new(app, @reportable_errors, @extra_middleware)
     end
 
     def port_key
-      Capybara.reuse_server ? app.object_id : middleware.object_id
+      Capybara.reuse_server ? app.object_id : object_id
     end
 
     def pending_requests?

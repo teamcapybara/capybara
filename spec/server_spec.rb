@@ -141,6 +141,13 @@ RSpec.describe Capybara::Server do
         server1.wait_for_pending_requests
       end.to change { done }.from(0).to(2)
       expect(server2.send(:pending_requests?)).to eq(false)
+
+      expect do
+        start_request(server1, 1.0)
+        start_request(server2, 3.0)
+        server2.wait_for_pending_requests
+      end.to change { done }.from(2).to(4)
+      expect(server1.send(:pending_requests?)).to eq(false)
     end
   end
 
