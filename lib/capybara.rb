@@ -393,7 +393,7 @@ module Capybara
       if threadsafe
         Thread.current['capybara_specified_session']
       else
-        @specified_session
+        @specified_session ||= nil
       end
     end
 
