@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# Note: This file uses `sleep` to sync up parts of the tests. This is only implemented like this
+# because of the methods being tested. In tests using Capybara this type of behavior should be implemented
+# using Capybara provided assertions with builtin waiting behavior.
+
 Capybara::SpecHelper.spec '#window_opened_by', requires: [:windows] do
   before do
     @window = @session.current_window

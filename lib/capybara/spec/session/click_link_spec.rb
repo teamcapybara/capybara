@@ -211,7 +211,7 @@ Capybara::SpecHelper.spec '#click_link' do
     download_file = File.join(Capybara.save_path, 'download.csv')
     expect(File).not_to exist(download_file)
     @session.click_link('Download Me')
-    sleep 2
+    sleep 2 # allow time for file to download
     expect(File).to exist(download_file)
     FileUtils.rm_rf download_file
   end

@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# Note: This file uses `sleep` to sync up parts of the tests. This is only implemented like this
+# because of the methods being tested. In tests using Capybara this type of behavior should be implemented
+# using Capybara provided assertions with builtin waiting behavior.
+
 Capybara::SpecHelper.spec 'node' do
   before do
     @session.visit('/with_html')
@@ -478,7 +482,7 @@ Capybara::SpecHelper.spec 'node' do
       expect(@session.find(:css, '#address1_city').value).to eq 'Oceanside'
     end
 
-    it 'should hold modifers at top level' do
+    it 'should hold modifiers at top level' do
       @session.visit('/form')
       @session.find(:css, '#address1_city').send_keys('ocean', :shift, 'side')
       expect(@session.find(:css, '#address1_city').value).to eq 'oceanSIDE'
