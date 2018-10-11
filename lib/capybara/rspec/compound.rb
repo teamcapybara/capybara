@@ -33,16 +33,15 @@ if defined?(::RSpec::Expectations::Version)
           end
         end
 
-        class And < ::RSpec::Matchers::BuiltIn::Compound::And
-        private
-
+        # @api private
+        module Synchronizer
           def match(_expected, actual)
             @evaluator = CapybaraEvaluator.new(actual)
             syncer = sync_element(actual)
             begin
               syncer.synchronize do
                 @evaluator.reset
-                raise ::Capybara::ElementNotFound unless [matcher_1_matches?, matcher_2_matches?].all?
+                raise ::Capybara::ElementNotFound unless synchronized_match?
 
                 true
               end
@@ -62,32 +61,23 @@ if defined?(::RSpec::Expectations::Version)
           end
         end
 
-        class Or < ::RSpec::Matchers::BuiltIn::Compound::Or
+        class And < ::RSpec::Matchers::BuiltIn::Compound::And
+          include Synchronizer
+
         private
 
-          def match(_expected, actual)
-            @evaluator = CapybaraEvaluator.new(actual)
-            syncer = sync_element(actual)
-            begin
-              syncer.synchronize do
-                @evaluator.reset
-                raise ::Capybara::ElementNotFound unless [matcher_1_matches?, matcher_2_matches?].any?
-
-                true
-              end
-            rescue StandardError
-              false
-            end
+          def synchronized_match?
+            [matcher_1_matches?, matcher_2_matches?].all?
           end
+        end
 
-          def sync_element(el)
-            if el.respond_to? :synchronize
-              el
-            elsif el.respond_to? :current_scope
-              el.current_scope
-            else
-              Capybara.string(el)
-            end
+        class Or < ::RSpec::Matchers::BuiltIn::Compound::Or
+          include Synchronizer
+
+        private
+
+          def synchronized_match?
+            [matcher_1_matches?, matcher_2_matches?].any?
           end
         end
       end
