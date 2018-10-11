@@ -16,7 +16,7 @@ module Capybara
 
       def initialize(app)
         @app = app
-        @disable_markup = DISABLE_MARKUP_TEMPLATE % AnimationDisabler.selector_for(Capybara.disable_animation)
+        @disable_markup = format(DISABLE_MARKUP_TEMPLATE, selector: AnimationDisabler.selector_for(Capybara.disable_animation))
       end
 
       def call(env)
@@ -46,7 +46,7 @@ module Capybara
       DISABLE_MARKUP_TEMPLATE = <<~HTML
         <script defer>(typeof jQuery !== 'undefined') && (jQuery.fx.off = true);</script>
         <style>
-           %s {
+           %<selector>s {
              transition: none !important;
              animation-duration: 0s !important;
              animation-delay: 0s !important;
