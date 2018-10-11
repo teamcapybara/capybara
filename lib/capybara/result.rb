@@ -73,28 +73,25 @@ module Capybara
     end
 
     def compare_count
+      count, min, max, between = @query.options.values_at(:count, :minimum, :maximum, :between)
+
       # Only check filters for as many elements as necessary to determine result
-      if (count = @query.options[:count])
-        count = Integer(count)
+      if count && (count = Integer(count))
         return load_up_to(count + 1) <=> count
       end
 
-      if (min = @query.options[:minimum])
-        min = Integer(min)
+      if min && (min = Integer(min))
         return -1 if load_up_to(min) < min
       end
 
-      if (max = @query.options[:maximum])
-        max = Integer(max)
+      if max && (max = Integer(max))
         return 1 if load_up_to(max + 1) > max
       end
 
-      if (between = @query.options[:between])
+      if between
         min, max = between.minmax
         size = load_up_to(max + 1)
-        return 0 if between.include? size
-
-        return size <=> min
+        return between.include?(size) ? 0 : size <=> min
       end
 
       0
