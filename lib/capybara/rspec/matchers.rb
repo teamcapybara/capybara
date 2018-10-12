@@ -25,20 +25,6 @@ module Capybara
 
     private
 
-      def wrap_matches?(actual)
-        yield(wrap(actual))
-      rescue Capybara::ExpectationNotMet => err
-        @failure_message = err.message
-        false
-      end
-
-      def wrap_does_not_match?(actual)
-        yield(wrap(actual))
-      rescue Capybara::ExpectationNotMet => err
-        @failure_message_when_negated = err.message
-        false
-      end
-
       def session_query_args
         if @args.last.is_a? Hash
           @args.last[:session_options] = session_options
@@ -60,13 +46,29 @@ module Capybara
       end
     end
 
-    class HaveSelector < Matcher
+    class WrappedElementMatcher < Matcher
       def matches?(actual)
-        wrap_matches?(actual) { |el| el.assert_selector(*@args, &@filter_block) }
+        element_matches?(wrap(actual))
+      rescue Capybara::ExpectationNotMet => err
+        @failure_message = err.message
+        false
       end
 
       def does_not_match?(actual)
-        wrap_does_not_match?(actual) { |el| el.assert_no_selector(*@args, &@filter_block) }
+        element_does_not_match?(wrap(actual))
+      rescue Capybara::ExpectationNotMet => err
+        @failure_message_when_negated = err.message
+        false
+      end
+    end
+
+    class HaveSelector < WrappedElementMatcher
+      def element_matches?(el)
+        el.assert_selector(*@args, &@filter_block)
+      end
+
+      def element_does_not_match?(el)
+        el.assert_no_selector(*@args, &@filter_block)
       end
 
       def description
@@ -78,9 +80,9 @@ module Capybara
       end
     end
 
-    class HaveAllSelectors < Matcher
-      def matches?(actual)
-        wrap_matches?(actual) { |el| el.assert_all_of_selectors(*@args, &@filter_block) }
+    class HaveAllSelectors < WrappedElementMatcher
+      def element_matches?(el)
+        el.assert_all_of_selectors(*@args, &@filter_block)
       end
 
       def does_not_match?(_actual)
@@ -92,9 +94,9 @@ module Capybara
       end
     end
 
-    class HaveNoSelectors < Matcher
-      def matches?(actual)
-        wrap_matches?(actual) { |el| el.assert_none_of_selectors(*@args, &@filter_block) }
+    class HaveNoSelectors < WrappedElementMatcher
+      def element_matches?(el)
+        el.assert_none_of_selectors(*@args, &@filter_block)
       end
 
       def does_not_match?(_actual)
@@ -107,12 +109,12 @@ module Capybara
     end
 
     class MatchSelector < HaveSelector
-      def matches?(actual)
-        wrap_matches?(actual) { |el| el.assert_matches_selector(*@args, &@filter_block) }
+      def element_matches?(el)
+        el.assert_matches_selector(*@args, &@filter_block)
       end
 
-      def does_not_match?(actual)
-        wrap_does_not_match?(actual) { |el| el.assert_not_matches_selector(*@args, &@filter_block) }
+      def element_does_not_match?(el)
+        el.assert_not_matches_selector(*@args, &@filter_block)
       end
 
       def description
@@ -124,13 +126,13 @@ module Capybara
       end
     end
 
-    class HaveText < Matcher
-      def matches?(actual)
-        wrap_matches?(actual) { |el| el.assert_text(*@args) }
+    class HaveText < WrappedElementMatcher
+      def element_matches?(el)
+        el.assert_text(*@args)
       end
 
-      def does_not_match?(actual)
-        wrap_does_not_match?(actual) { |el| el.assert_no_text(*@args) }
+      def element_does_not_match?(el)
+        el.assert_no_text(*@args)
       end
 
       def description
@@ -148,13 +150,13 @@ module Capybara
       end
     end
 
-    class HaveTitle < Matcher
-      def matches?(actual)
-        wrap_matches?(actual) { |el| el.assert_title(*@args) }
+    class HaveTitle < WrappedElementMatcher
+      def element_matches?(el)
+        el.assert_title(*@args)
       end
 
-      def does_not_match?(actual)
-        wrap_does_not_match?(actual) { |el| el.assert_no_title(*@args) }
+      def element_does_not_match?(el)
+        el.assert_no_title(*@args)
       end
 
       def description
@@ -168,13 +170,13 @@ module Capybara
       end
     end
 
-    class HaveCurrentPath < Matcher
-      def matches?(actual)
-        wrap_matches?(actual) { |el| el.assert_current_path(*@args) }
+    class HaveCurrentPath < WrappedElementMatcher
+      def element_matches?(el)
+        el.assert_current_path(*@args)
       end
 
-      def does_not_match?(actual)
-        wrap_does_not_match?(actual) { |el| el.assert_no_current_path(*@args) }
+      def element_does_not_match?(el)
+        el.assert_no_current_path(*@args)
       end
 
       def description
@@ -217,9 +219,9 @@ module Capybara
       end
     end
 
-    class HaveStyle < Matcher
-      def matches?(actual)
-        wrap_matches?(actual) { |el| el.assert_style(*@args) }
+    class HaveStyle < WrappedElementMatcher
+      def element_matches?(el)
+        el.assert_style(*@args)
       end
 
       def does_not_match?(_actual)

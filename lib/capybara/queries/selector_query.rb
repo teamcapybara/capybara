@@ -61,8 +61,7 @@ module Capybara
         return true if (@resolved_node&.== node) && options[:allow_self]
 
         @applied_filters ||= :system
-        return false unless matches_id_filter?(node) && matches_class_filter?(node)
-        return false unless matches_text_filter?(node) && matches_exact_text_filter?(node) && matches_visible_filter?(node)
+        return false unless matches_system_filters?(node)
 
         @applied_filters = :node
         matches_node_filters?(node) && matches_filter_block?(node)
@@ -290,6 +289,14 @@ module Capybara
 
       def simple_root?(node)
         node.is_a?(::Capybara::Node::Simple) && node.path == '/'
+      end
+
+      def matches_system_filters?(node)
+        matches_id_filter?(node) &&
+          matches_class_filter?(node) &&
+          matches_text_filter?(node) &&
+          matches_exact_text_filter?(node) &&
+          matches_visible_filter?(node)
       end
 
       def matches_id_filter?(node)

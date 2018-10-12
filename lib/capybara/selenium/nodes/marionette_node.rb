@@ -36,16 +36,11 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
     return super if browser_version >= 62.0
 
     # Workaround lack of support for multiple upload by uploading one at a time
-    path_names = value.to_s.empty? ? [] : value
-    Array(path_names).each do |path|
-      unless driver.browser.respond_to?(:upload)
-        if (fd = bridge.file_detector)
-          local_file = fd.call([path])
-          path = upload(local_file) if local_file
-        end
-      end
-      native.send_keys(path)
+    path_names = value.to_s.empty? ? [] : Array(value)
+    if (fd = bridge.file_detector) && !driver.browser.respond_to?(:upload)
+      path_names.map! { |path| upload(fd.call([path])) || path }
     end
+    path_names.each { |path| native.send_keys(path) }
   end
 
   def send_keys(*args)
@@ -101,6 +96,8 @@ private
   end
 
   def upload(local_file)
+    return nil unless local_file
+
     unless File.file?(local_file)
       raise ArgumentError, "You may only upload files: #{local_file.inspect}"
     end

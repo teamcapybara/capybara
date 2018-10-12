@@ -57,23 +57,24 @@ class Capybara::RackTest::Browser
   end
 
   def process(method, path, attributes = {}, env = {})
-    new_uri = URI.parse(path)
-    method.downcase! unless method.is_a? Symbol
-    if path.empty?
-      new_uri.path = request_path
-    else
-      new_uri.path = request_path if path.start_with?('?')
-      new_uri.path = '/' if new_uri.path.empty?
-      new_uri.path = request_path.sub(%r{/[^/]*$}, '/') + new_uri.path unless new_uri.path.start_with?('/')
-    end
-    new_uri.scheme ||= @current_scheme
-    new_uri.host ||= @current_host
-    new_uri.port ||= @current_port unless new_uri.default_port == @current_port
-
+    method = method.downcase
+    new_uri = build_uri(path)
     @current_scheme, @current_host, @current_port = new_uri.select(:scheme, :host, :port)
 
     reset_cache!
     send(method, new_uri.to_s, attributes, env.merge(options[:headers] || {}))
+  end
+
+  def build_uri(path)
+    URI.parse(path).tap do |uri|
+      uri.path = request_path if path.empty? || path.start_with?('?')
+      uri.path = '/' if uri.path.empty?
+      uri.path = request_path.sub(%r{/[^/]*$}, '/') + uri.path unless uri.path.start_with?('/')
+
+      uri.scheme ||= @current_scheme
+      uri.host ||= @current_host
+      uri.port ||= @current_port unless uri.default_port == @current_port
+    end
   end
 
   def current_url

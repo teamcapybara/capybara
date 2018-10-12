@@ -107,33 +107,17 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     navigated = false
     timer = Capybara::Helpers.timer(expire_in: 10)
     begin
-      unless navigated
-        # Only trigger a navigation if we haven't done it already, otherwise it
-        # can trigger an endless series of unload modals
-        clear_browser_state
-        @browser.navigate.to('about:blank')
-      end
+      # Only trigger a navigation if we haven't done it already, otherwise it
+      # can trigger an endless series of unload modals
+      reset_browser_state unless navigated
       navigated = true
-
       # Ensure the page is empty and trigger an UnhandledAlertError for any modals that appear during unload
-      until find_xpath('/html/body/*').empty?
-        raise Capybara::ExpectationNotMet, 'Timed out waiting for Selenium session reset' if timer.expired?
-
-        sleep 0.05
-      end
+      wait_for_empty_page(timer)
     rescue Selenium::WebDriver::Error::UnhandledAlertError, Selenium::WebDriver::Error::UnexpectedAlertOpenError
       # This error is thrown if an unhandled alert is on the page
       # Firefox appears to automatically dismiss this alert, chrome does not
       # We'll try to accept it
-      begin
-        @browser.switch_to.alert.accept
-        sleep 0.25 # allow time for the modal to be handled
-      rescue modal_error
-        # The alert is now gone.
-        # If navigation has not occurred attempt again and accept alert
-        # since FF may have dismissed the alert at first attempt.
-        navigate_with_accept('about:blank') if current_url != 'about:blank'
-      end
+      accept_unhandled_reset_alert
       # try cleaning up the browser again
       retry
     end
@@ -381,6 +365,29 @@ private
       quit if Process.pid == main
       exit @exit_status if @exit_status # Force exit with stored status
     end
+  end
+
+  def reset_browser_state
+    clear_browser_state
+    @browser.navigate.to('about:blank')
+  end
+
+  def wait_for_empty_page(timer)
+    until find_xpath('/html/body/*').empty?
+      raise Capybara::ExpectationNotMet, 'Timed out waiting for Selenium session reset' if timer.expired?
+
+      sleep 0.05
+    end
+  end
+
+  def accept_unhandled_reset_alert
+    @browser.switch_to.alert.accept
+    sleep 0.25 # allow time for the modal to be handled
+  rescue modal_error
+    # The alert is now gone.
+    # If navigation has not occurred attempt again and accept alert
+    # since FF may have dismissed the alert at first attempt.
+    navigate_with_accept('about:blank') if current_url != 'about:blank'
   end
 end
 
