@@ -251,7 +251,7 @@ module Capybara
     def css(*allowed_filters, &block)
       if block
         @format, @expression = :css, block
-        allowed_filters.flatten.each { |ef| expression_filters[ef] = nil }
+        allowed_filters.flatten.each { |ef| expression_filters[ef] = Filters::IdentityExpressionFilter.new(ef) }
       end
       format == :css ? @expression : nil
     end
