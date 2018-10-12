@@ -54,7 +54,23 @@ RSpec.describe Capybara do
       end
 
       Capybara.add_selector :custom_css_selector do
-        css { |selector| selector }
+        css(:name) do |selector, name: nil, **|
+          selector ||= ''
+          selector += "[name='#{name}']" if name
+          selector
+        end
+
+        expression_filter(:placeholder) do |expr, val|
+          expr + "[placeholder='#{val}']"
+        end
+
+        expression_filter(:value) do |expr, val|
+          expr + "[value='#{val}']"
+        end
+
+        expression_filter(:title) do |expr, val|
+          expr + "[title='#{val}']"
+        end
       end
 
       Capybara.add_selector :custom_xpath_selector do
@@ -101,6 +117,19 @@ RSpec.describe Capybara do
         expect(string).to have_selector(:custom_selector, 'bb', count: 1)
         expect(string).to have_selector(:custom_selector, 'bb', not_empty: false, count: 1)
         expect(string).to have_selector(:custom_selector, 'bb', not_empty: :all, count: 2)
+      end
+    end
+
+    describe 'css based selectors' do
+      it "supports filters specified in 'css' definition" do
+        expect(string).to have_selector(:custom_css_selector, 'input', name: 'form[my_text_input]')
+        expect(string).to have_no_selector(:custom_css_selector, 'input', name: 'form[not_my_text_input]')
+      end
+
+      it 'supports explicitly defined expression filters' do
+        expect(string).to have_selector(:custom_css_selector, placeholder: 'my text')
+        expect(string).to have_no_selector(:custom_css_selector, placeholder: 'not my text')
+        expect(string).to have_selector(:custom_css_selector, value: 'click me', title: 'submit button')
       end
     end
 
