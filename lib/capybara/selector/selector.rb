@@ -217,7 +217,7 @@ module Capybara
     # Define a selector by an xpath expression
     #
     # @overload xpath(*expression_filters, &block)
-    #   @param [Array<Symbol>] expression_filters ([])  Names of filters that can be implemented via this expression
+    #   @param [Array<Symbol>] expression_filters ([])  Names of filters that are implemented via this expression, if not specified the names of any keyword parameters in the block will be used
     #   @yield [locator, options]                       The block to use to generate the XPath expression
     #   @yieldparam [String] locator                    The locator string passed to the query
     #   @yieldparam [Hash] options                      The options hash passed to the query
@@ -229,6 +229,7 @@ module Capybara
     def xpath(*allowed_filters, &block)
       if block
         @format, @expression = :xpath, block
+        allowed_filters = parameter_names(block) if allowed_filters.empty?
         allowed_filters.flatten.each { |ef| expression_filters[ef] = Filters::IdentityExpressionFilter.new(ef) }
       end
       format == :xpath ? @expression : nil
@@ -251,6 +252,7 @@ module Capybara
     def css(*allowed_filters, &block)
       if block
         @format, @expression = :css, block
+        allowed_filters = parameter_names(block) if allowed_filters.empty?
         allowed_filters.flatten.each { |ef| expression_filters[ef] = Filters::IdentityExpressionFilter.new(ef) }
       end
       format == :css ? @expression : nil
@@ -458,6 +460,10 @@ module Capybara
 
     def find_by_class_attr(classes)
       Array(classes).map { |klass| XPath.attr(:class).contains_word(klass) }.reduce(:&)
+    end
+
+    def parameter_names(block)
+      block.parameters.select { |(type, _name)| %i[key keyreq].include? type }.map { |(_type, name)| name }
     end
   end
 end

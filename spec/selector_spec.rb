@@ -54,7 +54,7 @@ RSpec.describe Capybara do
       end
 
       Capybara.add_selector :custom_css_selector do
-        css(:name) do |selector, name: nil, **|
+        css(:name, :other_name) do |selector, name: nil, **|
           selector ||= ''
           selector += "[name='#{name}']" if name
           selector
@@ -74,7 +74,7 @@ RSpec.describe Capybara do
       end
 
       Capybara.add_selector :custom_xpath_selector do
-        xpath { |selector| selector }
+        xpath(:valid1, :valid2) { |selector| selector }
       end
     end
 
@@ -120,7 +120,34 @@ RSpec.describe Capybara do
       end
     end
 
-    describe 'css based selectors' do
+    describe 'xpath' do
+      it 'uses filter names passed in' do
+        selector = Capybara::Selector.new :test do
+          xpath(:something, :other) { |_locator| XPath.descendant }
+        end
+
+        expect(selector.expression_filters.keys).to include(:something, :other)
+      end
+
+      it 'gets filter names from block if none passed to xpath method' do
+        selector = Capybara::Selector.new :test do
+          xpath { |_locator, valid3:, valid4: nil| "#{valid3} #{valid4}" }
+        end
+
+        expect(selector.expression_filters.keys).to include(:valid3, :valid4)
+      end
+
+      it 'ignores block parameters if names passed in' do
+        selector = Capybara::Selector.new :test do
+          xpath(:valid1) { |_locator, valid3:, valid4: nil| "#{valid3} #{valid4}" }
+        end
+
+        expect(selector.expression_filters.keys).to include(:valid1)
+        expect(selector.expression_filters.keys).not_to include(:valid3, :valid4)
+      end
+    end
+
+    describe 'css' do
       it "supports filters specified in 'css' definition" do
         expect(string).to have_selector(:custom_css_selector, 'input', name: 'form[my_text_input]')
         expect(string).to have_no_selector(:custom_css_selector, 'input', name: 'form[not_my_text_input]')
@@ -130,6 +157,31 @@ RSpec.describe Capybara do
         expect(string).to have_selector(:custom_css_selector, placeholder: 'my text')
         expect(string).to have_no_selector(:custom_css_selector, placeholder: 'not my text')
         expect(string).to have_selector(:custom_css_selector, value: 'click me', title: 'submit button')
+      end
+
+      it 'uses filter names passed in' do
+        selector = Capybara::Selector.new :text do
+          css(:name, :other_name) { |_locator| '' }
+        end
+
+        expect(selector.expression_filters.keys).to include(:name, :other_name)
+      end
+
+      it 'gets filter names from block if none passed to css method' do
+        selector = Capybara::Selector.new :test do
+          css { |_locator, valid3:, valid4: nil| "#{valid3} #{valid4}" }
+        end
+
+        expect(selector.expression_filters.keys).to include(:valid3, :valid4)
+      end
+
+      it 'ignores block parameters if names passed in' do
+        selector = Capybara::Selector.new :test do
+          css(:valid1) { |_locator, valid3:, valid4: nil| "#{valid3} #{valid4}" }
+        end
+
+        expect(selector.expression_filters.keys).to include(:valid1)
+        expect(selector.expression_filters.keys).not_to include(:valid3, :valid4)
       end
     end
 

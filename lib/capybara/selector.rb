@@ -75,7 +75,7 @@ Capybara.add_selector(:field) do
 end
 
 Capybara.add_selector(:fieldset) do
-  xpath(:legend) do |locator, legend: nil, **|
+  xpath do |locator, legend: nil, **|
     locator_matchers = (XPath.attr(:id) == locator.to_s) | XPath.child(:legend)[XPath.string.n.is(locator.to_s)]
     locator_matchers |= XPath.attr(test_id) == locator if test_id
     xpath = XPath.descendant(:fieldset)
@@ -88,7 +88,7 @@ Capybara.add_selector(:fieldset) do
 end
 
 Capybara.add_selector(:link) do
-  xpath(:title, :alt) do |locator, href: true, alt: nil, title: nil, **|
+  xpath do |locator, href: true, alt: nil, title: nil, **|
     xpath = XPath.descendant(:a)
     xpath = xpath[@href_conditions = builder.attribute_conditions(href: href)]
 
@@ -192,8 +192,8 @@ end
 Capybara.add_selector(:fillable_field) do
   label 'field'
 
-  xpath(:allow_self) do |locator, **options|
-    xpath = XPath.axis(options[:allow_self] ? :"descendant-or-self" : :descendant, :input, :textarea)[
+  xpath do |locator, allow_self: nil, **options|
+    xpath = XPath.axis(allow_self ? :"descendant-or-self" : :descendant, :input, :textarea)[
       !XPath.attr(:type).one_of('submit', 'image', 'radio', 'checkbox', 'hidden', 'file')
     ]
     locate_field(xpath, locator, options)
@@ -223,8 +223,8 @@ end
 Capybara.add_selector(:radio_button) do
   label 'radio button'
 
-  xpath(:allow_self) do |locator, **options|
-    xpath = XPath.axis(options[:allow_self] ? :"descendant-or-self" : :descendant, :input)[
+  xpath do |locator, allow_self: nil, **options|
+    xpath = XPath.axis(allow_self ? :"descendant-or-self" : :descendant, :input)[
       XPath.attr(:type) == 'radio'
     ]
     locate_field(xpath, locator, options)
@@ -241,8 +241,8 @@ Capybara.add_selector(:radio_button) do
 end
 
 Capybara.add_selector(:checkbox) do
-  xpath(:allow_self) do |locator, **options|
-    xpath = XPath.axis(options[:allow_self] ? :"descendant-or-self" : :descendant, :input)[
+  xpath do |locator, allow_self: nil, **options|
+    xpath = XPath.axis(allow_self ? :"descendant-or-self" : :descendant, :input)[
       XPath.attr(:type) == 'checkbox'
     ]
     locate_field(xpath, locator, options)
@@ -379,8 +379,8 @@ end
 
 Capybara.add_selector(:file_field) do
   label 'file field'
-  xpath(:allow_self) do |locator, **options|
-    xpath = XPath.axis(options[:allow_self] ? :"descendant-or-self" : :descendant, :input)[
+  xpath do |locator, allow_self: nil, **options|
+    xpath = XPath.axis(allow_self ? :"descendant-or-self" : :descendant, :input)[
       XPath.attr(:type) == 'file'
     ]
     locate_field(xpath, locator, options)
@@ -411,14 +411,13 @@ Capybara.add_selector(:label) do
   end
 
   node_filter(:for) do |node, field_or_value|
-    if field_or_value.is_a? Capybara::Node::Element
-      if node[:for]
-        field_or_value[:id] == node[:for]
-      else
-        field_or_value.find_xpath('./ancestor::label[1]').include? node.base
-      end
+    # Non element values were handled through the expression filter
+    next true unless field_or_value.is_a? Capybara::Node::Element
+
+    if (for_val = node[:for])
+      field_or_value[:id] == for_val
     else
-      true # Non element values were handled through the expression filter
+      field_or_value.find_xpath('./ancestor::label[1]').include? node.base
     end
   end
 
@@ -431,7 +430,7 @@ Capybara.add_selector(:label) do
 end
 
 Capybara.add_selector(:table) do
-  xpath(:caption) do |locator, caption: nil, **|
+  xpath do |locator, caption: nil, **|
     xpath = XPath.descendant(:table)
     unless locator.nil?
       locator_matchers = (XPath.attr(:id) == locator.to_s) | XPath.descendant(:caption).is(locator.to_s)
@@ -448,15 +447,14 @@ Capybara.add_selector(:table) do
 end
 
 Capybara.add_selector(:frame) do
-  xpath(:name) do |locator, **options|
+  xpath do |locator, name: nil, **|
     xpath = XPath.descendant(:iframe).union(XPath.descendant(:frame))
     unless locator.nil?
       locator_matchers = (XPath.attr(:id) == locator.to_s) | (XPath.attr(:name) == locator.to_s)
       locator_matchers |= XPath.attr(test_id) == locator if test_id
       xpath = xpath[locator_matchers]
     end
-    xpath = expression_filters.keys.inject(xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
-    xpath
+    xpath[find_by_attr(:name, name)]
   end
 
   describe_expression_filters do |name: nil, **|
