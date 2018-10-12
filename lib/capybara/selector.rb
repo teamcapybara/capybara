@@ -64,7 +64,7 @@ Capybara.add_selector(:field) do
 
   describe_expression_filters do |type: nil, **options|
     desc = +''
-    (expression_filters.keys - [:type]).each { |ef| desc << " with #{ef} #{options[ef]}" if options.key?(ef) }
+    (expression_filters.keys & options.keys).each { |ef| desc << " with #{ef} #{options[ef]}" }
     desc << " of type #{type.inspect}" if type
     desc
   end
@@ -77,9 +77,8 @@ end
 Capybara.add_selector(:fieldset) do
   xpath do |locator, legend: nil, **|
     locator_matchers = (XPath.attr(:id) == locator.to_s) | XPath.child(:legend)[XPath.string.n.is(locator.to_s)]
-    locator_matchers |= XPath.attr(test_id) == locator if test_id
-    xpath = XPath.descendant(:fieldset)
-    xpath = xpath[locator_matchers] unless locator.nil?
+    locator_matchers |= XPath.attr(test_id) == locator.to_s if test_id
+    xpath = XPath.descendant(:fieldset)[locator && locator_matchers]
     xpath = xpath[XPath.child(:legend)[XPath.string.n.is(legend)]] if legend
     xpath
   end

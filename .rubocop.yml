@@ -12,6 +12,13 @@ AllCops:
 Metrics/LineLength:
   Description: 'Limit lines to 80 characters.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#80-character-limits'
+  Exclude:
+    - 'spec/**/*'
+    - 'lib/capybara/spec/**/*'
+  IgnoredPatterns:
+    - '\s*# '
+    - '\s*(raise|warn) '
+  Max: 120
   Enabled: false
 
 Metrics/BlockLength:

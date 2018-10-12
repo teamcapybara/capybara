@@ -97,10 +97,7 @@ private
 
   def upload(local_file)
     return nil unless local_file
-
-    unless File.file?(local_file)
-      raise ArgumentError, "You may only upload files: #{local_file.inspect}"
-    end
+    raise ArgumentError, "You may only upload files: #{local_file.inspect}" unless File.file?(local_file)
 
     result = bridge.http.call(:post, "session/#{bridge.session_id}/file", file: Selenium::WebDriver::Zipper.zip_file(local_file))
     result['value']

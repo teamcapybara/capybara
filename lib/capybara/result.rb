@@ -32,7 +32,7 @@ module Capybara
 
     def_delegators :full_results, :size, :length, :last, :values_at, :inspect, :sample
 
-    alias :index :find_index
+    alias index find_index
 
     def each(&block)
       return enum_for(:each) unless block_given?

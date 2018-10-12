@@ -48,9 +48,7 @@ module Capybara
 
       res = @checker.request { |http| http.get('/__identify__') }
 
-      if res.is_a?(Net::HTTPSuccess) || res.is_a?(Net::HTTPRedirection)
-        return res.body == app.object_id.to_s
-      end
+      return res.body == app.object_id.to_s if res.is_a?(Net::HTTPSuccess) || res.is_a?(Net::HTTPRedirection)
     rescue SystemCallError, Net::ReadTimeout, OpenSSL::SSL::SSLError
       false
     end
