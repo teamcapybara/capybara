@@ -148,6 +148,32 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     native.attribute('isContentEditable')
   end
 
+  def clickable?
+    driver.execute_script <<~JS, self
+      var elem = arguments[0],
+          parent = elem,
+          nodes = [];
+      while (parent = parent.parentElement) {
+        nodes.push({ el: parent, left: parent.scrollLeft, top: parent.scrollTop });
+      }
+
+      elem.scrollIntoView();
+      var {top, bottom, left, right} = elem.getBoundingClientRect(),
+          hit = document.elementFromPoint((left+right)/2, (top+bottom)/2);
+      for(;hit; hit = hit.parentElement){
+        if (hit === elem) {
+          break;
+        }
+      };
+
+      nodes.forEach(function({el, left, top}){
+        el.scrollLeft = left;
+        el.scrollTop = top;
+      })
+      return !!hit;
+    JS
+  end
+
   def find_xpath(locator)
     native.find_elements(:xpath, locator).map { |el| self.class.new(driver, el) }
   end

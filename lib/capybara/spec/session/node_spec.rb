@@ -271,6 +271,36 @@ Capybara::SpecHelper.spec 'node' do
     end
   end
 
+  describe '#clickable?' do
+    it 'should extract node clickability', requires: [:css] do
+      @session.visit('obscured')
+      expect(@session.find(:css, '#cover')).to be_clickable
+      expect(@session.find(:css, '#obscured')).not_to be_clickable
+      @session.execute_script("$('#cover').hide()")
+      expect(@session.find(:css, '#obscured')).to be_clickable
+    end
+
+    it 'should work for element offscreen', require: [:js] do
+      @session.visit('obscured')
+      expect(@session.find(:css, '#offscreen')).to be_clickable
+    end
+
+    it 'should not wait', requires: [:js] do
+      @session.visit('obscured')
+      obscured = @session.find(:css, '#obscured')
+      @session.execute_script("setTimeout(function(){ $('#cover').hide()}, 1000)")
+      expect(obscured).not_to be_clickable
+      sleep 1
+      expect(obscured).to be_clickable
+    end
+
+    it 'should be boolean', requires: [:css] do
+      @session.visit('obscured')
+      expect(@session.find(:css, '#cover').clickable?).to be true
+      expect(@session.find(:css, '#obscured').clickable?).to be false
+    end
+  end
+
   describe '#==' do
     it 'preserve object identity' do
       expect(@session.find('//h1') == @session.find('//h1')).to be true # rubocop:disable Lint/UselessComparison

@@ -334,6 +334,10 @@ module Capybara
         synchronize { base.multiple? }
       end
 
+      def clickable?
+        synchronize { base.clickable? }
+      end
+
       ##
       #
       # An XPath expression describing where on the page the element can be found

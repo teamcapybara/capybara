@@ -88,6 +88,10 @@ module Capybara
         raise NotImplementedError
       end
 
+      def clickable?
+        raise NotImplementedError
+      end
+
       def readonly?
         !!self[:readonly]
       end
