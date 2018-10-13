@@ -125,9 +125,9 @@ module Capybara
       # Select this node if is an option element inside a select tag
       #
       # @return [Capybara::Node::Element]  The element
-      def select_option
+      def select_option(wait: nil)
         warn "Attempt to select disabled option: #{value || text}" if disabled?
-        synchronize { base.select_option }
+        synchronize(wait) { base.select_option }
         self
       end
 
@@ -136,8 +136,8 @@ module Capybara
       # Unselect this node if is an option element inside a multiple select tag
       #
       # @return [Capybara::Node::Element]  The element
-      def unselect_option
-        synchronize { base.unselect_option }
+      def unselect_option(wait: nil)
+        synchronize(wait) { base.unselect_option }
         self
       end
 
@@ -152,8 +152,8 @@ module Capybara
       #     @option offset [Integer] x  X coordinate to offset the click location from the top left corner of the element
       #     @option offset [Integer] y  Y coordinate to offset the click location from the top left corner of the element
       # @return [Capybara::Node::Element]  The element
-      def click(*keys, **offset)
-        synchronize { base.click(keys, offset) }
+      def click(*keys, wait: nil, **offset)
+        synchronize(wait) { base.click(keys, offset) }
         self
       end
 
@@ -163,8 +163,8 @@ module Capybara
       #
       # @macro click_modifiers
       # @return [Capybara::Node::Element]  The element
-      def right_click(*keys, **offset)
-        synchronize { base.right_click(keys, offset) }
+      def right_click(*keys, wait: nil, **offset)
+        synchronize(wait) { base.right_click(keys, offset) }
         self
       end
 
@@ -174,8 +174,8 @@ module Capybara
       #
       # @macro click_modifiers
       # @return [Capybara::Node::Element]  The element
-      def double_click(*keys, **offset)
-        synchronize { base.double_click(keys, offset) }
+      def double_click(*keys, wait: nil, **offset)
+        synchronize(wait) { base.double_click(keys, offset) }
         self
       end
 
@@ -332,6 +332,10 @@ module Capybara
       #
       def multiple?
         synchronize { base.multiple? }
+      end
+
+      def clickable?
+        synchronize { base.clickable? }
       end
 
       ##

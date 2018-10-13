@@ -148,6 +148,18 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     native.attribute('isContentEditable')
   end
 
+  def clickable?
+    driver.execute_script <<~JS, self
+      var elem = arguments[0],
+          {top, bottom, left, right} = elem.getBoundingClientRect(),
+          hit = document.elementFromPoint((left+right)/2, (top+bottom)/2);
+      for(;hit; hit = hit.parentElement){
+        if (hit === elem) { return true;}
+      };
+      return false;
+    JS
+  end
+
   def find_xpath(locator)
     native.find_elements(:xpath, locator).map { |el| self.class.new(driver, el) }
   end

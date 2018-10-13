@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <title>with_animation</title>
+    <script src="/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <style>
+      div {
+        width: 400px;
+        height: 400px;
+        position: absolute;
+      }
+      #obscured {
+        z-index: 1;
+        background-color: red;
+      }
+      #cover {
+        z-index: 2;
+        background-color: blue;
+      }
+    </style>
+  </head>
+
+  <body id="with_animation">
+    <div id="obscured">
+      <input id="obscured_input"/>
+    </div>
+    <div id="cover"></div>
+  </body>
+</html>
+

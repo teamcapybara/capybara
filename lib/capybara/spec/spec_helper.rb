@@ -119,6 +119,10 @@ module Capybara
       expect(session).to have_xpath("//pre[@id='results']")
       YAML.load Nokogiri::HTML(session.body).xpath("//pre[@id='results']").first.inner_html.lstrip
     end
+
+    def be_an_invalid_element_error(session)
+      satisfy { |error| session.driver.invalid_element_errors.any? { |e| error.is_a? e } }
+    end
   end
 end
 

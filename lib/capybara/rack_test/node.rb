@@ -102,6 +102,10 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     end
   end
 
+  def clickable?
+    return true
+  end
+
   def path
     native.path
   end

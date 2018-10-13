@@ -271,6 +271,31 @@ Capybara::SpecHelper.spec 'node' do
     end
   end
 
+  describe '#clickable?' do
+    it 'should extract node clickability' do
+      @session.visit('obscured')
+      expect(@session.find(:css, '#cover')).to be_clickable
+      expect(@session.find(:css, '#obscured')).not_to be_clickable
+      @session.execute_script("$('#cover').hide()")
+      expect(@session.find(:css, '#obscured')).to be_clickable
+    end
+
+    it 'should not wait' do
+      @session.visit('obscured')
+      obscured = @session.find(:css, '#obscured')
+      @session.execute_script("setTimeout(function(){ $('#cover').hide()}, 1000)")
+      expect(obscured).not_to be_clickable
+      sleep 1
+      expect(obscured).to be_clickable
+    end
+
+    it 'should be boolean' do
+      @session.visit('obscured')
+      expect(@session.find(:css, '#cover').clickable?).to be true
+      expect(@session.find(:css, '#obscured').clickable?).to be false
+    end
+  end
+
   describe '#==' do
     it 'preserve object identity' do
       expect(@session.find('//h1') == @session.find('//h1')).to be true # rubocop:disable Lint/UselessComparison
@@ -411,6 +436,33 @@ Capybara::SpecHelper.spec 'node' do
       tr = @session.find(:css, '#agent_table tr:first-child').click
       expect(tr).to have_css('label', text: 'Clicked')
     end
+
+    it 'should retry clicking', requires: [:js] do
+      @session.visit('/obscured')
+      obscured = @session.find(:css, '#obscured')
+      @session.execute_script <<~JS
+        setTimeout(function(){ $('#cover').hide(); }, 1000)
+      JS
+      expect { obscured.click }.not_to raise_error
+    end
+
+    it 'should allow to retry longer', requires: [:js] do
+      @session.visit('/obscured')
+      obscured = @session.find(:css, '#obscured')
+      @session.execute_script <<~JS
+        setTimeout(function(){ $('#cover').hide(); }, 3000)
+      JS
+      expect { obscured.click(wait: 3) }.not_to raise_error
+    end
+
+    it 'should not retry clicking when wait is disabled', requires: [:js] do
+      @session.visit('/obscured')
+      obscured = @session.find(:css, '#obscured')
+      @session.execute_script <<~JS
+        setTimeout(function(){ $('#cover').hide(); }, 2000)
+      JS
+      expect { obscured.click(wait: 0) }.to(raise_error { |e| expect(e).to be_an_invalid_element_error(@session) })
+    end
   end
 
   describe '#double_click', requires: [:js] do
@@ -436,6 +488,15 @@ Capybara::SpecHelper.spec 'node' do
       expect(locations[:x].to_f).to be_within(1).of(10)
       expect(locations[:y].to_f).to be_within(1).of(5)
     end
+
+    it 'should retry clicking', requires: [:js] do
+      @session.visit('/obscured')
+      obscured = @session.find(:css, '#obscured')
+      @session.execute_script <<~JS
+        setTimeout(function(){ $('#cover').hide(); }, 1000)
+      JS
+      expect { obscured.double_click }.not_to raise_error
+    end
   end
 
   describe '#right_click', requires: [:js] do
@@ -460,6 +521,15 @@ Capybara::SpecHelper.spec 'node' do
       # to integer/float conversions and rounding
       expect(locations[:x].to_f).to be_within(1).of(10)
       expect(locations[:y].to_f).to be_within(1).of(10)
+    end
+
+    it 'should retry clicking', requires: [:js] do
+      @session.visit('/obscured')
+      obscured = @session.find(:css, '#obscured')
+      @session.execute_script <<~JS
+        setTimeout(function(){ $('#cover').hide(); }, 1000)
+      JS
+      expect { obscured.right_click }.not_to raise_error
     end
   end
 
@@ -669,9 +739,5 @@ Capybara::SpecHelper.spec 'node' do
         expect(e.cause.message).to match(/Your application server raised an error/)
       end)
     end
-  end
-
-  def be_an_invalid_element_error(session)
-    satisfy { |error| session.driver.invalid_element_errors.any? { |e| error.is_a? e } }
   end
 end
