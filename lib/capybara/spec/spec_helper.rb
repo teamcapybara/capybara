@@ -120,6 +120,10 @@ module Capybara
       # YAML.load Nokogiri::HTML(session.body).xpath("//pre[@id='results']").first.inner_html.lstrip
       YAML.load Capybara::HTML(session.body).xpath("//pre[@id='results']").first.inner_html.lstrip
     end
+
+    def be_an_invalid_element_error(session)
+      satisfy { |error| session.driver.invalid_element_errors.any? { |e| error.is_a? e } }
+    end
   end
 end
 
