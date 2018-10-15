@@ -414,7 +414,6 @@ module Capybara
   module RackTest; end
   module Selenium; end
 
-  require 'capybara/xpath_patches'
   require 'capybara/helpers'
   require 'capybara/session'
   require 'capybara/window'
