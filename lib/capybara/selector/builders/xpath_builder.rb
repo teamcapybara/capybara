@@ -33,7 +33,7 @@ module Capybara
               if klass.start_with?('!') && !klass.start_with?('!!!')
                 !XPath.attr(:class).contains_word(klass.slice(1..-1))
               else
-                XPath.attr(:class).contains_word(klass.sub(/^!!/,''))
+                XPath.attr(:class).contains_word(klass.sub(/^!!/, ''))
               end
             end.reduce(:&)
           end

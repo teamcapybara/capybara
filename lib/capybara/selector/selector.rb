@@ -227,12 +227,7 @@ module Capybara
     # @return [#call]                             The block that will be called to generate the XPath expression
     #
     def xpath(*allowed_filters, &block)
-      if block
-        @format, @expression = :xpath, block
-        allowed_filters = parameter_names(block) if allowed_filters.empty?
-        allowed_filters.flatten.each { |ef| expression_filters[ef] = Filters::IdentityExpressionFilter.new(ef) }
-      end
-      format == :xpath ? @expression : nil
+      expression(:xpath, allowed_filters, &block)
     end
 
     ##
@@ -250,12 +245,7 @@ module Capybara
     # @return [#call]                             The block that will be called to generate the CSS selector
     #
     def css(*allowed_filters, &block)
-      if block
-        @format, @expression = :css, block
-        allowed_filters = parameter_names(block) if allowed_filters.empty?
-        allowed_filters.flatten.each { |ef| expression_filters[ef] = Filters::IdentityExpressionFilter.new(ef) }
-      end
-      format == :css ? @expression : nil
+      expression(:css, allowed_filters, &block)
     end
 
     ##
@@ -464,6 +454,15 @@ module Capybara
 
     def parameter_names(block)
       block.parameters.select { |(type, _name)| %i[key keyreq].include? type }.map { |(_type, name)| name }
+    end
+
+    def expression(type, allowed_filters, &block)
+      if block
+        @format, @expression = type, block
+        allowed_filters = parameter_names(block) if allowed_filters.empty?
+        allowed_filters.flatten.each { |ef| expression_filters[ef] = Filters::IdentityExpressionFilter.new(ef) }
+      end
+      format == type ? @expression : nil
     end
   end
 end

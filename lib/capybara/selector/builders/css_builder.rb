@@ -38,7 +38,7 @@ module Capybara
             attribute_conditions(class: classes)
           else
             cls = Array(classes).group_by { |cl| cl.start_with?('!') && !cl.start_with?('!!!') }
-            (cls[false].to_a.map { |cl| ".#{Capybara::Selector::CSS.escape(cl.sub(/^!!/,''))}" } +
+            (cls[false].to_a.map { |cl| ".#{Capybara::Selector::CSS.escape(cl.sub(/^!!/, ''))}" } +
             cls[true].to_a.map { |cl| ":not(.#{Capybara::Selector::CSS.escape(cl.slice(1..-1))})" }).join
           end
         end

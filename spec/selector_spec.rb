@@ -253,7 +253,7 @@ RSpec.describe Capybara do
           expect(string.all(:custom_xpath_selector, XPath.descendant(:div, :p), class: ['!cc', '!dd', 'bb']).size).to eq 1
         end
 
-        it 'handles classes starting with ! by requiring negated negated first', :focus_ do
+        it 'handles classes starting with ! by requiring negated negated first' do
           expect(string.all(:custom_css_selector, 'div, p', class: ['!!!mine']).size).to eq 1
           expect(string.all(:custom_xpath_selector, XPath.descendant(:div, :p), class: ['!!!mine']).size).to eq 1
         end
