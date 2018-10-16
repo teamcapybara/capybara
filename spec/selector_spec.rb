@@ -17,7 +17,7 @@ RSpec.describe Capybara do
                 <p>Yes it is</p>
               </div>
               <p class="bb cc">Some Content</p>
-              <p class="bb dd"></p>
+              <p class="bb dd !mine"></p>
             </div>
             <div id="#special">
             </div>
@@ -251,6 +251,11 @@ RSpec.describe Capybara do
           expect(string.all(:custom_css_selector, 'div, p', class: ['!cc', '!dd', 'bb']).size).to eq 1
           expect(string.all(:custom_xpath_selector, XPath.descendant(:div, :p), class: ['bb', '!cc']).size).to eq 2
           expect(string.all(:custom_xpath_selector, XPath.descendant(:div, :p), class: ['!cc', '!dd', 'bb']).size).to eq 1
+        end
+
+        it 'handles classes starting with ! by requiring negated negated first', :focus_ do
+          expect(string.all(:custom_css_selector, 'div, p', class: ['!!!mine']).size).to eq 1
+          expect(string.all(:custom_xpath_selector, XPath.descendant(:div, :p), class: ['!!!mine']).size).to eq 1
         end
 
         it "works with 'special' characters" do
