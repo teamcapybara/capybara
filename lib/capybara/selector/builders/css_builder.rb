@@ -35,8 +35,7 @@ module Capybara
           when XPath::Expression
             raise ArgumentError, 'XPath expressions are not supported for the :class filter with CSS based selectors'
           when Regexp
-            strs = Selector::RegexpDisassembler.new(classes).substrings
-            strs.map { |str| "[class*='#{str}'#{' i' if classes.casefold?}]" }.join
+            attribute_conditions(class: classes)
           else
             cls = Array(classes).group_by { |cl| cl.start_with? '!' }
             (cls[false].to_a.map { |cl| ".#{Capybara::Selector::CSS.escape(cl)}" } +

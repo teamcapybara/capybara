@@ -26,10 +26,8 @@ module Capybara
 
         def class_conditions(classes)
           case classes
-          when XPath::Expression
-            XPath.attr(:class)[classes]
-          when Regexp
-            XPath.attr(:class)[regexp_to_xpath_conditions(classes)]
+          when XPath::Expression, Regexp
+            attribute_conditions(class: classes)
           else
             Array(classes).map do |klass|
               if klass.start_with?('!')
