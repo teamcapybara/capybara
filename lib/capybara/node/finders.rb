@@ -15,15 +15,30 @@ module Capybara
       #   and defaults to 2 seconds.
       #   @option options [false, Numeric] wait (Capybara.default_max_wait_time) Maximum time to wait for matching element to appear.
       #
-      # +find+ takes the same options as +all+.
-      #
       #     page.find('#foo').find('.bar')
       #     page.find(:xpath, './/div[contains(., "bar")]')
       #     page.find('li', text: 'Quox').click_link('Delete')
       #
       # @param (see Capybara::Node::Finders#all)
       #
-      # @option options [Boolean] match        The matching strategy to use.
+      # @!macro system_filters
+      #   @option options [String, Regexp] text      Only find elements which contain this text or match this regexp
+      #   @option options [String, Boolean] exact_text (Capybara.exact_text) When String the elements contained text must match exactly, when Boolean controls whether the :text option must match exactly
+      #   @option options [Boolean] normalize_ws (Capybara.default_normalize_ws)  Whether the `text`/`exact_text` options are compared against elment text with whitespace normalized or as returned by the driver
+      #   @option options [Boolean, Symbol] visible  Only find elements with the specified visibility:
+      #                                              * true - only finds visible elements.
+      #                                              * false - finds invisible _and_ visible elements.
+      #                                              * :all - same as false; finds visible and invisible elements.
+      #                                              * :hidden - only finds invisible elements.
+      #                                              * :visible - same as true; only finds visible elements.
+      #   @option options [String, Regexp]  id           Only find elements with an id that matches the value passed
+      #   @option options [String, Array<String>, Regexp] class  Only find elements with matching class/classes.
+      #                                            + Absence of a class can be checked by prefixing the class name with !
+      #                                            + If you need to check for existence of a class name that starts with ! then prefix with !!
+      #                                            + ```class:['a', '!b', '!!!c'] # limit to elements with class 'a' and '!c' but not class 'b'```
+      #   @option options [Boolean] exact            Control whether `is` expressions in the given XPath match exactly or partially
+      #   @option options [Integer, false] wait (Capybara.default_max_wait_time)  The time to wait for matching elements to become available
+      # @option options [Symbol] match        The matching strategy to use.
       #
       # @return [Capybara::Node::Element]      The found element
       # @raise  [Capybara::ElementNotFound]    If the element can't be found before time expires
@@ -46,7 +61,7 @@ module Capybara
       #
       # @param (see Capybara::Node::Finders#find)
       #
-      # @!macro waiting_behavior
+      # @macro waiting_behavior
       #
       # @option options [Boolean] match        The matching strategy to use.
       #
@@ -221,21 +236,11 @@ module Capybara
       #
       # @param [Symbol] kind                       Optional selector type (:css, :xpath, :field, etc.) - Defaults to Capybara.default_selector
       # @param [String] locator                    The locator for the specified selector
-      # @option options [String, Regexp] text      Only find elements which contain this text or match this regexp
-      # @option options [String, Boolean] exact_text (Capybara.exact_text) When String the elements contained text must match exactly, when Boolean controls whether the :text option must match exactly
-      # @option options [Boolean] normalize_ws (Capybara.default_normalize_ws)  Whether the `text`/`exact_text` options are compared against elment text with whitespace normalized or as returned by the driver
-      # @option options [Boolean, Symbol] visible  Only find elements with the specified visibility:
-      #                                              * true - only finds visible elements.
-      #                                              * false - finds invisible _and_ visible elements.
-      #                                              * :all - same as false; finds visible and invisible elements.
-      #                                              * :hidden - only finds invisible elements.
-      #                                              * :visible - same as true; only finds visible elements.
+      # @macro system_filters
       # @option options [Integer] count            Exact number of matches that are expected to be found
       # @option options [Integer] maximum          Maximum number of matches that are expected to be found
       # @option options [Integer] minimum          Minimum number of matches that are expected to be found
       # @option options [Range]   between          Number of matches found must be within the given range
-      # @option options [Boolean] exact            Control whether `is` expressions in the given XPath match exactly or partially
-      # @option options [Integer, false] wait (Capybara.default_max_wait_time)  The time to wait for matching elements to become available
       # @overload all([kind = Capybara.default_selector], locator = nil, **options)
       # @overload all([kind = Capybara.default_selector], locator = nil, **options, &filter_block)
       #   @yieldparam element [Capybara::Node::Element]  The element being considered for inclusion in the results
