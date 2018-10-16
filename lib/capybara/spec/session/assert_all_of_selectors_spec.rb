@@ -19,6 +19,10 @@ Capybara::SpecHelper.spec '#assert_all_of_selectors' do
     @session.assert_all_of_selectors('p a#foo', 'h2#h2two', 'h2#h2one')
   end
 
+  it 'should support filter block' do
+    expect { @session.assert_all_of_selectors(:css, 'h2#h2one', 'h2#h2two') { |n| n[:id] == 'h2one' } }.to raise_error(Capybara::ElementNotFound, /custom filter block/)
+  end
+
   context 'should respect scopes' do
     it 'when used with `within`' do
       @session.within "//p[@id='first']" do

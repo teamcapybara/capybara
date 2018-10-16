@@ -139,13 +139,9 @@ module Capybara
       #
       # @overload assert_all_of_selectors([kind = Capybara.default_selector], *locators, **options)
       #
-      def assert_all_of_selectors(*args, wait: nil, **options, &optional_filter_block)
-        wait = session_options.default_max_wait_time if wait.nil?
-        selector = extract_selector(args)
-        synchronize(wait) do
-          args.each do |locator|
-            assert_selector(selector, locator, options, &optional_filter_block)
-          end
+      def assert_all_of_selectors(*args, **options, &optional_filter_block)
+        _verify_multiple(*args, options) do |selector, locator, opts|
+          assert_selector(selector, locator, opts, &optional_filter_block)
         end
       end
 
@@ -164,13 +160,9 @@ module Capybara
       #
       # @overload assert_none_of_selectors([kind = Capybara.default_selector], *locators, **options)
       #
-      def assert_none_of_selectors(*args, wait: nil, **options, &optional_filter_block)
-        wait = session_options.default_max_wait_time if wait.nil?
-        selector = extract_selector(args)
-        synchronize(wait) do
-          args.each do |locator|
-            assert_no_selector(selector, locator, options, &optional_filter_block)
-          end
+      def assert_none_of_selectors(*args, **options, &optional_filter_block)
+        _verify_multiple(*args, options) do |selector, locator, opts|
+          assert_no_selector(selector, locator, opts, &optional_filter_block)
         end
       end
 
@@ -698,6 +690,14 @@ module Capybara
 
       def extract_selector(args)
         args.first.is_a?(Symbol) ? args.shift : session_options.default_selector
+      end
+
+      def _verify_multiple(*args, wait: nil, **options)
+        wait = session_options.default_max_wait_time if wait.nil?
+        selector = extract_selector(args)
+        synchronize(wait) do
+          args.each { |locator| yield(selector, locator, options) }
+        end
       end
 
       def _verify_selector_result(query_args, optional_filter_block)
