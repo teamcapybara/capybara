@@ -1,6 +1,10 @@
 # Version 3.10.0
 Release date: unreleased
 
+### Fixed
+
+* Workaround installation of rspec matcher proxies under jruby by reverting to the old solution not using prepend, so jruby bugs are not hit - Issue #2115
+
 ### Added
 
 * :class filter can now check for class names starting with !
