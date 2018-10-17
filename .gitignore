@@ -9,6 +9,7 @@ tmp
 spec.opts
 .rvmrc
 .ruby-version
+.java-version
 .ruby-gemset
 capybara-*.html
 .yardoc

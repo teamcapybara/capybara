@@ -1,3 +1,16 @@
+# Version 3.10.0
+Release date: unreleased
+
+### Added
+
+* :class filter can now check for class names starting with !
+* Selector `xpath`/`css` expression definitions will get filter names from block parameters if not explicitly provided
+
+### Fixed
+
+* Selector `css` expression definiton declared filters now work again
+* Cleaned up warnings [Yuji Yaginuma]
+
 # Version 3.9.0
 Release date: 2018-10-03
 
