@@ -19,25 +19,22 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
   end
 
   def params(button)
-    params = make_params
-
-    form_element_types = %i[input select textarea]
+    form_element_types = %i[input select textarea button]
     form_elements_xpath = XPath.generate do |xp|
       xpath = xp.descendant(*form_element_types).where(!xp.attr(:form))
       xpath += xp.anywhere(*form_element_types).where(xp.attr(:form) == native[:id]) if native[:id]
       xpath.where(!xp.attr(:disabled))
     end.to_s
 
-    native.xpath(form_elements_xpath).map do |field|
+    form_elements = native.xpath(form_elements_xpath).reject { |el| submitter?(el) && (el != button.native) }
+
+    form_elements.each_with_object(make_params) do |field, params|
       case field.name
-      when 'input' then add_input_param(field, params)
+      when 'input', 'button' then add_input_param(field, params)
       when 'select' then add_select_param(field, params)
       when 'textarea' then add_textarea_param(field, params)
       end
-    end
-    merge_param!(params, button[:name], button[:value] || '') if button[:name]
-
-    params.to_params_hash
+    end.to_params_hash
   end
 
   def submit(button)
@@ -86,8 +83,7 @@ private
         merge_param!(params, field['name'], node.value.to_s)
       end
     elsif %w[submit image].include? field['type']
-      # TODO: identify the click button here (in document order, rather
-      # than leaving until the end of the params)
+      merge_param!(params, field['name'], field['value'].to_s) if field['name']
     elsif field['type'] == 'file'
       if multipart?
         file = if (value = field['value']).to_s.empty?
@@ -118,5 +114,9 @@ private
 
   def add_textarea_param(field, params)
     merge_param!(params, field['name'], field['_capybara_raw_value'].to_s.gsub(/\n/, "\r\n"))
+  end
+
+  def submitter?(el)
+    (%w[submit image].include? el['type']) || (el.name == 'button')
   end
 end

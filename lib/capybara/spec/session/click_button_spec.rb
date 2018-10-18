@@ -376,6 +376,12 @@ Capybara::SpecHelper.spec '#click_button' do
     expect(@results['no_value']).not_to be_nil
   end
 
+  it 'should send button in document order' do
+    @session.click_button('outside_button')
+    @results = extract_results(@session)
+    expect(@results.keys).to eq %w[for_form2 outside_button which_form post_count]
+  end
+
   it 'should not send image buttons that were not clicked' do
     @session.click_button('Click me!')
     @results = extract_results(@session)

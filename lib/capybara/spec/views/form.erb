@@ -470,6 +470,8 @@ New line after and before textarea tag
   <input type="submit" name="form[submit_form1]" value="submit_form1" id="submit_form1"/>
 </form>
 
+<button type="submit" name="form[outside_button]" value="outside_button" form="form2">Outside!</button>
+
 <form id="form2" action="/form" method="post">
   <input type="text" name="form[which_form]" value="form2" id="form_which_form2"/>
   <input type="submit" name="form[unused]" value="unused"/>
@@ -486,8 +488,6 @@ New line after and before textarea tag
 </select>
 
 <input type="submit" name="form[outside_submit]" value="outside_submit" form="form1"/>
-<button type="submit" name="form[outside_button]" value="outside_button" form="form2">Outside!</button>
-
 
 <form id="get-form" action="/form/get?foo=bar" method="get">
   <p>
