@@ -272,7 +272,7 @@ Capybara::SpecHelper.spec 'node' do
   end
 
   describe '#clickable?' do
-    it 'should extract node clickability' do
+    it 'should extract node clickability', requires: [:css] do
       @session.visit('obscured')
       expect(@session.find(:css, '#cover')).to be_clickable
       expect(@session.find(:css, '#obscured')).not_to be_clickable
@@ -280,7 +280,7 @@ Capybara::SpecHelper.spec 'node' do
       expect(@session.find(:css, '#obscured')).to be_clickable
     end
 
-    it 'should not wait' do
+    it 'should not wait', requires: [:js] do
       @session.visit('obscured')
       obscured = @session.find(:css, '#obscured')
       @session.execute_script("setTimeout(function(){ $('#cover').hide()}, 1000)")
@@ -289,7 +289,7 @@ Capybara::SpecHelper.spec 'node' do
       expect(obscured).to be_clickable
     end
 
-    it 'should be boolean' do
+    it 'should be boolean', requires: [:css] do
       @session.visit('obscured')
       expect(@session.find(:css, '#cover').clickable?).to be true
       expect(@session.find(:css, '#obscured').clickable?).to be false

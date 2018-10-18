@@ -83,6 +83,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   def visible?
     string_node.visible?
   end
+  alias clickable? visible?
 
   def checked?
     string_node.checked?
@@ -100,10 +101,6 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     else
       !find_xpath(DISABLED_BY_FIELDSET_XPATH).empty?
     end
-  end
-
-  def clickable?
-    return true
   end
 
   def path
