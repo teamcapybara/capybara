@@ -7,10 +7,6 @@ require 'rspec/shared_spec_matchers'
 
 CHROME_DRIVER = ENV['HEADLESS'] ? :selenium_chrome_headless : :selenium_chrome
 
-# if ENV['HEADLESS'] && ENV['TRAVIS']
-#   Selenium::WebDriver::Chrome.path='/usr/bin/google-chrome-beta'
-# end
-
 Capybara.register_driver :selenium_chrome do |app|
   driver = Capybara::Selenium::Driver.new(app, browser: :chrome)
   driver.browser.download_path = Capybara.save_path
@@ -19,8 +15,8 @@ end
 
 Capybara.register_driver :selenium_chrome_headless do |app|
   browser_options = ::Selenium::WebDriver::Chrome::Options.new
-  browser_options.args << '--headless'
-  browser_options.args << '--disable-gpu' if Gem.win_platform?
+  browser_options.headless!
+  browser_options.add_option(:w3c, !!ENV['W3C'])
   driver = Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
   driver.browser.download_path = Capybara.save_path
   driver
@@ -31,7 +27,7 @@ Capybara.register_driver :selenium_chrome_clear_storage do |app|
     browser: :chrome,
     options: ::Selenium::WebDriver::Chrome::Options.new
   }
-  chrome_options[:options].args << 'headless' if ENV['HEADLESS']
+  chrome_options[:options].headless! if ENV['HEADLESS']
   Capybara::Selenium::Driver.new(app, chrome_options.merge(clear_local_storage: true, clear_session_storage: true))
 end
 

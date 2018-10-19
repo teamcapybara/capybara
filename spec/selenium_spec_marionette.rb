@@ -6,8 +6,7 @@ require 'shared_selenium_session'
 require 'rspec/shared_spec_matchers'
 
 browser_options = ::Selenium::WebDriver::Firefox::Options.new
-browser_options.args << '--headless' if ENV['HEADLESS']
-browser_options.add_preference 'dom.file.createInChild', true
+browser_options.headless! if ENV['HEADLESS']
 # browser_options.add_option("log", {"level": "trace"})
 
 browser_options.profile = Selenium::WebDriver::Firefox::Profile.new.tap do |profile|
@@ -21,7 +20,6 @@ Capybara.register_driver :selenium_marionette do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
-    desired_capabilities: { marionette: true, 'moz:webdriverClick': true },
     options: browser_options,
     # Get a trace level log from geckodriver
     # :driver_opts => { args: ['-vv'] }
@@ -32,7 +30,6 @@ Capybara.register_driver :selenium_marionette_clear_storage do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
-    desired_capabilities: { marionette: true },
     clear_local_storage: true,
     clear_session_storage: true,
     options: browser_options
