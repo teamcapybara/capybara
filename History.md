@@ -1,10 +1,6 @@
 # Version 3.10.0
 Release date: unreleased
 
-### Fixed
-
-* Workaround installation of rspec matcher proxies under jruby by reverting to the old solution not using prepend, so jruby bugs are not hit - Issue #2115
-
 ### Added
 
 * :class filter can now check for class names starting with !
@@ -14,6 +10,7 @@ Release date: unreleased
 
 * Selector `css` expression definiton declared filters now work again
 * Cleaned up warnings [Yuji Yaginuma]
+* Workaround installation of rspec matcher proxies under jruby by reverting to the old solution not using prepend, so jruby bugs are not hit - Issue #2115
 
 # Version 3.9.0
 Release date: 2018-10-03

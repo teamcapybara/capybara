@@ -121,12 +121,12 @@ RSpec.describe 'capybara/rspec' do
           end
         end
 
-        it "can be called with `not_to`" do
+        it 'can be called with `not_to`' do
           # This test is for a bug in jruby where `super` isn't defined correctly - https://github.com/jruby/jruby/issues/4678
           # Reported in https://github.com/teamcapybara/capybara/issues/2115
           @test_class_instance.instance_eval do
             expect do
-              expect(true).not_to only_match_matcher(false)
+              expect(true).not_to only_match_matcher(false) # rubocop:disable RSpec/ExpectActual
             end.not_to raise_error
           end
         end
