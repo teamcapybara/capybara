@@ -111,6 +111,26 @@ RSpec.describe 'capybara/rspec' do
           expect(@test_class_instance.find(:css, 'span.number').text.to_i).to @test_class_instance.within(1).of(41)
         end
       end
+
+      context 'when `match_when_negated` is not defined in a matcher' do
+        before do
+          RSpec::Matchers.define :only_match_matcher do |expected|
+            match do |actual|
+              !(actual ^ expected)
+            end
+          end
+        end
+
+        it "can be called with `not_to`" do
+          # This test is for a bug in jruby where `super` isn't defined correctly - https://github.com/jruby/jruby/issues/4678
+          # Reported in https://github.com/teamcapybara/capybara/issues/2115
+          @test_class_instance.instance_eval do
+            expect do
+              expect(true).not_to only_match_matcher(false)
+            end.not_to raise_error
+          end
+        end
+      end
     end
 
     it 'should not include Capybara' do

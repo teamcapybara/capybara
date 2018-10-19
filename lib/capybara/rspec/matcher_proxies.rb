@@ -19,43 +19,68 @@ module Capybara
     end
   end
 
-  module DSLRSpecProxyInstaller
-    module ClassMethods
-      def included(base)
-        if defined?(::RSpec::Matchers)
-          base.include(::Capybara::RSpecMatcherProxies) if base.include?(::RSpec::Matchers)
+  if RUBY_ENGINE == "jruby"
+    module DSL
+      class <<self
+        remove_method :included
+
+        def included(base)
+          warn "including Capybara::DSL in the global scope is not recommended!" if base == Object
+
+          if defined?(::RSpec::Matchers) && base.include?(::RSpec::Matchers)
+            base.send(:include, ::Capybara::RSpecMatcherProxies)
+          end
+
+          super
         end
-        super
+      end
+    end
+  else
+    module DSLRSpecProxyInstaller
+      module ClassMethods
+        def included(base)
+          if defined?(::RSpec::Matchers)
+            base.include(::Capybara::RSpecMatcherProxies) if base.include?(::RSpec::Matchers)
+          end
+          super
+        end
+      end
+
+      def self.prepended(base)
+        class <<base
+          prepend ClassMethods
+        end
       end
     end
 
-    def self.prepended(base)
-      class <<base
-        prepend ClassMethods
+    module RSpecMatcherProxyInstaller
+      module ClassMethods
+        def included(base)
+          base.include(::Capybara::RSpecMatcherProxies) if base.include?(::Capybara::DSL)
+          super
+        end
+      end
+
+      def self.prepended(base)
+        class <<base
+          prepend ClassMethods
+        end
       end
     end
+
+    DSL.prepend ::Capybara::DSLRSpecProxyInstaller
   end
-
-  module RSpecMatcherProxyInstaller
-    module ClassMethods
-      def included(base)
-        base.include(::Capybara::RSpecMatcherProxies) if base.include?(::Capybara::DSL)
-        super
-      end
-    end
-
-    def self.prepended(base)
-      class <<base
-        prepend ClassMethods
-      end
-    end
-  end
-
-  DSL.prepend ::Capybara::DSLRSpecProxyInstaller
 end
 
 if defined?(::RSpec::Matchers)
   module ::RSpec::Matchers
-    prepend ::Capybara::RSpecMatcherProxyInstaller
+    if RUBY_ENGINE == "jruby"
+      def self.included(base)
+        base.send(:include, ::Capybara::RSpecMatcherProxies) if base.include?(::Capybara::DSL)
+        super
+      end
+    else
+      prepend ::Capybara::RSpecMatcherProxyInstaller
+    end
   end
 end
