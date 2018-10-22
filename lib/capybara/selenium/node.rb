@@ -151,12 +151,26 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def clickable?
     driver.execute_script <<~JS, self
       var elem = arguments[0],
-          {top, bottom, left, right} = elem.getBoundingClientRect(),
+          parent = elem,
+          nodes = [];
+      while (parent = parent.parentElement) {
+        nodes.push({ el: parent, left: parent.scrollLeft, top: parent.scrollTop });
+      }
+
+      elem.scrollIntoView();
+      var {top, bottom, left, right} = elem.getBoundingClientRect(),
           hit = document.elementFromPoint((left+right)/2, (top+bottom)/2);
       for(;hit; hit = hit.parentElement){
-        if (hit === elem) { return true;}
+        if (hit === elem) {
+          break;
+        }
       };
-      return false;
+
+      nodes.forEach(function({el, left, top}){
+        el.scrollLeft = left;
+        el.scrollTop = top;
+      })
+      return !!hit;
     JS
   end
 

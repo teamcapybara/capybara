@@ -280,6 +280,11 @@ Capybara::SpecHelper.spec 'node' do
       expect(@session.find(:css, '#obscured')).to be_clickable
     end
 
+    it 'should work for element offscreen', require: [:js] do
+      @session.visit('obscured')
+      expect(@session.find(:css, '#offscreen')).to be_clickable
+    end
+
     it 'should not wait', requires: [:js] do
       @session.visit('obscured')
       obscured = @session.find(:css, '#obscured')
