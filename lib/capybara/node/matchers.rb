@@ -194,6 +194,7 @@ module Capybara
             end
           end
           raise Capybara::ExpectationNotMet, res.join(' or ') if res
+
           true
         end
       end

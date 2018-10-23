@@ -77,27 +77,32 @@ private
   end
 
   def add_input_param(field, params)
-    if %w[radio checkbox].include? field['type']
-      if field['checked']
-        node = Capybara::RackTest::Node.new(driver, field)
-        merge_param!(params, field['name'], node.value.to_s)
-      end
-    elsif %w[submit image].include? field['type']
-      merge_param!(params, field['name'], field['value'].to_s) if field['name']
-    elsif field['type'] == 'file'
+    name, value = field['name'].to_s, field['value'].to_s
+    return if name.empty?
+
+    value = case field['type']
+    when 'radio', 'checkbox'
+      return unless field['checked']
+
+      Capybara::RackTest::Node.new(driver, field).value.to_s
+    when 'file'
       if multipart?
-        file = if (value = field['value']).to_s.empty?
-          NilUploadedFile.new
-        else
-          mime_info = MiniMime.lookup_by_filename(value)
-          Rack::Test::UploadedFile.new(value, mime_info&.content_type&.to_s)
-        end
-        merge_param!(params, field['name'], file)
+        file_to_upload(value)
       else
-        merge_param!(params, field['name'], File.basename(field['value'].to_s))
+        File.basename(value)
       end
     else
-      merge_param!(params, field['name'], field['value'].to_s)
+      value
+    end
+    merge_param!(params, name, value)
+  end
+
+  def file_to_upload(filename)
+    if filename.empty?
+      NilUploadedFile.new
+    else
+      mime_info = MiniMime.lookup_by_filename(filename)
+      Rack::Test::UploadedFile.new(filename, mime_info&.content_type&.to_s)
     end
   end
 
