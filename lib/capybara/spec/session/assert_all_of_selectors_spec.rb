@@ -113,3 +113,28 @@ Capybara::SpecHelper.spec '#assert_none_of_selectors' do
     end
   end
 end
+
+Capybara::SpecHelper.spec '#assert_any_of_selectors' do
+  before do
+    @session.visit('/with_html')
+  end
+
+  it 'should be true if any of the given selectors are on the page' do
+    @session.assert_any_of_selectors(:css, 'a#foo', 'h2#h2three')
+    @session.assert_any_of_selectors(:css, 'h2#h2three', 'a#foo')
+  end
+
+  it 'should be false if none of the given selectors are on the page' do
+    expect { @session.assert_any_of_selectors(:css, 'h2#h2three', 'h4#h4four') }.to raise_error(Capybara::ElementNotFound)
+  end
+
+  it 'should use default selector' do
+    Capybara.default_selector = :css
+    expect { @session.assert_any_of_selectors('h2#h2three', 'h5#h5five') }.to raise_error(Capybara::ElementNotFound)
+    @session.assert_any_of_selectors('p a#foo', 'h2#h2two', 'h2#h2one')
+  end
+
+  it 'should support filter block' do
+    expect { @session.assert_any_of_selectors(:css, 'h2#h2one', 'h2#h2two') { |_n| false } }.to raise_error(Capybara::ElementNotFound, /custom filter block/)
+  end
+end

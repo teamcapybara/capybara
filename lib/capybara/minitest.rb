@@ -87,7 +87,7 @@ module Capybara
       #   see {Capybara::Node::Matchers#assert_style}
 
       %w[assert_selector assert_no_selector
-         assert_all_of_selectors assert_none_of_selectors
+         assert_all_of_selectors assert_none_of_selectors assert_any_of_selectors
          assert_matches_selector assert_not_matches_selector
          assert_style].each do |assertion_name|
         class_eval <<-ASSERTION, __FILE__, __LINE__ + 1

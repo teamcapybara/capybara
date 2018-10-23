@@ -108,6 +108,20 @@ module Capybara
       end
     end
 
+    class HaveAnySelectors < WrappedElementMatcher
+      def element_matches?(el)
+        el.assert_any_of_selectors(*@args, &@filter_block)
+      end
+
+      def does_not_match?(_actual)
+        el.assert_none_of_selectors(*@args, &@filter_block)
+      end
+
+      def description
+        'have any selectors'
+      end
+    end
+
     class MatchSelector < HaveSelector
       def element_matches?(el)
         el.assert_matches_selector(*@args, &@filter_block)
@@ -275,6 +289,12 @@ module Capybara
     # See {Capybara::Node::Matcher#assert_none_of_selectors}
     def have_none_of_selectors(*args, &optional_filter_block)
       HaveNoSelectors.new(*args, &optional_filter_block)
+    end
+
+    # RSpec matcher for whether the element(s) matching any of a group of selectors exist
+    # See {Capybara::Node::Matcher#assert_any_of_selectors}
+    def have_any_of_selectors(*args, &optional_filter_block)
+      HaveAnySelectors.new(*args, &optional_filter_block)
     end
 
     # RSpec matcher for whether the current element matches a given selector

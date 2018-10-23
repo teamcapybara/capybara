@@ -49,7 +49,7 @@ module Capybara
       has_no_table? has_table? unselect has_select? has_no_select?
       has_selector? has_no_selector? click_on has_no_checked_field?
       has_no_unchecked_field? query assert_selector assert_no_selector
-      assert_all_of_selectors assert_none_of_selectors
+      assert_all_of_selectors assert_none_of_selectors assert_any_of_selectors
       refute_selector assert_text assert_no_text
     ].freeze
     # @api private

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Capybara::SpecHelper.spec '#have_all_selectors' do
+Capybara::SpecHelper.spec '#have_all_of_selectors' do
   before do
     @session.visit('/with_html')
   end

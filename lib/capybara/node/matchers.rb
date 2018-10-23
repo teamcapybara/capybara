@@ -166,6 +166,38 @@ module Capybara
         end
       end
 
+      # Asserts that any of the provided selectors are present on the given page
+      # or descendants of the current node.  If options are provided, the assertion
+      # will check that each locator is present with those options as well (other than :wait).
+      #
+      #   page.assert_any_of_selectors(:custom, 'Tom', 'Joe', visible: all)
+      #   page.assert_any_of_selectors(:css, '#my_div', 'a.not_clicked')
+      #
+      # It accepts all options that {Capybara::Node::Finders#all} accepts,
+      # such as :text and :visible.
+      #
+      # The :wait option applies to all of the selectors as a group, so any of the locators must be present
+      # within :wait (Defaults to Capybara.default_max_wait_time) seconds.
+      #
+      # @overload assert_any_of_selectors([kind = Capybara.default_selector], *locators, **options)
+      #
+      def assert_any_of_selectors(*args, wait: nil, **options, &optional_filter_block)
+        wait = session_options.default_max_wait_time if wait.nil?
+        selector = extract_selector(args)
+        synchronize(wait) do
+          res = args.map do |locator|
+            begin
+              assert_selector(selector, locator, options, &optional_filter_block)
+              break nil
+            rescue Capybara::ExpectationNotMet => e
+              e.message
+            end
+          end
+          raise Capybara::ExpectationNotMet, res.join(' or ') if res
+          true
+        end
+      end
+
       ##
       #
       # Asserts that a given selector is not on the page or a descendant of the current node.

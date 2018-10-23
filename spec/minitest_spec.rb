@@ -105,6 +105,10 @@ class MinitestTest < Minitest::Test
     assert_none_of_selectors(:css, 'input#not_on_page', 'input#also_not_on_page')
   end
 
+  def test_assert_any_of_selectors
+    assert_any_of_selectors(:css, 'input#not_on_page', 'select#form_other_title')
+  end
+
   def test_assert_matches_selector
     assert_matches_selector(find(:field, 'customer_email'), :field, 'customer_email')
     assert_not_matches_selector(find(:select, 'form_title'), :field, 'customer_email')
@@ -144,6 +148,6 @@ RSpec.describe 'capybara/minitest' do
     reporter.start
     MinitestTest.run reporter, {}
     reporter.report
-    expect(output.string).to include('19 runs, 49 assertions, 0 failures, 0 errors, 1 skips')
+    expect(output.string).to include('20 runs, 50 assertions, 0 failures, 0 errors, 1 skips')
   end
 end

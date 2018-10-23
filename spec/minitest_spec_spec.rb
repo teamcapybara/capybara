@@ -98,6 +98,10 @@ class MinitestSpecTest < Minitest::Spec
     page.must_have_none_of_selectors(:css, 'input#not_on_page', 'input#also_not_on_page')
   end
 
+  it 'supports any_of_selectors expectations' do
+    page.must_have_any_of_selectors(:css, 'select#form_other_title', 'input#not_on_page')
+  end
+
   it 'supports match_selector expectations' do
     find(:field, 'customer_email').must_match_selector(:field, 'customer_email')
     find(:select, 'form_title').wont_match_selector(:field, 'customer_email')
@@ -140,7 +144,7 @@ RSpec.describe 'capybara/minitest/spec' do
     reporter.start
     MinitestSpecTest.run reporter, {}
     reporter.report
-    expect(output.string).to include('19 runs, 41 assertions, 1 failures, 0 errors, 1 skips')
+    expect(output.string).to include('20 runs, 42 assertions, 1 failures, 0 errors, 1 skips')
     # Make sure error messages are displayed
     expect(output.string).to include('expected to find select box "non_existing_form_title" but there were no matches')
   end

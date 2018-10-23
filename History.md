@@ -5,6 +5,7 @@ Release date: unreleased
 
 * :class filter can now check for class names starting with !
 * Selector `xpath`/`css` expression definitions will get filter names from block parameters if not explicitly provided
+* `any_of_selectors` assertions and matchers to complement `all_of_selectors` and `none_of_selectors`
 
 ### Fixed
 
