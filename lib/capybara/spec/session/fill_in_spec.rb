@@ -69,11 +69,26 @@ Capybara::SpecHelper.spec '#fill_in' do
       expect(Time.parse(results).strftime('%r')).to eq time.strftime('%r')
     end
 
+    it 'should fill in a time input with seconds' do
+      time = Time.new(2018, 3, 9, 15, 26, 19)
+      @session.fill_in('form_time_with_seconds', with: time)
+      @session.click_button('awesome')
+      results = extract_results(@session)['time_with_seconds']
+      expect(Time.parse(results).strftime('%r')).to eq time.strftime('%r')
+    end
+
     it 'should fill in a datetime input' do
       dt = Time.new(2018, 3, 13, 9, 53)
       @session.fill_in('form_datetime', with: dt)
       @session.click_button('awesome')
       expect(Time.parse(extract_results(@session)['datetime'])).to eq dt
+    end
+
+    it 'should fill in a datetime input with seconds' do
+      dt = Time.new(2018, 3, 13, 9, 53, 13)
+      @session.fill_in('form_datetime_with_seconds', with: dt)
+      @session.click_button('awesome')
+      expect(Time.parse(extract_results(@session)['datetime_with_seconds'])).to eq dt
     end
   end
 

@@ -59,11 +59,11 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       when 'file'
         set_file(value)
       when 'date'
-        set_date(value)
+        set_date(value, options)
       when 'time'
-        set_time(value)
+        set_time(value, options)
       when 'datetime-local'
-        set_datetime_local(value)
+        set_datetime_local(value, options)
       else
         set_text(value, options)
       end
@@ -259,28 +259,42 @@ private
     end
   end
 
-  def set_date(value) # rubocop:disable Naming/AccessorMethodName
+  def set_date(value, as_keys: false, **)
     value = SettableValue.new(value)
     return set_text(value) unless value.dateable?
+    return set_as_keystrokes(value, :date) if as_keys
 
-    # TODO: this would be better if locale can be detected and correct keystrokes sent
     update_value_js(value.to_date_str)
   end
 
-  def set_time(value) # rubocop:disable Naming/AccessorMethodName
+  def set_time(value, as_keys: false, **)
     value = SettableValue.new(value)
     return set_text(value) unless value.timeable?
+    return set_as_keystrokes(value, :time) if as_keys
 
-    # TODO: this would be better if locale can be detected and correct keystrokes sent
     update_value_js(value.to_time_str)
   end
 
-  def set_datetime_local(value) # rubocop:disable Naming/AccessorMethodName
+  def set_datetime_local(value, as_keys: false, **)
     value = SettableValue.new(value)
     return set_text(value) unless value.timeable?
+    return set_as_keystrokes(value, :datetime) if as_keys
 
-    # TODO: this would be better if locale can be detected and correct keystrokes sent
     update_value_js(value.to_datetime_str)
+  end
+
+  def set_as_keystrokes(val, type)
+    send_keys(keystrokes_for_datetime(val, type))
+  end
+
+  def locale
+    driver.execute_script(<<~JS).to_sym.downcase
+      return (window.navigator && (
+        (window.navigator.languages && window.navigator.languages[0]) ||
+        window.navigator.language ||
+        window.navigator.userLanguage
+      ));
+    JS
   end
 
   def update_value_js(value)
@@ -357,6 +371,35 @@ private
     end
   end
 
+  def keystrokes_for_datetime(dt, type)
+    format = LOCALE_KEYSTROKES[locale][type]
+    if format.is_a? String
+      dt.strftime(format)
+    else
+      format.call(dt, self)
+    end
+  end
+
+  LOCALE_KEYSTROKES = {
+    'en-us': {
+      datetime: lambda { |dt, node|
+        if node[:step].empty?
+          dt.strftime '%m%d%Y%t%I%M%p'
+        else
+          dt.strftime '%m%d%Y%t%I%M%S%p'
+        end
+      },
+      time: lambda { |dt, node|
+        if node[:step].empty?
+          dt.strftime '%I%M%p'
+        else
+          dt.strftime '%I%M%S%p'
+        end
+      },
+      date: '%m%d%Y'
+    }
+  }.freeze
+
   # SettableValue encapsulates time/date field formatting
   class SettableValue
     attr_reader :value
@@ -382,11 +425,15 @@ private
     end
 
     def to_time_str
-      value.to_time.strftime('%H:%M')
+      value.to_time.strftime('%H:%M:%S')
     end
 
     def to_datetime_str
-      value.to_time.strftime('%Y-%m-%dT%H:%M')
+      value.to_time.strftime('%Y-%m-%dT%H:%M:%S')
+    end
+
+    def strftime(format)
+      value.strftime format
     end
   end
   private_constant :SettableValue

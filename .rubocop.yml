@@ -70,6 +70,7 @@ Naming/UncommunicativeMethodParamName:
     - 'x'
     - 'y'
     - 'on'
+    - 'dt'
 
 Style/ParallelAssignment:
   Enabled: false

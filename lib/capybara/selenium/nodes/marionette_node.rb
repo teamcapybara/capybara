@@ -67,6 +67,12 @@ private
     super
   end
 
+  def set_as_keystrokes(val, type)
+    # send_keys doesn't work for datetime widgets in FF - use Actions API
+    click(x: 5, y: 5)
+    _send_keys(keystrokes_for_datetime(val, type)).perform
+  end
+
   def _send_keys(keys, actions = browser_action, down_keys = ModifierKeysStack.new)
     case keys
     when :control, :left_control, :right_control,
