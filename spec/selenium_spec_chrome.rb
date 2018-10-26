@@ -5,29 +5,23 @@ require 'selenium-webdriver'
 require 'shared_selenium_session'
 require 'rspec/shared_spec_matchers'
 
-CHROME_DRIVER = ENV['HEADLESS'] ? :selenium_chrome_headless : :selenium_chrome
+CHROME_DRIVER = :selenium_chrome
+
+browser_options = ::Selenium::WebDriver::Chrome::Options.new
+browser_options.headless! if ENV['HEADLESS']
+browser_options.add_option(:w3c, !!ENV['W3C'])
 
 Capybara.register_driver :selenium_chrome do |app|
-  driver = Capybara::Selenium::Driver.new(app, browser: :chrome)
-  driver.browser.download_path = Capybara.save_path
-  driver
-end
-
-Capybara.register_driver :selenium_chrome_headless do |app|
-  browser_options = ::Selenium::WebDriver::Chrome::Options.new
-  browser_options.headless!
-  browser_options.add_option(:w3c, !!ENV['W3C'])
-  driver = Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
-  driver.browser.download_path = Capybara.save_path
-  driver
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options).tap do |driver|
+    driver.browser.download_path = Capybara.save_path
+  end
 end
 
 Capybara.register_driver :selenium_chrome_clear_storage do |app|
   chrome_options = {
     browser: :chrome,
-    options: ::Selenium::WebDriver::Chrome::Options.new
+    options: browser_options
   }
-  chrome_options[:options].headless! if ENV['HEADLESS']
   Capybara::Selenium::Driver.new(app, chrome_options.merge(clear_local_storage: true, clear_session_storage: true))
 end
 
