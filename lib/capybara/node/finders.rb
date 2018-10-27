@@ -37,7 +37,6 @@ module Capybara
       #                                            + If you need to check for existence of a class name that starts with ! then prefix with !!
       #                                            + ```class:['a', '!b', '!!!c'] # limit to elements with class 'a' and '!c' but not class 'b'```
       #   @option options [Boolean] exact            Control whether `is` expressions in the given XPath match exactly or partially
-      #   @option options [Integer, false] wait (Capybara.default_max_wait_time)  The time to wait for matching elements to become available
       # @option options [Symbol] match        The matching strategy to use.
       #
       # @return [Capybara::Node::Element]      The found element

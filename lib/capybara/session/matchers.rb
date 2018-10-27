@@ -6,7 +6,7 @@ module Capybara
     # Asserts that the page has the given path.
     # By default, if passed a full url this will compare against the full url,
     # if passed a path only the path+query portion will be compared, if passed a regexp
-    # the comparison will depend on the :url option
+    # the comparison will depend on the :url option (path+query by default)
     #
     # @!macro current_path_query_params
     #   @overload $0(string, **options)
