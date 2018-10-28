@@ -9,7 +9,7 @@ module Capybara
       # is not found.
       #
       # @!macro waiting_behavior
-      #   If the driver is capable of executing JavaScript, +$0+ will wait for a set amount of time
+      #   If the driver is capable of executing JavaScript, this method will wait for a set amount of time
       #   and continuously retry finding the element until either the element is found or the time
       #   expires. The length of time +find+ will wait is controlled through {Capybara.default_max_wait_time}
       #   and defaults to 2 seconds.
