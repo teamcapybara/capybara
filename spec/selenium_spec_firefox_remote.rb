@@ -71,6 +71,8 @@ Capybara::SpecHelper.run_specs TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVE
     pending "FF < 62 doesn't support setting all files at once" if marionette_lt?(62, @session)
   when 'Capybara::Session selenium_firefox_remote #reset_session! removes ALL cookies'
     pending "Geckodriver doesn't provide a way to remove cookies outside the current domain"
+  when /#accept_confirm should work with nested modals$/
+    pending 'Broken in FF 63 - https://bugzilla.mozilla.org/show_bug.cgi?id=1487358' if marionette_gte?(63, @session)
   end
 end
 
