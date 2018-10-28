@@ -118,10 +118,10 @@ module Capybara
       #   @option options [String, Regexp] with   Value of field to match on
       #   @option options [String] type           Type of field to match on
       #   @option options [Boolean] multiple      Match fields that can have multiple values?
-      #   @option options [String] id             Match fields that match the id attribute
+      #   @option options [String, Regexp] id             Match fields that match the id attribute
       #   @option options [String] name           Match fields that match the name attribute
       #   @option options [String] placeholder    Match fields that match the placeholder attribute
-      #   @option options [String, Array<String>] Match fields that match the class(es) passed
+      #   @option options [String, Array<String>, Regexp] class Match fields that match the class(es) passed
       # @return [Capybara::Node::Element]   The found element
       #
 
@@ -139,10 +139,10 @@ module Capybara
       #   @macro waiting_behavior
       #
       #   @option options [String,Regexp,nil] href        Value to match against the links href, if nil finds link placeholders (<a> elements with no href attribute)
-      #   @option options [String] id                 Match links with the id provided
+      #   @option options [String, Regexp] id                 Match links with the id provided
       #   @option options [String] title              Match links with the title provided
       #   @option options [String] alt                Match links with a contained img element whose alt matches
-      #   @option options [String, Array<String>] class    Match links that match the class(es) provided
+      #   @option options [String, Array<String>, Regexp] class    Match links that match the class(es) provided
       # @return [Capybara::Node::Element]   The found element
       #
       def find_link(locator = nil, **options, &optional_filter_block)
@@ -167,10 +167,10 @@ module Capybara
       #                                                       * true - only finds a disabled button
       #                                                       * false - only finds an enabled button
       #                                                       * :all - finds either an enabled or disabled button
-      #   @option options [String] id                 Match buttons with the id provided
+      #   @option options [String, Regexp] id                 Match buttons with the id provided
       #   @option options [String] title              Match buttons with the title provided
       #   @option options [String] value              Match buttons with the value provided
-      #   @option options [String, Array<String>] class    Match buttons that match the class(es) provided
+      #   @option options [String, Array<String>, Regexp] class    Match buttons that match the class(es) provided
       # @return [Capybara::Node::Element]   The found element
       #
       def find_button(locator = nil, **options, &optional_filter_block)
@@ -275,7 +275,7 @@ module Capybara
       # element is found, or `nil` if the provided count options allow for empty results.
       #
       # @overload first([kind], locator, options)
-      #   @param [:css, :xpath] kind                 The type of selector
+      #   @param [Symbol] kind                       The type of selector
       #   @param [String] locator                    The selector
       #   @param [Hash] options                      Additional options; see {#all}
       # @return [Capybara::Node::Element]            The found element or nil
