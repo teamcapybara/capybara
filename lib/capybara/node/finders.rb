@@ -15,9 +15,9 @@ module Capybara
       #   and defaults to 2 seconds.
       #   @option options [false, Numeric] wait (Capybara.default_max_wait_time) Maximum time to wait for matching element to appear.
       #
-      #     page.find('#foo').find('.bar')
-      #     page.find(:xpath, './/div[contains(., "bar")]')
-      #     page.find('li', text: 'Quox').click_link('Delete')
+      #  page.find('#foo').find('.bar')
+      #  page.find(:xpath, './/div[contains(., "bar")]')
+      #  page.find('li', text: 'Quox').click_link('Delete')
       #
       # @param (see Capybara::Node::Finders#all)
       #
