@@ -3,19 +3,20 @@
 module Capybara
   module Node
     module Actions
-      ##
-      #
-      # Finds a button or link and clicks it.  See {Capybara::Node::Actions#click_button} and
-      # {Capybara::Node::Actions#click_link} for what locator will match against for each type of element
       # @!macro waiting_behavior
       #   If the driver is capable of executing JavaScript, this method will wait for a set amount of time
       #   and continuously retry finding the element until either the element is found or the time
       #   expires. The length of time +find+ will wait is controlled through {Capybara.default_max_wait_time}
       #
       #   @option options [false, Numeric] wait (Capybara.default_max_wait_time) Maximum time to wait for matching element to appear.
+
+      ##
       #
-      # @overload click_link_or_button([locator], options)
+      # Finds a button or link and clicks it.  See {Capybara::Node::Actions#click_button} and
+      # {Capybara::Node::Actions#click_link} for what locator will match against for each type of element
       #
+      # @overload click_link_or_button([locator], **options)
+      #   @macro waiting_behavior
       #   @param [String] locator      See {Capybara::Node::Actions#click_button} and {Capybara::Node::Actions#click_link}
       #
       # @return [Capybara::Node::Element]  The element clicked
@@ -30,9 +31,8 @@ module Capybara
       # Finds a link by id, Capybara.test_id attribute, text or title and clicks it. Also looks at image
       # alt text inside the link.
       #
-      # @macro waiting_behavior
-      #
-      # @overload click_link([locator], options)
+      # @overload click_link([locator], **options)
+      #   @macro waiting_behavior
       #   @param [String] locator         text, id, Capybara.test_id attribute, title or nested image's alt attribute
       #   @param options                  See {Capybara::Node::Finders#find_link}
       #
@@ -48,9 +48,8 @@ module Capybara
       # \<button> element. All buttons can be found by their id, Capybara.test_id attribute, value, or title. \<button> elements can also be found
       # by their text content, and image \<input> elements by their alt attribute
       #
-      # @macro waiting_behavior
-      #
       # @overload click_button([locator], **options)
+      #   @macro waiting_behavior
       #   @param [String] locator      Which button to find
       #   @param options     See {Capybara::Node::Finders#find_button}
       # @return [Capybara::Node::Element]  The element clicked
