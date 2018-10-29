@@ -62,7 +62,7 @@ module Capybara
       #
       # @macro waiting_behavior
       #
-      # @option options [Boolean] match        The matching strategy to use.
+      # @option options [Symbol] match        The matching strategy to use.
       #
       # @return [Capybara::Node::Element]      The found element
       # @raise  [Capybara::ElementNotFound]    If the element can't be found before time expires
@@ -88,7 +88,7 @@ module Capybara
       #
       # @macro waiting_behavior
       #
-      # @option options [Boolean] match        The matching strategy to use.
+      # @option options [Symbol] match        The matching strategy to use.
       #
       # @return [Capybara::Node::Element]      The found element
       # @raise  [Capybara::ElementNotFound]    If the element can't be found before time expires
