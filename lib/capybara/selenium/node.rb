@@ -181,7 +181,9 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
         when 1
           '' # index not necessary when only one matching element
         else
-          "[#{siblings.index(node) + 1}]"
+          idx = siblings.index(node)
+          # Element may not be found in the siblings if it has gone away
+          idx.nil? ? '[ERROR]' : "[#{idx + 1}]"
         end
       end
       result.push selector
