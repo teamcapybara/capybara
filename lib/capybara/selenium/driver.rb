@@ -162,11 +162,11 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     sleep 0.1 # work around for https://code.google.com/p/selenium/issues/detail?id=7405
   end
 
-  def get_screen_resolution_height
+  def screen_height
     browser.execute('return screen.height')
   end
 
-  def get_screen_resolution_width
+  def screen_width
     browser.execute('return screen.width')
   end
 
