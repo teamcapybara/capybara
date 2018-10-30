@@ -39,10 +39,29 @@ Capybara::SpecHelper.spec '#has_css?' do
     expect(@session).to have_css('h2', id: /2ON/i)
   end
 
-  it 'should respect scopes' do
-    @session.within "//p[@id='first']" do
-      expect(@session).to have_css('a#foo')
-      expect(@session).not_to have_css('a#red')
+  context 'when scoped' do
+    it 'should look in the scope' do
+      @session.within "//p[@id='first']" do
+        expect(@session).to have_css('a#foo')
+        expect(@session).not_to have_css('a#red')
+      end
+    end
+
+    it 'should be able to generate an error message if the scope is a sibling', :focus_ do
+      el = @session.find(:css, '#first')
+      @session.within el.sibling(:css, '#second') do
+        expect {
+          expect(@session).to have_css('a#not_on_page')
+        }.to raise_error /there were no matches/
+      end
+    end
+
+    it 'should be able to generate an error message if the scope is a sibling from XPath', :focus_ do
+      el = @session.find(:css, '#first').find(:xpath, './following-sibling::*[1]') do
+        expect {
+          expect(el).to have_css('a#not_on_page')
+        }.to raise_error /there were no matches/
+      end
     end
   end
 
