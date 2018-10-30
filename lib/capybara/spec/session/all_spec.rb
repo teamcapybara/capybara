@@ -56,6 +56,11 @@ Capybara::SpecHelper.spec '#all' do
       expect(@session.all(:xpath, '//h1').first.text).to eq('This is a test')
       expect(@session.all(:xpath, "//input[@id='test_field']").first.value).to eq('monkey')
     end
+
+    it 'should use alternated regex for :id' do
+      expect(@session.all(:xpath, './/h2', id: /h2/).unfiltered_size).to eq 3
+      expect(@session.all(:xpath, './/h2', id: /h2(one|two)/).unfiltered_size).to eq 2
+    end
   end
 
   context 'with css as default selector' do

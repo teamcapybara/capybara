@@ -47,7 +47,7 @@ RSpec.describe Capybara::Selector::RegexpDisassembler do
       /abc[a-z]/ => %w[abc],
       /abc[a-z]def[0-9]g/ => %w[abc def g],
       /[0-9]abc/ => %w[abc],
-      /[0-9]+/ => %w[],
+      /[0-9]+/ => [],
       /abc[0-9&&[^7]]/ => %w[abc]
     )
   end
@@ -88,11 +88,47 @@ RSpec.describe Capybara::Selector::RegexpDisassembler do
     )
   end
 
-  it 'handles alternation' do
-    verify_strings(
+  it 'ignores alternation for #substrings' do
+    {
       /abc|def/ => [],
       /ab(?:c|d)/ => %w[ab],
-      /ab(c|d)ef/ => %w[ab ef]
+      /ab(c|d|e)fg/ => %w[ab fg],
+      /ab?(c|d)fg/ => %w[a fg],
+      /ab(c|d)ef/ => %w[ab ef],
+      /ab(cd?|ef)g/ => %w[ab g],
+      /ab(cd|ef*)g/ => %w[ab g],
+      /ab|cd*/ => [],
+      /cd(?:ef|gh)|xyz/ => [],
+      /(cd(?:ef|gh)|xyz)/ => [],
+      /cd(ef|gh)+/ => %w[cd],
+      /cd(ef|gh)?/ => %w[cd],
+      /cd(ef|gh)?ij/ => %w[cd ij],
+      /cd(ef|gh)+ij/ => %w[cd ij],
+      /cd(ef|gh){2}ij/ => %w[cd ij],
+      /(cd(ef|g*))/ => %w[cd]
+    }.each do |regexp, expected|
+      expect(Capybara::Selector::RegexpDisassembler.new(regexp).substrings).to eq expected
+    end
+  end
+
+  it 'handles alternation for #options' do
+    verify_alternated_strings(
+      /abc|def/ => [%w[abc],%w[def]],
+      /ab(?:c|d)/ => [%w[abc],%w[abd]],
+      /ab(c|d|e)fg/ => [%w[abcfg],%w[abdfg],%w[abefg]],
+      /ab?(c|d)fg/ => [%w[a cfg], %w[a dfg]],
+      /ab(c|d)ef/ => [%w[abcef], %w[abdef]],
+      /ab(cd?|ef)g/ => [%w[abc g], %w[abefg]],
+      /ab(cd|ef*)g/ => [%w[abcdg], %w[abe g]],
+      /ab|cd*/ => [%w[ab], %w[c]],
+      /cd(?:ef|gh)|xyz/ => [%w[cdef],%w[cdgh],%w[xyz]],
+      /(cd(?:ef|gh)|xyz)/ => [%w[cdef],%w[cdgh],%w[xyz]],
+      /cd(ef|gh)+/ => [%w[cdef], %w[cdgh]],
+      /cd(ef|gh)?/ => [%w[cd]],
+      /cd(ef|gh)?ij/ => [%w[cd ij]],
+      /cd(ef|gh)+ij/ => [%w[cdef ij], %w[cdgh ij]],
+      /cd(ef|gh){2}ij/ => [%w[cdefefij], %w[cdefghij], %w[cdghefij], %w[cdghghij]],
+      /(cd(ef|g*))/ => [%w[cd]]
     )
   end
 
@@ -151,6 +187,14 @@ RSpec.describe Capybara::Selector::RegexpDisassembler do
   def verify_strings(hsh)
     hsh.each do |regexp, expected|
       expect(Capybara::Selector::RegexpDisassembler.new(regexp).substrings).to eq expected
+    end
+    verify_alternated_strings(hsh, wrap: true)
+  end
+
+  def verify_alternated_strings(hsh, wrap: false)
+    hsh.each do |regexp, expected|
+      expected = [expected] if wrap
+      expect(Capybara::Selector::RegexpDisassembler.new(regexp).alternated_substrings).to eq expected
     end
   end
 end
