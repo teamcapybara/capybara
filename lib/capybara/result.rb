@@ -16,6 +16,8 @@ module Capybara
   # * first()
   # * last()
   # * empty?()
+  # * values_at()
+  # * sample()
   #
   # @see Capybara::Node::Element
   #
