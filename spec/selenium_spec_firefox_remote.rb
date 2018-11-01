@@ -34,11 +34,11 @@ Capybara.register_driver :selenium_firefox_remote do |app|
   ensure_selenium_running!
 
   url = "http://#{selenium_host}:#{selenium_port}/wd/hub"
-  caps = Selenium::WebDriver::Remote::Capabilities.firefox
+  browser_options = ::Selenium::WebDriver::Firefox::Options.new
 
   Capybara::Selenium::Driver.new app,
                                  browser: :remote,
-                                 desired_capabilities: caps,
+                                 options: browser_options,
                                  url: url
 end
 
