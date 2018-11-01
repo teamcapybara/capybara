@@ -47,7 +47,7 @@ Capybara::SpecHelper.spec '#has_css?' do
       end
     end
 
-    it 'should be able to generate an error message if the scope is a sibling', :focus_ do
+    it 'should be able to generate an error message if the scope is a sibling' do
       el = @session.find(:css, '#first')
       @session.within el.sibling(:css, '#second') do
         expect {
@@ -56,7 +56,7 @@ Capybara::SpecHelper.spec '#has_css?' do
       end
     end
 
-    it 'should be able to generate an error message if the scope is a sibling from XPath', :focus_ do
+    it 'should be able to generate an error message if the scope is a sibling from XPath' do
       el = @session.find(:css, '#first').find(:xpath, './following-sibling::*[1]') do
         expect {
           expect(el).to have_css('a#not_on_page')

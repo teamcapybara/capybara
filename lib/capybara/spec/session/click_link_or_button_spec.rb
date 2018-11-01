@@ -110,4 +110,20 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
     link = @session.find(:link, 'Blank Anchor')
     expect(@session.click_link_or_button('Blank Anchor')).to eq link
   end
+
+  context 'with enable_aria_label' do
+    it 'should click on link' do
+      @session.visit('/with_html')
+      expect do
+        @session.click_link_or_button('Go to simple', enable_aria_label: true)
+      end.not_to raise_error
+    end
+
+    it 'should click on button' do
+      @session.visit('/form')
+      expect do
+        @session.click_link_or_button('Aria button', enable_aria_label: true)
+      end.not_to raise_error
+    end
+  end
 end
