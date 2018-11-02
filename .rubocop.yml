@@ -15,11 +15,11 @@ Metrics/LineLength:
   Exclude:
     - 'spec/**/*'
     - 'lib/capybara/spec/**/*'
+    - 'lib/capybara/selector.rb'
   IgnoredPatterns:
     - '\s*# '
     - '\s*(raise|warn) '
   Max: 120
-  Enabled: false
 
 Metrics/BlockLength:
   Exclude:

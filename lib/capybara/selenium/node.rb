@@ -170,22 +170,9 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       selector = node[:tagName]
       if node[:namespaceURI] != default_ns
         selector = XPath.child.where((XPath.local_name == selector) & (XPath.namespace_uri == node[:namespaceURI])).to_s
-        selector
       end
 
-      if parent
-        siblings = parent.find_xpath(selector)
-        selector += case siblings.size
-        when 0
-          '[ERROR]' # IE doesn't support full XPath (namespace-uri, etc)
-        when 1
-          '' # index not necessary when only one matching element
-        else
-          idx = siblings.index(node)
-          # Element may not be found in the siblings if it has gone away
-          idx.nil? ? '[ERROR]' : "[#{idx + 1}]"
-        end
-      end
+      selector += sibling_index(parent, node, selector) if parent
       result.push selector
     end
 
@@ -202,6 +189,20 @@ protected
   end
 
 private
+
+  def sibling_index(parent, node, selector)
+    siblings = parent.find_xpath(selector)
+    case siblings.size
+    when 0
+      '[ERROR]' # IE doesn't support full XPath (namespace-uri, etc)
+    when 1
+      '' # index not necessary when only one matching element
+    else
+      idx = siblings.index(node)
+      # Element may not be found in the siblings if it has gone away
+      idx.nil? ? '[ERROR]' : "[#{idx + 1}]"
+    end
+  end
 
   def boolean_attr(val)
     val && (val != 'false')

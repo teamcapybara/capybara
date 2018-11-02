@@ -819,7 +819,9 @@ module Capybara
     end
 
     def prepare_path(path, extension)
-      File.expand_path(path || default_fn(extension), config.save_path).tap { |p_path| FileUtils.mkdir_p(File.dirname(p_path)) }
+      File.expand_path(path || default_fn(extension), config.save_path).tap do |p_path|
+        FileUtils.mkdir_p(File.dirname(p_path))
+      end
     end
 
     def default_fn(extension)

@@ -9,8 +9,9 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
     super
   rescue ::Selenium::WebDriver::Error::ElementNotInteractableError
     if tag_name == 'tr'
-      warn 'You are attempting to click a table row which has issues in geckodriver/marionette - see https://github.com/mozilla/geckodriver/issues/1228. ' \
-           'Your test should probably be clicking on a table cell like a user would. Clicking the first cell in the row instead.'
+      warn 'You are attempting to click a table row which has issues in geckodriver/marionette - '\
+           'see https://github.com/mozilla/geckodriver/issues/1228. Your test should probably be '\
+           'clicking on a table cell like a user would. Clicking the first cell in the row instead.'
       return find_css('th:first-child,td:first-child')[0].click(keys, options)
     end
     raise
@@ -26,7 +27,8 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
     if %w[option optgroup].include? tag_name
       find_xpath('parent::*[self::optgroup or self::select]')[0].disabled?
     else
-      !find_xpath('parent::fieldset[@disabled] | ancestor::*[not(self::legend) or preceding-sibling::legend][parent::fieldset[@disabled]]').empty?
+      !find_xpath(DISABLED_BY_FIELDSET_XPATH).empty?
+      # !find_xpath('parent::fieldset[@disabled] | ancestor::*[not(self::legend) or preceding-sibling::legend][parent::fieldset[@disabled]]').empty?
     end
   end
 
@@ -99,13 +101,26 @@ private
     return nil unless local_file
     raise ArgumentError, "You may only upload files: #{local_file.inspect}" unless File.file?(local_file)
 
-    result = bridge.http.call(:post, "session/#{bridge.session_id}/file", file: Selenium::WebDriver::Zipper.zip_file(local_file))
-    result['value']
+    file = ::Selenium::WebDriver::Zipper.zip_file(local_file)
+    bridge.http.call(:post, "session/#{bridge.session_id}/file", file: file)['value']
   end
 
   def browser_version
     driver.browser.capabilities[:browser_version].to_f
   end
+
+  DISABLED_BY_FIELDSET_XPATH = XPath.generate do |x|
+    x.parent(:fieldset)[
+      x.attr(:disabled)
+    ] + x.ancestor[
+      ~x.self(:legned) |
+      x.preceding_sibling(:legend)
+    ][
+      x.parent(:fieldset)[
+        x.attr(:disabled)
+      ]
+    ]
+  end.to_s.freeze
 
   class ModifierKeysStack
     def initialize

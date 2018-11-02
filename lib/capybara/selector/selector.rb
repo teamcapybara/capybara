@@ -430,13 +430,17 @@ module Capybara
     def describe_all_expression_filters(**opts)
       expression_filters.map do |ef_name, ef|
         if ef.matcher?
-          opts.keys.map do |key|
-            " with #{ef_name}[#{key} => #{opts[key]}]" if ef.handles_option?(key) && !::Capybara::Queries::SelectorQuery::VALID_KEYS.include?(key)
-          end.join
+          handled_custom_keys(ef, opts.keys).map { |key| " with #{ef_name}[#{key} => #{opts[key]}]" }.join
         elsif opts.key?(ef_name)
           " with #{ef_name} #{opts[ef_name]}"
         end
       end.join
+    end
+
+    def handled_custom_keys(filter, keys)
+      keys.select do |key|
+        filter.handles_option?(key) && !::Capybara::Queries::SelectorQuery::VALID_KEYS.include?(key)
+      end
     end
 
     def find_by_attr(attribute, value)

@@ -104,10 +104,11 @@ module Capybara
         return false if (tag_name == 'input') && (native[:type] == 'hidden')
 
         if check_ancestors
-          !find_xpath("boolean(./ancestor-or-self::*[contains(@style, 'display:none') or contains(@style, 'display: none') or @hidden or name()='script' or name()='head'])")
+          !find_xpath(VISIBILITY_XPATH)
+          # !find_xpath("boolean(./ancestor-or-self::*[contains(@style, 'display:none') or contains(@style, 'display: none') or @hidden or name()='script' or name()='head'])")
         else
           # No need for an xpath if only checking the current element
-          !(native.has_attribute?('hidden') || (native[:style] =~ /display:\s?none/) || %w[script head].include?(tag_name))
+          !(native.key?('hidden') || (native[:style] =~ /display:\s?none/) || %w[script head].include?(tag_name))
         end
       end
 
@@ -185,6 +186,14 @@ module Capybara
 
         option[:value] || option.content
       end
+
+      VISIBILITY_XPATH = XPath.generate do |x|
+        x.ancestor_or_self[
+          x.attr(:style)[x.contains('display:none') | x.contains('display: none')] |
+          x.attr(:hidden) |
+          x.qname.one_of('script', 'head')
+        ].boolean
+      end.to_s.freeze
     end
   end
 end

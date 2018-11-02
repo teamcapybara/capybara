@@ -21,11 +21,11 @@ module Capybara
       end
 
       S = '\u{80}-\u{D7FF}\u{E000}-\u{FFFD}\u{10000}-\u{10FFFF}'
-      H = /[0-9a-fA-F]/
-      UNICODE  = /\\#{H}{1,6}[ \t\r\n\f]?/
-      NONASCII = /[#{S}]/
-      ESCAPE   = /#{UNICODE}|\\[ -~#{S}]/
-      NMSTART = /[_a-zA-Z]|#{NONASCII}|#{ESCAPE}/
+      H = /[0-9a-fA-F]/.freeze
+      UNICODE  = /\\#{H}{1,6}[ \t\r\n\f]?/.freeze
+      NONASCII = /[#{S}]/.freeze
+      ESCAPE   = /#{UNICODE}|\\[ -~#{S}]/.freeze
+      NMSTART = /[_a-zA-Z]|#{NONASCII}|#{ESCAPE}/.freeze
 
       class Splitter
         def split(css)

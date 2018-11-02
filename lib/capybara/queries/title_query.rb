@@ -8,7 +8,7 @@ module Capybara
         @expected_title = expected_title.is_a?(Regexp) ? expected_title : expected_title.to_s
         @options = options
         super(@options)
-        @search_regexp = Capybara::Helpers.to_regexp(@expected_title, all_whitespace: true, exact: options.fetch(:exact, false))
+        @search_regexp = Helpers.to_regexp(@expected_title, all_whitespace: true, exact: options.fetch(:exact, false))
         assert_valid_keys
       end
 

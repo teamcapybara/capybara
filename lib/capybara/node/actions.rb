@@ -322,7 +322,8 @@ module Capybara
       rescue StandardError # rubocop:disable Lint/HandleExceptions swallow extra errors
       end
 
-      def _check_with_label(selector, checked, locator, allow_label_click: session_options.automatic_label_click, **options)
+      def _check_with_label(selector, checked, locator,
+                            allow_label_click: session_options.automatic_label_click, **options)
         options[:allow_self] = true if locator.nil?
 
         synchronize(Capybara::Queries::BaseQuery.wait(options, session_options.default_max_wait_time)) do

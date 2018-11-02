@@ -278,7 +278,7 @@ Capybara.add_selector(:select) do
 
   expression_filter(:with_options) do |expr, options|
     options.inject(expr) do |xpath, option|
-      xpath[Capybara::Selector.all[:option].call(option)]
+      xpath[self.class.all[:option].call(option)]
     end
   end
 
@@ -325,7 +325,7 @@ Capybara.add_selector(:datalist_input) do
 
   expression_filter(:with_options) do |expr, options|
     options.inject(expr) do |xpath, option|
-      xpath[XPath.attr(:list) == XPath.anywhere(:datalist)[Capybara::Selector.all[:datalist_option].call(option)].attr(:id)]
+      xpath[XPath.attr(:list) == XPath.anywhere(:datalist)[self.class.all[:datalist_option].call(option)].attr(:id)]
     end
   end
 

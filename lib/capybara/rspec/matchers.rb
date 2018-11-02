@@ -129,7 +129,8 @@ module Capybara
       Matchers::HaveStyle.new(styles, options)
     end
 
-    %w[selector css xpath text title current_path link button field checked_field unchecked_field select table].each do |matcher_type|
+    %w[selector css xpath text title current_path link button
+       field checked_field unchecked_field select table].each do |matcher_type|
       define_method "have_no_#{matcher_type}" do |*args, &optional_filter_block|
         Matchers::NegatedMatcher.new(send("have_#{matcher_type}", *args, &optional_filter_block))
       end

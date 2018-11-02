@@ -96,9 +96,11 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     return true if string_node.disabled?
 
     if %w[option optgroup].include? tag_name
-      find_xpath('parent::*[self::optgroup or self::select or self::datalist]')[0].disabled?
+      find_xpath(OPTION_OWNER_XPATH)[0].disabled?
+      # find_xpath('parent::*[self::optgroup or self::select or self::datalist]')[0].disabled?
     else
-      !find_xpath('parent::fieldset[@disabled] | ancestor::*[not(self::legend) or preceding-sibling::legend][parent::fieldset[@disabled]]').empty?
+      !find_xpath(DISABLED_BY_FIELDSET_XPATH).empty?
+      # !find_xpath('parent::fieldset[@disabled] | ancestor::*[not(self::legend) or preceding-sibling::legend][parent::fieldset[@disabled]]').empty?
     end
   end
 
@@ -256,4 +258,18 @@ protected
   def textarea?
     tag_name == 'textarea'
   end
+
+  OPTION_OWNER_XPATH = XPath.parent(:optgroup, :select, :datalist).to_s.freeze
+  DISABLED_BY_FIELDSET_XPATH = XPath.generate do |x|
+    x.parent(:fieldset)[
+      XPath.attr(:disabled)
+    ] + x.ancestor[
+      ~x.self(:legend) |
+      x.preceding_sibling(:legend)
+    ][
+      x.parent(:fieldset)[
+        x.attr(:disabled)
+      ]
+    ]
+  end.to_s.freeze
 end

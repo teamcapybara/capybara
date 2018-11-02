@@ -24,7 +24,8 @@ module Capybara
 
         raise ArgumentError, "Unused parameters passed to #{self.class.name} : #{args}" unless args.empty?
 
-        @expression = selector.call(@locator, @options.merge(selector_config: { enable_aria_label: enable_aria_label, test_id: test_id }))
+        selector_config = { enable_aria_label: enable_aria_label, test_id: test_id }
+        @expression = selector.call(@locator, @options.merge(selector_config: selector_config))
 
         warn_exact_usage
 
@@ -34,21 +35,23 @@ module Capybara
       def name; selector.name; end
       def label; selector.label || selector.name; end
 
-      def description(applied = false)
+      def description(only_applied = false)
         desc = +''
-        if !applied || applied_filters
+        show_for = show_for_stage(only_applied)
+
+        if show_for[:any]
           desc << 'visible ' if visible == :visible
           desc << 'non-visible ' if visible == :hidden
         end
         desc << "#{label} #{locator.inspect}"
-        if !applied || applied_filters
+        if show_for[:any]
           desc << " with#{' exact' if exact_text == true} text #{options[:text].inspect}" if options[:text]
           desc << " with exact text #{exact_text}" if exact_text.is_a?(String)
         end
         desc << " with id #{options[:id]}" if options[:id]
         desc << " with classes [#{Array(options[:class]).join(',')}]" if options[:class]
-        desc << selector.description(node_filters: !applied || (applied_filters == :node), **options)
-        desc << ' that also matches the custom filter block' if @filter_block && (!applied || (applied_filters == :node))
+        desc << selector.description(node_filters: show_for[:node], **options)
+        desc << ' that also matches the custom filter block' if @filter_block && show_for[:node]
         desc << " within #{@resolved_node.inspect}" if describe_within?
         desc
       end
@@ -60,17 +63,17 @@ module Capybara
       def matches_filters?(node)
         return true if (@resolved_node&.== node) && options[:allow_self]
 
-        @applied_filters ||= :system
+        applied_filters << :system
         return false unless matches_system_filters?(node)
 
-        @applied_filters = :node
+        applied_filters << :node
         matches_node_filters?(node) && matches_filter_block?(node)
       rescue *(node.respond_to?(:session) ? node.session.driver.invalid_element_errors : [])
         false
       end
 
       def visible
-        case (vis = options.fetch(:visible) { @selector.default_visibility(session_options.ignore_hidden_elements, options) })
+        case (vis = options.fetch(:visible) { default_visibility })
         when true then :visible
         when false then :all
         else vis
@@ -98,7 +101,7 @@ module Capybara
 
       # @api private
       def resolve_for(node, exact = nil)
-        @applied_filters = false
+        applied_filters.clear
         @resolved_node = node
         node.synchronize do
           children = find_nodes_by_selector_format(node, exact).map(&method(:to_element))
@@ -121,8 +124,14 @@ module Capybara
 
     private
 
+      def show_for_stage(only_applied)
+        lambda do |stage = :any|
+          !only_applied || (stage == :any ? applied_filters.any? : applied_filters.include?(stage))
+        end
+      end
+
       def applied_filters
-        @applied_filters ||= false
+        @applied_filters ||= []
       end
 
       def find_selector(locator)
@@ -183,17 +192,21 @@ module Capybara
         end
       end
 
+      def filter_set(name)
+        ::Capybara::Selector::FilterSet.all[name]
+      end
+
       def node_filters
         if options.key?(:filter_set)
-          ::Capybara::Selector::FilterSet.all[options[:filter_set]].node_filters
+          filter_set(options[:filter_set])
         else
-          @selector.node_filters
-        end
+          @selector
+        end.node_filters
       end
 
       def expression_filters
         filters = @selector.expression_filters
-        filters.merge ::Capybara::Selector::FilterSet.all[options[:filter_set]].expression_filters if options.key?(:filter_set)
+        filters.merge filter_set(options[:filter_set]).expression_filters if options.key?(:filter_set)
         filters
       end
 
@@ -253,7 +266,7 @@ module Capybara
         unapplied_options = options.keys - valid_keys
         expression_filters.inject(expression) do |expr, (name, ef)|
           if ef.matcher?
-            unapplied_options.select { |option_name| ef.handles_option?(option_name) }.inject(expr) do |memo, option_name|
+            unapplied_options.select(&ef.method(:handles_option?)).inject(expr) do |memo, option_name|
               unapplied_options.delete(option_name)
               ef.apply_filter(memo, option_name, options[option_name])
             end
@@ -346,6 +359,10 @@ module Capybara
         text_visible = visible
         text_visible = :all if text_visible == :hidden
         !!node.text(text_visible, normalize_ws: normalize_ws).match(regexp)
+      end
+
+      def default_visibility
+        @selector.default_visibility(session_options.ignore_hidden_elements, options)
       end
 
       def builder

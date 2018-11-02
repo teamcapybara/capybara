@@ -77,15 +77,19 @@ module Capybara
         message = +''
         count, between, maximum, minimum = options.values_at(:count, :between, :maximum, :minimum)
         if count
-          message << " #{count} #{Capybara::Helpers.declension('time', 'times', count)}"
+          message << " #{occurrences count}"
         elsif between
           message << " between #{between.first} and #{between.last} times"
         elsif maximum
-          message << " at most #{maximum} #{Capybara::Helpers.declension('time', 'times', maximum)}"
+          message << " at most #{occurrences maximum}"
         elsif minimum
-          message << " at least #{minimum} #{Capybara::Helpers.declension('time', 'times', minimum)}"
+          message << " at least #{occurrences minimum}"
         end
         message
+      end
+
+      def occurrences(count)
+        "#{count} #{Capybara::Helpers.declension('time', 'times', count)}"
       end
 
       def assert_valid_keys

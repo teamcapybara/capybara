@@ -100,9 +100,7 @@ module Capybara
       #
       def assert_selector(*args, &optional_filter_block)
         _verify_selector_result(args, optional_filter_block) do |result, query|
-          unless result.matches_count? && (result.any? || query.expects_none?)
-            raise Capybara::ExpectationNotMet, result.failure_message
-          end
+          raise Capybara::ExpectationNotMet, result.failure_message unless result.matches_count? && (result.any? || query.expects_none?)
         end
       end
 

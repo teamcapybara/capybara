@@ -42,12 +42,12 @@ module Capybara
       # @!method assert_no_current_path
       #   see {Capybara::SessionMatchers#assert_no_current_path}
 
-      %w[assert_text assert_no_text assert_title assert_no_title assert_current_path assert_no_current_path].each do |assertion_name|
+      %w[text no_text title no_title current_path no_current_path].each do |assertion_name|
         class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
-          def #{assertion_name} *args
+          def assert_#{assertion_name} *args
             self.assertions +=1
             subject, args = determine_subject(args)
-            subject.#{assertion_name}(*args)
+            subject.assert_#{assertion_name}(*args)
           rescue Capybara::ExpectationNotMet => e
             raise ::Minitest::Assertion, e.message
           end
@@ -86,15 +86,14 @@ module Capybara
       # @!method assert_style
       #   see {Capybara::Node::Matchers#assert_style}
 
-      %w[assert_selector assert_no_selector
-         assert_all_of_selectors assert_none_of_selectors assert_any_of_selectors
-         assert_matches_selector assert_not_matches_selector
-         assert_style].each do |assertion_name|
+      %w[selector no_selector style
+         all_of_selectors none_of_selectors any_of_selectors
+         matches_selector not_matches_selector].each do |assertion_name|
         class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
-          def #{assertion_name} *args, &optional_filter_block
+          def assert_#{assertion_name} *args, &optional_filter_block
             self.assertions +=1
             subject, args = determine_subject(args)
-            subject.#{assertion_name}(*args, &optional_filter_block)
+            subject.assert_#{assertion_name}(*args, &optional_filter_block)
           rescue Capybara::ExpectationNotMet => e
             raise ::Minitest::Assertion, e.message
           end

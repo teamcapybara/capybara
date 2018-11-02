@@ -460,7 +460,8 @@ end
 
 Capybara.register_server :webrick do |app, port, host, **options|
   require 'rack/handler/webrick'
-  Rack::Handler::WEBrick.run(app, { Host: host, Port: port, AccessLog: [], Logger: WEBrick::Log.new(nil, 0) }.merge(options))
+  options = { Host: host, Port: port, AccessLog: [], Logger: WEBrick::Log.new(nil, 0) }.merge(options)
+  Rack::Handler::WEBrick.run(app, options)
 end
 
 Capybara.register_server :puma do |app, port, host, **options|
@@ -476,8 +477,8 @@ Capybara.register_server :puma do |app, port, host, **options|
   # If we just run the Puma Rack handler it installs signal handlers which prevent us from being able to interrupt tests.
   # Therefore construct and run the Server instance ourselves.
   # Rack::Handler::Puma.run(app, { Host: host, Port: port, Threads: "0:4", workers: 0, daemon: false }.merge(options))
-
-  conf = Rack::Handler::Puma.config(app, { Host: host, Port: port, Threads: '0:4', workers: 0, daemon: false }.merge(options))
+  options = { Host: host, Port: port, Threads: '0:4', workers: 0, daemon: false }.merge(options)
+  conf = Rack::Handler::Puma.config(app, options)
   events = conf.options[:Silent] ? ::Puma::Events.strings : ::Puma::Events.stdio
 
   events.log 'Capybara starting Puma...'

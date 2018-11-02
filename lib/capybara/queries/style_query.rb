@@ -5,7 +5,7 @@ module Capybara
   module Queries
     class StyleQuery < BaseQuery
       def initialize(expected_styles, session_options:, **options)
-        @expected_styles = expected_styles.each_with_object({}) { |(style, value), str_keys| str_keys[style.to_s] = value }
+        @expected_styles = stringify_keys(expected_styles)
         @options = options
         @actual_styles = {}
         super(@options)
@@ -32,6 +32,10 @@ module Capybara
       end
 
     private
+
+      def stringify_keys(hsh)
+        hsh.each_with_object({}) { |(k, v), str_keys| str_keys[k.to_s] = v }
+      end
 
       def valid_keys
         %i[wait]

@@ -18,7 +18,12 @@ module Capybara
 
     attr_reader :app, :port, :host
 
-    def initialize(app, *deprecated_options, port: Capybara.server_port, host: Capybara.server_host, reportable_errors: Capybara.server_errors, extra_middleware: [])
+    def initialize(app,
+                   *deprecated_options,
+                   port: Capybara.server_port,
+                   host: Capybara.server_host,
+                   reportable_errors: Capybara.server_errors,
+                   extra_middleware: [])
       warn 'Positional arguments, other than the application, to Server#new are deprecated, please use keyword arguments' unless deprecated_options.empty?
       @app = app
       @extra_middleware = extra_middleware
