@@ -1,3 +1,11 @@
+# Version 3.10.1
+Release date: 2018-11-03
+
+### Fixed
+
+* Fix `aria-label` and `test_id` matching for `link_or_button` selector type - Issue #2125
+* Fixed crash in element path creation for matcher failure messages - Issue #2120
+
 # Version 3.10.0
 Release date: 2018-10-23
 

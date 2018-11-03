@@ -156,7 +156,6 @@ module Capybara
 
       def matches_node_filters?(node)
         unapplied_options = options.keys - valid_keys
-
         node_filters.all? do |filter_name, filter|
           if filter.matcher?
             unapplied_options.select { |option_name| filter.handles_option?(option_name) }.all? do |option_name|
