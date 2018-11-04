@@ -11,7 +11,7 @@ module Capybara
       end
 
       def alternated_substrings
-        @options ||= begin
+        @alternated_substrings ||= begin
           process(alternation: true)
         end
       end
@@ -26,11 +26,10 @@ module Capybara
 
       def process(alternation:)
         strs = extract_strings(Regexp::Parser.parse(@regexp), [''], alternation: alternation)
-        strs = collapse(combine(strs).map &:flatten)
+        strs = collapse(combine(strs).map(&:flatten))
         strs.each { |str| str.map!(&:upcase) } if @regexp.casefold?
         strs
       end
-
 
       def min_repeat(exp)
         exp.quantifier&.min || 1
@@ -43,7 +42,6 @@ module Capybara
       def optional?(exp)
         min_repeat(exp).zero?
       end
-
 
       def combine(strs)
         suffixes = [[]]
@@ -65,7 +63,7 @@ module Capybara
 
       def collapse(strs)
         strs.map do |substrings|
-          substrings.slice_before { |str| str.empty? }.map(&:join).reject(&:empty?).uniq
+          substrings.slice_before(&:empty?).map(&:join).reject(&:empty?).uniq
         end
       end
 
@@ -77,12 +75,7 @@ module Capybara
           end
 
           if %i[meta].include?(exp.type) && !exp.terminal? && alternation
-            alternatives = exp.alternatives.map { |sub_exp| extract_strings(sub_exp, [], alternation: true) }
-            if alternatives.all? { |alt| alt.any? { |a| !a.empty? } }
-              strings.push(Set.new(alternatives))
-            else
-              strings.push('')
-            end
+            strings.push(alternative_strings(exp))
             next
           end
 
@@ -94,9 +87,9 @@ module Capybara
           if exp.terminal?
             case exp.type
             when :literal
-              strings.push (exp.text * min_repeat(exp))
+              strings.push(exp.text * min_repeat(exp))
             when :escape
-              strings.push (exp.char * min_repeat(exp))
+              strings.push(exp.char * min_repeat(exp))
             else
               strings.push('')
             end
@@ -106,6 +99,15 @@ module Capybara
           strings.push('') unless fixed_repeat?(exp)
         end
         strings
+      end
+
+      def alternative_strings(expression)
+        alternatives = expression.alternatives.map { |sub_exp| extract_strings(sub_exp, [], alternation: true) }
+        if alternatives.all? { |alt| alt.any? { |a| !a.empty? } }
+          Set.new(alternatives)
+        else
+          strings.push('')
+        end
       end
     end
   end

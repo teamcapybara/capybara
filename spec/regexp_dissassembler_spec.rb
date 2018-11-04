@@ -113,16 +113,16 @@ RSpec.describe Capybara::Selector::RegexpDisassembler do
 
   it 'handles alternation for #options' do
     verify_alternated_strings(
-      /abc|def/ => [%w[abc],%w[def]],
-      /ab(?:c|d)/ => [%w[abc],%w[abd]],
-      /ab(c|d|e)fg/ => [%w[abcfg],%w[abdfg],%w[abefg]],
+      /abc|def/ => [%w[abc], %w[def]],
+      /ab(?:c|d)/ => [%w[abc], %w[abd]],
+      /ab(c|d|e)fg/ => [%w[abcfg], %w[abdfg], %w[abefg]],
       /ab?(c|d)fg/ => [%w[a cfg], %w[a dfg]],
       /ab(c|d)ef/ => [%w[abcef], %w[abdef]],
       /ab(cd?|ef)g/ => [%w[abc g], %w[abefg]],
       /ab(cd|ef*)g/ => [%w[abcdg], %w[abe g]],
       /ab|cd*/ => [%w[ab], %w[c]],
-      /cd(?:ef|gh)|xyz/ => [%w[cdef],%w[cdgh],%w[xyz]],
-      /(cd(?:ef|gh)|xyz)/ => [%w[cdef],%w[cdgh],%w[xyz]],
+      /cd(?:ef|gh)|xyz/ => [%w[cdef], %w[cdgh], %w[xyz]],
+      /(cd(?:ef|gh)|xyz)/ => [%w[cdef], %w[cdgh], %w[xyz]],
       /cd(ef|gh)+/ => [%w[cdef], %w[cdgh]],
       /cd(ef|gh)?/ => [%w[cd]],
       /cd(ef|gh)?ij/ => [%w[cd ij]],
