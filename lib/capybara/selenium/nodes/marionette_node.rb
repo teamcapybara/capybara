@@ -28,7 +28,6 @@ class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
       find_xpath('parent::*[self::optgroup or self::select]')[0].disabled?
     else
       !find_xpath(DISABLED_BY_FIELDSET_XPATH).empty?
-      # !find_xpath('parent::fieldset[@disabled] | ancestor::*[not(self::legend) or preceding-sibling::legend][parent::fieldset[@disabled]]').empty?
     end
   end
 

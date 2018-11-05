@@ -105,7 +105,6 @@ module Capybara
 
         if check_ancestors
           !find_xpath(VISIBILITY_XPATH)
-          # !find_xpath("boolean(./ancestor-or-self::*[contains(@style, 'display:none') or contains(@style, 'display: none') or @hidden or name()='script' or name()='head'])")
         else
           # No need for an xpath if only checking the current element
           !(native.key?('hidden') || (native[:style] =~ /display:\s?none/) || %w[script head].include?(tag_name))
