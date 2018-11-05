@@ -25,7 +25,7 @@ module Capybara
     private
 
       def process(alternation:)
-        strs = extract_strings(Regexp::Parser.parse(@regexp), [''], alternation: alternation)
+        strs = extract_strings(Regexp::Parser.parse(@regexp), alternation: alternation)
         strs = collapse(combine(strs).map(&:flatten))
         strs.each { |str| str.map!(&:upcase) } if @regexp.casefold?
         strs
@@ -63,14 +63,14 @@ module Capybara
 
       def collapse(strs)
         strs.map do |substrings|
-          substrings.slice_before(&:empty?).map(&:join).reject(&:empty?).uniq
+          substrings.slice_before(&:nil?).map(&:join).reject(&:empty?).uniq
         end
       end
 
-      def extract_strings(expression, strings, alternation: false)
+      def extract_strings(expression, strings = [], alternation: false)
         expression.each do |exp|
           if optional?(exp)
-            strings.push('')
+            strings.push(nil)
             next
           end
 
@@ -80,7 +80,7 @@ module Capybara
           end
 
           if %i[meta set].include?(exp.type)
-            strings.push('')
+            strings.push(nil)
             next
           end
 
@@ -91,22 +91,22 @@ module Capybara
             when :escape
               strings.push(exp.char * min_repeat(exp))
             else
-              strings.push('')
+              strings.push(nil)
             end
           else
             min_repeat(exp).times { extract_strings(exp, strings, alternation: alternation) }
           end
-          strings.push('') unless fixed_repeat?(exp)
+          strings.push(nil) unless fixed_repeat?(exp)
         end
         strings
       end
 
       def alternative_strings(expression)
-        alternatives = expression.alternatives.map { |sub_exp| extract_strings(sub_exp, [], alternation: true) }
-        if alternatives.all? { |alt| alt.any? { |a| !a.empty? } }
+        alternatives = expression.alternatives.map { |sub_exp| extract_strings(sub_exp, alternation: true) }
+        if alternatives.all?(&:any?)
           Set.new(alternatives)
         else
-          strings.push('')
+          nil
         end
       end
     end
