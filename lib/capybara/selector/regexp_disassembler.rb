@@ -12,17 +12,47 @@ module Capybara
 
       def alternated_substrings
         @alternated_substrings ||= begin
-          process(alternation: true)
+          or_strings = process(alternation: true)
+          remove_or_covered(or_strings)
+          or_strings.any?(&:empty?) ? [] : or_strings
         end
       end
 
       def substrings
         @substrings ||= begin
-          process(alternation: false).first
+          strs = process(alternation: false).first
+          remove_and_covered(strs)
         end
       end
 
     private
+
+      def remove_and_covered(strings)
+        # If we have "ab" and "abcd" required - only need to check for "abcd"
+        strings.delete_if do |sub_string|
+          strings.any? do |cover_string|
+            next if sub_string.equal? cover_string
+
+            cover_string.include?(sub_string)
+          end
+        end
+      end
+
+      def remove_or_covered(or_series)
+        # If we are going to match `("a" and "b") or ("ade" and "bce")` it only makes sense to match ("a" and "b")
+
+        # Ensure minimum sets of strings are being or'd
+        or_series.each { |strs| remove_and_covered(strs) }
+
+        # Remove any of the alternated string series that fully contain any other string series
+        or_series.delete_if do |and_strs|
+          or_series.any? do |and_strs2|
+            next if and_strs.equal? and_strs2
+
+            remove_and_covered(and_strs + and_strs2) == and_strs
+          end
+        end
+      end
 
       def process(alternation:)
         strs = extract_strings(Regexp::Parser.parse(@regexp), alternation: alternation)
@@ -68,8 +98,8 @@ module Capybara
       end
 
       def extract_strings(expression, strings = [], alternation: false)
-        expression.each do |exp|
-          if optional?(exp)
+        expression.each do |exp| # rubocop:disable Metrics/BlockLength
+          if optional?(exp) && !(alternation && zero_or_one?(exp))
             strings.push(nil)
             next
           end
@@ -87,18 +117,35 @@ module Capybara
           if exp.terminal?
             case exp.type
             when :literal
-              strings.push(exp.text * min_repeat(exp))
+              if zero_or_one?(exp)
+                strings.push(Set.new([[''], [exp.text]]))
+                next
+              else
+                strings.push(exp.text * min_repeat(exp))
+              end
             when :escape
-              strings.push(exp.char * min_repeat(exp))
+              if zero_or_one?(exp)
+                strings.push(Set.new([[''], [exp.text]]))
+                next
+              else
+                strings.push(exp.char * min_repeat(exp))
+              end
             else
               strings.push(nil)
             end
+          elsif alternation && zero_or_one?(exp)
+            strings.push(Set.new([[''], extract_strings(exp, alternation: true)]))
+            next
           else
             min_repeat(exp).times { extract_strings(exp, strings, alternation: alternation) }
           end
           strings.push(nil) unless fixed_repeat?(exp)
         end
         strings
+      end
+
+      def zero_or_one?(exp)
+        exp.quantity == [0, 1]
       end
 
       def alternative_strings(expression)
