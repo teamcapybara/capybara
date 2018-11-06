@@ -27,18 +27,37 @@ RSpec.describe Capybara::Selector::RegexpDisassembler do
       /abc./ => %w[abc],
       /abc.*/ => %w[abc],
       /abc.def/ => %w[abc def],
-      /abc.def.ghi/ => %w[abc def ghi]
+      /abc.def.ghi/ => %w[abc def ghi],
+      /abc.abcd.abcde/ => %w[abcde],
+      /.*/ => []
     )
   end
 
-  it 'handles optional characters' do
-    verify_strings(
+  it 'ignores optional characters for substrings' do
+    {
       /abc*def/ => %w[ab def],
       /abc*/ => %w[ab],
+      /c*/ => [],
       /abc?def/ => %w[ab def],
       /abc?/ => %w[ab],
       /abc?def?/ => %w[ab de],
-      /abc?def?g/ => %w[ab de g]
+      /abc?def?g/ => %w[ab de g],
+      /d?/ => []
+    }.each do |regexp, expected|
+      expect(Capybara::Selector::RegexpDisassembler.new(regexp).substrings).to eq expected
+    end
+  end
+
+  it 'handles optional characters for #alternated_substrings' do
+    verify_alternated_strings(
+      /abc*def/ => [%w[ab def]],
+      /abc*/ => [%w[ab]],
+      /c*/ => [],
+      /abc?def/ => [%w[abdef], %w[abcdef]],
+      /abc?/ => [%w[ab]],
+      /abc?def?/ => [%w[abde], %w[abcde]],
+      /abc?def?g/ => [%w[abdeg], %w[abdefg], %w[abcdeg], %w[abcdefg]],
+      /d?/ => []
     )
   end
 
@@ -111,24 +130,31 @@ RSpec.describe Capybara::Selector::RegexpDisassembler do
     end
   end
 
-  it 'handles alternation for #options' do
+  it 'handles alternation for #alternated_substrings' do
     verify_alternated_strings(
       /abc|def/ => [%w[abc], %w[def]],
       /ab(?:c|d)/ => [%w[abc], %w[abd]],
       /ab(c|d|e)fg/ => [%w[abcfg], %w[abdfg], %w[abefg]],
-      /ab?(c|d)fg/ => [%w[a cfg], %w[a dfg]],
+      /ab?(c|d)fg/ => [%w[acfg], %w[adfg], %w[abcfg], %w[abdfg]],
       /ab(c|d)ef/ => [%w[abcef], %w[abdef]],
-      /ab(cd?|ef)g/ => [%w[abc g], %w[abefg]],
+      /ab(cd?|ef)g/ => [%w[abcg], %w[abcdg], %w[abefg]],
       /ab(cd|ef*)g/ => [%w[abcdg], %w[abe g]],
       /ab|cd*/ => [%w[ab], %w[c]],
       /cd(?:ef|gh)|xyz/ => [%w[cdef], %w[cdgh], %w[xyz]],
       /(cd(?:ef|gh)|xyz)/ => [%w[cdef], %w[cdgh], %w[xyz]],
       /cd(ef|gh)+/ => [%w[cdef], %w[cdgh]],
       /cd(ef|gh)?/ => [%w[cd]],
-      /cd(ef|gh)?ij/ => [%w[cd ij]],
+      /cd(ef|gh)?ij/ => [%w[cdij], %w[cdefij], %w[cdghij]],
       /cd(ef|gh)+ij/ => [%w[cdef ij], %w[cdgh ij]],
       /cd(ef|gh){2}ij/ => [%w[cdefefij], %w[cdefghij], %w[cdghefij], %w[cdghghij]],
-      /(cd(ef|g*))/ => [%w[cd]]
+      /(cd(ef|g*))/ => [%w[cd]],
+      /a|b*/ => [],
+      /ab(?:c|d?)/ => [%w[ab]],
+      /ab(c|d)|a*/ => [],
+      /(abc)?(d|e)/ => [%w[d], %w[e]],
+      /(abc*de)?(d|e)/ => [%w[d], %w[e]],
+      /(abc*de)?(d|e?)/ => [],
+      /(abc)?(d|e?)/ => []
     )
   end
 
@@ -193,7 +219,7 @@ RSpec.describe Capybara::Selector::RegexpDisassembler do
 
   def verify_alternated_strings(hsh, wrap: false)
     hsh.each do |regexp, expected|
-      expected = [expected] if wrap
+      expected = [expected] if wrap && (expected != [])
       expect(Capybara::Selector::RegexpDisassembler.new(regexp).alternated_substrings).to eq expected
     end
   end
