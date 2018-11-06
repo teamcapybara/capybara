@@ -409,7 +409,7 @@ and test server, see "Transactions and database setup" below.
 
 ### <a name="capybara-webkit"></a>Capybara-webkit
 
-Note: `capybara-webkit` depends on QtWebkit which went EOL quite some time ago. There has been an attempt to revive the project but `capybara-webkit` is not yet (AFAIK) compatible with the revived version of QtWebKit (could be a good OSS project for someone) and as such is still limited to an old version of QtWebKit.  This means its support for modern JS and CSS is severely limited. Y
+Note: `capybara-webkit` depends on QtWebkit which went EOL quite some time ago. There has been an attempt to revive the project but `capybara-webkit` is not yet (AFAIK) compatible with the revived version of QtWebKit (could be a good OSS project for someone) and as such is still limited to an old version of QtWebKit.  This means its support for modern JS and CSS is severely limited.
 
 The [capybara-webkit driver](https://github.com/thoughtbot/capybara-webkit) is for true headless
 testing. It uses QtWebKit to start a rendering engine process. It can execute JavaScript as well.
