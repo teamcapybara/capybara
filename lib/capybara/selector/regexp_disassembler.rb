@@ -13,10 +13,8 @@ module Capybara
       def alternated_substrings
         @alternated_substrings ||= begin
           or_strings = process(alternation: true)
-          or_strings.each { |strs| remove_and_covered(strs) }
           remove_or_covered(or_strings)
-          or_strings = [] if or_strings.any?(&:empty?)
-          or_strings
+          or_strings.any?(&:empty?) ? [] : or_strings
         end
       end
 
@@ -42,12 +40,16 @@ module Capybara
 
       def remove_or_covered(or_series)
         # If we are going to match `("a" and "b") or ("ade" and "bce")` it only makes sense to match ("a" and "b")
+
+        # Ensure minimum sets of strings are being or'd
+        or_series.each { |strs| remove_and_covered(strs) }
+
         # Remove any of the alternated string series that fully contain any other string series
         or_series.delete_if do |and_strs|
           or_series.any? do |and_strs2|
             next if and_strs.equal? and_strs2
 
-            and_strs2.all? { |and_str2| and_strs.any? { |str| str.include?(and_str2) } }
+            remove_and_covered(and_strs + and_strs2) == and_strs
           end
         end
       end
