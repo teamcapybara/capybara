@@ -38,6 +38,7 @@ Capybara.register_driver :selenium_firefox_remote do |app|
 
   Capybara::Selenium::Driver.new app,
                                  browser: :remote,
+                                 desired_capabilities: :firefox,
                                  options: browser_options,
                                  url: url
 end

@@ -42,6 +42,7 @@ Capybara.register_driver :selenium_chrome_remote do |app|
 
   Capybara::Selenium::Driver.new app,
                                  browser: :remote,
+                                 desired_capabilities: :chrome,
                                  options: browser_options,
                                  url: url
 end
