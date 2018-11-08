@@ -124,7 +124,12 @@ RSpec.describe Capybara::Selector::RegexpDisassembler do
       /cd(ef|gh)?ij/ => %w[cd ij],
       /cd(ef|gh)+ij/ => %w[cd ij],
       /cd(ef|gh){2}ij/ => %w[cd ij],
-      /(cd(ef|g*))/ => %w[cd]
+      /(cd(ef|g*))/ => %w[cd],
+      /ab(cd){0,2}ef/ => %w[ab ef],
+      /ab(cd){0,1}ef/ => %w[ab ef],
+      /ab(cd|cd)ef/ => %w[ab ef],
+      /ab(cd|cd)?ef/ => %w[ab ef],
+      /ab\\?cd/ => %w[ab cd]
     }.each do |regexp, expected|
       expect(Capybara::Selector::RegexpDisassembler.new(regexp).substrings).to eq expected
     end
@@ -154,7 +159,12 @@ RSpec.describe Capybara::Selector::RegexpDisassembler do
       /(abc)?(d|e)/ => [%w[d], %w[e]],
       /(abc*de)?(d|e)/ => [%w[d], %w[e]],
       /(abc*de)?(d|e?)/ => [],
-      /(abc)?(d|e?)/ => []
+      /(abc)?(d|e?)/ => [],
+      /ab(cd){0,2}ef/ => [%w[ab ef]],
+      /ab(cd){0,1}ef/ => [%w[abef], %w[abcdef]],
+      /ab(cd|cd)ef/ => [%w[abcdef]],
+      /ab(cd|cd)?ef/ => [%w[abef], %w[abcdef]],
+      /ab\\?cd/ => [%w[abcd], %w[ab\cd]]
     )
   end
 

@@ -28,6 +28,10 @@ module Capybara
     private
 
       def remove_and_covered(strings)
+        # delete_if is documented to modify the array after every block iteration - this doesn't appear to be true
+        # uniq the strings to prevent identical strings from removing each other
+        strings.uniq!
+
         # If we have "ab" and "abcd" required - only need to check for "abcd"
         strings.delete_if do |sub_string|
           strings.any? do |cover_string|
@@ -65,8 +69,12 @@ module Capybara
         exp.quantifier&.min || 1
       end
 
+      def max_repeat(exp)
+        exp.quantifier&.max || 1
+      end
+
       def fixed_repeat?(exp)
-        min_repeat(exp) == (exp.quantifier&.max || 1)
+        min_repeat(exp) == max_repeat(exp)
       end
 
       def optional?(exp)
@@ -97,9 +105,10 @@ module Capybara
         end
       end
 
-      def extract_strings(expression, strings = [], alternation: false)
+      def extract_strings(expression, alternation: false)
+        strings = []
         expression.each do |exp| # rubocop:disable Metrics/BlockLength
-          if optional?(exp) && !(alternation && zero_or_one?(exp))
+          if optional?(exp) && !alternation
             strings.push(nil)
             next
           end
@@ -115,37 +124,31 @@ module Capybara
           end
 
           if exp.terminal?
-            case exp.type
-            when :literal
-              if zero_or_one?(exp)
-                strings.push(Set.new([[''], [exp.text]]))
-                next
-              else
-                strings.push(exp.text * min_repeat(exp))
-              end
-            when :escape
-              if zero_or_one?(exp)
-                strings.push(Set.new([[''], [exp.text]]))
-                next
-              else
-                strings.push(exp.char * min_repeat(exp))
-              end
+            text = case exp.type
+            when :literal then exp.text
+            when :escape then exp.char
             else
               strings.push(nil)
+              next
             end
-          elsif alternation && zero_or_one?(exp)
+
+            if optional?(exp)
+              strings.push(Set.new([[''], [text]]))
+              strings.push(nil) unless max_repeat(exp) == 1
+              next
+            else
+              strings.push(text * min_repeat(exp))
+            end
+          elsif optional?(exp)
             strings.push(Set.new([[''], extract_strings(exp, alternation: true)]))
+            strings.push(nil) unless max_repeat(exp) == 1
             next
           else
-            min_repeat(exp).times { extract_strings(exp, strings, alternation: alternation) }
+            min_repeat(exp).times { strings.concat extract_strings(exp, alternation: alternation) }
           end
           strings.push(nil) unless fixed_repeat?(exp)
         end
         strings
-      end
-
-      def zero_or_one?(exp)
-        exp.quantity == [0, 1]
       end
 
       def alternative_strings(expression)
