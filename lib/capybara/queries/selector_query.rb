@@ -60,14 +60,14 @@ module Capybara
         description(true)
       end
 
-      def matches_filters?(node)
+      def matches_filters?(node, node_filter_errors = [])
         return true if (@resolved_node&.== node) && options[:allow_self]
 
         applied_filters << :system
         return false unless matches_system_filters?(node)
 
         applied_filters << :node
-        matches_node_filters?(node) && matches_filter_block?(node)
+        matches_node_filters?(node, node_filter_errors) && matches_filter_block?(node)
       rescue *(node.respond_to?(:session) ? node.session.driver.invalid_element_errors : [])
         false
       end
@@ -163,21 +163,23 @@ module Capybara
         VALID_KEYS + custom_keys
       end
 
-      def matches_node_filters?(node)
+      def matches_node_filters?(node, errors)
         unapplied_options = options.keys - valid_keys
-        node_filters.all? do |filter_name, filter|
-          if filter.matcher?
-            unapplied_options.select { |option_name| filter.handles_option?(option_name) }.all? do |option_name|
-              unapplied_options.delete(option_name)
-              filter.matches?(node, option_name, options[option_name])
+        @selector.with_filter_errors(errors) do
+          node_filters.all? do |filter_name, filter|
+            if filter.matcher?
+              unapplied_options.select { |option_name| filter.handles_option?(option_name) }.all? do |option_name|
+                unapplied_options.delete(option_name)
+                filter.matches?(node, option_name, options[option_name], @selector)
+              end
+            elsif options.key?(filter_name)
+              unapplied_options.delete(filter_name)
+              filter.matches?(node, filter_name, options[filter_name], @selector)
+            elsif filter.default?
+              filter.matches?(node, filter_name, filter.default, @selector)
+            else
+              true
             end
-          elsif options.key?(filter_name)
-            unapplied_options.delete(filter_name)
-            filter.matches?(node, filter_name, options[filter_name])
-          elsif filter.default?
-            filter.matches?(node, filter_name, filter.default)
-          else
-            true
           end
         end
       end
@@ -268,13 +270,13 @@ module Capybara
           if ef.matcher?
             unapplied_options.select(&ef.method(:handles_option?)).inject(expr) do |memo, option_name|
               unapplied_options.delete(option_name)
-              ef.apply_filter(memo, option_name, options[option_name])
+              ef.apply_filter(memo, option_name, options[option_name], @selector)
             end
           elsif options.key?(name)
             unapplied_options.delete(name)
-            ef.apply_filter(expr, name, options[name])
+            ef.apply_filter(expr, name, options[name], @selector)
           elsif ef.default?
-            ef.apply_filter(expr, name, ef.default)
+            ef.apply_filter(expr, name, ef.default, @selector)
           else
             expr
           end

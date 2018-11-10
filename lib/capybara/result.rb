@@ -28,7 +28,8 @@ module Capybara
     def initialize(elements, query)
       @elements = elements
       @result_cache = []
-      @results_enum = lazy_select_elements { |node| query.matches_filters?(node) }
+      @filter_errors = []
+      @results_enum = lazy_select_elements { |node| query.matches_filters?(node, @filter_errors) }
       @query = query
     end
 
@@ -113,7 +114,8 @@ module Capybara
       end
       unless rest.empty?
         elements = rest.map { |el| el.text rescue '<<ERROR>>' }.map(&:inspect).join(', ') # rubocop:disable Style/RescueModifier
-        message << '. Also found ' << elements << ', which matched the selector but not all filters.'
+        message << '. Also found ' << elements << ', which matched the selector but not all filters. '
+        message << @filter_errors.join('. ') if (rest.size == 1) && count.zero?
       end
       message
     end

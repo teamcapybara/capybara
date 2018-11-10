@@ -59,7 +59,10 @@ Capybara.add_selector(:field) do
 
   node_filter(:readonly, :boolean) { |node, value| !(value ^ node.readonly?) }
   node_filter(:with) do |node, with|
-    with.is_a?(Regexp) ? node.value =~ with : node.value == with.to_s
+    val = node.value
+    (with.is_a?(Regexp) ? val =~ with : val == with.to_s).tap do |res|
+      add_error("Expected value to be #{with.inspect} but was #{val.inspect}") unless res
+    end
   end
 
   describe_expression_filters do |type: nil, **options|
@@ -109,7 +112,9 @@ Capybara.add_selector(:link) do
 
   node_filter(:href) do |node, href|
     # If not a Regexp it's been handled in the main XPath
-    href.is_a?(Regexp) ? node[:href].match(href) : true
+    (href.is_a?(Regexp) ? node[:href].match(href) : true).tap do |res|
+      add_error "Expected href to match #{href.inspect} but it was #{node[:href].inspect}" unless res
+    end
   end
 
   expression_filter(:download, valid_values: [true, false, String]) do |expr, download|
@@ -178,7 +183,9 @@ end
 Capybara.add_selector(:link_or_button) do
   label 'link or button'
   xpath do |locator, **options|
-    self.class.all.values_at(:link, :button).map { |selector| selector.call(locator, **options, selector_config: @config) }.reduce(:union)
+    self.class.all.values_at(:link, :button).map do |selector|
+      instance_exec(locator, options, &selector.xpath)
+    end.reduce(:union)
   end
 
   node_filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| node.tag_name == 'a' || !(value ^ node.disabled?) }
@@ -210,7 +217,10 @@ Capybara.add_selector(:fillable_field) do
   filter_set(:_field, %i[disabled multiple name placeholder])
 
   node_filter(:with) do |node, with|
-    with.is_a?(Regexp) ? node.value =~ with : node.value == with.to_s
+    val = node.value
+    (with.is_a?(Regexp) ? val =~ with : val == with.to_s).tap do |res|
+      add_error("Expected value to be #{with.inspect} but was #{val.inspect}") unless res
+    end
   end
 
   describe_expression_filters
@@ -231,7 +241,12 @@ Capybara.add_selector(:radio_button) do
 
   filter_set(:_field, %i[checked unchecked disabled name])
 
-  node_filter(:option) { |node, value| node.value == value.to_s }
+  node_filter(:option) do |node, value|
+    val = node.value
+    (val == value.to_s).tap do |res|
+      add_error("Expected option value to be #{value.inspect} but it was #{val.inspect}") unless res
+    end
+  end
 
   describe_expression_filters
   describe_node_filters do |option: nil, **|
@@ -249,7 +264,12 @@ Capybara.add_selector(:checkbox) do
 
   filter_set(:_field, %i[checked unchecked disabled name])
 
-  node_filter(:option) { |node, value| node.value == value.to_s }
+  node_filter(:option) do |node, value|
+    val = node.value
+    (val == value.to_s).tap do |res|
+      add_error("Expected option value to be #{value.inspect} but it was #{val.inspect}") unless res
+    end
+  end
 
   describe_expression_filters
   describe_node_filters do |option: nil, **|
@@ -273,7 +293,9 @@ Capybara.add_selector(:select) do
     else
       node.all(:xpath, './/option', visible: false, wait: false).map { |option| option.text(:all) }
     end
-    options.sort == actual.sort
+    (options.sort == actual.sort).tap do |res|
+      add_error("Expected options #{options.inspect} found #{actual.inspect}") unless res
+    end
   end
 
   expression_filter(:with_options) do |expr, options|
@@ -284,12 +306,16 @@ Capybara.add_selector(:select) do
 
   node_filter(:selected) do |node, selected|
     actual = node.all(:xpath, './/option', visible: false, wait: false).select(&:selected?).map { |option| option.text(:all) }
-    Array(selected).sort == actual.sort
+    (Array(selected).sort == actual.sort).tap do |res|
+      add_error("Expected #{selected.inspect} to be selected found #{actual.inspect}") unless res
+    end
   end
 
   node_filter(:with_selected) do |node, selected|
     actual = node.all(:xpath, './/option', visible: false, wait: false).select(&:selected?).map { |option| option.text(:all) }
-    (Array(selected) - actual).empty?
+    (Array(selected) - actual).empty?.tap do |res|
+      add_error("Expected at least #{selected.inspect} to be selected found #{actual.inspect}") unless res
+    end
   end
 
   describe_expression_filters do |with_options: nil, **opts|
@@ -320,7 +346,9 @@ Capybara.add_selector(:datalist_input) do
 
   node_filter(:options) do |node, options|
     actual = node.find("//datalist[@id=#{node[:list]}]", visible: :all).all(:datalist_option, wait: false).map(&:value)
-    options.sort == actual.sort
+    (options.sort == actual.sort).tap do |res|
+      add_error("Expected #{options.inspect} options found #{actual.inspect}") unless res
+    end
   end
 
   expression_filter(:with_options) do |expr, options|
@@ -471,7 +499,11 @@ Capybara.add_selector(:element) do
   end
 
   node_filter(:attributes, matcher: /.+/) do |node, name, val|
-    val.is_a?(Regexp) ? node[name] =~ val : true
+    next true unless val.is_a?(Regexp)
+
+    (node[name] =~ val).tap do |res|
+      add_error("Expected #{name} to match #{val.inspect} but it was #{node[name]}") unless res
+    end
   end
 
   describe_expression_filters do |**options|

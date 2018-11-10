@@ -41,6 +41,23 @@ Capybara::SpecHelper.spec '#has_field' do
       expect(@session).not_to have_field('First Name', with: 'John')
       expect(@session).not_to have_field('First Name', with: /John|Paul|George|Ringo/)
     end
+
+    it 'should output filter errors if only one element matched the selector but failed the filters' do
+      @session.fill_in('First Name', with: 'Thomas')
+      expect do
+        expect(@session).to have_field('First Name', with: 'Jonas')
+      end.to raise_exception(RSpec::Expectations::ExpectationNotMetError, /Expected value to be "Jonas" but was "Thomas"/)
+
+      # native boolean node filter
+      expect do
+        expect(@session).to have_field('First Name', readonly: true)
+      end.to raise_exception(RSpec::Expectations::ExpectationNotMetError, /Expected readonly true but it wasn't/)
+
+      # inherited boolean node filter
+      expect do
+        expect(@session).to have_field('form_pets_cat', checked: true)
+      end.to raise_exception(RSpec::Expectations::ExpectationNotMetError, /Expected checked true but it wasn't/)
+    end
   end
 
   context 'with type' do

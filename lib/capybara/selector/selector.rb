@@ -389,6 +389,10 @@ module Capybara
       vis.nil? ? fallback : vis
     end
 
+    def add_error(error_msg)
+      errors << error_msg
+    end
+
     # @api private
     def builder
       case format
@@ -401,7 +405,19 @@ module Capybara
       end
     end
 
+    # @api private
+    def with_filter_errors(errors)
+      Thread.current["capybara_#{object_id}_errors"] = errors
+      yield
+    ensure
+      Thread.current["capybara_#{object_id}_errors"] = nil
+    end
+
   private
+
+    def errors
+      Thread.current["capybara_#{object_id}_errors"] || []
+    end
 
     def enable_aria_label
       @config[:enable_aria_label]
