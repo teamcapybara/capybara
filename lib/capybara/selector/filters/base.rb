@@ -7,9 +7,18 @@ module Capybara
         def initialize(name, matcher, block, **options)
           @name = name
           @matcher = matcher
-          @block = block
           @options = options
           @options[:valid_values] = [true, false] if options[:boolean]
+          @block = if boolean?
+            proc do |node, value|
+              error_cnt = errors.size
+              block.call(node, value).tap do |res|
+                add_error("Expected #{@name} #{value} but it wasn't") if !res && error_cnt == errors.size
+              end
+            end
+          else
+            block
+          end
         end
 
         def default?
@@ -28,6 +37,10 @@ module Capybara
           !@matcher.nil?
         end
 
+        def boolean?
+          !!@options[:boolean]
+        end
+
         def handles_option?(option_name)
           if matcher?
             option_name =~ @matcher
@@ -38,15 +51,19 @@ module Capybara
 
       private
 
-        def apply(subject, name, value, skip_value)
+        def apply(subject, name, value, skip_value, ctx)
           return skip_value if skip?(value)
           raise ArgumentError, "Invalid value #{value.inspect} passed to #{self.class.name.split('::').last} #{name}#{" : #{@name}" if @name.is_a?(Regexp)}" unless valid_value?(value)
 
           if @block.arity == 2
-            @block.call(subject, value)
+            filter_context(ctx).instance_exec(subject, value, &@block)
           else
-            @block.call(subject, name, value)
+            filter_context(ctx).instance_exec(subject, name, value, &@block)
           end
+        end
+
+        def filter_context(context)
+          context || @block.binding.receiver
         end
 
         def valid_value?(value)
