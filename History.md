@@ -1,3 +1,15 @@
+# Version 3.11.0
+Release date: unreleased
+
+### Added
+
+* Ability for node filters to set detailed error messages
+* `Capybara::HTML` Will use `nokogumbo` for HTML parsing if installed
+
+### Fixed
+
+* Node filters are evaluated in the context of the Selector they are used in to ensure the correct options are used
+
 # Version 3.10.1
 Release date: 2018-11-03
 
