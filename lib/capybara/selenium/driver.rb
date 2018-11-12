@@ -225,7 +225,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       ::Selenium::WebDriver::Error::StaleElementReferenceError,
       ::Selenium::WebDriver::Error::UnhandledError,
       ::Selenium::WebDriver::Error::ElementNotVisibleError,
-      ::Selenium::WebDriver::Error::InvalidSelectorError, # Work around a race condition that can occur with chromedriver and #go_back/#go_forward
+      ::Selenium::WebDriver::Error::InvalidSelectorError, # Work around a chromedriver go_back/go_forward race condition
       ::Selenium::WebDriver::Error::ElementNotInteractableError,
       ::Selenium::WebDriver::Error::ElementClickInterceptedError,
       ::Selenium::WebDriver::Error::InvalidElementStateError,

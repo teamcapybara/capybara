@@ -20,7 +20,9 @@ module Capybara
     # @return [true]
     #
     def assert_current_path(path, **options)
-      _verify_current_path(path, options) { |query| raise Capybara::ExpectationNotMet, query.failure_message unless query.resolves_for?(self) }
+      _verify_current_path(path, options) do |query|
+        raise Capybara::ExpectationNotMet, query.failure_message unless query.resolves_for?(self)
+      end
     end
 
     ##
@@ -34,7 +36,9 @@ module Capybara
     # @return [true]
     #
     def assert_no_current_path(path, **options)
-      _verify_current_path(path, options) { |query| raise Capybara::ExpectationNotMet, query.negative_failure_message if query.resolves_for?(self) }
+      _verify_current_path(path, options) do |query|
+        raise Capybara::ExpectationNotMet, query.negative_failure_message if query.resolves_for?(self)
+      end
     end
 
     ##

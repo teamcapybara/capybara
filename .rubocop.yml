@@ -17,8 +17,9 @@ Metrics/LineLength:
     - 'lib/capybara/spec/**/*'
     - 'lib/capybara/selector.rb'
   IgnoredPatterns:
-    - '\s*# '
-    - '\s*(raise|warn) '
+    - '\s+# rubocop'
+    - '^\s*#'
+    - '^\s*(raise|warn) '
   Max: 120
 
 Metrics/BlockLength:
