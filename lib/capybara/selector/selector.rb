@@ -348,8 +348,9 @@ module Capybara
 
     def_delegators :@filter_set, :node_filter, :expression_filter, :filter
 
-    def locator_filter(&block)
-      @locator_filter = block if block
+    def locator_filter(*types, **options, &block)
+      types.each { |type| options[type] = true }
+      @locator_filter = Filters::LocatorFilter.new(block, options) if block
       @locator_filter
     end
 
