@@ -1,10 +1,11 @@
 # Version 3.11.0
-Release date: unreleased
+Release date: 2018-11-14
 
 ### Added
 
 * Ability for node filters to set detailed error messages
 * `Capybara::HTML` Will use `nokogumbo` for HTML parsing if installed
+* `Selector#locator_filter` added to allow for dynamic locator in selectors
 
 ### Fixed
 
