@@ -26,6 +26,7 @@ engines:
     enabled: true
   rubocop:
     enabled: true
+    channel: rubocop-0-60
     exclude_fingerprints:
     - affb30770e6ef0780044f5646e28d817
 ratings:
