@@ -723,6 +723,10 @@ module Capybara
         args.first.is_a?(Symbol) ? args.shift : session_options.default_selector
       end
 
+      def extract_before_block(args)
+        args.last.is_a?(Hash) ? args.last.delete(:before) : nil
+      end
+
       def _verify_multiple(*args, wait: nil, **options)
         wait = session_options.default_max_wait_time if wait.nil?
         selector = extract_selector(args)
@@ -733,8 +737,10 @@ module Capybara
 
       def _verify_selector_result(query_args, optional_filter_block)
         query_args = _set_query_session_options(*query_args)
+        before_block = extract_before_block(query_args)
         query = Capybara::Queries::SelectorQuery.new(*query_args, &optional_filter_block)
         synchronize(query.wait) do
+          before_block&.call(self)
           yield query.resolve_for(self), query
         end
         true

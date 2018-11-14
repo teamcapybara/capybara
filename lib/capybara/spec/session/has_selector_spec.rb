@@ -34,6 +34,18 @@ Capybara::SpecHelper.spec '#has_selector?' do
     expect(@session).to have_selector(:css, 'a', count: 1) { |el| el[:id] == 'foo' }
   end
 
+  context 'with a before block' do
+    it 'should run before the check' do
+      expect(@session).to have_selector(:field, 'test_field', with: '5', before: proc { |el| el.fill_in('test_field', with: '5') })
+    end
+
+    it 'should run before rechecks', requires: [:js] do
+      i = 0
+      bl = ->(el) { el.fill_in('test_field', with: (i += 1).to_s) }
+      expect(@session).to have_selector(:field, 'test_field', with: '5', before: bl)
+    end
+  end
+
   context 'with count' do
     it 'should be true if the content is on the page the given number of times' do
       expect(@session).to have_selector('//p', count: 3)
