@@ -11,9 +11,7 @@ module Capybara
         end
 
         def matches?(node, value, context = nil)
-          apply(node, nil, value, true, context)
-        rescue Capybara::ElementNotFound
-          false
+          super(node, nil, value, context)
         end
       end
     end

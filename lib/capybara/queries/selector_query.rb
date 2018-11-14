@@ -307,7 +307,7 @@ module Capybara
       end
 
       def matches_locator_filter?(node)
-        return true if @selector.locator_filter.nil?
+        return true unless @selector.locator_filter
 
         @selector.locator_filter.matches?(node, @locator, @selector)
       end
