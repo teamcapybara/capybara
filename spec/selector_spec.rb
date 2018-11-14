@@ -301,6 +301,9 @@ RSpec.describe Capybara do
       describe ':id selector' do
         it 'finds by locator' do
           expect(string.find(:id, 'my_text_input')[:name]).to eq 'form[my_text_input]'
+          expect(string.find(:id, /my_text_input/)[:name]).to eq 'form[my_text_input]'
+          expect(string.find(:id, /_text_/)[:name]).to eq 'form[my_text_input]'
+          expect(string.find(:id, /i[nmo]/)[:name]).to eq 'form[my_text_input]'
         end
       end
 

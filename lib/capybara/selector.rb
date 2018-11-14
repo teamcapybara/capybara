@@ -34,7 +34,8 @@ Capybara.add_selector(:css) do
 end
 
 Capybara.add_selector(:id) do
-  xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
+  xpath { |id| XPath.descendant[builder.attribute_conditions(id: id)] }
+  locator_filter {  |node, id| id.is_a?(Regexp) ? node[:id] =~ id : true }
 end
 
 Capybara.add_selector(:field) do
@@ -118,12 +119,7 @@ Capybara.add_selector(:link) do
   end
 
   expression_filter(:download, valid_values: [true, false, String]) do |expr, download|
-    mod = case download
-    when true then XPath.attr(:download)
-    when false then !XPath.attr(:download)
-    when String then XPath.attr(:download) == download
-    end
-    expr[mod]
+    expr[builder.attribute_conditions(download: download)]
   end
 
   describe_expression_filters do |**options|

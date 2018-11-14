@@ -19,7 +19,7 @@ module Capybara
   #     * Locator: A CSS selector
   #
   #   * **:id** - Select element by id
-  #     * Locator: The id of the element to match
+  #     * Locator: (String, Regexp) The id of the element to match ()
   #
   #   * **:field** - Select field elements (input [not of type submit, image, or hidden], textarea, select)
   #     * Locator: Matches against the id, Capybara.test_id attribute, name, or placeholder
@@ -191,6 +191,7 @@ module Capybara
       @format = nil
       @expression = nil
       @expression_filters = {}
+      @locator_filter = nil
       @default_visibility = nil
       @config = {
         enable_aria_label: false,
@@ -346,6 +347,11 @@ module Capybara
     # the block should return the modified expression
 
     def_delegators :@filter_set, :node_filter, :expression_filter, :filter
+
+    def locator_filter(&block)
+      @locator_filter = block if block
+      @locator_filter
+    end
 
     def filter_set(name, filters_to_use = nil)
       @filter_set.import(name, filters_to_use)

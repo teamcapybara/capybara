@@ -62,6 +62,7 @@ module Capybara
 
       def matches_filters?(node, node_filter_errors = [])
         return true if (@resolved_node&.== node) && options[:allow_self]
+        return false unless matches_locator_filter?(node)
 
         applied_filters << :system
         return false unless matches_system_filters?(node)
@@ -303,6 +304,12 @@ module Capybara
 
       def simple_root?(node)
         node.is_a?(::Capybara::Node::Simple) && node.path == '/'
+      end
+
+      def matches_locator_filter?(node)
+        return true if @selector.locator_filter.nil?
+
+        @selector.locator_filter.call(node, @locator)
       end
 
       def matches_system_filters?(node)
