@@ -72,16 +72,6 @@ Capybara::SpecHelper.spec '#assert_selector' do
   end
 end
 
-Capybara::SpecHelper.spec '#refute_selector', requires: [:driver] do
-  it 'should warn not to use' do
-    @session.visit('/with_html')
-    doc = @session.document
-    allow(doc).to receive(:warn)
-    doc.refute_selector(:xpath, '//abbr')
-    expect(doc).to have_received(:warn)
-  end
-end
-
 Capybara::SpecHelper.spec '#assert_no_selector' do
   before do
     @session.visit('/with_html')

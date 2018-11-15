@@ -108,56 +108,50 @@ module Capybara
       def extract_strings(expression, alternation: false)
         strings = []
         expression.each do |exp| # rubocop:disable Metrics/BlockLength
-          if optional?(exp) && !alternation
-            strings.push(nil)
-            next
-          end
+          next strings.push(nil) if optional?(exp) && !alternation
 
-          if %i[meta].include?(exp.type) && !exp.terminal? && alternation
-            strings.push(alternative_strings(exp))
-            next
-          end
+          next strings.push(alternative_strings(exp)) if %i[meta].include?(exp.type) && !exp.terminal? && alternation
 
-          if %i[meta set].include?(exp.type)
-            strings.push(nil)
-            next
-          end
+          next strings.push(nil) if %i[meta set].include?(exp.type)
 
-          if exp.terminal?
-            text = case exp.type
-            when :literal then exp.text
-            when :escape then exp.char
-            else
-              strings.push(nil)
-              next
-            end
-
-            if optional?(exp)
-              strings.push(Set.new([[''], [text]]))
-              strings.push(nil) unless max_repeat(exp) == 1
-              next
-            else
-              strings.push(text * min_repeat(exp))
-            end
+          strs = if exp.terminal?
+            terminal_strings(exp)
           elsif optional?(exp)
-            strings.push(Set.new([[''], extract_strings(exp, alternation: true)]))
-            strings.push(nil) unless max_repeat(exp) == 1
-            next
+            optional_strings(exp, extract_strings(exp, alternation: true))
           else
-            min_repeat(exp).times { strings.concat extract_strings(exp, alternation: alternation) }
+            repeated_strings(exp, extract_strings(exp, alternation: alternation))
           end
-          strings.push(nil) unless fixed_repeat?(exp)
+          strings.concat(strs)
         end
         strings
       end
 
       def alternative_strings(expression)
         alternatives = expression.alternatives.map { |sub_exp| extract_strings(sub_exp, alternation: true) }
-        if alternatives.all?(&:any?)
-          Set.new(alternatives)
+        alternatives.all?(&:any?) ? Set.new(alternatives) : nil
+      end
+
+      def terminal_strings(exp)
+        text = case exp.type
+        when :literal then exp.text
+        when :escape then exp.char
         else
-          nil
+          return [nil]
         end
+
+        optional?(exp) ? optional_strings(exp, text) : repeated_strings(exp, text)
+      end
+
+      def optional_strings(exp, text)
+        strs = [Set.new([[''], Array(text)])]
+        strs.push(nil) unless max_repeat(exp) == 1
+        strs
+      end
+
+      def repeated_strings(exp, text)
+        strs = Array(text * min_repeat(exp))
+        strs.push(nil) unless fixed_repeat?(exp)
+        strs
       end
     end
   end

@@ -62,13 +62,11 @@ module Capybara
 
       def matches_filters?(node, node_filter_errors = [])
         return true if (@resolved_node&.== node) && options[:allow_self]
-        return false unless matches_locator_filter?(node)
 
-        applied_filters << :system
-        return false unless matches_system_filters?(node)
-
-        applied_filters << :node
-        matches_node_filters?(node, node_filter_errors) && matches_filter_block?(node)
+        matches_locator_filter?(node) &&
+          matches_system_filters?(node) &&
+          matches_node_filters?(node, node_filter_errors) &&
+          matches_filter_block?(node)
       rescue *(node.respond_to?(:session) ? node.session.driver.invalid_element_errors : [])
         false
       end
@@ -165,6 +163,8 @@ module Capybara
       end
 
       def matches_node_filters?(node, errors)
+        applied_filters << :node
+
         unapplied_options = options.keys - valid_keys
         @selector.with_filter_errors(errors) do
           node_filters.all? do |filter_name, filter|
@@ -313,6 +313,8 @@ module Capybara
       end
 
       def matches_system_filters?(node)
+        applied_filters << :system
+
         matches_id_filter?(node) &&
           matches_class_filter?(node) &&
           matches_text_filter?(node) &&
