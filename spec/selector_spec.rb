@@ -416,6 +416,22 @@ RSpec.describe Capybara do
           expect(string.find(:element, 'input', title: XPath.contains_word('button 1'))[:type]).to eq 'button'
         end
       end
+
+      describe ':link_or_button selector' do
+        around(:all) do |example|
+          Capybara.modify_selector(:link_or_button) do
+            expression_filter(:random) { |xpath, _| xpath } # do nothing filter
+          end
+          example.run
+          Capybara::Selector.all[:link_or_button].expression_filters.delete(:random)
+        end
+
+        context 'when modified' do
+          it 'should still work' do
+            expect(string.find(:link_or_button, 'click me', random: 'blah').value).to eq 'click me'
+          end
+        end
+      end
     end
   end
 end
