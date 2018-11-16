@@ -161,11 +161,9 @@ Capybara.add_selector(:button) do
       image_btn_xpath = image_btn_xpath[alt_matches]
     end
 
-    res_xpath = input_btn_xpath.union(btn_xpath).union(image_btn_xpath)
-
-    res_xpath = expression_filters.keys.inject(res_xpath) { |memo, ef| memo[find_by_attr(ef, options[ef])] }
-
-    res_xpath
+    %i[value title type].inject(input_btn_xpath.union(btn_xpath).union(image_btn_xpath)) do |memo, ef|
+      memo[find_by_attr(ef, options[ef])]
+    end
   end
 
   node_filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| !(value ^ node.disabled?) }
