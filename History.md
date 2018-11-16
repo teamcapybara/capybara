@@ -1,3 +1,11 @@
+# Version 3.12.0
+Release date: unreleased
+
+### Added
+
+* Support Ruby 2.6 endless range in Result#[]
+
+
 # Version 3.11.1
 Release date: 2018-11-16
 
