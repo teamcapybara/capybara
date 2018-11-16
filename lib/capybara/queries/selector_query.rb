@@ -135,11 +135,11 @@ module Capybara
 
       def find_selector(locator)
         selector = if locator.is_a?(Symbol)
-          Selector.all.fetch(locator) { |sel_type| raise ArgumentError, "Unknown selector type (:#{sel_type})" }
+          Selector[locator] { |sel_type| raise ArgumentError, "Unknown selector type (:#{sel_type})" }
         else
           Selector.all.values.find { |sel| sel.match?(locator) }
         end
-        selector || Selector.all[session_options.default_selector]
+        selector || Selector[session_options.default_selector]
       end
 
       def find_nodes_by_selector_format(node, exact)

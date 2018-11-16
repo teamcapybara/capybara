@@ -169,12 +169,16 @@ module Capybara
         @selectors ||= {} # rubocop:disable Naming/MemoizedInstanceVariableName
       end
 
+      def [](name, &block)
+        all.fetch(name.to_sym, &block)
+      end
+
       def add(name, &block)
         all[name.to_sym] = Capybara::Selector.new(name.to_sym, &block)
       end
 
       def update(name, &block)
-        all[name.to_sym].instance_eval(&block)
+        self[name.to_sym].instance_eval(&block)
       end
 
       def remove(name)

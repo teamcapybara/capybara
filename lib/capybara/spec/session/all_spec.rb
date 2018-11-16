@@ -30,7 +30,7 @@ Capybara::SpecHelper.spec '#all' do
 
   it 'should accept an XPath instance', :exact_false do
     @session.visit('/form')
-    @xpath = Capybara::Selector.all[:fillable_field].call('Name')
+    @xpath = Capybara::Selector[:fillable_field].call('Name')
     expect(@xpath).to be_a(::XPath::Union)
     @result = @session.all(@xpath).map(&:value)
     expect(@result).to include('Smith', 'John', 'John Smith')
