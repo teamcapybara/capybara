@@ -135,6 +135,13 @@ Capybara::SpecHelper.spec '#all' do
       it 'should raise ExpectationNotMet when the number of elements founds does not match the expectation' do
         expect { @session.all(:css, 'h1, p', between: 0..3) }.to raise_error(Capybara::ExpectationNotMet)
       end
+
+      eval <<~TEST, binding, __FILE__, __LINE__ + 1 if RUBY_VERSION.to_f > 2.5
+        it'treats an endless range as minimum' do
+          expect { @session.all(:css, 'h1, p', between: 2..) }.not_to raise_error
+          expect { @session.all(:css, 'h1, p', between: 5..) }.to raise_error(Capybara::ExpectationNotMet)
+        end
+      TEST
     end
 
     context 'with multiple count filters' do

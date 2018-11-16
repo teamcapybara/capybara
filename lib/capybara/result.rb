@@ -92,8 +92,8 @@ module Capybara
       end
 
       if between
-        min, max = between.minmax
-        size = load_up_to(max + 1)
+        min, max = between.min, (between.end && between.max)
+        size = load_up_to(max ? max + 1 : min)
         return between.include?(size) ? 0 : size <=> min
       end
 
