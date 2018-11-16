@@ -428,7 +428,11 @@ RSpec.describe Capybara do
 
         context 'when modified' do
           it 'should still work' do
+            filter = Capybara::Selector.all[:link_or_button].expression_filters[:random]
+            allow(filter).to receive(:apply_filter).and_call_original
+
             expect(string.find(:link_or_button, 'click me', random: 'blah').value).to eq 'click me'
+            expect(filter).to have_received(:apply_filter).with(anything, :random, 'blah', anything)
           end
         end
       end
