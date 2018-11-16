@@ -59,7 +59,7 @@ module Capybara
           nil
         end
       when Range
-        idx.max
+        idx.end && idx.max # endless range will have end == nil
       end
 
       if max_idx.nil?
