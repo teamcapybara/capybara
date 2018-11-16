@@ -75,6 +75,7 @@ RSpec.describe Capybara do
 
       Capybara.add_selector :custom_xpath_selector do
         xpath(:valid1, :valid2) { |selector| selector }
+        match { |value| value == 'match_me' }
       end
     end
 
@@ -117,6 +118,26 @@ RSpec.describe Capybara do
         expect(string).to have_selector(:custom_selector, 'bb', count: 1)
         expect(string).to have_selector(:custom_selector, 'bb', not_empty: false, count: 1)
         expect(string).to have_selector(:custom_selector, 'bb', not_empty: :all, count: 2)
+      end
+    end
+
+    describe '::[]' do
+      it 'can find a selector' do
+        expect(Capybara::Selector[:field]).not_to be_nil
+      end
+
+      it 'raises if no selector found' do
+        expect { Capybara::Selector[:no_exist] }.to raise_error(ArgumentError, /Unknown selector type/)
+      end
+    end
+
+    describe '::for' do
+      it 'finds selector that matches the locator' do
+        expect(Capybara::Selector.for('match_me').name).to eq :custom_xpath_selector
+      end
+
+      it 'returns nil if no match' do
+        expect(Capybara::Selector.for('nothing')).to be nil
       end
     end
 

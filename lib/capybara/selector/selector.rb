@@ -169,8 +169,8 @@ module Capybara
         @selectors ||= {} # rubocop:disable Naming/MemoizedInstanceVariableName
       end
 
-      def [](name, &block)
-        all.fetch(name.to_sym, &block)
+      def [](name)
+        all.fetch(name.to_sym) { |sel_type| raise ArgumentError, "Unknown selector type (:#{sel_type})" }
       end
 
       def add(name, &block)
@@ -178,11 +178,15 @@ module Capybara
       end
 
       def update(name, &block)
-        self[name.to_sym].instance_eval(&block)
+        self[name].instance_eval(&block)
       end
 
       def remove(name)
         all.delete(name.to_sym)
+      end
+
+      def for(locator)
+        all.values.find { |sel| sel.match?(locator) }
       end
     end
 

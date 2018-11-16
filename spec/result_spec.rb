@@ -75,7 +75,7 @@ RSpec.describe Capybara::Result do
     expect(result[1...3].map(&:text)).to eq %w[Beta Gamma]
     expect(result[2..-1].map(&:text)).to eq %w[Gamma Delta]
     expect(result[2...-1].map(&:text)).to eq %w[Gamma]
-    eval <<~TEST if RUBY_VERSION.to_f > 2.5
+    eval <<~TEST, binding, __FILE__, __LINE__ + 1 if RUBY_VERSION.to_f > 2.5
       expect(result[2..].map(&:text)).to eq %w[Gamma Delta]
     TEST
   end
