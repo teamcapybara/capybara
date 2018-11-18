@@ -3,7 +3,7 @@ Release date: unreleased
 
 ### Added
 
-* Support Ruby 2.6 endless range in Result#[]
+* Support Ruby 2.6 endless range in Result#[] and query `:between` option
 
 
 # Version 3.11.1
