@@ -2,7 +2,7 @@
 
 require 'capybara/selenium/extensions/html5_drag'
 
-class Capybara::Selenium::MarionetteNode < Capybara::Selenium::Node
+class Capybara::Selenium::FirefoxNode < Capybara::Selenium::Node
   include Html5Drag
 
   def click(keys = [], **options)

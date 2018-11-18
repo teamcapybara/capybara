@@ -353,7 +353,7 @@ private
       extend ChromeDriver
     when :firefox
       require 'capybara/selenium/patches/pause_duration_fix' if pause_broken?(sel_driver)
-      extend MarionetteDriver if sel_driver.capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
+      extend FirefoxDriver if sel_driver.capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
     end
   end
 
@@ -396,4 +396,4 @@ private
 end
 
 require 'capybara/selenium/driver_specializations/chrome_driver'
-require 'capybara/selenium/driver_specializations/marionette_driver'
+require 'capybara/selenium/driver_specializations/firefox_driver'

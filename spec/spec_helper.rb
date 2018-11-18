@@ -6,17 +6,17 @@ require 'webdrivers' if ENV['CI']
 
 module Capybara
   module SpecHelper
-    def marionette?(session)
+    def firefox?(session)
       browser_name(session) == :firefox &&
         session.driver.browser.capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
     end
 
-    def marionette_lt?(version, session)
-      marionette?(session) && (session.driver.browser.capabilities[:browser_version].to_f < version)
+    def firefox_lt?(version, session)
+      firefox?(session) && (session.driver.browser.capabilities[:browser_version].to_f < version)
     end
 
-    def marionette_gte?(version, session)
-      marionette?(session) && (session.driver.browser.capabilities[:browser_version].to_f >= version)
+    def firefox_gte?(version, session)
+      firefox?(session) && (session.driver.browser.capabilities[:browser_version].to_f >= version)
     end
 
     def chrome?(session)
