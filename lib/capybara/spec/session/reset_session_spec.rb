@@ -144,4 +144,45 @@ Capybara::SpecHelper.spec '#reset_session!' do
     @session.visit('/')
     expect(@session.current_path).to eq('/')
   end
+
+  context "Capybara.clear_storage_on_reset" do
+    it "resets all storage when true", requires: [:server] do
+      Capybara.clear_storage_on_reset = true
+      @session.visit("/set_storage")
+      expect(@session.evaluate_script(
+               "[window.localStorage.getItem('capybara'), window.sessionStorage.getItem('capybara_unload')]"
+             )).to eq %w[42 42]
+      @session.reset!
+      @session.visit("/")
+      expect(@session.evaluate_script(
+               "[window.localStorage.getItem('capybara'), window.sessionStorage.getItem('capybara_unload')]"
+             )).to eq [nil, nil]
+    end
+
+    it "resets local storage when :local", requires: [:server] do
+      Capybara.clear_storage_on_reset = :local
+      @session.visit("/set_storage")
+      expect(@session.evaluate_script(
+               "[window.localStorage.getItem('capybara'), window.sessionStorage.getItem('capybara_unload')]"
+             )).to eq %w[42 42]
+      @session.reset!
+      @session.visit("/")
+      expect(@session.evaluate_script(
+               "[window.localStorage.getItem('capybara'), window.sessionStorage.getItem('capybara_unload')]"
+             )).to eq [nil, '43']
+    end
+
+    it "resets session storage when :session", requires: [:server] do
+      Capybara.clear_storage_on_reset = :session
+      @session.visit("/set_storage")
+      expect(@session.evaluate_script(
+               "[window.localStorage.getItem('capybara'), window.sessionStorage.getItem('capybara_unload')]"
+             )).to eq %w[42 42]
+      @session.reset!
+      @session.visit("/")
+      expect(@session.evaluate_script(
+               "[window.localStorage.getItem('capybara'), window.sessionStorage.getItem('capybara_unload')]"
+             )).to eq ['42', nil]
+    end
+  end
 end

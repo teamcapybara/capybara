@@ -1,0 +1,18 @@
+<html>
+<head>
+  <script>
+      window.localStorage.setItem("capybara", 42);
+      window.sessionStorage.setItem("capybara", 42);
+      window.localStorage.setItem("capybara_unload", 42);
+      window.sessionStorage.setItem("capybara_unload", 42);
+
+      window.onbeforeunload = function(e) {
+        window.localStorage.setItem("capybara_unload", 43);
+        window.sessionStorage.setItem("capybara_unload", 43);
+      };
+  </script>
+</head>
+<body>
+  <div>This sets storage</div>
+</body>
+</html>

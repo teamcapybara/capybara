@@ -154,6 +154,16 @@ class Capybara::Driver::Base
 
   def reset!; end
 
+  ##
+  #
+  # Clear local and/or session storage
+  # @param only_clear [nil, :local, :session]
+  #
+  #
+  def clear_storage(only_clear = nil)
+    yield
+  end
+
   def needs_server?
     false
   end
