@@ -69,128 +69,179 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
     end
 
-    context '#fill_in_with empty string and no options' do
-      it 'should trigger change when clearing a field' do
-        session.visit('/with_js')
-        session.fill_in('with_change_event', with: '')
-        # click outside the field to trigger the change event
-        session.find(:css, 'body').click
-        expect(session).to have_selector(:css, '.change_event_triggered', match: :one)
-      end
-    end
-
-    context '#fill_in with { :clear => :backspace } fill_option', requires: [:js] do
-      before do
-        # Firefox has an issue with change events if the main window doesn't think it's focused
-        session.execute_script('window.focus()')
+    describe '#fill_in' do
+      context 'with empty string and no options' do
+        it 'should trigger change when clearing a field' do
+          session.visit('/with_js')
+          session.fill_in('with_change_event', with: '')
+          # click outside the field to trigger the change event
+          session.find(:css, 'body').click
+          expect(session).to have_selector(:css, '.change_event_triggered', match: :one)
+        end
       end
 
-      it 'should fill in a field, replacing an existing value' do
-        session.visit('/form')
-        session.fill_in('form_first_name',
-                        with: 'Harry',
-                        fill_options: { clear: :backspace })
-        expect(session.find(:fillable_field, 'form_first_name').value).to eq('Harry')
+      context 'with { :clear => :backspace } fill_option', requires: [:js] do
+        before do
+          # Firefox has an issue with change events if the main window doesn't think it's focused
+          session.execute_script('window.focus()')
+        end
+
+        it 'should fill in a field, replacing an existing value' do
+          session.visit('/form')
+          session.fill_in('form_first_name',
+                          with: 'Harry',
+                          fill_options: { clear: :backspace })
+          expect(session.find(:fillable_field, 'form_first_name').value).to eq('Harry')
+        end
+
+        it 'should fill in a field, replacing an existing value, even with caret position' do
+          session.visit('/form')
+          session.find(:css, '#form_first_name').execute_script <<-JS
+            this.focus();
+            this.setSelectionRange(0, 0);
+          JS
+
+          session.fill_in('form_first_name',
+                          with: 'Harry',
+                          fill_options: { clear: :backspace })
+          expect(session.find(:fillable_field, 'form_first_name').value).to eq('Harry')
+        end
+
+        it 'should fill in if the option is set via global option' do
+          Capybara.default_set_options = { clear: :backspace }
+          session.visit('/form')
+          session.fill_in('form_first_name', with: 'Thomas')
+          expect(session.find(:fillable_field, 'form_first_name').value).to eq('Thomas')
+        end
+
+        it 'should only trigger onchange once' do
+          session.visit('/with_js')
+          session.fill_in('with_change_event',
+                          with: 'some value',
+                          fill_options: { clear: :backspace })
+          # click outside the field to trigger the change event
+          session.find(:css, '#with_focus_event').click
+          expect(session.find(:css, '.change_event_triggered', match: :one, wait: 5)).to have_text 'some value'
+        end
+
+        it 'should trigger change when clearing field' do
+          session.visit('/with_js')
+          session.fill_in('with_change_event',
+                          with: '',
+                          fill_options: { clear: :backspace })
+          # click outside the field to trigger the change event
+          session.find(:css, '#with_focus_event').click
+          expect(session).to have_selector(:css, '.change_event_triggered', match: :one, wait: 5)
+        end
+
+        it 'should trigger input event field_value.length times' do
+          session.visit('/with_js')
+          session.fill_in('with_change_event',
+                          with: '',
+                          fill_options: { clear: :backspace })
+          # click outside the field to trigger the change event
+          session.find(:css, 'body').click
+          expect(session).to have_xpath('//p[@class="input_event_triggered"]', count: 13)
+        end
       end
 
-      it 'should fill in a field, replacing an existing value, even with caret position' do
-        session.visit('/form')
-        session.find(:css, '#form_first_name').execute_script <<-JS
-          this.focus();
-          this.setSelectionRange(0, 0);
-        JS
-
-        session.fill_in('form_first_name',
-                        with: 'Harry',
-                        fill_options: { clear: :backspace })
-        expect(session.find(:fillable_field, 'form_first_name').value).to eq('Harry')
+      context 'with { clear: :none } fill_options' do
+        it 'should append to content in a field' do
+          session.visit('/form')
+          session.fill_in('form_first_name',
+                          with: 'Harry',
+                          fill_options: { clear: :none })
+          expect(session.find(:fillable_field, 'form_first_name').value).to eq('JohnHarry')
+        end
       end
 
-      it 'should fill in if the option is set via global option' do
-        Capybara.default_set_options = { clear: :backspace }
-        session.visit('/form')
-        session.fill_in('form_first_name', with: 'Thomas')
-        expect(session.find(:fillable_field, 'form_first_name').value).to eq('Thomas')
+      context  'with Date', :focus_ do
+        before do
+          session.visit('/form')
+          session.find(:css, '#form_date').execute_script <<-JS
+            window.capybara_formDateFiredEvents = [];
+            var fd = this;
+            ['focus', 'input', 'change', 'keydown'].forEach(function(eventType) {
+              fd.addEventListener(eventType, function() { window.capybara_formDateFiredEvents.push(eventType); });
+            });
+          JS
+          # work around weird FF issue where it would create an extra focus issue in some cases
+          session.find(:css, 'body').click
+        end
+
+        it 'should generate standard events on changing value' do
+          pending "IE 11 doesn't support date input type" if ie?(session)
+          session.fill_in('form_date', with: Date.today)
+          expect(session.evaluate_script('window.capybara_formDateFiredEvents')).to eq %w[focus input change]
+        end
+
+        it 'should not generate key events without as_keys option' do
+          session.fill_in('form_date', with: Date.today)
+          expect(session.evaluate_script('window.capybara_formDateFiredEvents')).not_to include('keydown')
+        end
+
+        it 'should generate key events with as_keys option' do
+          session.fill_in('form_date', with: Date.today, fill_options: { as_keys: true })
+          expect(session.evaluate_script('window.capybara_formDateFiredEvents')).to include('keydown')
+        end
+
+        it 'should not generate input and change events if the value is not changed' do
+          pending "IE 11 doesn't support date input type" if ie?(session)
+          session.fill_in('form_date', with: Date.today)
+          session.fill_in('form_date', with: Date.today)
+          # Chrome adds an extra focus for some reason - ok for now
+          expect(session.evaluate_script('window.capybara_formDateFiredEvents')).to eq(%w[focus input change])
+        end
+
+        context 'with :as_keys options' do
+          it 'should fill in a date input' do
+            date = Date.today
+            session.fill_in('form_date', with: date, fill_options: { as_keys: true })
+            session.click_button('awesome')
+            expect(Date.parse(extract_results(session)['date'])).to eq date
+          end
+
+          it 'should fill in a time input' do
+            time = Time.new(2019, 2, 11, 7, 3)
+            session.fill_in('form_time', with: time, fill_options: { as_keys: true })
+            session.click_button('awesome')
+            results = extract_results(session)['time']
+            expect(Time.parse(results).strftime('%r')).to eq time.strftime('%r')
+          end
+
+          it 'should fill in a time input with seconds' do
+            time = Time.new(2018, 11, 4, 3, 24, 17)
+            session.fill_in('form_time_with_seconds', with: time, fill_options: { as_keys: true })
+            session.click_button('awesome')
+            results = extract_results(session)['time_with_seconds']
+            expect(Time.parse(results).strftime('%r')).to eq time.strftime('%r')
+          end
+
+          it 'should fill in a datetime input' do
+            dt = Time.new(2018, 10, 13, 12, 53)
+            session.fill_in('form_datetime', with: dt, fill_options: { as_keys: true })
+            session.click_button('awesome')
+            expect(Time.parse(extract_results(session)['datetime'])).to eq dt
+          end
+
+          it 'should fill in a datetime input with seconds' do
+            dt = Time.new(2018, 3, 13, 9, 53, 13)
+            session.fill_in('form_datetime_with_seconds', with: dt, fill_options: { as_keys: true })
+            session.click_button('awesome')
+            expect(Time.parse(extract_results(session)['datetime_with_seconds'])).to eq dt
+          end
+        end
       end
 
-      it 'should only trigger onchange once' do
-        session.visit('/with_js')
-        session.fill_in('with_change_event',
-                        with: 'some value',
-                        fill_options: { clear: :backspace })
-        # click outside the field to trigger the change event
-        session.find(:css, '#with_focus_event').click
-        expect(session.find(:css, '.change_event_triggered', match: :one, wait: 5)).to have_text 'some value'
-      end
-
-      it 'should trigger change when clearing field' do
-        session.visit('/with_js')
-        session.fill_in('with_change_event',
-                        with: '',
-                        fill_options: { clear: :backspace })
-        # click outside the field to trigger the change event
-        session.find(:css, '#with_focus_event').click
-        expect(session).to have_selector(:css, '.change_event_triggered', match: :one, wait: 5)
-      end
-
-      it 'should trigger input event field_value.length times' do
-        session.visit('/with_js')
-        session.fill_in('with_change_event',
-                        with: '',
-                        fill_options: { clear: :backspace })
-        # click outside the field to trigger the change event
-        session.find(:css, 'body').click
-        expect(session).to have_xpath('//p[@class="input_event_triggered"]', count: 13)
-      end
-    end
-
-    context '#fill_in with { clear: :none } fill_options' do
-      it 'should append to content in a field' do
-        session.visit('/form')
-        session.fill_in('form_first_name',
-                        with: 'Harry',
-                        fill_options: { clear: :none })
-        expect(session.find(:fillable_field, 'form_first_name').value).to eq('JohnHarry')
-      end
-    end
-
-    context  '#fill_in with Date' do
-      before do
-        session.visit('/form')
-        session.find(:css, '#form_date').execute_script <<-JS
-          window.capybara_formDateFiredEvents = [];
-          var fd = this;
-          ['focus', 'input', 'change'].forEach(function(eventType) {
-            fd.addEventListener(eventType, function() { window.capybara_formDateFiredEvents.push(eventType); });
-          });
-        JS
-        # work around weird FF issue where it would create an extra focus issue in some cases
-        session.find(:css, 'body').click
-      end
-
-      it 'should generate standard events on changing value' do
-        pending "IE 11 doesn't support date input type" if ie?(session)
-        session.fill_in('form_date', with: Date.today)
-        expect(session.evaluate_script('window.capybara_formDateFiredEvents')).to eq %w[focus input change]
-      end
-
-      it 'should not generate input and change events if the value is not changed' do
-        pending "IE 11 doesn't support date input type" if ie?(session)
-        session.fill_in('form_date', with: Date.today)
-        session.fill_in('form_date', with: Date.today)
-        # Chrome adds an extra focus for some reason - ok for now
-        expect(session.evaluate_script('window.capybara_formDateFiredEvents')).to eq(%w[focus input change])
-      end
-    end
-
-    context '#fill_in with { clear: Array } fill_options' do
-      it 'should pass the array through to the element' do
-        # this is mainly for use with [[:control, 'a'], :backspace] - however since that is platform dependant I'm testing with something less useful
-        session.visit('/form')
-        session.fill_in('form_first_name',
-                        with: 'Harry',
-                        fill_options: { clear: [[:shift, 'abc'], :backspace] })
-        expect(session.find(:fillable_field, 'form_first_name').value).to eq('JohnABHarry')
+      context 'with { clear: Array } fill_options' do
+        it 'should pass the array through to the element' do
+          # this is mainly for use with [[:control, 'a'], :backspace] - however since that is platform dependant I'm testing with something less useful
+          session.visit('/form')
+          session.fill_in('form_first_name',
+                          with: 'Harry',
+                          fill_options: { clear: [[:shift, 'abc'], :backspace] })
+          expect(session.find(:fillable_field, 'form_first_name').value).to eq('JohnABHarry')
+        end
       end
     end
 
