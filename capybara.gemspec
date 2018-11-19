@@ -41,7 +41,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('minitest')
   s.add_development_dependency('puma')
   s.add_development_dependency('rake')
-  s.add_development_dependency('rspec', ['>= 3.4.0'])
+  s.add_development_dependency('rspec', ['>= 3.5.0'])
   s.add_development_dependency('rubocop')
   s.add_development_dependency('rubocop-rspec')
   s.add_development_dependency('selenium-webdriver', ['~>3.5'])

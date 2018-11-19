@@ -140,7 +140,7 @@ There are also explicit tags for each registered driver set up for you (`@seleni
 
 ## <a name="using-capybara-with-rspec"></a>Using Capybara with RSpec
 
-Load RSpec 3.x support by adding the following line (typically to your
+Load RSpec 3.5+ support by adding the following line (typically to your
 `spec_helper.rb` file):
 
 ```ruby

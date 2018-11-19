@@ -16,8 +16,7 @@ module Capybara
         config.filter_run_excluding requires: method(:filter).to_proc
         config.before { Capybara::SpecHelper.reset! }
         config.after { Capybara::SpecHelper.reset! }
-        # Test in 3.5+ where metadata doesn't autotrigger shared context inclusion - will be only behavior in RSpec 4
-        config.shared_context_metadata_behavior = :apply_to_host_groups if config.respond_to?(:shared_context_metadata_behavior=)
+        config.shared_context_metadata_behavior = :apply_to_host_groups
       end
 
       def reset!
