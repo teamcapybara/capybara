@@ -153,7 +153,9 @@ module Capybara
       #     @option offset [Integer] y  Y coordinate to offset the click location from the top left corner of the element
       # @return [Capybara::Node::Element]  The element
       def click(*keys, wait: nil, **offset)
-        synchronize(wait) { base.click(keys, offset) }
+        raise ArgumentError, 'You must specify both x: and y: for a click offset' if nil ^ offset[:x] ^ offset[:y]
+
+        synchronize(wait) { base.click(Array(keys), offset) }
         self
       end
 

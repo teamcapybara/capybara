@@ -406,6 +406,13 @@ Capybara::SpecHelper.spec 'node' do
       expect(locations[:y].to_f).to be_within(1).of(5)
     end
 
+    it 'should raise error if both x and y values are not passed' do
+      @session.visit('with_js')
+      el = @session.find(:css, '#click-test')
+      expect { el.click(x: 5) }.to raise_error ArgumentError
+      expect { el.click(x: nil, y: 3) }.to raise_error ArgumentError
+    end
+
     it 'should be able to click a table row', requires: [:js] do
       @session.visit('/tables')
       tr = @session.find(:css, '#agent_table tr:first-child').click
