@@ -62,17 +62,17 @@ matrix:
         apt:
           packages:
             - awesome
-    - gemfile: gemfiles/Gemfile.edge-marionette
+    - gemfile: gemfiles/Gemfile.edge-firefox
       rvm: ruby-head
       env:
         - CAPYBARA_FF=true
         - CAPYBARA_REMOTE=true
-    - gemfile: gemfiles/Gemfile.edge-marionette
+    - gemfile: gemfiles/Gemfile.edge-firefox
       rvm: ruby-head
       env:
         - CAPYBARA_REMOTE=true
         - HEADLESS=true
-    - gemfile: gemfiles/Gemfile.edge-marionette
+    - gemfile: gemfiles/Gemfile.edge-firefox
       rvm: ruby-head
       env: CAPYBARA_FF=true RUBY_OPT=--jit
       addons:
@@ -94,11 +94,11 @@ matrix:
       script: bundle exec rake spec_rack
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
-    - gemfile: gemfiles/Gemfile.edge-marionette
+    - gemfile: gemfiles/Gemfile.edge-firefox
     - env: W3C=true HEADLESS=true
 before_install:
   - gem update --system
-  - if [[ $BUNDLE_GEMFILE =~ Gemfile.edge-marionette$ ]]; then
+  - if [[ $BUNDLE_GEMFILE =~ Gemfile.edge-firefox$ ]]; then
       pushd ..;
       git clone --depth 1 https://github.com/SeleniumHQ/selenium.git;
       cd selenium; ./go //rb:gem:build;

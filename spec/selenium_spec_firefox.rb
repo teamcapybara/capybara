@@ -15,7 +15,7 @@ browser_options.profile = Selenium::WebDriver::Firefox::Profile.new.tap do |prof
   profile['browser.helperApps.neverAsk.saveToDisk'] = 'text/csv'
 end
 
-Capybara.register_driver :selenium_marionette do |app|
+Capybara.register_driver :selenium_firefox do |app|
   # ::Selenium::WebDriver.logger.level = "debug"
   Capybara::Selenium::Driver.new(
     app,
@@ -26,7 +26,7 @@ Capybara.register_driver :selenium_marionette do |app|
   )
 end
 
-Capybara.register_driver :selenium_marionette_clear_storage do |app|
+Capybara.register_driver :selenium_firefox_clear_storage do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
@@ -37,7 +37,7 @@ Capybara.register_driver :selenium_marionette_clear_storage do |app|
 end
 
 module TestSessions
-  SeleniumMarionette = Capybara::Session.new(:selenium_marionette, TestApp)
+  SeleniumFirefox = Capybara::Session.new(:selenium_firefox, TestApp)
 end
 
 skipped_tests = %i[response_headers status_code trigger]
@@ -45,21 +45,21 @@ skipped_tests << :windows if ENV['TRAVIS'] && ENV['SKIP_WINDOW']
 
 $stdout.puts `#{Selenium::WebDriver::Firefox.driver_path} --version` if ENV['CI']
 
-Capybara::SpecHelper.run_specs TestSessions::SeleniumMarionette, 'selenium', capybara_skip: skipped_tests do |example|
+Capybara::SpecHelper.run_specs TestSessions::SeleniumFirefox, 'selenium', capybara_skip: skipped_tests do |example|
   case example.metadata[:full_description]
   when 'Capybara::Session selenium node #click should allow multiple modifiers'
-    pending "Firefox doesn't generate an event for shift+control+click" if marionette_gte?(62, @session) && !Gem.win_platform?
+    pending "Firefox doesn't generate an event for shift+control+click" if firefox_gte?(62, @session) && !Gem.win_platform?
   when /^Capybara::Session selenium node #double_click/
-    pending "selenium-webdriver/geckodriver doesn't generate double click event" if marionette_lt?(59, @session)
+    pending "selenium-webdriver/geckodriver doesn't generate double click event" if firefox_lt?(59, @session)
   when 'Capybara::Session selenium #accept_prompt should accept the prompt with a blank response when there is a default'
-    pending "Geckodriver doesn't set a blank response in FF < 63 - https://bugzilla.mozilla.org/show_bug.cgi?id=1486485" if marionette_lt?(63, @session)
+    pending "Geckodriver doesn't set a blank response in FF < 63 - https://bugzilla.mozilla.org/show_bug.cgi?id=1486485" if firefox_lt?(63, @session)
   when 'Capybara::Session selenium #attach_file with multipart form should fire change once for each set of files uploaded'
     pending 'Gekcodriver appends files so we have to first call clear for multiple files which creates an extra change ' \
             'if files are already set'
   when 'Capybara::Session selenium #attach_file with multipart form should fire change once when uploading multiple files from empty'
-    pending "FF < 62 doesn't support setting all files at once" if marionette_lt?(62, @session)
+    pending "FF < 62 doesn't support setting all files at once" if firefox_lt?(62, @session)
   when 'Capybara::Session selenium #accept_confirm should work with nested modals'
-    skip 'Broken in FF 63 - https://bugzilla.mozilla.org/show_bug.cgi?id=1487358' if marionette_gte?(63, @session)
+    skip 'Broken in FF 63 - https://bugzilla.mozilla.org/show_bug.cgi?id=1487358' if firefox_gte?(63, @session)
   when 'Capybara::Session selenium #click_link can download a file'
     skip 'Need to figure out testing of file downloading on windows platform' if Gem.win_platform?
   when 'Capybara::Session selenium #reset_session! removes ALL cookies'
@@ -69,8 +69,8 @@ end
 
 RSpec.describe 'Capybara::Session with firefox' do # rubocop:disable RSpec/MultipleDescribes
   include Capybara::SpecHelper
-  include_examples  'Capybara::Session', TestSessions::SeleniumMarionette, :selenium_marionette
-  include_examples  Capybara::RSpecMatchers, TestSessions::SeleniumMarionette, :selenium_marionette
+  include_examples  'Capybara::Session', TestSessions::SeleniumFirefox, :selenium_firefox
+  include_examples  Capybara::RSpecMatchers, TestSessions::SeleniumFirefox, :selenium_firefox
 end
 
 RSpec.describe Capybara::Selenium::Driver do
@@ -126,7 +126,7 @@ RSpec.describe Capybara::Selenium::Driver do
   context 'storage' do
     describe '#reset!' do
       it 'does not clear either storage by default' do
-        @session = TestSessions::SeleniumMarionette
+        @session = TestSessions::SeleniumFirefox
         @session.visit('/with_js')
         @session.find(:css, '#set-storage').click
         @session.reset!
@@ -136,7 +136,7 @@ RSpec.describe Capybara::Selenium::Driver do
       end
 
       it 'clears storage when set' do
-        @session = Capybara::Session.new(:selenium_marionette_clear_storage, TestApp)
+        @session = Capybara::Session.new(:selenium_firefox_clear_storage, TestApp)
         @session.visit('/with_js')
         @session.find(:css, '#set-storage').click
         @session.reset!
@@ -151,7 +151,7 @@ end
 RSpec.describe Capybara::Selenium::Node do
   context '#click' do
     it 'warns when attempting on a table row' do
-      session = TestSessions::SeleniumMarionette
+      session = TestSessions::SeleniumFirefox
       session.visit('/tables')
       tr = session.find(:css, '#agent_table tr:first-child')
       allow(tr.base).to receive(:warn)
@@ -160,7 +160,7 @@ RSpec.describe Capybara::Selenium::Node do
     end
 
     it 'should allow multiple modifiers', requires: [:js] do
-      session = TestSessions::SeleniumMarionette
+      session = TestSessions::SeleniumFirefox
       session.visit('with_js')
       # Firefox v62+ doesn't generate an event for control+shift+click
       session.find(:css, '#click-test').click(:alt, :ctrl, :meta)
@@ -171,7 +171,7 @@ RSpec.describe Capybara::Selenium::Node do
 
   context '#send_keys' do
     it 'should process space' do
-      session = TestSessions::SeleniumMarionette
+      session = TestSessions::SeleniumFirefox
       session.visit('/form')
       session.find(:css, '#address1_city').send_keys('ocean', [:shift, :space, 'side'])
       expect(session.find(:css, '#address1_city').value).to eq 'ocean SIDE'

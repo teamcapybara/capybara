@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'capybara/selenium/nodes/marionette_node'
+require 'capybara/selenium/nodes/firefox_node'
 
-module Capybara::Selenium::Driver::MarionetteDriver
+module Capybara::Selenium::Driver::FirefoxDriver
   def resize_window_to(handle, width, height)
     within_given_window(handle) do
       # Don't set the size if already set - See https://github.com/mozilla/geckodriver/issues/643
@@ -45,6 +45,6 @@ module Capybara::Selenium::Driver::MarionetteDriver
 private
 
   def build_node(native_node)
-    ::Capybara::Selenium::MarionetteNode.new(self, native_node)
+    ::Capybara::Selenium::FirefoxNode.new(self, native_node)
   end
 end

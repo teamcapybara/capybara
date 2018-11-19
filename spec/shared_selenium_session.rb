@@ -295,7 +295,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
 
     describe 'Element#drag_to' do
       before do
-        skip "Firefox < 62 doesn't support a DataTransfer constuctor" if marionette_lt?(62.0, session)
+        skip "Firefox < 62 doesn't support a DataTransfer constuctor" if firefox_lt?(62.0, session)
         skip "IE doesn't support a DataTransfer constuctor" if ie?(session)
       end
 
@@ -336,7 +336,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
 
     describe 'Capybara#Node#attach_file' do
       it 'can attach a directory' do
-        pending "Geckodriver doesn't support uploading a directory" if marionette?(session)
+        pending "Geckodriver doesn't support uploading a directory" if firefox?(session)
         pending "Selenium remote doesn't support transferring a directory" if remote?(session)
         pending "Headless Chrome doesn't support directory upload - https://bugs.chromium.org/p/chromedriver/issues/detail?id=2521&q=directory%20upload&colspec=ID%20Status%20Pri%20Owner%20Summary" if chrome?(session) && ENV['HEADLESS']
 
