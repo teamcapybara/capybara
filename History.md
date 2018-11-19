@@ -5,6 +5,9 @@ Release date: unreleased
 
 * Support Ruby 2.6 endless range in Result#[] and query `:between` option
 
+### Removed
+
+* Support for RSpec < 3.5
 
 # Version 3.11.1
 Release date: 2018-11-16
