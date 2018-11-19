@@ -7,13 +7,13 @@ module Capybara
         value = str.dup
         out = +''
         out << value.slice!(0...1) if value =~ /^[-_]/
-        out << (value[0] =~ NMSTART ? value.slice!(0...1) : escape_char(value.slice!(0...1)))
+        out << (NMSTART.match?(value[0]) ? value.slice!(0...1) : escape_char(value.slice!(0...1)))
         out << value.gsub(/[^a-zA-Z0-9_-]/) { |char| escape_char char }
         out
       end
 
       def self.escape_char(char)
-        char =~ %r{[ -/:-~]} ? "\\#{char}" : format('\\%06x', char.ord)
+        %r{[ -/:-~]}.match?(char) ? "\\#{char}" : format('\\%06x', char.ord)
       end
 
       def self.split(css)

@@ -838,7 +838,7 @@ module Capybara
       when Array
         arg.map { |subarg| element_script_result(subarg) }
       when Hash
-        arg.each { |key, value| arg[key] = element_script_result(value) }
+        arg.transform_values { |value| element_script_result(value) }
       when Capybara::Driver::Node
         Capybara::Node::Element.new(self, arg, nil, nil)
       else
