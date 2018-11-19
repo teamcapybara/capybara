@@ -194,7 +194,7 @@ module Capybara
       end
 
       def filter_set(name)
-        ::Capybara::Selector::FilterSet.all[name]
+        ::Capybara::Selector::FilterSet[name]
       end
 
       def node_filters

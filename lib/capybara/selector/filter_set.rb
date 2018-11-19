@@ -52,20 +52,25 @@ module Capybara
       end
 
       def import(name, filters = nil)
-        f_set = self.class.all[name]
         filter_selector = filters.nil? ? ->(*) { true } : ->(filter_name, _) { filters.include? filter_name }
 
-        expression_filters.merge!(f_set.expression_filters.select(&filter_selector))
-        node_filters.merge!(f_set.node_filters.select(&filter_selector))
-
-        f_set.undeclared_descriptions.each { |desc| describe(&desc) }
-        f_set.expression_filter_descriptions.each { |desc| describe(:expression_filters, &desc) }
-        f_set.node_filter_descriptions.each { |desc| describe(:node_filters, &desc) }
+        self.class[name].tap do |f_set|
+          expression_filters.merge!(f_set.expression_filters.select(&filter_selector))
+          node_filters.merge!(f_set.node_filters.select(&filter_selector))
+          f_set.undeclared_descriptions.each { |desc| describe(&desc) }
+          f_set.expression_filter_descriptions.each { |desc| describe(:expression_filters, &desc) }
+          f_set.node_filter_descriptions.each { |desc| describe(:node_filters, &desc) }
+        end
+        self
       end
 
       class << self
         def all
           @filter_sets ||= {} # rubocop:disable Naming/MemoizedInstanceVariableName
+        end
+
+        def [](name)
+          all.fetch(name.to_sym) { |set_name| raise ArgumentError, "Unknown filter set (:#{set_name})" }
         end
 
         def add(name, &block)
@@ -107,11 +112,8 @@ module Capybara
         types.each { |type| options[type] = true }
         raise 'ArgumentError', ':default option is not supported for filters with a :matcher option' if matcher && options[:default]
 
-        if filter_class <= Filters::ExpressionFilter
-          @expression_filters[name] = filter_class.new(name, matcher, block, options)
-        else
-          @node_filters[name] = filter_class.new(name, matcher, block, options)
-        end
+        filter = filter_class.new(name, matcher, block, options)
+        (filter_class <= Filters::ExpressionFilter ? @expression_filters : @node_filters)[name] = filter
       end
     end
   end
