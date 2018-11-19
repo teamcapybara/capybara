@@ -31,22 +31,22 @@ module Capybara
         def split(css)
           selectors = []
           StringIO.open(css.to_s) do |str|
-            selector = ''
+            selector = +''
             while (char = str.getc)
               case char
               when '['
-                selector += parse_square(str)
+                selector << parse_square(str)
               when '('
-                selector += parse_paren(str)
+                selector << parse_paren(str)
               when '"', "'"
-                selector += parse_string(char, str)
+                selector << parse_string(char, str)
               when '\\'
-                selector += char + str.getc
+                selector << char + str.getc
               when ','
                 selectors << selector.strip
-                selector = ''
+                selector.clear
               else
-                selector += char
+                selector << char
               end
             end
             selectors << selector.strip
