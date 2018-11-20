@@ -6,8 +6,8 @@ require 'English'
 class Capybara::Selenium::Driver < Capybara::Driver::Base
   DEFAULT_OPTIONS = {
     browser: :firefox,
-    clear_local_storage: false,
-    clear_session_storage: false
+    clear_local_storage: nil,
+    clear_session_storage: nil
   }.freeze
   SPECIAL_OPTIONS = %i[browser clear_local_storage clear_session_storage].freeze
   attr_reader :app, :options
@@ -260,15 +260,17 @@ private
   end
 
   def clear_storage
-    clear_session_storage if options[:clear_session_storage]
-    clear_local_storage if options[:clear_local_storage]
+    clear_session_storage unless options[:clear_session_storage] == false
+    clear_local_storage unless options[:clear_local_storage] == false
+  rescue Selenium::WebDriver::Error::JavascriptError # rubocop:disable Lint/HandleExceptions
+    # session/local storage may not be available if on non-http pages (e.g. about:blank)
   end
 
   def clear_session_storage
     if @browser.respond_to? :session_storage
       @browser.session_storage.clear
     else
-      warn 'sessionStorage clear requested but is not available for this driver'
+      warn 'sessionStorage clear requested but is not supported by this driver' unless options[:clear_session_storage].nil?
     end
   end
 
@@ -276,7 +278,7 @@ private
     if @browser.respond_to? :local_storage
       @browser.local_storage.clear
     else
-      warn 'localStorage clear requested but is not available for this driver'
+      warn 'localStorage clear requested but is not supported by this driver' unless options[:clear_local_storage].nil?
     end
   end
 

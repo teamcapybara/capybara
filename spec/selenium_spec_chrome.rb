@@ -17,12 +17,12 @@ Capybara.register_driver :selenium_chrome do |app|
   end
 end
 
-Capybara.register_driver :selenium_chrome_clear_storage do |app|
+Capybara.register_driver :selenium_chrome_not_clear_storage do |app|
   chrome_options = {
     browser: :chrome,
     options: browser_options
   }
-  Capybara::Selenium::Driver.new(app, chrome_options.merge(clear_local_storage: true, clear_session_storage: true))
+  Capybara::Selenium::Driver.new(app, chrome_options.merge(clear_local_storage: false, clear_session_storage: false))
 end
 
 module TestSessions
@@ -49,28 +49,24 @@ RSpec.describe 'Capybara::Session with chrome' do
 
   context 'storage' do
     describe '#reset!' do
-      it 'does not clear either storage by default' do
+      it 'clears storage by default' do
         @session = TestSessions::Chrome
         @session.visit('/with_js')
         @session.find(:css, '#set-storage').click
         @session.reset!
         @session.visit('/with_js')
-        # expect(@session.driver.browser.local_storage.keys).not_to be_empty
-        # expect(@session.driver.browser.session_storage.keys).not_to be_empty
-        expect(@session.evaluate_script('Object.keys(localStorage)')).not_to be_empty
-        expect(@session.evaluate_script('Object.keys(sessionStorage)')).not_to be_empty
+        expect(@session.evaluate_script('Object.keys(localStorage)')).to be_empty
+        expect(@session.evaluate_script('Object.keys(sessionStorage)')).to be_empty
       end
 
-      it 'clears storage when set' do
-        @session = Capybara::Session.new(:selenium_chrome_clear_storage, TestApp)
+      it 'does not clear storage when false' do
+        @session = Capybara::Session.new(:selenium_chrome_not_clear_storage, TestApp)
         @session.visit('/with_js')
         @session.find(:css, '#set-storage').click
         @session.reset!
         @session.visit('/with_js')
-        # expect(@session.driver.browser.local_storage.keys).to be_empty
-        # expect(@session.driver.browser.session_storage.keys).to be_empty
-        expect(@session.evaluate_script('Object.keys(localStorage)')).to be_empty
-        expect(@session.evaluate_script('Object.keys(sessionStorage)')).to be_empty
+        expect(@session.evaluate_script('Object.keys(localStorage)')).not_to be_empty
+        expect(@session.evaluate_script('Object.keys(sessionStorage)')).not_to be_empty
       end
     end
   end

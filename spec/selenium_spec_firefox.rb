@@ -26,12 +26,12 @@ Capybara.register_driver :selenium_firefox do |app|
   )
 end
 
-Capybara.register_driver :selenium_firefox_clear_storage do |app|
+Capybara.register_driver :selenium_firefox_not_clear_storage do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
-    clear_local_storage: true,
-    clear_session_storage: true,
+    clear_local_storage: false,
+    clear_session_storage: false,
     options: browser_options
   )
 end
@@ -125,24 +125,24 @@ RSpec.describe Capybara::Selenium::Driver do
 
   context 'storage' do
     describe '#reset!' do
-      it 'does not clear either storage by default' do
+      it 'clears storage by default' do
         @session = TestSessions::SeleniumFirefox
-        @session.visit('/with_js')
-        @session.find(:css, '#set-storage').click
-        @session.reset!
-        @session.visit('/with_js')
-        expect(@session.driver.browser.local_storage.keys).not_to be_empty
-        expect(@session.driver.browser.session_storage.keys).not_to be_empty
-      end
-
-      it 'clears storage when set' do
-        @session = Capybara::Session.new(:selenium_firefox_clear_storage, TestApp)
         @session.visit('/with_js')
         @session.find(:css, '#set-storage').click
         @session.reset!
         @session.visit('/with_js')
         expect(@session.driver.browser.local_storage.keys).to be_empty
         expect(@session.driver.browser.session_storage.keys).to be_empty
+      end
+
+      it 'does not clear storage when false' do
+        @session = Capybara::Session.new(:selenium_firefox_not_clear_storage, TestApp)
+        @session.visit('/with_js')
+        @session.find(:css, '#set-storage').click
+        @session.reset!
+        @session.visit('/with_js')
+        expect(@session.driver.browser.local_storage.keys).not_to be_empty
+        expect(@session.driver.browser.session_storage.keys).not_to be_empty
       end
     end
   end
