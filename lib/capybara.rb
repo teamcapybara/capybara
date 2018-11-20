@@ -532,6 +532,13 @@ Capybara.register_driver :selenium do |app|
   Capybara::Selenium::Driver.new(app)
 end
 
+Capybara.register_driver :selenium_headless do |app|
+  Capybara::Selenium::Driver.load_selenium
+  browser_options = ::Selenium::WebDriver::Firefox::Options.new
+  browser_options.args << '-headless'
+  Capybara::Selenium::Driver.new(app, browser: :firefox, options: browser_options)
+end
+
 Capybara.register_driver :selenium_chrome do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome)
 end
