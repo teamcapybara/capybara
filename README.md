@@ -405,7 +405,7 @@ to the browsers.  See the section on adding and configuring drivers.
 
 **Note**: drivers which run the server in a different thread may not share the
 same transaction as your tests, causing data not to be shared between your test
-and test server, see "Transactions and database setup" below.
+and test server, see [Transactions and database setup](#transactions-and-database-setup) below.
 
 ### <a name="capybara-webkit"></a>Capybara-webkit
 
