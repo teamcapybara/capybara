@@ -395,6 +395,7 @@ and add it to your Gemfile if you're using bundler.
 Capybara pre-registers a number of named drives that use Selenium - they are:
 
   * :selenium                 => Selenium driving Firefox
+  * :selenium_headless        => Selenium driving Firefox in a headless configuration
   * :selenium_chrome          => Selenium driving Chrome
   * :selenium_chrome_headless => Selenium driving Chrome in a headless configuration
 
