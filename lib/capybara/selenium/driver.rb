@@ -9,7 +9,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     clear_local_storage: nil,
     clear_session_storage: nil
   }.freeze
-  SPECIAL_OPTIONS = %i[browser clear_local_storage clear_session_storage].freeze
+  SPECIAL_OPTIONS = %i[browser clear_local_storage clear_session_storage timeout].freeze
   attr_reader :app, :options
 
   def self.load_selenium
@@ -23,6 +23,9 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def browser
     @browser ||= begin
+      if options[:timeout]
+        options[:http_client] ||= Selenium::WebDriver::Remote::Http::Default.new(read_timeout: options[:timeout])
+      end
       processed_options = options.reject { |key, _val| SPECIAL_OPTIONS.include?(key) }
       Selenium::WebDriver.for(options[:browser], processed_options).tap do |driver|
         specialize_driver(driver)

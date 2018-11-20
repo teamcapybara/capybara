@@ -12,7 +12,7 @@ browser_options.headless! if ENV['HEADLESS']
 browser_options.add_option(:w3c, !!ENV['W3C'])
 
 Capybara.register_driver :selenium_chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options).tap do |driver|
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options, timeout: 30).tap do |driver|
     driver.browser.download_path = Capybara.save_path
   end
 end
@@ -68,6 +68,12 @@ RSpec.describe 'Capybara::Session with chrome' do
         expect(@session.evaluate_script('Object.keys(localStorage)')).not_to be_empty
         expect(@session.evaluate_script('Object.keys(sessionStorage)')).not_to be_empty
       end
+    end
+  end
+
+  context 'timeout' do
+    it 'sets the http client read timeout' do
+      expect(TestSessions::Chrome.driver.browser.send(:bridge).http.read_timeout).to eq 30
     end
   end
 

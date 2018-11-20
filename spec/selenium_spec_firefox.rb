@@ -21,6 +21,7 @@ Capybara.register_driver :selenium_firefox do |app|
     app,
     browser: :firefox,
     options: browser_options,
+    timeout: 31,
     # Get a trace level log from geckodriver
     # :driver_opts => { args: ['-vv'] }
   )
@@ -144,6 +145,12 @@ RSpec.describe Capybara::Selenium::Driver do
         expect(@session.driver.browser.local_storage.keys).not_to be_empty
         expect(@session.driver.browser.session_storage.keys).not_to be_empty
       end
+    end
+  end
+
+  context 'timeout' do
+    it 'sets the http client read timeout' do
+      expect(TestSessions::SeleniumFirefox.driver.browser.send(:bridge).http.read_timeout).to eq 31
     end
   end
 end
