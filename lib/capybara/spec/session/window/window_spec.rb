@@ -120,7 +120,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
 
     after do
       @session.current_window.resize_to(*@initial_size)
-      sleep 0.5
+      sleep 1
     end
 
     it 'should be able to resize window', requires: %i[windows js] do
@@ -194,7 +194,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
 
     after do
       @session.current_window.resize_to(*@initial_size)
-      sleep 0.5
+      sleep 1
     end
 
     it 'should be able to fullscreen the window' do
