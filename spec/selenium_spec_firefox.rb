@@ -42,7 +42,6 @@ module TestSessions
 end
 
 skipped_tests = %i[response_headers status_code trigger]
-skipped_tests << :windows if ENV['TRAVIS'] && ENV['SKIP_WINDOW']
 
 $stdout.puts `#{Selenium::WebDriver::Firefox.driver_path} --version` if ENV['CI']
 

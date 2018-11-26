@@ -30,8 +30,6 @@ module TestSessions
 end
 
 skipped_tests = %i[response_headers status_code trigger]
-# skip window tests when headless for now - closing a window not supported by chromedriver/chrome
-skipped_tests << :windows if ENV['TRAVIS'] && (ENV['SKIP_WINDOW'] || ENV['HEADLESS'])
 
 $stdout.puts `#{Selenium::WebDriver::Chrome.driver_path} --version` if ENV['CI']
 
@@ -39,6 +37,8 @@ Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_DRIVER.to_s, capybar
   case example.metadata[:full_description]
   when /#click_link can download a file$/
     skip 'Need to figure out testing of file downloading on windows platform' if Gem.win_platform?
+  when /Capybara::Session selenium_chrome Capybara::Window#maximize/
+    pending "Chrome headless doesn't support maximize" if ENV['HEADLESS']
   end
 end
 

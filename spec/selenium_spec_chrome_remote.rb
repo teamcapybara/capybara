@@ -60,8 +60,6 @@ TestSessions::Chrome.driver.browser.file_detector = lambda do |args|
 end
 
 skipped_tests = %i[response_headers status_code trigger download]
-# skip window tests when headless for now - closing a window not supported by chromedriver/chrome
-skipped_tests << :windows if ENV['TRAVIS'] && (ENV['SKIP_WINDOW'] || ENV['HEADLESS'])
 
 Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_REMOTE_DRIVER.to_s, capybara_skip: skipped_tests do |example|
   case example.metadata[:full_description]

@@ -12,8 +12,6 @@ env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
     - JAVA_OPTS=-Djava.security.egd=file:/dev/urandom
-  # matrix:
-  #   - WINDOW_TEST=true
 
 addons:
   apt:
