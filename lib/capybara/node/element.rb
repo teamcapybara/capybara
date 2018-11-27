@@ -166,6 +166,8 @@ module Capybara
       # @macro click_modifiers
       # @return [Capybara::Node::Element]  The element
       def right_click(*keys, wait: nil, **offset)
+        raise ArgumentError, 'You must specify both x: and y: for a click offset' if nil ^ offset[:x] ^ offset[:y]
+
         synchronize(wait) { base.right_click(keys, offset) }
         self
       end
@@ -177,6 +179,8 @@ module Capybara
       # @macro click_modifiers
       # @return [Capybara::Node::Element]  The element
       def double_click(*keys, wait: nil, **offset)
+        raise ArgumentError, 'You must specify both x: and y: for a click offset' if nil ^ offset[:x] ^ offset[:y]
+
         synchronize(wait) { base.double_click(keys, offset) }
         self
       end
