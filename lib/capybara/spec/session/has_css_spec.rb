@@ -27,11 +27,15 @@ Capybara::SpecHelper.spec '#has_css?' do
     expect(@session).to have_css('h2', id: 'h2one')
     expect(@session).to have_css('h2')
     expect(@session).to have_css('h2', id: /h2o/)
+    expect(@session).to have_css('li', id: /john|paul/)
   end
 
   it 'should support :class option' do
     expect(@session).to have_css('li', class: 'guitarist')
     expect(@session).to have_css('li', class: /guitar/)
+    expect(@session).to have_css('li', class: /guitar|drummer/)
+    expect(@session).to have_css('li', class: %w[beatle guitarist])
+    expect(@session).to have_css('li', class: /.*/)
   end
 
   it 'should support case insensitive :class and :id options' do
@@ -111,6 +115,9 @@ Capybara::SpecHelper.spec '#has_css?' do
       expect(@session).to have_css('p', count: 3)
       expect(@session).to have_css('p a#foo', count: 1)
       expect(@session).to have_css('p a.doesnotexist', count: 0)
+      expect(@session).to have_css('li', class: /guitar|drummer/, count: 4)
+      expect(@session).to have_css('li', id: /john|paul/, class: /guitar|drummer/, count: 2)
+      expect(@session).to have_css('li', class: %w[beatle guitarist], count: 2)
     end
 
     it 'should be false if the content occurs a different number of times than the given' do

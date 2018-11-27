@@ -240,10 +240,15 @@ module Capybara
       end
 
       def filtered_css(expr)
+        id_conditions = conditions_from_id if use_default_id_filter?
+        id_conditions = [''] unless id_conditions&.any?
+
+        class_conditions = conditions_from_classes if use_default_class_filter?
+        class_conditions = [''] unless class_conditions&.any?
+
+        conditions = id_conditions.product(class_conditions)
         ::Capybara::Selector::CSS.split(expr).map do |sel|
-          sel += conditions_from_id if use_default_id_filter?
-          sel += conditions_from_classes if use_default_class_filter?
-          sel
+          conditions.map { |(id_cond, class_cond)| sel + id_cond + class_cond }.join(', ')
         end.join(', ')
       end
 
@@ -260,7 +265,7 @@ module Capybara
       end
 
       def conditions_from_id
-        builder.attribute_conditions(id: options[:id])
+        builder.id_conditions(options[:id])
       end
 
       def apply_expression_filters(expression)

@@ -34,7 +34,7 @@ Capybara.add_selector(:css) do
 end
 
 Capybara.add_selector(:id) do
-  xpath { |id| XPath.descendant[builder.attribute_conditions(id: id)] }
+  xpath { |id| XPath.descendant[builder.id_conditions(id)] }
   locator_filter {  |node, id| id.is_a?(Regexp) ? node[:id] =~ id : true }
 end
 

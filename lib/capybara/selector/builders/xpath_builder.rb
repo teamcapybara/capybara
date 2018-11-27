@@ -39,6 +39,10 @@ module Capybara
           end
         end
 
+        def id_conditions(id)
+          attribute_conditions(id: id)
+        end
+
       private
 
         def regexp_to_xpath_conditions(regexp)
