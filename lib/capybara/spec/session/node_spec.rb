@@ -423,7 +423,7 @@ Capybara::SpecHelper.spec 'node' do
       @session.visit('/obscured')
       obscured = @session.find(:css, '#obscured')
       @session.execute_script <<~JS
-        setTimeout(function(){ $('#cover').hide(); }, 1000)
+        setTimeout(function(){ $('#cover').hide(); }, 700)
       JS
       expect { obscured.click }.not_to raise_error
     end
@@ -475,7 +475,7 @@ Capybara::SpecHelper.spec 'node' do
       @session.visit('/obscured')
       obscured = @session.find(:css, '#obscured')
       @session.execute_script <<~JS
-        setTimeout(function(){ $('#cover').hide(); }, 1000)
+        setTimeout(function(){ $('#cover').hide(); }, 700)
       JS
       expect { obscured.double_click }.not_to raise_error
     end
@@ -509,7 +509,7 @@ Capybara::SpecHelper.spec 'node' do
       @session.visit('/obscured')
       obscured = @session.find(:css, '#obscured')
       @session.execute_script <<~JS
-        setTimeout(function(){ $('#cover').hide(); }, 1000)
+        setTimeout(function(){ $('#cover').hide(); }, 700)
       JS
       expect { obscured.right_click }.not_to raise_error
     end
