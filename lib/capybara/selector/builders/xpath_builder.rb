@@ -24,6 +24,19 @@ module Capybara
           end.reduce(:&)
         end
 
+        def add_attribute_conditions(xpath, **conditions)
+          conditions.inject(xpath) do |xp, (name, value)|
+            conditions = name == :class ? class_conditions(value) : attribute_conditions(name => value)
+            if xp.is_a? XPath::Expression
+              xp[conditions]
+            else
+              "(#{xp})[#{conditions}]"
+            end
+          end
+        end
+
+      private
+
         def class_conditions(classes)
           case classes
           when XPath::Expression, Regexp
@@ -38,12 +51,6 @@ module Capybara
             end.reduce(:&)
           end
         end
-
-        def id_conditions(id)
-          attribute_conditions(id: id)
-        end
-
-      private
 
         def regexp_to_xpath_conditions(regexp)
           condition = XPath.current

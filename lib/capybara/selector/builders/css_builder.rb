@@ -30,6 +30,30 @@ module Capybara
           end.join
         end
 
+        def add_attribute_conditions(selector, **attributes)
+          attributes.inject(selector) do |css, (name, value)|
+            conditions = if name == :class
+              class_conditions(value)
+            elsif value.is_a? Regexp
+              Selector::RegexpDisassembler.new(value).alternated_substrings.map do |strs|
+                strs.map do |str|
+                  "[#{name}*='#{str}'#{' i' if value.casefold?}]"
+                end.join
+              end
+            else
+              [attribute_conditions(name => value)]
+            end
+
+            ::Capybara::Selector::CSS.split(css).map do |sel|
+              next sel if conditions.empty?
+
+              conditions.map { |cond| sel + cond }.join(', ')
+            end.join(', ')
+          end
+        end
+
+      private
+
         def class_conditions(classes)
           case classes
           when XPath::Expression
@@ -44,19 +68,6 @@ module Capybara
             cls = Array(classes).group_by { |cl| cl.start_with?('!') && !cl.start_with?('!!!') }
             [(cls[false].to_a.map { |cl| ".#{Capybara::Selector::CSS.escape(cl.sub(/^!!/, ''))}" } +
             cls[true].to_a.map { |cl| ":not(.#{Capybara::Selector::CSS.escape(cl.slice(1..-1))})" }).join]
-          end
-        end
-
-        def id_conditions(id)
-          case id
-          when Regexp
-            Selector::RegexpDisassembler.new(id).alternated_substrings.map do |id_strs|
-              id_strs.map do |str|
-                "[id*='#{str}'#{' i' if id.casefold?}]"
-              end.join
-            end
-          else
-            [attribute_conditions(id: id)]
           end
         end
       end

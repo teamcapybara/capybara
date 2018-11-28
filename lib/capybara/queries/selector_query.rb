@@ -91,11 +91,11 @@ module Capybara
         exact = exact? if exact.nil?
         expr = apply_expression_filters(@expression)
         expr = exact ? expr.to_xpath(:exact) : expr.to_s if expr.respond_to?(:to_xpath)
-        filtered_xpath(expr)
+        filtered_expression(expr)
       end
 
       def css
-        filtered_css(apply_expression_filters(@expression))
+        filtered_expression(apply_expression_filters(@expression))
       end
 
       # @api private
@@ -233,23 +233,11 @@ module Capybara
         raise ArgumentError, "invalid keys #{invalid_names}, should be one of #{valid_names}"
       end
 
-      def filtered_xpath(expr)
-        expr = "(#{expr})[#{conditions_from_id}]" if use_default_id_filter?
-        expr = "(#{expr})[#{conditions_from_classes}]" if use_default_class_filter?
-        expr
-      end
-
-      def filtered_css(expr)
-        id_conditions = conditions_from_id if use_default_id_filter?
-        id_conditions = [''] unless id_conditions&.any?
-
-        class_conditions = conditions_from_classes if use_default_class_filter?
-        class_conditions = [''] unless class_conditions&.any?
-
-        conditions = id_conditions.product(class_conditions)
-        ::Capybara::Selector::CSS.split(expr).map do |sel|
-          conditions.map { |(id_cond, class_cond)| sel + id_cond + class_cond }.join(', ')
-        end.join(', ')
+      def filtered_expression(expr)
+        conditions = {}
+        conditions[:id] = options[:id] if use_default_id_filter?
+        conditions[:class] = options[:class] if use_default_class_filter?
+        builder.add_attribute_conditions(expr, conditions)
       end
 
       def use_default_id_filter?
@@ -258,14 +246,6 @@ module Capybara
 
       def use_default_class_filter?
         options.key?(:class) && !custom_keys.include?(:class)
-      end
-
-      def conditions_from_classes
-        builder.class_conditions(options[:class])
-      end
-
-      def conditions_from_id
-        builder.id_conditions(options[:id])
       end
 
       def apply_expression_filters(expression)
