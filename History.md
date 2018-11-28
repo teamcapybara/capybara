@@ -5,7 +5,7 @@ Release date: unreleased
 
 * Support Ruby 2.6 endless range in Result#[] and query `:between` option
 * Pre-registered headless firefox driver :selenium_headless [Andrew Havens]
-* Selenium driver now defaults to clearing `sessionStorage`` and `localStorage`. To disable pass `clear_local_storage: false` and/or `clear_session_storage: false` when creating Capybara::Selenium::Driver instance in your driver registration
+* Selenium driver now defaults to clearing `sessionStorage` and `localStorage`. To disable pass `clear_local_storage: false` and/or `clear_session_storage: false` when creating Capybara::Selenium::Driver instance in your driver registration
 
 ### Fixed
 
