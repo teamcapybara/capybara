@@ -83,7 +83,7 @@ Capybara::SpecHelper.spec '#click_link' do
     end
 
     it "should raise error if link wasn't found" do
-      expect { @session.click_link('labore', href: 'invalid_href') }.to raise_error(Capybara::ElementNotFound)
+      expect { @session.click_link('labore', href: 'invalid_href') }.to raise_error(Capybara::ElementNotFound, /with href "invalid_href/)
     end
   end
 
@@ -104,8 +104,8 @@ Capybara::SpecHelper.spec '#click_link' do
     end
 
     it "should raise an error if no link's href matched the pattern" do
-      expect { @session.click_link('labore', href: /invalid_pattern/) }.to raise_error(Capybara::ElementNotFound)
-      expect { @session.click_link('labore', href: /.+d+/) }.to raise_error(Capybara::ElementNotFound)
+      expect { @session.click_link('labore', href: /invalid_pattern/) }.to raise_error(Capybara::ElementNotFound, %r{with href matching /invalid_pattern/})
+      expect { @session.click_link('labore', href: /.+d+/) }.to raise_error(Capybara::ElementNotFound, /#{Regexp.quote "with href matching /.+d+/"}/)
     end
 
     context 'href: nil' do
@@ -114,8 +114,8 @@ Capybara::SpecHelper.spec '#click_link' do
       end
 
       it 'should raise an error if href attribute exists' do
-        expect { @session.click_link('Blank Href', href: nil) }.to raise_error(Capybara::ElementNotFound)
-        expect { @session.click_link('Normal Anchor', href: nil) }.to raise_error(Capybara::ElementNotFound)
+        expect { @session.click_link('Blank Href', href: nil) }.to raise_error(Capybara::ElementNotFound, /with no href attribute/)
+        expect { @session.click_link('Normal Anchor', href: nil) }.to raise_error(Capybara::ElementNotFound, /with no href attribute/)
       end
     end
   end

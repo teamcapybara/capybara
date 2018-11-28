@@ -34,7 +34,7 @@ Capybara.add_selector(:css) do
 end
 
 Capybara.add_selector(:id) do
-  xpath { |id| builder.add_attribute_conditions(XPath.descendant, id: id) }
+  xpath { |id| builder(XPath.descendant).add_attribute_conditions(id: id) }
   locator_filter {  |node, id| id.is_a?(Regexp) ? node[:id] =~ id : true }
 end
 
@@ -92,8 +92,7 @@ end
 
 Capybara.add_selector(:link) do
   xpath do |locator, href: true, alt: nil, title: nil, **|
-    xpath = XPath.descendant(:a)
-    xpath = xpath[@href_conditions = builder.attribute_conditions(href: href)]
+    xpath = builder(XPath.descendant(:a)).add_attribute_conditions(href: href)
 
     unless locator.nil?
       locator = locator.to_s
@@ -119,24 +118,17 @@ Capybara.add_selector(:link) do
   end
 
   expression_filter(:download, valid_values: [true, false, String]) do |expr, download|
-    builder.add_attribute_conditions(expr, download: download)
+    builder(expr).add_attribute_conditions(download: download)
   end
 
   describe_expression_filters do |**options|
     desc = +''
     if (href = options[:href])
-      if !href.is_a?(Regexp)
-        desc << " with href #{href.inspect}"
-      elsif @href_conditions
-        desc << " with href matching #{href.inspect}"
-      end
+      desc << " with href #{'matching ' if href.is_a? Regexp}#{href.inspect}"
+    elsif options.key?(:href) # is nil/false specified?
+      desc << ' with no href attribute'
     end
-    desc << ' with no href attribute' if options.fetch(:href, true).nil?
     desc
-  end
-
-  describe_node_filters do |href: nil, **|
-    " with href matching #{href.inspect}" if href.is_a?(Regexp) && @href_conditions.nil?
   end
 end
 
@@ -489,7 +481,7 @@ Capybara.add_selector(:element) do
   end
 
   expression_filter(:attributes, matcher: /.+/) do |xpath, name, val|
-    builder.add_attribute_conditions(xpath, name => val)
+    builder(xpath).add_attribute_conditions(name => val)
   end
 
   node_filter(:attributes, matcher: /.+/) do |node, name, val|

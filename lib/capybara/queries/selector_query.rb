@@ -237,7 +237,7 @@ module Capybara
         conditions = {}
         conditions[:id] = options[:id] if use_default_id_filter?
         conditions[:class] = options[:class] if use_default_class_filter?
-        builder.add_attribute_conditions(expr, conditions)
+        builder(expr).add_attribute_conditions(conditions)
       end
 
       def use_default_id_filter?
@@ -359,8 +359,8 @@ module Capybara
         @selector.default_visibility(session_options.ignore_hidden_elements, options)
       end
 
-      def builder
-        selector.builder
+      def builder(expr)
+        selector.builder(expr)
       end
     end
   end

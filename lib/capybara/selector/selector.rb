@@ -409,7 +409,7 @@ module Capybara
     end
 
     # @api private
-    def builder
+    def builder(expr = nil)
       case format
       when :css
         Capybara::Selector::CSSBuilder
@@ -417,7 +417,7 @@ module Capybara
         Capybara::Selector::XPathBuilder
       else
         raise NotImplementedError, "No builder exists for selector of type #{format}"
-      end
+      end.new(expr)
     end
 
     # @api private
