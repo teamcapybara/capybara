@@ -72,4 +72,13 @@ RSpec.describe Capybara::Session do
       expect(Capybara.session_name).to eq 'sess1'
     end
   end
+
+  context 'quit' do
+    it 'will reset the driver' do
+      session = Capybara::Session.new(:rack_test, TestApp)
+      driver = session.driver
+      session.quit
+      expect(session.driver).not_to eql driver
+    end
+  end
 end
