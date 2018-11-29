@@ -29,8 +29,11 @@ class Capybara::Selenium::Node
     HTML5_DRAG_DROP_SCRIPT = <<~JS
       var source = arguments[0];
       var target = arguments[1];
+      var sourceRect = source.getBoundingClientRect();
+      var targetRect = target.getBoundingClientRect();
 
       var dt = new DataTransfer();
+
       var opts = { cancelable: true, bubbles: true, dataTransfer: dt };
 
       if (source.tagName == 'A'){
@@ -44,8 +47,19 @@ class Capybara::Selenium::Node
       var dragEvent = new DragEvent('dragstart', opts);
       source.dispatchEvent(dragEvent);
       target.scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
-      var dragOverEvent = new DragEvent('dragover', opts);
+
+      // fire 2 dragover events to simulate dragging with a direction
+      var dragOverX = sourceRect.x + source.clientWidth / 2;
+      var dragOverY = sourceRect.y + source.clientHeight / 2;
+      var dragOverOpts = Object.assign({clientX: dragOverX, clientY: dragOverY}, opts);
+      var dragOverEvent = new DragEvent('dragover', dragOverOpts);
       target.dispatchEvent(dragOverEvent);
+      dragOverX = targetRect.x + target.clientWidth / 2;
+      dragOverY = targetRect.y + target.clientHeight / 2;
+      dragOverOpts = Object.assign({clientX: dragOverX, clientY: dragOverY}, opts);
+      dragOverEvent = new DragEvent('dragover', dragOverOpts);
+      target.dispatchEvent(dragOverEvent);
+
       var dragLeaveEvent = new DragEvent('dragleave', opts);
       target.dispatchEvent(dragLeaveEvent);
       if (dragOverEvent.defaultPrevented) {
