@@ -4,7 +4,7 @@ module Capybara
   module Queries
     class SelectorQuery < Queries::BaseQuery
       attr_reader :expression, :selector, :locator, :options
-      VALID_KEYS = COUNT_KEYS + %i[text id class visible exact exact_text normalize_ws match wait filter_set]
+      VALID_KEYS = COUNT_KEYS + %i[text id class style visible exact exact_text normalize_ws match wait filter_set]
       VALID_MATCH = %i[first smart prefer_exact one].freeze
 
       def initialize(*args,
@@ -237,6 +237,7 @@ module Capybara
         conditions = {}
         conditions[:id] = options[:id] if use_default_id_filter?
         conditions[:class] = options[:class] if use_default_class_filter?
+        conditions[:style] = options[:style] if use_default_style_filter? && !options[:style].is_a?(Hash)
         builder(expr).add_attribute_conditions(conditions)
       end
 
@@ -246,6 +247,10 @@ module Capybara
 
       def use_default_class_filter?
         options.key?(:class) && !custom_keys.include?(:class)
+      end
+
+      def use_default_style_filter?
+        options.key?(:style) && !custom_keys.include?(:style)
       end
 
       def apply_expression_filters(expression)
@@ -300,6 +305,7 @@ module Capybara
 
         matches_id_filter?(node) &&
           matches_class_filter?(node) &&
+          matches_style_filter?(node) &&
           matches_text_filter?(node) &&
           matches_exact_text_filter?(node) &&
           matches_visible_filter?(node)
@@ -315,6 +321,28 @@ module Capybara
         return true unless use_default_class_filter? && options[:class].is_a?(Regexp)
 
         node[:class] =~ options[:class]
+      end
+
+      def matches_style_filter?(node)
+        case options[:style]
+        when String, nil
+          true
+        when Regexp
+          node[:style] =~ options[:style]
+        when Hash
+          matches_style?(node, options[:style])
+        end
+      end
+
+      def matches_style?(node, styles)
+        @actual_styles = node.style(*styles.keys)
+        styles.all? do |style, value|
+          if value.is_a? Regexp
+            @actual_styles[style.to_s] =~ value
+          else
+            @actual_styles[style.to_s] == value
+          end
+        end
       end
 
       def matches_text_filter?(node)

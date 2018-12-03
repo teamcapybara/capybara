@@ -31,7 +31,7 @@ RSpec.describe Capybara do
             <input type="file" id="file" class=".special file"/>
             <input type="hidden" id="hidden_field" value="this is hidden"/>
             <input type="submit" value="click me" title="submit button"/>
-            <input type="button" value="don't click me" title="Other button 1"/>
+            <input type="button" value="don't click me" title="Other button 1" style="line-height: 30px;"/>
             <a href="#">link</a>
             <fieldset></fieldset>
             <select id="select">
@@ -301,6 +301,16 @@ RSpec.describe Capybara do
 
         it 'accepts Regexp for CSS base selectors' do
           expect(string.find(:custom_css_selector, 'div', class: /random/)[:id]).to eq 'random_words'
+        end
+      end
+
+      context 'with :style option' do
+        it 'accepts string for CSS based selectors' do
+          expect(string.find(:custom_css_selector, 'input', style: 'line-height: 30px;')[:title]).to eq 'Other button 1'
+        end
+
+        it 'accepts Regexp for CSS base selectors' do
+          expect(string.find(:custom_css_selector, 'input', style: /30px/)[:title]).to eq 'Other button 1'
         end
       end
 

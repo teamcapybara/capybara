@@ -5,7 +5,7 @@ Capybara::SpecHelper.spec '#click_button' do
     @session.visit('/form')
   end
 
-  it 'should wait for asynchronous load', :focus_, requires: [:js] do
+  it 'should wait for asynchronous load', requires: [:js] do
     @session.visit('/with_js')
     @session.using_wait_time(1.5) do
       @session.click_link('Click me')

@@ -38,6 +38,20 @@ Capybara::SpecHelper.spec '#has_css?' do
     expect(@session).to have_css('li', class: /.*/)
   end
 
+  context ':style option' do
+    it 'should support String' do
+      expect(@session).to have_css('p', style: 'line-height: 25px;')
+    end
+
+    it 'should support Regexp' do
+      expect(@session).to have_css('p', style: /-height: 2/)
+    end
+
+    it 'should support Hash', requires: [:css] do
+      expect(@session).to have_css('p', style: { 'line-height': '25px' })
+    end
+  end
+
   it 'should support case insensitive :class and :id options' do
     expect(@session).to have_css('li', class: /UiTaRI/i)
     expect(@session).to have_css('h2', id: /2ON/i)
@@ -118,6 +132,12 @@ Capybara::SpecHelper.spec '#has_css?' do
       expect(@session).to have_css('li', class: /guitar|drummer/, count: 4)
       expect(@session).to have_css('li', id: /john|paul/, class: /guitar|drummer/, count: 2)
       expect(@session).to have_css('li', class: %w[beatle guitarist], count: 2)
+      expect(@session).to have_css('p', style: 'line-height: 25px;', count: 1)
+      expect(@session).to have_css('p', style: /-height: 2/, count: 1)
+    end
+
+    it 'should be true if the content occurs the given number of times in CSS processing drivers', requires: [:css] do
+      expect(@session).to have_css('p', style: { 'line-height': '25px' }, count: 1)
     end
 
     it 'should be false if the content occurs a different number of times than the given' do
