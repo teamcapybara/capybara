@@ -7,12 +7,13 @@ module Capybara
   class Config
     extend Forwardable
 
-    OPTIONS = %i[app reuse_server threadsafe default_wait_time server default_driver javascript_driver].freeze
+    OPTIONS = %i[app reuse_server threadsafe default_wait_time server default_driver javascript_driver allow_gumbo].freeze
 
     attr_accessor :app
     attr_reader :reuse_server, :threadsafe
     attr_reader :session_options
     attr_writer :default_driver, :javascript_driver
+    attr_accessor :allow_gumbo
 
     SessionConfig::OPTIONS.each do |method|
       def_delegators :session_options, method, "#{method}="

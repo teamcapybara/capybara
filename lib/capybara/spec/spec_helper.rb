@@ -35,6 +35,7 @@ module Capybara
         Capybara.test_id = nil
         Capybara.predicates_wait = true
         Capybara.default_normalize_ws = false
+        Capybara.allow_gumbo = true
         reset_threadsafe
       end
 

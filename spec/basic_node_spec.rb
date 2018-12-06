@@ -110,6 +110,17 @@ RSpec.describe Capybara do
       expect(string.find('//form/input[@name="meh"]')).not_to be_disabled
     end
 
+    it 'drops illegal fragments when using gumbo' do
+      skip "libxml is less strict thatn Gumbo" unless Nokogiri.respond_to?(:HTML5)
+      expect(Capybara.string("<td>1</td>")).not_to have_css('td')
+    end
+
+    it 'can disable use of gumbo' do
+      skip "Test doesn't make sense unlesss nokogumbo is loaded" unless Nokogiri.respond_to?(:HTML5)
+      Capybara.allow_gumbo = false
+      expect(Capybara.string("<td>1</td>")).to have_css('td')
+    end
+
     describe '#title' do
       it 'returns the page title' do
         expect(string.title).to eq('simple_node')
