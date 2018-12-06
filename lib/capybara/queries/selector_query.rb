@@ -50,6 +50,15 @@ module Capybara
         end
         desc << " with id #{options[:id]}" if options[:id]
         desc << " with classes [#{Array(options[:class]).join(',')}]" if options[:class]
+        desc << case options[:style]
+        when String
+          " with style attribute #{options[:style].inspect}"
+        when Regexp
+          " with style attribute matching #{options[:style].inspect}"
+        when Hash
+          " with styles #{options[:style].inspect}"
+        else ''
+        end
         desc << selector.description(node_filters: show_for[:node], **options)
         desc << ' that also matches the custom filter block' if @filter_block && show_for[:node]
         desc << " within #{@resolved_node.inspect}" if describe_within?

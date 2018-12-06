@@ -41,14 +41,26 @@ Capybara::SpecHelper.spec '#has_css?' do
   context ':style option' do
     it 'should support String' do
       expect(@session).to have_css('p', style: 'line-height: 25px;')
+
+      expect do
+        expect(@session).to have_css('p', style: 'display: not_valid')
+      end.to raise_error(RSpec::Expectations::ExpectationNotMetError, /style attribute "display: not_valid"/)
     end
 
     it 'should support Regexp' do
       expect(@session).to have_css('p', style: /-height: 2/)
+
+      expect do
+        expect(@session).to have_css('p', style: /not_valid/)
+      end.to raise_error(RSpec::Expectations::ExpectationNotMetError, %r{style attribute matching /not_valid/})
     end
 
     it 'should support Hash', requires: [:css] do
       expect(@session).to have_css('p', style: { 'line-height': '25px' })
+
+      expect do
+        expect(@session).to have_css('p', style: { 'line-height': '30px' })
+      end.to raise_error(RSpec::Expectations::ExpectationNotMetError, /with styles \{:"line-height"=>"30px"\}/)
     end
   end
 
