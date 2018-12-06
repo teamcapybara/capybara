@@ -38,6 +38,8 @@ module Capybara
     #   See {Capybara.configure}
     # @!method javascript_driver
     #   See {Capybara.configure}
+    # @!method allow_gumbo
+    #   See {Capybara.configure}
     Config::OPTIONS.each do |method|
       def_delegators :config, method, "#{method}="
     end
@@ -86,6 +88,7 @@ module Capybara
     # [test_id = Symbol/String/nil] Optional attribute to match locator aginst with builtin selectors along with id (Default: nil)
     # [predicates_wait = Boolean]  Whether Capybaras predicate matchers use waiting behavior by default (Default: true)
     # [default_normalize_ws = Boolean] Whether text predicates and matchers use normalize whitespace behaviour (Default: false)
+    # [allow_gumbo = Boolean] When `nokogumbo` is available, whether it will be used to parse HTML strings (Default: true)
     #
     # === DSL Options
     #
@@ -366,7 +369,7 @@ module Capybara
     # @return [Nokogiri::HTML::Document]      HTML document
     #
     def HTML(html) # rubocop:disable Naming/MethodName
-      if Nokogiri.respond_to?(:HTML5) # Nokogumbo installed
+      if Nokogiri.respond_to?(:HTML5) && Capybara.allow_gumbo # Nokogumbo installed and allowed for use
         Nokogiri::HTML5(html).tap do |document|
           document.xpath('//textarea').each do |textarea|
             # The Nokogumbo HTML5 parser already returns spec compliant contents
@@ -522,6 +525,7 @@ Capybara.configure do |config|
   config.test_id = nil
   config.predicates_wait = true
   config.default_normalize_ws = false
+  config.allow_gumbo = true
 end
 
 Capybara.register_driver :rack_test do |app|
