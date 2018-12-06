@@ -39,7 +39,7 @@ module Capybara
       ##
       # @deprecated
       def must_have_style(*args, &block)
-        warn "must_have_style is deprecated, please use must_match_style"
+        warn 'must_have_style is deprecated, please use must_match_style'
         must_match_style(*args, &block)
       end
 

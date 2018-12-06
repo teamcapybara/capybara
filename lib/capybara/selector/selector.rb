@@ -35,6 +35,7 @@ module Capybara
   #       * :unchecked (Boolean) — Match unchecked fields?
   #       * :disabled (Boolean) — Match disabled field?
   #       * :multiple (Boolean) — Match fields that accept multiple values
+  #       * :style (String, Regexp, Hash)
   #
   #   * **:fieldset** - Select fieldset elements
   #     * Locator: Matches id or contents of wrapped legend
@@ -42,6 +43,7 @@ module Capybara
   #       * :id (String, Regexp, XPath::Expression) — Matches id attribute
   #       * :legend (String) — Matches contents of wrapped legend
   #       * :class (String, Array<String>, Regexp, XPath::Expression) — Matches the class(es) provided
+  #       * :style (String, Regexp, Hash)
   #
   #   * **:link** - Find links ( <a> elements with an href attribute )
   #     * Locator: Matches the id or title attributes, or the string content of the link, or the alt attribute of a contained img element
@@ -51,6 +53,7 @@ module Capybara
   #       * :alt (String) — Matches the alt attribute of a contained img element
   #       * :class (String, Array<String>, Regexp, XPath::Expression) — Matches the class(es) provided
   #       * :href (String, Regexp, nil) — Matches the normalized href of the link, if nil will find <a> elements with no href attribute
+  #       * :style (String, Regexp, Hash)
   #
   #   * **:button** - Find buttons ( input [of type submit, reset, image, button] or button elements )
   #     * Locator: Matches the id, Capybara.test_id attribute, value, or title attributes, string content of a button, or the alt attribute of an image type button or of a descendant image of a button
@@ -60,6 +63,7 @@ module Capybara
   #       * :class (String, Array<String>, Regexp, XPath::Expression) — Matches the class(es) provided
   #       * :value (String) — Matches the value of an input button
   #       * :type
+  #       * :style (String, Regexp, Hash)
   #
   #   * **:link_or_button** - Find links or buttons
   #     * Locator: See :link and :button selectors
@@ -75,6 +79,7 @@ module Capybara
   #       * :class (String, Array<String>, Regexp, XPath::Expression) — Matches the class(es) provided
   #       * :disabled (Boolean) — Match disabled field?
   #       * :multiple (Boolean) — Match fields that accept multiple values
+  #       * :style (String, Regexp, Hash)
   #
   #   * **:radio_button** - Find radio buttons
   #     * Locator: Match id, Capybara.test_id attribute, name, or associated label text
@@ -86,6 +91,7 @@ module Capybara
   #       * :unchecked (Boolean) — Match unchecked fields?
   #       * :disabled (Boolean) — Match disabled field?
   #       * :option (String) — Match the value
+  #       * :style (String, Regexp, Hash)
   #
   #   * **:checkbox** - Find checkboxes
   #     * Locator: Match id, Capybara.test_id attribute, name, or associated label text
@@ -97,6 +103,7 @@ module Capybara
   #       * *:unchecked (Boolean) — Match unchecked fields?
   #       * *:disabled (Boolean) — Match disabled field?
   #       * *:option (String) — Match the value
+  #       * :style (String, Regexp, Hash)
   #
   #   * **:select** - Find select elements
   #     * Locator: Match id, Capybara.test_id attribute, name, placeholder, or associated label text
@@ -111,6 +118,7 @@ module Capybara
   #       * :with_options (Array<String>) — Partial match options
   #       * :selected (String, Array<String>) — Match the selection(s)
   #       * :with_selected (String, Array<String>) — Partial match the selection(s)
+  #       * :style (String, Regexp, Hash)
   #
   #   * **:option** - Find option elements
   #     * Locator: Match text of option
@@ -136,6 +144,7 @@ module Capybara
   #       * :class (String, Array<String>, Regexp, XPath::Expression) — Matches the class(es) provided
   #       * :disabled (Boolean) — Match disabled field?
   #       * :multiple (Boolean) — Match field that accepts multiple values
+  #       * :style (String, Regexp, Hash)
   #
   #   * **:label** - Find label elements
   #     * Locator: Match id or text contents
@@ -148,6 +157,7 @@ module Capybara
   #       * :id (String, Regexp, XPath::Expression) — Match id attribute of table
   #       * :caption (String) — Match text of associated caption
   #       * :class ((String, Array<String>, Regexp, XPath::Expression) — Matches the class(es) provided
+  #       * :style (String, Regexp, Hash)
   #
   #   * **:frame** - Find frame/iframe elements
   #     * Locator: Match id or name
@@ -155,6 +165,7 @@ module Capybara
   #       * :id (String, Regexp, XPath::Expression) — Match id attribute
   #       * :name (String) — Match name attribute
   #       * :class (String, Array<String>, Regexp, XPath::Expression) — Matches the class(es) provided
+  #       * :style (String, Regexp, Hash)
   #
   #   * **:element**
   #     * Locator: Type of element ('div', 'a', etc) - if not specified defaults to '*'

@@ -173,7 +173,7 @@ module Capybara
     # button style (a class) might look like this
     #
     #     Capybara.modify_selector(:button) do
-    #       filter (:style, valid_values: [:primary, :secondary]) { |node, style| node[:class].split.include? "btn-#{style}" }
+    #       filter (:btn_style, valid_values: [:primary, :secondary]) { |node, style| node[:class].split.include? "btn-#{style}" }
     #     end
     #
     #
