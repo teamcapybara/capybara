@@ -56,13 +56,21 @@ module Capybara
       #
       # Checks if a an element has the specified CSS styles
       #
-      #     element.has_style?( 'color' => 'rgb(0,0,255)', 'font-size' => /px/ )
+      #     element.matches_style?( 'color' => 'rgb(0,0,255)', 'font-size' => /px/ )
       #
       # @param styles [Hash]
       # @return [Boolean]                       If the styles match
       #
+      def matches_style?(styles, **options)
+        make_predicate(options) { assert_matches_style(styles, options) }
+      end
+
+      ##
+      # @deprecated
+      #
       def has_style?(styles, **options)
-        make_predicate(options) { assert_style(styles, options) }
+        warn 'DEPRECATED: has_style? is deprecated, please use matches_style?'
+        matches_style?(styles, **options)
       end
 
       ##
@@ -108,18 +116,25 @@ module Capybara
       #
       # Asserts that an element has the specified CSS styles
       #
-      #     element.assert_style( 'color' => 'rgb(0,0,255)', 'font-size' => /px/ )
+      #     element.assert_matches_style( 'color' => 'rgb(0,0,255)', 'font-size' => /px/ )
       #
       # @param styles [Hash]
       # @raise [Capybara::ExpectationNotMet]    If the element doesn't have the specified styles
       #
-      def assert_style(styles, **options)
+      def assert_matches_style(styles, **options)
         query_args = _set_query_session_options(styles, options)
         query = Capybara::Queries::StyleQuery.new(*query_args)
         synchronize(query.wait) do
           raise Capybara::ExpectationNotMet, query.failure_message unless query.resolves_for?(self)
         end
         true
+      end
+
+      ##
+      # @deprecated
+      def assert_style(styles, **options)
+        warn 'assert_style is deprecated, please use assert_matches_style instead'
+        assert_matches_style(styles, **options)
       end
 
       # Asserts that all of the provided selectors are present on the given page

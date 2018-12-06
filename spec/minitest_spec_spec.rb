@@ -124,7 +124,7 @@ class MinitestSpecTest < Minitest::Spec
   it 'supports style expectations' do
     skip "Rack test doesn't support style" if Capybara.current_driver == :rack_test
     visit('/with_html')
-    find(:css, '#second').must_have_style('display' => 'inline')
+    find(:css, '#second').must_match_style('display' => 'inline')
   end
 end
 

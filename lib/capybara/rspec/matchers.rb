@@ -3,7 +3,7 @@
 require 'capybara/rspec/matchers/have_selector'
 require 'capybara/rspec/matchers/match_selector'
 require 'capybara/rspec/matchers/have_current_path'
-require 'capybara/rspec/matchers/have_style'
+require 'capybara/rspec/matchers/match_style'
 require 'capybara/rspec/matchers/have_text'
 require 'capybara/rspec/matchers/have_title'
 require 'capybara/rspec/matchers/become_closed'
@@ -124,9 +124,17 @@ module Capybara
     end
 
     # RSpec matcher for element style
-    # See {Capybara::Node::Matchers#has_style?}
+    # See {Capybara::Node::Matchers#matches_style?}
+    def match_style(styles, **options)
+      Matchers::MatchStyle.new(styles, options)
+    end
+
+    ##
+    # @deprecated
+    #
     def have_style(styles, **options)
-      Matchers::HaveStyle.new(styles, options)
+      warn 'DEPRECATED: have_style is deprecated, please use match_style'
+      match_style(styles, **options)
     end
 
     %w[selector css xpath text title current_path link button

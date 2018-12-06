@@ -17,7 +17,7 @@ module Capybara
       end + [%w[assert_all_of_selectors must_have_all_of_selectors],
              %w[assert_none_of_selectors must_have_none_of_selectors],
              %w[assert_any_of_selectors must_have_any_of_selectors],
-             %w[assert_style must_have_style]] +
+             %w[assert_matches_style must_match_style]] +
       %w[selector xpath css].flat_map do |assertion|
         [%W[assert_matches_#{assertion} must_match_#{assertion}],
          %W[refute_matches_#{assertion} wont_match_#{assertion}]]
@@ -35,6 +35,13 @@ module Capybara
         ASSERTION
       end
       # rubocop:enable Style/MultilineBlockChain
+
+      ##
+      # @deprecated
+      def must_have_style(*args, &block)
+        warn "must_have_style is deprecated, please use must_match_style"
+        must_match_style(*args, &block)
+      end
 
       ##
       # Expectation that there is xpath
@@ -169,8 +176,8 @@ module Capybara
       ##
       # Expectation that element has style
       #
-      # @!method must_have_style
-      #   see {Capybara::Node::Matchers#assert_style}
+      # @!method must_match_style
+      #   see {Capybara::Node::Matchers#assert_matches_style}
     end
   end
 end

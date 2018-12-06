@@ -83,10 +83,10 @@ module Capybara
 
       ## Assert element has the provided CSS styles
       #
-      # @!method assert_style
-      #   see {Capybara::Node::Matchers#assert_style}
+      # @!method assert_matches_style
+      #   see {Capybara::Node::Matchers#assert_matches_style}
 
-      %w[selector no_selector style
+      %w[selector no_selector matches_style
          all_of_selectors none_of_selectors any_of_selectors
          matches_selector not_matches_selector].each do |assertion_name|
         class_eval <<-ASSERTION, __FILE__, __LINE__ + 1

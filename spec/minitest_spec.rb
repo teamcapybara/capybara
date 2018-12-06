@@ -125,10 +125,10 @@ class MinitestTest < Minitest::Test
     refute_matches_xpath(find(:select, 'form_title'), './/select[@id="form_other_title"]')
   end
 
-  def test_assert_style
+  def test_assert_matches_style
     skip "Rack test doesn't support style" if Capybara.current_driver == :rack_test
     visit('/with_html')
-    assert_style(find(:css, '#second'), display: 'inline')
+    assert_matches_style(find(:css, '#second'), display: 'inline')
   end
 end
 
