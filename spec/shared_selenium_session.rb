@@ -307,6 +307,15 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         expect(session).to have_xpath('//div[contains(., "HTML5 Dropped drag_html5")]')
       end
 
+      it 'should set clientX/Y in dragover events' do
+        session.visit('/with_js')
+        element = session.find('//div[@id="drag_html5"]')
+        target = session.find('//div[@id="drop_html5"]')
+        element.drag_to(target)
+        session.all(:css, 'div.log').each { |el| puts el.text }
+        expect(session).to have_css('div.log', text: /DragOver with client position: [1-9]\d*,[1-9]\d*/, count: 2)
+      end
+
       it 'should not HTML5 drag and drop on a non HTML5 drop element' do
         session.visit('/with_js')
         element = session.find('//div[@id="drag_html5"]')
