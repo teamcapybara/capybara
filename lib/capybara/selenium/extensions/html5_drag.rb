@@ -29,11 +29,46 @@ class Capybara::Selenium::Node
     HTML5_DRAG_DROP_SCRIPT = <<~JS
       var source = arguments[0];
       var target = arguments[1];
-      var sourceRect = source.getBoundingClientRect();
-      var targetRect = target.getBoundingClientRect();
+
+      function rectCenter(rect){
+        return new DOMPoint(
+          (rect.left + rect.right)/2,
+          (rect.top + rect.bottom)/2
+        );
+      }
+
+      function pointOnRect(pt, rect) {
+      	var rectPt = rectCenter(rect);
+      	var slope = (rectPt.y - pt.y) / (rectPt.x - pt.x);
+
+      	if (pt.x <= rectPt.x) { // left side
+      		var minXy = slope * (rect.left - pt.x) + pt.y;
+      		if (rect.top <= minXy && minXy <= rect.bottom)
+            return new DOMPoint(rect.left, minXy);
+      	}
+
+      	if (pt.x >= rectPt.x) { // right side
+      		var maxXy = slope * (rect.right - pt.x) + pt.y;
+      		if (rect.top <= maxXy && maxXy <= rect.bottom)
+            return new DOMPoint(rect.right, maxXy);
+      	}
+
+      	if (pt.y <= rectPt.y) { // top side
+      		var minYx = (rectPt.top - pt.y) / slope + pt.x;
+      		if (rect.left <= minYx && minYx <= rect.right)
+            return new DOMPoint(minYx, rect.top);
+      	}
+
+      	if (pt.y >= rectPt.y) { // bottom side
+      		var maxYx = (rect.bottom - pt.y) / slope + pt.x;
+      		if (rect.left <= maxYx && maxYx <= rect.right)
+            return new DOMPoint(maxYx, rect.bottom);
+      	}
+
+        return new DOMPoint(pt.x,pt.y);
+      }
 
       var dt = new DataTransfer();
-
       var opts = { cancelable: true, bubbles: true, dataTransfer: dt };
 
       if (source.tagName == 'A'){
@@ -44,19 +79,21 @@ class Capybara::Selenium::Node
         dt.setData('text/uri-list', source.src);
         dt.setData('text', source.src);
       }
+
       var dragEvent = new DragEvent('dragstart', opts);
       source.dispatchEvent(dragEvent);
       target.scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
+      var targetRect = target.getBoundingClientRect();
+      var sourceCenter = rectCenter(source.getBoundingClientRect());
 
       // fire 2 dragover events to simulate dragging with a direction
-      var dragOverX = sourceRect.x + source.clientWidth / 2;
-      var dragOverY = sourceRect.y + source.clientHeight / 2;
-      var dragOverOpts = Object.assign({clientX: dragOverX, clientY: dragOverY}, opts);
+      var entryPoint = pointOnRect(sourceCenter, targetRect)
+      var dragOverOpts = Object.assign({clientX: entryPoint.x, clientY: entryPoint.y}, opts);
       var dragOverEvent = new DragEvent('dragover', dragOverOpts);
       target.dispatchEvent(dragOverEvent);
-      dragOverX = targetRect.x + target.clientWidth / 2;
-      dragOverY = targetRect.y + target.clientHeight / 2;
-      dragOverOpts = Object.assign({clientX: dragOverX, clientY: dragOverY}, opts);
+
+      var targetCenter = rectCenter(targetRect);
+      dragOverOpts = Object.assign({clientX: targetCenter.x, clientY: targetCenter.y}, opts);
       dragOverEvent = new DragEvent('dragover', dragOverOpts);
       target.dispatchEvent(dragOverEvent);
 
