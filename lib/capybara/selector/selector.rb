@@ -184,8 +184,8 @@ module Capybara
         all.fetch(name.to_sym) { |sel_type| raise ArgumentError, "Unknown selector type (:#{sel_type})" }
       end
 
-      def add(name, &block)
-        all[name.to_sym] = Capybara::Selector.new(name.to_sym, &block)
+      def add(name, **options, &block)
+        all[name.to_sym] = Capybara::Selector.new(name.to_sym, **options, &block)
       end
 
       def update(name, &block)
@@ -201,7 +201,7 @@ module Capybara
       end
     end
 
-    def initialize(name, &block)
+    def initialize(name, locator_type: nil, raw_locator: false, &block)
       @name = name
       @filter_set = FilterSet.add(name) {}
       @match = nil
@@ -212,6 +212,8 @@ module Capybara
       @expression_filters = {}
       @locator_filter = nil
       @default_visibility = nil
+      @locator_type = locator_type
+      @raw_locator = raw_locator
       @config = {
         enable_aria_label: false,
         test_id: nil
@@ -306,6 +308,8 @@ module Capybara
     def_delegator :@filter_set, :description
 
     def call(locator, selector_config: {}, **options)
+      raise ArgumentError, "Locator must #{locator_description}" unless locator_valid?(locator)
+
       @config.merge! selector_config
       if format
         @expression.call(locator, options)
@@ -439,7 +443,36 @@ module Capybara
       Thread.current["capybara_#{object_id}_errors"] = nil
     end
 
+    # @api private
+    def raw_locator?
+      !!@raw_locator
+    end
+
   private
+
+    def locator_types
+      return nil unless @locator_type
+
+      Array(@locator_type)
+    end
+
+    def locator_valid?(locator)
+      return true unless locator && locator_types
+
+      locator_types&.any? do |type_or_method|
+        type_or_method.is_a?(Symbol) ? locator.respond_to?(type_or_method) : type_or_method === locator # rubocop:disable Style/CaseEquality
+      end
+    end
+
+    def locator_description
+      locator_types.map do |type_or_method|
+        if type_or_method.is_a? Symbol
+          "respond to ##{type_or_method}"
+        else
+          "be a #{type_or_method.inspect}"
+        end
+      end.join(' or ')
+    end
 
     def errors
       Thread.current["capybara_#{object_id}_errors"] || []

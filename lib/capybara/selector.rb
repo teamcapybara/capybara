@@ -25,20 +25,20 @@ end
 
 # rubocop:disable Metrics/BlockLength
 
-Capybara.add_selector(:xpath) do
+Capybara.add_selector(:xpath, locator_type: %i[to_xpath to_s], raw_locator: true) do
   xpath { |xpath| xpath }
 end
 
-Capybara.add_selector(:css) do
+Capybara.add_selector(:css, locator_type: :to_s, raw_locator: true) do
   css { |css| css }
 end
 
-Capybara.add_selector(:id) do
+Capybara.add_selector(:id, locator_type: [:to_s, Regexp]) do
   xpath { |id| builder(XPath.descendant).add_attribute_conditions(id: id) }
   locator_filter {  |node, id| id.is_a?(Regexp) ? node[:id] =~ id : true }
 end
 
-Capybara.add_selector(:field) do
+Capybara.add_selector(:field, locator_type: :to_s) do
   visible { |options| :hidden if options[:type].to_s == 'hidden' }
   xpath do |locator, **options|
     invalid_types = %w[submit image]
@@ -78,7 +78,7 @@ Capybara.add_selector(:field) do
   end
 end
 
-Capybara.add_selector(:fieldset) do
+Capybara.add_selector(:fieldset, locator_type: :to_s) do
   xpath do |locator, legend: nil, **|
     locator_matchers = (XPath.attr(:id) == locator.to_s) | XPath.child(:legend)[XPath.string.n.is(locator.to_s)]
     locator_matchers |= XPath.attr(test_id) == locator.to_s if test_id
@@ -90,7 +90,7 @@ Capybara.add_selector(:fieldset) do
   node_filter(:disabled, :boolean) { |node, value| !(value ^ node.disabled?) }
 end
 
-Capybara.add_selector(:link) do
+Capybara.add_selector(:link, locator_type: :to_s) do
   xpath do |locator, href: true, alt: nil, title: nil, **|
     xpath = builder(XPath.descendant(:a)).add_attribute_conditions(href: href)
 
@@ -132,7 +132,7 @@ Capybara.add_selector(:link) do
   end
 end
 
-Capybara.add_selector(:button) do
+Capybara.add_selector(:button, locator_type: :to_s) do
   xpath(:value, :title, :type) do |locator, **options|
     input_btn_xpath = XPath.descendant(:input)[XPath.attr(:type).one_of('submit', 'reset', 'image', 'button')]
     btn_xpath = XPath.descendant(:button)
@@ -166,7 +166,7 @@ Capybara.add_selector(:button) do
   end
 end
 
-Capybara.add_selector(:link_or_button) do
+Capybara.add_selector(:link_or_button, locator_type: :to_s) do
   label 'link or button'
   xpath do |locator, **options|
     self.class.all.values_at(:link, :button).map do |selector|
@@ -181,9 +181,8 @@ Capybara.add_selector(:link_or_button) do
   end
 end
 
-Capybara.add_selector(:fillable_field) do
+Capybara.add_selector(:fillable_field, locator_type: :to_s) do
   label 'field'
-
   xpath do |locator, allow_self: nil, **options|
     xpath = XPath.axis(allow_self ? :"descendant-or-self" : :descendant, :input, :textarea)[
       !XPath.attr(:type).one_of('submit', 'image', 'radio', 'checkbox', 'hidden', 'file')
@@ -215,9 +214,8 @@ Capybara.add_selector(:fillable_field) do
   end
 end
 
-Capybara.add_selector(:radio_button) do
+Capybara.add_selector(:radio_button, locator_type: :to_s) do
   label 'radio button'
-
   xpath do |locator, allow_self: nil, **options|
     xpath = XPath.axis(allow_self ? :"descendant-or-self" : :descendant, :input)[
       XPath.attr(:type) == 'radio'
@@ -240,7 +238,7 @@ Capybara.add_selector(:radio_button) do
   end
 end
 
-Capybara.add_selector(:checkbox) do
+Capybara.add_selector(:checkbox, locator_type: :to_s) do
   xpath do |locator, allow_self: nil, **options|
     xpath = XPath.axis(allow_self ? :"descendant-or-self" : :descendant, :input)[
       XPath.attr(:type) == 'checkbox'
@@ -263,7 +261,7 @@ Capybara.add_selector(:checkbox) do
   end
 end
 
-Capybara.add_selector(:select) do
+Capybara.add_selector(:select, locator_type: :to_s) do
   label 'select box'
 
   xpath do |locator, **options|
@@ -320,7 +318,7 @@ Capybara.add_selector(:select) do
   end
 end
 
-Capybara.add_selector(:datalist_input) do
+Capybara.add_selector(:datalist_input, locator_type: :to_s) do
   label 'input box with datalist completion'
 
   xpath do |locator, **options|
@@ -355,7 +353,7 @@ Capybara.add_selector(:datalist_input) do
   end
 end
 
-Capybara.add_selector(:option) do
+Capybara.add_selector(:option, locator_type: :to_s) do
   xpath do |locator|
     xpath = XPath.descendant(:option)
     xpath = xpath[XPath.string.n.is(locator.to_s)] unless locator.nil?
@@ -373,7 +371,7 @@ Capybara.add_selector(:option) do
   end
 end
 
-Capybara.add_selector(:datalist_option) do
+Capybara.add_selector(:datalist_option, locator_type: :to_s) do
   label 'datalist option'
   visible(:all)
 
@@ -390,7 +388,7 @@ Capybara.add_selector(:datalist_option) do
   end
 end
 
-Capybara.add_selector(:file_field) do
+Capybara.add_selector(:file_field, locator_type: :to_s) do
   label 'file field'
   xpath do |locator, allow_self: nil, **options|
     xpath = XPath.axis(allow_self ? :"descendant-or-self" : :descendant, :input)[
@@ -404,7 +402,7 @@ Capybara.add_selector(:file_field) do
   describe_expression_filters
 end
 
-Capybara.add_selector(:label) do
+Capybara.add_selector(:label, locator_type: :to_s) do
   label 'label'
   xpath(:for) do |locator, options|
     xpath = XPath.descendant(:label)
@@ -442,7 +440,7 @@ Capybara.add_selector(:label) do
   end
 end
 
-Capybara.add_selector(:table) do
+Capybara.add_selector(:table, locator_type: :to_s) do
   xpath do |locator, caption: nil, **|
     xpath = XPath.descendant(:table)
     unless locator.nil?
@@ -459,7 +457,7 @@ Capybara.add_selector(:table) do
   end
 end
 
-Capybara.add_selector(:frame) do
+Capybara.add_selector(:frame, locator_type: :to_s) do
   xpath do |locator, name: nil, **|
     xpath = XPath.descendant(:iframe).union(XPath.descendant(:frame))
     unless locator.nil?
@@ -475,7 +473,7 @@ Capybara.add_selector(:frame) do
   end
 end
 
-Capybara.add_selector(:element) do
+Capybara.add_selector(:element, locator_type: :to_s) do
   xpath do |locator, **|
     XPath.descendant.where(locator ? XPath.local_name == locator.to_s : nil)
   end

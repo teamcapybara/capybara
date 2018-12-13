@@ -62,6 +62,12 @@ module Capybara
         desc << selector.description(node_filters: show_for[:node], **options)
         desc << ' that also matches the custom filter block' if @filter_block && show_for[:node]
         desc << " within #{@resolved_node.inspect}" if describe_within?
+        if locator.is_a?(String) && locator.start_with?('#', './/', '//')
+          unless selector.raw_locator?
+            desc << "\nNote: It appears you may be passing a CSS selector or XPath expression rather than a locator. " \
+                    "Please see the documentation for acceptable locator values.\n\n"
+          end
+        end
         desc
       end
 

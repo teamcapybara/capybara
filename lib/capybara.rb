@@ -165,8 +165,8 @@ module Capybara
     # @param [Symbol] name    The name of the selector to add
     # @yield                  A block executed in the context of the new {Capybara::Selector}
     #
-    def add_selector(name, &block)
-      Capybara::Selector.add(name, &block)
+    def add_selector(name, **options, &block)
+      Capybara::Selector.add(name, **options, &block)
     end
 
     ##

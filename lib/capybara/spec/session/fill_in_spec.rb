@@ -242,4 +242,10 @@ Capybara::SpecHelper.spec '#fill_in' do
     el = @session.find(:fillable_field, 'form_first_name')
     expect(@session.fill_in('form_first_name', with: 'Harry')).to eq el
   end
+
+  it 'should warn if passed what looks like a CSS id selector' do
+    expect do
+      @session.fill_in('#form_first_name', with: 'Harry')
+    end.to raise_error(/you may be passing a CSS selector or XPath expression rather than a locator/)
+  end
 end

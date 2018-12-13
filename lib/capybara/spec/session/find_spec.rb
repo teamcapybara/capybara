@@ -92,6 +92,12 @@ Capybara::SpecHelper.spec '#find' do
       expect(@session.find(:css, '#\31 escape\.me').text).to eq('needs escaping')
       expect(@session.find(:css, '.\32 escape').text).to eq('needs escaping')
     end
+
+    it 'should not warn about locator' do
+      expect { @session.find(:css, '#not_on_page') }.to raise_error Capybara::ElementNotFound do |e|
+        expect(e.message).not_to match(/you may be passing a CSS selector or XPath expression/)
+      end
+    end
   end
 
   context 'with xpath selectors' do
