@@ -195,6 +195,8 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The option element selected
       def select(value = nil, from: nil, **options)
+        raise ArgumentError, 'The :from option does not take an element' if from.is_a? Capybara::Node::Element
+
         el = from ? find_select_or_datalist_input(from, options) : self
 
         if el.respond_to?(:tag_name) && (el.tag_name == 'input')
@@ -221,6 +223,8 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The option element unselected
       def unselect(value = nil, from: nil, **options)
+        raise ArgumentError, 'The :from option does not take an element' if from.is_a? Capybara::Node::Element
+
         scope = from ? find(:select, from, options) : self
         scope.find(:option, value, options).unselect_option
       end

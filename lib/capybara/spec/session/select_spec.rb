@@ -226,4 +226,9 @@ Capybara::SpecHelper.spec '#select' do
       end
     end
   end
+
+  it 'should error when not passed a locator for :from option' do
+    select = @session.find(:select, 'Title')
+    expect { @session.select('Mr', from: select) }.to raise_error(ArgumentError, /does not take an element/)
+  end
 end
