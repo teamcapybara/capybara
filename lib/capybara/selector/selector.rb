@@ -308,14 +308,14 @@ module Capybara
     def_delegator :@filter_set, :description
 
     def call(locator, selector_config: {}, **options)
-      raise ArgumentError, "Locator must #{locator_description}" unless locator_valid?(locator)
-
       @config.merge! selector_config
       if format
         @expression.call(locator, options)
       else
         warn 'Selector has no format'
       end
+    ensure
+      warn "Locator #{locator.inspect} must #{locator_description}. This will raise an error in a future version of Capybara." unless locator_valid?(locator)
     end
 
     ##
@@ -465,11 +465,11 @@ module Capybara
     end
 
     def locator_description
-      locator_types.map do |type_or_method|
-        if type_or_method.is_a? Symbol
-          "respond to ##{type_or_method}"
+      locator_types.group_by { |lt| lt.is_a? Symbol }.map do |symbol, types_or_methods|
+        if symbol
+          "respond to #{types_or_methods.join(' or ')}"
         else
-          "be a #{type_or_method.inspect}"
+          "be an instance of #{types_or_methods.join(' or ')}"
         end
       end.join(' or ')
     end

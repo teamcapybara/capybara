@@ -25,7 +25,7 @@ end
 
 # rubocop:disable Metrics/BlockLength
 
-Capybara.add_selector(:xpath, locator_type: [:to_xpath, String, Symbol], raw_locator: true) do
+Capybara.add_selector(:xpath, locator_type: [:to_xpath, String], raw_locator: true) do
   xpath { |xpath| xpath }
 end
 
