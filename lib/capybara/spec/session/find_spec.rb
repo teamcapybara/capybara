@@ -92,12 +92,23 @@ Capybara::SpecHelper.spec '#find' do
       expect(@session.find(:css, '#\31 escape\.me').text).to eq('needs escaping')
       expect(@session.find(:css, '.\32 escape').text).to eq('needs escaping')
     end
+
+    it 'should not warn about locator' do
+      expect { @session.find(:css, '#not_on_page') }.to raise_error Capybara::ElementNotFound do |e|
+        expect(e.message).not_to match(/you may be passing a CSS selector or XPath expression/)
+      end
+    end
   end
 
   context 'with xpath selectors' do
     it 'should find the first element using the given locator' do
       expect(@session.find(:xpath, '//h1').text).to eq('This is a test')
       expect(@session.find(:xpath, "//input[@id='test_field']").value).to eq('monkey')
+    end
+
+    it 'should warn if passed a non-valid locator type', :focus_ do
+      expect_any_instance_of(Kernel).to receive(:warn).with(/must respond to to_xpath or be an instance of String/)
+      expect { @session.find(:xpath, 123) }.to raise_error # rubocop:disable RSpec/UnspecifiedException
     end
   end
 
