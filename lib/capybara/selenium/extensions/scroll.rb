@@ -6,12 +6,12 @@ module Capybara
       def scroll_by(x, y)
         driver.execute_script <<~JS, self, x, y
           var el = arguments[0];
-            if (el.scrollBy){
-              el.scrollBy(arguments[1], arguments[2]);
-            } else {
-              el.scrollTop = el.scrollTop + arguments[2];
-              el.scrollLeft = el.scrollLeft + arguments[1];
-            }
+          if (el.scrollBy){
+            el.scrollBy(arguments[1], arguments[2]);
+          } else {
+            el.scrollTop = el.scrollTop + arguments[2];
+            el.scrollLeft = el.scrollLeft + arguments[1];
+          }
         JS
       end
 
