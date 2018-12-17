@@ -381,6 +381,17 @@ module Capybara
         self
       end
 
+      def scroll_to(pos_or_el, position = :top)
+        pos_or_el = pos_or_el.base if pos_or_el.is_a? Capybara::Node::Element
+        synchronize { base.scroll_to(pos_or_el, position) }
+        self
+      end
+
+      def scroll_by(x, y)
+        synchronize { base.scroll_by(x, y) }
+        self
+      end
+
       ##
       #
       # Execute the given JS in the context of the element not returning a result. This is useful for scripts that return

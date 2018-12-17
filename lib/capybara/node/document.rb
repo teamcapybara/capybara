@@ -31,6 +31,22 @@ module Capybara
       def title
         session.driver.title
       end
+
+      def execute_script(*args)
+        find(:xpath, '/html').execute_script(*args)
+      end
+
+      def evaluate_script(*args)
+        find(:xpath, '/html').evaluate_script(*args)
+      end
+
+      def scroll_to(*args)
+        find(:xpath, '//body').scroll_to(*args)
+      end
+
+      def scroll_by(*args)
+        find(:xpath, '//body').scroll_by(*args)
+      end
     end
   end
 end

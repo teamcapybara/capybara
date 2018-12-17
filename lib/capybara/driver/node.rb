@@ -68,6 +68,14 @@ module Capybara
         raise NotImplementedError
       end
 
+      def scroll_by(x, y)
+        raise NotImplementedError
+      end
+
+      def scroll_to(element, location = :top)
+        raise NotImplementedError
+      end
+
       def tag_name
         raise NotImplementedError
       end
