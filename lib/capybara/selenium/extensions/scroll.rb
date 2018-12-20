@@ -17,7 +17,6 @@ module Capybara
 
       def scroll_to(element, location = :top)
         location, element = element, nil if element.is_a? Symbol
-
         if element.is_a? Capybara::Selenium::Node
           scroll_element_to_location(element, location)
         elsif location.is_a? Symbol
@@ -67,7 +66,7 @@ module Capybara
 
       def scroll_to_coords(x, y)
         driver.execute_script <<~JS, self, x, y
-          if (this.scrollTo){
+          if (arguments[0].scrollTo){
             arguments[0].scrollTo(arguments[1], arguments[2]);
           } else {
             arguments[0].scrollTop = arguments[2];

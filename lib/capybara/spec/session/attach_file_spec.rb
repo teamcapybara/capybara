@@ -13,26 +13,26 @@ Capybara::SpecHelper.spec '#attach_file' do
     it 'should set a file path by id' do
       @session.attach_file 'form_image', with_os_path_separators(__FILE__)
       @session.click_button('awesome')
-      expect(extract_results(@session)['image']).to eq(File.basename(__FILE__))
+      expect(extract_results(@session)['image']).to end_with(File.basename(__FILE__))
     end
 
     it 'should set a file path by label' do
       @session.attach_file 'Image', with_os_path_separators(__FILE__)
       @session.click_button('awesome')
-      expect(extract_results(@session)['image']).to eq(File.basename(__FILE__))
+      expect(extract_results(@session)['image']).to end_with(File.basename(__FILE__))
     end
 
     it 'should be able to set on element if no locator passed' do
       ff = @session.find(:file_field, 'Image')
       ff.attach_file(with_os_path_separators(__FILE__))
       @session.click_button('awesome')
-      expect(extract_results(@session)['image']).to eq(File.basename(__FILE__))
+      expect(extract_results(@session)['image']).to end_with(File.basename(__FILE__))
     end
 
     it 'casts to string' do
       @session.attach_file :form_image, with_os_path_separators(__FILE__)
       @session.click_button('awesome')
-      expect(extract_results(@session)['image']).to eq(File.basename(__FILE__))
+      expect(extract_results(@session)['image']).to end_with(File.basename(__FILE__))
     end
   end
 
@@ -137,7 +137,7 @@ Capybara::SpecHelper.spec '#attach_file' do
     it 'should set a file path by partial label when false' do
       @session.attach_file 'Imag', with_os_path_separators(__FILE__), exact: false
       @session.click_button('awesome')
-      expect(extract_results(@session)['image']).to eq(File.basename(__FILE__))
+      expect(extract_results(@session)['image']).to end_with(File.basename(__FILE__))
     end
 
     it 'should not allow partial matches when true' do
@@ -181,7 +181,7 @@ Capybara::SpecHelper.spec '#attach_file' do
     end
   end
 
-  private
+private
 
   def with_os_path_separators(path)
     Gem.win_platform? ? path.to_s.tr('/', '\\') : path.to_s

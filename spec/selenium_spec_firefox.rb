@@ -21,7 +21,7 @@ Capybara.register_driver :selenium_firefox do |app|
     app,
     browser: :firefox,
     options: browser_options,
-    timeout: 31,
+    timeout: 31
     # Get a trace level log from geckodriver
     # :driver_opts => { args: ['-vv'] }
   )

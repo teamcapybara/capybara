@@ -1,4 +1,5 @@
 --color
 --require fuubar
 --format Fuubar
+# --format documentation
 --order random

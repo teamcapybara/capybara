@@ -53,7 +53,6 @@ Capybara::SpecHelper.spec '#switch_to_frame', requires: [:frames] do
     @session.switch_to_frame frame
     frame = @session.find(:frame, 'childFrame')
     @session.switch_to_frame frame
-
     @session.click_link 'Close Window'
     @session.switch_to_frame :parent # Go back to parentFrame
     expect(@session).to have_selector(:css, 'body#parentBody')

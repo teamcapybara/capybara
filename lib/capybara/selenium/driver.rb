@@ -359,6 +359,8 @@ private
     when :firefox
       require 'capybara/selenium/patches/pause_duration_fix' if pause_broken?(sel_driver)
       extend FirefoxDriver if sel_driver.capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
+    when :ie, :internet_explorer
+      extend InternetExplorerDriver
     end
   end
 
@@ -402,3 +404,4 @@ end
 
 require 'capybara/selenium/driver_specializations/chrome_driver'
 require 'capybara/selenium/driver_specializations/firefox_driver'
+require 'capybara/selenium/driver_specializations/internet_explorer_driver'

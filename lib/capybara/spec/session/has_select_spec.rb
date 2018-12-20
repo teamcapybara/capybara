@@ -276,7 +276,7 @@ Capybara::SpecHelper.spec '#has_no_select?' do
   it 'should support locator-less usage' do
     expect(@session.has_no_select?(with_options: %w[Norway Sweden Finland Latvia])).to eq true
     expect(@session).to have_no_select(with_options: ['New London'])
-    expect(@session.has_no_select?(with_selected: ['Boxers'])).to eq true
-    expect(@session).to have_no_select(with_selected: %w[Commando Boxers])
+    expect(@session.has_no_select?(id: 'form_underwear', with_selected: ['Boxers'])).to eq true
+    expect(@session).to have_no_select(id: 'form_underwear', with_selected: %w[Commando Boxers])
   end
 end

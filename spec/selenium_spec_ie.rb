@@ -5,6 +5,20 @@ require 'selenium-webdriver'
 require 'shared_selenium_session'
 require 'rspec/shared_spec_matchers'
 
+::Selenium::WebDriver::IE.driver_path = 'C:\Tools\WebDriver\IEDriverServer.exe' if ENV['CI']
+
+def selenium_host
+  ENV.fetch('SELENIUM_HOST', '192.168.56.102')
+end
+
+def selenium_port
+  ENV.fetch('SELENIUM_PORT', 4444)
+end
+
+def server_host
+  ENV.fetch('SERVER_HOST', '10.24.4.135')
+end
+
 Capybara.register_driver :selenium_ie do |app|
   # ::Selenium::WebDriver.logger.level = "debug"
   options = ::Selenium::WebDriver::IE::Options.new
@@ -17,9 +31,35 @@ Capybara.register_driver :selenium_ie do |app|
   )
 end
 
+if ENV['REMOTE']
+  Capybara.register_driver :selenium_ie do |app|
+    url = "http://#{selenium_host}:#{selenium_port}/wd/hub"
+    options = ::Selenium::WebDriver::IE::Options.new
+    options.require_window_focus = true
+
+    Capybara::Selenium::Driver.new(app,
+                                   browser: :remote,
+                                   desired_capabilities: ::Selenium::WebDriver::Remote::Capabilities.ie,
+                                   options: options,
+                                   url: url).tap do |driver|
+      driver.browser.file_detector = lambda do |args|
+        str = args.first.to_s
+        str if File.exist?(str)
+      end
+    end
+  end
+
+  Capybara.server_host = server_host
+end
+
 module TestSessions
   SeleniumIE = Capybara::Session.new(:selenium_ie, TestApp)
 end
+
+# TestSessions::SeleniumIE.driver.browser.file_detector = lambda do |args|
+#   str = args.first.to_s
+#   str if File.exist?(str)
+# end if ENV['REMOTE']
 
 TestSessions::SeleniumIE.current_window.resize_to(800, 500)
 
@@ -41,12 +81,35 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumIE, 'selenium', capybara_sk
     skip 'IE 11 obeys non-standard disabled attribute on anchor tag'
   when /#right_click should allow modifiers$/
     skip "Windows can't :meta click because :meta triggers start menu"
+  when /#click should allow modifiers$/
+    pending "Doesn't work with IE for some unknown reason$"
+  when /#double_click should allow modifiers$/
+    pending "Doesn't work with IE for some unknown reason$"
   when /#click should allow multiple modifiers$/
     skip "Windows can't :meta click because :meta triggers start menu"
   when /#double_click should allow multiple modifiers$/
     skip "Windows can't :alt double click due to being properties shortcut"
-  when /via clicking the wrapping label if possible$/
-    pending 'IEDriver has an issue with the click location of elements with multiple children if the first child is a text node and the page is scrolled'
+  when /#has_css\? should support case insensitive :class and :id options$/
+    pending "IE doesn't support case insensitive CSS selectors"
+  when /#reset_session! removes ALL cookies$/
+    pending "IE driver doesn't provide a way to remove ALL cookies"
+  when /#click_button should send button in document order$/
+    pending "IE 11 doesn't support the 'form' attribute"
+  when /#click_button should follow permanent redirects that maintain method$/
+    pending "Window 7 and 8.1 don't support 308 http status code"
+  when /#scroll_to can scroll an element to the center of the viewport$/,
+       /#scroll_to can scroll an element to the center of the scrolling element$/
+    pending " IE doesn't support ScrollToOptions"
+  when /#attach_file with multipart form should fire change once for each set of files uploaded$/,
+       /#attach_file with multipart form should fire change once when uploading multiple files from empty$/,
+       /#attach_file with multipart form should not break when using HTML5 multiple file input uploading multiple files$/
+    pending "IE requires all files be uploaded from same directory. Selenium doesn't provide that." if ENV['REMOTE']
+  when %r{#attach_file with multipart form should send content type image/jpeg when uploading an image$}
+    pending 'IE gets text/plain type for some reason'
+  when /#click should not retry clicking when wait is disabled$/
+    pending "IE driver doesn't error when clicking on covered elements, it just clicks the wrong element"
+  when /#click should go to the same page if href is blank$/
+    pending 'IE treats blank href as a parent request (against HTML spec)'
   end
 end
 
@@ -58,13 +121,16 @@ end
 
 RSpec.describe Capybara::Selenium::Node do
   it '#right_click should allow modifiers' do
+    # pending "Actions API doesn't appear to work for this"
     session = TestSessions::SeleniumIE
     session.visit('/with_js')
-    session.find(:css, '#click-test').right_click(:control)
+    el = session.find(:css, '#click-test')
+    el.right_click(:control)
     expect(session).to have_link('Has been control right clicked')
   end
 
   it '#click should allow multiple modifiers' do
+    # pending "Actions API doesn't appear to work for this"
     session = TestSessions::SeleniumIE
     session.visit('with_js')
     # IE triggers system behavior with :meta so can't use those here
@@ -73,6 +139,7 @@ RSpec.describe Capybara::Selenium::Node do
   end
 
   it '#double_click should allow modifiers' do
+    # pending "Actions API doesn't appear to work for this"
     session = TestSessions::SeleniumIE
     session.visit('/with_js')
     session.find(:css, '#click-test').double_click(:shift)

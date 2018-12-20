@@ -3,6 +3,8 @@ version: 1.0.{build}-{branch}
 cache:
   - vendor/bundle
 
+# image: Visual Studio 2017
+
 environment:
   matrix:
     - RUBY_VERSION: 25
@@ -34,9 +36,14 @@ install:
 build: off
 
 before_test:
+  # - ps: Invoke-WebRequest 'https://github.com/SeleniumHQ/selenium/raw/master/cpp/prebuilt/x64/Release/IEDriverServer.exe' -OutFile 'C:\Tools\WebDriver\IEDriverServer.exe'
+  - ps: Invoke-WebRequest 'https://github.com/SeleniumHQ/selenium/raw/master/cpp/prebuilt/Win32/Release/IEDriverServer.exe' -OutFile 'C:\Tools\WebDriver\IEDriverServer.exe'
   - ruby -v
   - gem -v
   - bundle -v
+  - chromedriver.exe --version
+  - geckodriver.exe --version
+  - IEDriverServer.exe --version
 
 test_script:
   - bundle exec rake travis

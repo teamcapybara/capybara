@@ -30,24 +30,24 @@ Capybara::SpecHelper.spec '#scroll_to', requires: [:scroll] do
   it 'can scroll the window to the vertical top' do
     @session.scroll_to :bottom
     @session.scroll_to :top
-    expect(@session.evaluate_script('[window.scrollX, window.scrollY]')).to eq [0, 0]
+    expect(@session.evaluate_script('[window.scrollX || window.pageXOffset, window.scrollY || window.pageYOffset]')).to eq [0, 0]
   end
 
   it 'can scroll the window to the vertical bottom' do
     @session.scroll_to :bottom
     max_scroll = @session.evaluate_script('document.body.scrollHeight - document.body.clientHeight')
-    expect(@session.evaluate_script('[window.scrollX, window.scrollY]')).to eq [0, max_scroll]
+    expect(@session.evaluate_script('[window.scrollX || window.pageXOffset, window.scrollY || window.pageYOffset]')).to eq [0, max_scroll]
   end
 
   it 'can scroll the window to the vertical center' do
     @session.scroll_to :center
     max_scroll = @session.evaluate_script('document.documentElement.scrollHeight - document.body.clientHeight')
-    expect(@session.evaluate_script('[window.scrollX, window.scrollY]')).to eq [0, max_scroll / 2]
+    expect(@session.evaluate_script('[window.scrollX || window.pageXOffset, window.scrollY || window.pageYOffset]')).to eq [0, max_scroll / 2]
   end
 
-  it 'can scroll the window to specifc location' do
+  it 'can scroll the window to specific location' do
     @session.scroll_to 100, 100
-    expect(@session.evaluate_script('[window.scrollX, window.scrollY]')).to eq [100, 100]
+    expect(@session.evaluate_script('[window.scrollX || window.pageXOffset, window.scrollY || window.pageYOffset]')).to eq [100, 100]
   end
 
   it 'can scroll an element to the top of the scrolling element' do
@@ -55,7 +55,7 @@ Capybara::SpecHelper.spec '#scroll_to', requires: [:scroll] do
     el = scrolling_element.find(:css, '#inner')
     scrolling_element.scroll_to(el, :top)
     scrolling_element_top = scrolling_element.evaluate_script('this.getBoundingClientRect().top')
-    expect(el.evaluate_script('this.getBoundingClientRect().top')).to be_within(1).of(scrolling_element_top)
+    expect(el.evaluate_script('this.getBoundingClientRect().top')).to be_within(3).of(scrolling_element_top)
   end
 
   it 'can scroll an element to the bottom of the scrolling element' do
@@ -97,7 +97,7 @@ Capybara::SpecHelper.spec '#scroll_to', requires: [:scroll] do
     expect(scrolling_element.evaluate_script('[this.scrollLeft, this.scrollTop]')).to eq [0, max_scroll / 2]
   end
 
-  it 'can scroll the scrolling element to specifc location' do
+  it 'can scroll the scrolling element to specific location' do
     scrolling_element = @session.find(:css, '#scrollable')
     scrolling_element.scroll_to 100, 100
     expect(scrolling_element.evaluate_script('[this.scrollLeft, this.scrollTop]')).to eq [100, 100]
@@ -105,8 +105,8 @@ Capybara::SpecHelper.spec '#scroll_to', requires: [:scroll] do
 
   context 'scroll_by' do
     it 'can scroll the window by a specifc amount' do
-      @session.scroll_by 100, 100
-      expect(@session.evaluate_script('[window.scrollX, window.scrollY]')).to eq [100, 100]
+      @session.scroll_by 50, 75
+      expect(@session.evaluate_script('[window.scrollX || window.pageXOffset, window.scrollY || window.pageYOffset]')).to eq [50, 75]
     end
 
     it 'can scroll the scroll the scrolling element by a specifc amount' do

@@ -102,7 +102,7 @@ Capybara::SpecHelper.spec '#find_field' do
 
   context 'with no locator' do
     it 'should use options to find the field' do
-      expect(@session.find_field(with: 'dog')['id']).to eq 'form_pets_dog'
+      expect(@session.find_field(type: 'checkbox', with: 'dog')['id']).to eq 'form_pets_dog'
     end
   end
 

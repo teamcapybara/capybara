@@ -226,7 +226,7 @@ Capybara::SpecHelper.spec '#has_text?' do
       Capybara.using_wait_time(0.1) do
         @session.visit('/with_js')
         @session.click_link('Click me')
-        expect(@session).to have_text('Has been clicked', wait: 2)
+        expect(@session).to have_text('Has been clicked', wait: 3)
       end
     end
   end

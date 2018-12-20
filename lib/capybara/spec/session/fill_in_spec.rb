@@ -126,7 +126,7 @@ Capybara::SpecHelper.spec '#fill_in' do
   end
 
   it 'should fill in a field based on current value' do
-    @session.fill_in(currently_with: 'John', with: 'Thomas')
+    @session.fill_in(id: /form.*name/, currently_with: 'John', with: 'Thomas')
     @session.click_button('awesome')
     expect(extract_results(@session)['first_name']).to eq('Thomas')
   end
