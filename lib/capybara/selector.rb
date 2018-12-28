@@ -411,12 +411,14 @@ Capybara.add_selector(:label, locator_type: [String, Symbol]) do
       locator_matchers |= XPath.attr(test_id) == locator if test_id
       xpath = xpath[locator_matchers]
     end
-    if options.key?(:for) && !options[:for].is_a?(Capybara::Node::Element)
-      with_attr = XPath.attr(:for) == options[:for].to_s
-      labelable_elements = %i[button input keygen meter output progress select textarea]
-      wrapped = !XPath.attr(:for) &
-                XPath.descendant(*labelable_elements)[XPath.attr(:id) == options[:for].to_s]
-      xpath = xpath[with_attr | wrapped]
+    if options.key?(:for)
+      if (for_option = options[:for].is_a?(Capybara::Node::Element) ? options[:for][:id] : options[:for])
+        with_attr = XPath.attr(:for) == for_option.to_s
+        labelable_elements = %i[button input keygen meter output progress select textarea]
+        wrapped = !XPath.attr(:for) &
+                  XPath.descendant(*labelable_elements)[XPath.attr(:id) == for_option.to_s]
+        xpath = xpath[with_attr | wrapped]
+      end
     end
     xpath
   end
