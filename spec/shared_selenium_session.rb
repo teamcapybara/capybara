@@ -199,14 +199,14 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         # this is here because it is testing for an XPath that is specific to the algorithm used in the selenium driver
         session.visit('/path')
         element = session.find(:link, 'Second Link')
-        expect(element.path).to eq('/HTML/BODY/DIV[2]/A[1]')
+        expect(element.path).to eq('/HTML/BODY[1]/DIV[2]/A[1]')
       end
 
       it 'handles namespaces in xhtml' do
         pending "IE 11 doesn't handle all XPath querys (namespace-uri, etc)" if ie?(session)
         session.visit '/with_namespace'
         rect = session.find(:css, 'div svg rect:first-of-type')
-        expect(rect.path).to eq("/HTML/BODY/DIV/./*[((local-name(.) = 'svg') and (namespace-uri(.) = 'http://www.w3.org/2000/svg'))]/./*[((local-name(.) = 'rect') and (namespace-uri(.) = 'http://www.w3.org/2000/svg'))][1]")
+        expect(rect.path).to eq("/HTML/BODY[1]/DIV[1]/*[local-name()='svg' and namespace-uri()='http://www.w3.org/2000/svg'][1]/*[local-name()='rect' and namespace-uri()='http://www.w3.org/2000/svg'][1]")
         expect(session.find(:xpath, rect.path)).to eq rect
       end
 
@@ -214,7 +214,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         pending "IE 11 doesn't handle all XPath querys (namespace-uri, etc)" if ie?(session)
         session.visit '/with_html5_svg'
         rect = session.find(:css, 'div svg rect:first-of-type')
-        expect(rect.path).to eq("/HTML/BODY/DIV/./*[((local-name(.) = 'svg') and (namespace-uri(.) = 'http://www.w3.org/2000/svg'))]/./*[((local-name(.) = 'rect') and (namespace-uri(.) = 'http://www.w3.org/2000/svg'))][1]")
+        expect(rect.path).to eq("/HTML/BODY[1]/DIV[1]/*[local-name()='svg' and namespace-uri()='http://www.w3.org/2000/svg'][1]/*[local-name()='rect' and namespace-uri()='http://www.w3.org/2000/svg'][1]")
         expect(session.find(:xpath, rect.path)).to eq rect
       end
 

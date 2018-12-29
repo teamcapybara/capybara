@@ -161,22 +161,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def path
-    path = find_xpath(XPath.ancestor_or_self).reverse
-
-    result = []
-    default_ns = path.last[:namespaceURI]
-    while (node = path.shift)
-      parent = path.first
-      selector = node[:tagName]
-      if node[:namespaceURI] != default_ns
-        selector = XPath.child.where((XPath.local_name == selector) & (XPath.namespace_uri == node[:namespaceURI])).to_s
-      end
-
-      selector += sibling_index(parent, node, selector) if parent
-      result.push selector
-    end
-
-    '/' + result.reverse.join('/')
+    driver.evaluate_script GET_XPATH_SCRIPT, self
   end
 
 protected
@@ -356,6 +341,35 @@ private
       yield key
     end
   end
+
+  GET_XPATH_SCRIPT = <<~'JS'
+    (function(el, xml){
+      var xpath = '';
+    	var pos, tempitem2;
+
+      while(el !== xml.documentElement) {
+        pos = 0;
+        tempitem2 = el;
+        while(tempitem2) {
+          if (tempitem2.nodeType === 1 && tempitem2.nodeName === el.nodeName) { // If it is ELEMENT_NODE of the same name
+            pos += 1;
+          }
+          tempitem2 = tempitem2.previousSibling;
+        }
+
+        if (el.namespaceURI != xml.documentElement.namespaceURI) {
+          xpath = "*[local-name()='"+el.nodeName+"' and namespace-uri()='"+(el.namespaceURI===null?'':el.namespaceURI)+"']["+pos+']'+'/'+xpath;
+        } else {
+          xpath = el.nodeName.toUpperCase()+"["+pos+"]/"+xpath;
+        }
+
+        el = el.parentNode;
+      }
+      xpath = '/'+xml.documentElement.nodeName.toUpperCase()+'/'+xpath;
+      xpath = xpath.replace(/\/$/, '');
+      return xpath;
+    })(arguments[0], document)
+  JS
 
   # SettableValue encapsulates time/date field formatting
   class SettableValue
