@@ -430,7 +430,7 @@ Capybara.javascript_driver = :webkit
 
 ### <a name="poltergeist"></a>Poltergeist
 
-Note: `poltergeist` depends on PhantomJS for which active development ended quite some time ago (2.1.1). As such it is roughly equivalent to a 6-7 year old version of Safari, meaning lack of support for modern JS And CSS. If any effort to update PhantomJS succeeds in the future this situation could change.
+Note: `poltergeist` depends on PhantomJS for which active development ended quite some time ago (2.1.1). As such it is roughly equivalent to a 6-7 year old version of Safari, meaning lack of support for modern JS and CSS. If any effort to update PhantomJS succeeds in the future this situation could change.
 
 [Poltergeist](https://github.com/teampoltergeist/poltergeist) is another
 headless driver which integrates Capybara with
