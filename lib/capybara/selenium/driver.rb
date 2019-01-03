@@ -4,6 +4,8 @@ require 'uri'
 require 'English'
 
 class Capybara::Selenium::Driver < Capybara::Driver::Base
+  include Capybara::Selenium::Find
+
   DEFAULT_OPTIONS = {
     browser: :firefox,
     clear_local_storage: nil,
@@ -71,14 +73,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def current_url
     browser.current_url
-  end
-
-  def find_xpath(selector)
-    browser.find_elements(:xpath, selector).map(&method(:build_node))
-  end
-
-  def find_css(selector)
-    browser.find_elements(:css, selector).map(&method(:build_node))
   end
 
   def wait?; true; end
@@ -348,8 +342,12 @@ private
     end
   end
 
-  def build_node(native_node)
-    ::Capybara::Selenium::Node.new(self, native_node)
+  def find_context
+    browser
+  end
+
+  def build_node(native_node, initial_visibility = nil)
+    ::Capybara::Selenium::Node.new(self, native_node, initial_visibility)
   end
 
   def specialize_driver(sel_driver)

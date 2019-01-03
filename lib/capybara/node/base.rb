@@ -95,13 +95,21 @@ module Capybara
       end
 
       # @api private
-      def find_css(css)
-        base.find_css(css)
+      def find_css(css, **options)
+        if base.method(:find_css).arity != 1
+          base.find_css(css, **options)
+        else
+          base.find_css(css)
+        end
       end
 
       # @api private
-      def find_xpath(xpath)
-        base.find_xpath(xpath)
+      def find_xpath(xpath, **options)
+        if base.method(:find_css).arity != 1
+          base.find_xpath(xpath, **options)
+        else
+          base.find_xpath(xpath)
+        end
       end
 
       # @api private

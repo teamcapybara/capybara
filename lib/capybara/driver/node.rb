@@ -3,11 +3,12 @@
 module Capybara
   module Driver
     class Node
-      attr_reader :driver, :native
+      attr_reader :driver, :native, :initial_visibility
 
-      def initialize(driver, native)
+      def initialize(driver, native, initial_visibility = nil)
         @driver = driver
         @native = native
+        @initial_visibility = initial_visibility
       end
 
       def all_text

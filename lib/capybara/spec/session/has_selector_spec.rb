@@ -56,6 +56,7 @@ Capybara::SpecHelper.spec '#has_selector?' do
   context 'with text' do
     it 'should discard all matches where the given string is not contained' do
       expect(@session).to have_selector('//p//a', text: 'Redirect', count: 1)
+      expect(@session).to have_selector(:css, 'p a', text: 'Redirect', count: 1)
       expect(@session).not_to have_selector('//p', text: 'Doesnotexist')
     end
 
@@ -190,6 +191,12 @@ Capybara::SpecHelper.spec '#has_no_selector?' do
     it 'should discard all matches where the given regexp is matched' do
       expect(@session).not_to have_no_selector('//p//a', text: /re[dab]i/i, count: 1)
       expect(@session).to have_no_selector('//p//a', text: /Red$/)
+    end
+
+    it 'should error when matching element exists' do
+      expect do
+        expect(@session).to have_no_selector('//h2', text: 'Header Class Test Five')
+      end.to raise_error RSpec::Expectations::ExpectationNotMetError
     end
   end
 end

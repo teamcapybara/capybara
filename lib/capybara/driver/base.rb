@@ -15,11 +15,11 @@ class Capybara::Driver::Base
     raise NotImplementedError
   end
 
-  def find_xpath(query)
+  def find_xpath(query, **options)
     raise NotImplementedError
   end
 
-  def find_css(query)
+  def find_css(query, **options)
     raise NotImplementedError
   end
 

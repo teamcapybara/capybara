@@ -14,6 +14,7 @@ module Capybara
                      **options,
                      &filter_block)
         @resolved_node = nil
+        @resolved_count = 0
         @options = options.dup
         super(@options)
         self.session_options = session_options
@@ -106,7 +107,9 @@ module Capybara
         exact = exact? if exact.nil?
         expr = apply_expression_filters(@expression)
         expr = exact ? expr.to_xpath(:exact) : expr.to_s if expr.respond_to?(:to_xpath)
-        filtered_expression(expr)
+        expr = filtered_expression(expr)
+        expr = "(#{expr})[#{xpath_text_conditions}]" if try_text_match_in_expression?
+        expr
       end
 
       def css
@@ -117,6 +120,7 @@ module Capybara
       def resolve_for(node, exact = nil)
         applied_filters.clear
         @resolved_node = node
+        @resolved_count += 1
         node.synchronize do
           children = find_nodes_by_selector_format(node, exact).map(&method(:to_element))
           Capybara::Result.new(children, self)
@@ -138,6 +142,26 @@ module Capybara
 
     private
 
+      def text_fragments
+        text = (options[:text] || options[:exact_text])
+        text.is_a?(String) ? text.split : []
+      end
+
+      def xpath_text_conditions
+        (options[:text] || options[:exact_text]).split.map { |txt| XPath.contains(txt) }.reduce(&:&)
+      end
+
+      def try_text_match_in_expression?
+        first_try? &&
+          (options[:text] || options[:exact_text]).is_a?(String) &&
+          @resolved_node&.respond_to?(:session) &&
+          @resolved_node.session.driver.wait?
+      end
+
+      def first_try?
+        @resolved_count == 1
+      end
+
       def show_for_stage(only_applied)
         lambda do |stage = :any|
           !only_applied || (stage == :any ? applied_filters.any? : applied_filters.include?(stage))
@@ -156,10 +180,24 @@ module Capybara
       end
 
       def find_nodes_by_selector_format(node, exact)
+        options = {}
+        options[:uses_visibility] = true unless visible == :all
+        options[:texts] = text_fragments unless selector.format == :xpath
+
         if selector.format == :css
-          node.find_css(css)
+          if node.method(:find_css).arity != 1
+            node.find_css(css, **options)
+          else
+            node.find_css(css)
+          end
+        elsif selector.format == :xpath
+          if node.method(:find_xpath).arity != 1
+            node.find_xpath(xpath(exact), **options)
+          else
+            node.find_xpath(xpath(exact))
+          end
         else
-          node.find_xpath(xpath(exact))
+          raise ArgumentError, "Unknown format: #{selector.format}"
         end
       end
 
@@ -318,12 +356,12 @@ module Capybara
       def matches_system_filters?(node)
         applied_filters << :system
 
-        matches_id_filter?(node) &&
+        matches_visible_filter?(node) &&
+          matches_id_filter?(node) &&
           matches_class_filter?(node) &&
           matches_style_filter?(node) &&
           matches_text_filter?(node) &&
-          matches_exact_text_filter?(node) &&
-          matches_visible_filter?(node)
+          matches_exact_text_filter?(node)
       end
 
       def matches_id_filter?(node)
@@ -377,8 +415,10 @@ module Capybara
 
       def matches_visible_filter?(node)
         case visible
-        when :visible then node.visible?
-        when :hidden then !node.visible?
+        when :visible then
+          node.initial_visibility || (node.initial_visibility.nil? && node.visible?)
+        when :hidden then
+          (node.initial_visibility == false) || (node.initial_visibility.nil? && !node.visible?)
         else true
         end
       end

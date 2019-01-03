@@ -2,9 +2,11 @@
 
 # Selenium specific implementation of the Capybara::Driver::Node API
 
+require 'capybara/selenium/extensions/find'
 require 'capybara/selenium/extensions/scroll'
 
 class Capybara::Selenium::Node < Capybara::Driver::Node
+  include Capybara::Selenium::Find
   include Capybara::Selenium::Scroll
 
   def visible_text
@@ -151,14 +153,6 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
 
   def content_editable?
     native.attribute('isContentEditable')
-  end
-
-  def find_xpath(locator)
-    native.find_elements(:xpath, locator).map { |el| self.class.new(driver, el) }
-  end
-
-  def find_css(locator)
-    native.find_elements(:css, locator).map { |el| self.class.new(driver, el) }
   end
 
   def ==(other)
@@ -331,8 +325,12 @@ private
     each_key(keys) { |key| actions.key_up(key) }
   end
 
+  def browser
+    driver.browser
+  end
+
   def browser_action
-    driver.browser.action
+    browser.action
   end
 
   def each_key(keys)
@@ -345,6 +343,14 @@ private
       end
       yield key
     end
+  end
+
+  def find_context
+    native
+  end
+
+  def build_node(native_node, initial_visibility = nil)
+    self.class.new(driver, native_node, initial_visibility)
   end
 
   GET_XPATH_SCRIPT = <<~'JS'

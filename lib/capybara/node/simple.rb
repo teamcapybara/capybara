@@ -164,18 +164,22 @@ module Capybara
       end
 
       # @api private
-      def find_css(css)
+      def find_css(css, **_options)
         native.css(css)
       end
 
       # @api private
-      def find_xpath(xpath)
+      def find_xpath(xpath, **_options)
         native.xpath(xpath)
       end
 
       # @api private
       def session_options
         Capybara.session_options
+      end
+
+      def initial_visibility
+        nil
       end
 
     private

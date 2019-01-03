@@ -88,7 +88,7 @@ RSpec.describe Capybara::Result do
   it 'should catch invalid element errors during filtering' do
     allow_any_instance_of(Capybara::Node::Simple).to receive(:text).and_raise(StandardError)
     allow_any_instance_of(Capybara::Node::Simple).to receive(:session).and_return(
-      instance_double('Capybara::Session', driver: instance_double('Capybara::Driver::Base', invalid_element_errors: [StandardError]))
+      instance_double('Capybara::Session', driver: instance_double('Capybara::Driver::Base', invalid_element_errors: [StandardError], wait?: false))
     )
     result = string.all('//li', text: 'Alpha')
     expect(result.size).to eq 0
@@ -97,7 +97,7 @@ RSpec.describe Capybara::Result do
   it 'should return non-invalid element errors during filtering' do
     allow_any_instance_of(Capybara::Node::Simple).to receive(:text).and_raise(StandardError)
     allow_any_instance_of(Capybara::Node::Simple).to receive(:session).and_return(
-      instance_double('Capybara::Session', driver: instance_double('Capybara::Driver::Base', invalid_element_errors: [ArgumentError]))
+      instance_double('Capybara::Session', driver: instance_double('Capybara::Driver::Base', invalid_element_errors: [ArgumentError], wait?: false))
     )
     expect do
       string.all('//li', text: 'Alpha').to_a

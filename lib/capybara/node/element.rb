@@ -465,6 +465,14 @@ module Capybara
         %(Obsolete #<Capybara::Node::Element>)
       end
 
+      def initial_visibility
+        if base.respond_to? :initial_visibility
+          base.initial_visibility
+        else
+          nil
+        end
+      end
+
       STYLE_SCRIPT = <<~JS
         (function(){
           var s = window.getComputedStyle(this);

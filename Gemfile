@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 gem 'bundler', '< 3.0'
 gemspec
 
-gem 'xpath', git: 'git://github.com/teamcapybara/xpath.git'
+gem 'xpath', github: 'teamcapybara/xpath'
 
 group :doc do
   gem 'redcarpet', platforms: :mri
