@@ -219,7 +219,7 @@ feature "Signing in" do
 end
 ```
 
-`feature` is in fact just an alias for `describe ..., type:> :feature`,
+`feature` is in fact just an alias for `describe ..., type: :feature`,
 `background` is an alias for `before`, `scenario` for `it`, and
 `given`/`given!` aliases for `let`/`let!`, respectively.
 
