@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-gem 'bundler', '~> 1.1'
+gem 'bundler', '< 3.0'
 gemspec
 
 gem 'xpath', git: 'git://github.com/teamcapybara/xpath.git'

@@ -5,7 +5,7 @@ services:
   - docker
 rvm:
   - 2.6.0
-  - jruby-9.2.4.0
+  - jruby-9.2.5.0
 gemfile:
   - Gemfile
 env:
@@ -50,10 +50,10 @@ matrix:
           packages:
             - awesome
     - gemfile: Gemfile
-      rvm: 2.5.3
+      rvm: 2.6.0
       env: HEADLESS=true
     - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: 2.5.3
+      rvm: 2.6.0
       env: CAPYBARA_FF=true
       addons:
         firefox: latest-beta
