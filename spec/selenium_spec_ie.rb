@@ -23,43 +23,36 @@ Capybara.register_driver :selenium_ie do |app|
   # ::Selenium::WebDriver.logger.level = "debug"
   options = ::Selenium::WebDriver::IE::Options.new
   options.require_window_focus = true
-  Capybara::Selenium::Driver.new(
-    app,
-    browser: :ie,
-    desired_capabilities: ::Selenium::WebDriver::Remote::Capabilities.ie,
-    options: options
-  )
-end
+  # options.add_option("log", {"level": "trace"})
 
-if ENV['REMOTE']
-  Capybara.register_driver :selenium_ie do |app|
+  if ENV['REMOTE']
+    Capybara.server_host = server_host
+
     url = "http://#{selenium_host}:#{selenium_port}/wd/hub"
-    options = ::Selenium::WebDriver::IE::Options.new
-    options.require_window_focus = true
-
     Capybara::Selenium::Driver.new(app,
                                    browser: :remote,
-                                   desired_capabilities: ::Selenium::WebDriver::Remote::Capabilities.ie,
                                    options: options,
                                    url: url).tap do |driver|
+      puts driver.browser.capabilities.inspect
       driver.browser.file_detector = lambda do |args|
         str = args.first.to_s
         str if File.exist?(str)
       end
     end
+  else
+    Capybara::Selenium::Driver.new(
+      app,
+      browser: :ie,
+      options: options
+    ).tap do |driver|
+      puts driver.browser.capabilities.inspect
+    end
   end
-
-  Capybara.server_host = server_host
 end
 
 module TestSessions
   SeleniumIE = Capybara::Session.new(:selenium_ie, TestApp)
 end
-
-# TestSessions::SeleniumIE.driver.browser.file_detector = lambda do |args|
-#   str = args.first.to_s
-#   str if File.exist?(str)
-# end if ENV['REMOTE']
 
 TestSessions::SeleniumIE.current_window.resize_to(800, 500)
 
@@ -106,8 +99,9 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumIE, 'selenium', capybara_sk
     pending "IE requires all files be uploaded from same directory. Selenium doesn't provide that." if ENV['REMOTE']
   when %r{#attach_file with multipart form should send content type image/jpeg when uploading an image$}
     pending 'IE gets text/plain type for some reason'
-  when /#click should not retry clicking when wait is disabled$/
-    pending "IE driver doesn't error when clicking on covered elements, it just clicks the wrong element"
+  # when /#click should not retry clicking when wait is disabled$/
+  #   Fixed in IEDriverServer 3.141.0.5
+  #   pending "IE driver doesn't error when clicking on covered elements, it just clicks the wrong element"
   when /#click should go to the same page if href is blank$/
     pending 'IE treats blank href as a parent request (against HTML spec)'
   end

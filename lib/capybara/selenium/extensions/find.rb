@@ -33,7 +33,7 @@ module Capybara
           var texts = arguments[1]
           return arguments[0].filter(function(el){
             var content = el.textContent.toLowerCase();
-            return texts.every(function(txt){ return content.includes(txt.toLowerCase()) });
+            return texts.every(function(txt){ return content.indexOf(txt.toLowerCase()) != -1 });
           })
         JS
       end
