@@ -349,8 +349,8 @@ private
     native
   end
 
-  def build_node(native_node, initial_visibility = nil)
-    self.class.new(driver, native_node, initial_visibility)
+  def build_node(native_node, initial_cache = {})
+    self.class.new(driver, native_node, initial_cache)
   end
 
   GET_XPATH_SCRIPT = <<~'JS'

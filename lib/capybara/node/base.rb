@@ -105,7 +105,7 @@ module Capybara
 
       # @api private
       def find_xpath(xpath, **options)
-        if base.method(:find_css).arity != 1
+        if base.method(:find_xpath).arity != 1
           base.find_xpath(xpath, **options)
         else
           base.find_xpath(xpath)

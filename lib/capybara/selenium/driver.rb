@@ -346,8 +346,8 @@ private
     browser
   end
 
-  def build_node(native_node, initial_visibility = nil)
-    ::Capybara::Selenium::Node.new(self, native_node, initial_visibility)
+  def build_node(native_node, initial_cache = {})
+    ::Capybara::Selenium::Node.new(self, native_node, initial_cache)
   end
 
   def specialize_driver(sel_driver)

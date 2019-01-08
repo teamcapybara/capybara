@@ -416,9 +416,9 @@ module Capybara
       def matches_visible_filter?(node)
         case visible
         when :visible then
-          node.initial_visibility || (node.initial_visibility.nil? && node.visible?)
+          node.initial_cache[:visible] || (node.initial_cache[:visible].nil? && node.visible?)
         when :hidden then
-          (node.initial_visibility == false) || (node.initial_visibility.nil? && !node.visible?)
+          (node.initial_cache[:visible] == false) || (node.initial_cache[:visbile].nil? && !node.visible?)
         else true
         end
       end

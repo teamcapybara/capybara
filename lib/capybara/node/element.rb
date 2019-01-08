@@ -465,12 +465,9 @@ module Capybara
         %(Obsolete #<Capybara::Node::Element>)
       end
 
-      def initial_visibility
-        if base.respond_to? :initial_visibility
-          base.initial_visibility
-        else
-          nil
-        end
+      # @api private
+      def initial_cache
+        base.respond_to?(:initial_cache) ? base.initial_cache : {}
       end
 
       STYLE_SCRIPT = <<~JS

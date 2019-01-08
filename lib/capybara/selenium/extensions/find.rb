@@ -16,12 +16,8 @@ module Capybara
       def find_by(format, selector, uses_visibility:, texts:)
         els = find_context.find_elements(format, selector)
         els = filter_by_text(els, texts) if (els.size > 1) && !texts.empty?
-        visibilities = if uses_visibility && els.size > 1
-          element_visibilities(els)
-        else
-          []
-        end
-        els.map.with_index { |el, idx| build_node(el, visibilities[idx]) }
+        visibilities = uses_visibility && els.size > 1 ? element_visibilities(els) : []
+        els.map.with_index { |el, idx| build_node(el, visible: visibilities[idx]) }
       end
 
       def element_visibilities(elements)

@@ -51,8 +51,8 @@ private
     result['value']
   end
 
-  def build_node(native_node, initial_visibility = nil)
-    ::Capybara::Selenium::ChromeNode.new(self, native_node, initial_visibility)
+  def build_node(native_node, initial_cache = {})
+    ::Capybara::Selenium::ChromeNode.new(self, native_node, initial_cache)
   end
 
   def bridge

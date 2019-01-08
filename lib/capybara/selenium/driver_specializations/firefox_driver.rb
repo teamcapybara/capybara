@@ -44,7 +44,7 @@ module Capybara::Selenium::Driver::FirefoxDriver
 
 private
 
-  def build_node(native_node, initial_visibility = nil)
-    ::Capybara::Selenium::FirefoxNode.new(self, native_node, initial_visibility)
+  def build_node(native_node, initial_cache = {})
+    ::Capybara::Selenium::FirefoxNode.new(self, native_node, initial_cache)
   end
 end
