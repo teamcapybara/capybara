@@ -381,14 +381,35 @@ module Capybara
         self
       end
 
-      def scroll_to(pos_or_el, position = :top)
-        pos_or_el = pos_or_el.base if pos_or_el.is_a? Capybara::Node::Element
-        synchronize { base.scroll_to(pos_or_el, position) }
-        self
-      end
-
-      def scroll_by(x, y)
-        synchronize { base.scroll_by(x, y) }
+      ##
+      #
+      # Scroll the page or element
+      #
+      # Scroll the page or element to its top, bottom or middle
+      # @overload scroll_to(position, offset: [0,0])
+      #   @param [:top, :bottom, :center, :current] position
+      #   @param :offset
+      #
+      # Scroll the page or current element until the given element is aligned at the top, bottom, or center of it
+      # @overload scroll_to(element, align: :top)
+      #   @param [Capybara::Node::Element] element   The element to be scrolled into view
+      #   @param [:top, :bottom, :center] :align Where to align the element being scrolled into view with relation to the current page/element if possible
+      #
+      # @overload scroll_to(x,y)
+      #   @param [Integer] x    Horizontal scroll offset
+      #   @param [Integer] y    Vertical scroll offset
+      #
+      # @return [Capybara::Node::Element]  The element
+      def scroll_to(pos_or_el_or_x, y = nil, align: :top, offset: nil)
+        case pos_or_el_or_x
+        when Symbol
+          synchronize { base.scroll_to(nil, pos_or_el_or_x) } unless pos_or_el_or_x == :current
+        when Capybara::Node::Element
+          synchronize { base.scroll_to(pos_or_el_or_x.base, align)}
+        else
+          synchronize { base.scroll_to(nil, nil, [pos_or_el_or_x, y]) }
+        end
+        synchronize { base.scroll_by(*offset) } unless offset.nil?
         self
       end
 

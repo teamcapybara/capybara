@@ -73,7 +73,7 @@ module Capybara
         raise NotImplementedError
       end
 
-      def scroll_to(element, location = :top)
+      def scroll_to(element, alignment, position = nil)
         raise NotImplementedError
       end
 

@@ -44,9 +44,6 @@ module Capybara
         find(:xpath, '//body').scroll_to(*args)
       end
 
-      def scroll_by(*args)
-        find(:xpath, '//body').scroll_by(*args)
-      end
     end
   end
 end

@@ -15,15 +15,14 @@ module Capybara
         JS
       end
 
-      def scroll_to(element, location = :top)
-        location, element = element, nil if element.is_a? Symbol
+      def scroll_to(element, location, position = nil)
+        # location, element = element, nil if element.is_a? Symbol
         if element.is_a? Capybara::Selenium::Node
           scroll_element_to_location(element, location)
         elsif location.is_a? Symbol
           scroll_to_location(location)
         else
-          x, y = element, location
-          scroll_to_coords(x, y)
+          scroll_to_coords(*position)
         end
         self
       end
