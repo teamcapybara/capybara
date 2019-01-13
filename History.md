@@ -1,3 +1,15 @@
+# Version 3.13.0
+Release date: unreleased
+
+### Added
+
+* #scroll_to added to allow scrolling page/elements to specified locations
+* Speed optimizations around multiple element location and path generation when using the Selenium driver
+* Support for locator type checking in custom selectors
+* Automatic gumbo use can be disabled
+* `assert_style`/`has_style`/`have_style` depreacted in favor of `assert_matches_style`/`matches_styles?`/`match_style`
+* :style filter added to selectors
+
 # Version 3.12.0
 Release date: 2018-11-28
 
