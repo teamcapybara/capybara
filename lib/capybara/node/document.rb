@@ -43,7 +43,6 @@ module Capybara
       def scroll_to(*args)
         find(:xpath, '//body').scroll_to(*args)
       end
-
     end
   end
 end

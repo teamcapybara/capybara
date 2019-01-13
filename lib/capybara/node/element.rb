@@ -405,7 +405,7 @@ module Capybara
         when Symbol
           synchronize { base.scroll_to(nil, pos_or_el_or_x) } unless pos_or_el_or_x == :current
         when Capybara::Node::Element
-          synchronize { base.scroll_to(pos_or_el_or_x.base, align)}
+          synchronize { base.scroll_to(pos_or_el_or_x.base, align) }
         else
           synchronize { base.scroll_to(nil, nil, [pos_or_el_or_x, y]) }
         end

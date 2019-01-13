@@ -180,19 +180,20 @@ module Capybara
       end
 
       def find_nodes_by_selector_format(node, exact)
-        options = {}
-        options[:uses_visibility] = true unless visible == :all
-        options[:texts] = text_fragments unless selector.format == :xpath
+        hints = {}
+        hints[:uses_visibility] = true unless visible == :all
+        hints[:texts] = text_fragments unless selector.format == :xpath
+        hints[:styles] = options[:style] if use_default_style_filter?
 
         if selector.format == :css
           if node.method(:find_css).arity != 1
-            node.find_css(css, **options)
+            node.find_css(css, **hints)
           else
             node.find_css(css)
           end
         elsif selector.format == :xpath
           if node.method(:find_xpath).arity != 1
-            node.find_xpath(xpath(exact), **options)
+            node.find_xpath(xpath(exact), **hints)
           else
             node.find_xpath(xpath(exact))
           end
@@ -388,7 +389,7 @@ module Capybara
       end
 
       def matches_style?(node, styles)
-        @actual_styles = node.style(*styles.keys)
+        @actual_styles = node.initial_cache[:style] || node.style(*styles.keys)
         styles.all? do |style, value|
           if value.is_a? Regexp
             @actual_styles[style.to_s] =~ value
