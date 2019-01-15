@@ -385,7 +385,7 @@ private
     until find_xpath('/html/body/*').empty?
       raise Capybara::ExpectationNotMet, 'Timed out waiting for Selenium session reset' if timer.expired?
 
-      sleep 0.05
+      sleep 0.01
     end
   end
 

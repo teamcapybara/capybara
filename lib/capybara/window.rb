@@ -132,7 +132,7 @@ module Capybara
       timer = Capybara::Helpers.timer(expire_in: seconds)
       loop do
         prev_size = size
-        sleep 0.05
+        sleep 0.025
         return res if prev_size == size
         break if timer.expired?
       end

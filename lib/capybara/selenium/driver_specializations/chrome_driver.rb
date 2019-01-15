@@ -23,7 +23,7 @@ module Capybara::Selenium::Driver::ChromeDriver
 
     # Chromedriver doesn't wait long enough for state to change when coming out of fullscreen
     # and raises unnecessary error. Wait a bit and try again.
-    sleep 0.5
+    sleep 0.25
     super
   end
 

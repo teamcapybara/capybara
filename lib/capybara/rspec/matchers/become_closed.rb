@@ -15,7 +15,7 @@ module Capybara
           while window.exists?
             return false if timer.expired?
 
-            sleep 0.05
+            sleep 0.01
           end
           true
         end

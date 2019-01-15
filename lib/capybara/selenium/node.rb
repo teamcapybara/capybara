@@ -14,7 +14,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def all_text
-    text = driver.execute_script('return arguments[0].textContent', self)
+    text = driver.evaluate_script('arguments[0].textContent', self)
     text.gsub(/[\u200b\u200e\u200f]/, '')
         .gsub(/[\ \n\f\t\v\u2028\u2029]+/, ' ')
         .gsub(/\A[[:space:]&&[^\u00a0]]+/, '')
@@ -289,7 +289,7 @@ private
     # Ensure we are focused on the element
     click
 
-    script = <<-JS
+    driver.execute_script <<-JS, self
       var range = document.createRange();
       var sel = window.getSelection();
       arguments[0].focus();
@@ -297,7 +297,6 @@ private
       sel.removeAllRanges();
       sel.addRange(range);
     JS
-    driver.execute_script script, self
 
     # The action api has a speed problem but both chrome and firefox 58 raise errors
     # if we use the faster direct send_keys.  For now just send_keys to the element
