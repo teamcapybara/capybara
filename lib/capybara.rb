@@ -88,7 +88,7 @@ module Capybara
     # [test_id = Symbol/String/nil] Optional attribute to match locator aginst with builtin selectors along with id (Default: nil)
     # [predicates_wait = Boolean]  Whether Capybaras predicate matchers use waiting behavior by default (Default: true)
     # [default_normalize_ws = Boolean] Whether text predicates and matchers use normalize whitespace behaviour (Default: false)
-    # [allow_gumbo = Boolean] When `nokogumbo` is available, whether it will be used to parse HTML strings (Default: true)
+    # [allow_gumbo = Boolean] When `nokogumbo` is available, whether it will be used to parse HTML strings (Default: false)
     #
     # === DSL Options
     #
@@ -525,7 +525,7 @@ Capybara.configure do |config|
   config.test_id = nil
   config.predicates_wait = true
   config.default_normalize_ws = false
-  config.allow_gumbo = true
+  config.allow_gumbo = false
 end
 
 Capybara.register_driver :rack_test do |app|
