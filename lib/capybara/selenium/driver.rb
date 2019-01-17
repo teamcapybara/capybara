@@ -386,6 +386,11 @@ private
       raise Capybara::ExpectationNotMet, 'Timed out waiting for Selenium session reset' if timer.expired?
 
       sleep 0.01
+
+      # It has been observed that it is possible that asynchronous JS code in
+      # the application under test can navigate the browser away from about:blank
+      # if the timing is just right. Ensure we are still at about:blank... 
+      @browser.navigate.to('about:blank') if current_url != 'about:blank'
     end
   end
 
