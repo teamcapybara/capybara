@@ -37,6 +37,7 @@ GitHub): http://groups.google.com/group/ruby-capybara
     - [Selecting the Driver](#selecting-the-driver)
     - [RackTest](#racktest)
     - [Selenium](#selenium)
+    - [Apparition](#apparition)
     - [Capybara-webkit](#capybara-webkit)
     - [Poltergeist](#poltergeist)
 - [The DSL](#the-dsl)
