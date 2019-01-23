@@ -408,6 +408,15 @@ to the browsers.  See the section on adding and configuring drivers.
 same transaction as your tests, causing data not to be shared between your test
 and test server, see [Transactions and database setup](#transactions-and-database-setup) below.
 
+### <a name="apparition"></a>Apparition
+
+The [apparition driver](https://github.com/twalpole/apparition) in a new driver thatallows you to run tests using Chrome in a headless
+or headed configuration. It attempts to provide backwards compatibility with the [Poltergeist driver API](https://github.com/teampoltergeist/poltergeist)
+while allowing for the use of modern JS/CSS. It uses CDP to communicate with Chrome, thereby obviating the need for chromedriver.
+A compatibility layer for capybara-webkit is planned, although has not yet been started. This driver is being developed by the
+maintainer of Capybara and will attempt to keep up to date with new Capybara releases. It will probably be moved into the
+teamcapybara repo once completely stable.
+
 ### <a name="capybara-webkit"></a>Capybara-webkit
 
 Note: `capybara-webkit` depends on QtWebkit which went EOL quite some time ago. There has been an attempt to revive the project but `capybara-webkit` is not yet (AFAIK) compatible with the revived version of QtWebKit (could be a good OSS project for someone) and as such is still limited to an old version of QtWebKit.  This means its support for modern JS and CSS is severely limited.
