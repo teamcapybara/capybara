@@ -23,7 +23,6 @@ module Capybara
           hints_js = +''
           functions = []
           if uses_visibility && !is_displayed_atom.empty?
-            puts "running vis func"
             hints_js << <<~VISIBILITY_JS
               var vis_func = #{is_displayed_atom};
             VISIBILITY_JS

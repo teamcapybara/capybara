@@ -1,3 +1,10 @@
+# Version 3.13.2
+Release date: 2019-01-24
+
+### Fixed
+
+* Remove extraneous output
+
 # Version 3.13.1
 Release date: 2019-01-24
 
