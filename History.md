@@ -3,10 +3,11 @@ Release date: unreleased
 
 ### Added
 
+* Session#quit added
 * #scroll_to added to allow scrolling page/elements to specified locations
 * Speed optimizations around multiple element location and path generation when using the Selenium driver
 * Support for locator type checking in custom selectors
-* Automatic gumbo use can be disabled
+* Allow configuration of gumbo use - defaults to off
 * `assert_style`/`has_style`/`have_style` depreacted in favor of `assert_matches_style`/`matches_styles?`/`match_style`
 * :style filter added to selectors
 
