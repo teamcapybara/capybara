@@ -41,7 +41,7 @@ matrix:
       env:
         - CAPYBARA_REMOTE=true
         - CAPYBARA_FF=true
-    - gemfile: gemfiles/Gemfile.rspec-35
+    - gemfile: gemfiles/Gemfile.base-versions
       rvm: 2.3.8
       env: CAPYBARA_FF=true
       addons:

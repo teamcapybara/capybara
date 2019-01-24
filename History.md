@@ -1,3 +1,10 @@
+# Version 3.13.1
+Release date: 2019-01-24
+
+### Fixed
+
+* Only use Selenium visibility optimization when JS atom is available - Issue #2151
+
 # Version 3.13.0
 Release date: 2019-01-23
 
