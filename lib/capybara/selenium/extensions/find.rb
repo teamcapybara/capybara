@@ -16,12 +16,14 @@ module Capybara
       def find_by(format, selector, uses_visibility:, texts:, styles:)
         els = find_context.find_elements(format, selector)
         hints = []
+
         if (els.size > 2) && !ENV['DISABLE_CAPYBARA_SELENIUM_OPTIMIZATIONS']
           els = filter_by_text(els, texts) unless texts.empty?
 
           hints_js = +''
           functions = []
-          if uses_visibility
+          if uses_visibility && !is_displayed_atom.empty?
+            puts "running vis func"
             hints_js << <<~VISIBILITY_JS
               var vis_func = #{is_displayed_atom};
             VISIBILITY_JS
@@ -74,7 +76,12 @@ module Capybara
       end
 
       def is_displayed_atom # rubocop:disable Naming/PredicateName
-        @@is_displayed_atom ||= browser.send(:bridge).send(:read_atom, 'isDisplayed')
+        @@is_displayed_atom ||= begin
+          browser.send(:bridge).send(:read_atom, 'isDisplayed')
+        rescue StandardError
+          # If the atom doesn't exist or other error
+          ""
+        end
       end
     end
   end

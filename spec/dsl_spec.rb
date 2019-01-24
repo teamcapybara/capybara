@@ -13,6 +13,8 @@ Capybara::SpecHelper.run_specs TestClass.new, 'DSL', capybara_skip: %i[
   case example.metadata[:full_description]
   when /has_css\? should support case insensitive :class and :id options/
     pending "Nokogiri doesn't support case insensitive CSS attribute matchers"
+  when /#click_button should follow permanent redirects that maintain method/
+    pending "Rack < 2 doesn't support 308" if Gem.loaded_specs['rack'].version < Gem::Version.new('2.0.0')
   end
 end
 
