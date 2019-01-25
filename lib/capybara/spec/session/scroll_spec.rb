@@ -108,7 +108,7 @@ Capybara::SpecHelper.spec '#scroll_to', requires: [:scroll] do
     expect(@session.evaluate_script('[window.scrollX || window.pageXOffset, window.scrollY || window.pageYOffset]')).to eq [50, 75]
   end
 
-  it 'can scroll the scroll the scrolling element by a specifc amount' do
+  it 'can scroll the scroll the scrolling element by a specific amount' do
     scrolling_element = @session.find(:css, '#scrollable')
     scrolling_element.scroll_to 100, 100
     scrolling_element.scroll_to(:current, offset: [-50, 50])
