@@ -22,7 +22,7 @@ Release date: 2019-01-23
 * Speed optimizations around multiple element location and path generation when using the Selenium driver
 * Support for locator type checking in custom selectors
 * Allow configuration of gumbo use - defaults to off
-* `assert_style`/`has_style`/`have_style` depreacted in favor of `assert_matches_style`/`matches_styles?`/`match_style`
+* `assert_style`/`has_style`/`have_style` deprecated in favor of `assert_matches_style`/`matches_styles?`/`match_style`
 * :style filter added to selectors
 
 # Version 3.12.0
