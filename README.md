@@ -411,7 +411,7 @@ and test server, see [Transactions and database setup](#transactions-and-databas
 
 ### <a name="apparition"></a>Apparition
 
-The [apparition driver](https://github.com/twalpole/apparition) in a new driver thatallows you to run tests using Chrome in a headless
+The [apparition driver](https://github.com/twalpole/apparition) in a new driver that allows you to run tests using Chrome in a headless
 or headed configuration. It attempts to provide backwards compatibility with the [Poltergeist driver API](https://github.com/teampoltergeist/poltergeist)
 while allowing for the use of modern JS/CSS. It uses CDP to communicate with Chrome, thereby obviating the need for chromedriver.
 A compatibility layer for capybara-webkit is planned, although has not yet been started. This driver is being developed by the
