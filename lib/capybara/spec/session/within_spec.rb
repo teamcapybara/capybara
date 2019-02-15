@@ -26,6 +26,29 @@ Capybara::SpecHelper.spec '#within' do
       end
       expect(@session).to have_content('Bar')
     end
+
+    it 'should reload the node if the page is changed' do
+      @session.within(:css, '#for_foo') do
+        @session.visit('/with_scope_other')
+        expect(@session).to have_content('Different text')
+      end
+    end
+
+    it 'should reload multiple nodes if the page is changed' do
+      @session.within(:css, '#for_bar') do
+        @session.within(:css, 'form[action="/redirect"]') do
+          @session.refresh
+          expect(@session).to have_content('First Name')
+        end
+      end
+    end
+
+    it 'should error if the page is changed and a matching node no longer exists' do
+      @session.within(:css, '#for_foo') do
+        @session.visit('/')
+        expect { @session.text }.to raise_error(StandardError)
+      end
+    end
   end
 
   context 'with XPath selector' do
