@@ -16,4 +16,5 @@ gem 'cucumber', github: 'cucumber/cucumber-ruby'
 gem 'cucumber-core', github: 'cucumber/cucumber-ruby-core'
 gem 'cucumber-wire', github: 'cucumber/cucumber-ruby-wire'
 gem 'puma', github: 'puma/puma'
+gem 'google-protobuf', '>=3.7.0.rc.2'
 

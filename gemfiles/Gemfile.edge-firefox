@@ -10,3 +10,4 @@ gem 'rack', github: 'rack/rack'
 gem 'sinatra', github: 'sinatra/sinatra', branch: 'master'
 
 gem 'puma', github: 'puma/puma'
+gem 'google-protobuf', '>=3.7.0.rc.2'
