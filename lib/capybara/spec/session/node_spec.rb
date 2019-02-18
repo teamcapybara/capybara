@@ -344,6 +344,15 @@ Capybara::SpecHelper.spec 'node' do
       @session.find(:css, '.wrapper.scroll_needed').hover
       expect(@session.find(:css, '.wrapper.scroll_needed .hidden_until_hover', visible: false)).to be_visible
     end
+
+    it 'should hover again after following a link and back' do
+      @session.visit('/with_hover')
+      @session.find(:css, '.wrapper:not(.scroll_needed)').hover
+      @session.click_link('Other hover page')
+      @session.click_link('Go back')
+      @session.find(:css, '.wrapper:not(.scroll_needed)').hover
+      expect(@session.find(:css, '.wrapper:not(.scroll_needed) .hidden_until_hover', visible: false)).to be_visible
+    end
   end
 
   describe '#click' do
