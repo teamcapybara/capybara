@@ -83,11 +83,18 @@ module Capybara
           yield
         rescue StandardError => err
           session.raise_server_error!
-          raise err unless driver.wait? && catch_error?(err, errors)
-          raise err if timer.expired?
+          raise err unless catch_error?(err, errors)
 
-          sleep(0.01)
-          reload if session_options.automatic_reload
+          if driver.wait?
+            raise err if timer.expired?
+
+            sleep(0.01)
+            reload if session_options.automatic_reload
+          else
+            old_base = @base
+            reload if session_options.automatic_reload
+            raise err if old_base == @base
+          end
           retry
         ensure
           session.synchronized = false

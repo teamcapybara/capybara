@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'capybara/rack_test/errors'
+
 class Capybara::RackTest::Node < Capybara::Driver::Node
   BLOCK_ELEMENTS = %w[p h1 h2 h3 h4 h5 h6 ol ul pre address blockquote dl div fieldset form hr noscript table].freeze
 
@@ -106,18 +108,27 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     native.path
   end
 
-  def find_xpath(locator)
+  def find_xpath(locator, **_hints)
     native.xpath(locator).map { |el| self.class.new(driver, el) }
   end
 
-  def find_css(locator)
+  def find_css(locator, **_hints)
     native.css(locator, Capybara::RackTest::CSSHandlers.new).map { |el| self.class.new(driver, el) }
+  end
+
+  self.public_instance_methods(false).each do |meth_name|
+    alias_method "unchecked_#{meth_name}", meth_name
+    private "unchecked_#{meth_name}"
+    define_method meth_name do |*args|
+      stale_check
+      send("unchecked_#{meth_name}", *args)
+    end
   end
 
   def ==(other)
     native == other.native
   end
-
+  
 protected
 
   # @api private
@@ -140,6 +151,10 @@ protected
   end
 
 private
+
+  def stale_check
+    raise Capybara::RackTest::Errors::StaleElementReferenceError unless native.document == driver.dom
+  end
 
   def deselect_options
     select_node.find_xpath('.//option[@selected]').each { |node| node.native.remove_attribute('selected') }
