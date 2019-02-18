@@ -1,3 +1,16 @@
+# Version 3.14
+Release date: unreleased
+
+### Added
+
+* rack_test driver now supports reloading elements when the document changes - Issue #2157
+* Selenium driver HTML5 drag-drop emulation now emits multiple move events so drag direction
+  is determinable [Erkki Eilonen, Thomas Walpole]
+
+### Fixed
+
+* Workaround hover issue with FF 65 - Issue #2156
+
 # Version 3.13.2
 Release date: 2019-01-24
 
