@@ -116,9 +116,10 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     native.css(locator, Capybara::RackTest::CSSHandlers.new).map { |el| self.class.new(driver, el) }
   end
 
-  self.public_instance_methods(false).each do |meth_name|
+  public_instance_methods(false).each do |meth_name|
     alias_method "unchecked_#{meth_name}", meth_name
-    private "unchecked_#{meth_name}"
+    private "unchecked_#{meth_name}" # rubocop:disable Layout/AccessModifierIndentation,Style/AccessModifierDeclarations
+
     define_method meth_name do |*args|
       stale_check
       send("unchecked_#{meth_name}", *args)
@@ -128,7 +129,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   def ==(other)
     native == other.native
   end
-  
+
 protected
 
   # @api private

@@ -59,7 +59,8 @@ class Capybara::Selenium::FirefoxNode < Capybara::Selenium::Node
   end
 
   def hover
-    return super unless (browser_version >= 65.0)
+    return super unless browser_version >= 65.0
+
     # work around issue 2156 - https://github.com/teamcapybara/capybara/issues/2156
     scroll_if_needed { browser_action.move_to(native, 0, 0).move_to(native).perform }
   end

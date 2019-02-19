@@ -104,6 +104,6 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
   def header(key, value); browser.header(key, value); end
 
   def invalid_element_errors
-    [ Capybara::RackTest::Errors::StaleElementReferenceError ]
+    [Capybara::RackTest::Errors::StaleElementReferenceError]
   end
 end
