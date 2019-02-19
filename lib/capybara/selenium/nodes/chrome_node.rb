@@ -5,6 +5,13 @@ require 'capybara/selenium/extensions/html5_drag'
 class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
   include Html5Drag
 
+  def set_text(value, clear: nil, **_unused)
+    super.tap do
+      # React doesn't see the chromedriver element clear
+      send_keys(:space, :backspace) if value.to_s.empty? && clear.nil?
+    end
+  end
+
   def set_file(value) # rubocop:disable Naming/AccessorMethodName
     super(value)
   rescue ::Selenium::WebDriver::Error::ExpectedError => err
