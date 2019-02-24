@@ -73,7 +73,7 @@ module Capybara
     # [asset_host = String]               Where dynamic assets are hosted - will be prepended to relative asset locations if present (Default: nil)
     # [run_server = Boolean]              Whether to start a Rack server for the given Rack app (Default: true)
     # [raise_server_errors = Boolean]     Should errors raised in the server be raised in the tests? (Default: true)
-    # [server_errors = Array\<Class\>]    Error classes that should be raised in the tests if they are raised in the server and Capybara.raise_server_errors is true (Default: [StandardError])
+    # [server_errors = Array\<Class\>]    Error classes that should be raised in the tests if they are raised in the server and Capybara.raise_server_errors is true (Default: [Exception])
     # [default_selector = :css/:xpath]    Methods which take a selector use the given type by default (Default: :css)
     # [default_max_wait_time = Numeric]   The maximum number of seconds to wait for asynchronous processes to finish (Default: 2)
     # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: true)
@@ -516,7 +516,7 @@ Capybara.configure do |config|
   config.exact = false
   config.exact_text = false
   config.raise_server_errors = true
-  config.server_errors = [StandardError]
+  config.server_errors = [Exception]
   config.visible_text_only = false
   config.automatic_label_click = false
   config.enable_aria_label = false

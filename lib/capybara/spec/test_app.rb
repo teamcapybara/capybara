@@ -6,8 +6,8 @@ require 'rack'
 require 'yaml'
 
 class TestApp < Sinatra::Base
-  class TestAppError < StandardError; end
-  class TestAppOtherError < StandardError
+  class TestAppError < Exception; end
+  class TestAppOtherError < Exception
     def initialize(string1, msg)
       @something = string1
       @message = msg
