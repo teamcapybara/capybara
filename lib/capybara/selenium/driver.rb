@@ -389,7 +389,7 @@ private
 
       # It has been observed that it is possible that asynchronous JS code in
       # the application under test can navigate the browser away from about:blank
-      # if the timing is just right. Ensure we are still at about:blank... 
+      # if the timing is just right. Ensure we are still at about:blank...
       @browser.navigate.to('about:blank') unless current_url == 'about:blank'
     end
   end

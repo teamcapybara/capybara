@@ -6,10 +6,12 @@ Release date: unreleased
 * rack_test driver now supports reloading elements when the document changes - Issue #2157
 * Selenium driver HTML5 drag-drop emulation now emits multiple move events so drag direction
   is determinable [Erkki Eilonen, Thomas Walpole]
-
+* Capybara.server_errors now defaults to [Exception] - Issue #2160 [Edgars Beigarts]
 ### Fixed
 
 * Workaround hover issue with FF 65 - Issue #2156
+* Workaround chromedriver issue when setting blank strings to react controlled text fields
+
 
 # Version 3.13.2
 Release date: 2019-01-24
