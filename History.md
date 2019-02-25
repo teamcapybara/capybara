@@ -11,7 +11,7 @@ Release date: unreleased
 
 * Workaround hover issue with FF 65 - Issue #2156
 * Workaround chromedriver issue when setting blank strings to react controlled text fields
-
+* Workaround chromedriver issue with popup windows not loading content - https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
 
 # Version 3.13.2
 Release date: 2019-01-24
