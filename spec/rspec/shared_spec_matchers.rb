@@ -555,21 +555,20 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
       context 'with wait' do
         before do
-          @session = session
-          @session.visit('/with_js')
+          session.visit('/with_js')
         end
 
         it 'waits if wait time is more than timeout' do
-          @session.click_link('Change title')
+          session.click_link('Change title')
           using_wait_time 0 do
-            expect(@session).to have_title('changed title', wait: 2)
+            expect(session).to have_title('changed title', wait: 2)
           end
         end
 
         it "doesn't wait if wait time is less than timeout" do
-          @session.click_link('Change title')
+          session.click_link('Change title')
           using_wait_time 3 do
-            expect(@session).not_to have_title('changed title', wait: 0)
+            expect(session).not_to have_title('changed title', wait: 0)
           end
         end
       end
@@ -600,21 +599,20 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
       context 'with wait' do
         before do
-          @session = session
-          @session.visit('/with_js')
+          session.visit('/with_js')
         end
 
         it 'waits if wait time is more than timeout' do
-          @session.click_link('Change page')
+          session.click_link('Change page')
           using_wait_time 0 do
-            expect(@session).to have_current_path('/with_html', wait: 2)
+            expect(session).to have_current_path('/with_html', wait: 2)
           end
         end
 
         it "doesn't wait if wait time is less than timeout" do
-          @session.click_link('Change page')
+          session.click_link('Change page')
           using_wait_time 0 do
-            expect(@session).not_to have_current_path('/with_html')
+            expect(session).not_to have_current_path('/with_html')
           end
         end
       end
@@ -848,10 +846,11 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
   end
 
   context 'compounding timing' do
+    let(:session) { session }
+    let(:el) { session.find(:css, '#reload-me') }
+
     before do
-      @session = session
-      @session.visit('/with_js')
-      @el = @session.find(:css, '#reload-me')
+      session.visit('/with_js')
     end
 
     context '#and' do
@@ -860,82 +859,82 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
           matcher = have_text('this is not there').and have_text('neither is this')
           expect(Benchmark.realtime do
             expect do
-              expect(@el).to matcher
+              expect(el).to matcher
             end.to raise_error RSpec::Expectations::ExpectationNotMetError
           end).to be_between(2, 3)
         end
       end
 
       it "should run 'concurrently' and retry" do
-        @session.click_link('reload-link')
-        @session.using_wait_time(2) do
+        session.click_link('reload-link')
+        session.using_wait_time(2) do
           expect(Benchmark.realtime do
             expect do
-              expect(@el).to have_text('waiting to be reloaded').and(have_text('has been reloaded'))
+              expect(el).to have_text('waiting to be reloaded').and(have_text('has been reloaded'))
             end.to raise_error RSpec::Expectations::ExpectationNotMetError, /expected to find text "waiting to be reloaded" in "has been reloaded"/
           end).to be_between(2, 3)
         end
       end
 
       it 'should ignore :wait options' do
-        @session.using_wait_time(2) do
+        session.using_wait_time(2) do
           matcher = have_text('this is not there', wait: 5).and have_text('neither is this', wait: 6)
           expect(Benchmark.realtime do
             expect do
-              expect(@el).to matcher
+              expect(el).to matcher
             end.to raise_error RSpec::Expectations::ExpectationNotMetError
           end).to be_between(2, 3)
         end
       end
 
       it 'should work on the session' do
-        @session.using_wait_time(2) do
-          @session.click_link('reload-link')
-          expect(@session).to have_selector(:css, 'h1', text: 'FooBar').and have_text('has been reloaded')
+        session.using_wait_time(2) do
+          session.click_link('reload-link')
+          expect(session).to have_selector(:css, 'h1', text: 'FooBar').and have_text('has been reloaded')
         end
       end
     end
 
     context '#and_then' do
       it 'should run sequentially' do
-        @session.click_link('reload-link')
-        expect(@el).to have_text('waiting to be reloaded').and_then have_text('has been reloaded')
+        session.click_link('reload-link')
+        expect(el).to have_text('waiting to be reloaded').and_then have_text('has been reloaded')
       end
     end
 
     context '#or' do
       it "should run 'concurrently'" do
-        @session.using_wait_time(3) do
+        session.using_wait_time(3) do
           expect(Benchmark.realtime do
-            expect(@el).to have_text('has been reloaded').or have_text('waiting to be reloaded')
+            expect(el).to have_text('has been reloaded').or have_text('waiting to be reloaded')
           end).to be < 1
         end
       end
 
       it 'should retry' do
-        @session.using_wait_time(3) do
+        session.using_wait_time(3) do
           expect(Benchmark.realtime do
             expect do
-              expect(@el).to have_text('has been reloaded').or have_text('random stuff')
+              expect(el).to have_text('has been reloaded').or have_text('random stuff')
             end.to raise_error RSpec::Expectations::ExpectationNotMetError
           end).to be > 3
         end
       end
 
       it 'should ignore :wait options' do
-        @session.using_wait_time(2) do
+        session.using_wait_time(2) do
           expect(Benchmark.realtime do
             expect do
-              expect(@el).to have_text('this is not there', wait: 10).or have_text('neither is this', wait: 15)
+              expect(el).to have_text('this is not there', wait: 10).or have_text('neither is this', wait: 15)
             end.to raise_error RSpec::Expectations::ExpectationNotMetError
           end).to be_between(2, 3)
         end
       end
 
       it 'should work on the session' do
-        @session.using_wait_time(2) do
-          @session.click_link('reload-link')
-          expect(@session).to have_selector(:css, 'h1', text: 'Not on the page').or have_text('has been reloaded')
+        session.using_wait_time(2) do
+          session.click_link('reload-link')
+          expect(session).to have_selector(:css, 'h1', text: 'Not on the page').or have_text('has been reloaded')
         end
       end
     end

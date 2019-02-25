@@ -28,27 +28,28 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
     end
 
     describe 'exit codes' do
+      let(:env) { { 'SELENIUM_BROWSER' => session.driver.options[:browser].to_s } }
+      let!(:orig_dir) { Dir.getwd }
+
       before do
-        @current_dir = Dir.getwd
         Dir.chdir(File.join(File.dirname(__FILE__), '..'))
-        @env = { 'SELENIUM_BROWSER' => session.driver.options[:browser].to_s }
       end
 
       after do
-        Dir.chdir(@current_dir)
+        Dir.chdir(orig_dir)
       end
 
       it 'should have return code 1 when running selenium_driver_rspec_failure.rb' do
         skip 'only setup for local non-headless' if headless_or_remote?
 
-        system(@env, 'rspec spec/fixtures/selenium_driver_rspec_failure.rb', out: File::NULL, err: File::NULL)
+        system(env, 'rspec spec/fixtures/selenium_driver_rspec_failure.rb', out: File::NULL, err: File::NULL)
         expect($CHILD_STATUS.exitstatus).to eq(1)
       end
 
       it 'should have return code 0 when running selenium_driver_rspec_success.rb' do
         skip 'only setup for local non-headless' if headless_or_remote?
 
-        system(@env, 'rspec spec/fixtures/selenium_driver_rspec_success.rb', out: File::NULL, err: File::NULL)
+        system(env, 'rspec spec/fixtures/selenium_driver_rspec_success.rb', out: File::NULL, err: File::NULL)
         expect($CHILD_STATUS.exitstatus).to eq(0)
       end
     end
@@ -351,8 +352,8 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         pending "IE doesn't support uploading a directory" if ie?(session)
 
         session.visit('/form')
-        @test_file_dir = File.expand_path('./fixtures', File.dirname(__FILE__))
-        session.attach_file('Directory Upload', @test_file_dir)
+        test_file_dir = File.expand_path('./fixtures', File.dirname(__FILE__))
+        session.attach_file('Directory Upload', test_file_dir)
         session.click_button('Upload Multiple')
         expect(session.body).to include('5 | ') # number of files
       end
@@ -366,6 +367,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
     end
 
+    # rubocop:disable RSpec/InstanceVariable
     describe 'Capybara#disable_animation' do
       context 'when set to `true`' do
         before(:context) do # rubocop:disable RSpec/BeforeAfterAll
@@ -373,10 +375,6 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           # it doesn't affect any of these tests because the settings are applied per-session
           Capybara.disable_animation = true
           @animation_session = Capybara::Session.new(session.mode, TestApp.new)
-        end
-
-        after(:context) do # rubocop:disable RSpec/BeforeAfterAll
-          @animation_session = nil
         end
 
         it 'should disable CSS transitions' do
@@ -400,10 +398,6 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           @animation_session_with_matching_css = Capybara::Session.new(session.mode, TestApp.new)
         end
 
-        after(:context) do # rubocop:disable RSpec/BeforeAfterAll
-          @animation_session_with_matching_css = nil
-        end
-
         it 'should disable CSS transitions' do
           @animation_session_with_matching_css.visit('with_animation')
           @animation_session_with_matching_css.click_link('transition me away')
@@ -425,10 +419,6 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           @animation_session_without_matching_css = Capybara::Session.new(session.mode, TestApp.new)
         end
 
-        after(:context) do # rubocop:disable RSpec/BeforeAfterAll
-          @animation_session_without_matching_css = nil
-        end
-
         it 'should not disable CSS transitions' do
           @animation_session_without_matching_css.visit('with_animation')
           @animation_session_without_matching_css.click_link('transition me away')
@@ -446,6 +436,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         end
       end
     end
+    # rubocop:enable RSpec/InstanceVariable
 
     describe ':element selector' do
       it 'can find html5 svg elements' do

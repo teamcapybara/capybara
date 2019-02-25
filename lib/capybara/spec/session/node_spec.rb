@@ -25,9 +25,9 @@ Capybara::SpecHelper.spec 'node' do
 
   describe '#query_scope' do
     it 'should have a reference to the element the query was evaluated on if there is one' do
-      @node = @session.find(:css, '#first')
-      expect(@node.query_scope).to eq(@node.session.document)
-      expect(@node.find(:css, '#foo').query_scope).to eq(@node)
+      node = @session.find(:css, '#first')
+      expect(node.query_scope).to eq(node.session.document)
+      expect(node.find(:css, '#foo').query_scope).to eq(node)
     end
   end
 

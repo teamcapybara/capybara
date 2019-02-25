@@ -115,14 +115,11 @@ RSpec.describe Capybara::DSL do
     end
   end
 
+  # rubocop:disable RSpec/InstanceVariable
   describe '#using_wait_time' do
-    before do
-      @previous_wait_time = Capybara.default_max_wait_time
-    end
+    before { @previous_wait_time = Capybara.default_max_wait_time }
 
-    after do
-      Capybara.default_max_wait_time = @previous_wait_time
-    end
+    after { Capybara.default_max_wait_time = @previous_wait_time }
 
     it 'should switch the wait time and switch it back' do
       in_block = nil
@@ -142,6 +139,7 @@ RSpec.describe Capybara::DSL do
       expect(Capybara.default_max_wait_time).to eq(@previous_wait_time)
     end
   end
+  # rubocop:enable RSpec/InstanceVariable
 
   describe '#app' do
     it 'should be changeable' do
@@ -249,31 +247,29 @@ RSpec.describe Capybara::DSL do
   end
 
   describe 'the DSL' do
-    before do
-      @session = Class.new { include Capybara::DSL }.new
-    end
+    let(:session) { Class.new { include Capybara::DSL }.new }
 
     it 'should be possible to include it in another class' do
-      @session.visit('/with_html')
-      @session.click_link('ullamco')
-      expect(@session.body).to include('Another World')
+      session.visit('/with_html')
+      session.click_link('ullamco')
+      expect(session.body).to include('Another World')
     end
 
     it "should provide a 'page' shortcut for more expressive tests" do
-      @session.page.visit('/with_html')
-      @session.page.click_link('ullamco')
-      expect(@session.page.body).to include('Another World')
+      session.page.visit('/with_html')
+      session.page.click_link('ullamco')
+      expect(session.page.body).to include('Another World')
     end
 
     it "should provide an 'using_session' shortcut" do
       allow(Capybara).to receive(:using_session)
-      @session.using_session(:name)
+      session.using_session(:name)
       expect(Capybara).to have_received(:using_session).with(:name)
     end
 
     it "should provide a 'using_wait_time' shortcut" do
       allow(Capybara).to receive(:using_wait_time)
-      @session.using_wait_time(6)
+      session.using_wait_time(6)
       expect(Capybara).to have_received(:using_wait_time).with(6)
     end
   end

@@ -2,6 +2,7 @@
 
 require 'spec_helper'
 
+# rubocop:disable RSpec/InstanceVariable
 RSpec.describe Capybara::Selector::CSSBuilder do
   let :builder do
     ::Capybara::Selector::CSSBuilder.new(@css)
@@ -97,3 +98,4 @@ RSpec.describe Capybara::Selector::CSSBuilder do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable

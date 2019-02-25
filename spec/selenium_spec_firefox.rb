@@ -74,51 +74,47 @@ RSpec.describe 'Capybara::Session with firefox' do # rubocop:disable RSpec/Multi
 end
 
 RSpec.describe Capybara::Selenium::Driver do
-  before do
-    @driver = Capybara::Selenium::Driver.new(TestApp, browser: :firefox, options: browser_options)
-  end
+  let(:driver) { Capybara::Selenium::Driver.new(TestApp, browser: :firefox, options: browser_options) }
 
   describe '#quit' do
     it 'should reset browser when quit' do
-      expect(@driver.browser).to be_truthy
-      @driver.quit
+      expect(driver.browser).to be_truthy
+      driver.quit
       # access instance variable directly so we don't create a new browser instance
-      expect(@driver.instance_variable_get(:@browser)).to be_nil
+      expect(driver.instance_variable_get(:@browser)).to be_nil
     end
 
     context 'with errors' do
-      before do
-        @original_browser = @driver.browser
-      end
+      let!(:original_browser) { driver.browser }
 
       after do
         # Ensure browser is actually quit so we don't leave hanging processe
-        RSpec::Mocks.space.proxy_for(@original_browser).reset
-        @original_browser.quit
+        RSpec::Mocks.space.proxy_for(original_browser).reset
+        original_browser.quit
       end
 
       it 'warns UnknownError returned during quit because the browser is probably already gone' do
-        allow(@driver).to receive(:warn)
-        allow(@driver.browser).to(
+        allow(driver).to receive(:warn)
+        allow(driver.browser).to(
           receive(:quit)
           .and_raise(Selenium::WebDriver::Error::UnknownError, 'random message')
         )
 
-        expect { @driver.quit }.not_to raise_error
-        expect(@driver.instance_variable_get(:@browser)).to be_nil
-        expect(@driver).to have_received(:warn).with(/random message/)
+        expect { driver.quit }.not_to raise_error
+        expect(driver.instance_variable_get(:@browser)).to be_nil
+        expect(driver).to have_received(:warn).with(/random message/)
       end
 
       it 'ignores silenced UnknownError returned during quit because the browser is almost definitely already gone' do
-        allow(@driver).to receive(:warn)
-        allow(@driver.browser).to(
+        allow(driver).to receive(:warn)
+        allow(driver.browser).to(
           receive(:quit)
           .and_raise(Selenium::WebDriver::Error::UnknownError, 'Error communicating with the remote browser')
         )
 
-        expect { @driver.quit }.not_to raise_error
-        expect(@driver.instance_variable_get(:@browser)).to be_nil
-        expect(@driver).not_to have_received(:warn)
+        expect { driver.quit }.not_to raise_error
+        expect(driver.instance_variable_get(:@browser)).to be_nil
+        expect(driver).not_to have_received(:warn)
       end
     end
   end
@@ -126,23 +122,23 @@ RSpec.describe Capybara::Selenium::Driver do
   context 'storage' do
     describe '#reset!' do
       it 'clears storage by default' do
-        @session = TestSessions::SeleniumFirefox
-        @session.visit('/with_js')
-        @session.find(:css, '#set-storage').click
-        @session.reset!
-        @session.visit('/with_js')
-        expect(@session.driver.browser.local_storage.keys).to be_empty
-        expect(@session.driver.browser.session_storage.keys).to be_empty
+        session = TestSessions::SeleniumFirefox
+        session.visit('/with_js')
+        session.find(:css, '#set-storage').click
+        session.reset!
+        session.visit('/with_js')
+        expect(session.driver.browser.local_storage.keys).to be_empty
+        expect(session.driver.browser.session_storage.keys).to be_empty
       end
 
       it 'does not clear storage when false' do
-        @session = Capybara::Session.new(:selenium_firefox_not_clear_storage, TestApp)
-        @session.visit('/with_js')
-        @session.find(:css, '#set-storage').click
-        @session.reset!
-        @session.visit('/with_js')
-        expect(@session.driver.browser.local_storage.keys).not_to be_empty
-        expect(@session.driver.browser.session_storage.keys).not_to be_empty
+        session = Capybara::Session.new(:selenium_firefox_not_clear_storage, TestApp)
+        session.visit('/with_js')
+        session.find(:css, '#set-storage').click
+        session.reset!
+        session.visit('/with_js')
+        expect(session.driver.browser.local_storage.keys).not_to be_empty
+        expect(session.driver.browser.session_storage.keys).not_to be_empty
       end
     end
   end
