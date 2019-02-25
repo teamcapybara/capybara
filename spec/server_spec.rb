@@ -4,17 +4,17 @@ require 'spec_helper'
 
 RSpec.describe Capybara::Server do
   it 'should spool up a rack server' do
-    @app = proc { |_env| [200, {}, ['Hello Server!']] }
-    @server = Capybara::Server.new(@app).boot
+    app = proc { |_env| [200, {}, ['Hello Server!']] }
+    server = Capybara::Server.new(app).boot
 
-    @res = Net::HTTP.start(@server.host, @server.port) { |http| http.get('/') }
+    res = Net::HTTP.start(server.host, server.port) { |http| http.get('/') }
 
-    expect(@res.body).to include('Hello Server')
+    expect(res.body).to include('Hello Server')
   end
 
   it 'should do nothing when no server given' do
     expect do
-      @server = Capybara::Server.new(nil).boot
+      Capybara::Server.new(nil).boot
     end.not_to raise_error
   end
 
@@ -42,37 +42,36 @@ RSpec.describe Capybara::Server do
   it 'should use specified port' do
     Capybara.server_port = 22789
 
-    @app = proc { |_env| [200, {}, ['Hello Server!']] }
-    @server = Capybara::Server.new(@app).boot
+    app = proc { |_env| [200, {}, ['Hello Server!']] }
+    server = Capybara::Server.new(app).boot
 
-    @res = Net::HTTP.start(@server.host, 22789) { |http| http.get('/') }
-    expect(@res.body).to include('Hello Server')
+    res = Net::HTTP.start(server.host, 22789) { |http| http.get('/') }
+    expect(res.body).to include('Hello Server')
 
     Capybara.server_port = nil
   end
 
   it 'should use given port' do
-    @app = proc { |_env| [200, {}, ['Hello Server!']] }
-    @server = Capybara::Server.new(@app, port: 22790).boot
+    app = proc { |_env| [200, {}, ['Hello Server!']] }
+    server = Capybara::Server.new(app, port: 22790).boot
 
-    @res = Net::HTTP.start(@server.host, 22790) { |http| http.get('/') }
-    expect(@res.body).to include('Hello Server')
+    res = Net::HTTP.start(server.host, 22790) { |http| http.get('/') }
+    expect(res.body).to include('Hello Server')
 
     Capybara.server_port = nil
   end
 
   it 'should find an available port' do
-    @app1 = proc { |_env| [200, {}, ['Hello Server!']] }
-    @app2 = proc { |_env| [200, {}, ['Hello Second Server!']] }
+    responses = ['Hello Server!', 'Hello Second Server!']
+    apps = responses.map do |response|
+      proc { |_env| [200, {}, [response]] }
+    end
+    servers = apps.map { |app| Capybara::Server.new(app).boot }
 
-    @server1 = Capybara::Server.new(@app1).boot
-    @server2 = Capybara::Server.new(@app2).boot
-
-    @res1 = Net::HTTP.start(@server1.host, @server1.port) { |http| http.get('/') }
-    expect(@res1.body).to include('Hello Server')
-
-    @res2 = Net::HTTP.start(@server2.host, @server2.port) { |http| http.get('/') }
-    expect(@res2.body).to include('Hello Second Server')
+    servers.each_with_index do |server, idx|
+      result = Net::HTTP.start(server.host, server.port) { |http| http.get('/') }
+      expect(result.body).to include(responses[idx])
+    end
   end
 
   it 'should support SSL' do
@@ -98,28 +97,27 @@ RSpec.describe Capybara::Server do
   end
 
   context 'When Capybara.reuse_server is true' do
+    let!(:old_reuse_server) { Capybara.reuse_server }
+
     before do
-      @old_reuse_server = Capybara.reuse_server
       Capybara.reuse_server = true
     end
 
     after do
-      Capybara.reuse_server = @old_reuse_server
+      Capybara.reuse_server = old_reuse_server
     end
 
     it 'should use the existing server if it already running' do
-      @app = proc { |_env| [200, {}, ['Hello Server!']] }
+      app = proc { |_env| [200, {}, ['Hello Server!']] }
 
-      @server1 = Capybara::Server.new(@app).boot
-      @server2 = Capybara::Server.new(@app).boot
+      servers = 2.times { Capybara::Server.new(app).boot }
 
-      res = Net::HTTP.start(@server1.host, @server1.port) { |http| http.get('/') }
-      expect(res.body).to include('Hello Server')
+      servers.each do |server|
+        res = Net::HTTP.start(server.host, server.port) { |http| http.get('/') }
+        expect(res.body).to include('Hello Server')
+      end
 
-      res = Net::HTTP.start(@server2.host, @server2.port) { |http| http.get('/') }
-      expect(res.body).to include('Hello Server')
-
-      expect(@server1.port).to eq(@server2.port)
+      expect(servers[0].port).to eq(servers[1].port)
     end
 
     it 'detects and waits for all reused server sessions pending requests' do
@@ -151,22 +149,20 @@ RSpec.describe Capybara::Server do
     end
 
     after do
-      Capybara.reuse_server = @old_reuse_server
+      Capybara.reuse_server = @old_reuse_server # rubocop:disable RSpec/InstanceVariable
     end
 
     it 'should not reuse an already running server' do
-      @app = proc { |_env| [200, {}, ['Hello Server!']] }
+      app = proc { |_env| [200, {}, ['Hello Server!']] }
 
-      @server1 = Capybara::Server.new(@app).boot
-      @server2 = Capybara::Server.new(@app).boot
+      servers = 2.times { Capybara::Server.new(app).boot }
 
-      res = Net::HTTP.start(@server1.host, @server1.port) { |http| http.get('/') }
-      expect(res.body).to include('Hello Server')
+      servers.each do |server|
+        res = Net::HTTP.start(server.host, server.port) { |http| http.get('/') }
+        expect(res.body).to include('Hello Server')
+      end
 
-      res = Net::HTTP.start(@server2.host, @server2.port) { |http| http.get('/') }
-      expect(res.body).to include('Hello Server')
-
-      expect(@server1.port).not_to eq(@server2.port)
+      expect(servers[0].port).not_to eq(servers[1].port)
     end
 
     it 'detects and waits for only one sessions pending requests' do

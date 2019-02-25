@@ -4,12 +4,12 @@ require 'spec_helper'
 
 RSpec.describe Capybara do
   describe 'default_max_wait_time' do
-    after do
-      Capybara.default_max_wait_time = @previous_default_time
-    end
+    before { @previous_default_time = Capybara.default_max_wait_time }
+
+    after { Capybara.default_max_wait_time = @previous_default_time } # rubocop:disable RSpec/InstanceVariable
 
     it 'should be changeable' do
-      @previous_default_time = Capybara.default_max_wait_time
+      expect(Capybara.default_max_wait_time).not_to eq(5)
       Capybara.default_max_wait_time = 5
       expect(Capybara.default_max_wait_time).to eq(5)
     end

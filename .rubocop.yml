@@ -125,7 +125,7 @@ RSpec/ExampleWording:
   Enabled: false
 
 RSpec/InstanceVariable:
-  Enabled: false
+  AssignmentOnly: true
 
 RSpec/ExampleLength:
   Enabled: false

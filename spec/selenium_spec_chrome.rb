@@ -50,23 +50,23 @@ RSpec.describe 'Capybara::Session with chrome' do
   context 'storage' do
     describe '#reset!' do
       it 'clears storage by default' do
-        @session = TestSessions::Chrome
-        @session.visit('/with_js')
-        @session.find(:css, '#set-storage').click
-        @session.reset!
-        @session.visit('/with_js')
-        expect(@session.evaluate_script('Object.keys(localStorage)')).to be_empty
-        expect(@session.evaluate_script('Object.keys(sessionStorage)')).to be_empty
+        session = TestSessions::Chrome
+        session.visit('/with_js')
+        session.find(:css, '#set-storage').click
+        session.reset!
+        session.visit('/with_js')
+        expect(session.evaluate_script('Object.keys(localStorage)')).to be_empty
+        expect(session.evaluate_script('Object.keys(sessionStorage)')).to be_empty
       end
 
       it 'does not clear storage when false' do
-        @session = Capybara::Session.new(:selenium_chrome_not_clear_storage, TestApp)
-        @session.visit('/with_js')
-        @session.find(:css, '#set-storage').click
-        @session.reset!
-        @session.visit('/with_js')
-        expect(@session.evaluate_script('Object.keys(localStorage)')).not_to be_empty
-        expect(@session.evaluate_script('Object.keys(sessionStorage)')).not_to be_empty
+        session = Capybara::Session.new(:selenium_chrome_not_clear_storage, TestApp)
+        session.visit('/with_js')
+        session.find(:css, '#set-storage').click
+        session.reset!
+        session.visit('/with_js')
+        expect(session.evaluate_script('Object.keys(localStorage)')).not_to be_empty
+        expect(session.evaluate_script('Object.keys(sessionStorage)')).not_to be_empty
       end
     end
   end
@@ -79,29 +79,29 @@ RSpec.describe 'Capybara::Session with chrome' do
 
   describe 'filling in Chrome-specific date and time fields with keystrokes' do
     let(:datetime) { Time.new(1983, 6, 19, 6, 30) }
+    let(:session) { TestSessions::Chrome }
 
     before do
-      @session = TestSessions::Chrome
-      @session.visit('/form')
+      session.visit('/form')
     end
 
     it 'should fill in a date input with a String' do
-      @session.fill_in('form_date', with: '06/19/1983')
-      @session.click_button('awesome')
-      expect(Date.parse(extract_results(@session)['date'])).to eq datetime.to_date
+      session.fill_in('form_date', with: '06/19/1983')
+      session.click_button('awesome')
+      expect(Date.parse(extract_results(session)['date'])).to eq datetime.to_date
     end
 
     it 'should fill in a time input with a String' do
-      @session.fill_in('form_time', with: '06:30A')
-      @session.click_button('awesome')
-      results = extract_results(@session)['time']
+      session.fill_in('form_time', with: '06:30A')
+      session.click_button('awesome')
+      results = extract_results(session)['time']
       expect(Time.parse(results).strftime('%r')).to eq datetime.strftime('%r')
     end
 
     it 'should fill in a datetime input with a String' do
-      @session.fill_in('form_datetime', with: "06/19/1983\t06:30A")
-      @session.click_button('awesome')
-      expect(Time.parse(extract_results(@session)['datetime'])).to eq datetime
+      session.fill_in('form_datetime', with: "06/19/1983\t06:30A")
+      session.click_button('awesome')
+      expect(Time.parse(extract_results(session)['datetime'])).to eq datetime
     end
   end
 end

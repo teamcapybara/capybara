@@ -96,25 +96,26 @@ Capybara::SpecHelper.spec '#reset_session!' do
   end
 
   context 'When reuse_server == false' do
+    let!(:orig_reuse_server) { Capybara.reuse_server }
+
     before do
-      @reuse_server = Capybara.reuse_server
       Capybara.reuse_server = false
     end
 
     after do
-      Capybara.reuse_server = @reuse_server
+      Capybara.reuse_server = orig_reuse_server
     end
 
     it 'raises any standard errors caught inside the server during a second session', requires: [:server] do
       Capybara.using_driver(@session.mode) do
         Capybara.using_session(:another_session) do
-          @another_session = Capybara.current_session
-          quietly { @another_session.visit('/error') }
+          another_session = Capybara.current_session
+          quietly { another_session.visit('/error') }
           expect do
-            @another_session.reset_session!
+            another_session.reset_session!
           end.to raise_error(TestApp::TestAppError)
-          @another_session.visit('/')
-          expect(@another_session.current_path).to eq('/')
+          another_session.visit('/')
+          expect(another_session.current_path).to eq('/')
         end
       end
     end

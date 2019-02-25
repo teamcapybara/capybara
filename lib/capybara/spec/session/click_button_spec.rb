@@ -45,111 +45,113 @@ Capybara::SpecHelper.spec '#click_button' do
 
   context 'with value given on a submit button' do
     context 'on a form with HTML5 fields' do
+      let(:results) { extract_results(@session) }
+
       before do
         @session.click_button('html5_submit')
-        @results = extract_results(@session)
       end
 
       it 'should serialise and submit search fields' do
-        expect(@results['html5_search']).to eq('what are you looking for')
+        expect(results['html5_search']).to eq('what are you looking for')
       end
 
       it 'should serialise and submit email fields' do
-        expect(@results['html5_email']).to eq('person@email.com')
+        expect(results['html5_email']).to eq('person@email.com')
       end
 
       it 'should serialise and submit url fields' do
-        expect(@results['html5_url']).to eq('http://www.example.com')
+        expect(results['html5_url']).to eq('http://www.example.com')
       end
 
       it 'should serialise and submit tel fields' do
-        expect(@results['html5_tel']).to eq('911')
+        expect(results['html5_tel']).to eq('911')
       end
 
       it 'should serialise and submit color fields' do
-        expect(@results['html5_color'].upcase).to eq('#FFFFFF')
+        expect(results['html5_color'].upcase).to eq('#FFFFFF')
       end
     end
 
     context 'on an HTML4 form' do
+      let(:results) { extract_results(@session) }
+
       before do
         @session.click_button('awesome')
-        @results = extract_results(@session)
       end
 
       it 'should serialize and submit text fields' do
-        expect(@results['first_name']).to eq('John')
+        expect(results['first_name']).to eq('John')
       end
 
       it 'should escape fields when submitting' do
-        expect(@results['phone']).to eq('+1 555 7021')
+        expect(results['phone']).to eq('+1 555 7021')
       end
 
       it 'should serialize and submit password fields' do
-        expect(@results['password']).to eq('seeekrit')
+        expect(results['password']).to eq('seeekrit')
       end
 
       it 'should serialize and submit hidden fields' do
-        expect(@results['token']).to eq('12345')
+        expect(results['token']).to eq('12345')
       end
 
       it 'should not serialize fields from other forms' do
-        expect(@results['middle_name']).to be_nil
+        expect(results['middle_name']).to be_nil
       end
 
       it 'should submit the button that was clicked, but not other buttons' do
-        expect(@results['awesome']).to eq('awesome')
-        expect(@results['crappy']).to be_nil
+        expect(results['awesome']).to eq('awesome')
+        expect(results['crappy']).to be_nil
       end
 
       it 'should serialize radio buttons' do
-        expect(@results['gender']).to eq('female')
+        expect(results['gender']).to eq('female')
       end
 
       it "should default radio value to 'on' if none specified" do
-        expect(@results['valueless_radio']).to eq('on')
+        expect(results['valueless_radio']).to eq('on')
       end
 
       it 'should serialize check boxes' do
-        expect(@results['pets']).to include('dog', 'hamster')
-        expect(@results['pets']).not_to include('cat')
+        expect(results['pets']).to include('dog', 'hamster')
+        expect(results['pets']).not_to include('cat')
       end
 
       it "should default checkbox value to 'on' if none specififed" do
-        expect(@results['valueless_checkbox']).to eq('on')
+        expect(results['valueless_checkbox']).to eq('on')
       end
 
       it 'should serialize text areas' do
-        expect(@results['description']).to eq('Descriptive text goes here')
+        expect(results['description']).to eq('Descriptive text goes here')
       end
 
       it 'should serialize select tag with values' do
-        expect(@results['locale']).to eq('en')
+        expect(results['locale']).to eq('en')
       end
 
       it 'should serialize select tag without values' do
-        expect(@results['region']).to eq('Norway')
+        expect(results['region']).to eq('Norway')
       end
 
       it 'should serialize first option for select tag with no selection' do
-        expect(@results['city']).to eq('London')
+        expect(results['city']).to eq('London')
       end
 
       it 'should not serialize a select tag without options' do
-        expect(@results['tendency']).to be_nil
+        expect(results['tendency']).to be_nil
       end
 
       it 'should convert lf to cr/lf in submitted textareas' do
-        expect(@results['newline']).to eq("\r\nNew line after and before textarea tag\r\n")
+        expect(results['newline']).to eq("\r\nNew line after and before textarea tag\r\n")
       end
 
       it 'should not submit disabled fields' do
-        expect(@results['disabled_text_field']).to be_nil
-        expect(@results['disabled_textarea']).to be_nil
-        expect(@results['disabled_checkbox']).to be_nil
-        expect(@results['disabled_radio']).to be_nil
-        expect(@results['disabled_select']).to be_nil
-        expect(@results['disabled_file']).to be_nil
+        expect(results['disabled_text_field']).to be_nil
+        expect(results['disabled_textarea']).to be_nil
+        expect(results['disabled_checkbox']).to be_nil
+        expect(results['disabled_radio']).to be_nil
+        expect(results['disabled_select']).to be_nil
+        expect(results['disabled_file']).to be_nil
       end
     end
   end
@@ -172,57 +174,60 @@ Capybara::SpecHelper.spec '#click_button' do
   end
 
   context 'with fields associated with the form using the form attribute', requires: [:form_attribute] do
+    let(:results) { extract_results(@session) }
+
     before do
       @session.click_button('submit_form1')
-      @results = extract_results(@session)
     end
 
     it 'should serialize and submit text fields' do
-      expect(@results['outside_input']).to eq('outside_input')
+      expect(results['outside_input']).to eq('outside_input')
     end
 
     it 'should serialize text areas' do
-      expect(@results['outside_textarea']).to eq('Some text here')
+      expect(results['outside_textarea']).to eq('Some text here')
     end
 
     it 'should serialize select tags' do
-      expect(@results['outside_select']).to eq('Ruby')
+      expect(results['outside_select']).to eq('Ruby')
     end
 
     it 'should not serliaze fields associated with a different form' do
-      expect(@results['for_form2']).to be_nil
+      expect(results['for_form2']).to be_nil
     end
   end
 
   context 'with submit button outside the form defined by <button> tag', requires: [:form_attribute] do
+    let(:results) { extract_results(@session) }
+
     before do
       @session.click_button('outside_button')
-      @results = extract_results(@session)
     end
 
     it 'should submit the associated form' do
-      expect(@results['which_form']).to eq('form2')
+      expect(results['which_form']).to eq('form2')
     end
 
     it 'should submit the button that was clicked, but not other buttons' do
-      expect(@results['outside_button']).to eq('outside_button')
-      expect(@results['unused']).to be_nil
+      expect(results['outside_button']).to eq('outside_button')
+      expect(results['unused']).to be_nil
     end
   end
 
   context "with submit button outside the form defined by <input type='submit'> tag", requires: [:form_attribute] do
+    let(:results) { extract_results(@session) }
+
     before do
       @session.click_button('outside_submit')
-      @results = extract_results(@session)
     end
 
     it 'should submit the associated form' do
-      expect(@results['which_form']).to eq('form1')
+      expect(results['which_form']).to eq('form1')
     end
 
     it 'should submit the button that was clicked, but not other buttons' do
-      expect(@results['outside_submit']).to eq('outside_submit')
-      expect(@results['submit_form1']).to be_nil
+      expect(results['outside_submit']).to eq('outside_submit')
+      expect(results['submit_form1']).to be_nil
     end
   end
 
@@ -303,9 +308,9 @@ Capybara::SpecHelper.spec '#click_button' do
     it 'should serialize and send GET forms' do
       @session.visit('/form')
       @session.click_button('med')
-      @results = extract_results(@session)
-      expect(@results['middle_name']).to eq('Darren')
-      expect(@results['foo']).to be_nil
+      results = extract_results(@session)
+      expect(results['middle_name']).to eq('Darren')
+      expect(results['foo']).to be_nil
     end
   end
 
@@ -357,45 +362,45 @@ Capybara::SpecHelper.spec '#click_button' do
   context 'with formaction attribute on button' do
     it 'should submit to the formaction attribute' do
       @session.click_button('Formaction button')
-      @results = extract_results(@session)
+      results = extract_results(@session)
       expect(@session.current_path).to eq '/form'
-      expect(@results['which_form']).to eq 'formaction form'
+      expect(results['which_form']).to eq 'formaction form'
     end
   end
 
   context 'with formmethod attribute on button' do
     it 'should submit to the formethod attribute' do
       @session.click_button('Formmethod button')
-      @results = extract_results(@session)
+      results = extract_results(@session)
       expect(@session.current_path).to eq '/form/get'
-      expect(@results['which_form']).to eq 'formaction form'
+      expect(results['which_form']).to eq 'formaction form'
     end
   end
 
   it 'should serialize and send valueless buttons that were clicked' do
     @session.click_button('No Value!')
-    @results = extract_results(@session)
-    expect(@results['no_value']).not_to be_nil
+    results = extract_results(@session)
+    expect(results['no_value']).not_to be_nil
   end
 
   it 'should send button in document order' do
     @session.click_button('outside_button')
-    @results = extract_results(@session)
-    expect(@results.keys).to eq %w[for_form2 outside_button which_form post_count]
+    results = extract_results(@session)
+    expect(results.keys).to eq %w[for_form2 outside_button which_form post_count]
   end
 
   it 'should not send image buttons that were not clicked' do
     @session.click_button('Click me!')
-    @results = extract_results(@session)
-    expect(@results['okay']).to be_nil
+    results = extract_results(@session)
+    expect(results['okay']).to be_nil
   end
 
   it 'should serialize and send GET forms' do
     @session.visit('/form')
     @session.click_button('med')
-    @results = extract_results(@session)
-    expect(@results['middle_name']).to eq('Darren')
-    expect(@results['foo']).to be_nil
+    results = extract_results(@session)
+    expect(results['middle_name']).to eq('Darren')
+    expect(results['foo']).to be_nil
   end
 
   it 'should follow redirects' do

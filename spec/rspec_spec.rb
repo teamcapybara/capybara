@@ -75,40 +75,38 @@ RSpec.describe 'capybara/rspec' do
 
   context 'Type: Other', type: :other do
     context 'when RSpec::Matchers is included after Capybara::DSL' do
-      before do
+      let(:test_class_instance) do
         class DSLMatchersTest
           include Capybara::DSL
           include RSpec::Matchers
-        end
-
-        @test_class_instance = DSLMatchersTest.new
+        end.new
       end
 
       context '#all' do
         it 'allows access to the Capybara finder' do
-          @test_class_instance.visit('/with_html')
-          expect(@test_class_instance.all(:css, 'h2.head').size).to eq(5)
+          test_class_instance.visit('/with_html')
+          expect(test_class_instance.all(:css, 'h2.head').size).to eq(5)
         end
 
         it 'allows access to the RSpec matcher' do
-          @test_class_instance.visit('/with_html')
+          test_class_instance.visit('/with_html')
           strings = %w[test1 test2]
-          expect(strings).to @test_class_instance.all(be_a(String))
+          expect(strings).to test_class_instance.all(be_a(String))
         end
       end
 
       context '#within' do
         it 'allows access to the Capybara scoper' do
-          @test_class_instance.visit('/with_html')
+          test_class_instance.visit('/with_html')
           expect do
-            @test_class_instance.within(:css, '#does_not_exist') { @test_class_instance.click_link 'Go to simple' }
+            test_class_instance.within(:css, '#does_not_exist') { test_class_instance.click_link 'Go to simple' }
           end.to raise_error(Capybara::ElementNotFound)
         end
 
         it 'allows access to the RSpec matcher' do
-          @test_class_instance.visit('/with_html')
+          test_class_instance.visit('/with_html')
           # This reads terribly, but must call #within
-          expect(@test_class_instance.find(:css, 'span.number').text.to_i).to @test_class_instance.within(1).of(41)
+          expect(test_class_instance.find(:css, 'span.number').text.to_i).to test_class_instance.within(1).of(41)
         end
       end
 
@@ -124,7 +122,7 @@ RSpec.describe 'capybara/rspec' do
         it 'can be called with `not_to`' do
           # This test is for a bug in jruby where `super` isn't defined correctly - https://github.com/jruby/jruby/issues/4678
           # Reported in https://github.com/teamcapybara/capybara/issues/2115
-          @test_class_instance.instance_eval do
+          test_class_instance.instance_eval do
             expect do
               expect(true).not_to only_match_matcher(false) # rubocop:disable RSpec/ExpectActual
             end.not_to raise_error

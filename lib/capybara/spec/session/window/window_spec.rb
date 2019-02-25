@@ -5,69 +5,67 @@
 # using Capybara provided assertions with builtin waiting behavior.
 
 Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
+  let!(:window) { @session.current_window }
   before do
-    @window = @session.current_window
     @session.visit('/with_windows')
   end
 
   after do
-    (@session.windows - [@window]).each do |w|
+    (@session.windows - [window]).each do |w|
       @session.switch_to_window w
       w.close
     end
-    @session.switch_to_window(@window)
+    @session.switch_to_window(window)
   end
 
   describe '#exists?' do
-    before do
-      @other_window = @session.window_opened_by do
-        @session.find(:css, '#openWindow').click
-      end
+    other_window = @session.window_opened_by do
+      @session.find(:css, '#openWindow').click
     end
 
     it 'should become false after window was closed' do
       expect do
-        @session.switch_to_window @other_window
-        @other_window.close
-      end.to change { @other_window.exists? }.from(true).to(false)
+        @session.switch_to_window other_window
+        other_window.close
+      end.to change { other_window.exists? }.from(true).to(false)
     end
   end
 
   describe '#closed?' do
     it 'should become true after window was closed' do
-      @other_window = @session.window_opened_by do
+      other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
       expect do
-        @session.switch_to_window @other_window
-        @other_window.close
-      end.to change { @other_window.closed? }.from(false).to(true)
+        @session.switch_to_window other_window
+        other_window.close
+      end.to change { other_window.closed? }.from(false).to(true)
     end
   end
 
   describe '#current?' do
-    before do
-      @other_window = @session.window_opened_by do
+    let(:other_window) do
+      @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
     end
 
     it 'should become true after switching to window' do
       expect do
-        @session.switch_to_window(@other_window)
-      end.to change { @other_window.current? }.from(false).to(true)
+        @session.switch_to_window(other_window)
+      end.to change(other_window, :current?).from(false).to(true)
     end
 
     it 'should return false if window is closed' do
-      @session.switch_to_window(@other_window)
-      @other_window.close
-      expect(@other_window.current?).to eq(false)
+      @session.switch_to_window(other_window)
+      other_window.close
+      expect(other_window.current?).to eq(false)
     end
   end
 
   describe '#close' do
-    before do
-      @other_window = @session.window_opened_by do
+    let!(:other_window) do
+      @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
     end
@@ -75,19 +73,19 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
     it 'should switch to original window if invoked not for current window' do
       expect(@session.windows.size).to eq(2)
       expect(@session.current_window).to eq(@window)
-      @other_window.close
+      other_window.close
       expect(@session.windows.size).to eq(1)
       expect(@session.current_window).to eq(@window)
     end
 
     it 'should make subsequent invocations of other methods raise no_such_window_error if invoked for current window' do
-      @session.switch_to_window(@other_window)
-      expect(@session.current_window).to eq(@other_window)
-      @other_window.close
+      @session.switch_to_window(other_window)
+      expect(@session.current_window).to eq(other_window)
+      other_window.close
       expect do
         @session.find(:css, '#some_id')
       end.to raise_error(@session.driver.no_such_window_error)
-      @session.switch_to_window(@window)
+      @session.switch_to_window(window)
     end
   end
 
@@ -101,43 +99,41 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
     end
 
     it 'should switch to original window if invoked not for current window' do
-      @other_window = @session.window_opened_by do
+      other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
       sleep 1
-      size = @session.within_window(@other_window) do
+      size = @session.within_window(other_window) do
         win_size
       end
-      expect(@other_window.size).to eq(size)
-      expect(@session.current_window).to eq(@window)
+      expect(other_window.size).to eq(size)
+      expect(@session.current_window).to eq(window)
     end
   end
 
   describe '#resize_to' do
-    before do
-      @initial_size = @session.current_window.size
-    end
+    let!(:initial_size) { @session.current_window.size }
 
     after do
-      @session.current_window.resize_to(*@initial_size)
+      @session.current_window.resize_to(*initial_size)
       sleep 1
     end
 
     it 'should be able to resize window', requires: %i[windows js] do
-      width, height = @initial_size
+      width, height = initial_size
       @session.current_window.resize_to(width - 100, height - 100)
       sleep 1
       expect(@session.current_window.size).to eq([width - 100, height - 100])
     end
 
     it 'should stay on current window if invoked not for current window', requires: %i[windows js] do
-      @other_window = @session.window_opened_by do
+      other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
-      @other_window.resize_to(600, 300)
-      expect(@session.current_window).to eq(@window)
+      other_window.resize_to(600, 300)
+      expect(@session.current_window).to eq(window)
 
-      @session.within_window(@other_window) do
+      @session.within_window(other_window) do
         expect(@session.current_window.size).to eq([600, 300])
       end
     end
@@ -169,19 +165,19 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
     end
 
     it 'should stay on current window if invoked not for current window', requires: %i[windows js] do
-      @other_window = @session.window_opened_by do
+      other_window = @session.window_opened_by do
         @session.find(:css, '#openWindow').click
       end
-      @other_window.resize_to(400, 300)
+      other_window.resize_to(400, 300)
       sleep 0.5
-      @other_window.maximize
+      other_window.maximize
       sleep 0.5 # The timing on maximize is finicky on Travis -- wait a bit for maximize to occur
 
-      expect(@session.current_window).to eq(@window)
+      expect(@session.current_window).to eq(window)
       # Maximizing the browser affects all tabs so this may not be valid in real browsers
       # expect(@session.current_window.size).to eq(@initial_size)
 
-      ow_width, ow_height = @other_window.size
+      ow_width, ow_height = other_window.size
       expect(ow_width).to be > 400
       expect(ow_height).to be > 300
     end

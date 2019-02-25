@@ -3,6 +3,7 @@
 require 'spec_helper'
 require 'capybara/rspec'
 
+# rubocop:disable RSpec/InstanceVariable
 RSpec.configuration.before(:each, file_path: './spec/rspec/features_spec.rb') do
   @in_filtered_hook = true
 end
@@ -53,6 +54,7 @@ feature "Capybara's feature DSL" do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable
 
 feature 'given and given! aliases to let and let!' do
   given(:value) { :available }

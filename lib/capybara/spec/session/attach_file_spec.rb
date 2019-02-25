@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 Capybara::SpecHelper.spec '#attach_file' do
+  let(:test_file_path) { File.expand_path('../fixtures/test_file.txt', File.dirname(__FILE__)) }
+  let(:another_test_file_path) { File.expand_path('../fixtures/another_test_file.txt', File.dirname(__FILE__)) }
+  let(:test_jpg_file_path) { File.expand_path('../fixtures/capybara.jpg', File.dirname(__FILE__)) }
+  let(:no_extension_file_path) { File.expand_path('../fixtures/no_extension', File.dirname(__FILE__)) }
+
   before do
-    @test_file_path = File.expand_path('../fixtures/test_file.txt', File.dirname(__FILE__))
-    @another_test_file_path = File.expand_path('../fixtures/another_test_file.txt', File.dirname(__FILE__))
-    @test_jpg_file_path = File.expand_path('../fixtures/capybara.jpg', File.dirname(__FILE__))
-    @no_extension_file_path = File.expand_path('../fixtures/no_extension', File.dirname(__FILE__))
     @session.visit('/form')
   end
 
@@ -38,15 +39,15 @@ Capybara::SpecHelper.spec '#attach_file' do
 
   context 'with multipart form' do
     it 'should set a file path by id' do
-      @session.attach_file 'form_document', with_os_path_separators(@test_file_path)
+      @session.attach_file 'form_document', with_os_path_separators(test_file_path)
       @session.click_button('Upload Single')
-      expect(@session).to have_content(File.read(@test_file_path))
+      expect(@session).to have_content(File.read(test_file_path))
     end
 
     it 'should set a file path by label' do
-      @session.attach_file 'Single Document', with_os_path_separators(@test_file_path)
+      @session.attach_file 'Single Document', with_os_path_separators(test_file_path)
       @session.click_button('Upload Single')
-      expect(@session).to have_content(File.read(@test_file_path))
+      expect(@session).to have_content(File.read(test_file_path))
     end
 
     it 'should not break if no file is submitted' do
@@ -55,37 +56,37 @@ Capybara::SpecHelper.spec '#attach_file' do
     end
 
     it 'should send content type text/plain when uploading a text file' do
-      @session.attach_file 'Single Document', with_os_path_separators(@test_file_path)
+      @session.attach_file 'Single Document', with_os_path_separators(test_file_path)
       @session.click_button 'Upload Single'
       expect(@session).to have_content('text/plain')
     end
 
     it 'should send content type image/jpeg when uploading an image' do
-      @session.attach_file 'Single Document', with_os_path_separators(@test_jpg_file_path)
+      @session.attach_file 'Single Document', with_os_path_separators(test_jpg_file_path)
       @session.click_button 'Upload Single'
       expect(@session).to have_content('image/jpeg')
     end
 
     it 'should not break when uploading a file without extension' do
-      @session.attach_file 'Single Document', with_os_path_separators(@no_extension_file_path)
+      @session.attach_file 'Single Document', with_os_path_separators(no_extension_file_path)
       @session.click_button 'Upload Single'
-      expect(@session).to have_content(File.read(@no_extension_file_path))
+      expect(@session).to have_content(File.read(no_extension_file_path))
     end
 
     it 'should not break when using HTML5 multiple file input' do
-      @session.attach_file 'Multiple Documents', with_os_path_separators(@test_file_path)
+      @session.attach_file 'Multiple Documents', with_os_path_separators(test_file_path)
       @session.click_button('Upload Multiple')
-      expect(@session).to have_content(File.read(@test_file_path))
+      expect(@session).to have_content(File.read(test_file_path))
       expect(@session.body).to include('1 | ') # number of files
     end
 
     it 'should not break when using HTML5 multiple file input uploading multiple files' do
       @session.attach_file('Multiple Documents',
-                           [@test_file_path, @another_test_file_path].map { |f| with_os_path_separators(f) })
+                           [test_file_path, another_test_file_path].map { |f| with_os_path_separators(f) })
       @session.click_button('Upload Multiple')
       expect(@session.body).to include('2 | ') # number of files
-      expect(@session.body).to include(File.read(@test_file_path))
-      expect(@session.body).to include(File.read(@another_test_file_path))
+      expect(@session.body).to include(File.read(test_file_path))
+      expect(@session.body).to include(File.read(another_test_file_path))
     end
 
     it 'should not send anything when attaching no files to a multiple upload field' do
@@ -94,26 +95,26 @@ Capybara::SpecHelper.spec '#attach_file' do
     end
 
     it 'should not append files to already attached' do
-      @session.attach_file 'Multiple Documents', with_os_path_separators(@test_file_path)
-      @session.attach_file 'Multiple Documents', with_os_path_separators(@another_test_file_path)
+      @session.attach_file 'Multiple Documents', with_os_path_separators(test_file_path)
+      @session.attach_file 'Multiple Documents', with_os_path_separators(another_test_file_path)
       @session.click_button('Upload Multiple')
       expect(@session.body).to include('1 | ') # number of files
-      expect(@session.body).to include(File.read(@another_test_file_path))
-      expect(@session.body).not_to include(File.read(@test_file_path))
+      expect(@session.body).to include(File.read(another_test_file_path))
+      expect(@session.body).not_to include(File.read(test_file_path))
     end
 
     it 'should fire change once when uploading multiple files from empty', requires: [:js] do
       @session.visit('with_js')
       @session.attach_file('multiple-file',
-                           [@test_file_path, @another_test_file_path].map { |f| with_os_path_separators(f) })
+                           [test_file_path, another_test_file_path].map { |f| with_os_path_separators(f) })
       expect(@session).to have_css('.file_change', count: 1)
     end
 
     it 'should fire change once for each set of files uploaded', requires: [:js] do
       @session.visit('with_js')
-      @session.attach_file('multiple-file', [@test_jpg_file_path].map { |f| with_os_path_separators(f) })
+      @session.attach_file('multiple-file', [test_jpg_file_path].map { |f| with_os_path_separators(f) })
       @session.attach_file('multiple-file',
-                           [@test_file_path, @another_test_file_path].map { |f| with_os_path_separators(f) })
+                           [test_file_path, another_test_file_path].map { |f| with_os_path_separators(f) })
       expect(@session).to have_css('.file_change', count: 2)
     end
   end
@@ -122,7 +123,7 @@ Capybara::SpecHelper.spec '#attach_file' do
     it 'should raise an error' do
       msg = 'Unable to find file field "does not exist"'
       expect do
-        @session.attach_file('does not exist', with_os_path_separators(@test_file_path))
+        @session.attach_file('does not exist', with_os_path_separators(test_file_path))
       end.to raise_error(Capybara::ElementNotFound, msg)
     end
   end
