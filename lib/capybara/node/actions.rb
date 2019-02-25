@@ -231,17 +231,25 @@ module Capybara
 
       ##
       #
-      # Find a descendant file field on the page and attach a file given its path. The file field can
-      # be found via its name, id or label text. In the case of the file field being hidden for
+      # Find a descendant file field on the page and attach a file given its path. There are two ways to use
+      # `attach_file`, in the first method the file field can be found via its name, id or label text.
+      # In the case of the file field being hidden for
       # styling reasons the `make_visible` option can be used to temporarily change the CSS of
       # the file field, attach the file, and then revert the CSS back to original. If no locator is
       # passed this will match self or a descendant.
+      # The second method, which is currently in beta and may be changed/removed, involves passing a block
+      # which performs whatever actions would trigger the file chooser to appear.
       #
       #     # will attach file to a descendant file input element that has a name, id, or label_text matching 'My File'
       #     page.attach_file('My File', '/path/to/file.png')
       #
       #     # will attach file to el if it's a file input element
       #     el.attach_file('/path/to/file.png')
+      #
+      #     # will attach file to whatever file input is triggered by the block
+      #     page.attach_file('/path/to/file.png') do
+      #       page.find('#upload_button').click
+      #     end
       #
       # @overload attach_file([locator], paths, **options)
       #   @macro waiting_behavior
@@ -256,19 +264,33 @@ module Capybara
       #   @option options [String] name           Match fields that match the name attribute
       #   @option options [String, Array<String>, Regexp] class    Match fields that match the class(es) provided
       #   @option options [true, Hash] make_visible   A Hash of CSS styles to change before attempting to attach the file, if `true` { opacity: 1, display: 'block', visibility: 'visible' } is used (may not be supported by all drivers)
-      #
-      #   @return [Capybara::Node::Element]  The file field element
+      # @overload attach_file(paths, &blk)
+      #   @param [String, Array<String>] paths     The path(s) of the file(s) that will be attached
+      #   @yield Block whose actions will trigger the system file chooser to be shown
+      # @return [Capybara::Node::Element]  The file field element
       def attach_file(locator = nil, paths, make_visible: nil, **options) # rubocop:disable Style/OptionalArguments
+        raise ArgumentError, '``#attach_file` does not support passing both a locator and a block' if locator && block_given?
+
         Array(paths).each do |path|
           raise Capybara::FileNotFound, "cannot attach file, #{path} does not exist" unless File.exist?(path.to_s)
         end
         options[:allow_self] = true if locator.nil?
+
+        if block_given?
+          begin
+            execute_script CAPTURE_FILE_ELEMENT_SCRIPT
+            yield
+            file_field = evaluate_script 'window._capybara_clicked_file_input'
+          rescue ::Capybara::NotSupportedByDriverError
+            warn 'Block mode of `#attach_file` is not supported by the current driver - ignoring.'
+          end
+        end
         # Allow user to update the CSS style of the file input since they are so often hidden on a page
         if make_visible
-          ff = find(:file_field, locator, options.merge(visible: :all))
+          ff = file_field || find(:file_field, locator, options.merge(visible: :all))
           while_visible(ff, make_visible) { |el| el.set(paths) }
         else
-          find(:file_field, locator, options).set(paths)
+          (file_field || find(:file_field, locator, options)).set(paths)
         end
       end
 
@@ -368,6 +390,16 @@ module Capybara
         Array.prototype.slice.call((this.list||{}).options || []).
           filter(function(el){ return !el.disabled }).
           map(function(el){ return { "value": el.value, "label": el.label} })
+      JS
+
+      CAPTURE_FILE_ELEMENT_SCRIPT = <<~'JS'
+        document.addEventListener('click', function(e){
+          console.log(e);
+          if ((e.target.nodeName == 'INPUT') && (e.target['type'] == 'file')) {
+            window._capybara_clicked_file_input = e.target;
+            e.preventDefault();
+          }
+        })
       JS
     end
   end

@@ -181,6 +181,16 @@ Capybara::SpecHelper.spec '#attach_file' do
     end
   end
 
+  context 'with a block', requires: %i[js] do
+    it 'can upload by clicking the label' do
+      @session.attach_file(with_os_path_separators(__FILE__)) do
+        @session.find(:label, 'Hidden Image').click
+      end
+      @session.click_button('awesome')
+      expect(extract_results(@session)['hidden_image']).to end_with(File.basename(__FILE__))
+    end
+  end
+
 private
 
   def with_os_path_separators(path)
