@@ -45,7 +45,8 @@ module Capybara
           unless functions.empty?
             hints_js << <<~EACH_JS
               return arguments[0].map(function(el){
-                return [#{functions.join(',')}].map(function(fn){ return fn.call(null, el) });              });
+                return [#{functions.join(',')}].map(function(fn){ return fn.call(null, el) });
+              });
             EACH_JS
 
             hints = es_context.execute_script hints_js, els

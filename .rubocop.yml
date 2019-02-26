@@ -49,7 +49,7 @@ Metrics/PerceivedComplexity:
   Enabled: false
 
 Metrics/ParameterLists:
-  Enabled: false
+   CountKeywordArgs: false
 
 Lint/UnusedMethodArgument:
   Exclude:
