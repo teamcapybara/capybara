@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Capybara::SpecHelper.spec '#match_selector?' do
-  let(:element) { @session.find('//span', text: '42') }
+  let(:element) { @session.find(:xpath, '//span', text: '42') }
 
   before do
     @session.visit('/with_html')

@@ -110,7 +110,7 @@ RSpec.describe Capybara::Server do
     it 'should use the existing server if it already running' do
       app = proc { |_env| [200, {}, ['Hello Server!']] }
 
-      servers = 2.times { Capybara::Server.new(app).boot }
+      servers = Array.new(2) { Capybara::Server.new(app).boot }
 
       servers.each do |server|
         res = Net::HTTP.start(server.host, server.port) { |http| http.get('/') }
@@ -155,7 +155,7 @@ RSpec.describe Capybara::Server do
     it 'should not reuse an already running server' do
       app = proc { |_env| [200, {}, ['Hello Server!']] }
 
-      servers = 2.times { Capybara::Server.new(app).boot }
+      servers = Array.new(2) { Capybara::Server.new(app).boot }
 
       servers.each do |server|
         res = Net::HTTP.start(server.host, server.port) { |http| http.get('/') }

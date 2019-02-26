@@ -845,7 +845,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
     end
   end
 
-  context 'compounding timing', :focus_ do
+  context 'compounding timing' do
     let(:session) { session }
     let(:el) { session.find(:css, '#reload-me') }
 

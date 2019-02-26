@@ -5,29 +5,29 @@
 # using Capybara provided assertions with builtin waiting behavior.
 
 Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
-  let!(:window) { @session.current_window }
+  let!(:orig_window) { @session.current_window }
   before do
     @session.visit('/with_windows')
   end
 
   after do
-    (@session.windows - [window]).each do |w|
+    (@session.windows - [orig_window]).each do |w|
       @session.switch_to_window w
       w.close
     end
-    @session.switch_to_window(window)
+    @session.switch_to_window(orig_window)
   end
 
   describe '#exists?' do
-    other_window = @session.window_opened_by do
-      @session.find(:css, '#openWindow').click
-    end
-
     it 'should become false after window was closed' do
+      other_window = @session.window_opened_by do
+        @session.find(:css, '#openWindow').click
+      end
+
       expect do
         @session.switch_to_window other_window
         other_window.close
-      end.to change { other_window.exists? }.from(true).to(false)
+      end.to change(other_window, :exists?).from(true).to(false)
     end
   end
 
@@ -72,10 +72,10 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
 
     it 'should switch to original window if invoked not for current window' do
       expect(@session.windows.size).to eq(2)
-      expect(@session.current_window).to eq(@window)
+      expect(@session.current_window).to eq(orig_window)
       other_window.close
       expect(@session.windows.size).to eq(1)
-      expect(@session.current_window).to eq(@window)
+      expect(@session.current_window).to eq(orig_window)
     end
 
     it 'should make subsequent invocations of other methods raise no_such_window_error if invoked for current window' do
@@ -85,7 +85,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
       expect do
         @session.find(:css, '#some_id')
       end.to raise_error(@session.driver.no_such_window_error)
-      @session.switch_to_window(window)
+      @session.switch_to_window(orig_window)
     end
   end
 
@@ -107,7 +107,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
         win_size
       end
       expect(other_window.size).to eq(size)
-      expect(@session.current_window).to eq(window)
+      expect(@session.current_window).to eq(orig_window)
     end
   end
 
@@ -131,7 +131,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
         @session.find(:css, '#openWindow').click
       end
       other_window.resize_to(600, 300)
-      expect(@session.current_window).to eq(window)
+      expect(@session.current_window).to eq(orig_window)
 
       @session.within_window(other_window) do
         expect(@session.current_window.size).to eq([600, 300])
@@ -173,7 +173,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
       other_window.maximize
       sleep 0.5 # The timing on maximize is finicky on Travis -- wait a bit for maximize to occur
 
-      expect(@session.current_window).to eq(window)
+      expect(@session.current_window).to eq(orig_window)
       # Maximizing the browser affects all tabs so this may not be valid in real browsers
       # expect(@session.current_window.size).to eq(@initial_size)
 
