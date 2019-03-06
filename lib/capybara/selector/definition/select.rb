@@ -33,7 +33,7 @@ Capybara.add_selector(:select, locator_type: [String, Symbol]) do
 
   expression_filter(:with_options) do |expr, options|
     options.inject(expr) do |xpath, option|
-      xpath[expression_for(:option, option)]
+      xpath[expression_for(:option, option, format: :xpath)]
     end
   end
 
