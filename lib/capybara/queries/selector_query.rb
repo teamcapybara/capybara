@@ -19,14 +19,17 @@ module Capybara
         super(@options)
         self.session_options = session_options
 
-        @selector = find_selector(args[0].is_a?(Symbol) ? args.shift : args[0])
+        @selector = Selector.new(
+          find_selector(args[0].is_a?(Symbol) ? args.shift : args[0]),
+          config: { enable_aria_label: enable_aria_label, test_id: test_id }
+        )
+
         @locator = args.shift
         @filter_block = filter_block
 
         raise ArgumentError, "Unused parameters passed to #{self.class.name} : #{args}" unless args.empty?
 
-        selector_config = { enable_aria_label: enable_aria_label, test_id: test_id }
-        @expression = selector.call(@locator, @options.merge(selector_config: selector_config))
+        @expression = selector.call(@locator, @options)
 
         warn_exact_usage
 
@@ -129,7 +132,9 @@ module Capybara
 
       # @api private
       def supports_exact?
-        @expression.respond_to? :to_xpath
+        return @expression.respond_to? :to_xpath if @selector.supports_exact?.nil?
+
+        @selector.supports_exact?
       end
 
       def failure_message
@@ -141,6 +146,10 @@ module Capybara
       end
 
     private
+
+      def selector_format
+        @selector.format
+      end
 
       def text_fragments
         text = (options[:text] || options[:exact_text])
@@ -192,23 +201,23 @@ module Capybara
       def find_nodes_by_selector_format(node, exact)
         hints = {}
         hints[:uses_visibility] = true unless visible == :all
-        hints[:texts] = text_fragments unless selector.format == :xpath
+        hints[:texts] = text_fragments unless selector_format == :xpath
         hints[:styles] = options[:style] if use_default_style_filter?
 
-        if selector.format == :css
+        if selector_format == :css
           if node.method(:find_css).arity != 1
             node.find_css(css, **hints)
           else
             node.find_css(css)
           end
-        elsif selector.format == :xpath
+        elsif selector_format == :xpath
           if node.method(:find_xpath).arity != 1
             node.find_xpath(xpath(exact), **hints)
           else
             node.find_xpath(xpath(exact))
           end
         else
-          raise ArgumentError, "Unknown format: #{selector.format}"
+          raise ArgumentError, "Unknown format: #{selector_format}"
         end
       end
 
@@ -230,6 +239,8 @@ module Capybara
         unapplied_options = options.keys - valid_keys
         @selector.with_filter_errors(errors) do
           node_filters.all? do |filter_name, filter|
+            next true unless apply_filter?(filter)
+
             if filter.matcher?
               unapplied_options.select { |option_name| filter.handles_option?(option_name) }.all? do |option_name|
                 unapplied_options.delete(option_name)
@@ -320,6 +331,8 @@ module Capybara
       def apply_expression_filters(expression)
         unapplied_options = options.keys - valid_keys
         expression_filters.inject(expression) do |expr, (name, ef)|
+          next expr unless apply_filter?(ef)
+
           if ef.matcher?
             unapplied_options.select(&ef.method(:handles_option?)).inject(expr) do |memo, option_name|
               unapplied_options.delete(option_name)
@@ -358,10 +371,14 @@ module Capybara
         node.is_a?(::Capybara::Node::Simple) && node.path == '/'
       end
 
-      def matches_locator_filter?(node)
-        return true unless @selector.locator_filter
+      def apply_filter?(_filter)
+        true
+      end
 
-        @selector.locator_filter.matches?(node, @locator, @selector)
+      def matches_locator_filter?(node)
+        return true unless @selector.locator_filter && apply_filter?(@selector.locator_filter)
+
+        @selector.locator_filter.matches?(node, @locator, @selector, exact: exact?)
       end
 
       def matches_system_filters?(node)

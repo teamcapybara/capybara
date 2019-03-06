@@ -50,6 +50,7 @@ end
 
 Capybara.add_selector(:field, locator_type: [String, Symbol]) do
   visible { |options| :hidden if options[:type].to_s == 'hidden' }
+
   xpath do |locator, **options|
     invalid_types = %w[submit image]
     invalid_types << 'hidden' unless options[:type].to_s == 'hidden'
@@ -69,6 +70,7 @@ Capybara.add_selector(:field, locator_type: [String, Symbol]) do
   filter_set(:_field) # checked/unchecked/disabled/multiple/name/placeholder
 
   node_filter(:readonly, :boolean) { |node, value| !(value ^ node.readonly?) }
+
   node_filter(:with) do |node, with|
     val = node.value
     (with.is_a?(Regexp) ? with.match?(val) : val == with.to_s).tap do |res|
@@ -185,8 +187,8 @@ end
 Capybara.add_selector(:link_or_button, locator_type: [String, Symbol]) do
   label 'link or button'
   xpath do |locator, **options|
-    self.class.all.values_at(:link, :button).map do |selector|
-      instance_exec(locator, options, &selector.xpath)
+    %i[link button].map do |selector|
+      expression_for(selector, locator, **options)
     end.reduce(:union)
   end
 
@@ -297,7 +299,7 @@ Capybara.add_selector(:select, locator_type: [String, Symbol]) do
 
   expression_filter(:with_options) do |expr, options|
     options.inject(expr) do |xpath, option|
-      xpath[self.class.all[:option].call(option)]
+      xpath[expression_for(:option, option)]
     end
   end
 
@@ -350,7 +352,7 @@ Capybara.add_selector(:datalist_input, locator_type: [String, Symbol]) do
 
   expression_filter(:with_options) do |expr, options|
     options.inject(expr) do |xpath, option|
-      xpath[XPath.attr(:list) == XPath.anywhere(:datalist)[self.class.all[:datalist_option].call(option)].attr(:id)]
+      xpath[XPath.attr(:list) == XPath.anywhere(:datalist)[expression_for(:datalist_option, option)].attr(:id)]
     end
   end
 
