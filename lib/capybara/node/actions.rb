@@ -394,8 +394,7 @@ module Capybara
 
       CAPTURE_FILE_ELEMENT_SCRIPT = <<~'JS'
         document.addEventListener('click', function(e){
-          console.log(e);
-          if ((e.target.nodeName == 'INPUT') && (e.target['type'] == 'file')) {
+          if (e.target.matches("input[type='file']")) {
             window._capybara_clicked_file_input = e.target;
             e.preventDefault();
           }

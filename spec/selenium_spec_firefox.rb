@@ -65,7 +65,7 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumFirefox, 'selenium', capyba
   when 'Capybara::Session selenium #reset_session! removes ALL cookies'
     pending "Geckodriver doesn't provide a way to remove cookies outside the current domain"
   when 'Capybara::Session selenium #attach_file with a block can upload by clicking the file input'
-    pending "Geckodriver doesn't support clicking on file inputs"
+    pending "Geckodriver doesn't allow clicking on file inputs"
   end
 end
 
