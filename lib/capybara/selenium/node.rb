@@ -398,7 +398,7 @@ private
     end
 
     def to_date_str
-      value.to_date.strftime('%Y-%m-%d')
+      value.to_date.iso8601
     end
 
     def timeable?
