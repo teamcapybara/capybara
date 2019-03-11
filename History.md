@@ -1,3 +1,10 @@
+# Version 3.15
+Release date: unreleased
+
+### Added
+
+* `attach_file` now supports a block mode on JS capable drivers to more accurately test user behavior when file inputs are hidden (beta)
+
 # Version 3.14
 Release date: 2019-02-25
 
