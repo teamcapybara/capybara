@@ -40,6 +40,10 @@ module Capybara
       %i[internet_explorer ie].include?(browser_name(session))
     end
 
+    def safari?(session)
+      %i[safari Safari Safari_Technology_Preview].include?(browser_name(session))
+    end
+
     def browser_name(session)
       session.driver.browser.browser if session.respond_to?(:driver)
     end

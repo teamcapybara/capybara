@@ -178,10 +178,10 @@ Capybara::SpecHelper.spec '#fill_in' do
     it 'should only trigger onchange once' do
       @session.visit('/with_js')
       # Click somewhere on the page to ensure focus is acquired. Without this FF won't generate change events for some reason???
-      @session.find(:css, 'body').click
+      @session.find(:css, 'h1', text: 'FooBar').click
       @session.fill_in('with_change_event', with: 'some value')
       # click outside the field to trigger the change event
-      @session.find(:css, 'body').click
+      @session.find(:css, 'h1', text: 'FooBar').click
       expect(@session.find(:css, '.change_event_triggered', match: :one)).to have_text 'some value'
     end
 
@@ -189,7 +189,7 @@ Capybara::SpecHelper.spec '#fill_in' do
       @session.visit('/with_js')
       @session.fill_in('with_change_event', with: '')
       # click outside the field to trigger the change event
-      @session.find(:css, 'body').click
+      @session.find(:css, 'h1', text: 'FooBar').click
       expect(@session).to have_selector(:css, '.change_event_triggered', match: :one)
     end
   end

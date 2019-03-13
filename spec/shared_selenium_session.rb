@@ -72,6 +72,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
 
     context '#fill_in_with empty string and no options' do
       it 'should trigger change when clearing a field' do
+        pending "safaridriver doesn't trigger change for clear" if safari?(session)
         session.visit('/with_js')
         session.fill_in('with_change_event', with: '')
         # click outside the field to trigger the change event
@@ -116,6 +117,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
 
       it 'should only trigger onchange once' do
         session.visit('/with_js')
+        sleep 2 if safari?(session) # Safari needs a delay (to load event handlers maybe ???)
         session.fill_in('with_change_event',
                         with: 'some value',
                         fill_options: { clear: :backspace })
@@ -140,13 +142,16 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
                         with: '',
                         fill_options: { clear: :backspace })
         # click outside the field to trigger the change event
-        session.find(:css, 'body').click
+        # session.find(:css, 'body').click
+        session.find(:css, 'h1', text: 'FooBar').click
         expect(session).to have_xpath('//p[@class="input_event_triggered"]', count: 13)
       end
     end
 
     context '#fill_in with { clear: :none } fill_options' do
       it 'should append to content in a field' do
+        pending 'Safari overwrites by default - need to figure out a workaround' if safari?(session)
+
         session.visit('/form')
         session.fill_in('form_first_name',
                         with: 'Harry',
@@ -166,17 +171,20 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           });
         JS
         # work around weird FF issue where it would create an extra focus issue in some cases
-        session.find(:css, 'body').click
+        session.find(:css, 'h1', text: 'Form').click
+        # session.find(:css, 'body').click
       end
 
       it 'should generate standard events on changing value' do
         pending "IE 11 doesn't support date input type" if ie?(session)
+        pending "Safari doesn't support date input type" if safari?(session)
         session.fill_in('form_date', with: Date.today)
         expect(session.evaluate_script('window.capybara_formDateFiredEvents')).to eq %w[focus input change]
       end
 
       it 'should not generate input and change events if the value is not changed' do
         pending "IE 11 doesn't support date input type" if ie?(session)
+        pending "Safari doesn't support date input type" if safari?(session)
         session.fill_in('form_date', with: Date.today)
         session.fill_in('form_date', with: Date.today)
         # Chrome adds an extra focus for some reason - ok for now
@@ -264,6 +272,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
 
       describe '#evaluate_async_script' do
         it 'will timeout if the script takes too long' do
+          skip 'safaridriver returns the wrong error type' if safari?(session)
           session.visit('/with_js')
           expect do
             session.using_wait_time(1) do
@@ -298,6 +307,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       before do
         skip "Firefox < 62 doesn't support a DataTransfer constuctor" if firefox_lt?(62.0, session)
         skip "IE doesn't support a DataTransfer constuctor" if ie?(session)
+        skip "Safari doesn't support" if safari?(session)
       end
 
       it 'should HTML5 drag and drop an object' do
@@ -351,6 +361,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         pending "Headless Chrome doesn't support directory upload - https://bugs.chromium.org/p/chromedriver/issues/detail?id=2521&q=directory%20upload&colspec=ID%20Status%20Pri%20Owner%20Summary" if chrome?(session) && ENV['HEADLESS']
         pending "IE doesn't support uploading a directory" if ie?(session)
         pending 'Chrome/chromedriver 73 breaks this' unless chrome_lt?(73, session)
+        pending "Safari doesn't support uploading a directory" if safari?(session)
 
         session.visit('/form')
         test_file_dir = File.expand_path('./fixtures', File.dirname(__FILE__))
@@ -372,6 +383,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
     describe 'Capybara#disable_animation' do
       context 'when set to `true`' do
         before(:context) do # rubocop:disable RSpec/BeforeAfterAll
+          skip "Safari doesn't support multiple sessions" if safari?(session)
           # NOTE: Although Capybara.SpecHelper.reset! sets Capybara.disable_animation to false,
           # it doesn't affect any of these tests because the settings are applied per-session
           Capybara.disable_animation = true
@@ -393,6 +405,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
 
       context 'if we pass in css that matches elements' do
         before(:context) do # rubocop:disable RSpec/BeforeAfterAll
+          skip "safaridriver doesn't support multiple sessions" if safari?(session)
           # NOTE: Although Capybara.SpecHelper.reset! sets Capybara.disable_animation to false,
           # it doesn't affect any of these tests because the settings are applied per-session
           Capybara.disable_animation = '#with_animation a'
@@ -414,6 +427,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
 
       context 'if we pass in css that does not match elements' do
         before(:context) do # rubocop:disable RSpec/BeforeAfterAll
+          skip "Safari doesn't support multiple sessions" if safari?(session)
           # NOTE: Although Capybara.SpecHelper.reset! sets Capybara.disable_animation to false,
           # it doesn't affect any of these tests because the settings are applied per-session
           Capybara.disable_animation = '.this-class-matches-nothing'
