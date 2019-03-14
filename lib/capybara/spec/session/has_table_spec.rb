@@ -14,6 +14,17 @@ Capybara::SpecHelper.spec '#has_table?' do
   it 'should be false if the table is not on the page' do
     expect(@session).not_to have_table('Monkey')
   end
+
+  it 'should find row by header and cell values' do
+    expect(@session.find(:table, 'Vertical')).to have_selector(:table_row, 'First Name' => 'Thomas', 'Last Name' => 'Walpole')
+    expect(@session.find(:table, 'Vertical')).to have_selector(:table_row, 'Last Name' => 'Walpole')
+    expect(@session.find(:table, 'Vertical')).not_to have_selector(:table_row, 'First Name' => 'Walpole')
+  end
+
+  it 'should find row by cell values' do
+    expect(@session.find(:table, 'Vertical')).to have_selector(:table_row, %w[Thomas Walpole])
+    expect(@session.find(:table, 'Vertical')).not_to have_selector(:table_row, %w[Other])
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_table?' do

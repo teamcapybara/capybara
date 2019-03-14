@@ -459,6 +459,25 @@ Capybara.add_selector(:table, locator_type: [String, Symbol]) do
   end
 end
 
+Capybara.add_selector(:table_row, locator_type: [Array, Hash]) do
+  xpath do |locator|
+    xpath = XPath.descendant(:tr)
+    if locator.is_a? Hash
+      locator.reduce(xpath) do |xp, (header, cell)|
+        header_xp = XPath.ancestor(:table)[1].descendant(:tr)[1].descendant(:th)[XPath.string.n.is(header)]
+        cell_xp = XPath.descendant(:td)[
+          XPath.string.n.is(cell) & XPath.position.equals(header_xp.preceding_sibling.count.plus(1))
+        ]
+        xp[cell_xp]
+      end
+    else
+      locator.reduce(xpath) do |xp, cell|
+        xp[XPath.descendant(:td)[XPath.string.n.is(cell)]]
+      end
+    end
+  end
+end
+
 Capybara.add_selector(:frame, locator_type: [String, Symbol]) do
   xpath do |locator, name: nil, **|
     xpath = XPath.descendant(:iframe).union(XPath.descendant(:frame))
