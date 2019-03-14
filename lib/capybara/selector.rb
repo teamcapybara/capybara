@@ -471,9 +471,13 @@ Capybara.add_selector(:table_row, locator_type: [Array, Hash]) do
         xp[cell_xp]
       end
     else
-      locator.reduce(xpath) do |xp, cell|
-        xp[XPath.descendant(:td)[XPath.string.n.is(cell)]]
+      initial_td = XPath.descendant(:td)[XPath.string.n.is(locator.shift)]
+      tds = locator.reverse.map do |cell|
+        XPath.following_sibling(:td)[XPath.string.n.is(cell)]
+      end.reduce do |xp, cell|
+        xp[cell]
       end
+      xpath[initial_td[tds]]
     end
   end
 end
