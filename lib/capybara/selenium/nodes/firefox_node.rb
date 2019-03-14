@@ -119,7 +119,7 @@ private
     x.parent(:fieldset)[
       x.attr(:disabled)
     ] + x.ancestor[
-      ~x.self(:legned) |
+      ~x.self(:legend) |
       x.preceding_sibling(:legend)
     ][
       x.parent(:fieldset)[

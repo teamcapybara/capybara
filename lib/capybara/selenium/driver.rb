@@ -267,7 +267,11 @@ private
     if @browser.respond_to? :session_storage
       @browser.session_storage.clear
     else
-      warn 'sessionStorage clear requested but is not supported by this driver' unless options[:clear_session_storage].nil?
+      begin
+        @browser&.execute_script('window.sessionStorage.clear()')
+      rescue # rubocop:disable Style/RescueStandardError
+        warn 'sessionStorage clear requested but is not supported by this driver' unless options[:clear_session_storage].nil?
+      end
     end
   end
 
@@ -275,7 +279,11 @@ private
     if @browser.respond_to? :local_storage
       @browser.local_storage.clear
     else
-      warn 'localStorage clear requested but is not supported by this driver' unless options[:clear_local_storage].nil?
+      begin
+        @browser&.execute_script('window.localStorage.clear()')
+      rescue # rubocop:disable Style/RescueStandardError
+        warn 'localStorage clear requested but is not supported by this driver' unless options[:clear_local_storage].nil?
+      end
     end
   end
 
@@ -359,6 +367,8 @@ private
       extend FirefoxDriver if sel_driver.capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
     when :ie, :internet_explorer
       extend InternetExplorerDriver
+    when :safari, :Safari_Technology_Preview
+      extend SafariDriver
     end
   end
 
@@ -408,3 +418,4 @@ end
 require 'capybara/selenium/driver_specializations/chrome_driver'
 require 'capybara/selenium/driver_specializations/firefox_driver'
 require 'capybara/selenium/driver_specializations/internet_explorer_driver'
+require 'capybara/selenium/driver_specializations/safari_driver'
