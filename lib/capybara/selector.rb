@@ -101,7 +101,7 @@ Capybara.add_selector(:link, locator_type: [String, Symbol]) do
                   XPath.attr(:title).is(locator),
                   XPath.descendant(:img)[XPath.attr(:alt).is(locator)]]
       matchers << XPath.attr(:'aria-label').is(locator) if enable_aria_label
-      matchers << XPath.attr(test_id) == locator if test_id
+      matchers << XPath.attr(test_id).equals(locator) if test_id
       xpath = xpath[matchers.reduce(:|)]
     end
 
