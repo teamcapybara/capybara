@@ -468,5 +468,10 @@ Capybara::SpecHelper.spec '#find' do
       Capybara.test_id = 'data-other-test-id'
       expect(@session.find(:field, 'test_id')[:id]).to eq 'normal'
     end
+
+    it 'should find a link with the test_id' do
+      Capybara.test_id = 'data-test-id'
+      expect(@session.find(:link, 'test-foo')[:id]).to eq 'foo'
+    end
   end
 end
