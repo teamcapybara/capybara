@@ -52,6 +52,28 @@ Capybara::SpecHelper.spec '#has_table?' do
       ])
   end
 
+  it 'should match col with array of cell values' do
+    expect(@session).to have_table('Vertical Headers', with_cols:
+      [
+        %w[Vern Konopelski Everette]
+      ])
+  end
+
+  it 'should match cols with array of cell values' do
+    expect(@session).to have_table('Vertical Headers', with_cols:
+      [
+        %w[Danilo Wilkinson Johnsonville],
+        %w[Vern Konopelski Everette]
+      ])
+  end
+
+  it "should not match if the order of cell values doesn't match" do
+    expect(@session).not_to have_table('Vertical Headers', with_cols:
+      [
+        %w[Vern Everette Konopelski]
+      ])
+  end
+
   it "should not match with vertical headers if the columns don't match" do
     expect(@session).not_to have_table('Vertical Headers', with_cols:
       [

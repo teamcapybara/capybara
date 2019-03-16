@@ -457,17 +457,29 @@ Capybara.add_selector(:table, locator_type: [String, Symbol]) do
   end
 
   expression_filter(:with_cols, valid_values: [Array]) do |xpath, cols|
-    raise ArgumentError, 'Columns must be specified as hashes' unless cols.all? { |col| col.is_a? Hash }
+    # raise ArgumentError, 'Columns must be specified as hashes' unless cols.all? { |col| col.is_a? Hash }
 
     col_conditions = cols.map do |col|
-      col.reduce(nil) do |xp, (header, cell)|
-        header_xp = XPath.descendant(:th)[XPath.string.n.is(header)]
-        cell_xp = XPath.descendant(:tr)[header_xp].descendant(:td)
-        next cell_xp[XPath.string.n.is(cell)] unless xp
+      if col.is_a? Hash
+        col.reduce(nil) do |xp, (header, cell)|
+          header_xp = XPath.descendant(:th)[XPath.string.n.is(header)]
+          cell_xp = XPath.descendant(:tr)[header_xp].descendant(:td)
+          next cell_xp[XPath.string.n.is(cell)] unless xp
 
-        table_ancestor = XPath.ancestor(:table)[1]
-        xp = XPath::Expression.new(:join, table_ancestor, xp)
-        cell_xp[XPath.string.n.is(cell) & XPath.position.equals(xp.preceding_sibling.count)]
+          table_ancestor = XPath.ancestor(:table)[1]
+          xp = XPath::Expression.new(:join, table_ancestor, xp)
+          cell_xp[XPath.string.n.is(cell) & XPath.position.equals(xp.preceding_sibling.count)]
+        end
+      else
+        cells_xp = col.reduce(nil) do |xp, cell|
+          cell_conditions = [XPath.string.n.is(cell)]
+          if xp
+            prev_row_xp = XPath::Expression.new(:join, XPath.ancestor(:tr)[1].preceding_sibling(:tr), xp)
+            cell_conditions << XPath.position.equals(prev_row_xp.preceding_sibling.count)
+          end
+          XPath.descendant(:td)[cell_conditions.reduce :&]
+        end
+        XPath::Expression.new(:join, XPath.descendant(:tr), cells_xp)
       end
     end.reduce(:&)
     xpath[col_conditions]
