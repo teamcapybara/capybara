@@ -468,14 +468,14 @@ Capybara.add_selector(:table, locator_type: [String, Symbol]) do
 
           table_ancestor = XPath.ancestor(:table)[1]
           xp = XPath::Expression.new(:join, table_ancestor, xp)
-          cell_xp[XPath.string.n.is(cell) & XPath.position.equals(xp.preceding_sibling.count)]
+          cell_xp[XPath.string.n.is(cell) & XPath.position.equals(xp.preceding_sibling(:td).count.plus(1))]
         end
       else
         cells_xp = col.reduce(nil) do |xp, cell|
           cell_conditions = [XPath.string.n.is(cell)]
           if xp
             prev_row_xp = XPath::Expression.new(:join, XPath.ancestor(:tr)[1].preceding_sibling(:tr), xp)
-            cell_conditions << XPath.position.equals(prev_row_xp.preceding_sibling.count)
+            cell_conditions << XPath.position.equals(prev_row_xp.preceding_sibling(:td).count.plus(1))
           end
           XPath.descendant(:td)[cell_conditions.reduce :&]
         end
