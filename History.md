@@ -5,6 +5,11 @@ Release date: unreleased
 
 * `attach_file` now supports a block mode on JS capable drivers to more accurately test user behavior when file inputs are hidden (beta)
 
+### Fixed
+
+* Fix link selector when `Capybara.test_id` is set - Issue #2166 [bingjyang]
+
+
 # Version 3.14
 Release date: 2019-02-25
 
