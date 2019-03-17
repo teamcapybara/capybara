@@ -457,8 +457,6 @@ Capybara.add_selector(:table, locator_type: [String, Symbol]) do
   end
 
   expression_filter(:with_cols, valid_values: [Array]) do |xpath, cols|
-    # raise ArgumentError, 'Columns must be specified as hashes' unless cols.all? { |col| col.is_a? Hash }
-
     col_conditions = cols.map do |col|
       if col.is_a? Hash
         col.reduce(nil) do |xp, (header, cell)|
@@ -504,6 +502,31 @@ Capybara.add_selector(:table, locator_type: [String, Symbol]) do
         end
         XPath.descendant(:tr)[XPath.descendant(:td)[row_conditions]]
       end
+    end.reduce(:&)
+    xpath[rows_conditions]
+  end
+
+  expression_filter(:rows, valid_values: [Array]) do |xpath, rows|
+    xpath = xpath[XPath.descendant(:tbody).descendant(:tr).count.equals(rows.size)]
+    rows_conditions = rows.map do |row|
+      row_xpath = if row.is_a? Hash
+        row_conditions = row.map do |header, cell|
+          header_xp = XPath.ancestor(:table)[1].descendant(:tr)[1].descendant(:th)[XPath.string.n.is(header)]
+          XPath.descendant(:td)[
+            XPath.string.n.is(cell) & XPath.position.equals(header_xp.preceding_sibling.count.plus(1))
+          ]
+        end.reduce(:&)
+        XPath.descendant(:tr)[row_conditions]
+      else
+        row_conditions = row.map do |cell|
+          XPath.self(:td)[XPath.string.n.is(cell)]
+        end
+        row_conditions = row_conditions.reverse.reduce do |cond, cell|
+          cell[XPath.following_sibling[cond]]
+        end
+        XPath.descendant(:tr)[XPath.descendant(:td)[row_conditions]]
+      end
+      row_xpath[XPath.descendant(:td).count.equals(row.size)]
     end.reduce(:&)
     xpath[rows_conditions]
   end
