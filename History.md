@@ -4,6 +4,7 @@ Release date: unreleased
 ### Added
 
 * `attach_file` now supports a block mode on JS capable drivers to more accurately test user behavior when file inputs are hidden (beta)
+* :table selector now supports `with_rows` and `with_cols` filters
 
 ### Fixed
 

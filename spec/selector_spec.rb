@@ -42,6 +42,27 @@ RSpec.describe Capybara do
             <table>
               <tr><td></td></tr>
             </table>
+            <table id="rows">
+              <tr>
+                <td>A</td><td>B</td><td>C</td>
+              </tr>
+              <tr>
+                <td>D</td><td>E</td><td>F</td>
+              </tr>
+            </table>
+            <table id="cols">
+            <tbody>
+              <tr>
+                <td>A</td><td>D</td>
+              </tr>
+              <tr>
+                <td>B</td><td>E</td>
+              </tr>
+              <tr>
+                <td>C</td><td>F</td>
+              </tr>
+              </tbody>
+            </table>
           </body>
         </html>
       STRING
@@ -465,6 +486,16 @@ RSpec.describe Capybara do
             expect(string.find(:link_or_button, 'click me', random: 'blah').value).to eq 'click me'
             expect(filter).to have_received(:apply_filter).with(anything, :random, 'blah', anything)
           end
+        end
+      end
+
+      describe ':table selector' do
+        it 'finds by rows' do
+          expect(string.find(:table, with_rows: [%w[D E F]])[:id]).to eq 'rows'
+        end
+
+        it 'finds by columns' do
+          expect(string.find(:table, with_cols: [%w[A B C]])[:id]).to eq 'cols'
         end
       end
     end

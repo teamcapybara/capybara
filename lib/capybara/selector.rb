@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
+require 'capybara/selector/xpath_extensions'
 require 'capybara/selector/selector'
+
 Capybara::Selector::FilterSet.add(:_field) do
   node_filter(:checked, :boolean) { |node, value| !(value ^ node.checked?) }
   node_filter(:unchecked, :boolean) { |node, value| (value ^ node.checked?) }
@@ -454,8 +456,102 @@ Capybara.add_selector(:table, locator_type: [String, Symbol]) do
     xpath
   end
 
+  expression_filter(:with_cols, valid_values: [Array]) do |xpath, cols|
+    col_conditions = cols.map do |col|
+      if col.is_a? Hash
+        col.reduce(nil) do |xp, (header, cell)|
+          header_xp = XPath.descendant(:th)[XPath.string.n.is(header)]
+          cell_xp = XPath.descendant(:tr)[header_xp].descendant(:td)
+          next cell_xp[XPath.string.n.is(cell)] unless xp
+
+          table_ancestor = XPath.ancestor(:table)[1]
+          xp = XPath::Expression.new(:join, table_ancestor, xp)
+          cell_xp[XPath.string.n.is(cell) & XPath.position.equals(xp.preceding_sibling(:td).count.plus(1))]
+        end
+      else
+        cells_xp = col.reduce(nil) do |xp, cell|
+          cell_conditions = [XPath.string.n.is(cell)]
+          if xp
+            prev_row_xp = XPath::Expression.new(:join, XPath.ancestor(:tr)[1].preceding_sibling(:tr), xp)
+            cell_conditions << XPath.position.equals(prev_row_xp.preceding_sibling(:td).count.plus(1))
+          end
+          XPath.descendant(:td)[cell_conditions.reduce :&]
+        end
+        XPath::Expression.new(:join, XPath.descendant(:tr), cells_xp)
+      end
+    end.reduce(:&)
+    xpath[col_conditions]
+  end
+
+  expression_filter(:with_rows, valid_values: [Array]) do |xpath, rows|
+    rows_conditions = rows.map do |row|
+      if row.is_a? Hash
+        row_conditions = row.map do |header, cell|
+          header_xp = XPath.ancestor(:table)[1].descendant(:tr)[1].descendant(:th)[XPath.string.n.is(header)]
+          XPath.descendant(:td)[
+            XPath.string.n.is(cell) & XPath.position.equals(header_xp.preceding_sibling.count.plus(1))
+          ]
+        end.reduce(:&)
+        XPath.descendant(:tr)[row_conditions]
+      else
+        row_conditions = row.map do |cell|
+          XPath.self(:td)[XPath.string.n.is(cell)]
+        end
+        row_conditions = row_conditions.reverse.reduce do |cond, cell|
+          cell[XPath.following_sibling[cond]]
+        end
+        XPath.descendant(:tr)[XPath.descendant(:td)[row_conditions]]
+      end
+    end.reduce(:&)
+    xpath[rows_conditions]
+  end
+
+  expression_filter(:rows, valid_values: [Array]) do |xpath, rows|
+    xpath = xpath[XPath.descendant(:tbody).descendant(:tr).count.equals(rows.size)]
+    rows_conditions = rows.map do |row|
+      row_xpath = if row.is_a? Hash
+        row_conditions = row.map do |header, cell|
+          header_xp = XPath.ancestor(:table)[1].descendant(:tr)[1].descendant(:th)[XPath.string.n.is(header)]
+          XPath.descendant(:td)[
+            XPath.string.n.is(cell) & XPath.position.equals(header_xp.preceding_sibling.count.plus(1))
+          ]
+        end.reduce(:&)
+        XPath.descendant(:tr)[row_conditions]
+      else
+        row_conditions = row.map do |cell|
+          XPath.self(:td)[XPath.string.n.is(cell)]
+        end
+        row_conditions = row_conditions.reverse.reduce do |cond, cell|
+          cell[XPath.following_sibling[cond]]
+        end
+        XPath.descendant(:tr)[XPath.descendant(:td)[row_conditions]]
+      end
+      row_xpath[XPath.descendant(:td).count.equals(row.size)]
+    end.reduce(:&)
+    xpath[rows_conditions]
+  end
+
   describe_expression_filters do |caption: nil, **|
     " with caption \"#{caption}\"" if caption
+  end
+end
+
+Capybara.add_selector(:table_row, locator_type: [Array, Hash]) do
+  xpath do |locator|
+    xpath = XPath.descendant(:tr)
+    if locator.is_a? Hash
+      locator.reduce(xpath) do |xp, (header, cell)|
+        header_xp = XPath.ancestor(:table)[1].descendant(:tr)[1].descendant(:th)[XPath.string.n.is(header)]
+        cell_xp = XPath.descendant(:td)[
+          XPath.string.n.is(cell) & XPath.position.equals(header_xp.preceding_sibling.count.plus(1))
+        ]
+        xp[cell_xp]
+      end
+    else
+      initial_td = XPath.descendant(:td)[XPath.string.n.is(locator.shift)]
+      tds = locator.reverse.map { |cell| XPath.following_sibling(:td)[XPath.string.n.is(cell)] }.reduce { |xp, cell| xp[cell] }
+      xpath[initial_td[tds]]
+    end
   end
 end
 
