@@ -43,7 +43,7 @@ Capybara::SpecHelper.spec '#has_table?' do
       ])
   end
 
-  it 'should accept rows with array of cell values' do
+  it 'should accept all rows with array of cell values' do
     expect(@session).to have_table('Horizontal Headers', rows:
       [
         %w[Thomas Walpole Oceanside],
@@ -75,6 +75,17 @@ Capybara::SpecHelper.spec '#has_table?' do
       [
         %w[Danilo Wilkinson Johnsonville],
         %w[Vern Konopelski Everette]
+      ])
+  end
+
+  it 'should match all cols with array of cell values' do
+    expect(@session).to have_table('Vertical Headers', cols:
+      [
+        %w[Thomas Walpole Oceanside],
+        %w[Danilo Wilkinson Johnsonville],
+        %w[Vern Konopelski Everette],
+        ["Ratke", "Lawrence", "East Sorayashire"],
+        ["Palmer", "Sawayn", "West Trinidad"]
       ])
   end
 

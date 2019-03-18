@@ -158,6 +158,13 @@ module Capybara
   #       * :caption (String) — Match text of associated caption
   #       * :class ((String, Array<String>, Regexp, XPath::Expression) — Matches the class(es) provided
   #       * :style (String, Regexp, Hash)
+  #       * :with_rows (Array<Array<String>>, Array<Hash<String, String>>) - Partial match <td> data - visibility of <td> elements is not considered
+  #       * :rows (Array<Array<String>>) — Match all <td>s - visibility of <td> elements is not considered
+  #       * :with_cols (Array<Array<String>>, Array<Hash<String, String>>) - Partial match <td> data - visibility of <td> elements is not considered
+  #       * :cols (Array<Array<String>>) — Match all <td>s - visibility of <td> elements is not considered
+  #
+  #   * **:table_row** - Find table row
+  #     * Locator: Array<String>, Hash<String,String> table row <td> contents - visibility of <td> elements is not considered
   #
   #   * **:frame** - Find frame/iframe elements
   #     * Locator: Match id or name

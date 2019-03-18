@@ -514,8 +514,16 @@ module Capybara
       #
       #    page.has_table?('People')
       #
-      # @param [String] locator                        The id or caption of a table
-      # @return [Boolean]                              Whether it exist
+      # @param [String] locator  The id or caption of a table
+      # @option options [Array<Array<String>>] :rows
+      #   Text which should be contained in the tables `<td>` elements organized by row (`<td>` visibility is not considered)
+      # @option options [Array<Array<String>>, Array<Hash<String,String>>] :with_rows
+      #   Partial set of text which should be contained in the tables `<td>` elements organized by row (`<td>` visibility is not considered)
+      # @option options [Array<Array<String>>] :cols
+      #   Text which should be contained in the tables `<td>` elements organized by column (`<td>` visibility is not considered)
+      # @option options [Array<Array<String>>, Array<Hash<String,String>>] :with_cols
+      #   Partial set of text which should be contained in the tables `<td>` elements organized by column (`<td>` visibility is not considered)
+      # @return [Boolean]        Whether it exists
       #
       def has_table?(locator = nil, **options, &optional_filter_block)
         has_selector?(:table, locator, options, &optional_filter_block)

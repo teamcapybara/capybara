@@ -483,6 +483,26 @@ Capybara.add_selector(:table, locator_type: [String, Symbol]) do
     xpath[col_conditions]
   end
 
+  expression_filter(:cols, valid_values: [Array]) do |xpath, cols|
+    col_conditions = if cols.all? Array
+      rows = cols.transpose
+      xpath = xpath[XPath.descendant(:tbody).descendant(:tr).count.equals(rows.size)]
+      rows.map do |row|
+        row_conditions = row.map do |cell|
+          XPath.self(:td)[XPath.string.n.is(cell)]
+        end
+        row_conditions = row_conditions.reverse.reduce do |cond, cell|
+          cell[XPath.following_sibling[cond]]
+        end
+        row_xpath = XPath.descendant(:tr)[XPath.descendant(:td)[row_conditions]]
+        row_xpath[XPath.descendant(:td).count.equals(row.size)]
+      end
+    else
+      raise ArgumentError, ":cols must be an Array of Arrays"
+    end.reduce(:&)
+    xpath[col_conditions]
+  end
+
   expression_filter(:with_rows, valid_values: [Array]) do |xpath, rows|
     rows_conditions = rows.map do |row|
       if row.is_a? Hash
