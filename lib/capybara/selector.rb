@@ -483,6 +483,26 @@ Capybara.add_selector(:table, locator_type: [String, Symbol]) do
     xpath[col_conditions]
   end
 
+  expression_filter(:cols, valid_values: [Array]) do |xpath, cols|
+    raise ArgumentError, ":cols must be an Array of Arrays" unless cols.all? { |col| col.is_a? Array }
+
+    rows = cols.transpose
+    xpath = xpath[XPath.descendant(:tbody).descendant(:tr).count.equals(rows.size) | (XPath.descendant(:tr).count.equals(rows.size) & ~XPath.descendant(:tbody))]
+
+    col_conditions = rows.map do |row|
+      row_conditions = row.map do |cell|
+        XPath.self(:td)[XPath.string.n.is(cell)]
+      end
+      row_conditions = row_conditions.reverse.reduce do |cond, cell|
+        cell[XPath.following_sibling[cond]]
+      end
+      row_xpath = XPath.descendant(:tr)[XPath.descendant(:td)[row_conditions]]
+      row_xpath[XPath.descendant(:td).count.equals(row.size)]
+    end.reduce(:&)
+
+    xpath[col_conditions]
+  end
+
   expression_filter(:with_rows, valid_values: [Array]) do |xpath, rows|
     rows_conditions = rows.map do |row|
       if row.is_a? Hash
@@ -507,7 +527,7 @@ Capybara.add_selector(:table, locator_type: [String, Symbol]) do
   end
 
   expression_filter(:rows, valid_values: [Array]) do |xpath, rows|
-    xpath = xpath[XPath.descendant(:tbody).descendant(:tr).count.equals(rows.size)]
+    xpath = xpath[XPath.descendant(:tbody).descendant(:tr).count.equals(rows.size) | (XPath.descendant(:tr).count.equals(rows.size) & ~XPath.descendant(:tbody))]
     rows_conditions = rows.map do |row|
       row_xpath = if row.is_a? Hash
         row_conditions = row.map do |header, cell|
