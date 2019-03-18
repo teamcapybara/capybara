@@ -487,7 +487,7 @@ Capybara.add_selector(:table, locator_type: [String, Symbol]) do
     raise ArgumentError, ":cols must be an Array of Arrays" unless cols.all? { |col| col.is_a? Array }
 
     rows = cols.transpose
-    xpath = xpath[XPath.descendant(:tbody).descendant(:tr).count.equals(rows.size)]
+    xpath = xpath[XPath.descendant(:tbody).descendant(:tr).count.equals(rows.size) | (XPath.descendant(:tr).count.equals(rows.size) & ~XPath.descendant(:tbody))]
 
     col_conditions = rows.map do |row|
       row_conditions = row.map do |cell|
@@ -527,7 +527,7 @@ Capybara.add_selector(:table, locator_type: [String, Symbol]) do
   end
 
   expression_filter(:rows, valid_values: [Array]) do |xpath, rows|
-    xpath = xpath[XPath.descendant(:tbody).descendant(:tr).count.equals(rows.size)]
+    xpath = xpath[XPath.descendant(:tbody).descendant(:tr).count.equals(rows.size) | (XPath.descendant(:tr).count.equals(rows.size) & ~XPath.descendant(:tbody))]
     rows_conditions = rows.map do |row|
       row_xpath = if row.is_a? Hash
         row_conditions = row.map do |header, cell|
