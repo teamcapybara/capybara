@@ -7,3 +7,11 @@ module XPath
     end
   end
 end
+
+module XPath
+  module DSL
+    def join(*expressions)
+      XPath::Expression.new(:join, *[self, expressions].flatten)
+    end
+  end
+end

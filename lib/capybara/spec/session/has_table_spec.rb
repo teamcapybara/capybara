@@ -49,8 +49,8 @@ Capybara::SpecHelper.spec '#has_table?' do
         %w[Thomas Walpole Oceanside],
         %w[Danilo Wilkinson Johnsonville],
         %w[Vern Konopelski Everette],
-        ["Ratke", "Lawrence", "East Sorayashire"],
-        ["Palmer", "Sawayn", "West Trinidad"]
+        ['Ratke', 'Lawrence', 'East Sorayashire'],
+        ['Palmer', 'Sawayn', 'West Trinidad']
       ])
   end
 
@@ -84,8 +84,8 @@ Capybara::SpecHelper.spec '#has_table?' do
         %w[Thomas Walpole Oceanside],
         %w[Danilo Wilkinson Johnsonville],
         %w[Vern Konopelski Everette],
-        ["Ratke", "Lawrence", "East Sorayashire"],
-        ["Palmer", "Sawayn", "West Trinidad"]
+        ['Ratke', 'Lawrence', 'East Sorayashire'],
+        ['Palmer', 'Sawayn', 'West Trinidad']
       ])
   end
 
