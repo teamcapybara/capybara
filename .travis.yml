@@ -42,7 +42,7 @@ matrix:
         - CAPYBARA_REMOTE=true
         - CAPYBARA_FF=true
     - gemfile: gemfiles/Gemfile.base-versions
-      rvm: 2.3.8
+      rvm: 2.4
       env: CAPYBARA_FF=true
       addons:
         firefox: latest

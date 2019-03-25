@@ -263,7 +263,7 @@ module Capybara
 
       if base_uri && [nil, 'http', 'https'].include?(visit_uri.scheme)
         if visit_uri.relative?
-          visit_uri_parts = visit_uri.to_hash.delete_if { |_k, value| value.nil? }
+          visit_uri_parts = visit_uri.to_hash.compact
 
           # Useful to people deploying to a subdirectory
           # and/or single page apps where only the url fragment changes
@@ -850,7 +850,7 @@ module Capybara
       when Array
         arg.map { |subarg| element_script_result(subarg) }
       when Hash
-        arg.each { |key, value| arg[key] = element_script_result(value) }
+        arg.transform_values! { |value| element_script_result(value) }
       when Capybara::Driver::Node
         Capybara::Node::Element.new(self, arg, nil, nil)
       else

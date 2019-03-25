@@ -56,7 +56,7 @@ private
   end
 
   def request_method
-    self[:method] =~ /post/i ? :post : :get
+    self[:method].to_s.match?(/post/i) ? :post : :get
   end
 
   def merge_param!(params, key, value)

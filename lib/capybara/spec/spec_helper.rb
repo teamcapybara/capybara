@@ -100,7 +100,7 @@ module Capybara
 
     def silence_stream(stream)
       old_stream = stream.dup
-      stream.reopen(RbConfig::CONFIG['host_os'] =~ /rmswin|mingw/ ? 'NUL:' : '/dev/null')
+      stream.reopen(RbConfig::CONFIG['host_os'].match?(/rmswin|mingw/) ? 'NUL:' : '/dev/null')
       stream.sync = true
       yield
     ensure

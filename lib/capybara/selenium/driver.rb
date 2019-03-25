@@ -322,7 +322,7 @@ private
       wait.until do
         alert = @browser.switch_to.alert
         regexp = text.is_a?(Regexp) ? text : Regexp.escape(text.to_s)
-        alert.text.match(regexp) ? alert : nil
+        alert.text.match?(regexp) ? alert : nil
       end
     rescue Selenium::WebDriver::Error::TimeOutError
       raise Capybara::ModalNotFound, "Unable to find modal dialog#{" with #{text}" if text}"
@@ -342,7 +342,7 @@ private
     when Array
       arg.map { |arr| unwrap_script_result(arr) }
     when Hash
-      arg.each { |key, value| arg[key] = unwrap_script_result(value) }
+      arg.transform_values! { |value| unwrap_script_result(value) }
     when Selenium::WebDriver::Element
       build_node(arg)
     else
