@@ -4,8 +4,8 @@ dist: trusty
 services:
   - docker
 rvm:
-  - 2.6.0
-  - jruby-9.2.5.0
+  - 2.6
+  - jruby-9.2.6.0
 gemfile:
   - Gemfile
 env:
@@ -34,10 +34,10 @@ cache:
 matrix:
   include:
     - gemfile: Gemfile
-      rvm: 2.5.3
+      rvm: 2.5
       env: CAPYBARA_REMOTE=true
     - gemfile: Gemfile
-      rvm: 2.5.3
+      rvm: 2.5
       env:
         - CAPYBARA_REMOTE=true
         - CAPYBARA_FF=true
@@ -50,10 +50,10 @@ matrix:
           packages:
             - awesome
     - gemfile: Gemfile
-      rvm: 2.6.0
+      rvm: 2.6
       env: HEADLESS=true
     - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: 2.6.0
+      rvm: 2.6
       env: CAPYBARA_FF=true
       addons:
         firefox: latest-beta
@@ -80,15 +80,15 @@ matrix:
             - awesome
 
     - gemfile: Gemfile
-      rvm: 2.4.5
+      rvm: 2.4
       env: CAPYBARA_FF=true HEADLESS=true
       addons:
         firefox: latest
     - gemfile: Gemfile
-      rvm: 2.5.3
+      rvm: 2.5
       env: W3C=true HEADLESS=true
     - gemfile: gemfiles/Gemfile.gumbo
-      rvm: 2.5.3
+      rvm: 2.5
       script: bundle exec rake spec_rack
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
