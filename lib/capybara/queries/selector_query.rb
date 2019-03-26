@@ -271,7 +271,7 @@ module Capybara
 
       def assert_valid_keys
         unless VALID_MATCH.include?(match)
-          raise ArgumentError, "invalid option #{match.inspect} for :match, should be one of #{VALID_MATCH.map(&:inspect).join(', ')}"
+          raise ArgumentError, "Invalid option #{match.inspect} for :match, should be one of #{VALID_MATCH.map(&:inspect).join(', ')}"
         end
 
         unhandled_options = @options.keys.reject do |option_name|
@@ -284,7 +284,7 @@ module Capybara
 
         invalid_names = unhandled_options.map(&:inspect).join(', ')
         valid_names = (valid_keys - [:allow_self]).map(&:inspect).join(', ')
-        raise ArgumentError, "invalid keys #{invalid_names}, should be one of #{valid_names}"
+        raise ArgumentError, "Invalid option(s) #{invalid_names}, should be one of #{valid_names}"
       end
 
       def filtered_expression(expr)

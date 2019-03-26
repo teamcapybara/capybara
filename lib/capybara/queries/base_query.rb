@@ -98,7 +98,7 @@ module Capybara
 
         invalid_names = invalid_keys.map(&:inspect).join(', ')
         valid_names = valid_keys.map(&:inspect).join(', ')
-        raise ArgumentError, "invalid keys #{invalid_names}, should be one of #{valid_names}"
+        raise ArgumentError, "Invalid option(s) #{invalid_names}, should be one of #{valid_names}"
       end
     end
   end
