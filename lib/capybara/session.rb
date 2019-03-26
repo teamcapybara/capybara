@@ -458,9 +458,13 @@ module Capybara
     #
     # @return [Capybara::Window]   window that has been opened
     #
-    def open_new_window
+    def open_new_window(kind = :tab)
       window_opened_by do
-        driver.open_new_window
+        if driver.method(:open_new_window).arity.zero?
+          driver.open_new_window
+        else
+          driver.open_new_window(kind)
+        end
       end
     end
 
