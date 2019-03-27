@@ -124,7 +124,7 @@ Capybara::SpecHelper.spec '#has_css?' do
       expect(@session.has_css?("input[type='submit'][value='New Here']")).to be false
     end
 
-    it 'should should the default wait time if true is passed for :wait', requires: [:js]  do
+    it 'should should the default wait time if true is passed for :wait', requires: [:js] do
       expect(@session.has_css?("input[type='submit'][value='New Here']", wait: true)).to be true
     end
   end

@@ -4,6 +4,9 @@ require 'rubygems'
 require 'rspec/core/rake_task'
 require 'cucumber/rake/task'
 require 'yard'
+require 'rubocop/rake_task'
+
+RuboCop::RakeTask.new
 
 desc 'Run all examples with Firefox'
 
@@ -21,7 +24,7 @@ end
   end
 end
 
-RSpec::Core::RakeTask.new(:spec_rack) do |t|
+RSpec::Core::RakeTask.new(:spec_rack, [] => :rubocop) do |t|
   t.rspec_opts = rspec_opts
   t.pattern = './spec{,/*/**}/*{_spec.rb}'
 end
