@@ -76,7 +76,7 @@ module Capybara
       def synchronize(seconds = nil, errors: nil)
         return yield if session.synchronized
 
-        seconds = session_options.default_max_wait_time if seconds.nil?
+        seconds = session_options.default_max_wait_time if [nil, true].include? seconds
         session.synchronized = true
         timer = Capybara::Helpers.timer(expire_in: seconds)
         begin

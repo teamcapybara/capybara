@@ -120,6 +120,14 @@ Capybara::SpecHelper.spec '#has_css?' do
       @session.click_link('Click me')
       expect(@session.has_css?("input[type='submit'][value='New Here']")).to be false
     end
+
+    it 'should should the default wait time if true is passed for :wait' do
+      Capybara.predicates_wait = false
+      Capybara.default_max_wait_time = 2
+      @session.visit('/with_js')
+      @session.click_link('Click me')
+      expect(@session.has_css?("input[type='submit'][value='New Here']", wait: true)).to be true
+    end
   end
 
   context 'with between' do
