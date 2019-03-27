@@ -107,7 +107,7 @@ module Capybara
     #   See {Capybara::Node::Matchers#has_unchecked_field?}
 
     # RSpec matcher for text content
-    # See {Capybara::SessionMatchers#assert_text}
+    # See {Capybara::Node::Matchers#assert_text}
     def have_text(*args)
       Matchers::HaveText.new(*args)
     end
