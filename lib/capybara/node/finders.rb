@@ -13,7 +13,7 @@ module Capybara
       #   and continuously retry finding the element until either the element is found or the time
       #   expires. The length of time +find+ will wait is controlled through {Capybara.default_max_wait_time}
       #   and defaults to 2 seconds.
-      #   @option options [false, Numeric] wait (Capybara.default_max_wait_time) Maximum time to wait for matching element to appear.
+      #   @option options [false, true, Numeric] wait (Capybara.default_max_wait_time) Maximum time to wait for matching element to appear.
       #
       #  page.find('#foo').find('.bar')
       #  page.find(:xpath, './/div[contains(., "bar")]')

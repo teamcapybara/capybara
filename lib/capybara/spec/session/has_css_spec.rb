@@ -113,12 +113,19 @@ Capybara::SpecHelper.spec '#has_css?' do
   end
 
   context 'with predicates_wait == false' do
-    it 'should not wait for content to appear', requires: [:js] do
+    before do
       Capybara.predicates_wait = false
-      Capybara.default_max_wait_time = 2
+      Capybara.default_max_wait_time = 5
       @session.visit('/with_js')
       @session.click_link('Click me')
+    end
+
+    it 'should not wait for content to appear', requires: [:js] do
       expect(@session.has_css?("input[type='submit'][value='New Here']")).to be false
+    end
+
+    it 'should should the default wait time if true is passed for :wait', requires: [:js]  do
+      expect(@session.has_css?("input[type='submit'][value='New Here']", wait: true)).to be true
     end
   end
 
