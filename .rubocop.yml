@@ -1,5 +1,6 @@
 require:
   - rubocop-rspec
+  - rubocop-performance
 
 AllCops:
   DisabledByDefault: false
