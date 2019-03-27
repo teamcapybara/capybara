@@ -7,6 +7,8 @@ AllCops:
   TargetRubyVersion: 2.4
   Exclude:
       - 'capybara.gemspec'
+      - 'vendor/**/*'
+      - 'gemfiles/vendor/**/*'
 
 #################### Lint ################################
 
