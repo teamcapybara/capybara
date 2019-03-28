@@ -7,7 +7,7 @@
 [![SemVer](https://api.dependabot.com/badges/compatibility_score?dependency-name=capybara&package-manager=bundler&version-scheme=semver)](https://dependabot.com/compatibility-score.html?dependency-name=capybara&package-manager=bundler&version-scheme=semver)
 
 **Note** You are viewing the README for the development version of Capybara.  If you are using the current release version
-you can find the README at https://github.com/teamcapybara/capybara/blob/3.15_stable/README.md
+you can find the README at https://github.com/teamcapybara/capybara/blob/3.16_stable/README.md
 
 
 Capybara helps you test web applications by simulating how a real user would
