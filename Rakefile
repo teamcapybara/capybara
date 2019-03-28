@@ -20,8 +20,13 @@ end
 %w[chrome ie edge chrome_remote firefox_remote safari].each do |driver|
   RSpec::Core::RakeTask.new(:"spec_#{driver}") do |t|
     t.rspec_opts = rspec_opts
-    t.pattern = "./spec/*{_spec_#{driver}.rb}"
+    t.pattern = "./spec/{selenium_spec_#{driver}.rb}"
   end
+end
+
+RSpec::Core::RakeTask.new(:spec_sauce) do |t|
+  t.rspec_opts = rspec_opts
+  t.pattern = './spec/sauce_spec_chrome.rb'
 end
 
 RSpec::Core::RakeTask.new(:spec_rack, [] => :rubocop) do |t|
