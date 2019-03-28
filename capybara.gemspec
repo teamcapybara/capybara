@@ -46,6 +46,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rubocop')
   s.add_development_dependency('rubocop-performance')
   s.add_development_dependency('rubocop-rspec')
+  s.add_development_dependency('sauce_whisk')
   s.add_development_dependency('selenium-webdriver', ['~>3.5'])
   s.add_development_dependency('selenium_statistics')
   s.add_development_dependency('sinatra', ['>= 1.4.0'])
