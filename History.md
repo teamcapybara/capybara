@@ -1,3 +1,15 @@
+# Version 3.16
+Release date: unreleased
+
+### Changed
+
+* Ruby 2.4.0+ is now required
+* Selenium driver now defaults to using a persistent http client connection
+
+### Added
+
+* :wait option in predicates now accepts `true` to selectively override when `Capybara.predicates_wait == false`
+
 # Version 3.15
 Release date: 2019-03-19
 
