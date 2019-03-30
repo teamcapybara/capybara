@@ -16,7 +16,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def self.load_selenium
     require 'selenium-webdriver'
-    require 'capybara/selenium/patches/persistent_client'
     warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade." if Gem.loaded_specs['selenium-webdriver'].version < Gem::Version.new('3.5.0')
   rescue LoadError => err
     raise err if err.message !~ /selenium-webdriver/
@@ -27,6 +26,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def browser
     @browser ||= begin
       options[:http_client] ||= begin
+        require 'capybara/selenium/patches/persistent_client'
         if options[:timeout]
           ::Capybara::Selenium::PersistentClient.new(read_timeout: options[:timeout])
         else
