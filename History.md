@@ -1,3 +1,10 @@
+# Version 3.16.1
+Release date: 2019-03-30
+
+### Fixed
+
+* Fix potential 'uninitialized constant' error when using the :selenium_chrome drvier [jeffclemens-ab]
+
 # Version 3.16
 Release date: 2019-03-28
 
