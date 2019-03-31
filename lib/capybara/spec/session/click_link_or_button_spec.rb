@@ -26,7 +26,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
   end
 
   it 'should wait for asynchronous load', requires: [:js] do
-    Capybara.default_max_wait_time = 2
+    Capybara.configure { |c| c.default_max_wait_time = 2 }
     @session.visit('/with_js')
     @session.click_link('Click me')
     @session.click_link_or_button('Has been clicked')

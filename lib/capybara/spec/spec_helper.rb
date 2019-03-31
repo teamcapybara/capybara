@@ -7,7 +7,7 @@ require 'capybara/rspec' # Required here instead of in rspec_spec to avoid RSpec
 require 'capybara/spec/test_app'
 require 'nokogiri'
 
-Capybara.save_path = File.join(Dir.pwd, 'save_path_tmp')
+Capybara.configure { |c| c.save_path = File.join(Dir.pwd, 'save_path_tmp') }
 
 module Capybara
   module SpecHelper
@@ -20,22 +20,24 @@ module Capybara
       end
 
       def reset!
-        Capybara.app = TestApp
-        Capybara.app_host = nil
-        Capybara.default_selector = :xpath
-        Capybara.default_max_wait_time = 1
-        Capybara.ignore_hidden_elements = true
-        Capybara.exact = false
-        Capybara.raise_server_errors = true
-        Capybara.visible_text_only = false
-        Capybara.match = :smart
-        Capybara.enable_aria_label = false
-        Capybara.default_set_options = {}
-        Capybara.disable_animation = false
-        Capybara.test_id = nil
-        Capybara.predicates_wait = true
-        Capybara.default_normalize_ws = false
-        Capybara.allow_gumbo = true
+        Capybara.configure do |c|
+          c.app = TestApp
+          c.app_host = nil
+          c.default_selector = :xpath
+          c.default_max_wait_time = 1
+          c.ignore_hidden_elements = true
+          c.exact = false
+          c.raise_server_errors = true
+          c.visible_text_only = false
+          c.match = :smart
+          c.enable_aria_label = false
+          c.default_set_options = {}
+          c.disable_animation = false
+          c.test_id = nil
+          c.predicates_wait = true
+          c.default_normalize_ws = false
+          c.allow_gumbo = true
+        end
         reset_threadsafe
       end
 
@@ -78,7 +80,7 @@ module Capybara
           end
 
           before :each, :exact_false do
-            Capybara.exact = false
+            Capybara.configure { |c| c.exact = false }
           end
           # rubocop:enable RSpec/ScatteredSetup
 

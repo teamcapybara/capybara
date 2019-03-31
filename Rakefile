@@ -29,10 +29,13 @@ RSpec::Core::RakeTask.new(:spec_sauce) do |t|
   t.pattern = './spec/sauce_spec_chrome.rb'
 end
 
-RSpec::Core::RakeTask.new(:spec_rack, [] => :rubocop) do |t|
+# RSpec::Core::RakeTask.new(:spec_rack, [] => :rubocop) do |t|
+RSpec::Core::RakeTask.new(:spec_rack) do |t|
   t.rspec_opts = rspec_opts
   t.pattern = './spec{,/*/**}/*{_spec.rb}'
 end
+
+task rack: %i[rubocop spec_rack]
 
 task spec: [:spec_firefox]
 

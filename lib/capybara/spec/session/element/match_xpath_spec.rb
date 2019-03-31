@@ -18,7 +18,7 @@ Capybara::SpecHelper.spec '#match_xpath?' do
   end
 
   it 'should use xpath even if default selector is CSS' do
-    Capybara.default_selector = :css
+    Capybara.configure { |c| c.default_selector = :css }
     expect(@element).not_to have_xpath("//span[@class='not_a_number']")
     expect(@element).not_to have_xpath("//div[@class='number']")
   end

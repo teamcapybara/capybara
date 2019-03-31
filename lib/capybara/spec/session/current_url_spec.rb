@@ -37,22 +37,22 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
   end
 
   it 'returns to the app host when visiting a relative url' do
-    Capybara.app_host = bases[1]
+    Capybara.configure { |c| c.app_host = bases[1] }
     @session.visit("#{bases[0]}/host")
     should_be_on 0
     @session.visit('/host')
     should_be_on 1
-    Capybara.app_host = nil
+    Capybara.configure { |c| c.app_host = nil }
   end
 
   it 'is affected by setting Capybara.app_host' do
-    Capybara.app_host = bases[0]
+    Capybara.configure { |c| c.app_host = bases[0] }
     @session.visit('/host')
     should_be_on 0
-    Capybara.app_host = bases[1]
+    Capybara.configure { |c| c.app_host = bases[1] }
     @session.visit('/host')
     should_be_on 1
-    Capybara.app_host = nil
+    Capybara.configure { |c| c.app_host = nil }
   end
 
   it 'is unaffected by following a relative link' do

@@ -17,7 +17,7 @@ Capybara::SpecHelper.spec '#text' do
   end
 
   it 'ignores invisible text if `:visible` given' do
-    Capybara.ignore_hidden_elements = false
+    Capybara.configure { |c| c.ignore_hidden_elements = false }
     @session.visit('/with_html')
     expect(@session.find(:id, 'hidden-text').text(:visible)).to eq('Some of this text is')
   end
@@ -25,15 +25,15 @@ Capybara::SpecHelper.spec '#text' do
   it 'ignores invisible text if `Capybara.ignore_hidden_elements = true`' do
     @session.visit('/with_html')
     expect(@session.find(:id, 'hidden-text').text).to eq('Some of this text is')
-    Capybara.ignore_hidden_elements = false
+    Capybara.configure { |c| c.ignore_hidden_elements = false }
     expect(@session.find(:id, 'hidden-text').text).to eq('Some of this text is hidden!')
   end
 
   it 'ignores invisible text if `Capybara.visible_text_only = true`' do
     @session.visit('/with_html')
-    Capybara.visible_text_only = true
+    Capybara.configure { |c| c.visible_text_only = true }
     expect(@session.find(:id, 'hidden-text').text).to eq('Some of this text is')
-    Capybara.ignore_hidden_elements = false
+    Capybara.configure { |c| c.ignore_hidden_elements = false }
     expect(@session.find(:id, 'hidden-text').text).to eq('Some of this text is')
   end
 
@@ -43,9 +43,9 @@ Capybara::SpecHelper.spec '#text' do
   end
 
   context 'with css as default selector' do
-    before { Capybara.default_selector = :css }
+    before { Capybara.configure { |c| c.default_selector = :css } }
 
-    after { Capybara.default_selector = :xpath }
+    after { Capybara.configure { |c| c.default_selector = :xpath } }
 
     it 'should print the text of the page' do
       @session.visit('/with_simple_html')

@@ -119,7 +119,7 @@ RSpec.describe Capybara::DSL do
   describe '#using_wait_time' do
     before { @previous_wait_time = Capybara.default_max_wait_time }
 
-    after { Capybara.default_max_wait_time = @previous_wait_time }
+    after { Capybara.configure { |c| c.default_max_wait_time = @previous_wait_time } }
 
     it 'should switch the wait time and switch it back' do
       in_block = nil

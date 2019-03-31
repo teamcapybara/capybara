@@ -50,7 +50,7 @@ Capybara::SpecHelper.spec '#uncheck' do
 
     it 'should not accept partial matches when true' do
       expect do
-        @session.uncheck('Ham', exact:  true)
+        @session.uncheck('Ham', exact: true)
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
@@ -58,9 +58,10 @@ Capybara::SpecHelper.spec '#uncheck' do
   context 'when checkbox hidden' do
     context 'with Capybara.automatic_label_click == true' do
       around do |spec|
-        old_click_label, Capybara.automatic_label_click = Capybara.automatic_label_click, true
+        old_click_label = Capybara.automatic_label_click
+        Capybara.configure { |c| c.automatic_label_click = true }
         spec.run
-        Capybara.automatic_label_click = old_click_label
+        Capybara.configure { |c| c.automatic_label_click = old_click_label }
       end
 
       it 'should uncheck via clicking the label with :for attribute if possible' do

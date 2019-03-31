@@ -54,7 +54,16 @@ module Capybara
     # @!method always_include_port
     #   See {Capybara.configure}
     SessionConfig::OPTIONS.each do |method|
-      def_delegators :config, method, "#{method}="
+      def_delegator :config, method
+      # define_method method do |*args, &block|
+      #   warn "s DEPRECATED: Capybara.#{method} is deprecated, please use Capybara.config.#{method} instead [ #{caller(1, 1).first} ]"
+      #   config.send(method, *args, &block)
+      # end
+
+      define_method "#{method}=" do |*args, &block|
+        warn "DEPRECATED: Capybara.#{method}= is deprecated, please use Capybara.configure instead [ #{caller(1, 1).first} ]"
+        config.send("#{method}=", *args, &block)
+      end
     end
 
     ##
@@ -289,10 +298,10 @@ module Capybara
     #
     def using_wait_time(seconds)
       previous_wait_time = Capybara.default_max_wait_time
-      Capybara.default_max_wait_time = seconds
+      Capybara.configure { |c| c.default_max_wait_time = seconds }
       yield
     ensure
-      Capybara.default_max_wait_time = previous_wait_time
+      Capybara.configure { |c| c.default_max_wait_time = previous_wait_time }
     end
 
     ##
@@ -418,9 +427,8 @@ module Capybara
     end
   end
 
-  self.default_driver = nil
-  self.current_driver = nil
-  self.server_host = nil
+  Capybara.default_driver = Capybara.current_driver = nil
+  Capybara.configure { |c| c.server_host = nil }
 
   module Driver; end
   module RackTest; end

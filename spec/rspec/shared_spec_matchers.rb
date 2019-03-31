@@ -323,9 +323,9 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
         end
 
         context 'with default selector CSS' do
-          before { Capybara.default_selector = :css }
+          before { Capybara.configure { |c| c.default_selector = :css } }
 
-          after { Capybara.default_selector = :xpath }
+          after { Capybara.configure { |c| c.default_selector = :xpath } }
 
           it 'fails if has_content? returns false' do
             expect do
@@ -460,9 +460,9 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
         end
 
         context 'with default selector CSS' do
-          before { Capybara.default_selector = :css }
+          before { Capybara.configure { |c| c.default_selector = :css } }
 
-          after { Capybara.default_selector = :xpath }
+          after { Capybara.configure { |c| c.default_selector = :xpath } }
 
           it 'fails if has_text? returns false' do
             expect do

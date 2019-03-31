@@ -20,7 +20,7 @@ Capybara::SpecHelper.spec '#match_selector?' do
   end
 
   it 'should use default selector' do
-    Capybara.default_selector = :css
+    Capybara.configure { |c| c.default_selector = :css }
     expect(element).not_to match_selector('span.not_a_number')
     expect(element).to match_selector('span.number')
   end
@@ -92,7 +92,7 @@ Capybara::SpecHelper.spec '#not_matches_selector?' do
   end
 
   it 'should use default selector' do
-    Capybara.default_selector = :css
+    Capybara.configure { |c| c.default_selector = :css }
     expect(element).to not_match_selector('p a#doesnotexist')
     expect(element).not_to not_match_selector('span.number')
   end

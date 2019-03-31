@@ -54,11 +54,11 @@ Capybara::SpecHelper.spec '#visit' do
     end
 
     before do
-      Capybara.always_include_port = true
+      Capybara.configure { |c| c.always_include_port = true }
     end
 
     after do
-      Capybara.always_include_port = false
+      Capybara.configure { |c| c.always_include_port = false }
     end
 
     it 'should fetch a response from the driver with an absolute url without a port' do
@@ -85,7 +85,7 @@ Capybara::SpecHelper.spec '#visit' do
 
     it 'should give preference to app_host port if specified', requires: [:server] do
       allow(@session.driver).to receive(:visit)
-      Capybara.app_host = 'http://www.example.com:6666'
+      Capybara.configure { |c| c.app_host = 'http://www.example.com:6666' }
       @session.visit('/random')
       expect(@session.driver).to have_received(:visit).with('http://www.example.com:6666/random')
     end
@@ -99,7 +99,7 @@ Capybara::SpecHelper.spec '#visit' do
 
     it "shouldn't override port if no server but app_host is set", requires: [:server] do
       session = Capybara::Session.new(@session.mode, nil)
-      Capybara.app_host = 'http://www.example.com:6666'
+      Capybara.configure { |c| c.app_host = 'http://www.example.com:6666' }
       allow(session.driver).to receive(:visit)
       session.visit('http://www.google.com')
       expect(session.driver).to have_received(:visit).with('http://www.google.com')
@@ -108,12 +108,12 @@ Capybara::SpecHelper.spec '#visit' do
 
   context 'when Capybara.always_include_port is false' do
     before do
-      Capybara.always_include_port = false
+      Capybara.configure { |c| c.always_include_port = false }
     end
 
     it "shouldn't overwrite port if app_host is set", requires: [:server] do
       session = Capybara::Session.new(@session.mode, nil)
-      Capybara.app_host = 'http://www.example.com:6666'
+      Capybara.configure { |c| c.app_host = 'http://www.example.com:6666' }
       allow(session.driver).to receive(:visit)
       session.visit('http://www.google.com')
       expect(session.driver).to have_received(:visit).with('http://www.google.com')
@@ -121,7 +121,7 @@ Capybara::SpecHelper.spec '#visit' do
 
     it "shouldn't overwrite port if port specfified", requires: [:server] do
       session = Capybara::Session.new(@session.mode, nil)
-      Capybara.app_host = 'http://www.example.com:6666'
+      Capybara.configure { |c| c.app_host = 'http://www.example.com:6666' }
       allow(session.driver).to receive(:visit)
       session.visit('http://www.google.com:99')
       expect(session.driver).to have_received(:visit).with('http://www.google.com:99')
@@ -131,7 +131,7 @@ Capybara::SpecHelper.spec '#visit' do
   context 'without a server', requires: [:server] do
     it 'should respect `app_host`' do
       serverless_session = Capybara::Session.new(@session.mode, nil)
-      Capybara.app_host = "http://#{@session.server.host}:#{@session.server.port}"
+      Capybara.configure { |c| c.app_host = "http://#{@session.server.host}:#{@session.server.port}" }
       serverless_session.visit('/foo')
       expect(serverless_session).to have_content('Another World')
     end
@@ -146,7 +146,7 @@ Capybara::SpecHelper.spec '#visit' do
   context 'with Capybara.app_host set' do
     it 'should override server', requires: [:server] do
       another_session = Capybara::Session.new(@session.mode, @session.app.dup)
-      Capybara.app_host = "http://#{@session.server.host}:#{@session.server.port}"
+      Capybara.configure { |c| c.app_host = "http://#{@session.server.host}:#{@session.server.port}" }
       another_session.visit('/foo')
       expect(another_session).to have_content('Another World')
       expect(another_session.current_url).to start_with(Capybara.app_host)
@@ -155,13 +155,13 @@ Capybara::SpecHelper.spec '#visit' do
     end
 
     it 'should append relative path', requires: [:server] do
-      Capybara.app_host = "http://#{@session.server.host}:#{@session.server.port}/redirect/0"
+      Capybara.configure { |c| c.app_host = "http://#{@session.server.host}:#{@session.server.port}/redirect/0" }
       @session.visit('/times')
       expect(@session).to have_content('redirection complete')
     end
 
     it 'should work if `app_host` has a trailing /', requires: [:server] do
-      Capybara.app_host = "http://#{@session.server.host}:#{@session.server.port}/"
+      Capybara.configure { |c| c.app_host = "http://#{@session.server.host}:#{@session.server.port}/" }
       @session.visit('/')
       expect(@session).to have_content('Hello world!')
     end

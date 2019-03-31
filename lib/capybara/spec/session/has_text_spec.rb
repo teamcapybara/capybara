@@ -40,7 +40,7 @@ Capybara::SpecHelper.spec '#has_text?' do
   end
 
   context 'with enabled default collapsing whitespace' do
-    before { Capybara.default_normalize_ws = true }
+    before { Capybara.configure { |c| c.default_normalize_ws = true } }
 
     it 'should search unnormalized text' do
       @session.visit('/with_html')
@@ -96,7 +96,7 @@ Capybara::SpecHelper.spec '#has_text?' do
   end
 
   it 'should be true if `Capybara.ignore_hidden_elements = false` and text is invisible.' do
-    Capybara.ignore_hidden_elements = false
+    Capybara.configure { |c| c.ignore_hidden_elements = false }
     @session.visit('/with_html')
     expect(@session).to have_text('Some of this text is hidden!')
   end
@@ -310,7 +310,7 @@ Capybara::SpecHelper.spec '#has_no_text?' do
   end
 
   it 'should be false if `Capybara.ignore_hidden_elements = false` and text is invisible.' do
-    Capybara.ignore_hidden_elements = false
+    Capybara.configure { |c| c.ignore_hidden_elements = false }
     @session.visit('/with_html')
     expect(@session).not_to have_no_text('Some of this text is hidden!')
   end
@@ -331,7 +331,7 @@ Capybara::SpecHelper.spec '#has_no_text?' do
   end
 
   it 'should wait for text to disappear', requires: [:js] do
-    Capybara.default_max_wait_time = 2
+    Capybara.configure { |c| c.default_max_wait_time = 2 }
     @session.visit('/with_js')
     @session.click_link('Click me')
     expect(@session).to have_no_text('I changed it')

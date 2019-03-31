@@ -4,12 +4,12 @@ Capybara::SpecHelper.spec '#save_screenshot', requires: [:screenshot] do
   let(:alternative_path) { File.join(Dir.pwd, 'save_screenshot_tmp') }
   before do
     @old_save_path = Capybara.save_path
-    Capybara.save_path = nil
+    Capybara.configure { |c| c.save_path = nil }
     @session.visit '/foo'
   end
 
   after do
-    Capybara.save_path = @old_save_path
+    Capybara.configure { |c| c.save_path = @old_save_path }
     FileUtils.rm_rf alternative_path
   end
 
@@ -33,7 +33,7 @@ Capybara::SpecHelper.spec '#save_screenshot', requires: [:screenshot] do
 
   context 'with Capybara.save_path' do
     it 'file is generated in the correct location' do
-      Capybara.save_path = alternative_path
+      Capybara.configure { |c| c.save_path = alternative_path }
       allow(@session.driver).to receive(:save_screenshot)
 
       @session.save_screenshot
@@ -43,7 +43,7 @@ Capybara::SpecHelper.spec '#save_screenshot', requires: [:screenshot] do
     end
 
     it 'relative paths are relative to save_path' do
-      Capybara.save_path = alternative_path
+      Capybara.configure { |c| c.save_path = alternative_path }
       allow(@session.driver).to receive(:save_screenshot)
 
       custom_path = 'screenshots/2.png'

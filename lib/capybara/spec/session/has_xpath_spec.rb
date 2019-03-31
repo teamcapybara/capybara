@@ -32,7 +32,7 @@ Capybara::SpecHelper.spec '#has_xpath?' do
   end
 
   it 'should use xpath even if default selector is CSS' do
-    Capybara.default_selector = :css
+    Capybara.configure { |c| c.default_selector = :css }
     expect(@session).not_to have_xpath("//p//a[@id='doesnotexist']")
   end
 
@@ -101,7 +101,7 @@ Capybara::SpecHelper.spec '#has_no_xpath?' do
   end
 
   it 'should use xpath even if default selector is CSS' do
-    Capybara.default_selector = :css
+    Capybara.configure { |c| c.default_selector = :css }
     expect(@session).to have_no_xpath("//p//a[@id='doesnotexist']")
   end
 
@@ -113,7 +113,7 @@ Capybara::SpecHelper.spec '#has_no_xpath?' do
   end
 
   it 'should wait for content to disappear', requires: [:js] do
-    Capybara.default_max_wait_time = 2
+    Capybara.configure { |c| c.default_max_wait_time = 2 }
     @session.visit('/with_js')
     @session.click_link('Click me')
     expect(@session).to have_no_xpath("//p[@id='change']")
