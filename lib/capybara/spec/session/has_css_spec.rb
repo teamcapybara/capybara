@@ -96,7 +96,7 @@ Capybara::SpecHelper.spec '#has_css?' do
   end
 
   it 'should wait for content to appear', requires: [:js] do
-    Capybara.default_max_wait_time = 2
+    Capybara.configure { |c| c.default_max_wait_time = 2 }
     @session.visit('/with_js')
     @session.click_link('Click me')
     expect(@session).to have_css("input[type='submit'][value='New Here']")
@@ -104,8 +104,10 @@ Capybara::SpecHelper.spec '#has_css?' do
 
   context 'with predicates_wait == true' do
     it 'should wait for content to appear', requires: [:js] do
-      Capybara.predicates_wait = true
-      Capybara.default_max_wait_time = 2
+      Capybara.configure do |c|
+        c.predicates_wait = true
+        c.default_max_wait_time = 2
+      end
       @session.visit('/with_js')
       @session.click_link('Click me')
       expect(@session.has_css?("input[type='submit'][value='New Here']")).to be true
@@ -114,8 +116,10 @@ Capybara::SpecHelper.spec '#has_css?' do
 
   context 'with predicates_wait == false' do
     before do
-      Capybara.predicates_wait = false
-      Capybara.default_max_wait_time = 5
+      Capybara.configure do |c|
+        c.predicates_wait = false
+        c.default_max_wait_time = 5
+      end
       @session.visit('/with_js')
       @session.click_link('Click me')
     end
@@ -253,7 +257,7 @@ Capybara::SpecHelper.spec '#has_no_css?' do
   end
 
   it 'should wait for content to disappear', requires: [:js] do
-    Capybara.default_max_wait_time = 2
+    Capybara.configure { |c| c.default_max_wait_time = 2 }
     @session.visit('/with_js')
     @session.click_link('Click me')
     expect(@session).to have_no_css('p#change')

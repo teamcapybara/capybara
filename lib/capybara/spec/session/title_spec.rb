@@ -7,9 +7,9 @@ Capybara::SpecHelper.spec '#title' do
   end
 
   context 'with css as default selector' do
-    before { Capybara.default_selector = :css }
+    before { Capybara.configure { |c| c.default_selector = :css } }
 
-    after { Capybara.default_selector = :xpath }
+    after { Capybara.configure { |c| c.default_selector = :xpath } }
 
     it 'should get the title of the page' do
       @session.visit('/with_title')

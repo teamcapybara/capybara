@@ -25,22 +25,22 @@ RSpec.describe Capybara::Server do
     begin
       app = proc { |_env| [200, {}, ['Hello Server!']] }
 
-      Capybara.server_host = '127.0.0.1'
+      Capybara.configure { |c| c.server_host = '127.0.0.1' }
       server = Capybara::Server.new(app).boot
       res = Net::HTTP.get(URI("http://127.0.0.1:#{server.port}"))
       expect(res).to eq('Hello Server!')
 
-      Capybara.server_host = '0.0.0.0'
+      Capybara.configure { |c| c.server_host = '0.0.0.0' }
       server = Capybara::Server.new(app).boot
       res = Net::HTTP.get(URI("http://127.0.0.1:#{server.port}"))
       expect(res).to eq('Hello Server!')
     ensure
-      Capybara.server_host = nil
+      Capybara.configure { |c| c.server_host = nil }
     end
   end
 
   it 'should use specified port' do
-    Capybara.server_port = 22789
+    Capybara.configure { |c| c.server_port = 22789 }
 
     app = proc { |_env| [200, {}, ['Hello Server!']] }
     server = Capybara::Server.new(app).boot
@@ -48,7 +48,7 @@ RSpec.describe Capybara::Server do
     res = Net::HTTP.start(server.host, 22789) { |http| http.get('/') }
     expect(res.body).to include('Hello Server')
 
-    Capybara.server_port = nil
+    Capybara.configure { |c| c.server_port = nil }
   end
 
   it 'should use given port' do
@@ -58,7 +58,7 @@ RSpec.describe Capybara::Server do
     res = Net::HTTP.start(server.host, 22790) { |http| http.get('/') }
     expect(res.body).to include('Hello Server')
 
-    Capybara.server_port = nil
+    Capybara.configure { |c| c.server_port = nil }
   end
 
   it 'should find an available port' do

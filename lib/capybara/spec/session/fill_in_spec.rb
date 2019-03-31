@@ -149,7 +149,7 @@ Capybara::SpecHelper.spec '#fill_in' do
   end
 
   it 'should wait for asynchronous load', requires: [:js] do
-    Capybara.default_max_wait_time = 2
+    Capybara.configure { |c| c.default_max_wait_time = 2 }
     @session.visit('/with_js')
     @session.click_link('Click me')
     @session.fill_in('new_field', with: 'Testing...')
@@ -168,7 +168,7 @@ Capybara::SpecHelper.spec '#fill_in' do
   end
 
   it 'fills in a field if default_set_options is nil' do
-    Capybara.default_set_options = nil
+    Capybara.configure { |c| c.default_set_options = nil }
     @session.fill_in(:form_first_name, with: 'Thomas')
     @session.click_button('awesome')
     expect(extract_results(@session)['first_name']).to eq('Thomas')
@@ -195,9 +195,9 @@ Capybara::SpecHelper.spec '#fill_in' do
   end
 
   context 'with ignore_hidden_fields' do
-    before { Capybara.ignore_hidden_elements = true }
+    before { Capybara.configure { |c| c.ignore_hidden_elements = true } }
 
-    after  { Capybara.ignore_hidden_elements = false }
+    after  { Capybara.configure { |c| c.ignore_hidden_elements = false } }
 
     it 'should not find a hidden field' do
       msg = /Unable to find visible field "Super Secret"/

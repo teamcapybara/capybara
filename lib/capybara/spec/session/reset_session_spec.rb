@@ -99,11 +99,11 @@ Capybara::SpecHelper.spec '#reset_session!' do
     let!(:orig_reuse_server) { Capybara.reuse_server }
 
     before do
-      Capybara.reuse_server = false
+      Capybara.configure { |c| c.reuse_server = false }
     end
 
     after do
-      Capybara.reuse_server = orig_reuse_server
+      Capybara.configure { |c| c.reuse_server = orig_reuse_server }
     end
 
     it 'raises any standard errors caught inside the server during a second session', requires: [:server] do
@@ -124,7 +124,7 @@ Capybara::SpecHelper.spec '#reset_session!' do
   it 'raises configured errors caught inside the server', requires: [:server] do
     prev_errors = Capybara.server_errors.dup
 
-    Capybara.server_errors = [LoadError]
+    Capybara.configure { |c| c.server_errors = [LoadError] }
     quietly { @session.visit('/error') }
     expect do
       @session.reset_session!
@@ -135,11 +135,11 @@ Capybara::SpecHelper.spec '#reset_session!' do
       @session.reset_session!
     end.to raise_error(LoadError)
 
-    Capybara.server_errors = prev_errors
+    Capybara.configure { |c| c.server_errors = prev_errors }
   end
 
   it 'ignores server errors when `Capybara.raise_server_errors = false`', requires: [:server] do
-    Capybara.raise_server_errors = false
+    Capybara.configure { |c| c.raise_server_errors = false }
     quietly { @session.visit('/error') }
     @session.reset_session!
     @session.visit('/')

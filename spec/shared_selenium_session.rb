@@ -109,7 +109,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
 
       it 'should fill in if the option is set via global option' do
-        Capybara.default_set_options = { clear: :backspace }
+        Capybara.configure { |c| c.default_set_options = { clear: :backspace } }
         session.visit('/form')
         session.fill_in('form_first_name', with: 'Thomas')
         expect(session.find(:fillable_field, 'form_first_name').value).to eq('Thomas')
@@ -386,7 +386,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           skip "Safari doesn't support multiple sessions" if safari?(session)
           # NOTE: Although Capybara.SpecHelper.reset! sets Capybara.disable_animation to false,
           # it doesn't affect any of these tests because the settings are applied per-session
-          Capybara.disable_animation = true
+          Capybara.configure { |c| c.disable_animation = true }
           @animation_session = Capybara::Session.new(session.mode, TestApp.new)
         end
 
@@ -408,7 +408,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           skip "safaridriver doesn't support multiple sessions" if safari?(session)
           # NOTE: Although Capybara.SpecHelper.reset! sets Capybara.disable_animation to false,
           # it doesn't affect any of these tests because the settings are applied per-session
-          Capybara.disable_animation = '#with_animation a'
+          Capybara.configure { |c| c.disable_animation = '#with_animation a' }
           @animation_session_with_matching_css = Capybara::Session.new(session.mode, TestApp.new)
         end
 
@@ -430,7 +430,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           skip "Safari doesn't support multiple sessions" if safari?(session)
           # NOTE: Although Capybara.SpecHelper.reset! sets Capybara.disable_animation to false,
           # it doesn't affect any of these tests because the settings are applied per-session
-          Capybara.disable_animation = '.this-class-matches-nothing'
+          Capybara.configure { |c| c.disable_animation = '.this-class-matches-nothing' }
           @animation_session_without_matching_css = Capybara::Session.new(session.mode, TestApp.new)
         end
 

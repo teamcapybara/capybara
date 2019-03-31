@@ -130,7 +130,7 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'should use global default options' do
-      Capybara.default_set_options = { clear: :backspace }
+      Capybara.configure { |c| c.default_set_options = { clear: :backspace } }
       element = @session.first(:fillable_field, type: 'text')
       allow(element.base).to receive(:set)
       element.set('gorilla')
@@ -234,7 +234,7 @@ Capybara::SpecHelper.spec 'node' do
 
   describe '#visible?' do
     it 'should extract node visibility' do
-      Capybara.ignore_hidden_elements = false
+      Capybara.configure { |c| c.ignore_hidden_elements = false }
       expect(@session.first('//a')).to be_visible
 
       expect(@session.find('//div[@id="hidden"]')).not_to be_visible
@@ -245,7 +245,7 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'should be boolean' do
-      Capybara.ignore_hidden_elements = false
+      Capybara.configure { |c| c.ignore_hidden_elements = false }
       expect(@session.first('//a').visible?).to be true
       expect(@session.find('//div[@id="hidden"]').visible?).to be false
     end
@@ -634,9 +634,9 @@ Capybara::SpecHelper.spec 'node' do
 
   describe '#reload', requires: [:js] do
     context 'without automatic reload' do
-      before { Capybara.automatic_reload = false }
+      before { Capybara.configure { |c| c.automatic_reload = false } }
 
-      after { Capybara.automatic_reload = true }
+      after { Capybara.configure { |c| c.automatic_reload = true } }
 
       it 'should reload the current context of the node' do
         @session.visit('/with_js')
@@ -671,7 +671,7 @@ Capybara::SpecHelper.spec 'node' do
 
     context 'with automatic reload' do
       before do
-        Capybara.default_max_wait_time = 4
+        Capybara.configure { |c| c.default_max_wait_time = 4 }
       end
 
       it 'should reload the current context of the node automatically' do

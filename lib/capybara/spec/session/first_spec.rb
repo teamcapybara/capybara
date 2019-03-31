@@ -50,7 +50,7 @@ Capybara::SpecHelper.spec '#first' do
   end
 
   context 'with css as default selector' do
-    before { Capybara.default_selector = :css }
+    before { Capybara.configure { |c| c.default_selector = :css } }
 
     it 'should find the first element using the given locator' do
       expect(@session.first('h1').text).to eq('This is a test')
@@ -99,11 +99,11 @@ Capybara::SpecHelper.spec '#first' do
     end
 
     it 'should default to Capybara.ignore_hidden_elements' do
-      Capybara.ignore_hidden_elements = true
+      Capybara.configure { |c| c.ignore_hidden_elements = true }
       expect do
         @session.first(:css, 'a#invisible')
       end.to raise_error Capybara::ElementNotFound
-      Capybara.ignore_hidden_elements = false
+      Capybara.configure { |c| c.ignore_hidden_elements = false }
       expect(@session.first(:css, 'a#invisible')).to be_truthy
       expect(@session.first(:css, 'a')).to be_truthy
     end

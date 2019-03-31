@@ -81,9 +81,9 @@ Capybara::SpecHelper.spec '#within' do
   end
 
   context 'with the default selector set to CSS' do
-    before { Capybara.default_selector = :css }
+    before { Capybara.configure { |c| c.default_selector = :css } }
 
-    after { Capybara.default_selector = :xpath }
+    after { Capybara.configure { |c| c.default_selector = :xpath } }
 
     it 'should use CSS' do
       @session.within('#for_bar li', text: 'With Simple HTML') do

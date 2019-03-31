@@ -24,7 +24,7 @@ Capybara::SpecHelper.spec '#find' do
   end
 
   it 'should wait for asynchronous load', requires: [:js] do
-    Capybara.default_max_wait_time = 2
+    Capybara.configure { |c| c.default_max_wait_time = 2 }
     @session.visit('/with_js')
     @session.click_link('Click me')
     expect(@session.find(:css, 'a#has-been-clicked').text).to include('Has been clicked')
@@ -217,9 +217,9 @@ Capybara::SpecHelper.spec '#find' do
   end
 
   context 'with css as default selector' do
-    before { Capybara.default_selector = :css }
+    before { Capybara.configure { |c| c.default_selector = :css } }
 
-    after { Capybara.default_selector = :xpath }
+    after { Capybara.configure { |c| c.default_selector = :xpath } }
 
     it 'should find the first element using the given locator' do
       expect(@session.find('h1').text).to eq('This is a test')
@@ -254,11 +254,11 @@ Capybara::SpecHelper.spec '#find' do
     end
 
     it 'defaults to `Capybara.exact`' do
-      Capybara.exact = true
+      Capybara.configure { |c| c.exact = true }
       expect do
         @session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is('est_fiel')])
       end.to raise_error(Capybara::ElementNotFound)
-      Capybara.exact = false
+      Capybara.configure { |c| c.exact = false }
       @session.find(:xpath, XPath.descendant(:input)[XPath.attr(:id).is('est_fiel')])
     end
 
@@ -410,11 +410,11 @@ Capybara::SpecHelper.spec '#find' do
     end
 
     it 'defaults to `Capybara.match`' do
-      Capybara.match = :one
+      Capybara.configure { |c| c.match = :one }
       expect do
         @session.find(:css, '.multiple')
       end.to raise_error(Capybara::Ambiguous)
-      Capybara.match = :first
+      Capybara.configure { |c| c.match = :first }
       expect(@session.find(:css, '.multiple').text).to eq('multiple one')
     end
 
@@ -455,22 +455,22 @@ Capybara::SpecHelper.spec '#find' do
 
   context 'with Capybara.test_id' do
     it 'should not match on it when nil' do
-      Capybara.test_id = nil
+      Capybara.configure { |c| c.test_id = nil }
       expect(@session).not_to have_field('test_id')
     end
 
     it 'should work with the attribute set to `data-test-id` attribute' do
-      Capybara.test_id = 'data-test-id'
+      Capybara.configure { |c| c.test_id = 'data-test-id' }
       expect(@session.find(:field, 'test_id')[:id]).to eq 'test_field'
     end
 
     it 'should use a different attribute if set' do
-      Capybara.test_id = 'data-other-test-id'
+      Capybara.configure { |c| c.test_id = 'data-other-test-id' }
       expect(@session.find(:field, 'test_id')[:id]).to eq 'normal'
     end
 
     it 'should find a link with the test_id' do
-      Capybara.test_id = 'data-test-id'
+      Capybara.configure { |c| c.test_id = 'data-test-id' }
       expect(@session.find(:link, 'test-foo')[:id]).to eq 'foo'
     end
   end

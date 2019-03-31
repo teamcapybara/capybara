@@ -18,7 +18,7 @@ Capybara::SpecHelper.spec '#has_selector?' do
   end
 
   it 'should use default selector' do
-    Capybara.default_selector = :css
+    Capybara.configure { |c| c.default_selector = :css }
     expect(@session).not_to have_selector('p a#doesnotexist')
     expect(@session).to have_selector('p a#foo')
   end
@@ -63,9 +63,9 @@ Capybara::SpecHelper.spec '#has_selector?' do
     it 'should respect visibility setting' do
       expect(@session).to have_selector(:id, 'hidden-text', text: 'Some of this text is hidden!', visible: false)
       expect(@session).not_to have_selector(:id, 'hidden-text', text: 'Some of this text is hidden!', visible: true)
-      Capybara.ignore_hidden_elements = false
+      Capybara.configure { |c| c.ignore_hidden_elements = false }
       expect(@session).to have_selector(:id, 'hidden-text', text: 'Some of this text is hidden!', visible: false)
-      Capybara.visible_text_only = true
+      Capybara.configure { |c| c.visible_text_only = true }
       expect(@session).not_to have_selector(:id, 'hidden-text', text: 'Some of this text is hidden!', visible: true)
     end
 
@@ -83,7 +83,7 @@ Capybara::SpecHelper.spec '#has_selector?' do
     context 'with whitespace normalization' do
       context 'Capybara.default_normalize_ws = false' do
         it 'should support normalize_ws option' do
-          Capybara.default_normalize_ws = false
+          Capybara.configure { |c| c.default_normalize_ws = false }
           expect(@session).not_to have_selector(:id, 'second', text: 'text with whitespace')
           expect(@session).to have_selector(:id, 'second', text: 'text with whitespace', normalize_ws: true)
         end
@@ -91,7 +91,7 @@ Capybara::SpecHelper.spec '#has_selector?' do
 
       context 'Capybara.default_normalize_ws = true' do
         it 'should support normalize_ws option' do
-          Capybara.default_normalize_ws = true
+          Capybara.configure { |c| c.default_normalize_ws = true }
           expect(@session).to have_selector(:id, 'second', text: 'text with whitespace')
           expect(@session).not_to have_selector(:id, 'second', text: 'text with whitespace', normalize_ws: false)
         end
@@ -147,7 +147,7 @@ Capybara::SpecHelper.spec '#has_no_selector?' do
   end
 
   it 'should use default selector' do
-    Capybara.default_selector = :css
+    Capybara.configure { |c| c.default_selector = :css }
     expect(@session).to have_no_selector('p a#doesnotexist')
     expect(@session).not_to have_no_selector('p a#foo')
   end

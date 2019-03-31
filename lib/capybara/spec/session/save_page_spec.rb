@@ -4,12 +4,12 @@ Capybara::SpecHelper.spec '#save_page' do
   let(:alternative_path) { File.join(Dir.pwd, 'save_and_open_page_tmp') }
   before do
     @old_save_path = Capybara.save_path
-    Capybara.save_path = nil
+    Capybara.configure { |c| c.save_path = nil }
     @session.visit('/foo')
   end
 
   after do
-    Capybara.save_path = @old_save_path
+    Capybara.configure { |c| c.save_path = @old_save_path }
     Dir.glob('capybara-*.html').each do |file|
       FileUtils.rm(file)
     end
@@ -29,7 +29,7 @@ Capybara::SpecHelper.spec '#save_page' do
   end
 
   it 'can store files in a specified directory' do
-    Capybara.save_path = alternative_path
+    Capybara.configure { |c| c.save_path = alternative_path }
     @session.save_page
     path = Dir.glob(alternative_path + '/capybara-*.html').first
     expect(File.read(path)).to include('Another World')
@@ -41,14 +41,14 @@ Capybara::SpecHelper.spec '#save_page' do
   end
 
   it 'can store files in a specified directory with a given filename' do
-    Capybara.save_path = alternative_path
+    Capybara.configure { |c| c.save_path = alternative_path }
     @session.save_page('capybara-001133.html')
     path = alternative_path + '/capybara-001133.html'
     expect(File.read(path)).to include('Another World')
   end
 
   it 'can store files in a specified directory with a given relative filename' do
-    Capybara.save_path = alternative_path
+    Capybara.configure { |c| c.save_path = alternative_path }
     @session.save_page('tmp/capybara-001144.html')
     path = alternative_path + '/tmp/capybara-001144.html'
     expect(File.read(path)).to include('Another World')
@@ -61,16 +61,16 @@ Capybara::SpecHelper.spec '#save_page' do
   end
 
   it 'returns an absolute path in given directory' do
-    Capybara.save_path = alternative_path
+    Capybara.configure { |c| c.save_path = alternative_path }
     result = @session.save_page
     path = File.expand_path(Dir.glob(alternative_path + '/capybara-*.html').first, alternative_path)
     expect(result).to eq(path)
   end
 
   context 'asset_host contains a string' do
-    before { Capybara.asset_host = 'http://example.com' }
+    before { Capybara.configure { |c| c.asset_host = 'http://example.com' } }
 
-    after { Capybara.asset_host = nil }
+    after { Capybara.configure { |c| c.asset_host = nil } }
 
     it 'prepends base tag with value from asset_host to the head' do
       @session.visit('/with_js')
@@ -81,7 +81,7 @@ Capybara::SpecHelper.spec '#save_page' do
     end
 
     it "doesn't prepend base tag to pages when asset_host is nil" do
-      Capybara.asset_host = nil
+      Capybara.configure { |c| c.asset_host = nil }
       @session.visit('/with_js')
       path = @session.save_page
 

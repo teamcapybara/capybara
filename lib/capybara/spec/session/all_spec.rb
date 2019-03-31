@@ -16,7 +16,7 @@ Capybara::SpecHelper.spec '#all' do
   end
 
   it 'should wait for matching elements to appear', requires: [:js] do
-    Capybara.default_max_wait_time = 2
+    Capybara.configure { |c| c.default_max_wait_time = 2 }
     @session.visit('/with_js')
     @session.click_link('Click me')
     expect(@session.all(:css, 'a#has-been-clicked')).not_to be_empty
@@ -64,7 +64,7 @@ Capybara::SpecHelper.spec '#all' do
   end
 
   context 'with css as default selector' do
-    before { Capybara.default_selector = :css }
+    before { Capybara.configure { |c| c.default_selector = :css } }
 
     it 'should find the first element using the given locator' do
       expect(@session.all('h1').first.text).to eq('This is a test')
@@ -82,15 +82,15 @@ Capybara::SpecHelper.spec '#all' do
     end
 
     it 'should default to Capybara.ignore_hidden_elements' do
-      Capybara.ignore_hidden_elements = true
+      Capybara.configure { |c| c.ignore_hidden_elements = true }
       expect(@session.all(:css, 'a.simple').size).to eq(1)
-      Capybara.ignore_hidden_elements = false
+      Capybara.configure { |c| c.ignore_hidden_elements = false }
       expect(@session.all(:css, 'a.simple').size).to eq(2)
     end
 
     context 'with per session config', requires: [:psc] do
       it 'should use the sessions ignore_hidden_elements', psc: true do
-        Capybara.ignore_hidden_elements = true
+        Capybara.configure { |c| c.ignore_hidden_elements = true }
         @session.config.ignore_hidden_elements = false
         expect(Capybara.ignore_hidden_elements).to eq(true)
         expect(@session.all(:css, 'a.simple').size).to eq(2)

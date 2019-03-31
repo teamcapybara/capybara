@@ -16,7 +16,7 @@ Capybara::SpecHelper.spec '#assert_text' do
   end
 
   context 'with enabled default collapsing whitespace' do
-    before { Capybara.default_normalize_ws = true }
+    before { Capybara.configure { |c| c.default_normalize_ws = true } }
 
     it 'should be true if the given unnormalized text is on the page' do
       @session.visit('/with_html')
@@ -51,7 +51,7 @@ Capybara::SpecHelper.spec '#assert_text' do
   end
 
   it 'should be true if `Capybara.ignore_hidden_elements = true` and text is invisible.' do
-    Capybara.ignore_hidden_elements = false
+    Capybara.configure { |c| c.ignore_hidden_elements = false }
     @session.visit('/with_html')
     expect(@session.assert_text('Some of this text is hidden!')).to eq(true)
   end
@@ -106,7 +106,7 @@ Capybara::SpecHelper.spec '#assert_text' do
   end
 
   it 'should wait for text to appear', requires: [:js] do
-    Capybara.default_max_wait_time = 2
+    Capybara.configure { |c| c.default_max_wait_time = 2 }
     @session.visit('/with_js')
     @session.click_link('Click me')
     expect(@session.assert_text('Has been clicked')).to eq(true)

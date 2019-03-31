@@ -130,9 +130,10 @@ Capybara::SpecHelper.spec '#check' do
   context 'when checkbox hidden' do
     context 'with Capybara.automatic_label_click == true' do
       around do |spec|
-        old_click_label, Capybara.automatic_label_click = Capybara.automatic_label_click, true
+        old_click_label = Capybara.automatic_label_click
+        Capybara.configure { |c| c.automatic_label_click = true }
         spec.run
-        Capybara.automatic_label_click = old_click_label
+        Capybara.configure { |c| c.automatic_label_click = old_click_label }
       end
 
       it 'should check via clicking the label with :for attribute if possible' do
@@ -181,9 +182,10 @@ Capybara::SpecHelper.spec '#check' do
 
     context 'with Capybara.automatic_label_click == false' do
       around do |spec|
-        old_label_click, Capybara.automatic_label_click = Capybara.automatic_label_click, false
+        old_label_click = Capybara.automatic_label_click
+        Capybara.configure { |c| c.automatic_label_click = false }
         spec.run
-        Capybara.automatic_label_click = old_label_click
+        Capybara.configure { |c| c.automatic_label_click = old_label_click }
       end
 
       it 'should raise error if checkbox not visible' do

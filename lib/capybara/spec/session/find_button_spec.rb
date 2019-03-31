@@ -12,12 +12,12 @@ Capybara::SpecHelper.spec '#find_button' do
 
   context 'aria_label attribute with Capybara.enable_aria_label' do
     it 'should find when true' do
-      Capybara.enable_aria_label = true
+      Capybara.configure { |c| c.enable_aria_label = true }
       expect(@session.find_button('Mediocre Button')[:id]).to eq('mediocre')
     end
 
     it 'should not find when false' do
-      Capybara.enable_aria_label = false
+      Capybara.configure { |c| c.enable_aria_label = false }
       expect { @session.find_button('Mediocre Button') }.to raise_error(Capybara::ElementNotFound)
     end
   end

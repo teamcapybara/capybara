@@ -16,7 +16,7 @@ Capybara::SpecHelper.spec '#have_all_of_selectors' do
   end
 
   it 'should use default selector' do
-    Capybara.default_selector = :css
+    Capybara.configure { |c| c.default_selector = :css }
     expect(@session).to have_all_of_selectors('p a#foo', 'h2#h2two', 'h2#h2one')
     expect do
       expect(@session).to have_all_of_selectors('p a#foo', 'h2#h2three', 'h2#h2one')

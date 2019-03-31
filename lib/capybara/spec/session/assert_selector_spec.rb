@@ -18,7 +18,7 @@ Capybara::SpecHelper.spec '#assert_selector' do
   end
 
   it 'should use default selector' do
-    Capybara.default_selector = :css
+    Capybara.configure { |c| c.default_selector = :css }
     expect { @session.assert_selector('p a#doesnotexist') }.to raise_error(Capybara::ElementNotFound)
     @session.assert_selector('p a#foo')
   end
@@ -90,7 +90,7 @@ Capybara::SpecHelper.spec '#assert_no_selector' do
   end
 
   it 'should use default selector' do
-    Capybara.default_selector = :css
+    Capybara.configure { |c| c.default_selector = :css }
     @session.assert_no_selector('p a#doesnotexist')
     expect { @session.assert_no_selector('p a#foo') }.to raise_error(Capybara::ElementNotFound)
   end

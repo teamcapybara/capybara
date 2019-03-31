@@ -14,7 +14,7 @@ Capybara::SpecHelper.spec '#assert_all_of_selectors' do
   end
 
   it 'should use default selector' do
-    Capybara.default_selector = :css
+    Capybara.configure { |c| c.default_selector = :css }
     expect { @session.assert_all_of_selectors('p a#foo', 'h2#h2three', 'h2#h2one') }.to raise_error(Capybara::ElementNotFound)
     @session.assert_all_of_selectors('p a#foo', 'h2#h2two', 'h2#h2one')
   end
@@ -73,7 +73,7 @@ Capybara::SpecHelper.spec '#assert_none_of_selectors' do
   end
 
   it 'should use default selector' do
-    Capybara.default_selector = :css
+    Capybara.configure { |c| c.default_selector = :css }
     @session.assert_none_of_selectors('p a#doesnotexist', 'abbr')
     expect { @session.assert_none_of_selectors('abbr', 'p a#foo') }.to raise_error(Capybara::ElementNotFound)
   end
@@ -129,7 +129,7 @@ Capybara::SpecHelper.spec '#assert_any_of_selectors' do
   end
 
   it 'should use default selector' do
-    Capybara.default_selector = :css
+    Capybara.configure { |c| c.default_selector = :css }
     expect { @session.assert_any_of_selectors('h2#h2three', 'h5#h5five') }.to raise_error(Capybara::ElementNotFound)
     @session.assert_any_of_selectors('p a#foo', 'h2#h2two', 'h2#h2one')
   end
