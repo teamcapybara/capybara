@@ -84,7 +84,7 @@ Capybara::SpecHelper.spec '#choose' do
   context 'with hidden radio buttons' do
     context 'with Capybara.automatic_label_click == true' do
       around do |spec|
-        old_click_label = Capybara.automatic_label_click
+        old_click_label = Capybara.session_options.automatic_label_click
         Capybara.configure { |c| c.automatic_label_click = true }
         spec.run
         Capybara.configure { |c| c.automatic_label_click = old_click_label }

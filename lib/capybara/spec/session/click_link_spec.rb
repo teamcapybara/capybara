@@ -208,7 +208,7 @@ Capybara::SpecHelper.spec '#click_link' do
   it 'can download a file', requires: [:download] do
     # This requires the driver used for the test to be configured
     # to download documents with the mime type "text/csv"
-    download_file = File.join(Capybara.save_path, 'download.csv')
+    download_file = File.join(Capybara.session_options.save_path, 'download.csv')
     expect(File).not_to exist(download_file)
     @session.click_link('Download Me')
     sleep 2 # allow time for file to download

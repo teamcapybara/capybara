@@ -78,7 +78,7 @@ RSpec.describe Capybara::Server do
     begin
       key = File.join(Dir.pwd, 'spec', 'fixtures', 'key.pem')
       cert = File.join(Dir.pwd, 'spec', 'fixtures', 'certificate.pem')
-      Capybara.server = :puma, { Host: "ssl://#{Capybara.server_host}?key=#{key}&cert=#{cert}" }
+      Capybara.server = :puma, { Host: "ssl://#{Capybara.session_options.server_host}?key=#{key}&cert=#{cert}" }
       app = proc { |_env| [200, {}, ['Hello SSL Server!']] }
       server = Capybara::Server.new(app).boot
 

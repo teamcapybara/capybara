@@ -117,17 +117,17 @@ RSpec.describe Capybara::DSL do
 
   # rubocop:disable RSpec/InstanceVariable
   describe '#using_wait_time' do
-    before { @previous_wait_time = Capybara.default_max_wait_time }
+    before { @previous_wait_time = Capybara.session_options.default_max_wait_time }
 
     after { Capybara.configure { |c| c.default_max_wait_time = @previous_wait_time } }
 
     it 'should switch the wait time and switch it back' do
       in_block = nil
       Capybara.using_wait_time 6 do
-        in_block = Capybara.default_max_wait_time
+        in_block = Capybara.session_options.default_max_wait_time
       end
       expect(in_block).to eq(6)
-      expect(Capybara.default_max_wait_time).to eq(@previous_wait_time)
+      expect(Capybara.session_options.default_max_wait_time).to eq(@previous_wait_time)
     end
 
     it 'should ensure wait time is reset' do
@@ -136,7 +136,7 @@ RSpec.describe Capybara::DSL do
           raise 'hell'
         end
       end.to raise_error(RuntimeError, 'hell')
-      expect(Capybara.default_max_wait_time).to eq(@previous_wait_time)
+      expect(Capybara.session_options.default_max_wait_time).to eq(@previous_wait_time)
     end
   end
   # rubocop:enable RSpec/InstanceVariable

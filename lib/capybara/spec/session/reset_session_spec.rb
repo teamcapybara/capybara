@@ -122,7 +122,7 @@ Capybara::SpecHelper.spec '#reset_session!' do
   end
 
   it 'raises configured errors caught inside the server', requires: [:server] do
-    prev_errors = Capybara.server_errors.dup
+    prev_errors = Capybara.session_options.server_errors.dup
 
     Capybara.configure { |c| c.server_errors = [LoadError] }
     quietly { @session.visit('/error') }

@@ -3,7 +3,7 @@
 Capybara::SpecHelper.spec '#save_page' do
   let(:alternative_path) { File.join(Dir.pwd, 'save_and_open_page_tmp') }
   before do
-    @old_save_path = Capybara.save_path
+    @old_save_path = Capybara.session_options.save_path
     Capybara.configure { |c| c.save_path = nil }
     @session.visit('/foo')
   end

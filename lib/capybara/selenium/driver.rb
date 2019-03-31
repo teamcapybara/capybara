@@ -93,7 +93,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def evaluate_async_script(script, *args)
-    browser.manage.timeouts.script_timeout = Capybara.default_max_wait_time
+    browser.manage.timeouts.script_timeout = Capybara.session_options.default_max_wait_time
     result = browser.execute_async_script(script, *native_args(args))
     unwrap_script_result(result)
   end

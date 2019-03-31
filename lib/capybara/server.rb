@@ -20,9 +20,9 @@ module Capybara
 
     def initialize(app,
                    *deprecated_options,
-                   port: Capybara.server_port,
-                   host: Capybara.server_host,
-                   reportable_errors: Capybara.server_errors,
+                   port: Capybara.session_options.server_port,
+                   host: Capybara.session_options.server_host,
+                   reportable_errors: Capybara.session_options.server_errors,
                    extra_middleware: [])
       warn 'Positional arguments, other than the application, to Server#new are deprecated, please use keyword arguments' unless deprecated_options.empty?
       @app = app

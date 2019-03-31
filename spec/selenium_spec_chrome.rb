@@ -13,7 +13,7 @@ browser_options.add_option(:w3c, !!ENV['W3C'])
 
 Capybara.register_driver :selenium_chrome do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options, timeout: 30).tap do |driver|
-    driver.browser.download_path = Capybara.save_path
+    driver.browser.download_path = Capybara.session_options.save_path
   end
 end
 

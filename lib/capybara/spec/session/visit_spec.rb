@@ -149,7 +149,7 @@ Capybara::SpecHelper.spec '#visit' do
       Capybara.configure { |c| c.app_host = "http://#{@session.server.host}:#{@session.server.port}" }
       another_session.visit('/foo')
       expect(another_session).to have_content('Another World')
-      expect(another_session.current_url).to start_with(Capybara.app_host)
+      expect(another_session.current_url).to start_with(Capybara.session_options.app_host)
       expect(URI.parse(another_session.current_url).port).not_to eq another_session.server.port
       expect(URI.parse(another_session.current_url).port).to eq @session.server.port
     end

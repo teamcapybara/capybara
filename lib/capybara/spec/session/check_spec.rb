@@ -130,7 +130,7 @@ Capybara::SpecHelper.spec '#check' do
   context 'when checkbox hidden' do
     context 'with Capybara.automatic_label_click == true' do
       around do |spec|
-        old_click_label = Capybara.automatic_label_click
+        old_click_label = Capybara.session_options.automatic_label_click
         Capybara.configure { |c| c.automatic_label_click = true }
         spec.run
         Capybara.configure { |c| c.automatic_label_click = old_click_label }
@@ -182,7 +182,7 @@ Capybara::SpecHelper.spec '#check' do
 
     context 'with Capybara.automatic_label_click == false' do
       around do |spec|
-        old_label_click = Capybara.automatic_label_click
+        old_label_click = Capybara.session_options.automatic_label_click
         Capybara.configure { |c| c.automatic_label_click = false }
         spec.run
         Capybara.configure { |c| c.automatic_label_click = old_label_click }

@@ -4,14 +4,14 @@ require 'spec_helper'
 
 RSpec.describe Capybara do
   describe 'default_max_wait_time' do
-    before { @previous_default_time = Capybara.default_max_wait_time }
+    before { @previous_default_time = Capybara.session_options.default_max_wait_time }
 
     after { Capybara.configure { |c| c.default_max_wait_time = @previous_default_time } } # rubocop:disable RSpec/InstanceVariable
 
     it 'should be changeable' do
-      expect(Capybara.default_max_wait_time).not_to eq(5)
-      Capybara.default_max_wait_time = 5
-      expect(Capybara.default_max_wait_time).to eq(5)
+      expect(Capybara.session_options.default_max_wait_time).not_to eq(5)
+      Capybara.configure { |c| c.default_max_wait_time = 5 }
+      expect(Capybara.session_options.default_max_wait_time).to eq(5)
     end
   end
 
@@ -96,7 +96,7 @@ RSpec.describe Capybara do
 
   describe 'default_host' do
     around do |test|
-      old_default = Capybara.default_host
+      old_default = Capybara.session_options.default_host
       test.run
       Capybara.configure { |c| c.default_host = old_default }
     end

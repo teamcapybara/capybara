@@ -54,11 +54,11 @@ module Capybara
     # @!method always_include_port
     #   See {Capybara.configure}
     SessionConfig::OPTIONS.each do |method|
-      def_delegator :config, method
-      # define_method method do |*args, &block|
-      #   warn "s DEPRECATED: Capybara.#{method} is deprecated, please use Capybara.config.#{method} instead [ #{caller(1, 1).first} ]"
-      #   config.send(method, *args, &block)
-      # end
+      # def_delegators :config, method, "#{method}="
+      define_method method do |*args, &block|
+        warn "DEPRECATED: Capybara.#{method} is deprecated, please use Capybara.session_options.#{method} instead [ #{caller(1, 1).first} ]"
+        config.send(method, *args, &block)
+      end
 
       define_method "#{method}=" do |*args, &block|
         warn "DEPRECATED: Capybara.#{method}= is deprecated, please use Capybara.configure instead [ #{caller(1, 1).first} ]"
@@ -248,7 +248,7 @@ module Capybara
     # @param [Integer] port              The port to run the application on
     #
     def run_default_server(app, port)
-      servers[:puma].call(app, port, server_host)
+      servers[:puma].call(app, port, session_options.server_host)
     end
 
     ##
@@ -297,7 +297,7 @@ module Capybara
     # Yield a block using a specific wait time
     #
     def using_wait_time(seconds)
-      previous_wait_time = Capybara.default_max_wait_time
+      previous_wait_time = Capybara.session_options.default_max_wait_time
       Capybara.configure { |c| c.default_max_wait_time = seconds }
       yield
     ensure

@@ -97,7 +97,7 @@ module Capybara
       end
 
       def default_type
-        Capybara.ignore_hidden_elements || Capybara.visible_text_only ? :visible : :all
+        Capybara.session_options.ignore_hidden_elements || Capybara.session_options.visible_text_only ? :visible : :all
       end
     end
   end
