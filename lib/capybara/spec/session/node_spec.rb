@@ -109,12 +109,24 @@ Capybara::SpecHelper.spec 'node' do
       expect(@session.first('//input').value).to eq('')
     end
 
-    it 'should raise if the text field is readonly' do
-      expect { @session.first('//input[@readonly]').set('changed') }.to raise_error(Capybara::ReadOnlyElementError)
-    end
+    if ENV['CAPYBARA_THOROUGH']
+      it 'should raise if the text field is readonly' do
+        expect { @session.first('//input[@readonly]').set('changed') }.to raise_error(Capybara::ReadOnlyElementError)
+      end
 
-    it 'should raise if the textarea is readonly' do
-      expect { @session.first('//textarea[@readonly]').set('changed') }.to raise_error(Capybara::ReadOnlyElementError)
+      it 'should raise if the textarea is readonly' do
+        expect { @session.first('//textarea[@readonly]').set('changed') }.to raise_error(Capybara::ReadOnlyElementError)
+      end
+    else
+      it 'should not change if the text field is readonly' do
+        @session.first('//input[@readonly]').set('changed')
+        expect(@session.first('//input[@readonly]').value).to eq 'should not change'
+      end
+
+      it 'should not change if the textarea is readonly' do
+        @session.first('//textarea[@readonly]').set('changed')
+        expect(@session.first('//textarea[@readonly]').value).to eq 'textarea should not change'
+      end
     end
 
     it 'should use global default options' do
@@ -125,7 +137,7 @@ Capybara::SpecHelper.spec 'node' do
       expect(element.base).to have_received(:set).with('gorilla', clear: :backspace)
     end
 
-    context 'with a contenteditable element', requires: [:js] do
+    context 'with a contenteditable element', requires: [:js], focus_: true do
       it 'should allow me to change the contents' do
         @session.visit('/with_js')
         @session.find(:css, '#existing_content_editable').set('WYSIWYG')
@@ -155,7 +167,7 @@ Capybara::SpecHelper.spec 'node' do
     end
   end
 
-  describe '#disabled?' do
+  describe '#disabled?', :focus_ do
     it 'should extract disabled node' do
       @session.visit('/form')
       expect(@session.find('//input[@id="customer_name"]')).to be_disabled

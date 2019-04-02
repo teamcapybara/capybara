@@ -56,9 +56,10 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def set(value, **options)
     raise ArgumentError, "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}" if value.is_a?(Array) && !multiple?
 
-    case tag_name
+    tag_name, type = attrs(:tagName, :type)
+    case tag_name.downcase
     when 'input'
-      case self[:type]
+      case type.downcase
       when 'radio'
         click
       when 'checkbox'
@@ -146,9 +147,8 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
 
   def disabled?
     return true unless native.enabled?
-
     # WebDriver only defines `disabled?` for form controls but fieldset makes sense too
-    tag_name == 'fieldset' && find_xpath('ancestor-or-self::fieldset[@disabled]').any?
+    find_xpath('self::fieldset/ancestor-or-self::fieldset[@disabled]').any?
   end
 
   def content_editable?
@@ -211,7 +211,7 @@ private
       # Clear field by JavaScript assignment of the value property.
       # Script can change a readonly element which user input cannot, so
       # don't execute if readonly.
-      driver.execute_script "arguments[0].value = ''", self unless clear == :none
+      driver.execute_script "if (!arguments[0].readOnly){ arguments[0].value = '' }", self unless clear == :none
       send_keys(value)
     end
   end
@@ -269,6 +269,7 @@ private
 
   def update_value_js(value)
     driver.execute_script(<<-JS, self, value)
+      if (arguments[0].readOnly) { return };
       if (document.activeElement !== arguments[0]){
         arguments[0].focus();
       }
@@ -350,6 +351,18 @@ private
 
   def build_node(native_node, initial_cache = {})
     self.class.new(driver, native_node, initial_cache)
+  end
+
+  def attrs(*attr_names)
+    return attr_names.map { |name| self[name.to_s] } if ENV['CAPYBARA_THOROUGH']
+
+    driver.evaluate_script <<~'JS', self, attr_names.map(&:to_s)
+      (function(el, names){
+        return names.map(function(name){
+          return el[name]
+        });
+      })(arguments[0], arguments[1]);
+    JS
   end
 
   GET_XPATH_SCRIPT = <<~'JS'
