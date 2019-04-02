@@ -137,7 +137,7 @@ Capybara::SpecHelper.spec 'node' do
       expect(element.base).to have_received(:set).with('gorilla', clear: :backspace)
     end
 
-    context 'with a contenteditable element', requires: [:js], focus_: true do
+    context 'with a contenteditable element', requires: [:js] do
       it 'should allow me to change the contents' do
         @session.visit('/with_js')
         @session.find(:css, '#existing_content_editable').set('WYSIWYG')
@@ -167,7 +167,7 @@ Capybara::SpecHelper.spec 'node' do
     end
   end
 
-  describe '#disabled?', :focus_ do
+  describe '#disabled?' do
     it 'should extract disabled node' do
       @session.visit('/form')
       expect(@session.find('//input[@id="customer_name"]')).to be_disabled

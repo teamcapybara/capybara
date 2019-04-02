@@ -478,6 +478,10 @@ RSpec.describe Capybara do
           Capybara::Selector[:link_or_button].expression_filters.delete(:random)
         end
 
+        it 'should not find links when disabled == true' do
+          expect(string.all(:link_or_button, disabled: true).size).to eq 0
+        end
+
         context 'when modified' do
           it 'should still work' do
             filter = Capybara::Selector[:link_or_button].expression_filters[:random]

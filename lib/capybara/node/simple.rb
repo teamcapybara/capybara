@@ -127,7 +127,8 @@ module Capybara
       #
       # @return [Boolean]     Whether the element is disabled
       def disabled?
-        native.has_attribute?('disabled')
+        native.has_attribute?('disabled') &&
+          %w[button input select textarea optgroup option menuitem fieldset].include?(tag_name)
       end
 
       ##
