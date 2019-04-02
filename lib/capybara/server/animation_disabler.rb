@@ -3,20 +3,10 @@
 module Capybara
   class Server
     class AnimationDisabler
-      def self.selector_for(css_or_bool)
-        case css_or_bool
-        when String
-          css_or_bool
-        when true
-          '*'
-        else
-          raise CapybaraError, 'Capybara.disable_animation supports either a String (the css selector to disable) or a boolean'
-        end
-      end
-
       def initialize(app)
         @app = app
-        @disable_markup = format(DISABLE_MARKUP_TEMPLATE, selector: self.class.selector_for(Capybara.session_options.disable_animation))
+        @disable_markup = format(DISABLE_MARKUP_TEMPLATE,
+                                 selector: selector_for(Capybara.session_options.disable_animation))
       end
 
       def call(env)
@@ -41,6 +31,17 @@ module Capybara
 
       def insert_disable(html)
         html.sub(%r{(</head>)}, disable_markup + '\\1')
+      end
+
+      def selector_for(css_or_bool)
+        case css_or_bool
+        when String
+          css_or_bool
+        when true
+          '*'
+        else
+          raise CapybaraError, 'Capybara.disable_animation supports either a String (the css selector to disable) or a boolean'
+        end
       end
 
       DISABLE_MARKUP_TEMPLATE = <<~HTML
