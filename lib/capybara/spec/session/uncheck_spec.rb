@@ -85,11 +85,11 @@ Capybara::SpecHelper.spec '#uncheck' do
       end
 
       it 'should raise original error when no label available' do
-        expect { @session.uncheck('form_cars_porsche') }.to raise_error(Capybara::ElementNotFound, 'Unable to find visible checkbox "form_cars_porsche"')
+        expect { @session.uncheck('form_cars_porsche') }.to raise_error(Capybara::ElementNotFound, /Unable to find visible checkbox "form_cars_porsche"/)
       end
 
       it 'should raise error if not allowed to click label' do
-        expect { @session.uncheck('form_cars_jaguar', allow_label_click: false) }.to raise_error(Capybara::ElementNotFound, 'Unable to find visible checkbox "form_cars_jaguar"')
+        expect { @session.uncheck('form_cars_jaguar', allow_label_click: false) }.to raise_error(Capybara::ElementNotFound, /Unable to find visible checkbox "form_cars_jaguar"/)
       end
 
       it 'should include node filter description in error if necessary' do

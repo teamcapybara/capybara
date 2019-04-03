@@ -627,8 +627,12 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
   describe 'have_button matcher' do
     let(:html) { '<button>A button</button><input type="submit" value="Another button"/>' }
 
-    it 'gives proper description' do
-      expect(have_button('A button').description).to eq('have visible button "A button"')
+    it 'gives proper description with no options' do
+      expect(have_button('A button').description).to eq('have visible button "A button" that is not disabled')
+    end
+
+    it 'gives proper description with disabled :any option' do
+      expect(have_button('A button', disabled: :all).description).to eq('have visible button "A button"')
     end
 
     it 'passes if there is such a button' do
@@ -698,7 +702,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
     end
 
     it 'gives proper description' do
-      expect(have_checked_field('it is checked').description).to eq('have visible field "it is checked" that is checked and not disabled')
+      expect(have_checked_field('it is checked').description).to eq('have visible field "it is checked" that is not disabled that is checked')
     end
 
     context 'with should' do
@@ -747,7 +751,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
     end
 
     it 'gives proper description' do
-      expect(have_unchecked_field('unchecked field').description).to eq('have visible field "unchecked field" that is not checked and not disabled')
+      expect(have_unchecked_field('unchecked field').description).to eq('have visible field "unchecked field" that is not disabled that is not checked')
     end
 
     context 'with should' do

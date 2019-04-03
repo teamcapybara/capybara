@@ -56,7 +56,7 @@ Capybara::SpecHelper.spec '#unselect' do
 
   context "with a locator that doesn't exist" do
     it 'should raise an error' do
-      msg = 'Unable to find select box "does not exist"'
+      msg = /Unable to find select box "does not exist"/
       expect do
         @session.unselect('foo', from: 'does not exist')
       end.to raise_error(Capybara::ElementNotFound, msg)
