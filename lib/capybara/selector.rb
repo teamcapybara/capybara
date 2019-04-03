@@ -7,28 +7,28 @@ Capybara::Selector::FilterSet.add(:_field) do
   node_filter(:checked, :boolean) { |node, value| !(value ^ node.checked?) }
   node_filter(:unchecked, :boolean) { |node, value| (value ^ node.checked?) }
   node_filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| !(value ^ node.disabled?) }
-  node_filter(:multiple, :boolean) { |node, value| !(value ^ node.multiple?) }
 
   expression_filter(:name) { |xpath, val| xpath[XPath.attr(:name) == val] }
   expression_filter(:placeholder) { |xpath, val| xpath[XPath.attr(:placeholder) == val] }
   expression_filter(:disabled) { |xpath, val| val ? xpath : xpath[~XPath.attr(:disabled)] }
+  expression_filter(:multiple) { |xpath, val| xpath[val ? XPath.attr(:multiple) : ~XPath.attr(:multiple)] }
 
-  describe(:expression_filters) do |name: nil, placeholder: nil, disabled: nil, **|
+  describe(:expression_filters) do |name: nil, placeholder: nil, disabled: nil, multiple: nil, **|
     desc = +''
     desc << ' that is not disabled' if disabled == false
     desc << " with name #{name}" if name
     desc << " with placeholder #{placeholder}" if placeholder
+    desc << ' with the multiple attribute' if multiple == true
+    desc << ' without the multiple attribute' if multiple == false
     desc
   end
 
-  describe(:node_filters) do |checked: nil, unchecked: nil, disabled: nil, multiple: nil, **|
+  describe(:node_filters) do |checked: nil, unchecked: nil, disabled: nil, **|
     desc, states = +'', []
     states << 'checked' if checked || (unchecked == false)
     states << 'not checked' if unchecked || (checked == false)
     states << 'disabled' if disabled == true
     desc << " that is #{states.join(' and ')}" unless states.empty?
-    desc << ' with the multiple attribute' if multiple == true
-    desc << ' without the multiple attribute' if multiple == false
     desc
   end
 end
