@@ -474,7 +474,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         it 'can set and clear a text field' do
           session.visit 'https://reactjs.org/docs/forms.html'
           session.all(:css, 'h2#controlled-components ~ p a', text: 'Try it on CodePen')[0].click
-          session.within_frame(:css, 'iframe.result-iframe[src^="https://s.codepen.io"]', wait: 10) do
+          session.within_frame(:css, 'iframe.result-iframe:not([src=""])', wait: 10) do
             session.fill_in('Name:', with: 'abc')
             session.accept_prompt 'A name was submitted: abc' do
               session.click_button('Submit')
