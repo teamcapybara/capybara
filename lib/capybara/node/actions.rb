@@ -300,7 +300,7 @@ module Capybara
         synchronize(Capybara::Queries::BaseQuery.wait(options, session_options.default_max_wait_time)) do
           begin
             find(:select, from, options)
-          rescue Capybara::ElementNotFound => select_error
+          rescue Capybara::ElementNotFound => select_error # rubocop:disable Naming/RescuedExceptionsVariableName
             raise if %i[selected with_selected multiple].any? { |option| options.key?(option) }
 
             begin
@@ -356,14 +356,14 @@ module Capybara
           begin
             el = find(selector, locator, options)
             el.set(checked)
-          rescue StandardError => err
-            raise unless allow_label_click && catch_error?(err)
+          rescue StandardError => e
+            raise unless allow_label_click && catch_error?(e)
 
             begin
               el ||= find(selector, locator, options.merge(visible: :all))
               el.session.find(:label, for: el, visible: true).click unless el.checked? == checked
             rescue StandardError # swallow extra errors - raise original
-              raise err
+              raise e
             end
           end
         end

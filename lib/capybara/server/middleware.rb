@@ -46,9 +46,9 @@ module Capybara
           @counter.increment
           begin
             @extended_app.call(env)
-          rescue *@server_errors => err
-            @error ||= err
-            raise err
+          rescue *@server_errors => e
+            @error ||= e
+            raise e
           ensure
             @counter.decrement
           end

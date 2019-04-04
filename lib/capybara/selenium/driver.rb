@@ -17,8 +17,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def self.load_selenium
     require 'selenium-webdriver'
     warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade." if Gem.loaded_specs['selenium-webdriver'].version < Gem::Version.new('3.5.0')
-  rescue LoadError => err
-    raise err if err.message !~ /selenium-webdriver/
+  rescue LoadError => e
+    raise e unless e.message.match?(/selenium-webdriver/)
 
     raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
   end

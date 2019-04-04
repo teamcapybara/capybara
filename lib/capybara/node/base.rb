@@ -81,19 +81,19 @@ module Capybara
         timer = Capybara::Helpers.timer(expire_in: seconds)
         begin
           yield
-        rescue StandardError => err
+        rescue StandardError => e
           session.raise_server_error!
-          raise err unless catch_error?(err, errors)
+          raise e unless catch_error?(e, errors)
 
           if driver.wait?
-            raise err if timer.expired?
+            raise e if timer.expired?
 
             sleep(0.01)
             reload if session_options.automatic_reload
           else
             old_base = @base
             reload if session_options.automatic_reload
-            raise err if old_base == @base
+            raise e if old_base == @base
           end
           retry
         ensure

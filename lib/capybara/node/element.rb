@@ -87,11 +87,11 @@ module Capybara
 
         begin
           synchronize { base.style(styles) }
-        rescue NotImplementedError => err
+        rescue NotImplementedError => e
           begin
             evaluate_script(STYLE_SCRIPT, *styles)
           rescue Capybara::NotSupportedByDriverError
-            raise err
+            raise e
           end
         end
       end
@@ -469,8 +469,8 @@ module Capybara
           begin
             reloaded = query_scope.reload.first(@query.name, @query.locator, @query.options)
             @base = reloaded.base if reloaded
-          rescue StandardError => err
-            raise err unless catch_error?(err)
+          rescue StandardError => e
+            raise e unless catch_error?(e)
           end
         end
         self

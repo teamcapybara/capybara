@@ -83,7 +83,7 @@ module Capybara
           matches_system_filters?(node) &&
           matches_node_filters?(node, node_filter_errors) &&
           matches_filter_block?(node)
-      rescue *(node.respond_to?(:session) ? node.session.driver.invalid_element_errors : [])
+      rescue *(node.respond_to?(:session) ? node.session.driver.invalid_element_errors : []) # rubocop:disable Naming/RescuedExceptionsVariableName
         false
       end
 

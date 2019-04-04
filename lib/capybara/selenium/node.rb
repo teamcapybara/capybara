@@ -97,13 +97,13 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     return native.click if click_options.empty?
 
     click_with_options(click_options)
-  rescue StandardError => err
-    if err.is_a?(::Selenium::WebDriver::Error::ElementClickInterceptedError) ||
-       err.message =~ /Other element would receive the click/
+  rescue StandardError => e
+    if e.is_a?(::Selenium::WebDriver::Error::ElementClickInterceptedError) ||
+       e.message.match?(/Other element would receive the click/)
       scroll_to_center
     end
 
-    raise err
+    raise e
   end
 
   def right_click(keys = [], **options)
