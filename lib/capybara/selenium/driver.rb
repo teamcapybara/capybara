@@ -338,7 +338,7 @@ private
   end
 
   def silenced_unknown_error_message?(msg)
-    silenced_unknown_error_messages.any? { |regex| msg =~ regex }
+    silenced_unknown_error_messages.any? { |regex| msg.match? regex }
   end
 
   def silenced_unknown_error_messages

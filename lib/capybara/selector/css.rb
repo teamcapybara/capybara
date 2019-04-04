@@ -6,7 +6,7 @@ module Capybara
       def self.escape(str)
         value = str.dup
         out = +''
-        out << value.slice!(0...1) if value =~ /^[-_]/
+        out << value.slice!(0...1) if value.match?(/^[-_]/)
         out << (value[0].match?(NMSTART) ? value.slice!(0...1) : escape_char(value.slice!(0...1)))
         out << value.gsub(/[^a-zA-Z0-9_-]/) { |char| escape_char char }
         out

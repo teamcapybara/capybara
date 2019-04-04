@@ -34,7 +34,7 @@ module Capybara
 
         def handles_option?(option_name)
           if matcher?
-            option_name =~ @matcher
+            @matcher.match? option_name
           else
             @name == option_name
           end

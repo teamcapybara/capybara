@@ -45,7 +45,7 @@ end
 
 Capybara.add_selector(:id, locator_type: [String, Symbol, Regexp]) do
   xpath { |id| builder(XPath.descendant).add_attribute_conditions(id: id) }
-  locator_filter {  |node, id| id.is_a?(Regexp) ? node[:id] =~ id : true }
+  locator_filter {  |node, id| id.is_a?(Regexp) ? id.match?(node[:id]) : true }
 end
 
 Capybara.add_selector(:field, locator_type: [String, Symbol]) do
@@ -71,7 +71,7 @@ Capybara.add_selector(:field, locator_type: [String, Symbol]) do
   node_filter(:readonly, :boolean) { |node, value| !(value ^ node.readonly?) }
   node_filter(:with) do |node, with|
     val = node.value
-    (with.is_a?(Regexp) ? val =~ with : val == with.to_s).tap do |res|
+    (with.is_a?(Regexp) ? with.match?(val) : val == with.to_s).tap do |res|
       add_error("Expected value to be #{with.inspect} but was #{val.inspect}") unless res
     end
   end
@@ -219,7 +219,7 @@ Capybara.add_selector(:fillable_field, locator_type: [String, Symbol]) do
 
   node_filter(:with) do |node, with|
     val = node.value
-    (with.is_a?(Regexp) ? val =~ with : val == with.to_s).tap do |res|
+    (with.is_a?(Regexp) ? with.match?(val) : val == with.to_s).tap do |res|
       add_error("Expected value to be #{with.inspect} but was #{val.inspect}") unless res
     end
   end
@@ -618,7 +618,7 @@ Capybara.add_selector(:element, locator_type: [String, Symbol]) do
   node_filter(:attributes, matcher: /.+/) do |node, name, val|
     next true unless val.is_a?(Regexp)
 
-    (node[name] =~ val).tap do |res|
+    (val.match? node[name]).tap do |res|
       add_error("Expected #{name} to match #{val.inspect} but it was #{node[name]}") unless res
     end
   end
