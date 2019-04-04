@@ -77,14 +77,14 @@ module Capybara
 
     remove_method :app_host=
     def app_host=(url)
-      raise ArgumentError, "Capybara.app_host should be set to a url (http://www.example.com). Attempted to set #{url.inspect}." if url && url !~ URI::DEFAULT_PARSER.make_regexp
+      raise ArgumentError, "Capybara.app_host should be set to a url (http://www.example.com). Attempted to set #{url.inspect}." unless url.nil? || url.match?(URI::DEFAULT_PARSER.make_regexp)
 
       @app_host = url
     end
 
     remove_method :default_host=
     def default_host=(url)
-      raise ArgumentError, "Capybara.default_host should be set to a url (http://www.example.com). Attempted to set #{url.inspect}." if url && url !~ URI::DEFAULT_PARSER.make_regexp
+      raise ArgumentError, "Capybara.default_host should be set to a url (http://www.example.com). Attempted to set #{url.inspect}." unless url.nil? || url.match?(URI::DEFAULT_PARSER.make_regexp)
 
       @default_host = url
     end

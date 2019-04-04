@@ -36,7 +36,7 @@ module Capybara
       attr_reader :disable_markup
 
       def html_content?
-        !!(@headers['Content-Type'] =~ /html/)
+        /html/.match?(@headers['Content-Type'])
       end
 
       def insert_disable(html)

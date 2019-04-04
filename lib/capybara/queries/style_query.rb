@@ -19,7 +19,7 @@ module Capybara
         @actual_styles = node.style(*@expected_styles.keys)
         @expected_styles.all? do |style, value|
           if value.is_a? Regexp
-            @actual_styles[style] =~ value
+            value.match? @actual_styles[style]
           else
             @actual_styles[style] == value
           end

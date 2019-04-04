@@ -330,7 +330,7 @@ private
       wait.until do
         alert = @browser.switch_to.alert
         regexp = text.is_a?(Regexp) ? text : Regexp.escape(text.to_s)
-        alert.text.match?(regexp) ? alert : nil
+        regexp.match?(alert.text) ? alert : nil
       end
     rescue Selenium::WebDriver::Error::TimeOutError
       raise Capybara::ModalNotFound, "Unable to find modal dialog#{" with #{text}" if text}"
@@ -338,7 +338,7 @@ private
   end
 
   def silenced_unknown_error_message?(msg)
-    silenced_unknown_error_messages.any? { |regex| msg =~ regex }
+    silenced_unknown_error_messages.any? { |regex| msg.match? regex }
   end
 
   def silenced_unknown_error_messages

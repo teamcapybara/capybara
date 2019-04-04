@@ -368,13 +368,13 @@ module Capybara
       def matches_id_filter?(node)
         return true unless use_default_id_filter? && options[:id].is_a?(Regexp)
 
-        node[:id] =~ options[:id]
+        options[:id].match? node[:id]
       end
 
       def matches_class_filter?(node)
         return true unless use_default_class_filter? && options[:class].is_a?(Regexp)
 
-        node[:class] =~ options[:class]
+        options[:class].match? node[:class]
       end
 
       def matches_style_filter?(node)
@@ -382,7 +382,7 @@ module Capybara
         when String, nil
           true
         when Regexp
-          node[:style] =~ options[:style]
+          options[:style].match? node[:style]
         when Hash
           matches_style?(node, options[:style])
         end
@@ -392,7 +392,7 @@ module Capybara
         @actual_styles = node.initial_cache[:style] || node.style(*styles.keys)
         styles.all? do |style, value|
           if value.is_a? Regexp
-            @actual_styles[style.to_s] =~ value
+            value.match? @actual_styles[style.to_s]
           else
             @actual_styles[style.to_s] == value
           end
