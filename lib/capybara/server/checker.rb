@@ -12,7 +12,7 @@ module Capybara
 
       def request(&block)
         ssl? ? https_request(&block) : http_request(&block)
-      rescue *TRY_HTTPS_ERRORS
+      rescue *TRY_HTTPS_ERRORS # rubocop:disable Naming/RescuedExceptionsVariableName
         res = https_request(&block)
         @ssl = true
         res

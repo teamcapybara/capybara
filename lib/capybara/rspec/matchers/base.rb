@@ -41,8 +41,8 @@ module Capybara
       class WrappedElementMatcher < Base
         def matches?(actual)
           element_matches?(wrap(actual))
-        rescue Capybara::ExpectationNotMet => err
-          @failure_message = err.message
+        rescue Capybara::ExpectationNotMet => e
+          @failure_message = e.message
           false
         end
 

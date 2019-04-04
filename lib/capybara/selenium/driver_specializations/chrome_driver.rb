@@ -7,8 +7,8 @@ module Capybara::Selenium::Driver::ChromeDriver
     within_given_window(handle) do
       begin
         super
-      rescue NoMethodError => err
-        raise unless err.message =~ /full_screen_window/
+      rescue NoMethodError => e
+        raise unless e.message =~ /full_screen_window/
 
         result = bridge.http.call(:post, "session/#{bridge.session_id}/window/fullscreen", {})
         result['value']
