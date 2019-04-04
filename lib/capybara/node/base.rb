@@ -86,7 +86,7 @@ module Capybara
           raise e unless catch_error?(e, errors)
 
           if driver.wait?
-            raise err if timer.expired?
+            raise e if timer.expired?
 
             sleep(0.01)
             reload if session_options.automatic_reload
