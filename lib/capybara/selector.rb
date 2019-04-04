@@ -77,7 +77,7 @@ Capybara.add_selector(:field, locator_type: [String, Symbol]) do
   end
 
   describe_expression_filters do |type: nil, **|
-    type ? " of type #{type.inspect}" : ''
+    " of type #{type.inspect}" if type
   end
 
   describe_node_filters do |**options|
@@ -129,13 +129,15 @@ Capybara.add_selector(:link, locator_type: [String, Symbol]) do
     builder(expr).add_attribute_conditions(download: download)
   end
 
-  describe_expression_filters do |**options|
+  describe_expression_filters do |download: nil, **options|
     desc = +''
     if (href = options[:href])
       desc << " with href #{'matching ' if href.is_a? Regexp}#{href.inspect}"
     elsif options.key?(:href) # is nil/false specified?
       desc << ' with no href attribute'
     end
+    desc << " with download attribute#{" #{download}" if download.is_a? String}" if download
+    desc << ' without download attribute' if download == false
     desc
   end
 end
@@ -172,7 +174,7 @@ Capybara.add_selector(:button, locator_type: [String, Symbol]) do
   describe_expression_filters do |disabled: nil, **options|
     desc = +''
     desc << ' that is not disabled' if disabled == false
-    (expression_filters.keys & options.keys).inject(desc) { |memo, ef| memo << " with #{ef} #{options[ef]}" }
+    desc << describe_all_expression_filters(options)
   end
 
   describe_node_filters do |disabled: nil, **|
@@ -405,7 +407,7 @@ Capybara.add_selector(:datalist_option, locator_type: [String, Symbol]) do
   describe_expression_filters do |disabled: nil, **options|
     desc = +''
     desc << ' that is not disabled' if disabled == false
-    (expression_filters.keys & options.keys).inject(desc) { |memo, ef| memo << " with #{ef} #{options[ef]}" }
+    desc << describe_all_expression_filters(options)
   end
 
   describe_node_filters do |**options|
