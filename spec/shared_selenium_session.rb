@@ -472,18 +472,21 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
     describe 'with react' do
       context 'controlled components' do
         it 'can set and clear a text field' do
-          session.visit 'https://reactjs.org/docs/forms.html'
-          session.all(:css, 'h2#controlled-components ~ p a', text: 'Try it on CodePen')[0].click
-          session.within_frame(:css, 'iframe.result-iframe:not([src=""])', wait: 10) do
-            session.fill_in('Name:', with: 'abc')
-            session.accept_prompt 'A name was submitted: abc' do
-              session.click_button('Submit')
-            end
-            session.fill_in('Name:', with: '')
-            session.accept_prompt(/A name was submitted: $/) do
-              session.click_button('Submit')
-            end
+          # session.visit 'https://reactjs.org/docs/forms.html'
+          # session.all(:css, 'h2#controlled-components ~ p a', text: 'Try it on CodePen')[0].click
+          # copied into local view
+          session.visit 'react'
+          # Not necessary when accessed locally
+          # session.within_frame(:css, 'iframe.result-iframe:not([src=""])', wait: 10) do
+          session.fill_in('Name:', with: 'abc')
+          session.accept_prompt 'A name was submitted: abc' do
+            session.click_button('Submit')
           end
+          session.fill_in('Name:', with: '')
+          session.accept_prompt(/A name was submitted: $/) do
+            session.click_button('Submit')
+          end
+          # end
         end
       end
     end
