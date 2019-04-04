@@ -241,6 +241,7 @@ module Capybara
       # @option options [Integer] maximum          Maximum number of matches that are expected to be found
       # @option options [Integer] minimum          Minimum number of matches that are expected to be found
       # @option options [Range]   between          Number of matches found must be within the given range
+      # @option options [false, true, Numeric] wait (Capybara.default_max_wait_time) Maximum time to wait for matching element to appear.
       # @overload all([kind = Capybara.default_selector], locator = nil, **options)
       # @overload all([kind = Capybara.default_selector], locator = nil, **options, &filter_block)
       #   @yieldparam element [Capybara::Node::Element]  The element being considered for inclusion in the results
