@@ -3,7 +3,17 @@
 require 'capybara/selenium/nodes/safari_node'
 
 module Capybara::Selenium::Driver::SafariDriver
-private # rubocop:disable Layout/IndentationWidth
+  def switch_to_frame(frame)
+    return super unless frame == :parent
+
+    # safaridriver/safari has an issue where switch_to_frame(:parent)
+    # behaves like switch_to_frame(:top)
+    handles = @frame_handles[current_window_handle]
+    browser.switch_to.default_content
+    handles.tap(&:pop).each { |fh| browser.switch_to.frame(fh) }
+  end
+
+private
 
   def build_node(native_node, initial_cache = {})
     ::Capybara::Selenium::SafariNode.new(self, native_node, initial_cache)

@@ -53,7 +53,20 @@ Capybara::SpecHelper.spec '#switch_to_frame', requires: [:frames] do
     @session.switch_to_frame frame
     frame = @session.find(:frame, 'childFrame')
     @session.switch_to_frame frame
-    @session.click_link 'Close Window'
+    @session.click_link 'Close Window Now'
+    @session.switch_to_frame :parent # Go back to parentFrame
+    expect(@session).to have_selector(:css, 'body#parentBody')
+    expect(@session).not_to have_selector(:css, '#childFrame')
+    @session.switch_to_frame :parent # Go back to top
+  end
+
+  it 'works if the frame is closed with a slight delay', requires: %i[frames js] do
+    frame = @session.find(:frame, 'parentFrame')
+    @session.switch_to_frame frame
+    frame = @session.find(:frame, 'childFrame')
+    @session.switch_to_frame frame
+    @session.click_link 'Close Window Soon'
+    sleep 1
     @session.switch_to_frame :parent # Go back to parentFrame
     expect(@session).to have_selector(:css, 'body#parentBody')
     expect(@session).not_to have_selector(:css, '#childFrame')

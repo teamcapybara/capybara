@@ -57,10 +57,9 @@ Capybara::SpecHelper.run_specs TestSessions::Safari, SAFARI_DRIVER.to_s, capybar
       'Capybara::Session selenium_safari node #click should allow to retry longer',
       'Capybara::Session selenium_safari node #click should retry clicking'
     pending "safaridriver doesn't return a specific enough error to deal with this"
-  when /Capybara::Session selenium_safari #within_frame should find multiple nested frames/,
-       /Capybara::Session selenium_safari #within_frame works if the frame is closed/,
+  when /Capybara::Session selenium_safari #within_frame works if the frame is closed/,
        /Capybara::Session selenium_safari #switch_to_frame works if the frame is closed/
-    skip 'switch_to_frame(:parent) appears to go to the root in Safari rather than parent'
+    skip 'Safari has a race condition when clicking an element that causes the frame to close. It will sometimes raise a NoSuchFrameError'
   when /Capybara::Session selenium_safari #reset_session! removes ALL cookies/
     skip 'Safari webdriver can only remove cookies for the current domain'
   when /Capybara::Session selenium_safari #refresh it reposts/

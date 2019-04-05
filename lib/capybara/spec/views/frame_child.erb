@@ -10,7 +10,8 @@
         </script>
     </head>
     <body id="childBody">
-      <a href="javascript:void(0)" onClick="closeWin()">Close Window</a>
+      <a href="javascript:void(0)" onClick="closeWin()">Close Window Now</a>
+      <a href="javascript:void(0)" onClick="setTimeout(function(){closeWin()}, 10)">Close Window Soon</a>
       <iframe src="/frame_one" id="grandchildFrame1"></iframe>
       <iframe src="/frame_two" id="grandchildFrame2"></iframe>
     </body>
