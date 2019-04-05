@@ -3,8 +3,8 @@
 require 'timeout'
 require 'nokogiri'
 require 'xpath'
-require 'forwardable'
 require 'capybara/config'
+require 'capybara/options'
 
 module Capybara
   class CapybaraError < StandardError; end
@@ -23,14 +23,10 @@ module Capybara
   class ReadOnlyElementError < CapybaraError; end
 
   class << self
-    extend Forwardable
+    extend Options
 
     # DelegateCapybara global configurations
     # @!method app
-    #   See {Capybara.configure}
-    # @!method reuse_server
-    #   See {Capybara.configure}
-    # @!method threadsafe
     #   See {Capybara.configure}
     # @!method server
     #   See {Capybara.configure}
@@ -38,33 +34,14 @@ module Capybara
     #   See {Capybara.configure}
     # @!method javascript_driver
     #   See {Capybara.configure}
-    # @!method allow_gumbo
-    #   See {Capybara.configure}
-    Config::OPTIONS.each do |method|
-      def_delegators :config, method, "#{method}="
-    end
+    Config::OPTIONS.each(&method(:define_option_methods))
 
-    # Delegate Capybara global configurations
-    # @!method default_selector
-    #   See {Capybara.configure}
-    # @!method default_max_wait_time
-    #   See {Capybara.configure}
+    # Delegate Capybara session configurations
     # @!method app_host
     #   See {Capybara.configure}
     # @!method always_include_port
     #   See {Capybara.configure}
-    SessionConfig::OPTIONS.each do |method|
-      def_delegator :config, method
-      # define_method method do |*args, &block|
-      #   warn "s DEPRECATED: Capybara.#{method} is deprecated, please use Capybara.config.#{method} instead [ #{caller(1, 1).first} ]"
-      #   config.send(method, *args, &block)
-      # end
-
-      define_method "#{method}=" do |*args, &block|
-        warn "DEPRECATED: Capybara.#{method}= is deprecated, please use Capybara.configure instead [ #{caller(1, 1).first} ]"
-        config.send("#{method}=", *args, &block)
-      end
-    end
+    SessionConfig::OPTIONS.each(&method(:define_option_methods))
 
     ##
     #

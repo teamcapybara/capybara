@@ -100,11 +100,11 @@ RSpec.describe Capybara::Server do
     let!(:old_reuse_server) { Capybara.reuse_server }
 
     before do
-      Capybara.reuse_server = true
+      Capybara.configure { |c| c.reuse_server = true }
     end
 
     after do
-      Capybara.reuse_server = old_reuse_server
+      Capybara.configure { |c| c.reuse_server = old_reuse_server }
     end
 
     it 'should use the existing server if it already running' do
@@ -145,11 +145,11 @@ RSpec.describe Capybara::Server do
   context 'When Capybara.reuse_server is false' do
     before do
       @old_reuse_server = Capybara.reuse_server
-      Capybara.reuse_server = false
+      Capybara.configure { |c| c.reuse_server = false }
     end
 
     after do
-      Capybara.reuse_server = @old_reuse_server # rubocop:disable RSpec/InstanceVariable
+      Capybara.configure { |c| c.reuse_server = @old_reuse_server } # rubocop:disable RSpec/InstanceVariable
     end
 
     it 'should not reuse an already running server' do

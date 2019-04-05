@@ -25,7 +25,7 @@ RSpec.describe Capybara::Session do
     end
 
     it 'is global when threadsafe false' do
-      Capybara.threadsafe = false
+      Capybara.configure { |c| c.threadsafe = false }
       Capybara.current_driver = :selenium
       thread = Thread.new do
         Capybara.current_driver = :random
@@ -35,7 +35,7 @@ RSpec.describe Capybara::Session do
     end
 
     it 'is thread specific threadsafe true' do
-      Capybara.threadsafe = true
+      Capybara.configure { |c| c.threadsafe = true }
       Capybara.current_driver = :selenium
       thread = Thread.new do
         Capybara.current_driver = :random
@@ -53,7 +53,7 @@ RSpec.describe Capybara::Session do
     end
 
     it 'is global when threadsafe false' do
-      Capybara.threadsafe = false
+      Capybara.configure { |c| c.threadsafe = false }
       Capybara.session_name = 'sess1'
       thread = Thread.new do
         Capybara.session_name = 'sess2'
@@ -63,7 +63,7 @@ RSpec.describe Capybara::Session do
     end
 
     it 'is thread specific when threadsafe true' do
-      Capybara.threadsafe = true
+      Capybara.configure { |c| c.threadsafe = true }
       Capybara.session_name = 'sess1'
       thread = Thread.new do
         Capybara.session_name = 'sess2'

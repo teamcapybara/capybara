@@ -10,7 +10,7 @@ RSpec.describe Capybara do
 
     it 'should be changeable' do
       expect(Capybara.default_max_wait_time).not_to eq(5)
-      Capybara.default_max_wait_time = 5
+      Capybara.configure { |c| c.default_max_wait_time = 5 }
       expect(Capybara.default_max_wait_time).to eq(5)
     end
   end
