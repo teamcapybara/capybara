@@ -1,9 +1,16 @@
+# Version 3.16.2
+Release date: unreleased
+
+### Fixed
+
+* Fix Session#quit resetting of memoized document
+
 # Version 3.16.1
 Release date: 2019-03-30
 
 ### Fixed
 
-* Fix potential 'uninitialized constant' error when using the :selenium_chrome drvier [jeffclemens-ab]
+* Fix potential 'uninitialized constant' error when using the :selenium_chrome driver [jeffclemens-ab]
 
 # Version 3.16
 Release date: 2019-03-28
