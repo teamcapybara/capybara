@@ -80,5 +80,12 @@ RSpec.describe Capybara::Session do
       session.quit
       expect(session.driver).not_to eql driver
     end
+
+    it 'resets the document' do
+      session = Capybara::Session.new(:rack_test, TestApp)
+      document = session.document
+      session.quit
+      expect(session.document.base).not_to eql document.base
+    end
   end
 end
