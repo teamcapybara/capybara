@@ -141,7 +141,7 @@ module Capybara
     #
     def quit
       @driver.quit if @driver.respond_to? :quit
-      @driver = nil
+      @document = @driver = nil
       @touched = false
       @server&.reset_error!
     end
