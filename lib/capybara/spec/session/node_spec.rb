@@ -195,7 +195,7 @@ Capybara::SpecHelper.spec 'node' do
 
     it 'should see a disabled fieldset as disabled' do
       @session.visit('/form')
-      expect(@session.find(:css, '#form_disabled_fieldset')).to be_disabled
+      expect(@session.find(:xpath, './/fieldset[@id="form_disabled_fieldset"]')).to be_disabled
     end
 
     context 'in a disabled fieldset' do

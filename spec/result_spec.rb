@@ -106,7 +106,7 @@ RSpec.describe Capybara::Result do
 
   # Not a great test but it indirectly tests what is needed
   it 'should evaluate filters lazily for idx' do
-    skip 'JRuby has an issue with lazy enumerator evaluation' if RUBY_PLATFORM == 'java'
+    skip 'JRuby has an issue with lazy enumerator evaluation' if jruby_lazy_enumerator_workaround?
     # Not processed until accessed
     expect(result.instance_variable_get('@result_cache').size).to be 0
 
@@ -127,7 +127,7 @@ RSpec.describe Capybara::Result do
   end
 
   it 'should evaluate filters lazily for range' do
-    skip 'JRuby has an issue with lazy enumerator evaluation' if RUBY_PLATFORM == 'java'
+    skip 'JRuby has an issue with lazy enumerator evaluation' if jruby_lazy_enumerator_workaround?
     result[0..1]
     expect(result.instance_variable_get('@result_cache').size).to be 2
 
@@ -136,7 +136,7 @@ RSpec.describe Capybara::Result do
   end
 
   it 'should evaluate filters lazily for idx and length' do
-    skip 'JRuby has an issue with lazy enumerator evaluation' if RUBY_PLATFORM == 'java'
+    skip 'JRuby has an issue with lazy enumerator evaluation' if jruby_lazy_enumerator_workaround?
     result[1, 2]
     expect(result.instance_variable_get('@result_cache').size).to be 3
 
@@ -145,7 +145,7 @@ RSpec.describe Capybara::Result do
   end
 
   it 'should only need to evaluate one result for any?' do
-    skip 'JRuby has an issue with lazy enumerator evaluation' if RUBY_PLATFORM == 'java'
+    skip 'JRuby has an issue with lazy enumerator evaluation' if jruby_lazy_enumerator_workaround?
     result.any?
     expect(result.instance_variable_get('@result_cache').size).to be 1
   end
@@ -158,7 +158,7 @@ RSpec.describe Capybara::Result do
 
   context '#each' do
     it 'lazily evaluates' do
-      skip 'JRuby has an issue with lazy enumerator evaluation' if RUBY_PLATFORM == 'java'
+      skip 'JRuby has an issue with lazy enumerator evaluation' if jruby_lazy_enumerator_workaround?
       results = []
       result.each do |el|
         results << el
@@ -174,7 +174,7 @@ RSpec.describe Capybara::Result do
       end
 
       it 'lazily evaluates' do
-        skip 'JRuby has an issue with lazy enumerator evaluation' if RUBY_PLATFORM == 'java'
+        skip 'JRuby has an issue with lazy enumerator evaluation' if jruby_lazy_enumerator_workaround?
         result.each.with_index do |_el, idx|
           expect(result.instance_variable_get('@result_cache').size).to eq(idx + 1) # 0 indexing
         end
@@ -196,5 +196,9 @@ RSpec.describe Capybara::Result do
       sleep 1
       expect(eval_count).to eq 1
     end
+  end
+
+  def jruby_lazy_enumerator_workaround?
+    (RUBY_PLATFORM == 'java') && (Gem::Version.new(JRUBY_VERSION) < Gem::Version.new('9.2.8.0'))
   end
 end
