@@ -5,6 +5,7 @@ require 'nokogiri'
 require 'xpath'
 require 'forwardable'
 require 'capybara/config'
+require 'capybara/threadsafe'
 
 module Capybara
   class CapybaraError < StandardError; end
@@ -24,6 +25,20 @@ module Capybara
 
   class << self
     extend Forwardable
+    extend Threadsafe
+
+    %w[text no_text title no_title current_path no_current_path].each do |assertion_name|
+      class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
+        def assert_#{assertion_name} *args
+          self.assertions +=1
+          subject, args = determine_subject(args)
+          subject.assert_#{assertion_name}(*args)
+        rescue Capybara::ExpectationNotMet => e
+          raise ::Minitest::Assertion, e.message
+        end
+      ASSERTION
+    end
+
 
     # DelegateCapybara global configurations
     # @!method app
@@ -246,22 +261,9 @@ module Capybara
     #
     # @return [Symbol]    The name of the driver currently in use
     #
-    def current_driver
-      if threadsafe
-        Thread.current['capybara_current_driver']
-      else
-        @current_driver
-      end || default_driver
-    end
+    def current_driver; _current_driver || default_driver; end
+    def current_driver=(value); _current_driver = value; end
     alias_method :mode, :current_driver
-
-    def current_driver=(name)
-      if threadsafe
-        Thread.current['capybara_current_driver'] = name
-      else
-        @current_driver = name
-      end
-    end
 
     ##
     #
@@ -322,21 +324,7 @@ module Capybara
     #
     # @return [Symbol]    The name of the currently used session.
     #
-    def session_name
-      if threadsafe
-        Thread.current['capybara_session_name'] ||= :default
-      else
-        @session_name ||= :default
-      end
-    end
-
-    def session_name=(name)
-      if threadsafe
-        Thread.current['capybara_session_name'] = name
-      else
-        @session_name = name
-      end
-    end
+    threadsafe_accessor(:session_name, :default)
 
     ##
     #
@@ -401,21 +389,8 @@ module Capybara
       end
     end
 
-    def specified_session
-      if threadsafe
-        Thread.current['capybara_specified_session']
-      else
-        @specified_session ||= nil
-      end
-    end
-
-    def specified_session=(session)
-      if threadsafe
-        Thread.current['capybara_specified_session'] = session
-      else
-        @specified_session = session
-      end
-    end
+    threadsafe_accessor(:_current_driver, nil)
+    threadsafe_accessor(:specified_session, nil)
   end
 
   self.default_driver = nil
