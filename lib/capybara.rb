@@ -466,42 +466,8 @@ module Capybara
   require 'capybara/selenium/driver'
 end
 
-Capybara.register_server :default do |app, port, _host|
-  Capybara.run_default_server(app, port)
-end
-
-Capybara.register_server :webrick do |app, port, host, **options|
-  require 'rack/handler/webrick'
-  options = { Host: host, Port: port, AccessLog: [], Logger: WEBrick::Log.new(nil, 0) }.merge(options)
-  Rack::Handler::WEBrick.run(app, options)
-end
-
-Capybara.register_server :puma do |app, port, host, **options|
-  begin
-    require 'rack/handler/puma'
-  rescue LoadError
-    raise LoadError, 'Capybara is unable to load `puma` for its server, please add `puma` to your project or specify a different server via something like `Capybara.server = :webrick`.'
-  else
-    unless Rack::Handler::Puma.respond_to?(:config)
-      raise LoadError, 'Capybara requires `puma` version 3.8.0 or higher, please upgrade `puma` or register and specify your own server block'
-    end
-  end
-  # If we just run the Puma Rack handler it installs signal handlers which prevent us from being able to interrupt tests.
-  # Therefore construct and run the Server instance ourselves.
-  # Rack::Handler::Puma.run(app, { Host: host, Port: port, Threads: "0:4", workers: 0, daemon: false }.merge(options))
-  options = { Host: host, Port: port, Threads: '0:4', workers: 0, daemon: false }.merge(options)
-  conf = Rack::Handler::Puma.config(app, options)
-  events = conf.options[:Silent] ? ::Puma::Events.strings : ::Puma::Events.stdio
-
-  events.log 'Capybara starting Puma...'
-  events.log "* Version #{Puma::Const::PUMA_VERSION} , codename: #{Puma::Const::CODE_NAME}"
-  events.log "* Min threads: #{conf.options[:min_threads]}, max threads: #{conf.options[:max_threads]}"
-
-  Puma::Server.new(conf.app, events, conf.options).tap do |s|
-    s.binder.parse conf.options[:binds], s.events
-    s.min_threads, s.max_threads = conf.options[:min_threads], conf.options[:max_threads]
-  end.run.join
-end
+require 'capybara/registrations/servers'
+require 'capybara/registrations/drivers'
 
 Capybara.configure do |config|
   config.always_include_port = false
@@ -526,39 +492,4 @@ Capybara.configure do |config|
   config.predicates_wait = true
   config.default_normalize_ws = false
   config.allow_gumbo = false
-end
-
-Capybara.register_driver :rack_test do |app|
-  Capybara::RackTest::Driver.new(app)
-end
-
-Capybara.register_driver :selenium do |app|
-  Capybara::Selenium::Driver.new(app)
-end
-
-Capybara.register_driver :selenium_headless do |app|
-  Capybara::Selenium::Driver.load_selenium
-  browser_options = ::Selenium::WebDriver::Firefox::Options.new
-  browser_options.args << '-headless'
-  Capybara::Selenium::Driver.new(app, browser: :firefox, options: browser_options)
-end
-
-Capybara.register_driver :selenium_chrome do |app|
-  Capybara::Selenium::Driver.load_selenium
-  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-    # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
-    opts.args << '--disable-site-isolation-trials'
-  end
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
-end
-
-Capybara.register_driver :selenium_chrome_headless do |app|
-  Capybara::Selenium::Driver.load_selenium
-  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-    opts.args << '--headless'
-    opts.args << '--disable-gpu' if Gem.win_platform?
-    # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
-    opts.args << '--disable-site-isolation-trials'
-  end
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
 end
