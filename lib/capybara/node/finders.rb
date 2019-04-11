@@ -154,11 +154,11 @@ module Capybara
       #
       # Find a button on the page.
       # This can be any \<input> element of type submit, reset, image, button or it can be a
-      # \<button> element. All buttons can be found by their id, Capbyara.test_id attribute, value, or title. \<button> elements can also be found
+      # \<button> element. All buttons can be found by their id, name, Capbyara.test_id attribute, value, or title. \<button> elements can also be found
       # by their text content, and image \<input> elements by their alt attribute
       #
       # @overload find_button([locator], **options)
-      #   @param [String] locator            id, Capybara.test_id attribute, value, title, text content, alt of image
+      #   @param [String] locator            id, name, Capybara.test_id attribute, value, title, text content, alt of image
       #
       #   @overload find_button(**options)
       #
@@ -169,8 +169,9 @@ module Capybara
       #                                                       * false - only finds an enabled button
       #                                                       * :all - finds either an enabled or disabled button
       #   @option options [String, Regexp] id                 Match buttons with the id provided
-      #   @option options [String] title              Match buttons with the title provided
-      #   @option options [String] value              Match buttons with the value provided
+      #   @option options [String] name                       Match buttons with the name provided
+      #   @option options [String] title                      Match buttons with the title provided
+      #   @option options [String] value                      Match buttons with the value provided
       #   @option options [String, Array<String>, Regexp] class    Match buttons that match the class(es) provided
       # @return [Capybara::Node::Element]   The found element
       #

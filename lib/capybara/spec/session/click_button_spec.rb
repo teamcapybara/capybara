@@ -162,6 +162,11 @@ Capybara::SpecHelper.spec '#click_button' do
       expect(extract_results(@session)['first_name']).to eq('John')
     end
 
+    it 'should submit by specific button id' do
+      @session.click_button(id: 'awe123')
+      expect(extract_results(@session)['first_name']).to eq('John')
+    end
+
     it 'should submit by button title' do
       @session.click_button('What an Awesome Button')
       expect(extract_results(@session)['first_name']).to eq('John')
@@ -169,6 +174,16 @@ Capybara::SpecHelper.spec '#click_button' do
 
     it 'should submit by partial title', :exact_false do
       @session.click_button('What an Awesome')
+      expect(extract_results(@session)['first_name']).to eq('John')
+    end
+
+    it 'should submit by button name' do
+      @session.click_button('form[awesome]')
+      expect(extract_results(@session)['first_name']).to eq('John')
+    end
+
+    it 'should submit by specific button name' do
+      @session.click_button(name: 'form[awesome]')
       expect(extract_results(@session)['first_name']).to eq('John')
     end
   end
@@ -311,6 +326,18 @@ Capybara::SpecHelper.spec '#click_button' do
       results = extract_results(@session)
       expect(results['middle_name']).to eq('Darren')
       expect(results['foo']).to be_nil
+    end
+  end
+
+  context 'with name given on a button defined by <button> tag' do
+    it 'should submit the associated form when name is locator' do
+      @session.click_button('form[no_value]')
+      expect(extract_results(@session)['first_name']).to eq('John')
+    end
+
+    it 'should submit the associated form when name is specific' do
+      @session.click_button(name: 'form[no_value]')
+      expect(extract_results(@session)['first_name']).to eq('John')
     end
   end
 

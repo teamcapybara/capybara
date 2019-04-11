@@ -45,7 +45,7 @@ module Capybara
       #
       # Finds a button on the page and clicks it.
       # This can be any \<input> element of type submit, reset, image, button or it can be a
-      # \<button> element. All buttons can be found by their id, Capybara.test_id attribute, value, or title. \<button> elements can also be found
+      # \<button> element. All buttons can be found by their id, name, Capybara.test_id attribute, value, or title. \<button> elements can also be found
       # by their text content, and image \<input> elements by their alt attribute
       #
       # @overload click_button([locator], **options)

@@ -59,6 +59,7 @@ module Capybara
   #     * Locator: Matches the id, Capybara.test_id attribute, value, or title attributes, string content of a button, or the alt attribute of an image type button or of a descendant image of a button
   #     * Filters:
   #       * :id (String, Regexp, XPath::Expression) — Matches the id attribute
+  #       * :name (String) - Matches the name attribute
   #       * :title (String) — Matches the title attribute
   #       * :class (String, Array<String>, Regexp, XPath::Expression) — Matches the class(es) provided
   #       * :value (String) — Matches the value of an input button
