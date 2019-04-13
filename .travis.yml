@@ -89,7 +89,7 @@ matrix:
       env: W3C=true HEADLESS=true
     - gemfile: gemfiles/Gemfile.gumbo
       rvm: 2.5
-      script: bundle exec rake spec_rack
+      script: bundle exec rake rack_smoke
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-firefox

@@ -29,12 +29,15 @@ RSpec::Core::RakeTask.new(:spec_sauce) do |t|
   t.pattern = './spec/sauce_spec_chrome.rb'
 end
 
-RSpec::Core::RakeTask.new(:spec_rack, [] => :rubocop) do |t|
+# RSpec::Core::RakeTask.new(:spec_rack, [] => :rubocop) do |t|
+RSpec::Core::RakeTask.new(:spec_rack) do |t|
   t.rspec_opts = rspec_opts
   t.pattern = './spec{,/*/**}/*{_spec.rb}'
 end
 
 task spec: [:spec_firefox]
+
+task rack_smoke: %i[rubocop spec_rack]
 
 YARD::Rake::YardocTask.new do |t|
   t.files   = ['lib/**/*.rb']
