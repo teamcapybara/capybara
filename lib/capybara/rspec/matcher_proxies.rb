@@ -10,9 +10,9 @@ module Capybara
       end
     end
 
-    def within(*args)
+    def within(*args, &block)
       if block_given?
-        within_element(*args, &Proc.new)
+        within_element(*args, &block)
       else
         be_within(*args)
       end
