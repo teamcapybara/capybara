@@ -89,11 +89,6 @@ module Capybara
       @default_host = url
     end
 
-    remove_method :disable_animation=
-    def disable_animation=(bool_or_allowlist)
-      @disable_animation = bool_or_allowlist
-    end
-
     remove_method :test_id=
     ##
     #
