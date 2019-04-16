@@ -30,7 +30,8 @@ module Capybara
                 hint
               end
             end
-          rescue ::Selenium::WebDriver::Error::StaleElementReferenceError
+          rescue ::Selenium::WebDriver::Error::StaleElementReferenceError,
+                 ::Capybara::NotSupportedByDriverError
             # warn 'Unexpected Stale Element Error - skipping optimization'
             hints = []
           end
