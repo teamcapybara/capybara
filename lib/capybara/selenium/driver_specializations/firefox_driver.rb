@@ -3,6 +3,26 @@
 require 'capybara/selenium/nodes/firefox_node'
 
 module Capybara::Selenium::Driver::FirefoxDriver
+  def self.extended(driver)
+    driver.extend Capybara::Selenium::Driver::W3CFirefoxDriver if w3c?(driver)
+  end
+
+  def self.w3c?(driver)
+    driver.browser.capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
+  end
+end
+
+module Capybara::Selenium::Driver::W3CFirefoxDriver
+  class << self
+    def extended(driver)
+      require 'capybara/selenium/patches/pause_duration_fix' if pause_broken?(driver.browser)
+    end
+
+    def pause_broken?(sel_driver)
+      sel_driver.capabilities['moz:geckodriverVersion']&.start_with?('0.22.')
+    end
+  end
+
   def resize_window_to(handle, width, height)
     within_given_window(handle) do
       # Don't set the size if already set - See https://github.com/mozilla/geckodriver/issues/643
@@ -48,3 +68,5 @@ private
     ::Capybara::Selenium::FirefoxNode.new(self, native_node, initial_cache)
   end
 end
+
+Capybara::Selenium::Driver.register_specialization :firefox, Capybara::Selenium::Driver::FirefoxDriver

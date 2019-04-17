@@ -59,3 +59,5 @@ private
     browser.send(:bridge)
   end
 end
+
+Capybara::Selenium::Driver.register_specialization :chrome, Capybara::Selenium::Driver::ChromeDriver

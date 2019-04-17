@@ -23,3 +23,6 @@ private
     browser.send(:bridge)
   end
 end
+
+Capybara::Selenium::Driver.register_specialization(/^(safari|Safari_Technology_Preview)$/,
+                                                   Capybara::Selenium::Driver::SafariDriver)

@@ -14,17 +14,26 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   SPECIAL_OPTIONS = %i[browser clear_local_storage clear_session_storage timeout].freeze
   attr_reader :app, :options
 
-  def self.load_selenium
-    require 'selenium-webdriver'
-    warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade." if Gem.loaded_specs['selenium-webdriver'].version < Gem::Version.new('3.5.0')
-  rescue LoadError => e
-    raise e unless e.message.match?(/selenium-webdriver/)
+  class << self
+    def load_selenium
+      require 'selenium-webdriver'
+      warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade." if Gem.loaded_specs['selenium-webdriver'].version < Gem::Version.new('3.5.0')
+    rescue LoadError => e
+      raise e unless e.message.match?(/selenium-webdriver/)
 
-    raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
+      raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
+    end
+
+    attr_reader :specializations
+
+    def register_specialization(browser_name, specialization)
+      @specializations ||= {}
+      @specializations[browser_name] = specialization
+    end
   end
 
   def browser
-    @browser ||= begin
+    unless @browser
       options[:http_client] ||= begin
         require 'capybara/selenium/patches/persistent_client'
         if options[:timeout]
@@ -34,10 +43,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         end
       end
       processed_options = options.reject { |key, _val| SPECIAL_OPTIONS.include?(key) }
-      Selenium::WebDriver.for(options[:browser], processed_options).tap do |driver|
-        specialize_driver(driver)
-        setup_exit_handler
-      end
+      @browser = Selenium::WebDriver.for(options[:browser], processed_options)
+
+      specialize_driver
+      setup_exit_handler
     end
     @browser
   end
@@ -366,22 +375,11 @@ private
     ::Capybara::Selenium::Node.new(self, native_node, initial_cache)
   end
 
-  def specialize_driver(sel_driver)
-    case sel_driver.browser
-    when :chrome
-      extend ChromeDriver
-    when :firefox
-      require 'capybara/selenium/patches/pause_duration_fix' if pause_broken?(sel_driver)
-      extend FirefoxDriver if sel_driver.capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
-    when :ie, :internet_explorer
-      extend InternetExplorerDriver
-    when :safari, :Safari_Technology_Preview
-      extend SafariDriver
+  def specialize_driver
+    browser_type = browser.browser
+    self.class.specializations.select { |k, _v| k === browser_type }.each_value do |specialization| # rubocop:disable Style/CaseEquality
+      extend specialization
     end
-  end
-
-  def pause_broken?(driver)
-    driver.capabilities['moz:geckodriverVersion']&.start_with?('0.22.')
   end
 
   def setup_exit_handler

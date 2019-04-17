@@ -11,3 +11,8 @@ module Capybara::Selenium::Driver::InternetExplorerDriver
     handles.tap(&:pop).each { |fh| browser.switch_to.frame(fh) }
   end
 end
+
+module Capybara::Selenium
+  Driver.register_specialization :ie, Driver::InternetExplorerDriver
+  Driver.register_specialization :internet_explorer, Driver::InternetExplorerDriver
+end
