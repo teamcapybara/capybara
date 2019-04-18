@@ -14,12 +14,9 @@ env:
     - JAVA_OPTS=-Djava.security.egd=file:/dev/urandom
 
 addons:
+  chrome: stable
   apt:
-    sources:
-      - google-chrome
     packages:
-      - google-chrome-stable
-      - google-chrome-beta
       - awesome
 
 branches:
@@ -89,6 +86,8 @@ matrix:
     - gemfile: Gemfile
       rvm: 2.5
       env: W3C=true HEADLESS=true
+      addons:
+        chrome: beta
     - gemfile: gemfiles/Gemfile.gumbo
       rvm: 2.5
       script: bundle exec rake rack_smoke
