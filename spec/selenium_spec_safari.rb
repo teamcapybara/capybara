@@ -7,7 +7,11 @@ require 'rspec/shared_spec_matchers'
 
 SAFARI_DRIVER = :selenium_safari
 
-::Selenium::WebDriver::Safari.driver_path = '/Applications/Safari Technology Preview.app/Contents/MacOS/safaridriver'
+if ::Selenium::WebDriver::Service.respond_to? :driver_path=
+  ::Selenium::WebDriver::Safari::Service
+else
+  ::Selenium::WebDriver::Safari
+end.driver_path = '/Applications/Safari Technology Preview.app/Contents/MacOS/safaridriver'
 
 browser_options = ::Selenium::WebDriver::Safari::Options.new
 # browser_options.headless! if ENV['HEADLESS']
