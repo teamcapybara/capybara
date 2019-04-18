@@ -64,7 +64,11 @@ TestSessions::SeleniumIE.current_window.resize_to(800, 500)
 
 skipped_tests = %i[response_headers status_code trigger modals hover form_attribute windows]
 
-$stdout.puts `#{Selenium::WebDriver::IE.driver_path} --version` if ENV['CI']
+if ENV['CI']
+  service = Selenium::WebDriver::IE
+  service = service::Service if Selenium::WebDriver::Service.respond_to? :driver_path
+  $stdout.puts `#{service.driver_path} --version`
+end
 
 TestSessions::SeleniumIE.current_window.resize_to(1600, 1200)
 

@@ -37,7 +37,11 @@ end
 
 skipped_tests = %i[response_headers status_code trigger windows drag]
 
-$stdout.puts `#{Selenium::WebDriver::Safari.driver_path} --version` if ENV['CI']
+if ENV['CI']
+  service = Selenium::WebDriver::Safari
+  service = service::Service if Selenium::WebDriver::Service.respond_to? :driver_path
+  $stdout.puts `#{service.driver_path} --version`
+end
 
 Capybara::SpecHelper.run_specs TestSessions::Safari, SAFARI_DRIVER.to_s, capybara_skip: skipped_tests do |example|
   case example.metadata[:full_description]
