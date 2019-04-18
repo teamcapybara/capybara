@@ -14,7 +14,7 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
 
   def set_file(value) # rubocop:disable Naming/AccessorMethodName
     super(value)
-  rescue ::Selenium::WebDriver::Error::ExpectedError => e
+  rescue *file_errors => e
     raise ArgumentError, "Selenium < 3.14 with remote Chrome doesn't support multiple file upload" if e.message.match?(/File not found : .+\n.+/m)
 
     raise
@@ -27,6 +27,12 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
   end
 
 private
+
+  def file_errors
+    ::Selenium::WebDriver.logger.suppress_deprecations do
+      [::Selenium::WebDriver::Error::ExpectedError]
+    end
+  end
 
   def bridge
     driver.browser.send(:bridge)
