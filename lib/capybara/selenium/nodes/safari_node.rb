@@ -40,10 +40,12 @@ class Capybara::Selenium::SafariNode < Capybara::Selenium::Node
   end
 
   def disabled?
-    return true if super || (self[:disabled] == 'true')
+    return true if super
 
     # workaround for safaridriver reporting elements as enabled when they are nested in disabling elements
     if %w[option optgroup].include? tag_name
+      return true if self[:disabled] == 'true'
+
       find_xpath('parent::*[self::optgroup or self::select]')[0].disabled?
     else
       !find_xpath(DISABLED_BY_FIELDSET_XPATH).empty?
