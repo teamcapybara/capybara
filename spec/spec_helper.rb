@@ -9,7 +9,8 @@ module Capybara
   module SpecHelper
     def firefox?(session)
       browser_name(session) == :firefox &&
-        session.driver.browser.capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
+        ((defined?(::Selenium::WebDriver::VERSION) && (::Selenium::WebDriver::VERSION.to_f >= 4)) ||
+         session.driver.browser.capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities))
     end
 
     def firefox_lt?(version, session)
