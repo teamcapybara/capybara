@@ -49,6 +49,8 @@ matrix:
         apt:
           packages:
             - awesome
+    - gemfile: gemfiles/Gemfile.base-versions
+      rvm: 2.4
     - gemfile: Gemfile
       rvm: 2.6
       env: HEADLESS=true
