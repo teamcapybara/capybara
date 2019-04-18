@@ -264,6 +264,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
 private
 
+  def selenium_4?
+    defined?(Selenium::WebDriver::VERSION) && (Selenium::WebDriver::VERSION.to_f >= 4)
+  end
+
   def native_args(args)
     args.map { |arg| arg.is_a?(Capybara::Selenium::Node) ? arg.native : arg }
   end
@@ -278,15 +282,23 @@ private
   end
 
   def clear_browser_state_errors
-    ::Selenium::WebDriver.logger.suppress_deprecations do
-      [Selenium::WebDriver::Error::UnhandledError, Selenium::WebDriver::Error::UnknownError]
+    errors = [Selenium::WebDriver::Error::UnknownError]
+    unless selenium_4?
+      ::Selenium::WebDriver.logger.suppress_deprecations do
+        errors << Selenium::WebDriver::Error::UnhandledError
+      end
     end
+    errors
   end
 
   def unhandled_alert_errors
-    ::Selenium::WebDriver.logger.suppress_deprecations do
-      [Selenium::WebDriver::Error::UnhandledAlertError, Selenium::WebDriver::Error::UnexpectedAlertOpenError]
+    errors = [Selenium::WebDriver::Error::UnexpectedAlertOpenError]
+    unless selenium_4?
+      ::Selenium::WebDriver.logger.suppress_deprecations do
+        errors << Selenium::WebDriver::Error::UnhandledAlertError
+      end
     end
+    errors
   end
 
   def delete_all_cookies
@@ -367,9 +379,13 @@ private
   end
 
   def find_modal_errors
-    ::Selenium::WebDriver.logger.suppress_deprecations do
-      [Selenium::WebDriver::Error::TimeoutError, Selenium::WebDriver::Error::TimeOutError]
+    errors = [Selenium::WebDriver::Error::TimeoutError]
+    unless selenium_4?
+      ::Selenium::WebDriver.logger.suppress_deprecations do
+        errors << Selenium::WebDriver::Error::TimeOutError
+      end
     end
+    errors
   end
 
   def silenced_unknown_error_message?(msg)
