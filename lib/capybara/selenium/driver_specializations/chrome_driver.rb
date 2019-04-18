@@ -46,13 +46,13 @@ private
   end
 
   def cdp_unsupported_errors
-    errors = [Selenium::WebDriver::Error::WebDriverError]
-    unless selenium_4?
-      ::Selenium::WebDriver.logger.suppress_deprecations do
-        errors << Selenium::WebDriver::Error::UnhandledError
+    @cdp_unsupported_errors ||= [Selenium::WebDriver::Error::WebDriverError].tap do |errors|
+      unless selenium_4?
+        ::Selenium::WebDriver.logger.suppress_deprecations do
+          errors << Selenium::WebDriver::Error::UnhandledError
+        end
       end
     end
-    errors
   end
 
   def execute_cdp(cmd, params = {})

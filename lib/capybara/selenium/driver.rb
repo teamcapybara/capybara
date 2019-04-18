@@ -236,26 +236,27 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def invalid_element_errors
-    errors = [
-      ::Selenium::WebDriver::Error::StaleElementReferenceError,
-      ::Selenium::WebDriver::Error::ElementNotInteractableError,
-      ::Selenium::WebDriver::Error::InvalidSelectorError, # Work around chromedriver go_back/go_forward race condition
-      ::Selenium::WebDriver::Error::ElementClickInterceptedError,
-      ::Selenium::WebDriver::Error::NoSuchElementError, # IE
-      ::Selenium::WebDriver::Error::InvalidArgumentError # IE
-    ]
-
-    unless selenium_4?
-      ::Selenium::WebDriver.logger.suppress_deprecations do
-        errors.concat [
-          ::Selenium::WebDriver::Error::UnhandledError,
-          ::Selenium::WebDriver::Error::ElementNotVisibleError,
-          ::Selenium::WebDriver::Error::InvalidElementStateError,
-          ::Selenium::WebDriver::Error::ElementNotSelectableError
-        ]
+    @invalid_element_errors ||= begin
+      [
+        ::Selenium::WebDriver::Error::StaleElementReferenceError,
+        ::Selenium::WebDriver::Error::ElementNotInteractableError,
+        ::Selenium::WebDriver::Error::InvalidSelectorError, # Work around chromedriver go_back/go_forward race condition
+        ::Selenium::WebDriver::Error::ElementClickInterceptedError,
+        ::Selenium::WebDriver::Error::NoSuchElementError, # IE
+        ::Selenium::WebDriver::Error::InvalidArgumentError # IE
+      ].tap do |errors|
+        unless selenium_4?
+          ::Selenium::WebDriver.logger.suppress_deprecations do
+            errors.concat [
+              ::Selenium::WebDriver::Error::UnhandledError,
+              ::Selenium::WebDriver::Error::ElementNotVisibleError,
+              ::Selenium::WebDriver::Error::InvalidElementStateError,
+              ::Selenium::WebDriver::Error::ElementNotSelectableError
+            ]
+          end
+        end
       end
     end
-    errors
   end
 
   def no_such_window_error
@@ -282,23 +283,23 @@ private
   end
 
   def clear_browser_state_errors
-    errors = [Selenium::WebDriver::Error::UnknownError]
-    unless selenium_4?
-      ::Selenium::WebDriver.logger.suppress_deprecations do
-        errors << Selenium::WebDriver::Error::UnhandledError
+    @clear_browser_state_errors ||= [Selenium::WebDriver::Error::UnknownError].tap do |errors|
+      unless selenium_4?
+        ::Selenium::WebDriver.logger.suppress_deprecations do
+          errors << Selenium::WebDriver::Error::UnhandledError
+        end
       end
     end
-    errors
   end
 
   def unhandled_alert_errors
-    errors = [Selenium::WebDriver::Error::UnexpectedAlertOpenError]
-    unless selenium_4?
-      ::Selenium::WebDriver.logger.suppress_deprecations do
-        errors << Selenium::WebDriver::Error::UnhandledAlertError
+    @unhandled_alert_errors ||= [Selenium::WebDriver::Error::UnexpectedAlertOpenError].tap do |errors|
+      unless selenium_4?
+        ::Selenium::WebDriver.logger.suppress_deprecations do
+          errors << Selenium::WebDriver::Error::UnhandledAlertError
+        end
       end
     end
-    errors
   end
 
   def delete_all_cookies
@@ -379,13 +380,13 @@ private
   end
 
   def find_modal_errors
-    errors = [Selenium::WebDriver::Error::TimeoutError]
-    unless selenium_4?
-      ::Selenium::WebDriver.logger.suppress_deprecations do
-        errors << Selenium::WebDriver::Error::TimeOutError
+    @find_modal_errors ||= [Selenium::WebDriver::Error::TimeoutError].tap do |errors|
+      unless selenium_4?
+        ::Selenium::WebDriver.logger.suppress_deprecations do
+          errors << Selenium::WebDriver::Error::TimeOutError
+        end
       end
     end
-    errors
   end
 
   def silenced_unknown_error_message?(msg)

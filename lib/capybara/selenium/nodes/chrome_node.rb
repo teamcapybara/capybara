@@ -29,7 +29,7 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
 private
 
   def file_errors
-    ::Selenium::WebDriver.logger.suppress_deprecations do
+    @file_errors = ::Selenium::WebDriver.logger.suppress_deprecations do
       [::Selenium::WebDriver::Error::ExpectedError]
     end
   end
