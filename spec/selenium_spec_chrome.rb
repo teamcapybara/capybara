@@ -4,8 +4,11 @@ require 'spec_helper'
 require 'selenium-webdriver'
 require 'shared_selenium_session'
 require 'rspec/shared_spec_matchers'
+require 'webdrivers'
 
 CHROME_DRIVER = :selenium_chrome
+
+Selenium::WebDriver::Chrome.path = '/usr/bin/google-chrome-beta' if ENV['CI'] && ENV['W3C']
 
 browser_options = ::Selenium::WebDriver::Chrome::Options.new
 browser_options.headless! if ENV['HEADLESS']

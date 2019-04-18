@@ -57,6 +57,9 @@ end
 
 RSpec.configure do |config|
   Capybara::SpecHelper.configure(config)
+  config.expect_with :rspec do |expectations|
+    expectations.syntax = :expect
+  end
   config.filter_run_including focus_: true unless ENV['CI']
   config.run_all_when_everything_filtered = true
   config.after(:suite) { SeleniumStatistics.print_results }

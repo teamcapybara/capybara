@@ -43,7 +43,6 @@ end
 
 skipped_tests = %i[response_headers status_code trigger]
 
-
 if ENV['CI']
   service = Selenium::WebDriver::Firefox
   service = service::Service if Selenium::WebDriver::Service.respond_to? :driver_path
