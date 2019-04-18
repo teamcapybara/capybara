@@ -8,7 +8,8 @@ module Capybara::Selenium::Driver::FirefoxDriver
   end
 
   def self.w3c?(driver)
-    driver.browser.capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
+    (defined?(Selenium::WebDriver::VERSION) && (Selenium::WebDriver::VERSION.to_f >= 4)) ||
+      driver.browser.capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
   end
 end
 
