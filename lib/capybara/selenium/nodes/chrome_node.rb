@@ -26,6 +26,15 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
     html5_drag_to(element)
   end
 
+  def click(*)
+    super
+  rescue ::Selenium::WebDriver::Error::WebDriverError => e
+    # chromedriver 74 (at least on mac) raises the wrong error for this
+    raise ::Selenium::WebDriver::Error::ElementClickInterceptedError if e.message.match?(/element click intercepted/)
+
+    raise
+  end
+
 private
 
   def file_errors
