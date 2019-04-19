@@ -436,7 +436,7 @@ module Capybara
       def matches_text_regexp?(node, regexp)
         text_visible = visible
         text_visible = :all if text_visible == :hidden
-        !!node.text(text_visible, normalize_ws: normalize_ws).match(regexp)
+        node.text(text_visible, normalize_ws: normalize_ws).match?(regexp)
       end
 
       def default_visibility

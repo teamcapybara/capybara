@@ -22,7 +22,7 @@ module Capybara
         @actual_path = options[:url] ? uri&.to_s : uri&.request_uri
 
         if @expected_path.is_a? Regexp
-          @actual_path.to_s.match(@expected_path)
+          @actual_path.to_s.match?(@expected_path)
         else
           ::Addressable::URI.parse(@expected_path) == ::Addressable::URI.parse(@actual_path)
         end

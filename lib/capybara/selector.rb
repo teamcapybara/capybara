@@ -120,7 +120,7 @@ Capybara.add_selector(:link, locator_type: [String, Symbol]) do
 
   node_filter(:href) do |node, href|
     # If not a Regexp it's been handled in the main XPath
-    (href.is_a?(Regexp) ? node[:href].match(href) : true).tap do |res|
+    (href.is_a?(Regexp) ? node[:href].match?(href) : true).tap do |res|
       add_error "Expected href to match #{href.inspect} but it was #{node[:href].inspect}" unless res
     end
   end

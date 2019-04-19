@@ -13,7 +13,7 @@ module Capybara
       end
 
       def resolves_for?(node)
-        (@actual_title = node.title).match(@search_regexp)
+        (@actual_title = node.title).match?(@search_regexp)
       end
 
       def failure_message
