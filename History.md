@@ -1,3 +1,10 @@
+# Version 3.18.0
+Release date: unreleased
+
+### Added
+
+* XPath Selector query optimized to make use of Regexp :text option in initial element find
+
 # Version 3.17.0
 Release date: 2019-04-18
 
