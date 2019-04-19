@@ -80,11 +80,11 @@ RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
 
     describe '#fill_in' do
       it 'should warn that :fill_options are not supported' do
-        allow_any_instance_of(Capybara::RackTest::Node).to receive(:warn)
         session.visit '/with_html'
-        field = session.fill_in 'test_field', with: 'not_monkey', fill_options: { random: true }
+
+        expect { session.fill_in 'test_field', with: 'not_monkey', fill_options: { random: true } }.to \
+          output(/^Options passed to Node#set but the RackTest driver doesn't support any - ignoring/).to_stderr
         expect(session).to have_field('test_field', with: 'not_monkey')
-        expect(field.base).to have_received(:warn).with("Options passed to Node#set but the RackTest driver doesn't support any - ignoring")
       end
     end
 

@@ -107,8 +107,8 @@ Capybara::SpecHelper.spec '#find' do
     end
 
     it 'should warn if passed a non-valid locator type' do
-      expect_any_instance_of(Kernel).to receive(:warn).with(/must respond to to_xpath or be an instance of String/)
-      expect { @session.find(:xpath, 123) }.to raise_error Exception # The exact error is not yet well defined
+      expect { @session.find(:xpath, 123) }.to raise_error(Exception) # The exact error is not yet well defined
+        .and output(/must respond to to_xpath or be an instance of String/).to_stderr
     end
   end
 
@@ -263,9 +263,8 @@ Capybara::SpecHelper.spec '#find' do
     end
 
     it 'warns when the option has no effect' do
-      expect_any_instance_of(Kernel).to receive(:warn)
-        .with('The :exact option only has an effect on queries using the XPath#is method. Using it with the query "#test_field" has no effect.')
-      @session.find(:css, '#test_field', exact: true)
+      expect { @session.find(:css, '#test_field', exact: true) }.to \
+        output(/^The :exact option only has an effect on queries using the XPath#is method. Using it with the query "#test_field" has no effect/).to_stderr
     end
   end
 

@@ -143,8 +143,8 @@ Capybara::SpecHelper.spec '#select' do
     end
 
     it 'should warn' do
-      expect_any_instance_of(Capybara::Node::Element).to receive(:warn).once
-      @session.select('Other', from: 'form_title')
+      expect { @session.select('Other', from: 'form_title') }.to \
+        output(/^Attempt to select disabled option: Other/).to_stderr
     end
   end
 

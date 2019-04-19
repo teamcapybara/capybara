@@ -24,8 +24,8 @@ Capybara::SpecHelper.spec '#matches_style?', requires: [:css] do
   end
 
   it 'deprecated has_style?' do
-    expect_any_instance_of(Kernel).to receive(:warn).once
-    have_style(display: /^bl/)
+    expect { have_style(display: /^bl/) }.to \
+      output(/have_style is deprecated/).to_stderr
 
     el = @session.find(:css, '#first')
     allow(el).to receive(:warn).and_return(nil)

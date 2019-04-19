@@ -6,7 +6,6 @@ AllCops:
   DisabledByDefault: false
   TargetRubyVersion: 2.4
   Exclude:
-      - 'capybara.gemspec'
       - 'vendor/**/*'
       - 'gemfiles/vendor/**/*'
 
@@ -29,6 +28,7 @@ Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
     - 'lib/capybara/spec/**/*'
+    - 'capybara.gemspec'
 
 Metrics/AbcSize:
   Enabled: false
@@ -107,6 +107,10 @@ Style/NumericLiterals:
     - 'lib/capybara/spec/**/*'
     - 'spec/**/*'
 
+Style/SpecialGlobalVars:
+  Exclude:
+    - 'capybara.gemspec'
+
 Layout/EmptyLineBetweenDefs:
   AllowAdjacentOneLineDefs: true
 
@@ -146,9 +150,6 @@ RSpec/NestedGroups:
   Enabled: false
 
 RSpec/DescribeClass:
-  Enabled: false
-
-RSpec/AnyInstance:
   Enabled: false
 
 RSpec/FilePath:
