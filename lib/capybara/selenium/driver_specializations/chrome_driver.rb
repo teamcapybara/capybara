@@ -38,6 +38,13 @@ module Capybara::Selenium::Driver::ChromeDriver
 
 private
 
+  def clear_storage
+    # Chrome errors if attempt to clear storage on about:blank
+    # In W3C mode it crashes chromedriver
+    url = current_url
+    super unless url.nil? || url.start_with?('about:')
+  end
+
   def delete_all_cookies
     execute_cdp('Network.clearBrowserCookies')
   rescue *cdp_unsupported_errors
