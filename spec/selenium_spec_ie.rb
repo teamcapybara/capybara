@@ -64,11 +64,7 @@ TestSessions::SeleniumIE.current_window.resize_to(800, 500)
 
 skipped_tests = %i[response_headers status_code trigger modals hover form_attribute windows]
 
-if ENV['CI']
-  service = Selenium::WebDriver::IE
-  service = service::Service if Selenium::WebDriver::Service.respond_to? :driver_path
-  $stdout.puts `#{service.driver_path} --version`
-end
+Capybara::SpecHelper.log_selenium_driver_version(Selenium::WebDriver::IE) if ENV['CI']
 
 TestSessions::SeleniumIE.current_window.resize_to(1600, 1200)
 

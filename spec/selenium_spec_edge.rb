@@ -16,11 +16,7 @@ end
 
 skipped_tests = %i[response_headers status_code trigger modals]
 
-if ENV['CI']
-  service = Selenium::WebDriver::Edge
-  service = service::Service if Selenium::WebDriver::Service.respond_to? :driver_path
-  $stdout.puts `#{service.driver_path} --version`
-end
+Capybara::SpecHelper.log_selenium_driver_version(Selenium::WebDriver::Edge) if ENV['CI']
 
 Capybara::SpecHelper.run_specs TestSessions::SeleniumEdge, 'selenium', capybara_skip: skipped_tests do |example|
   case example.metadata[:description]

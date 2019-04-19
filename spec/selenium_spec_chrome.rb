@@ -4,7 +4,6 @@ require 'spec_helper'
 require 'selenium-webdriver'
 require 'shared_selenium_session'
 require 'rspec/shared_spec_matchers'
-require 'webdrivers'
 
 CHROME_DRIVER = :selenium_chrome
 
@@ -34,11 +33,7 @@ end
 
 skipped_tests = %i[response_headers status_code trigger]
 
-if ENV['CI']
-  service = Selenium::WebDriver::Chrome
-  service = service::Service if Selenium::WebDriver::Service.respond_to? :driver_path
-  $stdout.puts `#{service.driver_path} --version`
-end
+Capybara::SpecHelper.log_selenium_driver_version(Selenium::WebDriver::Chrome) if ENV['CI']
 
 Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_DRIVER.to_s, capybara_skip: skipped_tests do |example|
   case example.metadata[:full_description]
