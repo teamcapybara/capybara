@@ -148,12 +148,22 @@ module Capybara
       end
 
       def xpath_text_conditions
-        (options[:text] || options[:exact_text]).split.map { |txt| XPath.contains(txt) }.reduce(&:&)
+        text = (options[:text] || options[:exact_text])
+        case text
+        when String
+          text.split.map { |txt| XPath.contains(txt) }.reduce(&:&)
+        when Regexp
+          condition = XPath.current
+          condition = condition.uppercase if text.casefold?
+          Selector::RegexpDisassembler.new(text).alternated_substrings.map do |strs|
+            strs.flat_map(&:split).map { |str| condition.contains(str) }.reduce(:&)
+          end.reduce(:|)
+        end
       end
 
       def try_text_match_in_expression?
         first_try? &&
-          (options[:text] || options[:exact_text]).is_a?(String) &&
+          (options[:text] || options[:exact_text]) &&
           @resolved_node&.respond_to?(:session) &&
           @resolved_node.session.driver.wait?
       end
