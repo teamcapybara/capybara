@@ -228,15 +228,13 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       ::Selenium::WebDriver::Error::InvalidArgumentError # IE
     ]
 
-    unless selenium_4?
-      ::Selenium::WebDriver.logger.suppress_deprecations do
-        errors.concat [
-          ::Selenium::WebDriver::Error::UnhandledError,
-          ::Selenium::WebDriver::Error::ElementNotVisibleError,
-          ::Selenium::WebDriver::Error::InvalidElementStateError,
-          ::Selenium::WebDriver::Error::ElementNotSelectableError
-        ]
-      end
+    ::Selenium::WebDriver.logger.suppress_deprecations do
+      errors.concat [
+        ::Selenium::WebDriver::Error::UnhandledError,
+        ::Selenium::WebDriver::Error::ElementNotVisibleError,
+        ::Selenium::WebDriver::Error::InvalidElementStateError,
+        ::Selenium::WebDriver::Error::ElementNotSelectableError
+      ]
     end
     errors
   end
