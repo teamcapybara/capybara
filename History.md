@@ -1,4 +1,11 @@
-# Version 3.15
+# Version 3.15.1
+Release date: 2019-04-20
+
+### Added
+
+* Suppress some deprecation notices from the latest selenium-webdriver
+
+# Version 3.15.0
 Release date: 2019-03-19
 
 ### Added
