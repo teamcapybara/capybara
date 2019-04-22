@@ -1,5 +1,5 @@
 # Version 3.18.0
-Release date: unreleased
+Release date: 2019-04-22
 
 ### Added
 
