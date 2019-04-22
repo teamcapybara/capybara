@@ -5,6 +5,10 @@ Release date: unreleased
 
 * XPath Selector query optimized to make use of Regexp :text option in initial element find
 
+### Fixed
+
+* Workaround issue where Chrome/chromedriver 74 can return the wrong error type when a click is intercepted
+
 # Version 3.17.0
 Release date: 2019-04-18
 
