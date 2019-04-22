@@ -30,7 +30,7 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
     super
   rescue ::Selenium::WebDriver::Error::WebDriverError => e
     # chromedriver 74 (at least on mac) raises the wrong error for this
-    raise ::Selenium::WebDriver::Error::ElementClickInterceptedError if e.message.match?(/element click intercepted/)
+    raise ::Selenium::WebDriver::Error::ElementClickInterceptedError, e.message if e.message.match?(/element click intercepted/)
 
     raise
   end
