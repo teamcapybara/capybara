@@ -11,6 +11,7 @@ module Capybara
                      session_options:,
                      enable_aria_label: session_options.enable_aria_label,
                      test_id: session_options.test_id,
+                     selector_format: nil,
                      **options,
                      &filter_block)
         @resolved_node = nil
@@ -21,7 +22,8 @@ module Capybara
 
         @selector = Selector.new(
           find_selector(args[0].is_a?(Symbol) ? args.shift : args[0]),
-          config: { enable_aria_label: enable_aria_label, test_id: test_id }
+          config: { enable_aria_label: enable_aria_label, test_id: test_id },
+          format: selector_format
         )
 
         @locator = args.shift
@@ -371,8 +373,8 @@ module Capybara
         node.is_a?(::Capybara::Node::Simple) && node.path == '/'
       end
 
-      def apply_filter?(_filter)
-        true
+      def apply_filter?(filter)
+        filter.format.nil? || (filter.format == selector_format)
       end
 
       def matches_locator_filter?(node)

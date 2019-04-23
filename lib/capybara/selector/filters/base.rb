@@ -24,6 +24,10 @@ module Capybara
           @options.key?(:skip_if) && value == @options[:skip_if]
         end
 
+        def format
+          @options[:format]
+        end
+
         def matcher?
           !@matcher.nil?
         end
