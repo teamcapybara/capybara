@@ -144,9 +144,6 @@ module Capybara
       # is passed for the name the block should accept | node, option_name, option_value |. In either case
       # the block should return `true` if the node passes the filer or `false` if it doesn't
 
-      # @!method filter
-      #   See {Selector#node_filter}
-
       ##
       #
       # Define an expression filter for use with this selector

@@ -29,6 +29,7 @@ Metrics/BlockLength:
     - 'spec/**/*'
     - 'lib/capybara/spec/**/*'
     - 'capybara.gemspec'
+    - 'lib/capybara/selector/definition/*'
 
 Metrics/AbcSize:
   Enabled: false
