@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'capybara/selector/selector'
+
 module Capybara
   class Selector
     class CSS
