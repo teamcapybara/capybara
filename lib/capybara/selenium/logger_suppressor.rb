@@ -3,6 +3,11 @@
 module Capybara
   module Selenium
     module DeprecationSuppressor
+      def initialize(*)
+        @suppress_for_capybara = false
+        super
+      end
+
       def deprecate(*)
         super unless @suppress_for_capybara
       end
