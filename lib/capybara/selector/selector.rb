@@ -203,16 +203,17 @@ module Capybara
 
     attr_reader :errors
 
-    def initialize(definition, config:)
+    def initialize(definition, config:, format:)
       definition = self.class[definition] unless definition.is_a? Definition
       super(definition)
       @definition = definition
       @config = config
+      @format = format
       @errors = []
     end
 
     def format
-      @definition.default_format
+      @format || @definition.default_format
     end
     alias_method :current_format, :format
 
@@ -240,13 +241,9 @@ module Capybara
       errors << error_msg
     end
 
-    def expression_for(name, locator, config: @config, **options)
-      Selector.new(name, config: config).call(locator, **options)
+    def expression_for(name, locator, config: @config, format: current_format, **options)
+      Selector.new(name, config: config, format: format).call(locator, **options)
     end
-
-    # def expression_for(name, locator, config: @config, format: current_format, **options)
-    #   Selector.new(name, config: config, format: format).call(locator, **options)
-    # end
 
     # @api private
     def with_filter_errors(errors)
