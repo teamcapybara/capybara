@@ -13,6 +13,17 @@ Capybara::SpecHelper.spec '#save_screenshot', requires: [:screenshot] do
     FileUtils.rm_rf alternative_path
   end
 
+  around do |example|
+    # Workaround RSpec Issue - https://github.com/rspec/rspec-support/issues/374
+    if respond_to?(:without_partial_double_verification)
+      without_partial_double_verification do
+        example.run
+      end
+    else
+      example.run
+    end
+  end
+
   it 'generates sensible filename' do
     allow(@session.driver).to receive(:save_screenshot)
 
