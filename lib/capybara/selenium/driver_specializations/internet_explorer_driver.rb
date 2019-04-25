@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'capybara/selenium/nodes/ie_node'
+
 module Capybara::Selenium::Driver::InternetExplorerDriver
   def switch_to_frame(frame)
     return super unless frame == :parent
@@ -9,6 +11,12 @@ module Capybara::Selenium::Driver::InternetExplorerDriver
     handles = @frame_handles[current_window_handle]
     browser.switch_to.default_content
     handles.tap(&:pop).each { |fh| browser.switch_to.frame(fh) }
+  end
+
+private
+
+  def build_node(native_node, initial_cache = {})
+    ::Capybara::Selenium::IENode.new(self, native_node, initial_cache)
   end
 end
 

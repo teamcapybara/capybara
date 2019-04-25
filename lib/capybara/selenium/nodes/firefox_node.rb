@@ -18,17 +18,7 @@ class Capybara::Selenium::FirefoxNode < Capybara::Selenium::Node
   end
 
   def disabled?
-    # Not sure exactly what version of FF fixed the below issue, but it is definitely fixed in 61+
-    return super unless browser_version < 61.0
-
-    return true if super
-
-    # workaround for selenium-webdriver/geckodriver reporting elements as enabled when they are nested in disabling elements
-    if %w[option optgroup].include? tag_name
-      find_xpath('parent::*[self::optgroup or self::select]')[0].disabled?
-    else
-      !find_xpath(DISABLED_BY_FIELDSET_XPATH).empty?
-    end
+    driver.evaluate_script("arguments[0].matches(':disabled, select:disabled *')", self)
   end
 
   def set_file(value) # rubocop:disable Naming/AccessorMethodName

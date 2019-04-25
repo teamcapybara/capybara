@@ -35,6 +35,10 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
     raise
   end
 
+  def disabled?
+    driver.evaluate_script("arguments[0].matches(':disabled, select:disabled *')", self)
+  end
+
 private
 
   def file_errors
