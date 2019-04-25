@@ -21,6 +21,7 @@ module Capybara
 end
 
 if RUBY_ENGINE == 'jruby'
+  # :nocov:
   module Capybara::DSL
     class <<self
       remove_method :included
@@ -43,6 +44,7 @@ if RUBY_ENGINE == 'jruby'
       end
     end
   end
+  # :nocov:
 else
   module Capybara::DSLRSpecProxyInstaller
     module ClassMethods

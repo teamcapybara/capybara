@@ -153,7 +153,9 @@ module Capybara
       # causes a concurrency issue with network requests here
       # https://github.com/jruby/jruby/issues/4212
       if (RUBY_PLATFORM == 'java') && (Gem::Version.new(JRUBY_VERSION) < Gem::Version.new('9.2.8.0'))
+        # :nocov:
         @elements.select(&block).to_enum # non-lazy evaluation
+        # :nocov:
       else
         @elements.lazy.select(&block)
       end

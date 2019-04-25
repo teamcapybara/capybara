@@ -36,6 +36,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency('xpath', ['~>3.2'])
 
   s.add_development_dependency('byebug') unless RUBY_PLATFORM == 'java'
+  s.add_development_dependency('coveralls')
   s.add_development_dependency('cucumber', ['>= 2.3.0'])
   s.add_development_dependency('erubi') # dependency specification needed by rbx
   s.add_development_dependency('irb')

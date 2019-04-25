@@ -1,9 +1,16 @@
 # frozen_string_literal: true
 
 require 'rspec/expectations'
-require 'capybara/spec/spec_helper'
 require 'webdrivers' if ENV['CI']
 require 'selenium_statistics'
+if ENV['CI']
+  require 'coveralls'
+  Coveralls.wear! do
+    add_filter '/lib/capybara/driver/'
+    add_filter '/lib/capybara/registrations/'
+  end
+end
+require 'capybara/spec/spec_helper'
 
 module Capybara
   module SpecHelper

@@ -1,6 +1,8 @@
 language: ruby
 sudo: required
 dist: trusty
+notifications:
+  webhooks: https://coveralls.io/webhook
 services:
   - docker
 rvm:
