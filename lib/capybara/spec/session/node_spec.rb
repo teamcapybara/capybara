@@ -4,7 +4,7 @@
 # because of the methods being tested. In tests using Capybara this type of behavior should be implemented
 # using Capybara provided assertions with builtin waiting behavior.
 
-Capybara::SpecHelper.spec 'node' do
+Capybara::SpecHelper.spec 'node', :focus_ do
   before do
     @session.visit('/with_html')
   end
