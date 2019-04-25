@@ -3,6 +3,7 @@
 [![Build Status](https://secure.travis-ci.org/teamcapybara/capybara.svg)](https://travis-ci.org/teamcapybara/capybara)
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/teamcapybara/capybara?svg=true)](https://ci.appveyor.com/api/projects/github/teamcapybara/capybara)
 [![Code Climate](https://codeclimate.com/github/teamcapybara/capybara.svg)](https://codeclimate.com/github/teamcapybara/capybara)
+[![Coverage Status](https://coveralls.io/repos/github/teamcapybara/capybara/badge.svg?branch=master)](https://coveralls.io/github/teamcapybara/capybara?branch=master)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jnicklas/capybara?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![SemVer](https://api.dependabot.com/badges/compatibility_score?dependency-name=capybara&package-manager=bundler&version-scheme=semver)](https://dependabot.com/compatibility-score.html?dependency-name=capybara&package-manager=bundler&version-scheme=semver)
 
