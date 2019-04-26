@@ -360,7 +360,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         pending "Selenium remote doesn't support transferring a directory" if remote?(session)
         pending "Headless Chrome doesn't support directory upload - https://bugs.chromium.org/p/chromedriver/issues/detail?id=2521&q=directory%20upload&colspec=ID%20Status%20Pri%20Owner%20Summary" if chrome?(session) && ENV['HEADLESS']
         pending "IE doesn't support uploading a directory" if ie?(session)
-        pending 'Chrome/chromedriver 73 breaks this' unless chrome_lt?(73, session)
+        pending 'Chrome/chromedriver 73 breaks this' if chrome?(session) && !chrome_lt?(73, session)
         pending "Safari doesn't support uploading a directory" if safari?(session)
 
         session.visit('/form')
