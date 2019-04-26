@@ -110,7 +110,7 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumIE, 'selenium', capybara_sk
   #   pending "IE driver doesn't error when clicking on covered elements, it just clicks the wrong element"
   when /#click should go to the same page if href is blank$/
     pending 'IE treats blank href as a parent request (against HTML spec)'
-  when /#attach_file with a block$/
+  when /#attach_file with a block/
     skip 'Hangs IE testing for unknown reason'
   end
 end
