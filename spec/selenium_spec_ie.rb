@@ -5,13 +5,13 @@ require 'selenium-webdriver'
 require 'shared_selenium_session'
 require 'rspec/shared_spec_matchers'
 
-if ENV['CI']
-  if ::Selenium::WebDriver::Service.respond_to? :driver_path=
-    ::Selenium::WebDriver::IE::Service
-  else
-    ::Selenium::WebDriver::IE
-  end.driver_path = 'C:\Tools\WebDriver\IEDriverServer.exe'
-end
+# if ENV['CI']
+#   if ::Selenium::WebDriver::Service.respond_to? :driver_path=
+#     ::Selenium::WebDriver::IE::Service
+#   else
+#     ::Selenium::WebDriver::IE
+#   end.driver_path = 'C:\Tools\WebDriver\IEDriverServer.exe'
+# end
 
 def selenium_host
   ENV.fetch('SELENIUM_HOST', '192.168.56.102')
