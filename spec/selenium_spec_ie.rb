@@ -5,13 +5,13 @@ require 'selenium-webdriver'
 require 'shared_selenium_session'
 require 'rspec/shared_spec_matchers'
 
-# if ENV['CI']
-#   if ::Selenium::WebDriver::Service.respond_to? :driver_path=
-#     ::Selenium::WebDriver::IE::Service
-#   else
-#     ::Selenium::WebDriver::IE
-#   end.driver_path = 'C:\Tools\WebDriver\IEDriverServer.exe'
-# end
+if ENV['CI']
+  if ::Selenium::WebDriver::Service.respond_to? :driver_path=
+    ::Selenium::WebDriver::IE::Service
+  else
+    ::Selenium::WebDriver::IE
+  end.driver_path = 'C:\Tools\WebDriver\IEDriverServer.exe'
+end
 
 def selenium_host
   ENV.fetch('SELENIUM_HOST', '192.168.56.102')
@@ -110,6 +110,8 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumIE, 'selenium', capybara_sk
   #   pending "IE driver doesn't error when clicking on covered elements, it just clicks the wrong element"
   when /#click should go to the same page if href is blank$/
     pending 'IE treats blank href as a parent request (against HTML spec)'
+  when /with a block can upload by clicking the file input$/
+    skip 'Hangs IE testing for unknown reason'
   end
 end
 
