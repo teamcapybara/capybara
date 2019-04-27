@@ -3,7 +3,7 @@
 require 'rspec/expectations'
 require 'webdrivers' if ENV['CI']
 require 'selenium_statistics'
-if ENV['CI']
+if ENV['TRAVIS']
   require 'coveralls'
   Coveralls.wear! do
     add_filter '/lib/capybara/driver/'
