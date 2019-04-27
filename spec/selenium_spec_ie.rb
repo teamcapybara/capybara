@@ -28,7 +28,7 @@ end
 Capybara.register_driver :selenium_ie do |app|
   # ::Selenium::WebDriver.logger.level = "debug"
   options = ::Selenium::WebDriver::IE::Options.new
-  options.require_window_focus = true
+  # options.require_window_focus = true
   # options.add_option("log", {"level": "trace"})
 
   if ENV['REMOTE']
