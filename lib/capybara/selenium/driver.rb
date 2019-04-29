@@ -226,10 +226,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     @browser&.quit
   rescue Selenium::WebDriver::Error::SessionNotCreatedError, Errno::ECONNREFUSED # rubocop:disable Lint/HandleExceptions
     # Browser must have already gone
-  rescue Selenium::WebDriver::Error::UnknownError => err
-    unless silenced_unknown_error_message?(err.message) # Most likely already gone
+  rescue Selenium::WebDriver::Error::UnknownError => e
+    unless silenced_unknown_error_message?(e.message) # Most likely already gone
       # probably already gone but not sure - so warn
-      warn "Ignoring Selenium UnknownError during driver quit: #{err.message}"
+      warn "Ignoring Selenium UnknownError during driver quit: #{e.message}"
     end
   ensure
     @browser = nil

@@ -300,12 +300,12 @@ module Capybara
         synchronize(Capybara::Queries::BaseQuery.wait(options, session_options.default_max_wait_time)) do
           begin
             find(:select, from, options)
-          rescue Capybara::ElementNotFound => select_error # rubocop:disable Naming/RescuedExceptionsVariableName
+          rescue Capybara::ElementNotFound => select_error # _rubocop:disable Naming/RescuedExceptionsVariableName
             raise if %i[selected with_selected multiple].any? { |option| options.key?(option) }
 
             begin
               find(:datalist_input, from, options)
-            rescue Capybara::ElementNotFound => dlinput_error
+            rescue Capybara::ElementNotFound => dlinput_error # _rubocop:disable Naming/RescuedExceptionsVariableName
               raise Capybara::ElementNotFound, "#{select_error.message} and #{dlinput_error.message}"
             end
           end

@@ -19,7 +19,7 @@ Metrics/LineLength:
     - 'lib/capybara/spec/**/*'
     - 'lib/capybara/selector.rb'
   IgnoredPatterns:
-    - '\s+# rubocop'
+    - '\s+# _?rubocop'
     - '^\s*#'
     - '^\s*(raise|warn) '
   Max: 120
@@ -62,6 +62,11 @@ Lint/UnusedMethodArgument:
 
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
+
+
+Naming/RescuedExceptionsVariableName:
+  # This cop is currently fully broken
+  Enabled: false
 
 Naming/PredicateName:
   Exclude:
@@ -121,7 +126,7 @@ Layout/AccessModifierIndentation:
 Layout/CaseIndentation:
   EnforcedStyle: end
 
-Layout/IndentArray:
+Layout/IndentFirstArrayElement:
   EnforcedStyle: consistent
 
 Security/YAMLLoad:

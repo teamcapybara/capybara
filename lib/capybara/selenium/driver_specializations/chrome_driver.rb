@@ -18,8 +18,8 @@ module Capybara::Selenium::Driver::ChromeDriver
 
   def resize_window_to(handle, width, height)
     super
-  rescue Selenium::WebDriver::Error::UnknownError => err
-    raise unless err.message.match?(/failed to change window state/)
+  rescue Selenium::WebDriver::Error::UnknownError => e
+    raise unless e.message.match?(/failed to change window state/)
 
     # Chromedriver doesn't wait long enough for state to change when coming out of fullscreen
     # and raises unnecessary error. Wait a bit and try again.

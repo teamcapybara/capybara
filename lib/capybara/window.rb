@@ -49,7 +49,7 @@ module Capybara
     # @return [Boolean] whether this window is the window in which commands are being executed
     def current?
       @driver.current_window_handle == @handle
-    rescue @driver.no_such_window_error # rubocop:disable Naming/RescuedExceptionsVariableName
+    rescue @driver.no_such_window_error # _rubocop:disable Naming/RescuedExceptionsVariableName
       false
     end
 

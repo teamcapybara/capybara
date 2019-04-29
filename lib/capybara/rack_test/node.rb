@@ -118,7 +118,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
 
   public_instance_methods(false).each do |meth_name|
     alias_method "unchecked_#{meth_name}", meth_name
-    private "unchecked_#{meth_name}" # rubocop:disable Layout/AccessModifierIndentation,Style/AccessModifierDeclarations
+    private "unchecked_#{meth_name}" # rubocop:disable Style/AccessModifierDeclarations
 
     define_method meth_name do |*args|
       stale_check

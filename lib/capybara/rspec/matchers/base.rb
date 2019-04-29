@@ -48,8 +48,8 @@ module Capybara
 
         def does_not_match?(actual)
           element_does_not_match?(wrap(actual))
-        rescue Capybara::ExpectationNotMet => err
-          @failure_message_when_negated = err.message
+        rescue Capybara::ExpectationNotMet => e
+          @failure_message_when_negated = e.message
           false
         end
 
