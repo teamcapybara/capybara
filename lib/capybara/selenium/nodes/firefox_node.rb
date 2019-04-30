@@ -55,6 +55,14 @@ class Capybara::Selenium::FirefoxNode < Capybara::Selenium::Node
     scroll_if_needed { browser_action.move_to(native, 0, 0).move_to(native).perform }
   end
 
+  def select_option
+    # To optimize to only one check and then click
+    selected_or_disabled = driver.evaluate_script(<<~JS, self)
+      arguments[0].matches(':disabled, select:disabled *, :checked')
+    JS
+    click unless selected_or_disabled
+  end
+
 private
 
   def click_with_options(click_options)

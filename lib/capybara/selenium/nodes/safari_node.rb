@@ -19,8 +19,12 @@ class Capybara::Selenium::SafariNode < Capybara::Selenium::Node
   end
 
   def select_option
-    driver.execute_script("arguments[0].closest('select').scrollIntoView()", self)
-    super
+    # To optimize to only one check and then click
+    selected_or_disabled = driver.execute_script(<<~JS, self)
+      arguments[0].closest('select').scrollIntoView();
+      return arguments[0].matches(':disabled, select:disabled *, :checked');
+    JS
+    click unless selected_or_disabled
   end
 
   def unselect_option

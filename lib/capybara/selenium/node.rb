@@ -56,10 +56,12 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def set(value, **options)
     raise ArgumentError, "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}" if value.is_a?(Array) && !multiple?
 
-    tag_name, type = attrs(:tagName, :type)
-    case tag_name.downcase
+    tag_name, type = attrs(:tagName, :type).map { |val| val&.downcase }
+    @tag_name ||= tag_name
+
+    case tag_name
     when 'input'
-      case type.downcase
+      case type
       when 'radio'
         click
       when 'checkbox'
@@ -78,7 +80,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     when 'textarea'
       set_text(value, options)
     else
-      set_content_editable(value) if content_editable?
+      set_content_editable(value)
     end
   end
 
@@ -136,7 +138,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def tag_name
-    native.tag_name.downcase
+    @tag_name ||= native.tag_name.downcase
   end
 
   def visible?; boolean_attr(native.displayed?); end
@@ -291,20 +293,24 @@ private
     # Ensure we are focused on the element
     click
 
-    driver.execute_script <<-JS, self
-      var range = document.createRange();
-      var sel = window.getSelection();
-      arguments[0].focus();
-      range.selectNodeContents(arguments[0]);
-      sel.removeAllRanges();
-      sel.addRange(range);
+    editable = driver.execute_script <<-JS, self
+      if (arguments[0].isContentEditable) {
+        var range = document.createRange();
+        var sel = window.getSelection();
+        arguments[0].focus();
+        range.selectNodeContents(arguments[0]);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        return true;
+      }
+      return false;
     JS
 
     # The action api has a speed problem but both chrome and firefox 58 raise errors
     # if we use the faster direct send_keys.  For now just send_keys to the element
     # we've already focused.
     # native.send_keys(value.to_s)
-    browser_action.send_keys(value.to_s).perform
+    browser_action.send_keys(value.to_s).perform if editable
   end
 
   def action_with_modifiers(click_options)

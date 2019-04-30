@@ -126,7 +126,6 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The element
       def select_option(wait: nil)
-        warn "Attempt to select disabled option: #{value || text}" if disabled?
         synchronize(wait) { base.select_option }
         self
       end
@@ -276,7 +275,8 @@ module Capybara
       # @return [String]      The tag name of the element
       #
       def tag_name
-        synchronize { base.tag_name }
+        # Element type is immutable so cache it
+        @tag_name ||= synchronize { base.tag_name }
       end
 
       ##

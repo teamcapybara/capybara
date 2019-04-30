@@ -141,11 +141,6 @@ Capybara::SpecHelper.spec '#select' do
       @session.select('Other', from: 'form_title')
       expect(@session.find_field('form_title').value).not_to eq 'Other'
     end
-
-    it 'should warn' do
-      expect { @session.select('Other', from: 'form_title') }.to \
-        output(/^Attempt to select disabled option: Other/).to_stderr
-    end
   end
 
   context 'with multiple select' do

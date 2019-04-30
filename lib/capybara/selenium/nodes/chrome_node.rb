@@ -39,6 +39,14 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
     driver.evaluate_script("arguments[0].matches(':disabled, select:disabled *')", self)
   end
 
+  def select_option
+    # To optimize to only one check and then click
+    selected_or_disabled = driver.evaluate_script(<<~JS, self)
+      arguments[0].matches(':disabled, select:disabled *, :checked')
+    JS
+    click unless selected_or_disabled
+  end
+
 private
 
   def file_errors
