@@ -93,7 +93,20 @@ matrix:
       env: W3C=true HEADLESS=true
       addons:
         chrome: beta
+    - gemfile: Gemfile
+      os: osx
+      osx_image: xcode10.2
+      rvm: 2.6
+      addons:
+        homebrew:
+          taps: homebrew/cask-versions
+          casks: safari-technology-preview
+      before_script:
+        - "sudo /usr/bin/safaridriver --enable"
+        - "sudo '/Applications/Safari Technology Preview.app/Contents/MacOS/safaridriver' --enable"
+      script: "bundle exec rake spec_safari"
   allow_failures:
+    - os: osx
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-firefox
     - env: W3C=true HEADLESS=true

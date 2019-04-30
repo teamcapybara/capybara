@@ -64,7 +64,7 @@ module Capybara
       mod = mod::Service if ::Selenium::WebDriver::Service.respond_to? :driver_path
       path = mod.driver_path
       path = path.call if path.respond_to? :call
-      $stdout.puts `#{path} --version`
+      $stdout.puts `#{path.gsub(' ', '\ ')} --version`
     end
   end
 end
