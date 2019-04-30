@@ -7,17 +7,6 @@ Capybara::SpecHelper.spec '#save_and_open_screenshot' do
     @session.visit '/'
   end
 
-  around do |example|
-    # Workaround RSpec Issue - https://github.com/rspec/rspec-support/issues/374
-    if respond_to?(:without_partial_double_verification)
-      without_partial_double_verification do
-        example.run
-      end
-    else
-      example.run
-    end
-  end
-
   it 'opens file from the default directory', requires: [:screenshot] do
     expected_file_regex = /capybara-\d+\.png/
     allow(@session.driver).to receive(:save_screenshot)
