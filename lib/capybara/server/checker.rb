@@ -25,11 +25,15 @@ module Capybara
     private
 
       def http_request(&block)
-        Net::HTTP.start(@host, @port, read_timeout: 2, &block)
+        make_request(read_timeout: 2, &block)
       end
 
       def https_request(&block)
-        Net::HTTP.start(@host, @port, ssl_options, &block)
+        make_request(ssl_options, &block)
+      end
+
+      def make_request(**options, &block)
+        Net::HTTP.start(@host, @port, options.merge(max_retries: 0), &block)
       end
 
       def ssl_options
