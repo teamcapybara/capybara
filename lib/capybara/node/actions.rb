@@ -25,7 +25,31 @@ module Capybara
       def click_link_or_button(locator = nil, **options)
         find(:link_or_button, locator, options).click
       end
-      alias_method :click_on, :click_link_or_button
+
+      ##
+      #
+      # Finds an element and clicks on it
+      #
+      # By default this is an alias of {Capybara::Node::Actions#click_llink_or_button}
+      # @overload click_on([locator], **options)
+      #   By default this is an alias of {Capybara::Node::Actions#click_link_or_button}
+      #   @macro waiting_behavior
+      #   @param [String] locator      See {Capybara::Node::Actions#click_button} and {Capybara::Node::Actions#click_link}
+      #
+      # @overload click_on(selector, [locator], **options)
+      #  @macro waiting_behavior
+      #  @param [Symbol] symbol   A registered selector type (:css, :xpath, :element, ...) See {Capybara::Selector} for built-in selectors.
+      #  @param [String] locator  See {Capybara::Selector} for locator specifics
+      #
+      # @return [Capybara::Node::Element]  The element clicked
+      #
+      def click_on(*args, **options)
+        if args[0].is_a?(Symbol)
+          find(*args, **options).click
+        else
+          click_link_or_button(*args, **options)
+        end
+      end
 
       ##
       #
