@@ -277,8 +277,7 @@ end
       include Capybara::Minitest::Assertions
 
       # Reset sessions and driver between tests
-      # Use super wherever this method is redefined in your individual test classes
-      def teardown
+      teardown do
         Capybara.reset_sessions!
         Capybara.use_default_driver
       end
