@@ -63,9 +63,6 @@ Capybara::SpecHelper.run_specs TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVE
     skip "Firefox doesn't generate an event for shift+control+click" if firefox_gte?(62, @session)
   when 'Capybara::Session selenium_firefox_remote #accept_prompt should accept the prompt with a blank response when there is a default'
     pending "Geckodriver doesn't set a blank response in FF < 63 - https://bugzilla.mozilla.org/show_bug.cgi?id=1486485" if firefox_lt?(63, @session)
-  when 'Capybara::Session selenium_firefox_remote #attach_file with multipart form should fire change once for each set of files uploaded'
-    pending 'Gekcodriver appends files so we have to first call clear for multiple files which creates an extra change ' \
-            'if files are already set'
   when 'Capybara::Session selenium_firefox_remote #attach_file with multipart form should fire change once when uploading multiple files from empty'
     pending "FF < 62 doesn't support setting all files at once" if firefox_lt?(62, @session)
   when 'Capybara::Session selenium_firefox_remote #reset_session! removes ALL cookies'
