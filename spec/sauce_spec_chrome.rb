@@ -5,6 +5,7 @@ require 'selenium-webdriver'
 
 require 'sauce_whisk'
 # require 'shared_selenium_session'
+# require 'shared_selenium_node'
 # require 'rspec/shared_spec_matchers'
 
 Capybara.register_driver :sauce_chrome do |app|

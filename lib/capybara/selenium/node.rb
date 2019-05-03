@@ -155,7 +155,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def content_editable?
-    native.attribute('isContentEditable')
+    native.attribute('isContentEditable') == 'true'
   end
 
   def ==(other)

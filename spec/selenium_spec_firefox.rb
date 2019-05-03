@@ -3,6 +3,7 @@
 require 'spec_helper'
 require 'selenium-webdriver'
 require 'shared_selenium_session'
+require 'shared_selenium_node'
 require 'rspec/shared_spec_matchers'
 
 browser_options = ::Selenium::WebDriver::Firefox::Options.new
@@ -68,8 +69,9 @@ end
 
 RSpec.describe 'Capybara::Session with firefox' do # rubocop:disable RSpec/MultipleDescribes
   include Capybara::SpecHelper
-  include_examples  'Capybara::Session', TestSessions::SeleniumFirefox, :selenium_firefox
-  include_examples  Capybara::RSpecMatchers, TestSessions::SeleniumFirefox, :selenium_firefox
+  ['Capybara::Session', 'Capybara::Node', Capybara::RSpecMatchers].each do |examples|
+    include_examples examples, TestSessions::SeleniumFirefox, :selenium_firefox
+  end
 
   describe 'filling in Firefox-specific date and time fields with keystrokes' do
     let(:datetime) { Time.new(1983, 6, 19, 6, 30) }
@@ -196,15 +198,6 @@ RSpec.describe Capybara::Selenium::Node do
       session.find(:css, '#click-test').click(:alt, :ctrl, :meta)
       # it also triggers a contextmenu event when control is held so don't check click type
       expect(session).to have_link('Has been alt control meta')
-    end
-  end
-
-  context '#send_keys' do
-    it 'should process space' do
-      session = TestSessions::SeleniumFirefox
-      session.visit('/form')
-      session.find(:css, '#address1_city').send_keys('ocean', [:shift, :space, 'side'])
-      expect(session.find(:css, '#address1_city').value).to eq 'ocean SIDE'
     end
   end
 end

@@ -3,6 +3,7 @@
 require 'spec_helper'
 require 'selenium-webdriver'
 require 'shared_selenium_session'
+require 'shared_selenium_node'
 require 'rspec/shared_spec_matchers'
 
 SAFARI_DRIVER = :selenium_safari
@@ -77,8 +78,9 @@ end
 
 RSpec.describe 'Capybara::Session with safari' do
   include Capybara::SpecHelper
-  include_examples  'Capybara::Session', TestSessions::Safari, SAFARI_DRIVER
-  include_examples  Capybara::RSpecMatchers, TestSessions::Safari, SAFARI_DRIVER
+  ['Capybara::Session', 'Capybara::Node', Capybara::RSpecMatchers].each do |examples|
+    include_examples examples, TestSessions::Safari, SAFARI_DRIVER
+  end
 
   context 'storage' do
     describe '#reset!' do

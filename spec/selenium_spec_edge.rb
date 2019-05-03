@@ -3,6 +3,7 @@
 require 'spec_helper'
 require 'selenium-webdriver'
 require 'shared_selenium_session'
+require 'shared_selenium_node'
 require 'rspec/shared_spec_matchers'
 
 Capybara.register_driver :selenium_edge do |app|
@@ -27,6 +28,7 @@ end
 
 RSpec.describe 'Capybara::Session with Edge', capybara_skip: skipped_tests do
   include Capybara::SpecHelper
-  include_examples  'Capybara::Session', TestSessions::SeleniumEdge, :selenium_edge
-  include_examples  Capybara::RSpecMatchers, TestSessions::SeleniumEdge, :selenium_edge
+  ['Capybara::Session', 'Capybara::Node', Capybara::RSpecMatchers].each do |examples|
+    include_examples examples, TestSessions::SeleniumEdge, :selenium_edge
+  end
 end

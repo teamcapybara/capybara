@@ -65,6 +65,20 @@ task :travis do
   Rake::Task[:cucumber].invoke
 end
 
+task :build_js do
+  require 'uglifier'
+  Dir.glob('./lib/capybara/selenium/atoms/src/*.js').each do |fn|
+    js = ::Uglifier.compile(
+      File.read(fn),
+      compress: {
+        negate_iife: false, # Negate immediately invoked function expressions to avoid extra parens
+        side_effects: false # Pass false to disable potentially dropping functions marked as "pure"
+      }
+    )[0...-1]
+    File.write("./lib/capybara/selenium/atoms/#{File.basename(fn).gsub('.js', '.min.js')}", js)
+  end
+end
+
 task :release do
   version = Capybara::VERSION
   puts "Releasing #{version}, y/n?"

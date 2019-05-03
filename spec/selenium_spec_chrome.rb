@@ -3,6 +3,7 @@
 require 'spec_helper'
 require 'selenium-webdriver'
 require 'shared_selenium_session'
+require 'shared_selenium_node'
 require 'rspec/shared_spec_matchers'
 
 CHROME_DRIVER = :selenium_chrome
@@ -51,8 +52,9 @@ end
 
 RSpec.describe 'Capybara::Session with chrome' do
   include Capybara::SpecHelper
-  include_examples  'Capybara::Session', TestSessions::Chrome, CHROME_DRIVER
-  include_examples  Capybara::RSpecMatchers, TestSessions::Chrome, CHROME_DRIVER
+  ['Capybara::Session', 'Capybara::Node', Capybara::RSpecMatchers].each do |examples|
+    include_examples examples, TestSessions::Chrome, CHROME_DRIVER
+  end
 
   context 'storage' do
     describe '#reset!' do
