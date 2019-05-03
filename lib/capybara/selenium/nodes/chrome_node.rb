@@ -13,6 +13,14 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
   end
 
   def set_file(value) # rubocop:disable Naming/AccessorMethodName
+    # In Chrome 75+ files are appended (due to WebDriver spec - why?) so we have to clear here if its multiple and already set
+    if browser_version >= 75.0
+      driver.execute_script(<<~JS, self)
+        if (arguments[0].multiple && (arguments[0].files.length > 0)){
+          arguments[0].value = null;
+        }
+      JS
+    end
     super(value)
   rescue *file_errors => e
     raise ArgumentError, "Selenium < 3.14 with remote Chrome doesn't support multiple file upload" if e.message.match?(/File not found : .+\n.+/m)
@@ -57,5 +65,15 @@ private
 
   def bridge
     driver.browser.send(:bridge)
+  end
+
+  def w3c?
+    (defined?(Selenium::WebDriver::VERSION) && (Selenium::WebDriver::VERSION.to_f >= 4)) ||
+      driver.browser.capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
+  end
+
+  def browser_version
+    caps = driver.browser.capabilities
+    (caps[:browser_version] || caps[:version]).to_f
   end
 end

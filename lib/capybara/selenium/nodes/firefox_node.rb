@@ -23,7 +23,11 @@ class Capybara::Selenium::FirefoxNode < Capybara::Selenium::Node
 
   def set_file(value) # rubocop:disable Naming/AccessorMethodName
     # By default files are appended so we have to clear here if its multiple and already set
-    native.clear if multiple? && driver.evaluate_script('arguments[0].files', self).any?
+    driver.execute_script(<<~JS, self)
+      if (arguments[0].multiple && (arguments[0].files.length > 0)){
+        arguments[0].value = null;
+      }
+    JS
     return super if browser_version >= 62.0
 
     # Workaround lack of support for multiple upload by uploading one at a time
