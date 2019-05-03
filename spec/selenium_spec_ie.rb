@@ -3,6 +3,7 @@
 require 'spec_helper'
 require 'selenium-webdriver'
 require 'shared_selenium_session'
+require 'shared_selenium_node'
 require 'rspec/shared_spec_matchers'
 
 if ENV['CI']
@@ -114,8 +115,9 @@ end
 
 RSpec.describe 'Capybara::Session with Internet Explorer', capybara_skip: skipped_tests do # rubocop:disable RSpec/MultipleDescribes
   include Capybara::SpecHelper
-  include_examples 'Capybara::Session', TestSessions::SeleniumIE, :selenium_ie
-  include_examples Capybara::RSpecMatchers, TestSessions::SeleniumIE, :selenium_ie
+  ['Capybara::Session', 'Capybara::Node', Capybara::RSpecMatchers].each do |examples|
+    include_examples examples, TestSessions::SeleniumIE, :selenium_ie
+  end
 end
 
 RSpec.describe Capybara::Selenium::Node do

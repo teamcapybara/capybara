@@ -3,6 +3,7 @@
 require 'spec_helper'
 require 'selenium-webdriver'
 require 'shared_selenium_session'
+require 'shared_selenium_node'
 require 'rspec/shared_spec_matchers'
 
 def selenium_host
@@ -72,8 +73,9 @@ end
 
 RSpec.describe 'Capybara::Session with remote Chrome' do
   include Capybara::SpecHelper
-  include_examples  'Capybara::Session', TestSessions::Chrome, CHROME_REMOTE_DRIVER
-  include_examples  Capybara::RSpecMatchers, TestSessions::Chrome, CHROME_REMOTE_DRIVER
+  ['Capybara::Session', 'Capybara::Node', Capybara::RSpecMatchers].each do |examples|
+    include_examples examples, TestSessions::Chrome, CHROME_REMOTE_DRIVER
+  end
 
   it 'is considered to be chrome' do
     expect(session.driver.browser.browser).to eq :chrome
