@@ -1,3 +1,16 @@
+# Version 3.19.0
+Release date: unreleased
+
+### Added
+
+* Support for multiple expression types in Selector definitions
+* Reduced wirecalls for common actions in Selenium driver
+
+### Fixed
+
+* Workaround Chrome 75 appending files to multiple file inputs
+* Suppressed retry when detecting http vs https server connection
+
 # Version 3.18.0
 Release date: 2019-04-22
 
