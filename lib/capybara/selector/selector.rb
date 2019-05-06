@@ -61,7 +61,7 @@ module Capybara
         warn 'Selector has no format'
       end
     ensure
-      warn "Locator #{locator.inspect} must #{locator_description}. This will raise an error in a future version of Capybara." unless locator_valid?(locator)
+      warn "Locator #{locator.class}:#{locator.inspect} for selector #{name.inspect} must #{locator_description}. This will raise an error in a future version of Capybara." unless locator_valid?(locator)
     end
 
     def add_error(error_msg)
