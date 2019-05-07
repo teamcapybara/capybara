@@ -146,7 +146,9 @@ Capybara::SpecHelper.spec '#has_css?' do
   context 'with count' do
     it 'should be true if the content occurs the given number of times' do
       expect(@session).to have_css('p', count: 3)
+      expect(@session).to have_css('p').exactly(3).times
       expect(@session).to have_css('p a#foo', count: 1)
+      expect(@session).to have_css('p a#foo').once
       expect(@session).to have_css('p a.doesnotexist', count: 0)
       expect(@session).to have_css('li', class: /guitar|drummer/, count: 4)
       expect(@session).to have_css('li', id: /john|paul/, class: /guitar|drummer/, count: 2)
@@ -161,6 +163,7 @@ Capybara::SpecHelper.spec '#has_css?' do
 
     it 'should be false if the content occurs a different number of times than the given' do
       expect(@session).not_to have_css('p', count: 6)
+      expect(@session).not_to have_css('p').exactly(5).times
       expect(@session).not_to have_css('p a#foo', count: 2)
       expect(@session).not_to have_css('p a.doesnotexist', count: 1)
     end
@@ -175,6 +178,7 @@ Capybara::SpecHelper.spec '#has_css?' do
     it 'should be true when content occurs same or fewer times than given' do
       expect(@session).to have_css('h2.head', maximum: 5) # edge case
       expect(@session).to have_css('h2', maximum: 10)
+      expect(@session).to have_css('h2').at_most(10).times
       expect(@session).to have_css('p a.doesnotexist', maximum: 1)
       expect(@session).to have_css('p a.doesnotexist', maximum: 0)
     end
@@ -182,6 +186,7 @@ Capybara::SpecHelper.spec '#has_css?' do
     it 'should be false when content occurs more times than given' do
       expect(@session).not_to have_css('h2.head', maximum: 4) # edge case
       expect(@session).not_to have_css('h2', maximum: 3)
+      expect(@session).not_to have_css('h2').at_most(3).times
       expect(@session).not_to have_css('p', maximum: 1)
     end
 
@@ -195,12 +200,14 @@ Capybara::SpecHelper.spec '#has_css?' do
     it 'should be true when content occurs same or more times than given' do
       expect(@session).to have_css('h2.head', minimum: 5) # edge case
       expect(@session).to have_css('h2', minimum: 3)
+      expect(@session).to have_css('h2').at_least(2).times
       expect(@session).to have_css('p a.doesnotexist', minimum: 0)
     end
 
     it 'should be false when content occurs fewer times than given' do
       expect(@session).not_to have_css('h2.head', minimum: 6) # edge case
       expect(@session).not_to have_css('h2', minimum: 8)
+      expect(@session).not_to have_css('h2').at_least(8).times
       expect(@session).not_to have_css('p', minimum: 10)
       expect(@session).not_to have_css('p a.doesnotexist', minimum: 1)
     end

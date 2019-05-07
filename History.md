@@ -5,6 +5,8 @@ Release date: unreleased
 
 * Support for multiple expression types in Selector definitions
 * Reduced wirecalls for common actions in Selenium driver
+* Syntactic sugar `#once`, `#twice`, `#thrice`, `#excatly`, `#at_least`, `#at_most` to
+  `have_selector`, `have_css`, `have_xpath`, and `have_text` RSpec matchers
 
 ### Fixed
 

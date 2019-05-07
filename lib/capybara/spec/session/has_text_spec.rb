@@ -166,12 +166,14 @@ Capybara::SpecHelper.spec '#has_text?' do
     it 'should be true if the text occurs the given number of times' do
       @session.visit('/with_count')
       expect(@session).to have_text('count', count: 2)
+      expect(@session).to have_text('count').exactly(2).times
     end
 
     it 'should be false if the text occurs a different number of times than the given' do
       @session.visit('/with_count')
       expect(@session).not_to have_text('count', count: 0)
       expect(@session).not_to have_text('count', count: 1)
+      expect(@session).not_to have_text('count').once
       expect(@session).not_to have_text(/count/, count: 3)
     end
 
@@ -186,12 +188,14 @@ Capybara::SpecHelper.spec '#has_text?' do
     it 'should be true when text occurs same or fewer times than given' do
       @session.visit('/with_count')
       expect(@session).to have_text('count', maximum: 2)
+      expect(@session).to have_text('count').at_most(2).times
       expect(@session).to have_text(/count/, maximum: 3)
     end
 
     it 'should be false when text occurs more times than given' do
       @session.visit('/with_count')
       expect(@session).not_to have_text('count', maximum: 1)
+      expect(@session).not_to have_text('count').at_most(1).times
       expect(@session).not_to have_text('count', maximum: 0)
     end
 
@@ -206,12 +210,14 @@ Capybara::SpecHelper.spec '#has_text?' do
     it 'should be true when text occurs same or more times than given' do
       @session.visit('/with_count')
       expect(@session).to have_text('count', minimum: 2)
+      expect(@session).to have_text('count').at_least(2).times
       expect(@session).to have_text(/count/, minimum: 0)
     end
 
     it 'should be false when text occurs fewer times than given' do
       @session.visit('/with_count')
       expect(@session).not_to have_text('count', minimum: 3)
+      expect(@session).not_to have_text('count').at_least(3).times
     end
 
     it 'should coerce minimum to an integer' do

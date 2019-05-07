@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 require 'capybara/rspec/matchers/base'
+require 'capybara/rspec/matchers/count_sugar'
 
 module Capybara
   module RSpecMatchers
     module Matchers
       class HaveText < WrappedElementMatcher
+        include CountSugar
+
         def element_matches?(el)
           el.assert_text(*@args)
         end
