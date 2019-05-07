@@ -5,54 +5,50 @@ require 'selenium-webdriver'
 require 'shared_selenium_session'
 require 'rspec/shared_spec_matchers'
 
-CHROME_DRIVER = :selenium_chrome
+EDGE_DRIVER = :selenium_edge
 
-Selenium::WebDriver::Chrome.path = '/usr/bin/google-chrome-beta' if ENV['CI'] && ENV['W3C']
+browser_options = ::Selenium::WebDriver::Edge::Options.new
 
-browser_options = ::Selenium::WebDriver::Chrome::Options.new
-browser_options.headless! if ENV['HEADLESS']
-browser_options.add_option(:w3c, !!ENV['W3C'])
-
-Capybara.register_driver :selenium_chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options, timeout: 30).tap do |driver|
-    driver.browser.download_path = Capybara.save_path
+Capybara.register_driver :selenium_edge do |app|
+  Capybara::Selenium::Driver.new(app, browser: :edge, options: browser_options, timeout: 30).tap do |driver|
+    # driver.browser.download_path = Capybara.save_path
   end
 end
 
-Capybara.register_driver :selenium_chrome_not_clear_storage do |app|
-  chrome_options = {
-    browser: :chrome,
+Capybara.register_driver :selenium_edge_not_clear_storage do |app|
+  edge_options = {
+    browser: :edge,
     options: browser_options
   }
-  Capybara::Selenium::Driver.new(app, chrome_options.merge(clear_local_storage: false, clear_session_storage: false))
+  Capybara::Selenium::Driver.new(app, edge_options.merge(clear_local_storage: false, clear_session_storage: false))
 end
 
 module TestSessions
-  Chrome = Capybara::Session.new(CHROME_DRIVER, TestApp)
+  Edge = Capybara::Session.new(EDGE_DRIVER, TestApp)
 end
 
 skipped_tests = %i[response_headers status_code trigger]
 
-Capybara::SpecHelper.log_selenium_driver_version(Selenium::WebDriver::Chrome) if ENV['CI']
+Capybara::SpecHelper.log_selenium_driver_version(Selenium::WebDriver::Edge) if ENV['CI']
 
-Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_DRIVER.to_s, capybara_skip: skipped_tests do |example|
+Capybara::SpecHelper.run_specs TestSessions::Edge, EDGE_DRIVER.to_s, capybara_skip: skipped_tests do |example|
   case example.metadata[:full_description]
   when /#click_link can download a file$/
     skip 'Need to figure out testing of file downloading on windows platform' if Gem.win_platform?
-  when /Capybara::Session selenium_chrome Capybara::Window#maximize/
-    pending "Chrome headless doesn't support maximize" if ENV['HEADLESS']
+  when /Capybara::Session selenium_edge Capybara::Window#maximize/
+    pending "Edge headless doesn't support maximize" if ENV['HEADLESS']
   end
 end
 
-RSpec.describe 'Capybara::Session with chrome' do
+RSpec.describe 'Capybara::Session with edge' do
   include Capybara::SpecHelper
-  include_examples  'Capybara::Session', TestSessions::Chrome, CHROME_DRIVER
-  include_examples  Capybara::RSpecMatchers, TestSessions::Chrome, CHROME_DRIVER
+  include_examples  'Capybara::Session', TestSessions::Edge, EDGE_DRIVER
+  include_examples  Capybara::RSpecMatchers, TestSessions::Edge, EDGE_DRIVER
 
   context 'storage' do
     describe '#reset!' do
       it 'clears storage by default' do
-        session = TestSessions::Chrome
+        session = TestSessions::Edge
         session.visit('/with_js')
         session.find(:css, '#set-storage').click
         session.reset!
@@ -62,7 +58,7 @@ RSpec.describe 'Capybara::Session with chrome' do
       end
 
       it 'does not clear storage when false' do
-        session = Capybara::Session.new(:selenium_chrome_not_clear_storage, TestApp)
+        session = Capybara::Session.new(:selenium_edge_not_clear_storage, TestApp)
         session.visit('/with_js')
         session.find(:css, '#set-storage').click
         session.reset!
@@ -75,13 +71,13 @@ RSpec.describe 'Capybara::Session with chrome' do
 
   context 'timeout' do
     it 'sets the http client read timeout' do
-      expect(TestSessions::Chrome.driver.browser.send(:bridge).http.read_timeout).to eq 30
+      expect(TestSessions::Edge.driver.browser.send(:bridge).http.read_timeout).to eq 30
     end
   end
 
-  describe 'filling in Chrome-specific date and time fields with keystrokes' do
+  describe 'filling in Edge-specific date and time fields with keystrokes' do
     let(:datetime) { Time.new(1983, 6, 19, 6, 30) }
-    let(:session) { TestSessions::Chrome }
+    let(:session) { TestSessions::Edge }
 
     before do
       session.visit('/form')

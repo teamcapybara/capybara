@@ -17,7 +17,7 @@ RSpec::Core::RakeTask.new(:spec_firefox) do |t|
   t.pattern = './spec{,/*/**}/*{_spec.rb,_spec_firefox.rb}'
 end
 
-%w[chrome ie edge chrome_remote firefox_remote safari].each do |driver|
+%w[chrome ie edge chrome_remote firefox_remote safari edge].each do |driver|
   RSpec::Core::RakeTask.new(:"spec_#{driver}") do |t|
     t.rspec_opts = rspec_opts
     t.pattern = "./spec/{selenium_spec_#{driver}.rb}"
