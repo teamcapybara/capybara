@@ -283,13 +283,7 @@ private
   end
 
   def clear_browser_state_errors
-    @clear_browser_state_errors ||= [Selenium::WebDriver::Error::UnknownError].tap do |errors|
-      unless selenium_4?
-        ::Selenium::WebDriver.logger.suppress_deprecations do
-          errors << Selenium::WebDriver::Error::UnhandledError
-        end
-      end
-    end
+    @clear_browser_state_errors ||= [Selenium::WebDriver::Error::UnknownError]
   end
 
   def unhandled_alert_errors
