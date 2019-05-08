@@ -29,7 +29,8 @@ Metrics/BlockLength:
     - 'spec/**/*'
     - 'lib/capybara/spec/**/*'
     - 'capybara.gemspec'
-    - 'lib/capybara/selector/definition/*'
+  ExcludedMethods:
+    - Capybara.add_selector
 
 Metrics/AbcSize:
   Enabled: false
@@ -53,7 +54,7 @@ Metrics/PerceivedComplexity:
   Enabled: false
 
 Metrics/ParameterLists:
-   CountKeywordArgs: false
+  CountKeywordArgs: false
 
 Lint/UnusedMethodArgument:
   Exclude:
@@ -62,7 +63,6 @@ Lint/UnusedMethodArgument:
 
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
-
 
 Naming/RescuedExceptionsVariableName:
   # This cop is currently fully broken
@@ -97,9 +97,6 @@ Style/Documentation:
   Enabled: false
 
 Style/DoubleNegation:
-  Enabled: false
-
-Style/ClassVars:
   Enabled: false
 
 Style/EmptyElse:

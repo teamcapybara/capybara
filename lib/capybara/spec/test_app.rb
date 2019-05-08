@@ -18,7 +18,6 @@ class TestApp < Sinatra::Base
   set :raise_errors, true
   set :show_exceptions, false
 
-  @@form_post_count = 0
   # Also check lib/capybara/spec/views/*.erb for pages not listed here
 
   get '/' do
@@ -176,8 +175,8 @@ class TestApp < Sinatra::Base
   end
 
   post '/form' do
-    @@form_post_count += 1
-    '<pre id="results">' + params[:form].merge('post_count' => @@form_post_count).to_yaml + '</pre>'
+    self.class.form_post_count += 1
+    '<pre id="results">' + params[:form].merge('post_count' => self.class.form_post_count).to_yaml + '</pre>'
   end
 
   post '/upload_empty' do
@@ -212,6 +211,12 @@ class TestApp < Sinatra::Base
       'No files uploaded'
     end
   end
+
+  class << self
+    attr_accessor :form_post_count
+  end
+
+  @form_post_count = 0
 end
 
 Rack::Handler::Puma.run TestApp, Port: 8070 if $PROGRAM_NAME == __FILE__
