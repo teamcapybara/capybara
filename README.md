@@ -185,7 +185,7 @@ to one specific driver. For example:
 ```ruby
 describe 'some stuff which requires js', js: true do
   it 'will use the default js driver'
-  it 'will switch to one specific driver', driver: :webkit
+  it 'will switch to one specific driver', driver: :apparition
 end
 ```
 
@@ -262,7 +262,7 @@ end
 
 ## <a name="using-capybara-with-minitest"></a>Using Capybara with Minitest
 
-* If you are using Rails, add the following code in your `test_helper.rb`
+* If you are using Rails, but not using Rails system tests, add the following code in your `test_helper.rb`
     file to make Capybara available in all test cases deriving from
     `ActionDispatch::IntegrationTest`:
 
@@ -342,9 +342,9 @@ For example if you'd prefer to run everything in Selenium, you could do:
 Capybara.default_driver = :selenium # :selenium_chrome and :selenium_chrome_headless are also registered
 ```
 
-However, if you are using RSpec or Cucumber, you may instead want to consider
-leaving the faster `:rack_test` as the __default_driver__, and marking only those
-tests that require a JavaScript-capable driver using `js: true` or
+However, if you are using RSpec or Cucumber (and your app runs correctly without JS),
+you may instead want to consider leaving the faster `:rack_test` as the __default_driver__, and
+marking only those tests that require a JavaScript-capable driver using `js: true` or
 `@javascript`, respectively.  By default, JavaScript tests are run using the
 `:selenium` driver. You can change this by setting
 `Capybara.javascript_driver`.
@@ -353,7 +353,7 @@ You can also change the driver temporarily (typically in the Before/setup and
 After/teardown blocks):
 
 ```ruby
-Capybara.current_driver = :webkit # temporarily select different driver
+Capybara.current_driver = :apparition # temporarily select different driver
 # tests here
 Capybara.use_default_driver       # switch back to default driver
 ```
@@ -411,42 +411,12 @@ and test server, see [Transactions and database setup](#transactions-and-databas
 
 ### <a name="apparition"></a>Apparition
 
-The [apparition driver](https://github.com/twalpole/apparition) in a new driver that allows you to run tests using Chrome in a headless
+The [apparition driver](https://github.com/twalpole/apparition) is a new driver that allows you to run tests using Chrome in a headless
 or headed configuration. It attempts to provide backwards compatibility with the [Poltergeist driver API](https://github.com/teampoltergeist/poltergeist)
-while allowing for the use of modern JS/CSS. It uses CDP to communicate with Chrome, thereby obviating the need for chromedriver.
-A compatibility layer for capybara-webkit is planned, although has not yet been started. This driver is being developed by the
-maintainer of Capybara and will attempt to keep up to date with new Capybara releases. It will probably be moved into the
-teamcapybara repo once completely stable.
-
-### <a name="capybara-webkit"></a>Capybara-webkit
-
-Note: `capybara-webkit` depends on QtWebkit which went end-of-life quite some time ago. There has been an attempt to revive the project but `capybara-webkit` is not yet (as far as I know) compatible with the revived version of QtWebKit (could be a good open source project for someone) and as such is still limited to an old version of QtWebKit.  This means its support for modern JS and CSS is severely limited.
-
-The [capybara-webkit driver](https://github.com/thoughtbot/capybara-webkit) is for true headless
-testing. It uses QtWebKit to start a rendering engine process. It can execute JavaScript as well.
-It is significantly faster than drivers like Selenium since it does not load an entire browser.
-
-You can install it with:
-
-```bash
-gem install capybara-webkit
-```
-
-And you can use it by:
-
-```ruby
-Capybara.javascript_driver = :webkit
-```
-
-### <a name="poltergeist"></a>Poltergeist
-
-Note: `poltergeist` depends on PhantomJS for which active development ended quite some time ago (2.1.1). As such it is roughly equivalent to a 6-7 year old version of Safari, meaning lack of support for modern JS and CSS. If any effort to update PhantomJS succeeds in the future this situation could change.
-
-[Poltergeist](https://github.com/teampoltergeist/poltergeist) is another
-headless driver which integrates Capybara with
-[PhantomJS](http://phantomjs.org/). It is truly headless, so doesn't
-require Xvfb to run on your CI server. It will also detect and report
-any Javascript errors that happen within the page.
+and [capybara-webkit API](https://github.com/thoughtbot/capybara-webkit) while allowing for the use of modern JS/CSS. It
+uses CDP to communicate with Chrome, thereby obviating the need for chromedriver. This driver is being developed by the
+current developer of Capybara and will attempt to keep up to date with new Capybara releases. It will probably be moved into the
+teamcapybara repo once it reaches v1.0.
 
 ## <a name="the-dsl"></a>The DSL
 
