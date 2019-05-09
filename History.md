@@ -1,12 +1,13 @@
 # Version 3.19.0
-Release date: unreleased
+Release date: 2019-05-09
 
 ### Added
 
-* Support for multiple expression types in Selector definitions
-* Reduced wirecalls for common actions in Selenium driver
+
 * Syntactic sugar `#once`, `#twice`, `#thrice`, `#excatly`, `#at_least`, `#at_most` to
   `have_selector`, `have_css`, `have_xpath`, and `have_text` RSpec matchers
+* Support for multiple expression types in Selector definitions
+* Reduced wirecalls for common actions in Selenium driver
 
 ### Fixed
 
