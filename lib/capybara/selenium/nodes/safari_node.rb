@@ -16,6 +16,10 @@ class Capybara::Selenium::SafariNode < Capybara::Selenium::Node
       return find_css('th:first-child,td:first-child')[0].click(keys, options)
     end
     raise
+  rescue ::Selenium::WebDriver::Error::WebDriverError
+    # Safari doesn't return a specific error here - assume it's an ElementNotInteractableError
+    raise ::Selenium::WebDriver::Error::ElementNotInteractableError,
+          'Non distinct error raised in #click, translated to ElementNotInteractableError for retry'
   end
 
   def select_option
@@ -54,7 +58,9 @@ class Capybara::Selenium::SafariNode < Capybara::Selenium::Node
   end
 
   def send_keys(*args)
-    return super(*args.map { |arg| arg == :space ? ' ' : arg }) if args.none? { |arg| arg.is_a? Array }
+    if args.none? { |arg| arg.is_a?(Array) || (arg.is_a?(Symbol) && MODIFIER_KEYS.include?(arg)) }
+      return super(*args.map { |arg| arg == :space ? ' ' : arg })
+    end
 
     native.click
     _send_keys(args).perform
@@ -72,6 +78,11 @@ class Capybara::Selenium::SafariNode < Capybara::Selenium::Node
         send_keys(:space, :backspace) if value.to_s.empty? && clear.nil?
       end
     end
+  end
+
+  def hover
+    # Workaround issue where hover would sometimes fail - possibly due to mouse not having moved
+    scroll_if_needed { browser_action.move_to(native, 0, 0).move_to(native).perform }
   end
 
 private
@@ -95,11 +106,7 @@ private
 
   def _send_keys(keys, actions = browser_action, down_keys = ModifierKeysStack.new)
     case keys
-    when :control, :left_control, :right_control,
-         :alt, :left_alt, :right_alt,
-         :shift, :left_shift, :right_shift,
-         :meta, :left_meta, :right_meta,
-         :command
+    when *MODIFIER_KEYS
       down_keys.press(keys)
       actions.key_down(keys)
     when String
@@ -116,6 +123,12 @@ private
     end
     actions
   end
+
+  MODIFIER_KEYS = %i[control left_control right_control
+                     alt left_alt right_alt
+                     shift left_shift right_shift
+                     meta left_meta right_meta
+                     command].freeze
 
   class ModifierKeysStack
     def initialize

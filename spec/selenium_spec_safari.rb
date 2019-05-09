@@ -56,11 +56,6 @@ Capybara::SpecHelper.run_specs TestSessions::Safari, SAFARI_DRIVER.to_s, capybar
     skip "safaridriver doesn't allow clicking on file inputs"
   when /Capybara::Session selenium_safari #attach_file with a block can upload by clicking the label/
     skip 'hangs tests'
-  when /Capybara::Session selenium_safari #check when checkbox hidden with Capybara.automatic_label_click == false with allow_label_click == true should check via the label if input is visible but blocked by another element/,
-      'Capybara::Session selenium_safari node #click should not retry clicking when wait is disabled',
-      'Capybara::Session selenium_safari node #click should allow to retry longer',
-      'Capybara::Session selenium_safari node #click should retry clicking'
-    pending "safaridriver doesn't return a specific enough error to deal with this"
   when /Capybara::Session selenium_safari #within_frame works if the frame is closed/,
        /Capybara::Session selenium_safari #switch_to_frame works if the frame is closed/
     skip 'Safari has a race condition when clicking an element that causes the frame to close. It will sometimes raise a NoSuchFrameError'
@@ -79,8 +74,6 @@ Capybara::SpecHelper.run_specs TestSessions::Safari, SAFARI_DRIVER.to_s, capybar
   when 'Capybara::Session selenium_safari #go_back should fetch a response from the driver from the previous page',
        'Capybara::Session selenium_safari #go_forward should fetch a response from the driver from the previous page'
     skip 'safaridriver loses the ability to find elements in the document after `go_back`'
-  when 'Capybara::Session selenium_safari node #send_keys should hold modifiers at top level'
-    skip 'Need to look into this'
   end
 end
 
