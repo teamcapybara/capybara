@@ -54,8 +54,6 @@ Capybara::SpecHelper.run_specs TestSessions::Safari, SAFARI_DRIVER.to_s, capybar
     pending 'safaridriver thinks these links are non-interactable for some unknown reason'
   when /Capybara::Session selenium_safari #attach_file with a block can upload by clicking the file input/
     skip "safaridriver doesn't allow clicking on file inputs"
-  when /Capybara::Session selenium_safari #attach_file with a block can upload by clicking the label/
-    skip 'hangs tests'
   when /Capybara::Session selenium_safari #within_frame works if the frame is closed/,
        /Capybara::Session selenium_safari #switch_to_frame works if the frame is closed/
     skip 'Safari has a race condition when clicking an element that causes the frame to close. It will sometimes raise a NoSuchFrameError'
