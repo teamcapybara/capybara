@@ -1,13 +1,15 @@
 <html>
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-    <title>Obscured</title>
+    <title>with_animation</title>
+    <script src="/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+      $(document).on('contextmenu', function(e){ e.preventDefault(); });
+    </script>
     <style>
       div {
-        width: 200px;
-        height: 200px;
-      }
-      #cover, #offscreen, #offscreen_wrapper {
+        width: 400px;
+        height: 400px;
         position: absolute;
       }
       #obscured {
@@ -15,7 +17,6 @@
         background-color: red;
       }
       #cover {
-        top: 0px;
         z-index: 2;
         background-color: blue;
       }
@@ -32,16 +33,17 @@
       }
     </style>
   </head>
-  <body>
+
+  <body id="with_animation">
     <div id="obscured">
       <input id="obscured_input"/>
     </div>
     <div id="cover"></div>
-    <iframe id="frameOne" height="10px" src="/frame_one"></iframe>
-    <iframe id="nestedFrames" src="/frame_parent"></iframe>
     <div id="offscreen_wrapper">
       <div id="offscreen"></div>
     </div>
   </body>
+
+  <iframe id="frameOne" src="/frame_one"></iframe>
 </html>
 

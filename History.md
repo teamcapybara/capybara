@@ -1,6 +1,11 @@
 # Version 3.20.0
 Release date: unreleased
 
+### Added
+
+* `Node#obscured?` to check viewport presence and element overlap
+* `:obscured` system filter to check whether elements are obscured in finders, assertions, and expectations.
+
 ### Fixed
 
 * Workaround Safari issue with send_keys not correctly using top level modifiers

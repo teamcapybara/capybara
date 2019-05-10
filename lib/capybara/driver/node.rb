@@ -85,6 +85,10 @@ module Capybara
         raise NotImplementedError
       end
 
+      def obscured?
+        raise NotImplementedError
+      end
+
       def checked?
         raise NotImplementedError
       end
