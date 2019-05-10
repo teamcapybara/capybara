@@ -116,17 +116,18 @@ RSpec.describe 'Capybara::Session with safari' do
     let(:session) { TestSessions::Safari }
 
     before do
-      skip 'Too many other things broken currently'
       session.visit('/form')
     end
 
     it 'should fill in a date input with a String' do
+      pending "Safari doesn't support date inputs"
       session.fill_in('form_date', with: '06/19/1983')
       session.click_button('awesome')
       expect(Date.parse(extract_results(session)['date'])).to eq datetime.to_date
     end
 
     it 'should fill in a time input with a String' do
+      # Safari doesn't support time inputs - so this is just a text input
       session.fill_in('form_time', with: '06:30A')
       session.click_button('awesome')
       results = extract_results(session)['time']
@@ -134,6 +135,7 @@ RSpec.describe 'Capybara::Session with safari' do
     end
 
     it 'should fill in a datetime input with a String' do
+      pending "Safari doesn't support datetime inputs"
       session.fill_in('form_datetime', with: "06/19/1983\t06:30A")
       session.click_button('awesome')
       expect(Time.parse(extract_results(session)['datetime'])).to eq datetime
