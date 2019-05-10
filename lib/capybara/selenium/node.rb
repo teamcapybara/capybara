@@ -166,6 +166,13 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     driver.evaluate_script GET_XPATH_SCRIPT, self
   end
 
+  def obscured?(x: nil, y: nil)
+    res = driver.evaluate_script(OBSCURED_OR_OFFSET_SCRIPT, self, x, y)
+    return true if res == true
+
+    driver.frame_obscured_at?(x: res['x'], y: res['y'])
+  end
+
 protected
 
   def scroll_if_needed
@@ -399,6 +406,23 @@ private
       xpath = xpath.replace(/\/$/, '');
       return xpath;
     })(arguments[0], document)
+  JS
+
+  OBSCURED_OR_OFFSET_SCRIPT = <<~'JS'
+    (function(el, x, y) {
+      var box = el.getBoundingClientRect();
+      if (x == null) x = box.width/2;
+      if (y == null) y = box.height/2 ;
+
+      var px = box.left + x,
+          py = box.top + y,
+          e = document.elementFromPoint(px, py);
+
+      if (!el.contains(e))
+        return true;
+
+      return { x: px, y: py };
+    })(arguments[0], arguments[1], arguments[2])
   JS
 
   # SettableValue encapsulates time/date field formatting

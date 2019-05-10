@@ -10,7 +10,7 @@ module Capybara::Selenium::Driver::SafariDriver
     # behaves like switch_to_frame(:top)
     handles = @frame_handles[current_window_handle]
     browser.switch_to.default_content
-    handles.tap(&:pop).each { |fh| browser.switch_to.frame(fh) }
+    handles.tap(&:pop).each { |fh| browser.switch_to.frame(fh.native) }
   end
 
 private

@@ -251,6 +251,75 @@ Capybara::SpecHelper.spec 'node' do
     end
   end
 
+  describe '#obscured?', requires: [:css] do
+    it 'should see non visible elements as obscured' do
+      Capybara.ignore_hidden_elements = false
+      expect(@session.find('//div[@id="hidden"]')).to be_obscured
+      expect(@session.find('//div[@id="hidden_via_ancestor"]')).to be_obscured
+      expect(@session.find('//div[@id="hidden_attr"]')).to be_obscured
+      expect(@session.find('//a[@id="hidden_attr_via_ancestor"]')).to be_obscured
+      expect(@session.find('//input[@id="hidden_input"]')).to be_obscured
+    end
+
+    it 'should see non-overlapped elements as not obscured' do
+      @session.visit('/obscured')
+      expect(@session.find(:css, '#cover')).not_to be_obscured
+    end
+
+    it 'should see elements outside the viewport as obscured' do
+      @session.visit('/obscured')
+      off = @session.find(:css, '#offscreen')
+      off_wrapper = @session.find(:css, '#offscreen_wrapper')
+      expect(off).to be_obscured
+      expect(off_wrapper).to be_obscured
+      @session.scroll_to(off_wrapper)
+      expect(off_wrapper).not_to be_obscured
+      expect(off).to be_obscured
+      off_wrapper.scroll_to(off)
+      expect(off).not_to be_obscured
+      expect(off_wrapper).not_to be_obscured
+    end
+
+    it 'should see overlapped elements as obscured' do
+      @session.visit('/obscured')
+      expect(@session.find(:css, '#obscured')).to be_obscured
+    end
+
+    it 'should be boolean' do
+      Capybara.ignore_hidden_elements = false
+      expect(@session.first('//a').obscured?).to be false
+      expect(@session.find('//div[@id="hidden"]').obscured?).to be true
+    end
+
+    it 'should work in frames' do
+      @session.visit('/obscured')
+      frame = @session.find(:css, '#frameOne')
+      @session.within_frame(frame) do
+        div = @session.find(:css, '#divInFrameOne')
+        expect(div).to be_obscured
+        @session.scroll_to div
+        expect(div).not_to be_obscured
+      end
+    end
+
+    it 'should work in nested iframes' do
+      @session.visit('/obscured')
+      frame = @session.find(:css, '#nestedFrames')
+      @session.within_frame(frame) do
+        @session.within_frame(:css, '#childFrame') do
+          gcframe = @session.find(:css, '#grandchildFrame2')
+          @session.within_frame(gcframe) do
+            expect(@session.find(:css, '#divInFrameTwo')).to be_obscured
+          end
+          @session.scroll_to(gcframe)
+          @session.within_frame(gcframe) do
+            expect(@session.find(:css, '#divInFrameTwo')).not_to be_obscured
+          end
+        end
+      end
+    end
+  end
+
   describe '#checked?' do
     it 'should extract node checked state' do
       @session.visit('/form')
@@ -441,7 +510,7 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'should retry clicking', requires: [:js] do
-      @session.visit('/obscured')
+      @session.visit('/animated')
       obscured = @session.find(:css, '#obscured')
       @session.execute_script <<~JS
         setTimeout(function(){ $('#cover').hide(); }, 700)
@@ -450,7 +519,7 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'should allow to retry longer', requires: [:js] do
-      @session.visit('/obscured')
+      @session.visit('/animated')
       obscured = @session.find(:css, '#obscured')
       @session.execute_script <<~JS
         setTimeout(function(){ $('#cover').hide(); }, 3000)
@@ -459,7 +528,7 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'should not retry clicking when wait is disabled', requires: [:js] do
-      @session.visit('/obscured')
+      @session.visit('/animated')
       obscured = @session.find(:css, '#obscured')
       @session.execute_script <<~JS
         setTimeout(function(){ $('#cover').hide(); }, 2000)
@@ -493,7 +562,7 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'should retry clicking', requires: [:js] do
-      @session.visit('/obscured')
+      @session.visit('/animated')
       obscured = @session.find(:css, '#obscured')
       @session.execute_script <<~JS
         setTimeout(function(){ $('#cover').hide(); }, 700)
@@ -527,7 +596,7 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'should retry clicking', requires: [:js] do
-      @session.visit('/obscured')
+      @session.visit('/animated')
       obscured = @session.find(:css, '#obscured')
       @session.execute_script <<~JS
         setTimeout(function(){ $('#cover').hide(); }, 700)

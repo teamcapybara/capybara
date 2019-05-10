@@ -290,6 +290,10 @@ module Capybara
         synchronize { base.visible? }
       end
 
+      def obscured?
+        synchronize { base.obscured? }
+      end
+
       ##
       #
       # Whether or not the element is checked.

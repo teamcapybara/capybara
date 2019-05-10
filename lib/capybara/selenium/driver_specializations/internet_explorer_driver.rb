@@ -10,7 +10,7 @@ module Capybara::Selenium::Driver::InternetExplorerDriver
     # so we have to move to the default_content and iterate back through the frames
     handles = @frame_handles[current_window_handle]
     browser.switch_to.default_content
-    handles.tap(&:pop).each { |fh| browser.switch_to.frame(fh) }
+    handles.tap(&:pop).each { |fh| browser.switch_to.frame(fh.native) }
   end
 
 private

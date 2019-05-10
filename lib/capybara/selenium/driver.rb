@@ -135,6 +135,18 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     end
   end
 
+  def frame_obscured_at?(x:, y:)
+    frame = @frame_handles[current_window_handle].last
+    return false unless frame
+
+    switch_to_frame(:parent)
+    begin
+      return frame.base.obscured?(x: x, y: y)
+    ensure
+      switch_to_frame(frame)
+    end
+  end
+
   def switch_to_frame(frame)
     handles = @frame_handles[current_window_handle]
     case frame
@@ -145,7 +157,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       handles.pop
       browser.switch_to.parent_frame
     else
-      handles << frame.native
+      handles << frame
       browser.switch_to.frame(frame.native)
     end
   end
