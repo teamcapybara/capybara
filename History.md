@@ -1,3 +1,13 @@
+# Version 3.20.0
+Release date: unreleased
+
+### Fixed
+
+* Workaround Safari issue with send_keys not correctly using top level modifiers
+* Workaround Safari not retrying click due to incorrect error type
+* Fix Safari attach_file block mode when clicking elements associated to the file input
+* Workaround Safari issue with repeated hover
+
 # Version 3.19.0
 Release date: 2019-05-09
 
