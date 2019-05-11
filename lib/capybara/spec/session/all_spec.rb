@@ -100,6 +100,29 @@ Capybara::SpecHelper.spec '#all' do
     end
   end
 
+  context 'with obscured filter', requires: [:css] do
+    it 'should only find nodes on top in the viewport when false' do
+      expect(@session.all(:css, 'a.simple', obscured: false).size).to eq(1)
+    end
+
+    it 'should not find nodes on top outside the viewport when false' do
+      expect(@session.all(:link, 'Download Me', obscured: false).size).to eq(0)
+      @session.scroll_to(@session.find_link('Download Me'))
+      expect(@session.all(:link, 'Download Me', obscured: false).size).to eq(1)
+    end
+
+    it 'should find top nodes outside the viewport when true' do
+      expect(@session.all(:link, 'Download Me', obscured: true).size).to eq(1)
+      @session.scroll_to(@session.find_link('Download Me'))
+      expect(@session.all(:link, 'Download Me', obscured: true).size).to eq(0)
+    end
+
+    it 'should only find non-top nodes when true' do
+      # Also need visible: false so visibility is ignored
+      expect(@session.all(:css, 'a.simple', visible: false, obscured: true).size).to eq(1)
+    end
+  end
+
   context 'with element count filters' do
     context ':count' do
       it 'should succeed when the number of elements founds matches the expectation' do

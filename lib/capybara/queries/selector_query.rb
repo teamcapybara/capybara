@@ -4,7 +4,8 @@ module Capybara
   module Queries
     class SelectorQuery < Queries::BaseQuery
       attr_reader :expression, :selector, :locator, :options
-      VALID_KEYS = COUNT_KEYS + %i[text id class style visible exact exact_text normalize_ws match wait filter_set]
+      VALID_KEYS = COUNT_KEYS +
+                   %i[text id class style visible obscured exact exact_text normalize_ws match wait filter_set]
       VALID_MATCH = %i[first smart prefer_exact one].freeze
 
       def initialize(*args,
@@ -386,7 +387,7 @@ module Capybara
       def matches_system_filters?(node)
         applied_filters << :system
 
-        matches_visible_filter?(node) &&
+        matches_visibility_filters?(node) &&
           matches_id_filter?(node) &&
           matches_class_filter?(node) &&
           matches_style_filter?(node) &&
@@ -443,14 +444,27 @@ module Capybara
         matches_text_exactly?(node, exact_text)
       end
 
-      def matches_visible_filter?(node)
-        case visible
+      def matches_visibility_filters?(node)
+        obscured = options[:obscured]
+        return (visible != :hidden) && (node.initial_cache[:visible] != false) && !node.obscured? if obscured == false
+
+        vis = case visible
         when :visible then
           node.initial_cache[:visible] || (node.initial_cache[:visible].nil? && node.visible?)
         when :hidden then
           (node.initial_cache[:visible] == false) || (node.initial_cache[:visbile].nil? && !node.visible?)
-        else true
+        else
+          true
         end
+
+        vis && case obscured
+               when true
+                 node.obscured?
+               when false
+                 !node.obscured?
+               else
+                 true
+               end
       end
 
       def matches_text_exactly?(node, value)
