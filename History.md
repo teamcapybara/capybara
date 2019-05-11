@@ -1,11 +1,18 @@
+# Version 3.19.1
+Release date: 2019-05-11
+
+### Fixed
+
+* Fix access to specializations when Selenium::Driver is subclassed [James Mead]
+
 # Version 3.19.0
 Release date: 2019-05-09
 
 ### Added
 
 
-* Syntactic sugar `#once`, `#twice`, `#thrice`, `#exactly`, `#at_least`, `#at_most` to
-  `have_selector`, `have_css`, `have_xpath`, and `have_text` RSpec matchers
+* Syntactic sugar `#once`, `#twice`, `#thrice`, `#exactly`, `#at_least`, `#at_most`, and `#times`
+  added to `have_selector`, `have_css`, `have_xpath`, and `have_text` RSpec matchers
 * Support for multiple expression types in Selector definitions
 * Reduced wirecalls for common actions in Selenium driver
 
