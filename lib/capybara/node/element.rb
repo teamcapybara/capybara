@@ -290,6 +290,13 @@ module Capybara
         synchronize { base.visible? }
       end
 
+      ##
+      #
+      # Whether or not the element is currently in the viewport and would be considered clickable at
+      # its center point.
+      #
+      # @return [Boolean]     Whether the elements center is obscured.
+      #
       def obscured?
         synchronize { base.obscured? }
       end

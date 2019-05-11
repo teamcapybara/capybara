@@ -31,6 +31,9 @@ module Capybara
       #                                              * :all - same as false; finds visible and invisible elements.
       #                                              * :hidden - only finds invisible elements.
       #                                              * :visible - same as true; only finds visible elements.
+      #   @option options [Boolean] obscured  Only find elements with the specified obscured state:
+      #                                       * true - only find elements whose centerpoint is not in the viewport or is obscured by another element.
+      #                                       * false - only find elements whose centerpoint is in the viewport and is not obscured by other elements.
       #   @option options [String, Regexp]  id           Only find elements with an id that matches the value passed
       #   @option options [String, Array<String>, Regexp] class  Only find elements with matching class/classes.
       #                                            + Absence of a class can be checked by prefixing the class name with !
