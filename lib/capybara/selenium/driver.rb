@@ -414,7 +414,7 @@ private
 
   def specialize_driver
     browser_type = browser.browser
-    self.class.specializations.select { |k, _v| k === browser_type }.each_value do |specialization| # rubocop:disable Style/CaseEquality
+    Capybara::Selenium::Driver.specializations.select { |k, _v| k === browser_type }.each_value do |specialization| # rubocop:disable Style/CaseEquality
       extend specialization
     end
   end
