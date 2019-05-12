@@ -27,6 +27,15 @@ Capybara.register_driver :selenium_chrome_not_clear_storage do |app|
   Capybara::Selenium::Driver.new(app, chrome_options.merge(clear_local_storage: false, clear_session_storage: false))
 end
 
+Capybara.register_driver :selenium_with_reset do |app|
+  chrome_options = {
+    browser: :chrome,
+    options: browser_options,
+    reset: proc { |driver| driver.execute_script "reset proc" }
+  }
+  Capybara::Selenium::Driver.new(app, chrome_options)
+end
+
 Capybara.register_driver :selenium_driver_subclass_with_chrome do |app|
   subclass = Class.new(Capybara::Selenium::Driver)
   subclass.new(app, browser: :chrome, options: browser_options, timeout: 30)
@@ -75,6 +84,17 @@ RSpec.describe 'Capybara::Session with chrome' do
         expect(session.evaluate_script('Object.keys(localStorage)')).not_to be_empty
         expect(session.evaluate_script('Object.keys(sessionStorage)')).not_to be_empty
       end
+    end
+  end
+
+  context 'reset' do
+    it 'runs a reset proc if passed in' do
+      session = Capybara::Session.new(:selenium_with_reset, TestApp)
+      allow(session.driver).to receive(:execute_script)
+      session.visit('/with_js')
+      session.reset!
+
+      expect(session.driver).to have_received(:execute_script).with('reset proc')
     end
   end
 

@@ -11,7 +11,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     clear_local_storage: nil,
     clear_session_storage: nil
   }.freeze
-  SPECIAL_OPTIONS = %i[browser clear_local_storage clear_session_storage timeout].freeze
+  SPECIAL_OPTIONS = %i[browser clear_local_storage clear_session_storage timeout reset].freeze
   attr_reader :app, :options
 
   class << self
@@ -286,6 +286,7 @@ private
   end
 
   def clear_browser_state
+    options[:reset]&.call(self)
     delete_all_cookies
     clear_storage
   rescue *clear_browser_state_errors # rubocop:disable Lint/HandleExceptions
