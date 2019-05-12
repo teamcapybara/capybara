@@ -267,7 +267,7 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'should see elements only overlapped by descendants as not obscured' do
-      expect(@session.find(:css, '#ancestor3')).not_to be_obscured
+      expect(@session.first(:css, 'p:not(.para)')).not_to be_obscured
     end
 
     it 'should see elements outside the viewport as obscured' do
