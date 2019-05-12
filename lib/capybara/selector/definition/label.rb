@@ -11,10 +11,9 @@ Capybara.add_selector(:label, locator_type: [String, Symbol]) do
     end
     if options.key?(:for)
       if (for_option = options[:for].is_a?(Capybara::Node::Element) ? options[:for][:id] : options[:for])
-        with_attr = XPath.attr(:for) == for_option.to_s
-        labelable_elements = %i[button input keygen meter output progress select textarea]
+        with_attr = builder(XPath.self).add_attribute_conditions(for: for_option)
         wrapped = !XPath.attr(:for) &
-                  XPath.descendant(*labelable_elements)[XPath.attr(:id) == for_option.to_s]
+                  builder(XPath.self.descendant(*labelable_elements)).add_attribute_conditions(id: for_option)
         xpath = xpath[with_attr | wrapped]
       end
     end
@@ -22,22 +21,40 @@ Capybara.add_selector(:label, locator_type: [String, Symbol]) do
   end
 
   node_filter(:for) do |node, field_or_value|
-    # Non element values were handled through the expression filter
-    next true unless field_or_value.is_a? Capybara::Node::Element
-
-    if (for_val = node[:for])
-      field_or_value[:id] == for_val
+    case field_or_value
+    when Capybara::Node::Element
+      if (for_val = node[:for])
+        field_or_value[:id] == for_val
+      else
+        field_or_value.find_xpath('./ancestor::label[1]').include? node.base
+      end
+    when Regexp
+      if (for_val = node[:for])
+        field_or_value.match? for_val
+      else
+        node.find_xpath(XPath.descendant(*labelable_elements).to_s)
+            .any? { |n| field_or_value.match? n[:id] }
+      end
     else
-      field_or_value.find_xpath('./ancestor::label[1]').include? node.base
+      # Non element/regexp values were handled through the expression filter
+      true
     end
   end
 
   describe_expression_filters do |**options|
     next unless options.key?(:for) && !options[:for].is_a?(Capybara::Node::Element)
 
-    " for element with id of \"#{options[:for]}\""
+    if options[:for].is_a? Regexp
+      " for element with id matching #{options[:for].inspect}"
+    else
+      " for element with id of \"#{options[:for]}\""
+    end
   end
   describe_node_filters do |**options|
     " for element #{options[:for]}" if options[:for]&.is_a?(Capybara::Node::Element)
+  end
+
+  def labelable_elements
+    %i[button input keygen meter output progress select textarea]
   end
 end

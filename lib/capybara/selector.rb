@@ -146,7 +146,7 @@ require 'capybara/selector/definition'
 #   * **:label** - Find label elements
 #     * Locator: Match id or text contents
 #     * Filters:
-#       * :for (Element, String) — The element or id of the element associated with the label
+#       * :for (Element, String, Regexp) — The element or id of the element associated with the label
 #
 #   * **:table** - Find table elements
 #     * Locator: id or caption text of table
