@@ -83,7 +83,7 @@ RSpec.describe Capybara::Server do
       server = Capybara::Server.new(app).boot
 
       expect do
-        Net::HTTP.start(server.host, server.port, max_retries: 0) { |http| http.get('/__idntify__') }
+        Net::HTTP.start(server.host, server.port, max_retries: 0) { |http| http.get('/__identify__') }
       end.to raise_error(EOFError)
 
       res = Net::HTTP.start(server.host, server.port, use_ssl: true, verify_mode: OpenSSL::SSL::VERIFY_NONE) do |https|
