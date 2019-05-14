@@ -6,8 +6,9 @@ Release date: unreleased
 * `Node#obscured?` to check viewport presence and element overlap
 * `:obscured` system filter to check whether elements are obscured in finders, assertions, and expectations
 * :label selector :for option can be a regexp
-* Significanlty smaller `isDisplayed`/`getAttribute` atoms for selenium driver. If these produce issues you can disable their use
+* Significantly smaller `isDisplayed`/`getAttribute` atoms for selenium driver. If these produce issues you can disable their use
   by setting an environment variable named 'DISABLE_CAPYBARA_SELENIUM_OPTIMIZATIONS' (Please also report any issues).
+* `href: false` option with `find_link`/`click_link`/:link selector ignores `href` presence/absence
 
 ### Fixed
 

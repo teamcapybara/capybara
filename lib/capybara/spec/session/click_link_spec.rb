@@ -118,6 +118,17 @@ Capybara::SpecHelper.spec '#click_link' do
         expect { @session.click_link('Normal Anchor', href: nil) }.to raise_error(Capybara::ElementNotFound, /with no href attribute/)
       end
     end
+
+    context 'href: false' do
+      it 'should not raise an error on links with no href attribute' do
+        expect { @session.click_link('No Href', href: false) }.not_to raise_error
+      end
+
+      it 'should not raise an error if href attribute exists' do
+        expect { @session.click_link('Blank Href', href: false) }.not_to raise_error
+        expect { @session.click_link('Normal Anchor', href: false) }.not_to raise_error
+      end
+    end
   end
 
   it 'should follow relative links' do

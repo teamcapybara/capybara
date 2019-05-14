@@ -2,7 +2,8 @@
 
 Capybara.add_selector(:link, locator_type: [String, Symbol]) do
   xpath do |locator, href: true, alt: nil, title: nil, **|
-    xpath = builder(XPath.descendant(:a)).add_attribute_conditions(href: href)
+    xpath = XPath.descendant(:a)
+    xpath = builder(xpath).add_attribute_conditions(href: href) unless href == false
 
     unless locator.nil?
       locator = locator.to_s
@@ -35,7 +36,7 @@ Capybara.add_selector(:link, locator_type: [String, Symbol]) do
     desc = +''
     if (href = options[:href])
       desc << " with href #{'matching ' if href.is_a? Regexp}#{href.inspect}"
-    elsif options.key?(:href) # is nil/false specified?
+    elsif options.key?(:href) && href != false # is nil specified?
       desc << ' with no href attribute'
     end
     desc << " with download attribute#{" #{download}" if download.is_a? String}" if download

@@ -48,7 +48,7 @@ require 'capybara/selector/definition'
 #       * :title (String) — Matches the title attribute
 #       * :alt (String) — Matches the alt attribute of a contained img element
 #       * :class (String, Array<String>, Regexp, XPath::Expression) — Matches the class(es) provided
-#       * :href (String, Regexp, nil) — Matches the normalized href of the link, if nil will find <a> elements with no href attribute
+#       * :href (String, Regexp, nil, false) — Matches the normalized href of the link, if nil will find <a> elements with no href attribute, if false ignores href
 #       * :style (String, Regexp, Hash)
 #
 #   * **:button** - Find buttons ( input [of type submit, reset, image, button] or button elements )

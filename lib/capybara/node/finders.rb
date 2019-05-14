@@ -142,7 +142,7 @@ module Capybara
       #
       #   @macro waiting_behavior
       #
-      #   @option options [String,Regexp,nil] href        Value to match against the links href, if nil finds link placeholders (<a> elements with no href attribute)
+      #   @option options [String,Regexp,nil] href        Value to match against the links href, if nil finds link placeholders (<a> elements with no href attribute), if false ignores the href
       #   @option options [String, Regexp] id                 Match links with the id provided
       #   @option options [String] title              Match links with the title provided
       #   @option options [String] alt                Match links with a contained img element whose alt matches
