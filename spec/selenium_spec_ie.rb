@@ -39,7 +39,6 @@ Capybara.register_driver :selenium_ie do |app|
                                    browser: :remote,
                                    options: options,
                                    url: url).tap do |driver|
-      puts driver.browser.capabilities.inspect
       driver.browser.file_detector = lambda do |args|
         str = args.first.to_s
         str if File.exist?(str)
@@ -50,9 +49,7 @@ Capybara.register_driver :selenium_ie do |app|
       app,
       browser: :ie,
       options: options
-    ).tap do |driver|
-      puts driver.browser.capabilities.inspect
-    end
+    )
   end
 end
 
