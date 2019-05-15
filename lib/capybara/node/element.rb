@@ -392,6 +392,16 @@ module Capybara
         self
       end
 
+      def drop(*args)
+        options = args.map do |arg|
+          return arg.to_path if arg.respond_to?(:to_path)
+
+          arg
+        end
+        synchronize { base.drop(*options) }
+        self
+      end
+
       ##
       #
       # Scroll the page or element

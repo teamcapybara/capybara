@@ -110,6 +110,8 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumIE, 'selenium', capybara_sk
     pending 'IE treats blank href as a parent request (against HTML spec)'
   when /#attach_file with a block/
     skip 'Hangs IE testing for unknown reason'
+  when /drag_to.*HTML5/
+    pending "IE doesn't support a DataTransfer constuctor"
   end
 end
 

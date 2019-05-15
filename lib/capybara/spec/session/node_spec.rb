@@ -414,6 +414,87 @@ Capybara::SpecHelper.spec 'node' do
       link.drag_to target
       expect(@session).to have_xpath('//div[contains(., "Dropped!")]')
     end
+
+    context 'HTML5', requires: %i[js html5_drag] do
+      it 'should HTML5 drag and drop an object' do
+        @session.visit('/with_js')
+        element = @session.find('//div[@id="drag_html5"]')
+        target = @session.find('//div[@id="drop_html5"]')
+        element.drag_to(target)
+        expect(@session).to have_xpath('//div[contains(., "HTML5 Dropped string: text/plain drag_html5")]')
+      end
+
+      it 'should set clientX/Y in dragover events' do
+        @session.visit('/with_js')
+        element = @session.find('//div[@id="drag_html5"]')
+        target = @session.find('//div[@id="drop_html5"]')
+        element.drag_to(target)
+        expect(@session).to have_css('div.log', text: /DragOver with client position: [1-9]\d*,[1-9]\d*/, count: 2)
+      end
+
+      it 'should not HTML5 drag and drop on a non HTML5 drop element' do
+        @session.visit('/with_js')
+        element = @session.find('//div[@id="drag_html5"]')
+        target = @session.find('//div[@id="drop_html5"]')
+        target.execute_script("$(this).removeClass('drop');")
+        element.drag_to(target)
+        sleep 1
+        expect(@session).not_to have_xpath('//div[contains(., "HTML5 Dropped")]')
+      end
+
+      it 'should HTML5 drag and drop when scrolling needed' do
+        @session.visit('/with_js')
+        element = @session.find('//div[@id="drag_html5_scroll"]')
+        target = @session.find('//div[@id="drop_html5_scroll"]')
+        element.drag_to(target)
+        expect(@session).to have_xpath('//div[contains(., "HTML5 Dropped string: text/plain drag_html5_scroll")]')
+      end
+
+      it 'should drag HTML5 default draggable elements' do
+        @session.visit('/with_js')
+        link = @session.find_link('drag_link_html5')
+        target = @session.find(:id, 'drop_html5')
+        link.drag_to target
+        expect(@session).to have_xpath('//div[contains(., "HTML5 Dropped")]')
+      end
+    end
+  end
+
+  describe 'Element#drop', requires: %i[js html5_drag] do
+    it 'can drop a file' do
+      @session.visit('/with_js')
+      target = @session.find('//div[@id="drop_html5"]')
+      target.drop(
+        with_os_path_separators(File.expand_path('../fixtures/capybara.jpg', File.dirname(__FILE__)))
+      )
+      expect(@session).to have_xpath('//div[contains(., "HTML5 Dropped file: capybara.jpg")]')
+    end
+
+    it 'can drop multiple files' do
+      @session.visit('/with_js')
+      target = @session.find('//div[@id="drop_html5"]')
+      target.drop(
+        with_os_path_separators(File.expand_path('../fixtures/capybara.jpg', File.dirname(__FILE__))),
+        with_os_path_separators(File.expand_path('../fixtures/test_file.txt', File.dirname(__FILE__)))
+      )
+      expect(@session).to have_xpath('//div[contains(., "HTML5 Dropped file: capybara.jpg")]')
+      expect(@session).to have_xpath('//div[contains(., "HTML5 Dropped file: test_file.txt")]')
+    end
+
+    it 'can drop strings' do
+      @session.visit('/with_js')
+      target = @session.find('//div[@id="drop_html5"]')
+      target.drop('text/plain' => 'Some dropped text')
+      expect(@session).to have_xpath('//div[contains(., "HTML5 Dropped string: text/plain Some dropped text")]')
+    end
+
+    it 'can drop multiple strings' do
+      @session.visit('/with_js')
+      target = @session.find('//div[@id="drop_html5"]')
+      target.drop('text/plain' => 'Some dropped text', 'text/url' => 'http://www.google.com')
+      expect(@session).to have_xpath('//div[contains(., "HTML5 Dropped string: text/plain Some dropped text")]')
+      expect(@session).to have_xpath('//div[contains(., "HTML5 Dropped string: text/url http://www.google.com")]')
+    end
   end
 
   describe '#hover', requires: [:hover] do

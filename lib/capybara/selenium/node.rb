@@ -137,6 +137,10 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     element.scroll_if_needed { browser_action.move_to(element.native).release.perform }
   end
 
+  def drop(*_)
+    raise NotImplementedError, 'Out of browser drop emulation is not implemented for the current browser'
+  end
+
   def tag_name
     @tag_name ||= native.tag_name.downcase
   end

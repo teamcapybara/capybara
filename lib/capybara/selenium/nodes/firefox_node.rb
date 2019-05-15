@@ -52,6 +52,10 @@ class Capybara::Selenium::FirefoxNode < Capybara::Selenium::Node
     html5_drag_to(element)
   end
 
+  def drop(*args)
+    html5_drop(*args)
+  end
+
   def hover
     return super unless browser_version >= 65.0
 
