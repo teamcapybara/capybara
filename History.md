@@ -1,6 +1,5 @@
 # Version 3.20.0
-Release date: unreleased
-
+Release date: 2019-05-14
 ### Added
 
 * `Node#obscured?` to check viewport presence and element overlap
