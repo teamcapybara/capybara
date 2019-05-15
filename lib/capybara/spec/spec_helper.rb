@@ -124,6 +124,10 @@ module Capybara
     def be_an_invalid_element_error(session)
       satisfy { |error| session.driver.invalid_element_errors.any? { |e| error.is_a? e } }
     end
+
+    def with_os_path_separators(path)
+      Gem.win_platform? ? path.to_s.tr('/', '\\') : path.to_s
+    end
   end
 end
 

@@ -22,6 +22,69 @@ class Capybara::Selenium::Node
       native.property('draggable')
     end
 
+    def html5_drop(*args)
+      if args[0].is_a? String
+        input = driver.evaluate_script ATTACH_FILE
+        input.set_file(args)
+        driver.execute_script DROP_FILE, self, input
+      else
+        items = args.each_with_object([]) do |arg, arr|
+          arg.each_with_object(arr) do |(type, data), arr_|
+            arr_ << { type: type, data: data }
+          end
+        end
+        driver.execute_script DROP_STRING, items, self
+      end
+    end
+
+    DROP_STRING = <<~JS
+      var strings = arguments[0],
+          el = arguments[1],
+          dt = new DataTransfer(),
+          opts = { cancelable: true, bubbles: true, dataTransfer: dt };
+      for (var i=0; i < strings.length; i++){
+        if (dt.items) {
+          dt.items.add(strings[i]['data'], strings[i]['type']);
+        } else {
+          dt.setData(strings[i]['type'], strings[i]['data']);
+        }
+      }
+      var dropEvent = new DragEvent('drop', opts);
+      el.dispatchEvent(dropEvent);
+    JS
+
+    DROP_FILE = <<~JS
+      var el = arguments[0],
+          input = arguments[1],
+          files = input.files,
+          dt = new DataTransfer(),
+          opts = { cancelable: true, bubbles: true, dataTransfer: dt };
+      input.parentElement.removeChild(input);
+      if (dt.items){
+        for (var i=0; i<files.length; i++){
+          dt.items.add(files[i]);
+        }
+      } else {
+        Object.defineProperty(dt, "files", {
+          value: files,
+          writable: false
+        });
+      }
+      var dropEvent = new DragEvent('drop', opts);
+      el.dispatchEvent(dropEvent);
+    JS
+
+    ATTACH_FILE = <<~JS
+      (function(){
+        var input = document.createElement('INPUT');
+        input.type = "file";
+        input.id = "_capybara_drop_file";
+        input.multiple = true;
+        document.body.appendChild(input);
+        return input;
+      })()
+    JS
+
     MOUSEDOWN_TRACKER = <<~JS
       document.addEventListener('mousedown', ev => {
         window.capybara_mousedown_prevented = ev.defaultPrevented;

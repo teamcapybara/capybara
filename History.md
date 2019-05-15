@@ -1,3 +1,10 @@
+# Version 3.21.0
+Release date: unreleased
+
+### Added
+
+* Chrome and Firefox via the selenium driver support dropping files/data on elements
+
 # Version 3.20.1
 Release date: 2019-05-17
 

@@ -73,6 +73,8 @@ Capybara::SpecHelper.run_specs TestSessions::Safari, SAFARI_DRIVER.to_s, capybar
   when 'Capybara::Session selenium_safari #go_back should fetch a response from the driver from the previous page',
        'Capybara::Session selenium_safari #go_forward should fetch a response from the driver from the previous page'
     skip 'safaridriver loses the ability to find elements in the document after `go_back`'
+  when /drag_to.*HTML5/
+    pending "Safari doesn't support"
   end
 end
 

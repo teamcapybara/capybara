@@ -394,6 +394,30 @@ module Capybara
 
       ##
       #
+      # Drop items on the current element.
+      #
+      #     target = page.find('#foo')
+      #     target.drop('/some/path/file.csv')
+      #
+      # @overload drop(path, ...)
+      #   @param [String, #to_path] path Location of the file to drop on the element
+      #
+      # @overload drop(strings, ...)
+      #   @param [Hash] strings A hash of type to data to be dropped - { "text/url" => "https://www.google.com" }
+      #
+      # @return [Capybara::Node::Element]  The element
+      def drop(*args)
+        options = args.map do |arg|
+          return arg.to_path if arg.respond_to?(:to_path)
+
+          arg
+        end
+        synchronize { base.drop(*options) }
+        self
+      end
+
+      ##
+      #
       # Scroll the page or element
       #
       # Scroll the page or element to its top, bottom or middle

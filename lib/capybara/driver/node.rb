@@ -69,6 +69,10 @@ module Capybara
         raise NotImplementedError
       end
 
+      def drop(*args)
+        raise NotImplementedError
+      end
+
       def scroll_by(x, y)
         raise NotImplementedError
       end

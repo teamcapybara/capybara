@@ -34,6 +34,10 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
     html5_drag_to(element)
   end
 
+  def drop(*args)
+    html5_drop(*args)
+  end
+
   def click(*)
     super
   rescue ::Selenium::WebDriver::Error::WebDriverError => e

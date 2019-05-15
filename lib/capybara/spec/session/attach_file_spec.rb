@@ -199,10 +199,4 @@ Capybara::SpecHelper.spec '#attach_file' do
       expect(extract_results(@session)['hidden_image']).to end_with(File.basename(__FILE__))
     end
   end
-
-private
-
-  def with_os_path_separators(path)
-    Gem.win_platform? ? path.to_s.tr('/', '\\') : path.to_s
-  end
 end
