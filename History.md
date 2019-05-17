@@ -1,5 +1,13 @@
+# Version 3.20.1
+Release date: 2019-05-17
+
+### Fixed
+
+* RackTest driver considers &lt;template> elements to be non-visible and ignores the contents
+
 # Version 3.20.0
 Release date: 2019-05-14
+
 ### Added
 
 * `Node#obscured?` to check viewport presence and element overlap
