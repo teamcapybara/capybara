@@ -24,7 +24,7 @@ Capybara::SpecHelper.spec '#scroll_to', requires: [:scroll] do
     @session.scroll_to(el, align: :center)
     el_center = el.evaluate_script('(function(rect){return (rect.top + rect.bottom)/2})(this.getBoundingClientRect())')
     viewport_bottom = el.evaluate_script('document.body.clientHeight')
-    expect(el_center).to be_within(1).of(viewport_bottom / 2)
+    expect(el_center).to be_within(2).of(viewport_bottom / 2)
   end
 
   it 'can scroll the window to the vertical top' do

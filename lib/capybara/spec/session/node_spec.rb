@@ -242,6 +242,7 @@ Capybara::SpecHelper.spec 'node' do
       expect(@session.find('//div[@id="hidden_attr"]')).not_to be_visible
       expect(@session.find('//a[@id="hidden_attr_via_ancestor"]')).not_to be_visible
       expect(@session.find('//input[@id="hidden_input"]')).not_to be_visible
+      expect(@session.find('//template')).not_to be_visible
     end
 
     it 'should be boolean' do
