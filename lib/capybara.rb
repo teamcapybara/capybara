@@ -371,6 +371,10 @@ module Capybara
     def HTML(html) # rubocop:disable Naming/MethodName
       if Nokogiri.respond_to?(:HTML5) && Capybara.allow_gumbo # Nokogumbo installed and allowed for use
         Nokogiri::HTML5(html).tap do |document|
+          document.xpath('//template').each do |template|
+            # template elements content is not part of the document
+            template.inner_html = ''
+          end
           document.xpath('//textarea').each do |textarea|
             # The Nokogumbo HTML5 parser already returns spec compliant contents
             textarea['_capybara_raw_value'] = textarea.content
@@ -378,6 +382,10 @@ module Capybara
         end
       else
         Nokogiri::HTML(html).tap do |document|
+          document.xpath('//template').each do |template|
+            # template elements content is not part of the document
+            template.inner_html = ''
+          end
           document.xpath('//textarea').each do |textarea|
             textarea['_capybara_raw_value'] = textarea.content.sub(/\A\n/, '')
           end
