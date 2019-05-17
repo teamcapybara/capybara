@@ -12,12 +12,12 @@ module Capybara
   # * {Capybara::Session#switch_to_window}
   #
   # Note that some drivers (e.g. Selenium) support getting size of/resizing/closing only
-  #   current window. So if you invoke such method for:
+  # current window. So if you invoke such method for:
   #
-  #   * window that is current, Capybara will make 2 Selenium method invocations
-  #     (get handle of current window + get size/resize/close).
-  #   * window that is not current, Capybara will make 4 Selenium method invocations
-  #     (get handle of current window + switch to given handle + get size/resize/close + switch to original handle)
+  # * window that is current, Capybara will make 2 Selenium method invocations
+  #   (get handle of current window + get size/resize/close).
+  # * window that is not current, Capybara will make 4 Selenium method invocations
+  #   (get handle of current window + switch to given handle + get size/resize/close + switch to original handle)
   #
   class Window
     # @return [String]   a string that uniquely identifies window within session
@@ -57,8 +57,8 @@ module Capybara
     # Close window.
     #
     # If this method was called for window that is current, then after calling this method
-    #   future invocations of other Capybara methods should raise
-    #   `session.driver.no_such_window_error` until another window will be switched to.
+    # future invocations of other Capybara methods should raise
+    # `session.driver.no_such_window_error` until another window will be switched to.
     #
     # @!macro about_current
     #   If this method was called for window that is not current, then after calling this method
@@ -93,7 +93,7 @@ module Capybara
     # Maximize window.
     #
     # If a particular driver (e.g. headless driver) doesn't have concept of maximizing it
-    #   may not support this method.
+    # may not support this method.
     #
     # @macro about_current
     #

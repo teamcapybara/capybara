@@ -11,25 +11,25 @@ require 'capybara/rspec/matchers/become_closed'
 module Capybara
   module RSpecMatchers
     # RSpec matcher for whether the element(s) matching a given selector exist
-    # See {Capybara::Node::Matcher#assert_selector}
+    # See {Capybara::Node::Matchers#assert_selector}
     def have_selector(*args, &optional_filter_block)
       Matchers::HaveSelector.new(*args, &optional_filter_block)
     end
 
     # RSpec matcher for whether the element(s) matching a group of selectors exist
-    # See {Capybara::Node::Matcher#assert_all_of_selectors}
+    # See {Capybara::Node::Matchers#assert_all_of_selectors}
     def have_all_of_selectors(*args, &optional_filter_block)
       Matchers::HaveAllSelectors.new(*args, &optional_filter_block)
     end
 
     # RSpec matcher for whether no element(s) matching a group of selectors exist
-    # See {Capybara::Node::Matcher#assert_none_of_selectors}
+    # See {Capybara::Node::Matchers#assert_none_of_selectors}
     def have_none_of_selectors(*args, &optional_filter_block)
       Matchers::HaveNoSelectors.new(*args, &optional_filter_block)
     end
 
     # RSpec matcher for whether the element(s) matching any of a group of selectors exist
-    # See {Capybara::Node::Matcher#assert_any_of_selectors}
+    # See {Capybara::Node::Matchers#assert_any_of_selectors}
     def have_any_of_selectors(*args, &optional_filter_block)
       Matchers::HaveAnySelectors.new(*args, &optional_filter_block)
     end

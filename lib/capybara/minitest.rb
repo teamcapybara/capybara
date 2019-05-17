@@ -150,27 +150,27 @@ module Capybara
     # Assertion that there is xpath
     #
     # @!method assert_xpath
-    #   see Capybara::Node::Matchers#has_xpath?
+    #   see {Capybara::Node::Matchers#has_xpath?}
 
     ##
     # Assertion that there is no xpath
     #
     # @!method refute_xpath
     # @!method assert_no_xpath
-    #   see Capybara::Node::Matchers#has_no_xpath?
+    #   see {Capybara::Node::Matchers#has_no_xpath?}
 
     ##
     # Assertion that there is css
     #
     # @!method assert_css
-    #   see Capybara::Node::Matchers#has_css?
+    #   see {Capybara::Node::Matchers#has_css?}
 
     ##
     # Assertion that there is no css
     #
     # @!method refute_css
     # @!method assert_no_css
-    #   see Capybara::Node::Matchers#has_no_css?
+    #   see {Capybara::Node::Matchers#has_no_css?}
 
     ##
     # Assertion that there is link

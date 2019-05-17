@@ -45,13 +45,55 @@ module Capybara
     end
 
     # Delegate Capybara global configurations
+    # @!method always_include_port
+    #   See {Capybara.configure}
+    # @!method run_server
+    #   See {Capybara.configure}
     # @!method default_selector
     #   See {Capybara.configure}
     # @!method default_max_wait_time
     #   See {Capybara.configure}
+    # @!method ignore_hidden_elements
+    #   See {Capybara.configure}
+    # @!method automatic_reload
+    #   See {Capybara.configure}
+    # @!method match
+    #   See {Capybara.configure}
+    # @!method exact
+    #   See {Capybara.configure}
+    # @!method exact_text
+    #   See {Capybara.configure}
+    # @!method raise_server_errors
+    #   See {Capybara.configure}
+    # @!method visible_text_only
+    #   See {Capybara.configure}
+    # @!method automatic_label_click
+    #   See {Capybara.configure}
+    # @!method enable_aria_label
+    #   See {Capybara.configure}
+    # @!method save_path
+    #   See {Capybara.configure}
+    # @!method asset_host
+    #   See {Capybara.configure}
+    # @!method default_host
+    #   See {Capybara.configure}
     # @!method app_host
     #   See {Capybara.configure}
-    # @!method always_include_port
+    # @!method server_host
+    #   See {Capybara.configure}
+    # @!method server_port
+    #   See {Capybara.configure}
+    # @!method server_errors
+    #   See {Capybara.configure}
+    # @!method default_set_options
+    #   See {Capybara.configure}
+    # @!method disable_animation
+    #   See {Capybara.configure}
+    # @!method test_id
+    #   See {Capybara.configure}
+    # @!method predicates_wait
+    #   See {Capybara.configure}
+    # @!method default_normalize_ws
     #   See {Capybara.configure}
     SessionConfig::OPTIONS.each do |method|
       def_delegators :config, method, "#{method}="
@@ -297,7 +339,7 @@ module Capybara
 
     ##
     #
-    # The current Capybara::Session based on what is set as Capybara.app and Capybara.current_driver
+    # The current {Capybara::Session} based on what is set as {Capybara.app} and {Capybara.current_driver}.
     #
     # @return [Capybara::Session]     The currently used session
     #
@@ -340,7 +382,7 @@ module Capybara
 
     ##
     #
-    # Yield a block using a specific session name or Capybara::Session instance.
+    # Yield a block using a specific session name or {Capybara::Session} instance.
     #
     def using_session(name_or_session)
       previous_session_info = {

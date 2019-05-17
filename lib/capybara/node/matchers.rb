@@ -43,7 +43,7 @@ module Capybara
       ##
       #
       # Checks if a given selector is not on the page or a descendant of the current node.
-      # Usage is identical to Capybara::Node::Matchers#has_selector?
+      # Usage is identical to {#has_selector?}.
       #
       # @param (see Capybara::Node::Finders#has_selector?)
       # @return [Boolean]
@@ -148,7 +148,7 @@ module Capybara
       # such as :text and :visible.
       #
       # The :wait option applies to all of the selectors as a group, so all of the locators must be present
-      # within :wait (Defaults to Capybara.default_max_wait_time) seconds.
+      # within :wait (Defaults to {Capybara.default_max_wait_time}) seconds.
       #
       # @overload assert_all_of_selectors([kind = Capybara.default_selector], *locators, **options)
       #
@@ -169,7 +169,7 @@ module Capybara
       # such as :text and :visible.
       #
       # The :wait option applies to all of the selectors as a group, so none of the locators must be present
-      # within :wait (Defaults to Capybara.default_max_wait_time) seconds.
+      # within :wait (Defaults to {Capybara.default_max_wait_time}) seconds.
       #
       # @overload assert_none_of_selectors([kind = Capybara.default_selector], *locators, **options)
       #
@@ -190,7 +190,7 @@ module Capybara
       # such as :text and :visible.
       #
       # The :wait option applies to all of the selectors as a group, so any of the locators must be present
-      # within :wait (Defaults to Capybara.default_max_wait_time) seconds.
+      # within :wait (Defaults to {Capybara.default_max_wait_time}) seconds.
       #
       # @overload assert_any_of_selectors([kind = Capybara.default_selector], *locators, **options)
       #
@@ -215,7 +215,7 @@ module Capybara
       ##
       #
       # Asserts that a given selector is not on the page or a descendant of the current node.
-      # Usage is identical to Capybara::Node::Matchers#assert_selector
+      # Usage is identical to {#assert_selector}.
       #
       # Query options such as :count, :minimum, :maximum, and :between are
       # considered to be an integral part of the selector. This will return
@@ -272,9 +272,9 @@ module Capybara
       ##
       #
       # Checks if a given XPath expression is not on the page or a descendant of the current node.
-      # Usage is identical to Capybara::Node::Matchers#has_xpath?
+      # Usage is identical to {#has_xpath?}.
       #
-      # @param (see Capybara::Node::Finders#has_xpath?)
+      # @param [String] path (see {#has_xpath?})
       # @return [Boolean]
       #
       def has_no_xpath?(path, **options, &optional_filter_block)
@@ -300,7 +300,7 @@ module Capybara
       #     page.has_css?('li', text: 'Horse', visible: true)
       #
       # @param [String] path                      A CSS selector
-      # @param options                            (see Capybara::Node::Finders#all)
+      # @param options                            (see {Capybara::Node::Finders#all})
       # @option options [Integer] :count (nil)    Number of times the selector should occur
       # @return [Boolean]                         If the selector exists
       #
@@ -311,9 +311,9 @@ module Capybara
       ##
       #
       # Checks if a given CSS selector is not on the page or a descendant of the current node.
-      # Usage is identical to Capybara::Node::Matchers#has_css?
+      # Usage is identical to {#has_css?}.
       #
-      # @param (see Capybara::Node::Finders#has_css?)
+      # @param [String] path (see {#has_css?})
       # @return [Boolean]
       #
       def has_no_css?(path, **options, &optional_filter_block)
@@ -339,7 +339,7 @@ module Capybara
       # Checks if the page or current node has no link with the given
       # text or id.
       #
-      # @param (see Capybara::Node::Finders#has_link?)
+      # @param [String] locator      (see {#has_link?})
       # @return [Boolean]            Whether it doesn't exist
       #
       def has_no_link?(locator = nil, **options, &optional_filter_block)
@@ -399,7 +399,7 @@ module Capybara
       ##
       #
       # Checks if the page or current node has no form field with the given
-      # label, name or id. See {Capybara::Node::Matchers#has_field?}.
+      # label, name or id. See {#has_field?}.
       #
       # @param [String] locator                  The label, name or id of a field to check for
       # @option options [String, Regexp] :with   The text content of the field or a Regexp to match
@@ -413,7 +413,7 @@ module Capybara
       ##
       #
       # Checks if the page or current node has a radio button or
-      # checkbox with the given label, value, id, or Capybara.test_id attribute that is currently
+      # checkbox with the given label, value, id, or {Capybara.test_id} attribute that is currently
       # checked.
       #
       # @param [String] locator           The label, name or id of a checked field
@@ -426,7 +426,7 @@ module Capybara
       ##
       #
       # Checks if the page or current node has no radio button or
-      # checkbox with the given label, value or id, or Capybara.test_id attribute that is currently
+      # checkbox with the given label, value or id, or {Capybara.test_id} attribute that is currently
       # checked.
       #
       # @param [String] locator           The label, name or id of a checked field
@@ -439,7 +439,7 @@ module Capybara
       ##
       #
       # Checks if the page or current node has a radio button or
-      # checkbox with the given label, value or id, or Capybara.test_id attribute that is currently
+      # checkbox with the given label, value or id, or {Capybara.test_id} attribute that is currently
       # unchecked.
       #
       # @param [String] locator           The label, name or id of an unchecked field
@@ -452,7 +452,7 @@ module Capybara
       ##
       #
       # Checks if the page or current node has no radio button or
-      # checkbox with the given label, value or id, or Capybara.test_id attribute that is currently
+      # checkbox with the given label, value or id, or {Capybara.test_id} attribute that is currently
       # unchecked.
       #
       # @param [String] locator           The label, name or id of an unchecked field
@@ -498,10 +498,10 @@ module Capybara
       ##
       #
       # Checks if the page or current node has no select field with the
-      # given label, name or id. See {Capybara::Node::Matchers#has_select?}.
+      # given label, name or id. See {#has_select?}.
       #
-      # @param (see Capybara::Node::Matchers#has_select?)
-      # @return [Boolean]     Whether it doesn't exist
+      # @param [String] locator   (see {#has_select?})
+      # @return [Boolean]         Whether it doesn't exist
       #
       def has_no_select?(locator = nil, **options, &optional_filter_block)
         has_no_selector?(:select, locator, options, &optional_filter_block)
@@ -532,9 +532,9 @@ module Capybara
       ##
       #
       # Checks if the page or current node has no table with the given id
-      # or caption. See {Capybara::Node::Matchers#has_table?}.
+      # or caption. See {#has_table?}.
       #
-      # @param (see Capybara::Node::Matchers#has_table?)
+      # @param [String] locator (see {#has_table?})
       # @return [Boolean]       Whether it doesn't exist
       #
       def has_no_table?(locator = nil, **options, &optional_filter_block)
@@ -573,7 +573,7 @@ module Capybara
       #
       # Checks if the current node matches given selector
       #
-      # @param (see Capybara::Node::Finders#has_selector?)
+      # @param (see #has_selector?)
       # @return [Boolean]
       #
       def matches_selector?(*args, **options, &optional_filter_block)
@@ -605,9 +605,9 @@ module Capybara
       ##
       #
       # Checks if the current node does not match given selector
-      # Usage is identical to Capybara::Node::Matchers#has_selector?
+      # Usage is identical to {#has_selector?}.
       #
-      # @param (see Capybara::Node::Finders#has_selector?)
+      # @param (see #has_selector?)
       # @return [Boolean]
       #
       def not_matches_selector?(*args, **options, &optional_filter_block)
@@ -642,7 +642,7 @@ module Capybara
       #
       # @!macro text_query_params
       #   @overload $0(type, text, **options)
-      #     @param [:all, :visible] type               Whether to check for only visible or all text. If this parameter is missing or nil then we use the value of `Capybara.ignore_hidden_elements`, which defaults to `true`, corresponding to `:visible`.
+      #     @param [:all, :visible] type               Whether to check for only visible or all text. If this parameter is missing or nil then we use the value of {Capybara.ignore_hidden_elements}, which defaults to `true`, corresponding to `:visible`.
       #     @param [String, Regexp] text               The string/regexp to check for. If it's a string, text is expected to include it. If it's a regexp, text is expected to match it.
       #     @option options [Integer] :count (nil)     Number of times the text is expected to occur
       #     @option options [Integer] :minimum (nil)   Minimum number of times the text is expected to occur

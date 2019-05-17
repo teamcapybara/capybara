@@ -107,7 +107,7 @@ module Capybara
       # Find a form field on the page. The field can be found by its name, id or label text.
       #
       # @overload find_field([locator], **options)
-      #   @param [String] locator             name, id, Capybara.test_id attribute, placeholder or text of associated label element
+      #   @param [String] locator             name, id, {Capybara.test_id} attribute, placeholder or text of associated label element
       #
       #   @macro waiting_behavior
       #
@@ -138,7 +138,7 @@ module Capybara
       # Find a link on the page. The link can be found by its id or text.
       #
       # @overload find_link([locator], **options)
-      #   @param [String] locator            id, Capybara.test_id attribute, title, text, or alt of enclosed img element
+      #   @param [String] locator            id, {Capybara.test_id} attribute, title, text, or alt of enclosed img element
       #
       #   @macro waiting_behavior
       #
@@ -157,11 +157,11 @@ module Capybara
       #
       # Find a button on the page.
       # This can be any \<input> element of type submit, reset, image, button or it can be a
-      # \<button> element. All buttons can be found by their id, name, Capbyara.test_id attribute, value, or title. \<button> elements can also be found
+      # \<button> element. All buttons can be found by their id, name, {Capybara.test_id} attribute, value, or title. \<button> elements can also be found
       # by their text content, and image \<input> elements by their alt attribute
       #
       # @overload find_button([locator], **options)
-      #   @param [String] locator            id, name, Capybara.test_id attribute, value, title, text content, alt of image
+      #   @param [String] locator            id, name, {Capybara.test_id} attribute, value, title, text content, alt of image
       #
       #   @overload find_button(**options)
       #
@@ -224,7 +224,7 @@ module Capybara
       #     page.all('a', text: 'Home')
       #     page.all('#menu li', visible: true)
       #
-      # By default Capybara's waiting behavior will wait up to `Capybara.default_max_wait_time`
+      # By default Capybara's waiting behavior will wait up to {Capybara.default_max_wait_time}
       # seconds for matching elements to be available and then return an empty result if none
       # are available. It is possible to set expectations on the number of results located and
       # Capybara will raise an exception if the number of elements located don't satisfy the
@@ -235,10 +235,10 @@ module Capybara
       #     page.assert_selector('p#foo', minimum: 1)
       #     page.assert_selector('p#foo', between: 1..10)
       #
-      # See {Capybara::Helpers#matches_count?} for additional information about
+      # See {Capybara::Result#matches_count?} for additional information about
       # count matching.
       #
-      # @param [Symbol] kind                       Optional selector type (:css, :xpath, :field, etc.) - Defaults to Capybara.default_selector
+      # @param [Symbol] kind                       Optional selector type (:css, :xpath, :field, etc.) - Defaults to {Capybara.default_selector}
       # @param [String] locator                    The locator for the specified selector
       # @macro system_filters
       # @option options [Integer] count            Exact number of matches that are expected to be found
@@ -276,7 +276,7 @@ module Capybara
       ##
       #
       # Find the first element on the page matching the given selector
-      # and options. By default `first` will wait up to `Capybara.default_max_wait_time`
+      # and options. By default `first` will wait up to {Capybara.default_max_wait_time}
       # seconds for matching elements to appear and then raise an error if no matching
       # element is found, or `nil` if the provided count options allow for empty results.
       #

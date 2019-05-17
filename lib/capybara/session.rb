@@ -17,16 +17,16 @@ module Capybara
   #     session = Capybara::Session.new(:culerity)
   #     session.visit('http://www.google.com')
   #
-  # When Capybara.threadsafe == true the sessions options will be initially set to the
+  # When {Capybara.threadsafe} == true the sessions options will be initially set to the
   # current values of the global options and a configuration block can be passed to the session initializer.
-  # For available options see {Capybara::SessionConfig::OPTIONS}
+  # For available options see {Capybara::SessionConfig::OPTIONS}.
   #
   #     session = Capybara::Session.new(:driver, MyRackApp) do |config|
   #       config.app_host = "http://my_host.dev"
   #     end
   #
-  # Session provides a number of methods for controlling the navigation of the page, such as +visit+,
-  # +current_path, and so on. It also delegates a number of methods to a Capybara::Document, representing
+  # Session provides a number of methods for controlling the navigation of the page, such as {#visit},
+  # {#current_path}, and so on. It also delegates a number of methods to a {Capybara::Node::Document}, representing
   # the current HTML document. This allows interaction:
   #
   #     session.fill_in('q', with: 'Capybara')
@@ -111,17 +111,17 @@ module Capybara
     #
     # This method does not:
     #
-    #   * accept modal dialogs if they are present (Selenium driver now does, others may not)
-    #   * clear browser cache/HTML 5 local storage/IndexedDB/Web SQL database/etc.
-    #   * modify state of the driver/underlying browser in any other way
+    # * accept modal dialogs if they are present (Selenium driver now does, others may not)
+    # * clear browser cache/HTML 5 local storage/IndexedDB/Web SQL database/etc.
+    # * modify state of the driver/underlying browser in any other way
     #
     # as doing so will result in performance downsides and it's not needed to do everything from the list above for most apps.
     #
     # If you want to do anything from the list above on a general basis you can:
     #
-    #   * write RSpec/Cucumber/etc. after hook
-    #   * monkeypatch this method
-    #   * use Ruby's `prepend` method
+    # * write RSpec/Cucumber/etc. after hook
+    # * monkeypatch this method
+    # * use Ruby's `prepend` method
     #
     def reset!
       if @touched
@@ -304,7 +304,7 @@ module Capybara
 
     ##
     #
-    # Executes the given block within the context of a node. `within` takes the
+    # Executes the given block within the context of a node. {#within} takes the
     # same options as `find`, as well as a block. For the duration of the
     # block, any command to Capybara will be handled as though it were scoped
     # to the given element.
@@ -314,17 +314,17 @@ module Capybara
     #     end
     #
     # Just as with `find`, if multiple elements match the selector given to
-    # `within`, an error will be raised, and just as with `find`, this
+    # {within}, an error will be raised, and just as with `find`, this
     # behaviour can be controlled through the `:match` and `:exact` options.
     #
     # It is possible to omit the first parameter, in that case, the selector is
-    # assumed to be of the type set in Capybara.default_selector.
+    # assumed to be of the type set in {Capybara.default_selector}.
     #
     #     within('div#delivery-address') do
     #       fill_in('Street', with: '12 Main Street')
     #     end
     #
-    # Note that a lot of uses of `within` can be replaced more succinctly with
+    # Note that a lot of uses of {#within} can be replaced more succinctly with
     # chaining:
     #
     #     find('div#delivery-address').fill_in('Street', with: '12 Main Street')
@@ -373,7 +373,7 @@ module Capybara
     # Switch to the given frame
     #
     # If you use this method you are responsible for making sure you switch back to the parent frame when done in the frame changed to.
-    # Capybara::Session#within_frame is preferred over this method and should be used when possible.
+    # {#within_frame} is preferred over this method and should be used when possible.
     # May not be supported by all drivers.
     #
     # @overload switch_to_frame(element)
@@ -471,7 +471,7 @@ module Capybara
     ##
     # @overload switch_to_window(&block)
     #   Switches to the first window for which given block returns a value other than false or nil.
-    #   If window that matches block can't be found, the window will be switched back and `WindowError` will be raised.
+    #   If window that matches block can't be found, the window will be switched back and {Capybara::WindowError} will be raised.
     #   @example
     #     window = switch_to_window { title == 'Page title' }
     #   @raise [Capybara::WindowError]     if no window matches given block
@@ -480,8 +480,8 @@ module Capybara
     #   @raise [Capybara::Driver::Base#no_such_window_error] if nonexistent (e.g. closed) window was passed
     #
     # @return [Capybara::Window]         window that has been switched to
-    # @raise [Capybara::ScopeError]        if this method is invoked inside `within` or
-    #   `within_frame` methods
+    # @raise [Capybara::ScopeError]        if this method is invoked inside {#within} or
+    #   {#within_frame} methods
     # @raise [ArgumentError]               if both or neither arguments were provided
     #
     def switch_to_window(window = nil, **options, &window_locator)
@@ -504,7 +504,7 @@ module Capybara
     # 3. Switches back (this step will be invoked even if exception will happen at second step)
     #
     # @overload within_window(window) { do_something }
-    #   @param window [Capybara::Window]       instance of `Capybara::Window` class
+    #   @param window [Capybara::Window]       instance of {Capybara::Window} class
     #     that will be switched to
     #   @raise [driver#no_such_window_error] if nonexistent (e.g. closed) window was passed
     # @overload within_window(proc_or_lambda) { do_something }
@@ -514,7 +514,7 @@ module Capybara
     #     within_window(->{ page.title == 'Page title' }) { click_button 'Submit' }
     #   @raise [Capybara::WindowError]         if no window matching lambda was found
     #
-    # @raise [Capybara::ScopeError]        if this method is invoked inside `within_frame` method
+    # @raise [Capybara::ScopeError]        if this method is invoked inside {#within_frame} method
     # @return                              value returned by the block
     #
     def within_window(window_or_proc)
@@ -570,8 +570,8 @@ module Capybara
     ##
     #
     # Execute the given script, not returning a result. This is useful for scripts that return
-    # complex objects, such as jQuery statements. +execute_script+ should be used over
-    # +evaluate_script+ whenever possible.
+    # complex objects, such as jQuery statements. {#execute_script} should be used over
+    # {#evaluate_script} whenever possible.
     #
     # @param [String] script   A string of JavaScript to execute
     # @param args  Optional arguments that will be passed to the script.  Driver support for this is optional and types of objects supported may differ between drivers
@@ -584,7 +584,7 @@ module Capybara
     ##
     #
     # Evaluate the given JavaScript and return the result. Be careful when using this with
-    # scripts that return complex objects, such as jQuery statements. +execute_script+ might
+    # scripts that return complex objects, such as jQuery statements. {#execute_script} might
     # be a better alternative.
     #
     # @param  [String] script   A string of JavaScript to evaluate
@@ -676,12 +676,12 @@ module Capybara
 
     ##
     #
-    # Save a snapshot of the page. If `Capybara.asset_host` is set it will inject `base` tag
-    #   pointing to `asset_host`.
+    # Save a snapshot of the page. If {Capybara.asset_host} is set it will inject `base` tag
+    # pointing to `asset_host`.
     #
-    # If invoked without arguments it will save file to `Capybara.save_path`
-    #   and file will be given randomly generated filename. If invoked with a relative path
-    #   the path will be relative to `Capybara.save_path`
+    # If invoked without arguments it will save file to {Capybara.save_path}
+    # and file will be given randomly generated filename. If invoked with a relative path
+    # the path will be relative to {Capybara.save_path}.
     #
     # @param [String] path  the path to where it should be saved
     # @return [String]      the path to which the file was saved
@@ -696,9 +696,9 @@ module Capybara
     #
     # Save a snapshot of the page and open it in a browser for inspection.
     #
-    # If invoked without arguments it will save file to `Capybara.save_path`
-    #   and file will be given randomly generated filename. If invoked with a relative path
-    #   the path will be relative to `Capybara.save_path`
+    # If invoked without arguments it will save file to {Capybara.save_path}
+    # and file will be given randomly generated filename. If invoked with a relative path
+    # the path will be relative to {Capybara.save_path}.
     #
     # @param [String] path  the path to where it should be saved
     #
@@ -710,9 +710,9 @@ module Capybara
     #
     # Save a screenshot of page.
     #
-    # If invoked without arguments it will save file to `Capybara.save_path`
-    #   and file will be given randomly generated filename. If invoked with a relative path
-    #   the path will be relative to `Capybara.save_path`
+    # If invoked without arguments it will save file to {Capybara.save_path}
+    # and file will be given randomly generated filename. If invoked with a relative path
+    # the path will be relative to {Capybara.save_path}.
     #
     # @param [String] path    the path to where it should be saved
     # @param [Hash] options   a customizable set of options
@@ -725,9 +725,9 @@ module Capybara
     #
     # Save a screenshot of the page and open it for inspection.
     #
-    # If invoked without arguments it will save file to `Capybara.save_path`
-    #   and file will be given randomly generated filename. If invoked with a relative path
-    #   the path will be relative to `Capybara.save_path`
+    # If invoked without arguments it will save file to {Capybara.save_path}
+    # and file will be given randomly generated filename. If invoked with a relative path
+    # the path will be relative to {Capybara.save_path}.
     #
     # @param [String] path    the path to where it should be saved
     # @param [Hash] options   a customizable set of options
@@ -784,7 +784,7 @@ module Capybara
 
     ##
     #
-    #  Accepts a block to set the configuration options if Capybara.threadsafe == true. Note that some options only have an effect
+    #  Accepts a block to set the configuration options if {Capybara.threadsafe} == true. Note that some options only have an effect
     #  if set at initialization time, so look at the configuration block that can be passed to the initializer too
     #
     def configure
