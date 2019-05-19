@@ -39,8 +39,6 @@ GitHub): http://groups.google.com/group/ruby-capybara
     - [RackTest](#racktest)
     - [Selenium](#selenium)
     - [Apparition](#apparition)
-    - [Capybara-webkit](#capybara-webkit)
-    - [Poltergeist](#poltergeist)
 - [The DSL](#the-dsl)
     - [Navigating](#navigating)
     - [Clicking links and buttons](#clicking-links-and-buttons)
@@ -60,11 +58,13 @@ GitHub): http://groups.google.com/group/ruby-capybara
 - [Using the DSL elsewhere](#using-the-dsl-elsewhere)
 - [Calling remote servers](#calling-remote-servers)
 - [Using sessions](#using-sessions)
+    - [Named sessions](#named-sessions)
+    - [Using sessions manually](#using-sessions-manually)
 - [XPath, CSS and selectors](#xpath-css-and-selectors)
 - [Beware the XPath // trap](#beware-the-xpath--trap)
 - [Configuring and adding drivers](#configuring-and-adding-drivers)
 - [Gotchas:](#gotchas)
-- ["Threadsafe" mode](#threadsafe)
+- ["Threadsafe" mode](#threadsafe-mode)
 - [Development](#development)
 
 ## <a name="key-benefits"></a>Key benefits
