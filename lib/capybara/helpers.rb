@@ -41,7 +41,7 @@ module Capybara
     ##
     #
     # Injects a `<base>` tag into the given HTML code, pointing to
-    # `Capybara.asset_host`.
+    # {Capybara.configure asset_host}.
     #
     # @param [String] html     HTML code to inject into
     # @param [URL] host (Capybara.asset_host) The host from which assets should be loaded

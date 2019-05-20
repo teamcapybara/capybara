@@ -17,7 +17,7 @@ module Capybara
   #     session = Capybara::Session.new(:culerity)
   #     session.visit('http://www.google.com')
   #
-  # When {Capybara.threadsafe} == true the sessions options will be initially set to the
+  # When {Capybara.configure threadsafe} == true the sessions options will be initially set to the
   # current values of the global options and a configuration block can be passed to the session initializer.
   # For available options see {Capybara::SessionConfig::OPTIONS}.
   #
@@ -238,7 +238,7 @@ module Capybara
     #
     # For drivers which can run against an external application, such as the selenium driver
     # giving an absolute URL will navigate to that page. This allows testing applications
-    # running on remote servers. For these drivers, setting {Capybara.app_host} will make the
+    # running on remote servers. For these drivers, setting {Capybara.configure app_host} will make the
     # remote server the default. For example:
     #
     #     Capybara.app_host = 'http://google.com'
@@ -318,7 +318,7 @@ module Capybara
     # behaviour can be controlled through the `:match` and `:exact` options.
     #
     # It is possible to omit the first parameter, in that case, the selector is
-    # assumed to be of the type set in {Capybara.default_selector}.
+    # assumed to be of the type set in {Capybara.configure default_selector}.
     #
     #     within('div#delivery-address') do
     #       fill_in('Street', with: '12 Main Street')
@@ -676,12 +676,12 @@ module Capybara
 
     ##
     #
-    # Save a snapshot of the page. If {Capybara.asset_host} is set it will inject `base` tag
+    # Save a snapshot of the page. If {Capybara.configure asset_host} is set it will inject `base` tag
     # pointing to `asset_host`.
     #
-    # If invoked without arguments it will save file to {Capybara.save_path}
+    # If invoked without arguments it will save file to {Capybara.configure save_path}
     # and file will be given randomly generated filename. If invoked with a relative path
-    # the path will be relative to {Capybara.save_path}.
+    # the path will be relative to {Capybara.configure save_path}.
     #
     # @param [String] path  the path to where it should be saved
     # @return [String]      the path to which the file was saved
@@ -696,9 +696,9 @@ module Capybara
     #
     # Save a snapshot of the page and open it in a browser for inspection.
     #
-    # If invoked without arguments it will save file to {Capybara.save_path}
+    # If invoked without arguments it will save file to {Capybara.configure save_path}
     # and file will be given randomly generated filename. If invoked with a relative path
-    # the path will be relative to {Capybara.save_path}.
+    # the path will be relative to {Capybara.configure save_path}.
     #
     # @param [String] path  the path to where it should be saved
     #
@@ -710,9 +710,9 @@ module Capybara
     #
     # Save a screenshot of page.
     #
-    # If invoked without arguments it will save file to {Capybara.save_path}
+    # If invoked without arguments it will save file to {Capybara.configure save_path}
     # and file will be given randomly generated filename. If invoked with a relative path
-    # the path will be relative to {Capybara.save_path}.
+    # the path will be relative to {Capybara.configure save_path}.
     #
     # @param [String] path    the path to where it should be saved
     # @param [Hash] options   a customizable set of options
@@ -725,9 +725,9 @@ module Capybara
     #
     # Save a screenshot of the page and open it for inspection.
     #
-    # If invoked without arguments it will save file to {Capybara.save_path}
+    # If invoked without arguments it will save file to {Capybara.configure save_path}
     # and file will be given randomly generated filename. If invoked with a relative path
-    # the path will be relative to {Capybara.save_path}.
+    # the path will be relative to {Capybara.configure save_path}.
     #
     # @param [String] path    the path to where it should be saved
     # @param [Hash] options   a customizable set of options
@@ -784,7 +784,7 @@ module Capybara
 
     ##
     #
-    #  Accepts a block to set the configuration options if {Capybara.threadsafe} == true. Note that some options only have an effect
+    #  Accepts a block to set the configuration options if {Capybara.configure threadsafe} == true. Note that some options only have an effect
     #  if set at initialization time, so look at the configuration block that can be passed to the initializer too
     #
     def configure

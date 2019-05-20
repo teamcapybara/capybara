@@ -43,7 +43,7 @@ module Capybara
 
       ##
       #
-      # Retrieve the text of the element. If `Capybara.ignore_hidden_elements`
+      # Retrieve the text of the element. If {Capybara.configure ignore_hidden_elements}
       # is `true`, which it is by default, then this will return only text
       # which is visible. The exact semantics of this may differ between
       # drivers, but generally any text within elements with `display:none` is
@@ -109,7 +109,7 @@ module Capybara
       # Set the value of the form element to the given value.
       #
       # @param [String] value    The new value
-      # @param [Hash{}] options  Driver specific options for how to set the value. Take default values from `Capybara#default_set_options` - See {Capybara::configure}
+      # @param [Hash{}] options  Driver specific options for how to set the value. Take default values from {Capybara.configure default_set_options}
       #
       # @return [Capybara::Node::Element]  The element
       def set(value, **options)
@@ -197,62 +197,62 @@ module Capybara
       #     element.send_keys "tet", :left, "s"   #=> value: 'test'
       #     element.send_keys [:control, 'a'], :space   #=> value: ' ' - assuming ctrl-a selects all contents
       #
-      # Symbols supported for keys
-      # :cancel
-      # :help
-      # :backspace
-      # :tab
-      # :clear
-      # :return
-      # :enter
-      # :shift
-      # :control
-      # :alt
-      # :pause
-      # :escape
-      # :space
-      # :page_up
-      # :page_down
-      # :end
-      # :home
-      # :left
-      # :up
-      # :right
-      # :down
-      # :insert
-      # :delete
-      # :semicolon
-      # :equals
-      # :numpad0
-      # :numpad1
-      # :numpad2
-      # :numpad3
-      # :numpad4
-      # :numpad5
-      # :numpad6
-      # :numpad7
-      # :numpad8
-      # :numpad9
-      # :multiply      - numeric keypad *
-      # :add           - numeric keypad +
-      # :separator     - numeric keypad 'separator' key ??
-      # :subtract      - numeric keypad -
-      # :decimal       - numeric keypad .
-      # :divide        - numeric keypad /
-      # :f1
-      # :f2
-      # :f3
-      # :f4
-      # :f5
-      # :f6
-      # :f7
-      # :f8
-      # :f9
-      # :f10
-      # :f11
-      # :f12
-      # :meta
-      # :command      - alias of :meta
+      # Symbols supported for keys:
+      # * :cancel
+      # * :help
+      # * :backspace
+      # * :tab
+      # * :clear
+      # * :return
+      # * :enter
+      # * :shift
+      # * :control
+      # * :alt
+      # * :pause
+      # * :escape
+      # * :space
+      # * :page_up
+      # * :page_down
+      # * :end
+      # * :home
+      # * :left
+      # * :up
+      # * :right
+      # * :down
+      # * :insert
+      # * :delete
+      # * :semicolon
+      # * :equals
+      # * :numpad0
+      # * :numpad1
+      # * :numpad2
+      # * :numpad3
+      # * :numpad4
+      # * :numpad5
+      # * :numpad6
+      # * :numpad7
+      # * :numpad8
+      # * :numpad9
+      # * :multiply      - numeric keypad *
+      # * :add           - numeric keypad +
+      # * :separator     - numeric keypad 'separator' key ??
+      # * :subtract      - numeric keypad -
+      # * :decimal       - numeric keypad .
+      # * :divide        - numeric keypad /
+      # * :f1
+      # * :f2
+      # * :f3
+      # * :f4
+      # * :f5
+      # * :f6
+      # * :f7
+      # * :f8
+      # * :f9
+      # * :f10
+      # * :f11
+      # * :f12
+      # * :meta
+      # * :command      - alias of :meta
       #
       # @return [Capybara::Node::Element]  The element
       def send_keys(*args)
@@ -427,8 +427,8 @@ module Capybara
       ##
       #
       # Execute the given JS in the context of the element not returning a result. This is useful for scripts that return
-      # complex objects, such as jQuery statements. +execute_script+ should be used over
-      # +evaluate_script+ whenever possible. `this` in the script will refer to the element this is called on.
+      # complex objects, such as jQuery statements. {#execute_script} should be used over
+      # {#evaluate_script} whenever possible. `this` in the script will refer to the element this is called on.
       #
       # @param [String] script   A string of JavaScript to execute
       # @param args  Optional arguments that will be passed to the script.  Driver support for this is optional and types of objects supported may differ between drivers
@@ -444,7 +444,7 @@ module Capybara
       ##
       #
       # Evaluate the given JS in the context of the element and return the result. Be careful when using this with
-      # scripts that return complex objects, such as jQuery statements. +execute_script+ might
+      # scripts that return complex objects, such as jQuery statements. {#execute_script} might
       # be a better alternative. `this` in the script will refer to the element this is called on.
       #
       # @param  [String] script   A string of JavaScript to evaluate

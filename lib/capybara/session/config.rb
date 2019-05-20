@@ -29,8 +29,6 @@ module Capybara
     #   See {Capybara.configure}
     # @!method exact
     #   See {Capybara.configure}
-    # @!method exact_text
-    #   See {Capybara.configure}
     # @!method raise_server_errors
     #   See {Capybara.configure}
     # @!method visible_text_only

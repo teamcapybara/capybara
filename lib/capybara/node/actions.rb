@@ -6,18 +6,18 @@ module Capybara
       # @!macro waiting_behavior
       #   If the driver is capable of executing JavaScript, this method will wait for a set amount of time
       #   and continuously retry finding the element until either the element is found or the time
-      #   expires. The length of time +find+ will wait is controlled through {Capybara.default_max_wait_time}
+      #   expires. The length of time +find+ will wait is controlled through {Capybara.configure default_max_wait_time}
       #
       #   @option options [false, true, Numeric] wait (Capybara.default_max_wait_time) Maximum time to wait for matching element to appear.
 
       ##
       #
-      # Finds a button or link and clicks it.  See {Capybara::Node::Actions#click_button} and
-      # {Capybara::Node::Actions#click_link} for what locator will match against for each type of element
+      # Finds a button or link and clicks it.  See {#click_button} and
+      # {#click_link} for what locator will match against for each type of element
       #
       # @overload click_link_or_button([locator], **options)
       #   @macro waiting_behavior
-      #   @param [String] locator      See {Capybara::Node::Actions#click_button} and {Capybara::Node::Actions#click_link}
+      #   @param [String] locator      See {#click_button} and {#click_link}
       #
       # @return [Capybara::Node::Element]  The element clicked
       #
@@ -28,12 +28,12 @@ module Capybara
 
       ##
       #
-      # Finds a link by id, Capybara.test_id attribute, text or title and clicks it. Also looks at image
+      # Finds a link by id, {Capybara.configure test_id} attribute, text or title and clicks it. Also looks at image
       # alt text inside the link.
       #
       # @overload click_link([locator], **options)
       #   @macro waiting_behavior
-      #   @param [String] locator         text, id, Capybara.test_id attribute, title or nested image's alt attribute
+      #   @param [String] locator         text, id, {Capybara.configure test_id} attribute, title or nested image's alt attribute
       #   @param options                  See {Capybara::Node::Finders#find_link}
       #
       # @return [Capybara::Node::Element]  The element clicked
@@ -45,7 +45,7 @@ module Capybara
       #
       # Finds a button on the page and clicks it.
       # This can be any \<input> element of type submit, reset, image, button or it can be a
-      # \<button> element. All buttons can be found by their id, name, Capybara.test_id attribute, value, or title. \<button> elements can also be found
+      # \<button> element. All buttons can be found by their id, name, {Capybara.configure test_id} attribute, value, or title. \<button> elements can also be found
       # by their text content, and image \<input> elements by their alt attribute
       #
       # @overload click_button([locator], **options)
@@ -60,7 +60,7 @@ module Capybara
       ##
       #
       # Locate a text field or text area and fill it in with the given text
-      # The field can be found via its name, id, Capybara.test_id attribute, or label text.
+      # The field can be found via its name, id, {Capybara.configure test_id} attribute, or label text.
       # If no locator is provided will operate on self or a descendant
       #
       #     # will fill in a descendant fillable field with name, id, or label text matching 'Name'
@@ -81,7 +81,7 @@ module Capybara
       #   @option options [String] name           Match fields that match the name attribute
       #   @option options [String] placeholder    Match fields that match the placeholder attribute
       #   @option options [String, Array<String>, Regexp] class    Match fields that match the class(es) provided
-      #   @option options [Hash] fill_options     Driver specific options regarding how to fill fields (Defaults come from Capybara.default_set_options)
+      #   @option options [Hash] fill_options     Driver specific options regarding how to fill fields (Defaults come from {Capybara.configure default_set_options})
       #
       # @return [Capybara::Node::Element]  The element filled_in
       def fill_in(locator = nil, with:, currently_with: nil, fill_options: {}, **find_options)
@@ -178,7 +178,7 @@ module Capybara
 
       ##
       #
-      # If `:from` option is present, `select` finds a select box, or text input with associated datalist,
+      # If +:from+ option is present, +select+ finds a select box, or text input with associated datalist,
       # on the page and selects a particular option from it.
       # Otherwise it finds an option inside current scope and selects it.
       # If the select box is a multiple select, +select+ can be called multiple times to select more than
@@ -191,7 +191,7 @@ module Capybara
       #   @macro waiting_behavior
       #
       #   @param value [String] Which option to select
-      #   @param from [String]  The id, Capybara.test_id attribute, name or label of the select box
+      #   @param from [String]  The id, {Capybara.configure test_id} attribute, name or label of the select box
       #
       # @return [Capybara::Node::Element]  The option element selected
       def select(value = nil, from: nil, **options)
@@ -218,7 +218,7 @@ module Capybara
       #   @macro waiting_behavior
       #
       #   @param value [String]     Which option to unselect
-      #   @param from [String]      The id, Capybara.test_id attribute, name or label of the select box
+      #   @param from [String]      The id, {Capybara.configure test_id} attribute, name or label of the select box
       #
       #
       # @return [Capybara::Node::Element]  The option element unselected
