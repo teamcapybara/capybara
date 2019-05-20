@@ -112,6 +112,10 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumIE, 'selenium', capybara_sk
     skip 'Hangs IE testing for unknown reason'
   when /drag_to.*HTML5/
     pending "IE doesn't support a DataTransfer constuctor"
+  when /template elements should not be visible/
+    skip "IE doesn't support template elements"
+  when /Element#drop/
+    pending "IE doesn't support DataTransfer constructor"
   end
 end
 
