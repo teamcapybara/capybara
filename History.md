@@ -5,6 +5,13 @@ Release date: unreleased
 
 * Chrome and Firefox via the selenium driver support dropping files/data on elements
 
+# Version 3.20.2
+Release date: 2019-05-19
+
+### Fixed
+
+* Move `uglifier` from runtime to development dependency [miyucy]
+
 # Version 3.20.1
 Release date: 2019-05-17
 
