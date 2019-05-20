@@ -276,7 +276,7 @@ module Capybara
       #
       def tag_name
         # Element type is immutable so cache it
-        @tag_name ||= synchronize { base.tag_name }
+        @tag_name ||= initial_cache[:tag_name] || synchronize { base.tag_name }
       end
 
       ##
