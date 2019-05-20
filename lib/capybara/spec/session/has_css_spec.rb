@@ -10,10 +10,11 @@ Capybara::SpecHelper.spec '#has_css?' do
     expect(@session).to have_css('p a#foo')
   end
 
-  it 'should take a symbol as the selector' do
+  it 'should warn when passed a symbol' do
     # This was never a specifically accepted format but it has worked for a
-    # lot of versions. Probably should keep it until at least 4.0
-    # TODO: consider not supporting symbol for the CSS selector.
+    # lot of versions.
+    # TODO: Remove in 4.0
+    expect_any_instance_of(Kernel).to receive(:warn) # rubocop:disable RSpec/AnyInstance
     expect(@session).to have_css(:p)
   end
 
