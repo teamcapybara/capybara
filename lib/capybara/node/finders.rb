@@ -43,7 +43,7 @@ module Capybara
       #                                            * E.g. +class: ['a', '!b', '!!!c'] # limit to elements with class 'a' and '!c' but not class 'b'+
       #   @option options [String, Regexp, Hash] :style  Only find elements with matching style. String and Regexp will be checked against text of the elements +style+ attribute, while a Hash will be compared against the elements full style
       #   @option options [Boolean] :exact            Control whether +is+ expressions in the given XPath match exactly or partially
-      #   @option options [Symbol] :match        The matching strategy to use.
+      #   @option options [Symbol] :match        The matching strategy to use. Defaults to {Capybara.configure match}.
       #
       # @return [Capybara::Node::Element]      The found element
       # @raise  [Capybara::ElementNotFound]    If the element can't be found before time expires

@@ -6,21 +6,20 @@ module Capybara
       # @!macro waiting_behavior
       #   If the driver is capable of executing JavaScript, this method will wait for a set amount of time
       #   and continuously retry finding the element until either the element is found or the time
-      #   expires. The length of time +find+ will wait is controlled through {Capybara.configure default_max_wait_time}
+      #   expires. The length of time {Capybara::Node::Finders#find} will wait is controlled through {Capybara.configure default_max_wait_time}.
       #
-      #   @option options [false, true, Numeric] wait (Capybara.default_max_wait_time) Maximum time to wait for matching element to appear.
+      #   For each option details, see {Capybara::Node::Finders#find} options.
 
       ##
       #
       # Finds a button or link and clicks it.  See {#click_button} and
       # {#click_link} for what locator will match against for each type of element
       #
-      # @overload click_link_or_button([locator], **options)
-      #   @macro waiting_behavior
-      #   @param [String] locator      See {#click_button} and {#click_link}
+      # @see #click_button
+      # @see #click_link
       #
-      # @return [Capybara::Node::Element]  The element clicked
-      #
+      # @param (see #click_link)
+      # @return (see #click_link)
       def click_link_or_button(locator = nil, **options)
         find(:link_or_button, locator, options).click
       end
@@ -31,11 +30,8 @@ module Capybara
       # Finds a link by id, {Capybara.configure test_id} attribute, text or title and clicks it. Also looks at image
       # alt text inside the link.
       #
-      # @overload click_link([locator], **options)
-      #   @macro waiting_behavior
-      #   @param [String] locator         text, id, {Capybara.configure test_id} attribute, title or nested image's alt attribute
-      #   @param options                  See {Capybara::Node::Finders#find_link}
-      #
+      # @param [String] locator         text, id, {Capybara.configure test_id} attribute, title or nested image's alt attribute
+      # @option (see Capybara::Node::Finders#find)
       # @return [Capybara::Node::Element]  The element clicked
       def click_link(locator = nil, **options)
         find(:link, locator, options).click
@@ -48,10 +44,8 @@ module Capybara
       # \<button> element. All buttons can be found by their id, name, {Capybara.configure test_id} attribute, value, or title. \<button> elements can also be found
       # by their text content, and image \<input> elements by their alt attribute
       #
-      # @overload click_button([locator], **options)
-      #   @macro waiting_behavior
-      #   @param [String] locator      Which button to find
-      #   @param options     See {Capybara::Node::Finders#find_button}
+      # @param [String] locator      Which button to find
+      # @option (see Capybara::Node::Finders#find)
       # @return [Capybara::Node::Element]  The element clicked
       def click_button(locator = nil, **options)
         find(:button, locator, options).click
@@ -70,28 +64,25 @@ module Capybara
       #     el.fill_in with: 'Tom'
       #
       #
-      # @overload fill_in([locator], with:, **options)
-      #   @param [String] locator                 Which field to fill in
-      #   @param [Hash] options
-      #   @param with: [String]                  The value to fill_in
-      #   @macro waiting_behavior
-      #   @option options [String] currently_with The current value property of the field to fill in
-      #   @option options [Boolean] multiple      Match fields that can have multiple values?
-      #   @option options [String, Regexp] id             Match fields that match the id attribute
-      #   @option options [String] name           Match fields that match the name attribute
-      #   @option options [String] placeholder    Match fields that match the placeholder attribute
-      #   @option options [String, Array<String>, Regexp] class    Match fields that match the class(es) provided
-      #   @option options [Hash] fill_options     Driver specific options regarding how to fill fields (Defaults come from {Capybara.configure default_set_options})
-      #
-      # @return [Capybara::Node::Element]  The element filled_in
-      def fill_in(locator = nil, with:, currently_with: nil, fill_options: {}, **find_options)
-        find_options[:with] = currently_with if currently_with
-        find_options[:allow_self] = true if locator.nil?
-        find(:fillable_field, locator, find_options).set(with, fill_options)
+      # @param [String] locator                    Which field to fill in
+      # @param [String] with                       The value to fill in
+      # @param [String] currently_with             The current value property of the field to fill in
+      # @param [Hash] fill_options                 Driver specific options regarding how to fill fields (Defaults come from {Capybara.configure default_set_options})
+      # @macro waiting_behavior
+      # @option options [Boolean] :multiple      Match fields that can have multiple values?
+      # @option options [String, Regexp] :id             Match fields that match the id attribute
+      # @option options [String] :name           Match fields that match the name attribute
+      # @option options [String] :placeholder    Match fields that match the placeholder attribute
+      # @option options [String, Array<String>, Regexp] :class    Match fields that match the class(es) provided
+      # @return [Capybara::Node::Element]  The element filled in
+      def fill_in(locator = nil, with:, currently_with: nil, fill_options: {}, **options)
+        options[:with] = currently_with if currently_with
+        options[:allow_self] = true if locator.nil?
+        find(:fillable_field, locator, options).set(with, fill_options)
       end
 
       # @!macro label_click
-      #   @option options [Boolean] allow_label_click (Capybara.automatic_label_click) Attempt to click the label to toggle state if element is non-visible.
+      #   @option options [Boolean] :allow_label_click  Attempt to click the label to toggle state if element is non-visible. Defaults to {Capybara.configure automatic_label_click}.
 
       ##
       #
@@ -108,10 +99,10 @@ module Capybara
       # @overload choose([locator], **options)
       #   @param [String] locator           Which radio button to choose
       #
-      #   @option options [String] option  Value of the radio_button to choose
-      #   @option options [String, Regexp] id             Match fields that match the id attribute
-      #   @option options [String] name           Match fields that match the name attribute
-      #   @option options [String, Array<String>, Regexp] class    Match fields that match the class(es) provided
+      #   @option options [String] :option  Value of the radio_button to choose
+      #   @option options [String, Regexp] :id             Match fields that match the id attribute
+      #   @option options [String] :name           Match fields that match the name attribute
+      #   @option options [String, Array<String>, Regexp] :class    Match fields that match the class(es) provided
       #   @macro waiting_behavior
       #   @macro label_click
       #
@@ -136,10 +127,10 @@ module Capybara
       # @overload check([locator], **options)
       #   @param [String] locator           Which check box to check
       #
-      #   @option options [String] option  Value of the checkbox to select
-      #   @option options [String, Regexp] id       Match fields that match the id attribute
-      #   @option options [String] name     Match fields that match the name attribute
-      #   @option options [String, Array<String>, Regexp] class    Match fields that match the class(es) provided
+      #   @option options [String] :option  Value of the checkbox to select
+      #   @option options [String, Regexp] :id       Match fields that match the id attribute
+      #   @option options [String] :name     Match fields that match the name attribute
+      #   @option options [String, Array<String>, Regexp] :class    Match fields that match the class(es) provided
       #   @macro label_click
       #   @macro waiting_behavior
       #
@@ -161,15 +152,14 @@ module Capybara
       #     el.uncheck()
       #
       #
-      # @overload uncheck([locator], **options)
-      #   @param [String] locator           Which check box to uncheck
+      # @param [String] locator           Which check box to uncheck
+      # @option options [String] :option  Value of the checkbox to deselect
+      # @option options [String, Regexp] :id       Match fields that match the id attribute
+      # @option options [String] :name     Match fields that match the name attribute
+      # @option options [String, Array<String>, Regexp] :class    Match fields that match the class(es) provided
       #
-      #   @option options [String] option  Value of the checkbox to deselect
-      #   @option options [String, Regexp] id       Match fields that match the id attribute
-      #   @option options [String] name     Match fields that match the name attribute
-      #   @option options [String, Array<String>, Regexp] class    Match fields that match the class(es) provided
-      #   @macro label_click
-      #   @macro waiting_behavior
+      # @macro label_click
+      # @macro waiting_behavior
       #
       # @return [Capybara::Node::Element]  The element unchecked or the label clicked
       def uncheck(locator = nil, **options)
@@ -178,21 +168,19 @@ module Capybara
 
       ##
       #
-      # If +:from+ option is present, +select+ finds a select box, or text input with associated datalist,
+      # If +from+ option is present, {#select} finds a select box, or text input with associated datalist,
       # on the page and selects a particular option from it.
       # Otherwise it finds an option inside current scope and selects it.
-      # If the select box is a multiple select, +select+ can be called multiple times to select more than
+      # If the select box is a multiple select, {#select} can be called multiple times to select more than
       # one option.
       # The select box can be found via its name, id or label text. The option can be found by its text.
       #
       #     page.select 'March', from: 'Month'
       #
-      # @overload select(value = nil, from: nil, **options)
-      #   @macro waiting_behavior
+      # @macro waiting_behavior
       #
-      #   @param value [String] Which option to select
-      #   @param from [String]  The id, {Capybara.configure test_id} attribute, name or label of the select box
-      #
+      # @param [String] value   Which option to select
+      # @param [String] from    The id, {Capybara.configure test_id} attribute, name or label of the select box
       # @return [Capybara::Node::Element]  The option element selected
       def select(value = nil, from: nil, **options)
         raise ArgumentError, 'The :from option does not take an element' if from.is_a? Capybara::Node::Element
@@ -209,18 +197,15 @@ module Capybara
       ##
       #
       # Find a select box on the page and unselect a particular option from it. If the select
-      # box is a multiple select, +unselect+ can be called multiple times to unselect more than
+      # box is a multiple select, {#unselect} can be called multiple times to unselect more than
       # one option. The select box can be found via its name, id or label text.
       #
       #     page.unselect 'March', from: 'Month'
       #
-      # @overload unselect(value = nil, from: nil, **options)
-      #   @macro waiting_behavior
+      # @macro waiting_behavior
       #
-      #   @param value [String]     Which option to unselect
-      #   @param from [String]      The id, {Capybara.configure test_id} attribute, name or label of the select box
-      #
-      #
+      # @param value [String]     Which option to unselect
+      # @param from [String]      The id, {Capybara.configure test_id} attribute, name or label of the select box
       # @return [Capybara::Node::Element]  The option element unselected
       def unselect(value = nil, from: nil, **options)
         raise ArgumentError, 'The :from option does not take an element' if from.is_a? Capybara::Node::Element
@@ -232,9 +217,9 @@ module Capybara
       ##
       #
       # Find a descendant file field on the page and attach a file given its path. There are two ways to use
-      # `attach_file`, in the first method the file field can be found via its name, id or label text.
+      # {#attach_file}, in the first method the file field can be found via its name, id or label text.
       # In the case of the file field being hidden for
-      # styling reasons the `make_visible` option can be used to temporarily change the CSS of
+      # styling reasons the +:make_visible+ option can be used to temporarily change the CSS of
       # the file field, attach the file, and then revert the CSS back to original. If no locator is
       # passed this will match self or a descendant.
       # The second method, which is currently in beta and may be changed/removed, involves passing a block
@@ -257,13 +242,13 @@ module Capybara
       #   @param [String] locator                  Which field to attach the file to
       #   @param [String, Array<String>] paths     The path(s) of the file(s) that will be attached
       #
-      #   @option options [Symbol] match (Capybara.match)     The matching strategy to use (:one, :first, :prefer_exact, :smart).
-      #   @option options [Boolean] exact (Capybara.exact)    Match the exact label name/contents or accept a partial match.
-      #   @option options [Boolean] multiple Match field which allows multiple file selection
-      #   @option options [String, Regexp] id             Match fields that match the id attribute
-      #   @option options [String] name           Match fields that match the name attribute
-      #   @option options [String, Array<String>, Regexp] class    Match fields that match the class(es) provided
-      #   @option options [true, Hash] make_visible   A Hash of CSS styles to change before attempting to attach the file, if `true` { opacity: 1, display: 'block', visibility: 'visible' } is used (may not be supported by all drivers)
+      #   @option options [Symbol] :match          The matching strategy to use. Defaults to {Capybara.configure match}.
+      #   @option options [Boolean] :exact         Match the exact label name/contents or accept a partial match. Defaults to {Capybara.configure exact}.
+      #   @option options [Boolean] :multiple      Match field which allows multiple file selection
+      #   @option options [String, Regexp] :id     Match fields that match the id attribute
+      #   @option options [String] :name           Match fields that match the name attribute
+      #   @option options [String, Array<String>, Regexp] :class    Match fields that match the class(es) provided
+      #   @option options [true, Hash] :make_visible   A Hash of CSS styles to change before attempting to attach the file, if +true+, +{ opacity: 1, display: 'block', visibility: 'visible' }+ is used (may not be supported by all drivers)
       # @overload attach_file(paths, &blk)
       #   @param [String, Array<String>] paths     The path(s) of the file(s) that will be attached
       #   @yield Block whose actions will trigger the system file chooser to be shown

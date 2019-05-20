@@ -89,6 +89,7 @@ module Capybara
     # [predicates_wait = Boolean]  Whether Capybaras predicate matchers use waiting behavior by default (Default: true)
     # [default_normalize_ws = Boolean] Whether text predicates and matchers use normalize whitespace behaviour (Default: false)
     # [allow_gumbo = Boolean] When `nokogumbo` is available, whether it will be used to parse HTML strings (Default: false)
+    # [match = :one/:first/:prefer_exact/:smart] The matching strategy to find nodes (Default: :smart)
     #
     # === DSL Options
     #
