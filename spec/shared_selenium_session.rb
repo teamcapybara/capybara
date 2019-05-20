@@ -421,6 +421,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
     describe 'with react' do
       context 'controlled components' do
         it 'can set and clear a text field' do
+          skip "This test doesn't support older browsers" if ie?(session)
           # session.visit 'https://reactjs.org/docs/forms.html'
           # session.all(:css, 'h2#controlled-components ~ p a', text: 'Try it on CodePen')[0].click
           # copied into local view
