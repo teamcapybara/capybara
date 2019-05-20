@@ -5,6 +5,10 @@ Release date: unreleased
 
 * Chrome and Firefox via the selenium driver support dropping files/data on elements
 
+### Changed
+
+* Deprecate support for CSS selector being a Symbol
+
 # Version 3.20.2
 Release date: 2019-05-19
 
