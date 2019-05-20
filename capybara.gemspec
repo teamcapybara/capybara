@@ -33,7 +33,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency('rack', ['>= 1.6.0'])
   s.add_runtime_dependency('rack-test', ['>= 0.6.3'])
   s.add_runtime_dependency('regexp_parser', ['~>1.2'])
-  s.add_runtime_dependency('uglifier')
   s.add_runtime_dependency('xpath', ['~>3.2'])
 
   s.add_development_dependency('byebug') unless RUBY_PLATFORM == 'java'
@@ -54,6 +53,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('selenium-webdriver', ['~>3.5'])
   s.add_development_dependency('selenium_statistics')
   s.add_development_dependency('sinatra', ['>= 1.4.0'])
+  s.add_development_dependency('uglifier')
   s.add_development_dependency('webdrivers', ['>=3.6.0']) # if ENV['CI']
   s.add_development_dependency('yard', ['>= 0.9.0'])
 
