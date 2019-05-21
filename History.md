@@ -7,7 +7,7 @@ Release date: unreleased
 
 ### Changed
 
-* Deprecate support for CSS selector being a Symbol
+* Deprecate support for CSS locator being a Symbol
 
 # Version 3.20.2
 Release date: 2019-05-19
