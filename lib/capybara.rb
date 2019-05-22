@@ -201,15 +201,13 @@ module Capybara
     # any string containing HTML in the exact same way you would query the current document in a Capybara
     # session.
     #
-    # Example: A single element
-    #
+    # @example A single element
     #     node = Capybara.string('<a href="foo">bar</a>')
     #     anchor = node.first('a')
     #     anchor[:href] #=> 'foo'
     #     anchor.text #=> 'bar'
     #
-    # Example: Multiple elements
-    #
+    # @example Multiple elements
     #     node = Capybara.string <<-HTML
     #       <ul>
     #         <li id="home">Home</li>
