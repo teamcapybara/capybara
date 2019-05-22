@@ -6,9 +6,10 @@ module Capybara
       # @!macro waiting_behavior
       #   If the driver is capable of executing JavaScript, this method will wait for a set amount of time
       #   and continuously retry finding the element until either the element is found or the time
-      #   expires. The length of time +find+ will wait is controlled through {Capybara.default_max_wait_time}
+      #   expires. The length of time this method will wait is controlled through {Capybara.configure default_max_wait_time}.
       #
-      #   @option options [false, true, Numeric] wait (Capybara.default_max_wait_time) Maximum time to wait for matching element to appear.
+      #   @option options [false, true, Numeric] wait
+      #     Maximum time to wait for matching element to appear. Defaults to {Capybara.configure default_max_wait_time}.
 
       ##
       #

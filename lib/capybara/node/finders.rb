@@ -8,18 +8,13 @@ module Capybara
       # Find an {Capybara::Node::Element} based on the given arguments. +find+ will raise an error if the element
       # is not found.
       #
-      # @!macro waiting_behavior
-      #   If the driver is capable of executing JavaScript, this method will wait for a set amount of time
-      #   and continuously retry finding the element until either the element is found or the time
-      #   expires. The length of time +find+ will wait is controlled through {Capybara.default_max_wait_time}
-      #   and defaults to 2 seconds.
-      #   @option options [false, true, Numeric] wait (Capybara.default_max_wait_time) Maximum time to wait for matching element to appear.
-      #
       #  page.find('#foo').find('.bar')
       #  page.find(:xpath, './/div[contains(., "bar")]')
       #  page.find('li', text: 'Quox').click_link('Delete')
       #
       # @param (see Capybara::Node::Finders#all)
+      #
+      # @macro waiting_behavior
       #
       # @!macro system_filters
       #   @option options [String, Regexp] text      Only find elements which contain this text or match this regexp
