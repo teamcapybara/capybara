@@ -73,20 +73,20 @@ module Capybara
     # [asset_host = String]               Where dynamic assets are hosted - will be prepended to relative asset locations if present (Default: nil)
     # [run_server = Boolean]              Whether to start a Rack server for the given Rack app (Default: true)
     # [raise_server_errors = Boolean]     Should errors raised in the server be raised in the tests? (Default: true)
-    # [server_errors = Array\<Class\>]    Error classes that should be raised in the tests if they are raised in the server and Capybara.raise_server_errors is true (Default: [Exception])
+    # [server_errors = Array\<Class\>]    Error classes that should be raised in the tests if they are raised in the server and {configure raise_server_errors} is true (Default: [Exception])
     # [default_selector = :css/:xpath]    Methods which take a selector use the given type by default (Default: :css)
     # [default_max_wait_time = Numeric]   The maximum number of seconds to wait for asynchronous processes to finish (Default: 2)
     # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: true)
     # [automatic_reload = Boolean]        Whether to automatically reload elements as Capybara is waiting (Default: true)
     # [save_path = String]  Where to put pages saved through save_(page|screenshot), save_and_open_(page|screenshot) (Default: Dir.pwd)
-    # [automatic_label_click = Boolean]   Whether Node#choose, Node#check, Node#uncheck will attempt to click the associated label element if the checkbox/radio button are non-visible (Default: false)
+    # [automatic_label_click = Boolean]   Whether {Capybara::Node::Element#choose Element#choose}, {Capybara::Node::Element#check Element#check}, {Capybara::Node::Element#uncheck Element#uncheck} will attempt to click the associated label element if the checkbox/radio button are non-visible (Default: false)
     # [enable_aria_label = Boolean]  Whether fields, links, and buttons will match against aria-label attribute (Default: false)
     # [reuse_server = Boolean]  Reuse the server thread between multiple sessions using the same app object (Default: true)
     # [threadsafe = Boolean]  Whether sessions can be configured individually (Default: false)
     # [server = Symbol]  The name of the registered server to use when running the app under test (Default: :webrick)
-    # [default_set_options = Hash]  The default options passed to Node::set (Default: {})
+    # [default_set_options = Hash]  The default options passed to {Capybara::Node::Element#set Element#set} (Default: {})
     # [test_id = Symbol/String/nil] Optional attribute to match locator aginst with builtin selectors along with id (Default: nil)
-    # [predicates_wait = Boolean]  Whether Capybaras predicate matchers use waiting behavior by default (Default: true)
+    # [predicates_wait = Boolean]  Whether Capybara's predicate matchers use waiting behavior by default (Default: true)
     # [default_normalize_ws = Boolean] Whether text predicates and matchers use normalize whitespace behaviour (Default: false)
     # [allow_gumbo = Boolean] When `nokogumbo` is available, whether it will be used to parse HTML strings (Default: false)
     # [match = :one/:first/:prefer_exact/:smart] The matching strategy to find nodes (Default: :smart)
@@ -296,7 +296,7 @@ module Capybara
 
     ##
     #
-    # The current Capybara::Session based on what is set as Capybara.app and Capybara.current_driver
+    # The current {Capybara::Session} based on what is set as {app} and {current_driver}.
     #
     # @return [Capybara::Session]     The currently used session
     #
@@ -339,7 +339,7 @@ module Capybara
 
     ##
     #
-    # Yield a block using a specific session name or Capybara::Session instance.
+    # Yield a block using a specific session name or {Capybara::Session} instance.
     #
     def using_session(name_or_session)
       previous_session_info = {
