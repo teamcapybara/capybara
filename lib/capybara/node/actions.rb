@@ -331,7 +331,9 @@ module Capybara
       end
 
       def while_visible(element, visible_css)
-        visible_css = { opacity: 1, display: 'block', visibility: 'visible' } if visible_css == true
+        if visible_css == true
+          visible_css = { opacity: 1, display: 'block', visibility: 'visible', width: 'auto', height: 'auto' }
+        end
         _update_style(element, visible_css)
         raise ExpectationNotMet, 'The style changes in :make_visible did not make the file input visible' unless element.visible?
 
