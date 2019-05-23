@@ -122,8 +122,15 @@ module Capybara
 
       ##
       #
-      # Select this node if is an option element inside a select tag
+      # Select this node if it is an option element inside a select tag
       #
+      # @!macro action_waiting_behavior
+      #   If the driver dynamic pages (JS) and the element is currently non-interactable, this method will
+      #   continuously retry the action until either the element becomes interactable or the maximum
+      #   wait time expires.
+      #
+      #   @param [false, Numeric] wait
+      #     Maximum time to wait for the action to succeed. Defaults to {Capybara.configure default_max_wait_time}.
       # @return [Capybara::Node::Element]  The element
       def select_option(wait: nil)
         synchronize(wait) { base.select_option }
@@ -132,8 +139,9 @@ module Capybara
 
       ##
       #
-      # Unselect this node if is an option element inside a multiple select tag
+      # Unselect this node if it is an option element inside a multiple select tag
       #
+      # @macro action_waiting_behavior
       # @return [Capybara::Node::Element]  The element
       def unselect_option(wait: nil)
         synchronize(wait) { base.unselect_option }
@@ -144,9 +152,10 @@ module Capybara
       #
       # Click the Element
       #
+      # @macro action_waiting_behavior
       # @!macro click_modifiers
-      #   Both x: and y: must be specified if an offset is wanted, if not specified the click will occur at the middle of the element
-      #   @overload $0(*modifier_keys, **offset)
+      #   Both x: and y: must be specified if an offset is wanted, if not specified the click will occur at the middle of the element.
+      #   @overload $0(*modifier_keys, wait: nil, **offset)
       #     @param *modifier_keys [:alt, :control, :meta, :shift] ([]) Keys to be held down when clicking
       #     @option offset [Integer] x  X coordinate to offset the click location from the top left corner of the element
       #     @option offset [Integer] y  Y coordinate to offset the click location from the top left corner of the element
@@ -162,6 +171,7 @@ module Capybara
       #
       # Right Click the Element
       #
+      # @macro action_waiting_behavior
       # @macro click_modifiers
       # @return [Capybara::Node::Element]  The element
       def right_click(*keys, wait: nil, **offset)
@@ -175,6 +185,7 @@ module Capybara
       #
       # Double Click the Element
       #
+      # @macro action_waiting_behavior
       # @macro click_modifiers
       # @return [Capybara::Node::Element]  The element
       def double_click(*keys, wait: nil, **offset)
