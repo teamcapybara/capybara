@@ -166,11 +166,11 @@ module Capybara
         end
 
         def min_repeat
-          @exp.quantifier&.min || 1
+          @exp.repetitions.begin
         end
 
         def max_repeat
-          @exp.quantifier&.max || 1
+          @exp.repetitions.end
         end
 
         def fixed_repeat?

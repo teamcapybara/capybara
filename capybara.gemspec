@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency('nokogiri', ['~> 1.8'])
   s.add_runtime_dependency('rack', ['>= 1.6.0'])
   s.add_runtime_dependency('rack-test', ['>= 0.6.3'])
-  s.add_runtime_dependency('regexp_parser', ['~>1.2'])
+  s.add_runtime_dependency('regexp_parser', ['~>1.5'])
   s.add_runtime_dependency('xpath', ['~>3.2'])
 
   s.add_development_dependency('byebug') unless RUBY_PLATFORM == 'java'
