@@ -83,7 +83,7 @@ module Capybara
     # [enable_aria_label = Boolean]  Whether fields, links, and buttons will match against aria-label attribute (Default: false)
     # [reuse_server = Boolean]  Reuse the server thread between multiple sessions using the same app object (Default: true)
     # [threadsafe = Boolean]  Whether sessions can be configured individually (Default: false)
-    # [server = Symbol]  The name of the registered server to use when running the app under test (Default: :webrick)
+    # [server = Symbol]  The name of the registered server to use when running the app under test (Default: :default which uses puma)
     # [default_set_options = Hash]  The default options passed to {Capybara::Node::Element#set Element#set} (Default: {})
     # [test_id = Symbol/String/nil] Optional attribute to match locator aginst with builtin selectors along with id (Default: nil)
     # [predicates_wait = Boolean]  Whether Capybara's predicate matchers use waiting behavior by default (Default: true)
