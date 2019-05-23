@@ -180,6 +180,12 @@ Capybara::SpecHelper.spec '#attach_file' do
       @session.attach_file('hidden_file', with_os_path_separators(__FILE__), make_visible: true)
       expect(@session.evaluate_script('arguments[0].style.display', @session.find(:css, '#hidden_file', visible: :all))).to eq 'none'
     end
+
+    it 'should fire change' do
+      @session.visit('/with_js')
+      @session.attach_file('hidden_file', with_os_path_separators(__FILE__), make_visible: true)
+      expect(@session).to have_css('.file_change')
+    end
   end
 
   context 'with a block', requires: %i[js] do
@@ -197,6 +203,14 @@ Capybara::SpecHelper.spec '#attach_file' do
       end
       @session.click_button('awesome')
       expect(extract_results(@session)['hidden_image']).to end_with(File.basename(__FILE__))
+    end
+
+    it 'should fire change' do
+      @session.visit('/with_js')
+      @session.attach_file(with_os_path_separators(__FILE__)) do
+        @session.find(:label, 'Label for hidden file input').click
+      end
+      expect(@session).to have_css('.file_change')
     end
   end
 end
