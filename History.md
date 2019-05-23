@@ -4,6 +4,7 @@ Release date: unreleased
 ### Added
 
 * Chrome and Firefox via the selenium driver support dropping files/data on elements
+* Documentation Updates and Fixes - Many thanks to Masafumi Koba! [Masafumi Koba]
 
 ### Changed
 
