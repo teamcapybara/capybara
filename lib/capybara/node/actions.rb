@@ -13,12 +13,12 @@ module Capybara
 
       ##
       #
-      # Finds a button or link and clicks it.  See {Capybara::Node::Actions#click_button} and
-      # {Capybara::Node::Actions#click_link} for what locator will match against for each type of element
+      # Finds a button or link and clicks it. See {#click_button} and
+      # {#click_link} for what locator will match against for each type of element.
       #
       # @overload click_link_or_button([locator], **options)
       #   @macro waiting_behavior
-      #   @param [String] locator      See {Capybara::Node::Actions#click_button} and {Capybara::Node::Actions#click_link}
+      #   @param [String] locator      See {#click_button} and {#click_link}
       #
       # @return [Capybara::Node::Element]  The element clicked
       #
@@ -29,13 +29,13 @@ module Capybara
 
       ##
       #
-      # Finds a link by id, Capybara.test_id attribute, text or title and clicks it. Also looks at image
+      # Finds a link by id, {Capybara.configure test_id} attribute, text or title and clicks it. Also looks at image
       # alt text inside the link.
       #
       # @overload click_link([locator], **options)
       #   @macro waiting_behavior
-      #   @param [String] locator         text, id, Capybara.test_id attribute, title or nested image's alt attribute
-      #   @param options                  See {Capybara::Node::Finders#find_link}
+      #   @param [String] locator         text, id, {Capybara.configure test_id} attribute, title or nested image's alt attribute
+      #   @param [Hash] options           See {Capybara::Node::Finders#find_link}
       #
       # @return [Capybara::Node::Element]  The element clicked
       def click_link(locator = nil, **options)
@@ -45,14 +45,14 @@ module Capybara
       ##
       #
       # Finds a button on the page and clicks it.
-      # This can be any \<input> element of type submit, reset, image, button or it can be a
-      # \<button> element. All buttons can be found by their id, name, Capybara.test_id attribute, value, or title. \<button> elements can also be found
-      # by their text content, and image \<input> elements by their alt attribute
+      # This can be any `<input>` element of type submit, reset, image, button or it can be a
+      # `<button>` element. All buttons can be found by their id, name, {Capybara.configure test_id} attribute, value, or title. `<button>` elements can also be found
+      # by their text content, and image `<input>` elements by their alt attribute.
       #
       # @overload click_button([locator], **options)
       #   @macro waiting_behavior
       #   @param [String] locator      Which button to find
-      #   @param options     See {Capybara::Node::Finders#find_button}
+      #   @param [Hash] options        See {Capybara::Node::Finders#find_button}
       # @return [Capybara::Node::Element]  The element clicked
       def click_button(locator = nil, **options)
         find(:button, locator, options).click
@@ -60,9 +60,9 @@ module Capybara
 
       ##
       #
-      # Locate a text field or text area and fill it in with the given text
-      # The field can be found via its name, id, Capybara.test_id attribute, or label text.
-      # If no locator is provided will operate on self or a descendant
+      # Locate a text field or text area and fill it in with the given text.
+      # The field can be found via its name, id, {Capybara.configure test_id} attribute, or label text.
+      # If no locator is provided this will operate on self or a descendant.
       #
       #     # will fill in a descendant fillable field with name, id, or label text matching 'Name'
       #     page.fill_in 'Name', with: 'Bob'
@@ -74,7 +74,7 @@ module Capybara
       # @overload fill_in([locator], with:, **options)
       #   @param [String] locator                 Which field to fill in
       #   @param [Hash] options
-      #   @param with: [String]                  The value to fill_in
+      #   @param with: [String]                  The value to fill in
       #   @macro waiting_behavior
       #   @option options [String] currently_with The current value property of the field to fill in
       #   @option options [Boolean] multiple      Match fields that can have multiple values?
@@ -82,9 +82,9 @@ module Capybara
       #   @option options [String] name           Match fields that match the name attribute
       #   @option options [String] placeholder    Match fields that match the placeholder attribute
       #   @option options [String, Array<String>, Regexp] class    Match fields that match the class(es) provided
-      #   @option options [Hash] fill_options     Driver specific options regarding how to fill fields (Defaults come from Capybara.default_set_options)
+      #   @option options [Hash] fill_options     Driver specific options regarding how to fill fields (Defaults come from {Capybara.configure default_set_options})
       #
-      # @return [Capybara::Node::Element]  The element filled_in
+      # @return [Capybara::Node::Element]  The element filled in
       def fill_in(locator = nil, with:, currently_with: nil, fill_options: {}, **find_options)
         find_options[:with] = currently_with if currently_with
         find_options[:allow_self] = true if locator.nil?
@@ -92,7 +92,8 @@ module Capybara
       end
 
       # @!macro label_click
-      #   @option options [Boolean] allow_label_click (Capybara.automatic_label_click) Attempt to click the label to toggle state if element is non-visible.
+      #   @option options [Boolean] allow_label_click
+      #     Attempt to click the label to toggle state if element is non-visible. Defaults to {Capybara.configure automatic_label_click}.
 
       ##
       #
@@ -179,10 +180,10 @@ module Capybara
 
       ##
       #
-      # If `:from` option is present, `select` finds a select box, or text input with associated datalist,
+      # If `from` option is present, {#select} finds a select box, or text input with associated datalist,
       # on the page and selects a particular option from it.
       # Otherwise it finds an option inside current scope and selects it.
-      # If the select box is a multiple select, +select+ can be called multiple times to select more than
+      # If the select box is a multiple select, {#select} can be called multiple times to select more than
       # one option.
       # The select box can be found via its name, id or label text. The option can be found by its text.
       #
@@ -192,7 +193,7 @@ module Capybara
       #   @macro waiting_behavior
       #
       #   @param value [String] Which option to select
-      #   @param from [String]  The id, Capybara.test_id attribute, name or label of the select box
+      #   @param from [String]  The id, {Capybara.configure test_id} attribute, name or label of the select box
       #
       # @return [Capybara::Node::Element]  The option element selected
       def select(value = nil, from: nil, **options)
@@ -210,7 +211,7 @@ module Capybara
       ##
       #
       # Find a select box on the page and unselect a particular option from it. If the select
-      # box is a multiple select, +unselect+ can be called multiple times to unselect more than
+      # box is a multiple select, {#unselect} can be called multiple times to unselect more than
       # one option. The select box can be found via its name, id or label text.
       #
       #     page.unselect 'March', from: 'Month'
@@ -219,7 +220,7 @@ module Capybara
       #   @macro waiting_behavior
       #
       #   @param value [String]     Which option to unselect
-      #   @param from [String]      The id, Capybara.test_id attribute, name or label of the select box
+      #   @param from [String]      The id, {Capybara.configure test_id} attribute, name or label of the select box
       #
       #
       # @return [Capybara::Node::Element]  The option element unselected
@@ -233,7 +234,7 @@ module Capybara
       ##
       #
       # Find a descendant file field on the page and attach a file given its path. There are two ways to use
-      # `attach_file`, in the first method the file field can be found via its name, id or label text.
+      # {#attach_file}, in the first method the file field can be found via its name, id or label text.
       # In the case of the file field being hidden for
       # styling reasons the `make_visible` option can be used to temporarily change the CSS of
       # the file field, attach the file, and then revert the CSS back to original. If no locator is
@@ -258,13 +259,16 @@ module Capybara
       #   @param [String] locator                  Which field to attach the file to
       #   @param [String, Array<String>] paths     The path(s) of the file(s) that will be attached
       #
-      #   @option options [Symbol] match (Capybara.match)     The matching strategy to use (:one, :first, :prefer_exact, :smart).
-      #   @option options [Boolean] exact (Capybara.exact)    Match the exact label name/contents or accept a partial match.
+      #   @option options [Symbol] match
+      #     The matching strategy to use (:one, :first, :prefer_exact, :smart). Defaults to {Capybara.configure match}.
+      #   @option options [Boolean] exact
+      #     Match the exact label name/contents or accept a partial match. Defaults to {Capybara.configure exact}.
       #   @option options [Boolean] multiple Match field which allows multiple file selection
       #   @option options [String, Regexp] id             Match fields that match the id attribute
       #   @option options [String] name           Match fields that match the name attribute
       #   @option options [String, Array<String>, Regexp] class    Match fields that match the class(es) provided
-      #   @option options [true, Hash] make_visible   A Hash of CSS styles to change before attempting to attach the file, if `true` { opacity: 1, display: 'block', visibility: 'visible' } is used (may not be supported by all drivers)
+      #   @option options [true, Hash] make_visible
+      #     A Hash of CSS styles to change before attempting to attach the file, if `true`, `{ opacity: 1, display: 'block', visibility: 'visible' }` is used (may not be supported by all drivers).
       # @overload attach_file(paths, &blk)
       #   @param [String, Array<String>] paths     The path(s) of the file(s) that will be attached
       #   @yield Block whose actions will trigger the system file chooser to be shown
