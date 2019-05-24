@@ -121,19 +121,6 @@ private
     driver.browser.capabilities[:browser_version].to_f
   end
 
-  DISABLED_BY_FIELDSET_XPATH = XPath.generate do |x|
-    x.parent(:fieldset)[
-      x.attr(:disabled)
-    ] + x.ancestor[
-      ~x.self(:legend) |
-      x.preceding_sibling(:legend)
-    ][
-      x.parent(:fieldset)[
-        x.attr(:disabled)
-      ]
-    ]
-  end.to_s.freeze
-
   class ModifierKeysStack
     def initialize
       @stack = []

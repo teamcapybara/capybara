@@ -91,19 +91,6 @@ private
     driver.browser.send(:bridge)
   end
 
-  DISABLED_BY_FIELDSET_XPATH = XPath.generate do |x|
-    x.parent(:fieldset)[
-      x.attr(:disabled)
-    ] + x.ancestor[
-      ~x.self(:legend) |
-      x.preceding_sibling(:legend)
-    ][
-      x.parent(:fieldset)[
-        x.attr(:disabled)
-      ]
-    ]
-  end.to_s.freeze
-
   def _send_keys(keys, actions = browser_action, down_keys = ModifierKeysStack.new)
     case keys
     when *MODIFIER_KEYS

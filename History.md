@@ -3,7 +3,7 @@ Release date: unreleased
 
 ### Added
 
-* Chrome and Firefox via the selenium driver support dropping files/data on elements
+* Element#drop - Chrome and Firefox, via the selenium driver, support dropping files/data on elements
 * Documentation Updates and Fixes - Many thanks to Masafumi Koba! [Masafumi Koba]
 * Default CSS used for `attach_file` `make_visible: true` now includes auto for
   height and width to handle more ways of hiding the file input element
