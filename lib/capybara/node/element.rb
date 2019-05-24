@@ -43,7 +43,7 @@ module Capybara
 
       ##
       #
-      # Retrieve the text of the element. If `Capybara.ignore_hidden_elements`
+      # Retrieve the text of the element. If {Capybara.configure ignore_hidden_elements}
       # is `true`, which it is by default, then this will return only text
       # which is visible. The exact semantics of this may differ between
       # drivers, but generally any text within elements with `display:none` is
@@ -61,7 +61,7 @@ module Capybara
 
       ##
       #
-      # Retrieve the given attribute
+      # Retrieve the given attribute.
       #
       #     element[:title] # => HTML title attribute
       #
@@ -74,7 +74,7 @@ module Capybara
 
       ##
       #
-      # Retrieve the given CSS styles
+      # Retrieve the given CSS styles.
       #
       #     element.style('color', 'font-size') # => Computed values of CSS 'color' and 'font-size' styles
       #
@@ -109,7 +109,7 @@ module Capybara
       # Set the value of the form element to the given value.
       #
       # @param [String] value    The new value
-      # @param [Hash{}] options  Driver specific options for how to set the value. Take default values from `Capybara#default_set_options` - See {Capybara::configure}
+      # @param [Hash] options    Driver specific options for how to set the value. Take default values from {Capybara.configure default_set_options}.
       #
       # @return [Capybara::Node::Element]  The element
       def set(value, **options)
@@ -122,7 +122,7 @@ module Capybara
 
       ##
       #
-      # Select this node if it is an option element inside a select tag
+      # Select this node if it is an option element inside a select tag.
       #
       # @!macro action_waiting_behavior
       #   If the driver dynamic pages (JS) and the element is currently non-interactable, this method will
@@ -139,7 +139,7 @@ module Capybara
 
       ##
       #
-      # Unselect this node if it is an option element inside a multiple select tag
+      # Unselect this node if it is an option element inside a multiple select tag.
       #
       # @macro action_waiting_behavior
       # @return [Capybara::Node::Element]  The element
@@ -150,7 +150,7 @@ module Capybara
 
       ##
       #
-      # Click the Element
+      # Click the Element.
       #
       # @macro action_waiting_behavior
       # @!macro click_modifiers
@@ -169,7 +169,7 @@ module Capybara
 
       ##
       #
-      # Right Click the Element
+      # Right Click the Element.
       #
       # @macro action_waiting_behavior
       # @macro click_modifiers
@@ -183,7 +183,7 @@ module Capybara
 
       ##
       #
-      # Double Click the Element
+      # Double Click the Element.
       #
       # @macro action_waiting_behavior
       # @macro click_modifiers
@@ -197,7 +197,7 @@ module Capybara
 
       ##
       #
-      # Send Keystrokes to the Element
+      # Send Keystrokes to the Element.
       #
       # @overload send_keys(keys, ...)
       #   @param keys [String, Symbol, Array<String,Symbol>]
@@ -205,65 +205,65 @@ module Capybara
       # Examples:
       #
       #     element.send_keys "foo"                     #=> value: 'foo'
-      #     element.send_keys "tet", :left, "s"   #=> value: 'test'
+      #     element.send_keys "tet", :left, "s"         #=> value: 'test'
       #     element.send_keys [:control, 'a'], :space   #=> value: ' ' - assuming ctrl-a selects all contents
       #
-      # Symbols supported for keys
-      # :cancel
-      # :help
-      # :backspace
-      # :tab
-      # :clear
-      # :return
-      # :enter
-      # :shift
-      # :control
-      # :alt
-      # :pause
-      # :escape
-      # :space
-      # :page_up
-      # :page_down
-      # :end
-      # :home
-      # :left
-      # :up
-      # :right
-      # :down
-      # :insert
-      # :delete
-      # :semicolon
-      # :equals
-      # :numpad0
-      # :numpad1
-      # :numpad2
-      # :numpad3
-      # :numpad4
-      # :numpad5
-      # :numpad6
-      # :numpad7
-      # :numpad8
-      # :numpad9
-      # :multiply      - numeric keypad *
-      # :add           - numeric keypad +
-      # :separator     - numeric keypad 'separator' key ??
-      # :subtract      - numeric keypad -
-      # :decimal       - numeric keypad .
-      # :divide        - numeric keypad /
-      # :f1
-      # :f2
-      # :f3
-      # :f4
-      # :f5
-      # :f6
-      # :f7
-      # :f8
-      # :f9
-      # :f10
-      # :f11
-      # :f12
-      # :meta
-      # :command      - alias of :meta
+      # Symbols supported for keys:
+      # * :cancel
+      # * :help
+      # * :backspace
+      # * :tab
+      # * :clear
+      # * :return
+      # * :enter
+      # * :shift
+      # * :control
+      # * :alt
+      # * :pause
+      # * :escape
+      # * :space
+      # * :page_up
+      # * :page_down
+      # * :end
+      # * :home
+      # * :left
+      # * :up
+      # * :right
+      # * :down
+      # * :insert
+      # * :delete
+      # * :semicolon
+      # * :equals
+      # * :numpad0
+      # * :numpad1
+      # * :numpad2
+      # * :numpad3
+      # * :numpad4
+      # * :numpad5
+      # * :numpad6
+      # * :numpad7
+      # * :numpad8
+      # * :numpad9
+      # * :multiply      - numeric keypad *
+      # * :add           - numeric keypad +
+      # * :separator     - numeric keypad 'separator' key ??
+      # * :subtract      - numeric keypad -
+      # * :decimal       - numeric keypad .
+      # * :divide        - numeric keypad /
+      # * :f1
+      # * :f2
+      # * :f3
+      # * :f4
+      # * :f5
+      # * :f6
+      # * :f7
+      # * :f8
+      # * :f9
+      # * :f10
+      # * :f11
+      # * :f12
+      # * :meta
+      # * :command      - alias of :meta
       #
       # @return [Capybara::Node::Element]  The element
       def send_keys(*args)
@@ -273,7 +273,7 @@ module Capybara
 
       ##
       #
-      # Hover on the Element
+      # Hover on the Element.
       #
       # @return [Capybara::Node::Element]  The element
       def hover
@@ -364,7 +364,7 @@ module Capybara
 
       ##
       #
-      # An XPath expression describing where on the page the element can be found
+      # An XPath expression describing where on the page the element can be found.
       #
       # @return [String]      An XPath expression
       #
@@ -414,7 +414,7 @@ module Capybara
       #   @param [String, #to_path] path Location of the file to drop on the element
       #
       # @overload drop(strings, ...)
-      #   @param [Hash] strings A hash of type to data to be dropped - { "text/url" => "https://www.google.com" }
+      #   @param [Hash] strings A hash of type to data to be dropped - `{ "text/url" => "https://www.google.com" }`
       #
       # @return [Capybara::Node::Element]  The element
       def drop(*args)
@@ -429,17 +429,17 @@ module Capybara
 
       ##
       #
-      # Scroll the page or element
+      # Scroll the page or element.
       #
-      # Scroll the page or element to its top, bottom or middle
       # @overload scroll_to(position, offset: [0,0])
+      #   Scroll the page or element to its top, bottom or middle.
       #   @param [:top, :bottom, :center, :current] position
-      #   @param :offset
+      #   @param [[Integer, Integer]] offset
       #
-      # Scroll the page or current element until the given element is aligned at the top, bottom, or center of it
       # @overload scroll_to(element, align: :top)
+      #   Scroll the page or current element until the given element is aligned at the top, bottom, or center of it.
       #   @param [Capybara::Node::Element] element   The element to be scrolled into view
-      #   @param [:top, :bottom, :center] :align Where to align the element being scrolled into view with relation to the current page/element if possible
+      #   @param [:top, :bottom, :center] align Where to align the element being scrolled into view with relation to the current page/element if possible
       #
       # @overload scroll_to(x,y)
       #   @param [Integer] x    Horizontal scroll offset
@@ -462,11 +462,11 @@ module Capybara
       ##
       #
       # Execute the given JS in the context of the element not returning a result. This is useful for scripts that return
-      # complex objects, such as jQuery statements. +execute_script+ should be used over
-      # +evaluate_script+ whenever possible. `this` in the script will refer to the element this is called on.
+      # complex objects, such as jQuery statements. {#execute_script} should be used over
+      # {#evaluate_script} whenever a result is not expected or needed. `this` in the script will refer to the element this is called on.
       #
       # @param [String] script   A string of JavaScript to execute
-      # @param args  Optional arguments that will be passed to the script.  Driver support for this is optional and types of objects supported may differ between drivers
+      # @param args  Optional arguments that will be passed to the script. Driver support for this is optional and types of objects supported may differ between drivers
       #
       def execute_script(script, *args)
         session.execute_script(<<~JS, self, *args)
@@ -479,7 +479,7 @@ module Capybara
       ##
       #
       # Evaluate the given JS in the context of the element and return the result. Be careful when using this with
-      # scripts that return complex objects, such as jQuery statements. +execute_script+ might
+      # scripts that return complex objects, such as jQuery statements. {#execute_script} might
       # be a better alternative. `this` in the script will refer to the element this is called on.
       #
       # @param  [String] script   A string of JavaScript to evaluate
@@ -497,7 +497,7 @@ module Capybara
       #
       # Evaluate the given JavaScript in the context of the element and obtain the result from a
       # callback function which will be passed as the last argument to the script. `this` in the
-      # script will refer to the element this is called on
+      # script will refer to the element this is called on.
       #
       # @param  [String] script   A string of JavaScript to evaluate
       # @return [Object]          The result of the evaluated JavaScript (may be driver specific)
@@ -510,6 +510,7 @@ module Capybara
         JS
       end
 
+      # @api private
       def reload
         if @allow_reload
           begin
@@ -522,6 +523,11 @@ module Capybara
         self
       end
 
+      ##
+      #
+      # A human-readable representation of the element.
+      #
+      # @return [String]  A string representation
       def inspect
         %(#<Capybara::Node::Element tag="#{base.tag_name}" path="#{base.path}">)
       rescue NotSupportedByDriverError
