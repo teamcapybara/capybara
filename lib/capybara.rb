@@ -90,6 +90,7 @@ module Capybara
     # [default_normalize_ws = Boolean] Whether text predicates and matchers use normalize whitespace behaviour (Default: false)
     # [allow_gumbo = Boolean] When `nokogumbo` is available, whether it will be used to parse HTML strings (Default: false)
     # [match = :one/:first/:prefer_exact/:smart] The matching strategy to find nodes (Default: :smart)
+    # [exact_text = Boolean] Whether text must be an exact match or is just a substring (Default: false)
     #
     # === DSL Options
     #
