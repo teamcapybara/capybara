@@ -542,7 +542,7 @@ module Capybara
 
       ##
       #
-      # Asserts that the current_node matches a given selector.
+      # Asserts that the current node matches a given selector.
       #
       #     node.assert_matches_selector('p#foo')
       #     node.assert_matches_selector(:xpath, '//p[@id="foo"]')
@@ -562,6 +562,14 @@ module Capybara
         end
       end
 
+      ##
+      #
+      # Asserts that the current node does not match a given selector.
+      # Usage is identical to {#assert_matches_selector}.
+      #
+      # @param (see #assert_matches_selector)
+      # @raise [Capybara::ExpectationNotMet]      If the selector matches
+      #
       def assert_not_matches_selector(*args, &optional_filter_block)
         _verify_match_result(args, optional_filter_block) do |result|
           raise Capybara::ExpectationNotMet, 'Item matched the provided selector' if result.include? self
