@@ -6,7 +6,7 @@ require 'addressable/uri'
 module Capybara
   ##
   #
-  # The Session class represents a single user's interaction with the system. The Session can use
+  # The {Session} class represents a single user's interaction with the system. The {Session} can use
   # any of the underlying drivers. A session can be initialized manually like this:
   #
   #     session = Capybara::Session.new(:culerity, MyRackApp)
@@ -17,23 +17,23 @@ module Capybara
   #     session = Capybara::Session.new(:culerity)
   #     session.visit('http://www.google.com')
   #
-  # When Capybara.threadsafe == true the sessions options will be initially set to the
+  # When {Capybara.configure threadsafe} is `true` the sessions options will be initially set to the
   # current values of the global options and a configuration block can be passed to the session initializer.
-  # For available options see {Capybara::SessionConfig::OPTIONS}
+  # For available options see {Capybara::SessionConfig::OPTIONS}:
   #
   #     session = Capybara::Session.new(:driver, MyRackApp) do |config|
   #       config.app_host = "http://my_host.dev"
   #     end
   #
-  # Session provides a number of methods for controlling the navigation of the page, such as +visit+,
-  # +current_path, and so on. It also delegates a number of methods to a Capybara::Document, representing
+  # The {Session} provides a number of methods for controlling the navigation of the page, such as {#visit},
+  # {#current_path}, and so on. It also delegates a number of methods to a {Capybara::Document}, representing
   # the current HTML document. This allows interaction:
   #
   #     session.fill_in('q', with: 'Capybara')
   #     session.click_button('Search')
   #     expect(session).to have_content('Capybara')
   #
-  # When using capybara/dsl, the Session is initialized automatically for you.
+  # When using `capybara/dsl`, the {Session} is initialized automatically for you.
   #
   class Session
     include Capybara::SessionMatchers
@@ -107,21 +107,21 @@ module Capybara
 
     ##
     #
-    # Reset the session (i.e. remove cookies and navigate to blank page)
+    # Reset the session (i.e. remove cookies and navigate to blank page).
     #
     # This method does not:
     #
-    #   * accept modal dialogs if they are present (Selenium driver now does, others may not)
-    #   * clear browser cache/HTML 5 local storage/IndexedDB/Web SQL database/etc.
-    #   * modify state of the driver/underlying browser in any other way
+    # * accept modal dialogs if they are present (Selenium driver now does, others may not)
+    # * clear browser cache/HTML 5 local storage/IndexedDB/Web SQL database/etc.
+    # * modify state of the driver/underlying browser in any other way
     #
     # as doing so will result in performance downsides and it's not needed to do everything from the list above for most apps.
     #
     # If you want to do anything from the list above on a general basis you can:
     #
-    #   * write RSpec/Cucumber/etc. after hook
-    #   * monkeypatch this method
-    #   * use Ruby's `prepend` method
+    # * write RSpec/Cucumber/etc. after hook
+    # * monkeypatch this method
+    # * use Ruby's `prepend` method
     #
     def reset!
       if @touched
@@ -136,8 +136,7 @@ module Capybara
 
     ##
     #
-    # Disconnect from the current driver.  A new driver will be instantiated on the next interaction
-    #
+    # Disconnect from the current driver. A new driver will be instantiated on the next interaction.
     #
     def quit
       @driver.quit if @driver.respond_to? :quit
@@ -148,7 +147,7 @@ module Capybara
 
     ##
     #
-    # Raise errors encountered in the server
+    # Raise errors encountered in the server.
     #
     def raise_server_error!
       return unless @server&.error
@@ -168,9 +167,9 @@ module Capybara
 
     ##
     #
-    # Returns a hash of response headers. Not supported by all drivers (e.g. Selenium)
+    # Returns a hash of response headers. Not supported by all drivers (e.g. Selenium).
     #
-    # @return [Hash{String => String}] A hash of response headers.
+    # @return [Hash<String, String>] A hash of response headers.
     #
     def response_headers
       driver.response_headers
@@ -178,7 +177,7 @@ module Capybara
 
     ##
     #
-    # Returns the current HTTP status code as an Integer. Not supported by all drivers (e.g. Selenium)
+    # Returns the current HTTP status code as an integer. Not supported by all drivers (e.g. Selenium).
     #
     # @return [Integer] Current HTTP status code
     #
@@ -238,13 +237,13 @@ module Capybara
     #
     # For drivers which can run against an external application, such as the selenium driver
     # giving an absolute URL will navigate to that page. This allows testing applications
-    # running on remote servers. For these drivers, setting {Capybara.app_host} will make the
+    # running on remote servers. For these drivers, setting {Capybara.configure app_host} will make the
     # remote server the default. For example:
     #
     #     Capybara.app_host = 'http://google.com'
     #     session.visit('/') # visits the google homepage
     #
-    # If {Capybara.always_include_port} is set to true and this session is running against
+    # If {Capybara.configure always_include_port} is set to `true` and this session is running against
     # a rack application, then the port that the rack application is running on will automatically
     # be inserted into the URL. Supposing the app is running on port `4567`, doing something like:
     #
@@ -279,7 +278,7 @@ module Capybara
 
     ##
     #
-    # Refresh the page
+    # Refresh the page.
     #
     def refresh
       raise_server_error!
@@ -304,8 +303,8 @@ module Capybara
 
     ##
     #
-    # Executes the given block within the context of a node. `within` takes the
-    # same options as `find`, as well as a block. For the duration of the
+    # Executes the given block within the context of a node. {#within} takes the
+    # same options as {Capybara::Node::Finders#find #find}, as well as a block. For the duration of the
     # block, any command to Capybara will be handled as though it were scoped
     # to the given element.
     #
@@ -313,18 +312,18 @@ module Capybara
     #       fill_in('Street', with: '12 Main Street')
     #     end
     #
-    # Just as with `find`, if multiple elements match the selector given to
-    # `within`, an error will be raised, and just as with `find`, this
+    # Just as with `#find`, if multiple elements match the selector given to
+    # {#within}, an error will be raised, and just as with `#find`, this
     # behaviour can be controlled through the `:match` and `:exact` options.
     #
     # It is possible to omit the first parameter, in that case, the selector is
-    # assumed to be of the type set in Capybara.default_selector.
+    # assumed to be of the type set in {Capybara.configure default_selector}.
     #
     #     within('div#delivery-address') do
     #       fill_in('Street', with: '12 Main Street')
     #     end
     #
-    # Note that a lot of uses of `within` can be replaced more succinctly with
+    # Note that a lot of uses of {#within} can be replaced more succinctly with
     # chaining:
     #
     #     find('div#delivery-address').fill_in('Street', with: '12 Main Street')
@@ -370,18 +369,18 @@ module Capybara
 
     ##
     #
-    # Switch to the given frame
+    # Switch to the given frame.
     #
     # If you use this method you are responsible for making sure you switch back to the parent frame when done in the frame changed to.
-    # Capybara::Session#within_frame is preferred over this method and should be used when possible.
+    # {#within_frame} is preferred over this method and should be used when possible.
     # May not be supported by all drivers.
     #
     # @overload switch_to_frame(element)
-    #   @param [Capybara::Node::Element]  iframe/frame element to switch to
-    # @overload switch_to_frame(:parent)
-    #   Switch to the parent frame
-    # @overload switch_to_frame(:top)
-    #   Switch to the top level document
+    #   @param [Capybara::Node::Element] element    iframe/frame element to switch to
+    # @overload switch_to_frame(location)
+    #   @param [Symbol] location relative location of the frame to switch to
+    #                            * :parent - the parent frame
+    #                            * :top - the top level document
     #
     def switch_to_frame(frame)
       case frame
@@ -452,8 +451,8 @@ module Capybara
     end
 
     ##
-    # Open new window.
-    # Current window doesn't change as the result of this call.
+    # Open a new window.
+    # The current window doesn't change as the result of this call.
     # It should be switched to explicitly.
     #
     # @return [Capybara::Window]   window that has been opened
@@ -469,9 +468,11 @@ module Capybara
     end
 
     ##
+    # Switch to the given window.
+    #
     # @overload switch_to_window(&block)
     #   Switches to the first window for which given block returns a value other than false or nil.
-    #   If window that matches block can't be found, the window will be switched back and `WindowError` will be raised.
+    #   If window that matches block can't be found, the window will be switched back and {Capybara::WindowError} will be raised.
     #   @example
     #     window = switch_to_window { title == 'Page title' }
     #   @raise [Capybara::WindowError]     if no window matches given block
@@ -480,8 +481,8 @@ module Capybara
     #   @raise [Capybara::Driver::Base#no_such_window_error] if nonexistent (e.g. closed) window was passed
     #
     # @return [Capybara::Window]         window that has been switched to
-    # @raise [Capybara::ScopeError]        if this method is invoked inside `within` or
-    #   `within_frame` methods
+    # @raise [Capybara::ScopeError]        if this method is invoked inside {#within} or
+    #   {#within_frame} methods
     # @raise [ArgumentError]               if both or neither arguments were provided
     #
     def switch_to_window(window = nil, **options, &window_locator)
@@ -501,20 +502,20 @@ module Capybara
     #
     # 1. Switches to the given window (it can be located by window instance/lambda/string).
     # 2. Executes the given block (within window located at previous step).
-    # 3. Switches back (this step will be invoked even if exception will happen at second step)
+    # 3. Switches back (this step will be invoked even if an exception occurs at the second step).
     #
     # @overload within_window(window) { do_something }
-    #   @param window [Capybara::Window]       instance of `Capybara::Window` class
+    #   @param window [Capybara::Window]       instance of {Capybara::Window} class
     #     that will be switched to
     #   @raise [driver#no_such_window_error] if nonexistent (e.g. closed) window was passed
     # @overload within_window(proc_or_lambda) { do_something }
-    #   @param lambda [Proc]                  lambda. First window for which lambda
+    #   @param lambda [Proc]                  First window for which lambda
     #     returns a value other than false or nil will be switched to.
     #   @example
     #     within_window(->{ page.title == 'Page title' }) { click_button 'Submit' }
     #   @raise [Capybara::WindowError]         if no window matching lambda was found
     #
-    # @raise [Capybara::ScopeError]        if this method is invoked inside `within_frame` method
+    # @raise [Capybara::ScopeError]        if this method is invoked inside {#within_frame} method
     # @return                              value returned by the block
     #
     def within_window(window_or_proc)
@@ -544,11 +545,11 @@ module Capybara
     # Get the window that has been opened by the passed block.
     # It will wait for it to be opened (in the same way as other Capybara methods wait).
     # It's better to use this method than `windows.last`
-    # {https://dvcs.w3.org/hg/webdriver/raw-file/default/webdriver-spec.html#h_note_10 as order of windows isn't defined in some drivers}
+    # {https://dvcs.w3.org/hg/webdriver/raw-file/default/webdriver-spec.html#h_note_10 as order of windows isn't defined in some drivers}.
     #
     # @overload window_opened_by(**options, &block)
     #   @param options [Hash]
-    #   @option options [Numeric] :wait (Capybara.default_max_wait_time) maximum wait time
+    #   @option options [Numeric] :wait  maximum wait time. Defaults to {Capybara.configure default_max_wait_time}
     #   @return [Capybara::Window]       the window that has been opened within a block
     #   @raise [Capybara::WindowError]   if block passed to window hasn't opened window
     #     or opened more than one window
@@ -570,11 +571,11 @@ module Capybara
     ##
     #
     # Execute the given script, not returning a result. This is useful for scripts that return
-    # complex objects, such as jQuery statements. +execute_script+ should be used over
-    # +evaluate_script+ whenever possible.
+    # complex objects, such as jQuery statements. {#execute_script} should be used over
+    # {#evaluate_script} whenever possible.
     #
     # @param [String] script   A string of JavaScript to execute
-    # @param args  Optional arguments that will be passed to the script.  Driver support for this is optional and types of objects supported may differ between drivers
+    # @param args  Optional arguments that will be passed to the script. Driver support for this is optional and types of objects supported may differ between drivers
     #
     def execute_script(script, *args)
       @touched = true
@@ -584,10 +585,11 @@ module Capybara
     ##
     #
     # Evaluate the given JavaScript and return the result. Be careful when using this with
-    # scripts that return complex objects, such as jQuery statements. +execute_script+ might
+    # scripts that return complex objects, such as jQuery statements. {#execute_script} might
     # be a better alternative.
     #
     # @param  [String] script   A string of JavaScript to evaluate
+    # @param           args     Optional arguments that will be passed to the script
     # @return [Object]          The result of the evaluated JavaScript (may be driver specific)
     #
     def evaluate_script(script, *args)
@@ -601,6 +603,7 @@ module Capybara
     # Evaluate the given JavaScript and obtain the result from a callback function which will be passed as the last argument to the script.
     #
     # @param  [String] script   A string of JavaScript to evaluate
+    # @param           args     Optional arguments that will be passed to the script
     # @return [Object]          The result of the evaluated JavaScript (may be driver specific)
     #
     def evaluate_async_script(script, *args)
@@ -614,17 +617,17 @@ module Capybara
     # Execute the block, accepting a alert.
     #
     # @!macro modal_params
-    #   Expects a block whose actions will trigger the display modal to appear
+    #   Expects a block whose actions will trigger the display modal to appear.
     #   @example
     #     $0 do
     #       click_link('link that triggers appearance of system modal')
     #     end
     #   @overload $0(text, **options, &blk)
-    #     @param text [String, Regexp]  Text or regex to match against the text in the modal.  If not provided any modal is matched
-    #     @option options [Numeric] :wait (Capybara.default_max_wait_time) Maximum time to wait for the modal to appear after executing the block.
+    #     @param text [String, Regexp]  Text or regex to match against the text in the modal. If not provided any modal is matched.
+    #     @option options [Numeric] :wait  Maximum time to wait for the modal to appear after executing the block. Defaults to {Capybara.configure default_max_wait_time}.
     #     @yield Block whose actions will trigger the system modal
     #   @overload $0(**options, &blk)
-    #     @option options [Numeric] :wait (Capybara.default_max_wait_time) Maximum time to wait for the modal to appear after executing the block.
+    #     @option options [Numeric] :wait  Maximum time to wait for the modal to appear after executing the block. Defaults to {Capybara.configure default_max_wait_time}.
     #     @yield Block whose actions will trigger the system modal
     #   @return [String]  the message shown in the modal
     #   @raise [Capybara::ModalNotFound]  if modal dialog hasn't been found
@@ -676,12 +679,12 @@ module Capybara
 
     ##
     #
-    # Save a snapshot of the page. If `Capybara.asset_host` is set it will inject `base` tag
-    #   pointing to `asset_host`.
+    # Save a snapshot of the page. If {Capybara.configure asset_host} is set it will inject `base` tag
+    # pointing to {Capybara.configure asset_host}.
     #
-    # If invoked without arguments it will save file to `Capybara.save_path`
-    #   and file will be given randomly generated filename. If invoked with a relative path
-    #   the path will be relative to `Capybara.save_path`
+    # If invoked without arguments it will save file to {Capybara.configure save_path}
+    # and file will be given randomly generated filename. If invoked with a relative path
+    # the path will be relative to {Capybara.configure save_path}.
     #
     # @param [String] path  the path to where it should be saved
     # @return [String]      the path to which the file was saved
@@ -696,9 +699,9 @@ module Capybara
     #
     # Save a snapshot of the page and open it in a browser for inspection.
     #
-    # If invoked without arguments it will save file to `Capybara.save_path`
-    #   and file will be given randomly generated filename. If invoked with a relative path
-    #   the path will be relative to `Capybara.save_path`
+    # If invoked without arguments it will save file to {Capybara.configure save_path}
+    # and file will be given randomly generated filename. If invoked with a relative path
+    # the path will be relative to {Capybara.configure save_path}.
     #
     # @param [String] path  the path to where it should be saved
     #
@@ -710,9 +713,9 @@ module Capybara
     #
     # Save a screenshot of page.
     #
-    # If invoked without arguments it will save file to `Capybara.save_path`
-    #   and file will be given randomly generated filename. If invoked with a relative path
-    #   the path will be relative to `Capybara.save_path`
+    # If invoked without arguments it will save file to {Capybara.configure save_path}
+    # and file will be given randomly generated filename. If invoked with a relative path
+    # the path will be relative to {Capybara.configure save_path}.
     #
     # @param [String] path    the path to where it should be saved
     # @param [Hash] options   a customizable set of options
@@ -725,9 +728,9 @@ module Capybara
     #
     # Save a screenshot of the page and open it for inspection.
     #
-    # If invoked without arguments it will save file to `Capybara.save_path`
-    #   and file will be given randomly generated filename. If invoked with a relative path
-    #   the path will be relative to `Capybara.save_path`
+    # If invoked without arguments it will save file to {Capybara.configure save_path}
+    # and file will be given randomly generated filename. If invoked with a relative path
+    # the path will be relative to {Capybara.configure save_path}.
     #
     # @param [String] path    the path to where it should be saved
     # @param [Hash] options   a customizable set of options
@@ -766,7 +769,7 @@ module Capybara
 
     ##
     #
-    # Yield a block using a specific wait time
+    # Yield a block using a specific maximum wait time.
     #
     def using_wait_time(seconds)
       if Capybara.threadsafe
@@ -784,8 +787,8 @@ module Capybara
 
     ##
     #
-    #  Accepts a block to set the configuration options if Capybara.threadsafe == true. Note that some options only have an effect
-    #  if set at initialization time, so look at the configuration block that can be passed to the initializer too
+    # Accepts a block to set the configuration options if {Capybara.configure threadsafe} is `true`. Note that some options only have an effect
+    # if set at initialization time, so look at the configuration block that can be passed to the initializer too.
     #
     def configure
       raise 'Session configuration is only supported when Capybara.threadsafe == true' unless Capybara.threadsafe
