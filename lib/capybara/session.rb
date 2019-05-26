@@ -377,8 +377,8 @@ module Capybara
     #
     # @overload switch_to_frame(element)
     #   @param [Capybara::Node::Element] element    iframe/frame element to switch to
-    # @overload switch_to_frame(frame)
-    #   @param [Symbol] frame    frame/document element to switch to
+    # @overload switch_to_frame(location)
+    #   @param [Symbol] location relative location of the frame to switch to
     #                            * :parent - the parent frame
     #                            * :top - the top level document
     #
@@ -502,7 +502,7 @@ module Capybara
     #
     # 1. Switches to the given window (it can be located by window instance/lambda/string).
     # 2. Executes the given block (within window located at previous step).
-    # 3. Switches back (this step will be invoked even if exception will happen at second step).
+    # 3. Switches back (this step will be invoked even if an exception occurs at the second step).
     #
     # @overload within_window(window) { do_something }
     #   @param window [Capybara::Window]       instance of {Capybara::Window} class
@@ -769,7 +769,7 @@ module Capybara
 
     ##
     #
-    # Yield a block using a specific wait time.
+    # Yield a block using a specific maximum wait time.
     #
     def using_wait_time(seconds)
       if Capybara.threadsafe
