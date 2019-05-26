@@ -41,7 +41,6 @@ task rack_smoke: %i[rubocop spec_rack]
 
 YARD::Rake::YardocTask.new do |t|
   t.files   = ['lib/**/*.rb']
-  t.options = %w[--markup=markdown]
 end
 
 Cucumber::Rake::Task.new(:cucumber) do |task|

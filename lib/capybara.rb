@@ -66,39 +66,145 @@ module Capybara
     #       config.app_host   = 'http://www.google.com'
     #     end
     #
-    # === Configurable options
+    # #### Configurable options
     #
-    # [app_host = String/nil]             The default host to use when giving a relative URL to visit, must be a valid URL e.g. http://www.example.com
-    # [always_include_port = Boolean]     Whether the Rack server's port should automatically be inserted into every visited URL unless another port is explicitly specified (Default: false)
-    # [asset_host = String]               Where dynamic assets are hosted - will be prepended to relative asset locations if present (Default: nil)
-    # [run_server = Boolean]              Whether to start a Rack server for the given Rack app (Default: true)
-    # [raise_server_errors = Boolean]     Should errors raised in the server be raised in the tests? (Default: true)
-    # [server_errors = Array\<Class\>]    Error classes that should be raised in the tests if they are raised in the server and {configure raise_server_errors} is true (Default: [Exception])
-    # [default_selector = :css/:xpath]    Methods which take a selector use the given type by default (Default: :css)
-    # [default_max_wait_time = Numeric]   The maximum number of seconds to wait for asynchronous processes to finish (Default: 2)
-    # [ignore_hidden_elements = Boolean]  Whether to ignore hidden elements on the page (Default: true)
-    # [automatic_reload = Boolean]        Whether to automatically reload elements as Capybara is waiting (Default: true)
-    # [save_path = String]  Where to put pages saved through save_(page|screenshot), save_and_open_(page|screenshot) (Default: Dir.pwd)
-    # [automatic_label_click = Boolean]   Whether {Capybara::Node::Element#choose Element#choose}, {Capybara::Node::Element#check Element#check}, {Capybara::Node::Element#uncheck Element#uncheck} will attempt to click the associated label element if the checkbox/radio button are non-visible (Default: false)
-    # [enable_aria_label = Boolean]  Whether fields, links, and buttons will match against aria-label attribute (Default: false)
-    # [reuse_server = Boolean]  Reuse the server thread between multiple sessions using the same app object (Default: true)
-    # [threadsafe = Boolean]  Whether sessions can be configured individually (Default: false)
-    # [server = Symbol]  The name of the registered server to use when running the app under test (Default: :default which uses puma)
-    # [default_set_options = Hash]  The default options passed to {Capybara::Node::Element#set Element#set} (Default: {})
-    # [test_id = Symbol/String/nil] Optional attribute to match locator aginst with builtin selectors along with id (Default: nil)
-    # [predicates_wait = Boolean]  Whether Capybara's predicate matchers use waiting behavior by default (Default: true)
-    # [default_normalize_ws = Boolean] Whether text predicates and matchers use normalize whitespace behaviour (Default: false)
-    # [allow_gumbo = Boolean] When `nokogumbo` is available, whether it will be used to parse HTML strings (Default: false)
-    # [match = :one/:first/:prefer_exact/:smart] The matching strategy to find nodes (Default: :smart)
-    # [exact = Boolean] Whether locators are matched exactly or with substrings. Only affects selector conditions written using the XPath#is method (Default: false)
-    # [exact_text = Boolean] Whether the text matchers and `:text` filter match exactly or on substrings (Default: false)
+    # * **allow_gumbo**
+    #   * When `nokogumbo` is available, whether it will be used to parse HTML strings.
+    #   * Type: `Boolean`
+    #   * Default: `false`
     #
-    # === DSL Options
+    # * **always_include_port**
+    #   * Whether the Rack server's port should automatically be inserted into every visited URL
+    #     unless another port is explicitly specified.
+    #   * Type: `Boolean`
+    #   * Default: `false`
     #
-    # when using capybara/dsl, the following options are also available:
+    # * **app_host**
+    #   * The default host to use when giving a relative URL to visit, must be a valid URL e.g. `http://www.example.com`.
+    #   * Type: `String`, `nil`
     #
-    # [default_driver = Symbol]           The name of the driver to use by default. (Default: :rack_test)
-    # [javascript_driver = Symbol]        The name of a driver to use for JavaScript enabled tests. (Default: :selenium)
+    # * **asset_host**
+    #   * Where dynamic assets are hosted - will be prepended to relative asset locations if present.
+    #   * Type: `String`
+    #   * Default: `nil`
+    #
+    # * **automatic_label_click**
+    #   * Whether {Capybara::Node::Element#choose Element#choose}, {Capybara::Node::Element#check Element#check}, {Capybara::Node::Element#uncheck Element#uncheck}
+    #     will attempt to click the associated `<label>` element if the checkbox/radio button are non-visible.
+    #   * Type: `Boolean`
+    #   * Default: `false`
+    #
+    # * **automatic_reload**
+    #   * Whether to automatically reload elements as Capybara is waiting.
+    #   * Type: `Boolean`
+    #   * Default: `true`
+    #
+    # * **default_max_wait_time**
+    #   * The maximum number of seconds to wait for asynchronous processes to finish.
+    #   * Type: `Numeric`
+    #   * Default: `2`
+    #
+    # * **default_normalize_ws**
+    #   * Whether text predicates and matchers use normalize whitespace behavior.
+    #   * Type: `Boolean`
+    #   * Default: `false`
+    #
+    # * **default_selector**
+    #   * Methods which take a selector use the given type by default. See also {Capybara::Selector}.
+    #   * Type: `:css`, `:xpath`
+    #   * Default: `:css`
+    #
+    # * **default_set_options**
+    #   * The default options passed to {Capybara::Node::Element#set Element#set}.
+    #   * Type: `Hash`
+    #   * Default: `{}`
+    #
+    # * **enable_aria_label**
+    #   * Whether fields, links, and buttons will match against `aria-label` attribute.
+    #   * Type: `Boolean`
+    #   * Default: `false`
+    #
+    # * **exact**
+    #   * Whether locators are matched exactly or with substrings. Only affects selector conditions
+    #     written using the `XPath#is` method.
+    #   * Type: `Boolean`
+    #   * Default: `false`
+    #
+    # * **exact_text**
+    #   * Whether the text matchers and `:text` filter match exactly or on substrings.
+    #   * Type: `Boolean`
+    #   * Default: `false`
+    #
+    # * **ignore_hidden_elements**
+    #   * Whether to ignore hidden elements on the page.
+    #   * Type: `Boolean`
+    #   * Default: `true`
+    #
+    # * **match**
+    #   * The matching strategy to find nodes.
+    #   * Type: `:one`, `:first`, `:prefer_exact`, `:smart`
+    #   * Default: `:smart`
+    #
+    # * **predicates_wait**
+    #   * Whether Capybara's predicate matchers use waiting behavior by default.
+    #   * Type: `Boolean`
+    #   * Default: `true`
+    #
+    # * **raise_server_errors**
+    #   * Should errors raised in the server be raised in the tests?
+    #   * Type: `Boolean`
+    #   * Default: `true`
+    #
+    # * **reuse_server**
+    #   * Whether to reuse the server thread between multiple sessions using the same app object.
+    #   * Type: `Boolean`
+    #   * Default: `true`
+    #
+    # * **run_server**
+    #   * Whether to start a Rack server for the given Rack app.
+    #   * Type: `Boolean`
+    #   * Default: `true`
+    #
+    # * **save_path**
+    #   * Where to put pages saved through {Capybara::Session#save_page save_page}, {Capybara::Session#save_screenshot save_screenshot},
+    #     {Capybara::Session#save_and_open_page save_and_open_page}, or {Capybara::Session#save_and_open_screenshot save_and_open_screenshot}.
+    #   * Type: `String`
+    #   * Default: `Dir.pwd`
+    #
+    # * **server**
+    #   * The name of the registered server to use when running the app under test.
+    #   * Type: `Symbol`
+    #   * Default: `:default` (which uses puma)
+    #
+    # * **server_errors**
+    #   * Error classes that should be raised in the tests if they are raised in the server
+    #     and {configure raise_server_errors} is `true`.
+    #   * Type: `Array<Class>`
+    #   * Default: `[Exception]`
+    #
+    # * **test_id**
+    #   * Optional attribute to match locator against with built-in selectors along with id.
+    #   * Type: `Symbol`, `String`, `nil`
+    #   * Default: `nil`
+    #
+    # * **threadsafe**
+    #   * Whether sessions can be configured individually.
+    #   * Type: `Boolean`
+    #   * Default: `false`
+    #
+    # #### DSL Options
+    #
+    # When using `capybara/dsl`, the following options are also available:
+    #
+    # * **default_driver**
+    #   * The name of the driver to use by default.
+    #   * Type: `Symbol`
+    #   * Default: `:rack_test`
+    #
+    # * **javascript_driver**
+    #   * The name of a driver to use for JavaScript enabled tests.
+    #   * Type: `Symbol`
+    #   * Default: `:selenium`
     #
     def configure
       yield config
