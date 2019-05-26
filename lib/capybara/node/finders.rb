@@ -227,9 +227,6 @@ module Capybara
       #     page.assert_selector('p#foo', minimum: 1)
       #     page.assert_selector('p#foo', between: 1..10)
       #
-      # See {Capybara::Result#matches_count?} for additional information about
-      # count matching.
-      #
       # @param [Symbol] kind                       Optional selector type (:css, :xpath, :field, etc.). Defaults to {Capybara.configure default_selector}.
       # @param [String] locator                    The locator for the specified selector
       # @macro system_filters
