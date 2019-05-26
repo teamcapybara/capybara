@@ -8,9 +8,9 @@ module Capybara
       # Find an {Capybara::Node::Element} based on the given arguments. {#find} will raise an error if the element
       # is not found.
       #
-      #  page.find('#foo').find('.bar')
-      #  page.find(:xpath, './/div[contains(., "bar")]')
-      #  page.find('li', text: 'Quox').click_link('Delete')
+      #     page.find('#foo').find('.bar')
+      #     page.find(:xpath, './/div[contains(., "bar")]')
+      #     page.find('li', text: 'Quox').click_link('Delete')
       #
       # @param (see #all)
       #
