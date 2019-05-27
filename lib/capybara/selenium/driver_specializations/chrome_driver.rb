@@ -33,10 +33,33 @@ module Capybara::Selenium::Driver::ChromeDriver
 
     switch_to_window(window_handles.first)
     window_handles.slice(1..-1).each { |win| close_window(win) }
-    super
+    return super if chromedriver_version < 73
+
+    timer = Capybara::Helpers.timer(expire_in: 10)
+    begin
+      @browser.navigate.to('about:blank')
+      clear_storage unless uniform_storage_clear?
+      wait_for_empty_page(timer)
+    rescue *unhandled_alert_errors
+      accept_unhandled_reset_alert
+      retry
+    end
+
+    types = ['cookies']
+    types << 'local_storage' if clear_all_storage?
+    execute_cdp('Storage.clearDataForOrigin', origin: '*', storageTypes: types.join(','))
   end
 
 private
+
+  def clear_all_storage?
+    options.values_at(:clear_session_storage, :clear_local_storage).none? { |s| s == false }
+  end
+
+  def uniform_storage_clear?
+    clear = options.values_at(:clear_session_storage, :clear_local_storage)
+    clear.all? { |s| s == false } || clear.none? { |s| s == false }
+  end
 
   def clear_storage
     # Chrome errors if attempt to clear storage on about:blank
@@ -68,6 +91,13 @@ private
 
   def bridge
     browser.send(:bridge)
+  end
+
+  def chromedriver_version
+    @chromedriver_version ||= begin
+      caps = browser.capabilities
+      caps['chrome']&.fetch('chromedriverVersion', nil).to_f
+    end
   end
 end
 
