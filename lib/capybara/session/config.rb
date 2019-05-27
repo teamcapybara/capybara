@@ -96,7 +96,7 @@ module Capybara
     # This attribute will be checked by builtin selector types whenever id would normally be checked.
     # If `nil` then it will be ignored.
     #
-    #  @params [String, Symbol, nil] id Name of the attribute to use as the test id
+    # @param [String, Symbol, nil] id Name of the attribute to use as the test id
     #
     def test_id=(id)
       @test_id = id&.to_sym
