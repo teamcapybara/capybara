@@ -45,12 +45,16 @@ module Capybara::Selenium::Driver::ChromeDriver
       retry
     end
 
-    types = ['cookies']
-    types << 'local_storage' if clear_all_storage?
-    execute_cdp('Storage.clearDataForOrigin', origin: '*', storageTypes: types.join(','))
+    execute_cdp('Storage.clearDataForOrigin', origin: '*', storageTypes: storage_types_to_clear)
   end
 
 private
+
+  def storage_types_to_clear
+    types = ['cookies']
+    types << 'local_storage' if clear_all_storage?
+    types.join(',')
+  end
 
   def clear_all_storage?
     options.values_at(:clear_session_storage, :clear_local_storage).none? { |s| s == false }
