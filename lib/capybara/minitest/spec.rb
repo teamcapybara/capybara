@@ -11,7 +11,8 @@ module Capybara
       end
 
       # rubocop:disable Style/MultilineBlockChain
-      (%w[selector xpath css link button field select table checked_field unchecked_field].flat_map do |assertion|
+      (%w[selector xpath css link button field select table checked_field unchecked_field
+          ancestor sibling].flat_map do |assertion|
         [%W[assert_#{assertion} must_have_#{assertion}],
          %W[refute_#{assertion} wont_have_#{assertion}]]
       end + [%w[assert_all_of_selectors must_have_all_of_selectors],
@@ -21,8 +22,7 @@ module Capybara
       %w[selector xpath css].flat_map do |assertion|
         [%W[assert_matches_#{assertion} must_match_#{assertion}],
          %W[refute_matches_#{assertion} wont_match_#{assertion}]]
-      end + [%w[assert_ancestor must_have_ancestor],
-             %w[assert_sibling must_have_sibling]]).each do |(meth, new_name)|
+      end).each do |(meth, new_name)|
         class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
           def #{new_name} *args, &block
             ::Minitest::Expectation.new(self, ::Minitest::Spec.current).#{new_name}(*args, &block)

@@ -30,3 +30,15 @@ Capybara::SpecHelper.spec '#have_ancestor' do
     expect(el).to have_ancestor(:css, 'div').exactly(3).times
   end
 end
+
+Capybara::SpecHelper.spec '#have_no_ancestor' do
+  before do
+    @session.visit('/with_html')
+  end
+
+  it 'should assert no matching ancestor' do
+    el = @session.find(:css, '#ancestor1')
+    expect(el).to have_no_ancestor(:css, '#child')
+  end
+end
+

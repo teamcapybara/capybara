@@ -99,7 +99,7 @@ module Capybara
       %w[selector no_selector matches_style
          all_of_selectors none_of_selectors any_of_selectors
          matches_selector not_matches_selector
-         sibling ancestor].each do |assertion_name|
+         sibling no_sibling ancestor no_ancestor].each do |assertion_name|
         class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
           def assert_#{assertion_name} *args, &optional_filter_block
             self.assertions +=1
@@ -113,6 +113,8 @@ module Capybara
 
       alias_method :refute_selector, :assert_no_selector
       alias_method :refute_matches_selector, :assert_not_matches_selector
+      alias_method :refute_ancestor, :assert_no_ancestor
+      alias_method :refute_sibling, :assert_no_sibling
 
       %w[xpath css link button field select table].each do |selector_type|
         define_method "assert_#{selector_type}" do |*args, &optional_filter_block|
