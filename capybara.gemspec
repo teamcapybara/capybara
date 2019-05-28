@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.description = 'Capybara is an integration testing tool for rack based web applications. '\
                   'It simulates how a user would interact with a website'
 
-  s.files = Dir.glob('{lib,spec}/**/*') + %w[README.md History.md License.txt]
+  s.files = Dir.glob('{lib,spec}/**/*') + %w[README.md History.md License.txt .yardopts]
 
   s.homepage = 'https://github.com/teamcapybara/capybara'
   s.metadata = {
