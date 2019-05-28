@@ -38,6 +38,7 @@ Capybara::SpecHelper.spec '#have_no_sibling' do
   it 'should assert no matching sibling' do
     el = @session.find(:css, '#mid_sibling')
     expect(el).to have_no_sibling(:css, '#not_a_sibling')
+    expect(el).not_to have_sibling(:css, '#not_a_sibling')
   end
 
   it 'should raise if there are matching siblings' do
