@@ -42,13 +42,13 @@ Capybara::SpecHelper.spec '#select' do
   end
 
   it 'should select an option from a select box by id' do
-    @session.select('Finish', from: 'form_locale')
+    @session.select('Finnish', from: 'form_locale')
     @session.click_button('awesome')
     expect(extract_results(@session)['locale']).to eq('fi')
   end
 
   it 'should select an option from a select box by label' do
-    @session.select('Finish', from: 'Locale')
+    @session.select('Finnish', from: 'Locale')
     @session.click_button('awesome')
     expect(extract_results(@session)['locale']).to eq('fi')
   end
@@ -183,7 +183,7 @@ Capybara::SpecHelper.spec '#select' do
   context 'with :exact option' do
     context 'when `false`' do
       it 'can match select box approximately' do
-        @session.select('Finish', from: 'Loc', exact: false)
+        @session.select('Finnish', from: 'Loc', exact: false)
         @session.click_button('awesome')
         expect(extract_results(@session)['locale']).to eq('fi')
       end
@@ -204,13 +204,13 @@ Capybara::SpecHelper.spec '#select' do
     context 'when `true`' do
       it 'can match select box approximately' do
         expect do
-          @session.select('Finish', from: 'Loc', exact:  true)
+          @session.select('Finnish', from: 'Loc', exact: true)
         end.to raise_error(Capybara::ElementNotFound)
       end
 
       it 'can match option approximately' do
         expect do
-          @session.select('Fin', from: 'Locale', exact:  true)
+          @session.select('Fin', from: 'Locale', exact: true)
         end.to raise_error(Capybara::ElementNotFound)
       end
 

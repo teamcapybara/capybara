@@ -725,6 +725,88 @@ module Capybara
       end
       alias_method :has_no_content?, :has_no_text?
 
+      ##
+      #
+      # Asserts that a given selector matches an ancestor of the current node.
+      #
+      #     element.assert_ancestor('p#foo')
+      #
+      # Accepts the same options as {#assert_selector}
+      #
+      # @param (see Capybara::Node::Finders#find)
+      # @raise [Capybara::ExpectationNotMet]      If the selector does not exist
+      #
+      def assert_ancestor(*args, &optional_filter_block)
+        _verify_selector_result(args, optional_filter_block, Capybara::Queries::AncestorQuery) do |result, query|
+          raise Capybara::ExpectationNotMet, result.failure_message unless result.matches_count? && (result.any? || query.expects_none?)
+        end
+      end
+
+      def assert_no_ancestor(*args, &optional_filter_block)
+        _verify_selector_result(args, optional_filter_block, Capybara::Queries::SiblingQuery) do |result, query|
+          if result.matches_count? && (!result.empty? || query.expects_none?)
+            raise Capybara::ExpectationNotMet, result.negative_failure_message
+          end
+        end
+      end
+
+      ##
+      #
+      # Predicate version of {#assert_ancestor}
+      #
+      def has_ancestor?(*args, **options, &optional_filter_block)
+        make_predicate(options) { assert_ancestor(*args, options, &optional_filter_block) }
+      end
+
+      ##
+      #
+      # Predicate version of {#assert_no_ancestor}
+      #
+      def has_no_ancestor?(*args, **options, &optional_filter_block)
+        make_predicate(options) { assert_no_ancestor(*args, options, &optional_filter_block) }
+      end
+
+      ##
+      #
+      # Asserts that a given selector matches a sibling of the current node.
+      #
+      #     element.assert_sibling('p#foo')
+      #
+      # Accepts the same options as {#assert_selector}
+      #
+      # @param (see Capybara::Node::Finders#find)
+      # @raise [Capybara::ExpectationNotMet]      If the selector does not exist
+      #
+      def assert_sibling(*args, &optional_filter_block)
+        _verify_selector_result(args, optional_filter_block, Capybara::Queries::SiblingQuery) do |result, query|
+          raise Capybara::ExpectationNotMet, result.failure_message unless result.matches_count? && (result.any? || query.expects_none?)
+        end
+      end
+
+      def assert_no_sibling(*args, &optional_filter_block)
+        _verify_selector_result(args, optional_filter_block, Capybara::Queries::SiblingQuery) do |result, query|
+          if result.matches_count? && (!result.empty? || query.expects_none?)
+            raise Capybara::ExpectationNotMet, result.negative_failure_message
+          end
+        end
+      end
+
+      ##
+      #
+      # Predicate version of {#assert_sibling}
+      #
+      def has_sibling?(*args, **options, &optional_filter_block)
+        make_predicate(options) { assert_sibling(*args, options, &optional_filter_block) }
+      end
+
+      ##
+      #
+      # Predicate version of {#assert_no_sibling}
+      #
+      def has_no_sibling?(*args, **options, &optional_filter_block)
+        make_predicate(options) { assert_no_sibling(*args, options, &optional_filter_block) }
+      end
+
       def ==(other)
         eql?(other) || (other.respond_to?(:base) && base == other.base)
       end
@@ -743,9 +825,9 @@ module Capybara
         end
       end
 
-      def _verify_selector_result(query_args, optional_filter_block)
+      def _verify_selector_result(query_args, optional_filter_block, query_type = Capybara::Queries::SelectorQuery)
         query_args = _set_query_session_options(*query_args)
-        query = Capybara::Queries::SelectorQuery.new(*query_args, &optional_filter_block)
+        query = query_type.new(*query_args, &optional_filter_block)
         synchronize(query.wait) do
           yield query.resolve_for(self), query
         end

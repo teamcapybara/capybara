@@ -76,6 +76,8 @@ module Capybara
     end
 
     def compare_count
+      return 0 unless @query
+
       count, min, max, between = @query.options.values_at(:count, :minimum, :maximum, :between)
 
       # Only check filters for as many elements as necessary to determine result

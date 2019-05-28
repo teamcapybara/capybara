@@ -11,13 +11,14 @@ module Capybara
       end
 
       # rubocop:disable Style/MultilineBlockChain
-      (%w[selector xpath css link button field select table checked_field unchecked_field].flat_map do |assertion|
-        [%W[assert_#{assertion} must_have_#{assertion}],
-         %W[refute_#{assertion} wont_have_#{assertion}]]
-      end + [%w[assert_all_of_selectors must_have_all_of_selectors],
-             %w[assert_none_of_selectors must_have_none_of_selectors],
-             %w[assert_any_of_selectors must_have_any_of_selectors],
-             %w[assert_matches_style must_match_style]] +
+      (%w[selector xpath css link button field select table checked_field unchecked_field
+          ancestor sibling].flat_map do |assertion|
+            [%W[assert_#{assertion} must_have_#{assertion}],
+             %W[refute_#{assertion} wont_have_#{assertion}]]
+          end + [%w[assert_all_of_selectors must_have_all_of_selectors],
+                 %w[assert_none_of_selectors must_have_none_of_selectors],
+                 %w[assert_any_of_selectors must_have_any_of_selectors],
+                 %w[assert_matches_style must_match_style]] +
       %w[selector xpath css].flat_map do |assertion|
         [%W[assert_matches_#{assertion} must_match_#{assertion}],
          %W[refute_matches_#{assertion} wont_match_#{assertion}]]
@@ -178,6 +179,18 @@ module Capybara
       #
       # @!method must_match_style
       #   see {Capybara::Node::Matchers#assert_matches_style}
+
+      ##
+      # Expectation that there is an ancestor
+      #
+      # @!method must_have_ancestor
+      #   see Capybara::Node::Matchers#has_ancestor?
+
+      ##
+      # Expectation that there is a sibling
+      #
+      # @!method must_have_sibling
+      #   see Capybara::Node::Matchers#has_sibling?
     end
   end
 end
