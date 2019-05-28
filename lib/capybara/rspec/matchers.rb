@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'capybara/rspec/matchers/have_selector'
+require 'capybara/rspec/matchers/have_ancestor'
+require 'capybara/rspec/matchers/have_sibling'
 require 'capybara/rspec/matchers/match_selector'
 require 'capybara/rspec/matchers/have_current_path'
 require 'capybara/rspec/matchers/match_style'
@@ -149,6 +151,18 @@ module Capybara
       define_method "not_match_#{matcher_type}" do |*args, &optional_filter_block|
         Matchers::NegatedMatcher.new(send("match_#{matcher_type}", *args, &optional_filter_block))
       end
+    end
+
+    # RSpec matcher for whether sibling element(s) matching a given selector exist
+    # See {Capybara::Node::Matcher#assert_sibling}
+    def have_sibling(*args, &optional_filter_block)
+      Matchers::HaveSibling.new(*args, &optional_filter_block)
+    end
+
+    # RSpec matcher for whether ancestor element(s) matching a given selector exist
+    # See {Capybara::Node::Matcher#assert_ancestor}
+    def have_ancestor(*args, &optional_filter_block)
+      Matchers::HaveAncestor.new(*args, &optional_filter_block)
     end
 
     ##

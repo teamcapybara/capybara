@@ -21,7 +21,8 @@ module Capybara
       %w[selector xpath css].flat_map do |assertion|
         [%W[assert_matches_#{assertion} must_match_#{assertion}],
          %W[refute_matches_#{assertion} wont_match_#{assertion}]]
-      end).each do |(meth, new_name)|
+      end + [%w[assert_ancestor must_have_ancestor],
+             %w[assert_sibling must_have_sibling]]).each do |(meth, new_name)|
         class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
           def #{new_name} *args, &block
             ::Minitest::Expectation.new(self, ::Minitest::Spec.current).#{new_name}(*args, &block)
@@ -178,6 +179,18 @@ module Capybara
       #
       # @!method must_match_style
       #   see {Capybara::Node::Matchers#assert_matches_style}
+
+      ##
+      # Expectation that there is an ancestor
+      #
+      # @!method must_have_ancestor
+      #   see Capybara::Node::Matchers#has_ancestor?
+
+      ##
+      # Expectation that there is a sibling
+      #
+      # @!method must_have_sibling
+      #   see Capybara::Node::Matchers#has_sibling?
     end
   end
 end

@@ -130,6 +130,16 @@ class MinitestTest < Minitest::Test
     visit('/with_html')
     assert_matches_style(find(:css, '#second'), display: 'inline')
   end
+
+  def test_assert_ancestor
+    option = find(:option, 'Finnish')
+    assert_ancestor(option, :css, '#form_locale')
+  end
+
+  def test_assert_sibling
+    option = find(:css, '#form_title').find(:option, 'Mrs')
+    assert_sibling(option, :option, 'Mr')
+  end
 end
 
 RSpec.describe 'capybara/minitest' do
@@ -148,6 +158,6 @@ RSpec.describe 'capybara/minitest' do
     reporter.start
     MinitestTest.run reporter, {}
     reporter.report
-    expect(output.string).to include('20 runs, 50 assertions, 0 failures, 0 errors, 1 skips')
+    expect(output.string).to include('22 runs, 52 assertions, 0 failures, 0 errors, 1 skips')
   end
 end

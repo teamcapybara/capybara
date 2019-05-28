@@ -86,9 +86,20 @@ module Capybara
       # @!method assert_matches_style
       #   see {Capybara::Node::Matchers#assert_matches_style}
 
+      ## Assert element has a matching sibling
+      #
+      # @!method assert_sibling
+      #   see {Capybara::Node::Matchers#assert_sibling}
+
+      ## Assert element has a matching ancestor
+      #
+      # @!method assert_ancestor
+      #   see {Capybara::Node::Matchers#assert_ancestor}
+
       %w[selector no_selector matches_style
          all_of_selectors none_of_selectors any_of_selectors
-         matches_selector not_matches_selector].each do |assertion_name|
+         matches_selector not_matches_selector
+         sibling ancestor].each do |assertion_name|
         class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
           def assert_#{assertion_name} *args, &optional_filter_block
             self.assertions +=1

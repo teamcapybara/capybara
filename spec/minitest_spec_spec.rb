@@ -127,6 +127,16 @@ class MinitestSpecTest < Minitest::Spec
     find(:css, '#second').must_have_style('display' => 'inline') # deprecated
     find(:css, '#second').must_match_style('display' => 'inline')
   end
+
+  it 'supports ancestor expectations' do
+    option = find(:option, 'Finnish')
+    option.must_have_ancestor(:css, '#form_locale')
+  end
+
+  it 'supports sibling expectations' do
+    option = find(:css, '#form_title').find(:option, 'Mrs')
+    option.must_have_sibling(:option, 'Mr')
+  end
 end
 
 RSpec.describe 'capybara/minitest/spec' do
@@ -145,7 +155,7 @@ RSpec.describe 'capybara/minitest/spec' do
     reporter.start
     MinitestSpecTest.run reporter, {}
     reporter.report
-    expect(output.string).to include('20 runs, 42 assertions, 1 failures, 0 errors, 1 skips')
+    expect(output.string).to include('22 runs, 44 assertions, 1 failures, 0 errors, 1 skips')
     # Make sure error messages are displayed
     expect(output.string).to match(/expected to find select box "non_existing_form_title" .*but there were no matches/)
   end
