@@ -74,6 +74,12 @@ Capybara::SpecHelper.spec '#choose' do
       expect(extract_results(@session)['gender']).to eq('male')
     end
 
+    it 'should alias `:with` option' do
+      @session.choose('form[gender]', with: 'male')
+      @session.click_button('awesome')
+      expect(extract_results(@session)['gender']).to eq('male')
+    end
+
     it 'should raise an error if option not found' do
       expect do
         @session.choose('form[gender]', option: 'hermaphrodite')

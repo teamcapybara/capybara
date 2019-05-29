@@ -120,6 +120,12 @@ Capybara::SpecHelper.spec '#check' do
       expect(extract_results(@session)['pets']).to include('cat')
     end
 
+    it 'should alias `with`' do
+      @session.check('form[pets][]', with: 'cat')
+      @session.click_button('awesome')
+      expect(extract_results(@session)['pets']).to include('cat')
+    end
+
     it 'should raise an error if option not found' do
       expect do
         @session.check('form[pets][]', option: 'elephant')

@@ -11,14 +11,17 @@ Capybara.add_selector(:radio_button, locator_type: [String, Symbol]) do
 
   filter_set(:_field, %i[checked unchecked disabled name])
 
-  node_filter(:option) do |node, value|
+  node_filter(%i[option with]) do |node, value|
     val = node.value
-    (val == value.to_s).tap do |res|
-      add_error("Expected option value to be #{value.inspect} but it was #{val.inspect}") unless res
+    (value.is_a?(Regexp) ? value.match?(val) : val == value.to_s).tap do |res|
+      add_error("Expected value to be #{value.inspect} but it was #{val.inspect}") unless res
     end
   end
 
-  describe_node_filters do |option: nil, **|
-    " with value #{option.inspect}" if option
+  describe_node_filters do |option: nil, with: nil, **|
+    desc = +''
+    desc << " with value #{option.inspect}" if option
+    desc << " with value #{with.inspec}" if with
+    desc
   end
 end
