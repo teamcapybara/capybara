@@ -35,13 +35,13 @@ require 'capybara/selector/definition'
 #       * :multiple (Boolean) - Match fields that accept multiple values
 #
 # * **:fieldset** - Select fieldset elements
-#   * Locator: Matches id or contents of wrapped legend
+#   * Locator: Matches id, {Capybara.configure test_id}, or contents of wrapped legend
 #   * Filters:
 #       * :legend (String) - Matches contents of wrapped legend
 #       * :disabled (Boolean) - Match disabled fieldset?
 #
 # * **:link** - Find links (`<a>` elements with an href attribute)
-#   * Locator: Matches the id or title attributes, or the string content of the link, or the alt attribute of a contained img element.
+#   * Locator: Matches the id, {Capybara.configure test_id}, or title attributes, or the string content of the link, or the alt attribute of a contained img element.
 #     By default this selector requires a link to have an href attribute.
 #   * Filters:
 #       * :title (String) - Matches the title attribute
@@ -132,12 +132,12 @@ require 'capybara/selector/definition'
 #       * :multiple (Boolean) - Match field that accepts multiple values
 #
 # * **:label** - Find label elements
-#   * Locator: Match id or text contents
+#   * Locator: Match id, {Capybara.configure test_id}, or text contents
 #   * Filters:
 #       * :for (Element, String, Regexp) - The element or id of the element associated with the label
 #
 # * **:table** - Find table elements
-#   * Locator: id or caption text of table
+#   * Locator: id, {Capybara.configure test_id}, or caption text of table
 #   * Filters:
 #       * :caption (String) - Match text of associated caption
 #       * :with_rows (Array<Array<String>>, Array<Hash<String, String>>) - Partial match `<td>` data - visibility of `<td>` elements is not considered

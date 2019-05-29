@@ -926,12 +926,17 @@ Capybara.default_selector = :xpath
 find('.//ul/li').text
 ```
 
-Capybara allows you to add custom selectors, which can be very useful if you
-find yourself using the same kinds of selectors very often:
+Capybara provides a number of other built-in selector types. The full list, along
+with applicable filters, can be seen at [built-in selectors](https://www.rubydoc.info/github/teamcapybara/capybara/Capybara/Selector)
+
+Capybara also allows you to add custom selectors, which can be very useful if you
+find yourself using the same kinds of selectors very often. The examples below are very
+simple, and there are many available features not demonstrated. For more in-depth examples
+please see Capybaras built-in selector definitions.
 
 ```ruby
-Capybara.add_selector(:id) do
-  xpath { |id| XPath.descendant[XPath.attr(:id) == id.to_s] }
+Capybara.add_selector(:my_attribute) do
+  xpath { |id| XPath.descendant[XPath.attr(:my_attribute) == id.to_s] }
 end
 
 Capybara.add_selector(:row) do
@@ -948,9 +953,9 @@ an XPath expression generated through the XPath gem. You can now use these
 selectors like this:
 
 ```ruby
-find(:id, 'post_123')
-find(:row, 3)
-find(:flash_type, :notice)
+find(:my_attribute, 'post_123') # find element with matching attribute
+find(:row, 3) # find 3rd row in table body
+find(:flash_type, :notice) # find element with id of 'flash' and class of 'notice'
 ```
 
 ## <a name="beware-the-xpath--trap"></a>Beware the XPath // trap
