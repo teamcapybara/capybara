@@ -1,3 +1,16 @@
+# Version 3.22.0
+Release date: unreleased
+
+### Added
+
+* `ancestor`/`sibling` assertions and matchers added
+* Documentation Updates and Fixes - Many thanks again to Masafumi Koba! [Masafumi Koba]
+
+### Changed
+
+* Selenium driver with Chrome >= 73 now resets cookies and local/session storage after navigating
+  to 'about:blank' when possible to minimize potential race condition
+
 # Version 3.21.0
 Release date: 2019-05-24
 
