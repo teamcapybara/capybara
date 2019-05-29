@@ -5,6 +5,7 @@ Release date: unreleased
 
 * `ancestor`/`sibling` assertions and matchers added
 * Documentation Updates and Fixes - Many thanks again to Masafumi Koba! [Masafumi Koba]
+* Added `:with` alias for `:option` filter on `:checkbox` and `:radio_button` selectors
 
 ### Changed
 
