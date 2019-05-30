@@ -8,7 +8,7 @@ require 'capybara/selector/definition'
 # All Selectors below support the listed selector specific filters in addition to the following system-wide filters
 #   * :id (String, Regexp, XPath::Expression) - Matches the id attribute
 #   * :class (String, Array<String>, Regexp, XPath::Expression) - Matches the class(es) provided
-#   * :style (String, Regexp, Hash<String,String>) - Match on elements style
+#   * :style (String, Regexp, Hash<String, String>) - Match on elements style
 #
 # ### Built-in Selectors
 #
@@ -146,7 +146,7 @@ require 'capybara/selector/definition'
 #       * :cols (Array<Array<String>>) - Match all `<td>`s - visibility of `<td>` elements is not considered
 #
 # * **:table_row** - Find table row
-#   * Locator: Array<String>, Hash<String,String> table row `<td>` contents - visibility of `<td>` elements is not considered
+#   * Locator: Array<String>, Hash<String, String> table row `<td>` contents - visibility of `<td>` elements is not considered
 #
 # * **:frame** - Find frame/iframe elements
 #   * Locator: Match id or name
@@ -156,7 +156,7 @@ require 'capybara/selector/definition'
 # * **:element**
 #   * Locator: Type of element ('div', 'a', etc) - if not specified defaults to '*'
 #   * Filters:
-#       * :&lt;any> (String, Regexp) - Match on any specified element attribute
+#       * :\<any> (String, Regexp) - Match on any specified element attribute
 #
 class Capybara::Selector; end
 

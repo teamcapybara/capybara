@@ -95,7 +95,7 @@ module Capybara
     # - **server** (Symbol = `:default` (which uses puma)) - The name of the registered server to use when running the app under test.
     # - **server_errors** (Array\<Class> = `[Exception]`) - Error classes that should be raised in the tests if they are raised in the server
     #   and {configure raise_server_errors} is `true`.
-    # - **test_id** (`Symbol`, `String`, `nil` = `nil`) - Optional attribute to match locator against with built-in selectors along with id.
+    # - **test_id** (Symbol, String, `nil` = `nil`) - Optional attribute to match locator against with built-in selectors along with id.
     # - **threadsafe** (Boolean = `false`) - Whether sessions can be configured individually.
     #
     # #### DSL Options
