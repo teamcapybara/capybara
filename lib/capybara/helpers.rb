@@ -3,7 +3,7 @@
 module Capybara
   # @api private
   module Helpers
-  module_function # rubocop:disable Layout/IndentationWidth
+  module_function
 
     ##
     # @deprecated

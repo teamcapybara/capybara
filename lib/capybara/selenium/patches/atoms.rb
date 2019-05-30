@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module CapybaraAtoms
-private # rubocop:disable Layout/IndentationWidth
+private
 
   def read_atom(function)
     @atoms ||= Hash.new do |hash, key|

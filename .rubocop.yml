@@ -126,6 +126,9 @@ Layout/CaseIndentation:
 Layout/IndentFirstArrayElement:
   EnforcedStyle: consistent
 
+Layout/IndentationWidth:
+  IgnoredPatterns: ['^\s*module']
+
 Security/YAMLLoad:
   Exclude:
     - 'lib/capybara/spec/**/*'

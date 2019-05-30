@@ -4,7 +4,7 @@ class Capybara::Selenium::Node
   module Html5Drag
   # Implement methods to emulate HTML5 drag and drop
 
-  private # rubocop:disable Layout/IndentationWidth
+  private
 
     def html5_drag_to(element)
       driver.execute_script MOUSEDOWN_TRACKER
