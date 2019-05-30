@@ -774,6 +774,18 @@ Capybara::SpecHelper.spec 'node' do
       expect(el).to be_instance_of(Capybara::Node::Element)
       expect(el).to eq(change)
     end
+
+    it 'should support multiple statements via IIFE' do
+      @session.visit('/with_js')
+      change = @session.find(:css, '#change') # ensure page has loaded and element is available
+      res = change.evaluate_script(<<~JS, 3)
+        (function(n){
+          var el = this;
+          return [el, n];
+        }).apply(this, arguments)
+      JS
+      expect(res).to eq [change, 3]
+    end
   end
 
   describe '#evaluate_async_script', requires: %i[js es_args] do

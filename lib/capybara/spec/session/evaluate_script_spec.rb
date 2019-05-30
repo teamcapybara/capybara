@@ -34,4 +34,16 @@ Capybara::SpecHelper.spec '#evaluate_script', requires: [:js] do
     expect(el).to be_instance_of(Capybara::Node::Element)
     expect(el).to eq(@session.find(:css, '#change'))
   end
+
+  it 'should support multi statement via IIFE' do
+    @session.visit('/with_js')
+    @session.find(:css, '#change')
+    el = @session.evaluate_script(<<~JS)
+      (function(){
+        var el = document.getElementById('change');
+        return el;
+      })()
+    JS
+    expect(el).to eq(@session.find(:css, '#change'))
+  end
 end

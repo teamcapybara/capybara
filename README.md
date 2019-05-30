@@ -611,11 +611,21 @@ In drivers which support it, you can easily execute JavaScript:
 page.execute_script("$('body').empty()")
 ```
 
-For simple expressions, you can return the result of the script. Note
-that this may break with more complicated expressions:
+For simple expressions, you can return the result of the script.
 
 ```ruby
 result = page.evaluate_script('4 + 4');
+```
+
+For more complicated scripts you'll need to write them as one expression.
+
+```ruby
+result = page.evaluate_script(<<~JS, 3, element)
+  (function(n, el){
+    var val = parseInt(el.value, 10);
+    return n+val;
+  })(arguments[0], arguments[1])
+JS
 ```
 
 ### <a name="modals"></a>Modals
