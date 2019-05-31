@@ -22,7 +22,8 @@ require 'capybara/selector/definition'
 #   * Locator: (String, Regexp, XPath::Expression) The id of the element to match
 #
 # * **:field** - Select field elements (input [not of type submit, image, or hidden], textarea, select)
-#   * Locator: Matches against the id, {Capybara.configure test_id} attribute, name, or placeholder
+#   * Locator: Matches against the id, {Capybara.configure test_id} attribute, name, placeholder, or
+#     associated label text
 #   * Filters:
 #       * :name (String) - Matches the name attribute
 #       * :placeholder (String) - Matches the placeholder attribute
@@ -41,8 +42,8 @@ require 'capybara/selector/definition'
 #       * :disabled (Boolean) - Match disabled fieldset?
 #
 # * **:link** - Find links (`<a>` elements with an href attribute)
-#   * Locator: Matches the id, {Capybara.configure test_id}, or title attributes, or the string content of the link, or the alt attribute of a contained img element.
-#     By default this selector requires a link to have an href attribute.
+#   * Locator: Matches the id, {Capybara.configure test_id}, or title attributes, or the string content of the link,
+#     or the alt attribute of a contained img element. By default this selector requires a link to have an href attribute.
 #   * Filters:
 #       * :title (String) - Matches the title attribute
 #       * :alt (String) - Matches the alt attribute of a contained img element
@@ -63,7 +64,7 @@ require 'capybara/selector/definition'
 #       * :disabled (Boolean, :all) - Match disabled buttons? (Default: false)
 #
 # * **:fillable_field** - Find text fillable fields ( textarea, input [not of type submit, image, radio, checkbox, hidden, file] )
-#   * Locator: Matches against the id, {Capybara.configure test_id} attribute, name, or placeholder
+#   * Locator: Matches against the id, {Capybara.configure test_id} attribute, name, placeholder, or associated label text
 #   * Filters:
 #       * :name (String) - Matches the name attribute
 #       * :placeholder (String) - Matches the placeholder attribute
@@ -111,7 +112,8 @@ require 'capybara/selector/definition'
 #       * :selected (Boolean) - Match selected option
 #
 # * **:datalist_input** - Find input field with datalist completion
-#   * Locator: Matches against the id, {Capybara.configure test_id} attribute, name, or placeholder
+#   * Locator: Matches against the id, {Capybara.configure test_id} attribute, name,
+#     placeholder, or associated label text
 #   * Filters:
 #       * :name (String) - Matches the name attribute
 #       * :placeholder (String) - Matches the placeholder attribute
@@ -149,7 +151,7 @@ require 'capybara/selector/definition'
 #   * Locator: Array<String>, Hash<String, String> table row `<td>` contents - visibility of `<td>` elements is not considered
 #
 # * **:frame** - Find frame/iframe elements
-#   * Locator: Match id or name
+#   * Locator: Match id, {Capybara.configure test_id} attribute, or name
 #   * Filters:
 #       * :name (String) - Match name attribute
 #

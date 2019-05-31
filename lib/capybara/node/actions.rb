@@ -61,7 +61,7 @@ module Capybara
       ##
       #
       # Locate a text field or text area and fill it in with the given text.
-      # The field can be found via its name, id, {Capybara.configure test_id} attribute, or label text.
+      # The field can be found via its name, id, {Capybara.configure test_id} attribute, placeholder, or label text.
       # If no locator is provided this will operate on self or a descendant.
       #
       #     # will fill in a descendant fillable field with name, id, or label text matching 'Name'
@@ -98,8 +98,8 @@ module Capybara
       ##
       #
       # Find a descendant radio button and mark it as checked. The radio button can be found
-      # via name, id or label text. If no locator is provided this will match against self or
-      # a descendant.
+      # via name, id, {Capybara.configure test_id} attribute or label text. If no locator is
+      # provided this will match against self or a descendant.
       #
       #     # will choose a descendant radio button with a name, id, or label text matching 'Male'
       #     page.choose('Male')
@@ -125,8 +125,8 @@ module Capybara
       ##
       #
       # Find a descendant check box and mark it as checked. The check box can be found
-      # via name, id or label text. If no locator is provided this will match against
-      # self or a descendant.
+      # via name, id, {Capybara.configure test_id} attribute, or label text. If no locator
+      # is provided this will match against self or a descendant.
       #
       #     # will check a descendant checkbox with a name, id, or label text matching 'German'
       #     page.check('German')
@@ -153,8 +153,8 @@ module Capybara
       ##
       #
       # Find a descendant check box and uncheck it. The check box can be found
-      # via name, id or label text. If no locator is provided this will match against
-      # self or a descendant.
+      # via name, id, {Capybara.configure test_id} attribute, or label text. If
+      # no locator is provided this will match against self or a descendant.
       #
       #     # will uncheck a descendant checkbox with a name, id, or label text matching 'German'
       #     page.uncheck('German')
@@ -185,7 +185,8 @@ module Capybara
       # Otherwise it finds an option inside current scope and selects it.
       # If the select box is a multiple select, {#select} can be called multiple times to select more than
       # one option.
-      # The select box can be found via its name, id or label text. The option can be found by its text.
+      # The select box can be found via its name, id, {Capybara.configure test_id} attribute, or label text.
+      # The option can be found by its text.
       #
       #     page.select 'March', from: 'Month'
       #
@@ -212,7 +213,8 @@ module Capybara
       #
       # Find a select box on the page and unselect a particular option from it. If the select
       # box is a multiple select, {#unselect} can be called multiple times to unselect more than
-      # one option. The select box can be found via its name, id or label text.
+      # one option. The select box can be found via its name, id, {Capybara.configure test_id} attribute,
+      # or label text.
       #
       #     page.unselect 'March', from: 'Month'
       #
@@ -234,8 +236,8 @@ module Capybara
       ##
       #
       # Find a descendant file field on the page and attach a file given its path. There are two ways to use
-      # {#attach_file}, in the first method the file field can be found via its name, id or label text.
-      # In the case of the file field being hidden for
+      # {#attach_file}, in the first method the file field can be found via its name, id,
+      # {Capybara.configure test_id} attribute, or label text. In the case of the file field being hidden for
       # styling reasons the `make_visible` option can be used to temporarily change the CSS of
       # the file field, attach the file, and then revert the CSS back to original. If no locator is
       # passed this will match self or a descendant.
