@@ -5,8 +5,8 @@ gemspec path: '..'
 
 gem 'xpath', github: 'teamcapybara/xpath'
 
-gem 'selenium-webdriver', :path => '../../selenium/build/rb'
-gem 'webdrivers', 'twalpole/webdrivers', branch: 'selenium_4' if ENV['CI']
+gem 'selenium-webdriver', github: 'seleniumhq/selenium', glob: 'rb/*.gemspec'
+gem 'webdrivers', github: 'twalpole/webdrivers', branch: 'selenium_4'
 gem 'rack', github: 'rack/rack'
 gem 'sinatra', github: 'sinatra/sinatra', branch: 'master'
 

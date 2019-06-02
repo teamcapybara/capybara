@@ -41,6 +41,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
 
       it 'should have return code 1 when running selenium_driver_rspec_failure.rb' do
         skip 'only setup for local non-headless' if headless_or_remote?
+        skip 'Not setup for edge' if edge?(session)
 
         system(env, 'rspec spec/fixtures/selenium_driver_rspec_failure.rb', out: File::NULL, err: File::NULL)
         expect($CHILD_STATUS.exitstatus).to eq(1)
@@ -48,6 +49,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
 
       it 'should have return code 0 when running selenium_driver_rspec_success.rb' do
         skip 'only setup for local non-headless' if headless_or_remote?
+        skip 'Not setup for edge' if edge?(session)
 
         system(env, 'rspec spec/fixtures/selenium_driver_rspec_success.rb', out: File::NULL, err: File::NULL)
         expect($CHILD_STATUS.exitstatus).to eq(0)
@@ -311,6 +313,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         pending "IE doesn't support uploading a directory" if ie?(session)
         pending 'Chrome/chromedriver 73 breaks this' if chrome?(session) && !chrome_lt?(73, session)
         pending "Safari doesn't support uploading a directory" if safari?(session)
+        # pending "Edge/msedgedriver doesn't support directory upload" if edge?(session) && edge_gte?(75, session)
 
         session.visit('/form')
         test_file_dir = File.expand_path('./fixtures', File.dirname(__FILE__))

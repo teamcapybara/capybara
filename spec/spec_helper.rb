@@ -32,16 +32,29 @@ module Capybara
       browser_name(session) == :chrome
     end
 
+    def chrome_version(session)
+      (session.driver.browser.capabilities[:browser_version] ||
+        session.driver.browser.capabilities[:version]).to_f
+    end
+
     def chrome_lt?(version, session)
-      chrome?(session) && (session.driver.browser.capabilities[:version].to_f < version)
+      chrome?(session) && (chrome_version(session) < version)
     end
 
     def chrome_gte?(version, session)
-      chrome?(session) && (session.driver.browser.capabilities[:version].to_f >= version)
+      chrome?(session) && (chrome_version(session) < version)
     end
 
     def edge?(session)
       browser_name(session) == :edge
+    end
+
+    def edge_lt?(version, session)
+      edge?(session) && (chrome_version(session) < version)
+    end
+
+    def edge_gte?(version, session)
+      edge?(session) && (chrome_version(session) >= version)
     end
 
     def ie?(session)
