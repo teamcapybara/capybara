@@ -42,7 +42,7 @@ module Capybara
     end
 
     def chrome_gte?(version, session)
-      chrome?(session) && (chrome_version(session) < version)
+      chrome?(session) && (chrome_version(session) >= version)
     end
 
     def edge?(session)
