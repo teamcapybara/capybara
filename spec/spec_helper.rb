@@ -29,23 +29,19 @@ module Capybara
     end
 
     def chrome?(session)
-      puts browser_name(session)
       browser_name(session) == :chrome
     end
 
     def chrome_version(session)
-      puts session.driver.browser.capabilities.inspect
       (session.driver.browser.capabilities[:browser_version] ||
         session.driver.browser.capabilities[:version]).to_f
     end
 
     def chrome_lt?(version, session)
-      puts "chrome_version= #{chrome_version(session)}"
       chrome?(session) && (chrome_version(session) < version)
     end
 
     def chrome_gte?(version, session)
-      puts "chrome_version= #{chrome_version(session)}"
       chrome?(session) && (chrome_version(session) < version)
     end
 
@@ -94,7 +90,7 @@ RSpec.configure do |config|
   config.mock_with :rspec do |mocks|
     mocks.verify_partial_doubles = true
   end
-  config.filter_run_including focus_: true # unless ENV['CI']
+  config.filter_run_including focus_: true unless ENV['CI']
   config.run_all_when_everything_filtered = true
   config.after(:suite) { SeleniumStatistics.print_results }
 end
