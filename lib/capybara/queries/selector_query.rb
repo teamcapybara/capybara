@@ -154,14 +154,16 @@ module Capybara
         @selector.format
       end
 
+      def matching_text
+        options[:text] || options[:exact_text]
+      end
+
       def text_fragments
-        text = (options[:text] || options[:exact_text])
-        text.is_a?(String) ? text.split : []
+        (text = matching_text).is_a?(String) ? text.split : []
       end
 
       def xpath_text_conditions
-        text = (options[:text] || options[:exact_text])
-        case text
+        case (text = matching_text)
         when String
           text.split.map { |txt| XPath.contains(txt) }.reduce(&:&)
         when Regexp
@@ -175,9 +177,9 @@ module Capybara
 
       def try_text_match_in_expression?
         first_try? &&
-          (options[:text] || options[:exact_text]) &&
-          @resolved_node&.respond_to?(:session) &&
-          @resolved_node.session.driver.wait?
+          matching_text &&
+          @resolved_node.is_a?(Capybara::Node::Base) &&
+          @resolved_node.session&.driver&.wait?
       end
 
       def first_try?
