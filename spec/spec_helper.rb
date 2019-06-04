@@ -34,7 +34,7 @@ module Capybara
     end
 
     def chrome_version(session)
-      puts session.driver.browser.capabilities
+      puts session.driver.browser.capabilities.inspect
       (session.driver.browser.capabilities[:browser_version] ||
         session.driver.browser.capabilities[:version]).to_f
     end
@@ -45,6 +45,7 @@ module Capybara
     end
 
     def chrome_gte?(version, session)
+      puts "chrome_version= #{chrome_Version}"
       chrome?(session) && (chrome_version(session) < version)
     end
 
