@@ -29,6 +29,7 @@ module Capybara
     end
 
     def chrome?(session)
+      puts browser_name(session)
       browser_name(session) == :chrome
     end
 
