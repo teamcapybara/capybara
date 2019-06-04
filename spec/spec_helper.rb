@@ -40,12 +40,12 @@ module Capybara
     end
 
     def chrome_lt?(version, session)
-      puts "chrome_version= #{chrome_version}"
+      puts "chrome_version= #{chrome_version(session)}"
       chrome?(session) && (chrome_version(session) < version)
     end
 
     def chrome_gte?(version, session)
-      puts "chrome_version= #{chrome_version}"
+      puts "chrome_version= #{chrome_version(session)}"
       chrome?(session) && (chrome_version(session) < version)
     end
 
