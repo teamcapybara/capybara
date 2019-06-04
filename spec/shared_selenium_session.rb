@@ -305,7 +305,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
     end
 
-    describe 'Capybara#Node#attach_file' do
+    describe 'Capybara#Node#attach_file', :focus_ do
       it 'can attach a directory' do
         pending "Geckodriver doesn't support uploading a directory" if firefox?(session)
         pending "Selenium remote doesn't support transferring a directory" if remote?(session)
