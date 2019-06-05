@@ -89,6 +89,12 @@ Capybara::SpecHelper.spec '#fill_in' do
     expect(extract_results(@session)['description']).to eq("\r\nSome text\r\n")
   end
 
+  it 'should fill in a color field' do
+    @session.fill_in('Html5 Color', with: '#112233')
+    @session.click_button('html5_submit')
+    expect(extract_results(@session)['html5_color']).to eq('#112233')
+  end
+
   it 'should fill in a field with a custom type' do
     @session.fill_in('Schmooo', with: 'Schmooo is the game')
     @session.click_button('awesome')
