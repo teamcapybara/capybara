@@ -119,3 +119,4 @@ private
 end
 
 Capybara::Selenium::Driver.register_specialization :edge, Capybara::Selenium::Driver::EdgeDriver
+Capybara::Selenium::Driver.register_specialization :edge_chrome, Capybara::Selenium::Driver::EdgeDriver

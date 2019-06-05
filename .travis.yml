@@ -105,6 +105,18 @@ matrix:
         - "sudo /usr/bin/safaridriver --enable"
         - "sudo '/Applications/Safari Technology Preview.app/Contents/MacOS/safaridriver' --enable"
       script: "bundle exec rake spec_safari"
+    - gemfile: gemfiles/Gemfile.chrome_edge
+      os: osx
+      osx_image: xcode10.2
+      rvm: 2.6
+      addons:
+        homebrew:
+          taps: homebrew/cask-versions
+          casks: microsoft-edge-canary
+      before_install:
+        - wget https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/76.0.168.0/edgedriver_mac64.zip
+        - unzip edgedriver_mac64.zip -d /usr/local/bin
+      script: "bundle exec rake spec_edge"
   allow_failures:
     - os: osx
     - gemfile: gemfiles/Gemfile.beta-versions
