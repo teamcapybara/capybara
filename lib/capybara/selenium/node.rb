@@ -74,6 +74,8 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
         set_time(value)
       when 'datetime-local'
         set_datetime_local(value)
+      when 'color'
+        set_color(value)
       else
         set_text(value, options)
       end
@@ -279,6 +281,10 @@ private
 
     # TODO: this would be better if locale can be detected and correct keystrokes sent
     update_value_js(value.to_datetime_str)
+  end
+
+  def set_color(value) # rubocop:disable Naming/AccessorMethodName
+    update_value_js(value)
   end
 
   def update_value_js(value)
