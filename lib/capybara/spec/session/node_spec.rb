@@ -438,6 +438,14 @@ Capybara::SpecHelper.spec 'node' do
         expect(@session).to have_xpath('//div[contains(., "HTML5 Dropped string: text/plain drag_html5")]')
       end
 
+      it 'should HTML5 drag and drop an object child' do
+        @session.visit('/with_js')
+        element = @session.find('//div[@id="drag_html5"]/p')
+        target = @session.find('//div[@id="drop_html5"]')
+        element.drag_to(target)
+        expect(@session).to have_xpath('//div[contains(., "HTML5 Dropped string: text/plain drag_html5")]')
+      end
+
       it 'should set clientX/Y in dragover events' do
         @session.visit('/with_js')
         element = @session.find('//div[@id="drag_html5"]')
@@ -480,6 +488,14 @@ Capybara::SpecHelper.spec 'node' do
           src.drag_to target
           expect(@session).to have_content(/Item 3.*Item 1/, normalize_ws: true)
         end
+      end
+
+      it 'should drag HTML5 default draggable element child' do
+        @session.visit('/with_js')
+        source = @session.find_link('drag_link_html5').find(:css, 'p')
+        target = @session.find(:id, 'drop_html5')
+        source.drag_to target
+        expect(@session).to have_xpath('//div[contains(., "HTML5 Dropped")]')
       end
     end
   end

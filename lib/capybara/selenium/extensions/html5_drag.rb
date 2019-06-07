@@ -7,8 +7,8 @@ class Capybara::Selenium::Node
     def drag_to(element, delay: 0.05)
       driver.execute_script MOUSEDOWN_TRACKER
       scroll_if_needed { browser_action.click_and_hold(native).perform }
-      if driver.evaluate_script('window.capybara_mousedown_prevented || !arguments[0].draggable', self)
-        perform_regular_drag(element)
+      if driver.evaluate_script(LEGACY_DRAG_CHECK, self)
+        perform_legacy_drag(element)
       else
         perform_html5_drag(element, delay)
       end
@@ -16,7 +16,7 @@ class Capybara::Selenium::Node
 
   private
 
-    def perform_regular_drag(element)
+    def perform_legacy_drag(element)
       element.scroll_if_needed { browser_action.move_to(element.native).release.perform }
     end
 
@@ -92,6 +92,16 @@ class Capybara::Selenium::Node
       document.addEventListener('mousedown', ev => {
         window.capybara_mousedown_prevented = ev.defaultPrevented;
       }, { once: true, passive: true })
+    JS
+
+    LEGACY_DRAG_CHECK = <<~JS
+      (function(el){
+        if (window.capybara_mousedown_prevented) return true;
+        do {
+          if (el.draggable) return false;
+        } while (el = el.parentElement );
+        return true;
+      })(arguments[0])
     JS
 
     HTML5_DRAG_DROP_SCRIPT = <<~JS
@@ -173,6 +183,10 @@ class Capybara::Selenium::Node
 
       var dt = new DataTransfer();
       var opts = { cancelable: true, bubbles: true, dataTransfer: dt };
+
+      while (source && !source.draggable) {
+        source = source.parentElement;
+      }
 
       if (source.tagName == 'A'){
         dt.setData('text/uri-list', source.href);

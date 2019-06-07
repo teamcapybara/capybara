@@ -57,7 +57,7 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
 
 private
 
-  def perform_regular_drag(element)
+  def perform_legacy_drag(element)
     return super unless (browser_version < 77.0) && w3c? && !element.obscured?
 
     # W3C Chrome/chromedriver < 77 doesn't maintain mouse button state across actions API performs
