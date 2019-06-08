@@ -461,6 +461,16 @@ Capybara::SpecHelper.spec 'node' do
         link.drag_to target
         expect(@session).to have_xpath('//div[contains(., "HTML5 Dropped")]')
       end
+
+      it 'should work with SortableJS' do
+        @session.visit('/with_sortable_js')
+        @session.within(:css, '#sortable') do
+          src = @session.find('div', text: 'Item 1')
+          target = @session.find('div', text: 'Item 3')
+          src.drag_to target
+          expect(@session).to have_content(/Item 3.*Item 1/, normalize_ws: true)
+        end
+      end
     end
   end
 

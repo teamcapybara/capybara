@@ -30,12 +30,6 @@ class Capybara::Selenium::EdgeNode < Capybara::Selenium::Node
     raise
   end
 
-  def drag_to(element)
-    return super unless chrome_edge? && html5_draggable?
-
-    html5_drag_to(element)
-  end
-
   def drop(*args)
     return super unless chrome_edge?
 

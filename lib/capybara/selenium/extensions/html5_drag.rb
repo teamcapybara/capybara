@@ -2,25 +2,20 @@
 
 class Capybara::Selenium::Node
   module Html5Drag
-  # Implement methods to emulate HTML5 drag and drop
+    # Implement methods to emulate HTML5 drag and drop
 
-  private
-
-    def html5_drag_to(element)
+    def drag_to(element)
       driver.execute_script MOUSEDOWN_TRACKER
       scroll_if_needed { browser_action.click_and_hold(native).perform }
-      if driver.evaluate_script('window.capybara_mousedown_prevented')
+      if driver.evaluate_script('window.capybara_mousedown_prevented || !arguments[0].draggable', self)
         element.scroll_if_needed { browser_action.move_to(element.native).release.perform }
       else
-        driver.execute_script HTML5_DRAG_DROP_SCRIPT, self, element
+        driver.evaluate_async_script HTML5_DRAG_DROP_SCRIPT, self, element
         browser_action.release.perform
       end
     end
 
-    def html5_draggable?
-      # Workaround https://github.com/SeleniumHQ/selenium/issues/6396
-      native.property('draggable')
-    end
+  private
 
     def html5_drop(*args)
       if args[0].is_a? String
@@ -92,9 +87,6 @@ class Capybara::Selenium::Node
     JS
 
     HTML5_DRAG_DROP_SCRIPT = <<~JS
-      var source = arguments[0];
-      var target = arguments[1];
-
       function rectCenter(rect){
         return new DOMPoint(
           (rect.left + rect.right)/2,
@@ -133,6 +125,43 @@ class Capybara::Selenium::Node
         return new DOMPoint(pt.x,pt.y);
       }
 
+      function dragEnterTarget() {
+        target.scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
+        var targetRect = target.getBoundingClientRect();
+        var sourceCenter = rectCenter(source.getBoundingClientRect());
+
+        // fire 2 dragover events to simulate dragging with a direction
+        var entryPoint = pointOnRect(sourceCenter, targetRect)
+        var dragOverOpts = Object.assign({clientX: entryPoint.x, clientY: entryPoint.y}, opts);
+        var dragOverEvent = new DragEvent('dragover', dragOverOpts);
+        target.dispatchEvent(dragOverEvent);
+        window.setTimeout(dragOnTarget, 50);
+      }
+
+      function dragOnTarget() {
+        var targetCenter = rectCenter(target.getBoundingClientRect());
+        var dragOverOpts = Object.assign({clientX: targetCenter.x, clientY: targetCenter.y}, opts);
+        var dragOverEvent = new DragEvent('dragover', dragOverOpts);
+        target.dispatchEvent(dragOverEvent);
+        window.setTimeout(dragLeave, 50, dragOverEvent.defaultPrevented);
+      }
+
+      function dragLeave(drop) {
+        var dragLeaveEvent = new DragEvent('dragleave', opts);
+        target.dispatchEvent(dragLeaveEvent);
+        if (drop) {
+          var dropEvent = new DragEvent('drop', opts);
+          target.dispatchEvent(dropEvent);
+        }
+        var dragEndEvent = new DragEvent('dragend', opts);
+        source.dispatchEvent(dragEndEvent);
+        callback.call(true);
+      }
+
+      var source = arguments[0];
+      var target = arguments[1];
+      var callback = arguments[2];
+
       var dt = new DataTransfer();
       var opts = { cancelable: true, bubbles: true, dataTransfer: dt };
 
@@ -147,29 +176,8 @@ class Capybara::Selenium::Node
 
       var dragEvent = new DragEvent('dragstart', opts);
       source.dispatchEvent(dragEvent);
-      target.scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
-      var targetRect = target.getBoundingClientRect();
-      var sourceCenter = rectCenter(source.getBoundingClientRect());
 
-      // fire 2 dragover events to simulate dragging with a direction
-      var entryPoint = pointOnRect(sourceCenter, targetRect)
-      var dragOverOpts = Object.assign({clientX: entryPoint.x, clientY: entryPoint.y}, opts);
-      var dragOverEvent = new DragEvent('dragover', dragOverOpts);
-      target.dispatchEvent(dragOverEvent);
-
-      var targetCenter = rectCenter(targetRect);
-      dragOverOpts = Object.assign({clientX: targetCenter.x, clientY: targetCenter.y}, opts);
-      dragOverEvent = new DragEvent('dragover', dragOverOpts);
-      target.dispatchEvent(dragOverEvent);
-
-      var dragLeaveEvent = new DragEvent('dragleave', opts);
-      target.dispatchEvent(dragLeaveEvent);
-      if (dragOverEvent.defaultPrevented) {
-        var dropEvent = new DragEvent('drop', opts);
-        target.dispatchEvent(dropEvent);
-      }
-      var dragEndEvent = new DragEvent('dragend', opts);
-      source.dispatchEvent(dragEndEvent);
+      window.setTimeout(dragEnterTarget, 50);
     JS
   end
 end

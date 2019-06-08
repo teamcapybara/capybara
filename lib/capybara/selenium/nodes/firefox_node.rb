@@ -46,12 +46,6 @@ class Capybara::Selenium::FirefoxNode < Capybara::Selenium::Node
     _send_keys(args).perform
   end
 
-  def drag_to(element)
-    return super unless (browser_version >= 62.0) && html5_draggable?
-
-    html5_drag_to(element)
-  end
-
   def drop(*args)
     html5_drop(*args)
   end
