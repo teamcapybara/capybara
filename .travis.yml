@@ -124,13 +124,6 @@ matrix:
     - env: W3C=true HEADLESS=true
 before_install:
   - gem update --system
-  - if [[ $BUNDLE_GEMFILE =~ Gemfile.edge-firefox$ ]]; then
-      pushd ..;
-      git clone --depth 1 https://github.com/SeleniumHQ/selenium.git;
-      cd selenium; ./go //rb:gem:build;
-      popd;
-      bundle config local.selenium-webdriver ../selenium/build/rb;
-    fi
 before_script:
   - if [[ -z $HEADLESS && -z $CAPYBARA_REMOTE ]]; then
       export DISPLAY=:99.0;
