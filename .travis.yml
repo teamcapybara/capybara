@@ -56,6 +56,11 @@ matrix:
     - gemfile: Gemfile
       rvm: 2.6
       env: HEADLESS=true
+    - gemfile: Gemfile
+      rvm: 2.6
+      env:
+        - HEADLESS=true
+        - W3C=false
     - gemfile: gemfiles/Gemfile.beta-versions
       rvm: 2.6
       env: CAPYBARA_FF=true
@@ -90,7 +95,7 @@ matrix:
         firefox: latest
     - gemfile: Gemfile
       rvm: 2.5
-      env: W3C=true HEADLESS=true
+      env: CHROME_BETA=true HEADLESS=true
       addons:
         chrome: beta
     - gemfile: Gemfile
@@ -121,7 +126,7 @@ matrix:
     - os: osx
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-firefox
-    - env: W3C=true HEADLESS=true
+    - env: CHROME_BETA=true HEADLESS=true
 before_install:
   - gem update --system
   - if [[ $BUNDLE_GEMFILE =~ Gemfile.edge-firefox$ ]]; then

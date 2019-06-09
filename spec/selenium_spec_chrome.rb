@@ -8,11 +8,11 @@ require 'rspec/shared_spec_matchers'
 
 CHROME_DRIVER = :selenium_chrome
 
-Selenium::WebDriver::Chrome.path = '/usr/bin/google-chrome-beta' if ENV['CI'] && ENV['W3C']
+Selenium::WebDriver::Chrome.path = '/usr/bin/google-chrome-beta' if ENV['CI'] && ENV['CHROME_BETA']
 
 browser_options = ::Selenium::WebDriver::Chrome::Options.new
 browser_options.headless! if ENV['HEADLESS']
-browser_options.add_option(:w3c, !!ENV['W3C'])
+browser_options.add_option(:w3c, ENV['W3C'] != 'false')
 
 Capybara.register_driver :selenium_chrome do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options, timeout: 30).tap do |driver|
@@ -123,7 +123,7 @@ RSpec.describe 'Capybara::Session with chrome' do
   end
 
   describe 'log access' do
-    before { skip 'Only makes sense in W3C mode' unless ENV['W3C'] }
+    before { skip 'Only makes sense in W3C mode' if ENV['W3C'] == 'false' }
 
     it 'errors when getting log types' do
       expect do
