@@ -1,3 +1,17 @@
+# Version 3.23.0
+Release date: unreleased
+
+### Added
+
+* Improved error message when using Chrome in W3C mode and attempting to access logs
+* Support driver specific options for Element#drag_to
+* Support setting `<input type="color">` elements with the selenium driver
+
+### Fixed
+
+* Tightened conditions when in expression text option matching will be used
+* Improved Selenium drivers HTML5 drag and drop emulation compatibility with SortableJS library (and others)
+
 # Version 3.22.0
 Release date: 2019-05-29
 
