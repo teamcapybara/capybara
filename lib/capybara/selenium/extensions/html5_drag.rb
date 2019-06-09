@@ -4,13 +4,13 @@ class Capybara::Selenium::Node
   module Html5Drag
     # Implement methods to emulate HTML5 drag and drop
 
-    def drag_to(element)
+    def drag_to(element, delay: 0.05)
       driver.execute_script MOUSEDOWN_TRACKER
       scroll_if_needed { browser_action.click_and_hold(native).perform }
       if driver.evaluate_script('window.capybara_mousedown_prevented || !arguments[0].draggable', self)
         element.scroll_if_needed { browser_action.move_to(element.native).release.perform }
       else
-        driver.evaluate_async_script HTML5_DRAG_DROP_SCRIPT, self, element
+        driver.evaluate_async_script HTML5_DRAG_DROP_SCRIPT, self, element, delay * 1000
         browser_action.release.perform
       end
     end
@@ -135,7 +135,7 @@ class Capybara::Selenium::Node
         var dragOverOpts = Object.assign({clientX: entryPoint.x, clientY: entryPoint.y}, opts);
         var dragOverEvent = new DragEvent('dragover', dragOverOpts);
         target.dispatchEvent(dragOverEvent);
-        window.setTimeout(dragOnTarget, 50);
+        window.setTimeout(dragOnTarget, step_delay);
       }
 
       function dragOnTarget() {
@@ -143,7 +143,7 @@ class Capybara::Selenium::Node
         var dragOverOpts = Object.assign({clientX: targetCenter.x, clientY: targetCenter.y}, opts);
         var dragOverEvent = new DragEvent('dragover', dragOverOpts);
         target.dispatchEvent(dragOverEvent);
-        window.setTimeout(dragLeave, 50, dragOverEvent.defaultPrevented);
+        window.setTimeout(dragLeave, step_delay, dragOverEvent.defaultPrevented);
       }
 
       function dragLeave(drop) {
@@ -158,9 +158,10 @@ class Capybara::Selenium::Node
         callback.call(true);
       }
 
-      var source = arguments[0];
-      var target = arguments[1];
-      var callback = arguments[2];
+      var source = arguments[0],
+          target = arguments[1],
+          step_delay = arguments[2],
+          callback = arguments[3];
 
       var dt = new DataTransfer();
       var opts = { cancelable: true, bubbles: true, dataTransfer: dt };
@@ -177,7 +178,7 @@ class Capybara::Selenium::Node
       var dragEvent = new DragEvent('dragstart', opts);
       source.dispatchEvent(dragEvent);
 
-      window.setTimeout(dragEnterTarget, 50);
+      window.setTimeout(dragEnterTarget, step_delay);
     JS
   end
 end

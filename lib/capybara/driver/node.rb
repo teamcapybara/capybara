@@ -65,7 +65,7 @@ module Capybara
         raise NotImplementedError
       end
 
-      def drag_to(element)
+      def drag_to(element, **options)
         raise NotImplementedError
       end
 

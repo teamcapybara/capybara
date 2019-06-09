@@ -396,10 +396,11 @@ module Capybara
       #     source.drag_to(target)
       #
       # @param [Capybara::Node::Element] node     The element to drag to
+      # @param [Hash] options  Driver specific options for dragging. May not be supported by all drivers.
       #
       # @return [Capybara::Node::Element]  The element
-      def drag_to(node)
-        synchronize { base.drag_to(node.base) }
+      def drag_to(node, **options)
+        synchronize { base.drag_to(node.base, **options) }
         self
       end
 
