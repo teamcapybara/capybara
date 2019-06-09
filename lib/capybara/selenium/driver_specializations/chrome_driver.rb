@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
 require 'capybara/selenium/nodes/chrome_node'
+require 'capybara/selenium/patches/logs'
 
 module Capybara::Selenium::Driver::ChromeDriver
+  def self.extended(base)
+    bridge = base.send(:bridge)
+    bridge.extend Capybara::Selenium::ChromeLogs unless bridge.respond_to?(:available_log_types)
+  end
+
   def fullscreen_window(handle)
     within_given_window(handle) do
       begin

@@ -121,4 +121,20 @@ RSpec.describe 'Capybara::Session with chrome' do
       expect(session).to have_current_path('/form')
     end
   end
+
+  describe 'log access' do
+    before { skip 'Only makes sense in W3C mode' unless ENV['W3C'] }
+
+    it 'errors when getting log types' do
+      expect do
+        session.driver.browser.manage.logs.available_types
+      end.to raise_error(NotImplementedError, /Chromedriver 75\+ defaults to W3C mode/)
+    end
+
+    it 'errors when getting logs' do
+      expect do
+        session.driver.browser.manage.logs.get(:browser)
+      end.to raise_error(NotImplementedError, /Chromedriver 75\+ defaults to W3C mode/)
+    end
+  end
 end
