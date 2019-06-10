@@ -224,10 +224,7 @@ private
     elsif clear.is_a? Array
       send_keys(*clear, value)
     else
-      # Clear field by JavaScript assignment of the value property.
-      # Script can change a readonly element which user input cannot, so
-      # don't execute if readonly.
-      driver.execute_script "if (!arguments[0].readOnly){ arguments[0].value = '' }", self unless clear == :none
+      driver.execute_script 'arguments[0].select()', self unless clear == :none
       send_keys(value)
     end
   end
