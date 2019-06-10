@@ -321,6 +321,13 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         session.click_button('Upload Multiple')
         expect(session.body).to include('5 | ') # number of files
       end
+
+      it 'can attach a relative file' do
+        session.visit('/form')
+        session.attach_file('Single Document', 'spec/fixtures/capybara.csv')
+        session.click_button('Upload Single')
+        expect(session.body).to include('Content-type: text/csv')
+      end
     end
 
     context 'Windows' do
