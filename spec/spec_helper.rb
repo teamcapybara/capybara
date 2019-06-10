@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rspec/expectations'
-require 'webdrivers' if ENV['CI']
+require 'webdrivers' if ENV['CI'] || ENV['WEBDRIVERS']
 require 'selenium_statistics'
 if ENV['TRAVIS']
   require 'coveralls'
