@@ -16,7 +16,9 @@ class Capybara::Selenium::SafariNode < Capybara::Selenium::Node
       return find_css('th:first-child,td:first-child')[0].click(keys, options)
     end
     raise
-  rescue ::Selenium::WebDriver::Error::WebDriverError
+  rescue ::Selenium::WebDriver::Error::WebDriverError => e
+    raise unless e.instance_of? ::Selenium::WebDriver::Error::WebDriverError
+
     # Safari doesn't return a specific error here - assume it's an ElementNotInteractableError
     raise ::Selenium::WebDriver::Error::ElementNotInteractableError,
           'Non distinct error raised in #click, translated to ElementNotInteractableError for retry'
