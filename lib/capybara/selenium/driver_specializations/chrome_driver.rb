@@ -54,6 +54,15 @@ module Capybara::Selenium::Driver::ChromeDriver
     execute_cdp('Storage.clearDataForOrigin', origin: '*', storageTypes: storage_types_to_clear)
   end
 
+  def freeze_page
+    bridge.http.call(:post, "session/#{bridge.session_id}/goog/page/freeze", {})
+  end
+
+  def thaw_page
+    bridge.http.call(:post, "session/#{bridge.session_id}/goog/page/resume", {})
+    evaluate_script('1==1') # Ensure page has restarted
+  end
+
 private
 
   def storage_types_to_clear

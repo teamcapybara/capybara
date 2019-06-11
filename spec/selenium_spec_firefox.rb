@@ -42,7 +42,7 @@ module TestSessions
   SeleniumFirefox = Capybara::Session.new(:selenium_firefox, TestApp)
 end
 
-skipped_tests = %i[response_headers status_code trigger]
+skipped_tests = %i[response_headers status_code trigger freeze]
 
 Capybara::SpecHelper.log_selenium_driver_version(Selenium::WebDriver::Firefox) if ENV['CI']
 

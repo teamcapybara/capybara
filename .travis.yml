@@ -117,7 +117,7 @@ matrix:
       addons:
         homebrew:
           taps: homebrew/cask-versions
-          casks: microsoft-edge-canary
+          casks: microsoft-edge-dev
       before_install:
         - wget https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/76.0.168.0/edgedriver_mac64.zip
         - unzip edgedriver_mac64.zip -d /usr/local/bin

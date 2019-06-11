@@ -56,7 +56,7 @@ TestSessions::RemoteFirefox.driver.browser.file_detector = lambda do |args|
   str if File.exist?(str)
 end
 
-skipped_tests = %i[response_headers status_code trigger download]
+skipped_tests = %i[response_headers status_code trigger download freeze]
 
 Capybara::SpecHelper.run_specs TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVER.to_s, capybara_skip: skipped_tests do |example|
   case example.metadata[:full_description]
