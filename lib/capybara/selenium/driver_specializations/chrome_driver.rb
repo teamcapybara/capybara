@@ -6,7 +6,7 @@ require 'capybara/selenium/patches/logs'
 module Capybara::Selenium::Driver::ChromeDriver
   def self.extended(base)
     bridge = base.send(:bridge)
-    bridge.extend Capybara::Selenium::ChromeLogs unless bridge.respond_to?(:available_log_types)
+    bridge.extend Capybara::Selenium::ChromeLogs unless bridge.respond_to?(:log)
   end
 
   def fullscreen_window(handle)

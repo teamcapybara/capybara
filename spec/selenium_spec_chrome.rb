@@ -131,10 +131,10 @@ RSpec.describe 'Capybara::Session with chrome' do
       end.to raise_error(NotImplementedError, /Chromedriver 75\+ defaults to W3C mode/)
     end
 
-    it 'errors when getting logs' do
+    it 'does not error when getting logs' do
       expect do
         session.driver.browser.manage.logs.get(:browser)
-      end.to raise_error(NotImplementedError, /Chromedriver 75\+ defaults to W3C mode/)
+      end.not_to raise_error
     end
   end
 end

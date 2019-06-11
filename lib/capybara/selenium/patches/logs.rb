@@ -4,16 +4,36 @@ module Capybara
   module Selenium
     module ChromeLogs
       LOG_MSG = <<~MSG
-        Chromedriver 75+ defaults to W3C mode. The W3C webdriver spec does not define methods for accessing \
-        logs or log types. If you need to access the logs, in the short term, you can configure you driver to not use the W3C mode. \
-        It is unknown how long non-W3C mode will be supported by chromedriver (it won't be supported by selenium-webdriver 4+) \
-        so you may need to consider other solutions in the near future.
+        Chromedriver 75+ defaults to W3C mode. The W3C webdriver spec does not define a method for accessing log types. \
+        If you need to access the available log types, in the short term, you can configure you driver to not use the W3C mode. \
+        This functionality will be returning in Chromedriver 76 or 77 in a W3C compatible way.
       MSG
 
       def method_missing(meth, *) # rubocop:disable Style/MissingRespondToMissing
-        raise NotImplementedError, LOG_MSG if %i[available_log_types log].include? meth
+        raise NotImplementedError, LOG_MSG if meth == :available_log_types
 
         super
+      end
+
+      COMMANDS = {
+        # get_available_log_types: [:get, 'session/:session_id/log/types'],
+        get_log: [:post, 'session/:session_id/log']
+      }.freeze
+
+      def commands(command)
+        COMMANDS[command] || super
+      end
+
+      def log(type)
+        data = execute :get_log, {}, type: type.to_s
+
+        Array(data).map do |l|
+          begin
+            ::Selenium::WebDriver::LogEntry.new l.fetch('level', 'UNKNOWN'), l.fetch('timestamp'), l.fetch('message')
+          rescue KeyError
+            next
+          end
+        end
       end
     end
   end

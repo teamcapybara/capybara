@@ -80,4 +80,20 @@ RSpec.describe 'Capybara::Session with remote Chrome' do
   it 'is considered to be chrome' do
     expect(session.driver.browser.browser).to eq :chrome
   end
+
+  describe 'log access' do
+    before { skip 'Only makes sense in W3C mode' if ENV['W3C'] == 'false' }
+
+    it 'errors when getting log types' do
+      expect do
+        session.driver.browser.manage.logs.available_types
+      end.to raise_error(NotImplementedError, /Chromedriver 75\+ defaults to W3C mode/)
+    end
+
+    it 'does not error when getting logs' do
+      expect do
+        session.driver.browser.manage.logs.get(:browser)
+      end.not_to raise_error
+    end
+  end
 end
