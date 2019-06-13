@@ -4,28 +4,33 @@ module Capybara
   module Selenium
     module ChromeLogs
       LOG_MSG = <<~MSG
-        Chromedriver 75+ defaults to W3C mode. The W3C webdriver spec does not define a method for accessing log types. \
-        If you need to access the available log types, in the short term, you can configure you driver to not use the W3C mode. \
-        This functionality will be returning in Chromedriver 76 or 77 in a W3C compatible way.
+        Chromedriver 75+ defaults to W3C mode. Please upgrade to chromedriver >= \
+        75.0.3770.90 if you need to access logs while in W3C compliant mode.
       MSG
 
-      def method_missing(meth, *) # rubocop:disable Style/MissingRespondToMissing
-        raise NotImplementedError, LOG_MSG if meth == :available_log_types
-
-        super
-      end
-
       COMMANDS = {
-        # get_available_log_types: [:get, 'session/:session_id/log/types'],
-        get_log: [:post, 'session/:session_id/log']
+        get_available_log_types: [:get, 'session/:session_id/se/log/types'],
+        get_log: [:post, 'session/:session_id/se/log'],
+        get_log_legacy: [:post, 'session/:session_id/log']
       }.freeze
 
       def commands(command)
         COMMANDS[command] || super
       end
 
+      def available_log_types
+        types = execute :get_available_log_types
+        Array(types).map(&:to_sym)
+      rescue ::Selenium::WebDriver::Error::UnknownCommandError
+        raise NotImplementedError, LOG_MSG
+      end
+
       def log(type)
-        data = execute :get_log, {}, type: type.to_s
+        data = begin
+                 execute :get_log, {}, type: type.to_s
+               rescue ::Selenium::WebDriver::Error::UnknownCommandError
+                 execute :get_log_legacy, {}, type: type.to_s
+               end
 
         Array(data).map do |l|
           begin
@@ -34,6 +39,8 @@ module Capybara
             next
           end
         end
+      rescue ::Selenium::WebDriver::Error::UnknownCommandError
+        raise NotImplementedError, LOG_MSG
       end
     end
   end
