@@ -1,3 +1,19 @@
+# Version 3.24.0
+Release date: unreleased
+
+
+### Changed
+
+* Selenium driver now selects all current content and then sends keys rather than clearing field by JS
+  and then sending keys when setting values to text inputs in order to more closely simulate user behavior
+
+### Fixed
+
+* Relative paths passed to `attach_file` will be assumed to be relative to the current working directory when using the
+  Selenium driver
+* Log access (`driver.browser.manage.logs.get(...)`) when using chromedriver 75 in W3C mode has been reenabled. Log type
+  will not be reenabled until chomedriver 76 or 77.
+
 # Version 3.23.0
 Release date: 2019-06-10
 
