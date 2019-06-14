@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'capybara/node/pluginify'
+
 module Capybara
   module Node
     module Actions
@@ -300,6 +302,8 @@ module Capybara
           (file_field || find(:file_field, locator, options)).set(paths)
         end
       end
+
+      prepend ::Capybara::Node::Pluginify
 
     private
 
