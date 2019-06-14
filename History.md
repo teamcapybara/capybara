@@ -1,6 +1,9 @@
 # Version 3.24.0
-Release date: unreleased
+Release date: 2079-06-13
 
+### Added
+
+* Log access when using the Selenium driver with Chrome 75 in W3C mode has been reenabled.
 
 ### Changed
 
@@ -11,8 +14,6 @@ Release date: unreleased
 
 * Relative paths passed to `attach_file` will be assumed to be relative to the current working directory when using the
   Selenium driver
-* Log access (`driver.browser.manage.logs.get(...)`) when using chromedriver 75 in W3C mode has been reenabled. Log type
-  will not be reenabled until chomedriver 76 or 77.
 
 # Version 3.23.0
 Release date: 2019-06-10
