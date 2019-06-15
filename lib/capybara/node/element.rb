@@ -157,13 +157,16 @@ module Capybara
       #   Both x: and y: must be specified if an offset is wanted, if not specified the click will occur at the middle of the element.
       #   @overload $0(*modifier_keys, wait: nil, **offset)
       #     @param *modifier_keys [:alt, :control, :meta, :shift] ([]) Keys to be held down when clicking
-      #     @option offset [Integer] x  X coordinate to offset the click location from the top left corner of the element
-      #     @option offset [Integer] y  Y coordinate to offset the click location from the top left corner of the element
+      #     @option options [Integer] x  X coordinate to offset the click location. If {Capybara.configure w3c_click_offset} is `true` the
+      #       offset will be from the element center, otherwise it will be from the top left corner of the element
+      #     @option options [Integer] y  Y coordinate to offset the click location. If {Capybara.configure w3c_click_offset} is `true` the
+      #       offset will be from the element center, otherwise it will be from the top left corner of the element
       # @return [Capybara::Node::Element]  The element
-      def click(*keys, wait: nil, **offset)
-        raise ArgumentError, 'You must specify both x: and y: for a click offset' if nil ^ offset[:x] ^ offset[:y]
+      def click(*keys, wait: nil, **options)
+        raise ArgumentError, 'You must specify both x: and y: for a click offset' if nil ^ options[:x] ^ options[:y]
 
-        synchronize(wait) { base.click(Array(keys), offset) }
+        options[:offset] = :center if session_options.w3c_click_offset
+        synchronize(wait) { base.click(Array(keys), options) }
         self
       end
 

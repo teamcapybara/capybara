@@ -36,6 +36,7 @@ module Capybara
         Capybara.predicates_wait = true
         Capybara.default_normalize_ws = false
         Capybara.allow_gumbo = true
+        Capybara.w3c_click_offset = false
         reset_threadsafe
       end
 

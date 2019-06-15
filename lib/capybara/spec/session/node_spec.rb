@@ -636,25 +636,52 @@ Capybara::SpecHelper.spec 'node' do
       expect { obscured.click(wait: 0) }.to(raise_error { |e| expect(e).to be_an_invalid_element_error(@session) })
     end
 
-    context "offset" do
+    context 'offset', requires: [:js] do
       before do
         @session.visit('/offset')
         @clicker = @session.find(:id, 'clicker')
       end
 
-      it 'should offset from top left of element' do
-        @clicker.click(x: 10, y: 5)
-        expect(@session).to have_text(/clicked at 110,105/)
+      context 'when w3c_click_offset is false' do
+        before do
+          Capybara.w3c_click_offset = false
+        end
+
+        it 'should offset from top left of element' do
+          @clicker.click(x: 10, y: 5)
+          expect(@session).to have_text(/clicked at 110,105/)
+        end
+
+        it 'should offset outside the element' do
+          @clicker.click(x: -15, y: -10)
+          expect(@session).to have_text(/clicked at 85,90/)
+        end
+
+        it 'should default to click the middle' do
+          @clicker.click
+          expect(@session).to have_text(/clicked at 150,150/)
+        end
       end
 
-      it 'should offset outside the element' do
-        @clicker.click(x: -15, y: -10)
-        expect(@session).to have_text(/clicked at 85,90/)
-      end
+      context 'when w3c_click_offset is true' do
+        before do
+          Capybara.w3c_click_offset = true
+        end
 
-      it 'should default to click the middle' do
-        @clicker.click
-        expect(@session).to have_text(/clicked at 150,150/)
+        it 'should offset from center of element' do
+          @clicker.click(x: 10, y: 5)
+          expect(@session).to have_text(/clicked at 160,155/)
+        end
+
+        it 'should offset outside from center of element' do
+          @clicker.click(x: -65, y: -60)
+          expect(@session).to have_text(/clicked at 85,90/)
+        end
+
+        it 'should default to click the middle' do
+          @clicker.click
+          expect(@session).to have_text(/clicked at 150,150/)
+        end
       end
     end
   end
@@ -692,7 +719,7 @@ Capybara::SpecHelper.spec 'node' do
       expect { obscured.double_click }.not_to raise_error
     end
 
-    context "offset" do
+    context 'offset', requires: [:js] do
       before do
         @session.visit('/offset')
         @clicker = @session.find(:id, 'clicker')
@@ -748,7 +775,7 @@ Capybara::SpecHelper.spec 'node' do
       expect { obscured.right_click }.not_to raise_error
     end
 
-    context "offset" do
+    context 'offset', requires: [:js] do
       before do
         @session.visit('/offset')
         @clicker = @session.find(:id, 'clicker')

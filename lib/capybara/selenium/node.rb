@@ -328,7 +328,13 @@ private
   end
 
   def action_with_modifiers(click_options)
-    actions = browser_action.move_to(native, *click_options.coords)
+    actions = browser_action.tap do |acts|
+      if click_options.center_offset? && click_options.coords?
+        acts.move_to(native).move_by(*click_options.coords)
+      else
+        acts.move_to(native, *click_options.coords)
+      end
+    end
     modifiers_down(actions, click_options.keys)
     yield actions
     modifiers_up(actions, click_options.keys)
@@ -481,6 +487,10 @@ private
 
     def coords
       [options[:x], options[:y]]
+    end
+
+    def center_offset?
+      options[:offset] == :center
     end
 
     def empty?
