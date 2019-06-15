@@ -635,6 +635,28 @@ Capybara::SpecHelper.spec 'node' do
       JS
       expect { obscured.click(wait: 0) }.to(raise_error { |e| expect(e).to be_an_invalid_element_error(@session) })
     end
+
+    context "offset" do
+      before do
+        @session.visit('/offset')
+        @clicker = @session.find(:id, 'clicker')
+      end
+
+      it 'should offset from top left of element' do
+        @clicker.click(x: 10, y: 5)
+        expect(@session).to have_text(/clicked at 110,105/)
+      end
+
+      it 'should offset outside the element' do
+        @clicker.click(x: -15, y: -10)
+        expect(@session).to have_text(/clicked at 85,90/)
+      end
+
+      it 'should default to click the middle' do
+        @clicker.click
+        expect(@session).to have_text(/clicked at 150,150/)
+      end
+    end
   end
 
   describe '#double_click', requires: [:js] do
@@ -669,6 +691,28 @@ Capybara::SpecHelper.spec 'node' do
       JS
       expect { obscured.double_click }.not_to raise_error
     end
+
+    context "offset" do
+      before do
+        @session.visit('/offset')
+        @clicker = @session.find(:id, 'clicker')
+      end
+
+      it 'should offset from top left of element' do
+        @clicker.click(x: 10, y: 5)
+        expect(@session).to have_text(/clicked at 110,105/)
+      end
+
+      it 'should offset outside the element' do
+        @clicker.click(x: -15, y: -10)
+        expect(@session).to have_text(/clicked at 85,90/)
+      end
+
+      it 'should default to click the middle' do
+        @clicker.click
+        expect(@session).to have_text(/clicked at 150,150/)
+      end
+    end
   end
 
   describe '#right_click', requires: [:js] do
@@ -702,6 +746,28 @@ Capybara::SpecHelper.spec 'node' do
         setTimeout(function(){ $('#cover').hide(); }, 700)
       JS
       expect { obscured.right_click }.not_to raise_error
+    end
+
+    context "offset" do
+      before do
+        @session.visit('/offset')
+        @clicker = @session.find(:id, 'clicker')
+      end
+
+      it 'should offset from top left of element' do
+        @clicker.click(x: 10, y: 5)
+        expect(@session).to have_text(/clicked at 110,105/)
+      end
+
+      it 'should offset outside the element' do
+        @clicker.click(x: -15, y: -10)
+        expect(@session).to have_text(/clicked at 85,90/)
+      end
+
+      it 'should default to click the middle' do
+        @clicker.click
+        expect(@session).to have_text(/clicked at 150,150/)
+      end
     end
   end
 
