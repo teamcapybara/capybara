@@ -6,8 +6,12 @@ require 'shared_selenium_session'
 require 'shared_selenium_node'
 require 'rspec/shared_spec_matchers'
 
-Selenium::WebDriver::Edge::Service.driver_path = '/usr/local/bin/msedgedriver'
-Selenium::WebDriver::EdgeChrome.path = '/Applications/Microsoft Edge Canary.app/Contents/MacOS/Microsoft Edge Canary'
+unless ENV['CI']
+  Selenium::WebDriver::Edge::Service.driver_path = '/usr/local/bin/msedgedriver'
+  Selenium::WebDriver::EdgeChrome.path = '/Applications/Microsoft Edge Canary.app/Contents/MacOS/Microsoft Edge Canary'
+end
+
+Webdrivers::Edgedriver.required_version = '76.0.168' if ENV['CI']
 
 Capybara.register_driver :selenium_edge do |app|
   # ::Selenium::WebDriver.logger.level = "debug"
