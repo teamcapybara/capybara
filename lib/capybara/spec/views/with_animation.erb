@@ -6,6 +6,17 @@
     <script src="/jquery.js" type="text/javascript" charset="utf-8"></script>
     <script src="/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
     <script src="/test.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+      $(document).on('transitionend', function(){
+        $(document.body).append('<div>Transition Ended</div>')
+      });
+      $(document).on('animationend', function(){
+        $(document.body).append('<div>Animation Ended</div>')
+      });
+      $(document).on('contextmenu', function(e){
+        e.preventDefault();
+      });
+    </script>
     <style>
       .transition.away {
           width: 0%;
@@ -15,6 +26,13 @@
           display: inline-block;
           width: 100%;
           overflow: hidden;
+      }
+
+      a::after {
+        content: "";
+        width: 0px;
+        height: 0px;
+        background-color: blue;
       }
 
       a:not(.away) {
@@ -35,12 +53,22 @@
         animation-duration: 3s;
         animation-fill-mode: forwards;
       }
+
+      @keyframes pseudo_grow {
+        100% { height: 100px, width: 100px };
+      }
+
+      a.animation.pseudo::after {
+        animation: pseudo_grow 3s forwards;
+      }
     </style>
   </head>
 
   <body id="with_animation">
     <a href='#' class='transition' onclick='this.classList.add("away")'>transition me away</a>
-    <a href='#' class='animation' onclick='this.classList.add("away")'>animate me away</a>
+    <a href='#' class='animation' onclick='this.classList.add("away")' oncontextmenu='this.classList.add("pseudo")'>
+      animate me away
+    </a>
   </body>
 </html>
 
