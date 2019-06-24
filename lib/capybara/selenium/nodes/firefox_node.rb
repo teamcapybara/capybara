@@ -114,27 +114,4 @@ private
   def browser_version
     driver.browser.capabilities[:browser_version].to_f
   end
-
-  class ModifierKeysStack
-    def initialize
-      @stack = []
-    end
-
-    def include?(key)
-      @stack.flatten.include?(key)
-    end
-
-    def press(key)
-      @stack.last.push(key)
-    end
-
-    def push
-      @stack.push []
-    end
-
-    def pop
-      @stack.pop
-    end
-  end
-  private_constant :ModifierKeysStack
 end

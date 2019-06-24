@@ -300,13 +300,10 @@ private
   end
 
   def unhandled_alert_errors
-    @unhandled_alert_errors ||= [Selenium::WebDriver::Error::UnexpectedAlertOpenError].tap do |errors|
-      unless selenium_4?
-        ::Selenium::WebDriver.logger.suppress_deprecations do
-          errors << Selenium::WebDriver::Error::UnhandledAlertError
-        end
-      end
-    end
+    @unhandled_alert_errors ||= with_legacy_error(
+      [Selenium::WebDriver::Error::UnexpectedAlertOpenError],
+      'UnhandledAlertError'
+    )
   end
 
   def delete_all_cookies
@@ -387,10 +384,14 @@ private
   end
 
   def find_modal_errors
-    @find_modal_errors ||= [Selenium::WebDriver::Error::TimeoutError].tap do |errors|
+    @find_modal_errors ||= with_legacy_error([Selenium::WebDriver::Error::TimeoutError], 'TimeOutError')
+  end
+
+  def with_legacy_error(errors, legacy_error)
+    errors.tap do |errs|
       unless selenium_4?
         ::Selenium::WebDriver.logger.suppress_deprecations do
-          errors << Selenium::WebDriver::Error::TimeOutError
+          errs << Selenium::WebDriver::Error.const_get(legacy_error)
         end
       end
     end

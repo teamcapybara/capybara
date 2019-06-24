@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # require 'capybara/selenium/extensions/html5_drag'
+require 'capybara/selenium/extensions/modifier_keys_stack'
 
 class Capybara::Selenium::SafariNode < Capybara::Selenium::Node
   # include Html5Drag
@@ -118,27 +119,4 @@ private
                      shift left_shift right_shift
                      meta left_meta right_meta
                      command].freeze
-
-  class ModifierKeysStack
-    def initialize
-      @stack = []
-    end
-
-    def include?(key)
-      @stack.flatten.include?(key)
-    end
-
-    def press(key)
-      @stack.last.push(key)
-    end
-
-    def push
-      @stack.push []
-    end
-
-    def pop
-      @stack.pop
-    end
-  end
-  private_constant :ModifierKeysStack
 end

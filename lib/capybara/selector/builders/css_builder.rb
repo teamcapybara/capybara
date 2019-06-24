@@ -17,11 +17,7 @@ module Capybara
           conditions = if name == :class
             class_conditions(value)
           elsif value.is_a? Regexp
-            Selector::RegexpDisassembler.new(value).alternated_substrings.map do |strs|
-              strs.map do |str|
-                "[#{name}*='#{str}'#{' i' if value.casefold?}]"
-              end.join
-            end
+            regexp_conditions(name, value)
           else
             [attribute_conditions(name => value)]
           end
@@ -35,6 +31,14 @@ module Capybara
       end
 
     private
+
+      def regexp_conditions(name, value)
+        Selector::RegexpDisassembler.new(value).alternated_substrings.map do |strs|
+          strs.map do |str|
+            "[#{name}*='#{str}'#{' i' if value.casefold?}]"
+          end.join
+        end
+      end
 
       def attribute_conditions(attributes)
         attributes.map do |attribute, value|
@@ -70,7 +74,7 @@ module Capybara
             end.join
           end
         else
-          cls = Array(classes).group_by { |cl| cl.start_with?('!') && !cl.start_with?('!!!') }
+          cls = Array(classes).group_by { |cl| cl.match?(/^!(?!!!)/) }
           [(cls[false].to_a.map { |cl| ".#{Capybara::Selector::CSS.escape(cl.sub(/^!!/, ''))}" } +
           cls[true].to_a.map { |cl| ":not(.#{Capybara::Selector::CSS.escape(cl.slice(1..-1))})" }).join]
         end

@@ -18,25 +18,26 @@ module Capybara
         hints = []
 
         if (els.size > 2) && !ENV['DISABLE_CAPYBARA_SELENIUM_OPTIMIZATIONS']
-          begin
-            els = filter_by_text(els, texts) unless texts.empty?
-            hints_js, functions = build_hints_js(uses_visibility, styles)
-
-            unless functions.empty?
-              hints = es_context.execute_script(hints_js, els).map! do |results|
-                hint = {}
-                hint[:style] = results.pop if functions.include?(:style_func)
-                hint[:visible] = results.pop if functions.include?(:vis_func)
-                hint
-              end
-            end
-          rescue ::Selenium::WebDriver::Error::StaleElementReferenceError,
-                 ::Capybara::NotSupportedByDriverError
-            # warn 'Unexpected Stale Element Error - skipping optimization'
-            hints = []
-          end
+          els = filter_by_text(els, texts) unless texts.empty?
+          hints = gather_hints(els, uses_visibility: uses_visibility, styles: styles)
         end
         els.map.with_index { |el, idx| build_node(el, hints[idx] || {}) }
+      end
+
+      def gather_hints(elements, uses_visibility:, styles:)
+        hints_js, functions = build_hints_js(uses_visibility, styles)
+        return [] unless functions.any?
+
+        es_context.execute_script(hints_js, elements).map! do |results|
+          hint = {}
+          hint[:style] = results.pop if functions.include?(:style_func)
+          hint[:visible] = results.pop if functions.include?(:vis_func)
+          hint
+        end
+      rescue ::Selenium::WebDriver::Error::StaleElementReferenceError,
+             ::Capybara::NotSupportedByDriverError
+        # warn 'Unexpected Stale Element Error - skipping optimization'
+        []
       end
 
       def filter_by_text(elements, texts)

@@ -6,6 +6,9 @@ checks:
   file-lines:
     config:
       threshold: 500
+  method-complexity:
+    config:
+      threshold: 10
 engines:
   bundler-audit:
     enabled: false
@@ -17,6 +20,7 @@ engines:
     - "lib/capybara/selector.rb"
     - "lib/capybara/minitest.rb"
     - "lib/capybara/selector/definition/"
+    - "lib/capybara/rspec/matchers/"
     config:
       languages:
         ruby:

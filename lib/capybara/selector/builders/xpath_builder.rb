@@ -48,7 +48,7 @@ module Capybara
           attribute_conditions(class: classes)
         else
           Array(classes).map do |klass|
-            if klass.start_with?('!') && !klass.start_with?('!!!')
+            if klass.match?(/^!(?!!!)/)
               !XPath.attr(:class).contains_word(klass.slice(1..-1))
             else
               XPath.attr(:class).contains_word(klass.sub(/^!!/, ''))
