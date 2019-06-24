@@ -20,6 +20,7 @@ engines:
     exclude_patterns:
     - "lib/capybara/selector.rb"
     - "lib/capybara/minitest.rb"
+    - "lib/capybara/selector/definiton/"
   eslint:
     enabled: false
   fixme:

@@ -6,9 +6,7 @@ require 'capybara/rspec/matchers/count_sugar'
 module Capybara
   module RSpecMatchers
     module Matchers
-      class HaveSelector < WrappedElementMatcher
-        include CountSugar
-
+      class HaveSelector < CountableWrappedElementMatcher
         def element_matches?(el)
           el.assert_selector(*@args, &@filter_block)
         end

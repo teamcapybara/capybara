@@ -65,6 +65,10 @@ module Capybara
         end
       end
 
+      class CountableWrappedElementMatcher < WrappedElementMatcher
+        include CountSugar
+      end
+
       class NegatedMatcher
         include ::Capybara::RSpecMatchers::Matchers::Compound if defined?(::Capybara::RSpecMatchers::Matchers::Compound)
 
