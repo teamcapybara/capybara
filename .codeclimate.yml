@@ -13,14 +13,14 @@ engines:
     enabled: false
   duplication:
     enabled: true
+    exclude_patterns:
+    - "lib/capybara/selector.rb"
+    - "lib/capybara/minitest.rb"
+    - "lib/capybara/selector/definition/"
     config:
       languages:
         ruby:
           mass_threshold: 25
-    exclude_patterns:
-    - "lib/capybara/selector.rb"
-    - "lib/capybara/minitest.rb"
-    - "lib/capybara/selector/definiton/"
   eslint:
     enabled: false
   fixme:
