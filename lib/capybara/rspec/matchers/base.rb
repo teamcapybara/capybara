@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'capybara/rspec/matchers/compound'
+require 'capybara/rspec/matchers/count_sugar'
 
 module Capybara
   module RSpecMatchers
@@ -66,7 +67,7 @@ module Capybara
       end
 
       class CountableWrappedElementMatcher < WrappedElementMatcher
-        include CountSugar
+        include ::Capybara::RSpecMatchers::CountSugar
       end
 
       class NegatedMatcher

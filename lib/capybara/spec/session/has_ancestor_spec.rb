@@ -39,6 +39,8 @@ Capybara::SpecHelper.spec '#have_no_ancestor' do
   it 'should assert no matching ancestor' do
     el = @session.find(:css, '#ancestor1')
     expect(el).to have_no_ancestor(:css, '#child')
+    expect(el).to have_no_ancestor(:css, '#ancestor1_sibiling')
     expect(el).not_to have_ancestor(:css, '#child')
+    expect(el).not_to have_ancestor(:css, '#ancestor1_sibiling')
   end
 end

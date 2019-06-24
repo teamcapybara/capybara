@@ -743,7 +743,7 @@ module Capybara
       end
 
       def assert_no_ancestor(*args, &optional_filter_block)
-        _verify_selector_result(args, optional_filter_block, Capybara::Queries::SiblingQuery) do |result, query|
+        _verify_selector_result(args, optional_filter_block, Capybara::Queries::AncestorQuery) do |result, query|
           if result.matches_count? && (!result.empty? || query.expects_none?)
             raise Capybara::ExpectationNotMet, result.negative_failure_message
           end
