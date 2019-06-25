@@ -64,10 +64,6 @@ Lint/UnusedMethodArgument:
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
 
-Naming/RescuedExceptionsVariableName:
-  # This cop is currently fully broken
-  Enabled: false
-
 Naming/PredicateName:
   Exclude:
     - '**/*/*matchers.rb'
