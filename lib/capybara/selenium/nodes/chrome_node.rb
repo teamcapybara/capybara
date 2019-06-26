@@ -57,6 +57,15 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
 
 private
 
+  def perform_regular_drag(element)
+    return super unless (browser_version < 77.0) && w3c? && !element.obscured?
+
+    # W3C Chrome/chromedriver < 77 doesn't maintain mouse button state across actions API performs
+    # https://bugs.chromium.org/p/chromedriver/issues/detail?id=2981
+    browser_action.release.perform
+    browser_action.click_and_hold(native).move_to(element.native).release.perform
+  end
+
   def file_errors
     @file_errors = ::Selenium::WebDriver.logger.suppress_deprecations do
       [::Selenium::WebDriver::Error::ExpectedError]

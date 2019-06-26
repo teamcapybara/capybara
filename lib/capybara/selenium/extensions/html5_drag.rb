@@ -8,14 +8,22 @@ class Capybara::Selenium::Node
       driver.execute_script MOUSEDOWN_TRACKER
       scroll_if_needed { browser_action.click_and_hold(native).perform }
       if driver.evaluate_script('window.capybara_mousedown_prevented || !arguments[0].draggable', self)
-        element.scroll_if_needed { browser_action.move_to(element.native).release.perform }
+        perform_regular_drag(element)
       else
-        driver.evaluate_async_script HTML5_DRAG_DROP_SCRIPT, self, element, delay * 1000
-        browser_action.release.perform
+        perform_html5_drag(element, delay)
       end
     end
 
   private
+
+    def perform_regular_drag(element)
+      element.scroll_if_needed { browser_action.move_to(element.native).release.perform }
+    end
+
+    def perform_html5_drag(element, delay)
+      driver.evaluate_async_script HTML5_DRAG_DROP_SCRIPT, self, element, delay * 1000
+      browser_action.release.perform
+    end
 
     def html5_drop(*args)
       if args[0].is_a? String

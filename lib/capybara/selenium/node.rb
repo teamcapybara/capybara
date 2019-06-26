@@ -188,6 +188,21 @@ protected
     yield
   end
 
+  def scroll_to_center
+    script = <<-'JS'
+      try {
+        arguments[0].scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
+      } catch(e) {
+        arguments[0].scrollIntoView(true);
+      }
+    JS
+    begin
+      driver.execute_script(script, self)
+    rescue StandardError # rubocop:disable Lint/HandleExceptions
+      # Swallow error if scrollIntoView with options isn't supported
+    end
+  end
+
 private
 
   def sibling_index(parent, node, selector)
@@ -238,21 +253,6 @@ private
           click_options.coords? ? action.click : action.click(native)
         end
       end
-    end
-  end
-
-  def scroll_to_center
-    script = <<-'JS'
-      try {
-        arguments[0].scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
-      } catch(e) {
-        arguments[0].scrollIntoView(true);
-      }
-    JS
-    begin
-      driver.execute_script(script, self)
-    rescue StandardError # rubocop:disable Lint/HandleExceptions
-      # Swallow error if scrollIntoView with options isn't supported
     end
   end
 

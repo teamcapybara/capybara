@@ -419,6 +419,16 @@ Capybara::SpecHelper.spec 'node' do
       expect(@session).to have_xpath('//div[contains(., "Dropped!")]')
     end
 
+    it 'should work with Dragula' do
+      @session.visit('/with_dragula')
+      @session.within(:css, '#sortable') do
+        src = @session.find('div', text: 'Item 1')
+        target = @session.find('div', text: 'Item 3')
+        src.drag_to target
+        expect(@session).to have_content(/Item 2.*Item 1/, normalize_ws: true)
+      end
+    end
+
     context 'HTML5', requires: %i[js html5_drag] do
       it 'should HTML5 drag and drop an object' do
         @session.visit('/with_js')
