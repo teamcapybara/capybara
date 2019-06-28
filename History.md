@@ -1,3 +1,18 @@
+# Version 3.25.0
+Release date: 2019-06-27
+
+### Added
+
+* Animation disabler also disables before and after pseudoelements - Issue #2221 [Daniel Heath]
+* `w3c_click_offset` configuration option to determine whether click offsets are calculated from element
+  center or top left corner
+
+### Fixed
+
+* Woraround issue with chromedriver 76/77 in W3C mode losing mouse state during legacy drag. Only fixed if
+  both source and target are simultaenously inside the viewport - Issue #2223
+* Negative ancestor expectations/predicates were incorrectly checking siblings rather than ancestors
+
 # Version 3.24.0
 Release date: 2019-06-13
 
