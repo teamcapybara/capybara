@@ -6,6 +6,7 @@ module Capybara
       def once; exactly(1); end
       def twice; exactly(2); end
       def thrice; exactly(3); end
+      def never; exactly(0); end
 
       def exactly(number)
         options[:count] = number

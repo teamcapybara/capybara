@@ -151,6 +151,7 @@ Capybara::SpecHelper.spec '#has_css?' do
       expect(@session).to have_css('p a#foo', count: 1)
       expect(@session).to have_css('p a#foo').once
       expect(@session).to have_css('p a.doesnotexist', count: 0)
+      expect(@session).to have_css('p a.doesnotexist').never
       expect(@session).to have_css('li', class: /guitar|drummer/, count: 4)
       expect(@session).to have_css('li', id: /john|paul/, class: /guitar|drummer/, count: 2)
       expect(@session).to have_css('li', class: %w[beatle guitarist], count: 2)

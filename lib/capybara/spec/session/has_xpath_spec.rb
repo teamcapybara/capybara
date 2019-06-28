@@ -57,6 +57,7 @@ Capybara::SpecHelper.spec '#has_xpath?' do
       expect(@session).to have_xpath("//p//a[@id='foo']", count: 1)
       expect(@session).to have_xpath("//p[contains(.,'est')]", count: 1)
       expect(@session).to have_xpath("//p//a[@id='doesnotexist']", count: 0)
+      expect(@session).to have_xpath("//p//a[@id='doesnotexist']").never
       expect(@session).to have_xpath('//li', class: /guitar|drummer/, count: 4)
       expect(@session).to have_xpath('//li', id: /john|paul/, class: /guitar|drummer/, count: 2)
       expect(@session).to have_xpath('//li', class: %w[beatle guitarist], count: 2)
