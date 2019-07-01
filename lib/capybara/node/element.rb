@@ -162,12 +162,10 @@ module Capybara
       #     @option options [Integer] y  Y coordinate to offset the click location. If {Capybara.configure w3c_click_offset} is `true` the
       #       offset will be from the element center, otherwise it will be from the top left corner of the element
       # @return [Capybara::Node::Element]  The element
-      def click(*keys, wait: nil, **options)
-        raise ArgumentError, 'You must specify both x: and y: for a click offset' if nil ^ options[:x] ^ options[:y]
-
-        options[:offset] = :center if session_options.w3c_click_offset
-        synchronize(wait) { base.click(Array(keys), options) }
-        self
+      def click(*keys, **options)
+        perform_click_action(keys, options) do |k, opts|
+          base.click(k, opts)
+        end
       end
 
       ##
@@ -177,11 +175,10 @@ module Capybara
       # @macro action_waiting_behavior
       # @macro click_modifiers
       # @return [Capybara::Node::Element]  The element
-      def right_click(*keys, wait: nil, **offset)
-        raise ArgumentError, 'You must specify both x: and y: for a click offset' if nil ^ offset[:x] ^ offset[:y]
-
-        synchronize(wait) { base.right_click(keys, offset) }
-        self
+      def right_click(*keys, **options)
+        perform_click_action(keys, options) do |k, opts|
+          base.right_click(k, opts)
+        end
       end
 
       ##
@@ -191,11 +188,10 @@ module Capybara
       # @macro action_waiting_behavior
       # @macro click_modifiers
       # @return [Capybara::Node::Element]  The element
-      def double_click(*keys, wait: nil, **offset)
-        raise ArgumentError, 'You must specify both x: and y: for a click offset' if nil ^ offset[:x] ^ offset[:y]
-
-        synchronize(wait) { base.double_click(keys, offset) }
-        self
+      def double_click(*keys, **options)
+        perform_click_action(keys, options) do |k, opts|
+          base.double_click(k, opts)
+        end
       end
 
       ##
@@ -556,6 +552,16 @@ module Capybara
           return result;
         }).apply(this, arguments)
       JS
+
+    private
+
+      def perform_click_action(keys, wait: nil, **options)
+        raise ArgumentError, 'You must specify both x: and y: for a click offset' if nil ^ options[:x] ^ options[:y]
+
+        options[:offset] ||= :center if session_options.w3c_click_offset
+        synchronize(wait) { yield keys, options }
+        self
+      end
     end
   end
 end
