@@ -12,32 +12,37 @@ require 'capybara/rspec/matchers/become_closed'
 
 module Capybara
   module RSpecMatchers
-    # RSpec matcher for whether the element(s) matching a given selector exist
-    # See {Capybara::Node::Matcher#assert_selector}
+    # RSpec matcher for whether the element(s) matching a given selector exist.
+    #
+    # @see Capybara::Node::Matchers#assert_selector
     def have_selector(*args, &optional_filter_block)
       Matchers::HaveSelector.new(*args, &optional_filter_block)
     end
 
-    # RSpec matcher for whether the element(s) matching a group of selectors exist
-    # See {Capybara::Node::Matcher#assert_all_of_selectors}
+    # RSpec matcher for whether the element(s) matching a group of selectors exist.
+    #
+    # @see Capybara::Node::Matchers#assert_all_of_selectors
     def have_all_of_selectors(*args, &optional_filter_block)
       Matchers::HaveAllSelectors.new(*args, &optional_filter_block)
     end
 
-    # RSpec matcher for whether no element(s) matching a group of selectors exist
-    # See {Capybara::Node::Matcher#assert_none_of_selectors}
+    # RSpec matcher for whether no element(s) matching a group of selectors exist.
+    #
+    # @see Capybara::Node::Matchers#assert_none_of_selectors
     def have_none_of_selectors(*args, &optional_filter_block)
       Matchers::HaveNoSelectors.new(*args, &optional_filter_block)
     end
 
-    # RSpec matcher for whether the element(s) matching any of a group of selectors exist
-    # See {Capybara::Node::Matcher#assert_any_of_selectors}
+    # RSpec matcher for whether the element(s) matching any of a group of selectors exist.
+    #
+    # @see Capybara::Node::Matchers#assert_any_of_selectors
     def have_any_of_selectors(*args, &optional_filter_block)
       Matchers::HaveAnySelectors.new(*args, &optional_filter_block)
     end
 
-    # RSpec matcher for whether the current element matches a given selector
-    # See {Capybara::Node::Matchers#assert_matches_selector}
+    # RSpec matcher for whether the current element matches a given selector.
+    #
+    # @see Capybara::Node::Matchers#assert_matches_selector
     def match_selector(*args, &optional_filter_block)
       Matchers::MatchSelector.new(*args, &optional_filter_block)
     end
@@ -53,20 +58,24 @@ module Capybara
     end
 
     # @!method have_xpath(xpath, **options, &optional_filter_block)
-    #   RSpec matcher for whether elements(s) matching a given xpath selector exist
-    #   See {Capybara::Node::Matchers#has_xpath?}
+    #   RSpec matcher for whether elements(s) matching a given xpath selector exist.
+    #
+    #   @see Capybara::Node::Matchers#has_xpath?
 
     # @!method have_css(css, **options, &optional_filter_block)
     #   RSpec matcher for whether elements(s) matching a given css selector exist
-    #   See {Capybara::Node::Matchers#has_css?}
+    #
+    #   @see Capybara::Node::Matchers#has_css?
 
     # @!method match_xpath(xpath, **options, &optional_filter_block)
-    #   RSpec matcher for whether the current element matches a given xpath selector
-    #   See {Capybara::Node::Matchers#matches_xpath?}
+    #   RSpec matcher for whether the current element matches a given xpath selector.
+    #
+    #   @see Capybara::Node::Matchers#matches_xpath?
 
     # @!method match_css(css, **options, &optional_filter_block)
-    #   RSpec matcher for whether the current element matches a given css selector
-    #   See {Capybara::Node::Matchers#matches_css?}
+    #   RSpec matcher for whether the current element matches a given css selector.
+    #
+    #   @see Capybara::Node::Matchers#matches_css?
 
     %i[link button field select table].each do |selector|
       define_method "have_#{selector}" do |locator = nil, **options, &optional_filter_block|
@@ -75,24 +84,29 @@ module Capybara
     end
 
     # @!method have_link(locator = nil, **options, &optional_filter_block)
-    #   RSpec matcher for links
-    #   See {Capybara::Node::Matchers#has_link?}
+    #   RSpec matcher for links.
+    #
+    #   @see Capybara::Node::Matchers#has_link?
 
     # @!method have_button(locator = nil, **options, &optional_filter_block)
-    #   RSpec matcher for buttons
-    #   See {Capybara::Node::Matchers#has_button?}
+    #   RSpec matcher for buttons.
+    #
+    #   @see Capybara::Node::Matchers#has_button?
 
     # @!method have_field(locator = nil, **options, &optional_filter_block)
-    #   RSpec matcher for links
-    #   See {Capybara::Node::Matchers#has_field?}
+    #   RSpec matcher for links.
+    #
+    #   @see Capybara::Node::Matchers#has_field?
 
     # @!method have_select(locator = nil, **options, &optional_filter_block)
-    #   RSpec matcher for select elements
-    #   See {Capybara::Node::Matchers#has_select?}
+    #   RSpec matcher for select elements.
+    #
+    #   @see Capybara::Node::Matchers#has_select?
 
     # @!method have_table(locator = nil, **options, &optional_filter_block)
-    #   RSpec matcher for table elements
-    #   See {Capybara::Node::Matchers#has_table?}
+    #   RSpec matcher for table elements.
+    #
+    #   @see Capybara::Node::Matchers#has_table?
 
     %i[checked unchecked].each do |state|
       define_method "have_#{state}_field" do |locator = nil, **options, &optional_filter_block|
@@ -101,15 +115,18 @@ module Capybara
     end
 
     # @!method have_checked_field(locator = nil, **options, &optional_filter_block)
-    #   RSpec matcher for checked fields
-    #   See {Capybara::Node::Matchers#has_checked_field?}
+    #   RSpec matcher for checked fields.
+    #
+    #   @see Capybara::Node::Matchers#has_checked_field?
 
     # @!method have_unchecked_field(locator = nil, **options, &optional_filter_block)
-    #   RSpec matcher for unchecked fields
-    #   See {Capybara::Node::Matchers#has_unchecked_field?}
+    #   RSpec matcher for unchecked fields.
+    #
+    #   @see Capybara::Node::Matchers#has_unchecked_field?
 
-    # RSpec matcher for text content
-    # See {Capybara::Node::Matchers#assert_text}
+    # RSpec matcher for text content.
+    #
+    # @see Capybara::Node::Matchers#assert_text
     def have_text(*args)
       Matchers::HaveText.new(*args)
     end
@@ -119,14 +136,16 @@ module Capybara
       Matchers::HaveTitle.new(title, options)
     end
 
-    # RSpec matcher for the current path
-    # See {Capybara::SessionMatchers#assert_current_path}
+    # RSpec matcher for the current path.
+    #
+    # @see Capybara::SessionMatchers#assert_current_path
     def have_current_path(path, **options)
       Matchers::HaveCurrentPath.new(path, options)
     end
 
-    # RSpec matcher for element style
-    # See {Capybara::Node::Matchers#matches_style?}
+    # RSpec matcher for element style.
+    #
+    # @see Capybara::Node::Matchers#matches_style?
     def match_style(styles, **options)
       Matchers::MatchStyle.new(styles, options)
     end
@@ -154,24 +173,27 @@ module Capybara
       end
     end
 
-    # RSpec matcher for whether sibling element(s) matching a given selector exist
-    # See {Capybara::Node::Matcher#assert_sibling}
+    # RSpec matcher for whether sibling element(s) matching a given selector exist.
+    #
+    # @see Capybara::Node::Matchers#assert_sibling
     def have_sibling(*args, &optional_filter_block)
       Matchers::HaveSibling.new(*args, &optional_filter_block)
     end
 
-    # RSpec matcher for whether ancestor element(s) matching a given selector exist
-    # See {Capybara::Node::Matcher#assert_ancestor}
+    # RSpec matcher for whether ancestor element(s) matching a given selector exist.
+    #
+    # @see Capybara::Node::Matchers#assert_ancestor
     def have_ancestor(*args, &optional_filter_block)
       Matchers::HaveAncestor.new(*args, &optional_filter_block)
     end
 
     ##
     # Wait for window to become closed.
+    #
     # @example
     #   expect(window).to become_closed(wait: 0.8)
-    # @param options [Hash] optional param
-    # @option options [Numeric] :wait (Capybara.default_max_wait_time) Maximum wait time
+    #
+    # @option options [Numeric] :wait   Maximum wait time. Defaults to {Capybara.configure default_max_wait_time}
     def become_closed(**options)
       Matchers::BecomeClosed.new(options)
     end
