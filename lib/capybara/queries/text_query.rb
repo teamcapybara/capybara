@@ -6,10 +6,16 @@ module Capybara
     class TextQuery < BaseQuery
       def initialize(type = nil, expected_text, session_options:, **options) # rubocop:disable Style/OptionalArguments
         @type = type.nil? ? default_type : type
-        @expected_text = expected_text.is_a?(Regexp) ? expected_text : expected_text.to_s
         @options = options
         super(@options)
         self.session_options = session_options
+
+        if expected_text.nil? && !exact?
+          warn 'Checking for expected text of nil is confusing and/or pointless since it will always match. '\
+               'Please specify a string or regexp instead.'
+        end
+
+        @expected_text = expected_text.is_a?(Regexp) ? expected_text : expected_text.to_s
 
         @search_regexp = Capybara::Helpers.to_regexp(@expected_text, exact: exact?)
 

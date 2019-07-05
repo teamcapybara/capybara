@@ -139,6 +139,12 @@ Capybara::SpecHelper.spec '#has_text?' do
     expect(@session).to have_text(nil)
   end
 
+  it 'should warn when passed nil' do
+    @session.visit('/with_html')
+    expect_any_instance_of(Kernel).to receive(:warn).with(/Checking for expected text of nil is confusing/) # rubocop:disable RSpec/AnyInstance
+    expect(@session).to have_text(nil)
+  end
+
   it 'should wait for text to appear', requires: [:js] do
     Capybara.using_wait_time(3) do
       @session.visit('/with_js')
