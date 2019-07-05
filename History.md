@@ -9,6 +9,8 @@ Release date: unreleased
   any breaking changes, but due to the nature of the 2.7 changes and some selector types accepting
   Hashes as locators there are a lot of edge cases. If you find any broken cases please report
   them and I'll see if they're fixable.
+* Optionally allow `all` results to be reloaded when stable - Beta feature - may be removed in
+  future version
 
 # Version 3.30.0
 Release date: 2019-12-24

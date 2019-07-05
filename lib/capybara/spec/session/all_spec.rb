@@ -47,6 +47,39 @@ Capybara::SpecHelper.spec '#all' do
     expect { @session.all('//p', schmoo: 'foo') }.to raise_error(ArgumentError)
   end
 
+  it 'should not reload by default', requires: [:driver] do
+    paras = @session.all(:css, 'p', minimum: 3)
+    expect { paras[0].text }.not_to raise_error
+    @session.refresh
+    expect { paras[0].text }.to raise_error do |err|
+      expect(err).to be_an_invalid_element_error(@session)
+    end
+  end
+
+  context 'with allow_reload' do
+    it 'should reload if true' do
+      paras = @session.all(:css, 'p', allow_reload: true, minimum: 3)
+      expect { paras[0].text }.not_to raise_error
+      @session.refresh
+      sleep 1 # Ensure page has started to reload
+      expect(paras[0]).to have_text('Lorem ipsum dolor')
+      expect(paras[1]).to have_text('Duis aute irure dolor')
+    end
+
+    it 'should not reload if false', requires: [:driver] do
+      paras = @session.all(:css, 'p', allow_reload: false, minimum: 3)
+      expect { paras[0].text }.not_to raise_error
+      @session.refresh
+      sleep 1 # Ensure page has started to reload
+      expect { paras[0].text }.to raise_error do |err|
+        expect(err).to be_an_invalid_element_error(@session)
+      end
+      expect { paras[2].text }.to raise_error do |err|
+        expect(err).to be_an_invalid_element_error(@session)
+      end
+    end
+  end
+
   context 'with css selectors' do
     it 'should find all elements using the given selector' do
       expect(@session.all(:css, 'h1').first.text).to eq('This is a test')

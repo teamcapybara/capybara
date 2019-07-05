@@ -31,6 +31,7 @@ module Capybara
       @filter_errors = []
       @results_enum = lazy_select_elements { |node| query.matches_filters?(node, @filter_errors) }
       @query = query
+      @allow_reload = false
     end
 
     def_delegators :full_results, :size, :length, :last, :values_at, :inspect, :sample
@@ -43,7 +44,7 @@ module Capybara
       @result_cache.each(&block)
       loop do
         next_result = @results_enum.next
-        @result_cache << next_result
+        add_to_cache(next_result)
         yield next_result
       end
       self
@@ -130,13 +131,26 @@ module Capybara
       @elements.length
     end
 
+    ##
+    # @api private
+    #
+    def allow_reload!
+      @allow_reload = true
+      self
+    end
+
   private
+
+    def add_to_cache(elem)
+      elem.allow_reload!(@result_cache.size) if @allow_reload
+      @result_cache << elem
+    end
 
     def load_up_to(num)
       loop do
         break if @result_cache.size >= num
 
-        @result_cache << @results_enum.next
+        add_to_cache(@results_enum.next)
       end
       @result_cache.size
     end

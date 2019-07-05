@@ -235,13 +235,16 @@ module Capybara
       # @option options [Integer] maximum          Maximum number of matches that are expected to be found
       # @option options [Integer] minimum          Minimum number of matches that are expected to be found
       # @option options [Range]   between          Number of matches found must be within the given range
+      # @option options [Boolean] allow_reload     Beta feature - May be removed in any version.
+      #   When `true` allows elements to be reloaded if they become stale. This is an advanced behavior and should only be used
+      #   if you fully understand the potential ramifications. The results can be confusing on dynamic pages. Defaults to `false`
       # @overload all([kind = Capybara.default_selector], locator = nil, **options)
       # @overload all([kind = Capybara.default_selector], locator = nil, **options, &filter_block)
       #   @yieldparam element [Capybara::Node::Element]  The element being considered for inclusion in the results
       #   @yieldreturn [Boolean]                     Should the element be considered in the results?
       # @return [Capybara::Result]                   A collection of found elements
       # @raise [Capybara::ExpectationNotMet]         The number of elements found doesn't match the specified conditions
-      def all(*args, **options, &optional_filter_block)
+      def all(*args, allow_reload: false, **options, &optional_filter_block)
         minimum_specified = options_include_minimum?(options)
         options = { minimum: 1 }.merge(options) unless minimum_specified
         options[:session_options] = session_options
@@ -250,6 +253,7 @@ module Capybara
         begin
           synchronize(query.wait) do
             result = query.resolve_for(self)
+            result.allow_reload! if allow_reload
             raise Capybara::ExpectationNotMet, result.failure_message unless result.matches_count?
 
             result

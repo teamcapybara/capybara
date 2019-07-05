@@ -27,9 +27,11 @@ module Capybara
         @query_scope = query_scope
         @query = query
         @allow_reload = false
+        @query_idx = nil
       end
 
-      def allow_reload!
+      def allow_reload!(idx = nil)
+        @query_idx = idx
         @allow_reload = true
       end
 
@@ -545,14 +547,13 @@ module Capybara
 
       # @api private
       def reload
-        if @allow_reload
-          begin
-            reloaded = @query.resolve_for(query_scope.reload)&.first
+        return self unless @allow_reload
 
-            @base = reloaded.base if reloaded
-          rescue StandardError => e
-            raise e unless catch_error?(e)
-          end
+        begin
+          reloaded = @query.resolve_for(query_scope.reload)[@query_idx.to_i]
+          @base = reloaded.base if reloaded
+        rescue StandardError => e
+          raise e unless catch_error?(e)
         end
         self
       end
