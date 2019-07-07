@@ -74,6 +74,13 @@ RSpec.describe Capybara::Server do
     end
   end
 
+  it 'should return its #base_url' do
+    app = proc { |_env| [200, {}, ['Hello Server!']] }
+    server = Capybara::Server.new(app).boot
+    uri = ::Addressable::URI.parse(server.base_url)
+    expect(uri.to_hash).to include(scheme: 'http', host: server.host, port: server.port)
+  end
+
   it 'should support SSL' do
     begin
       key = File.join(Dir.pwd, 'spec', 'fixtures', 'key.pem')
@@ -93,6 +100,8 @@ RSpec.describe Capybara::Server do
       end
 
       expect(res.body).to include('Hello SSL Server!')
+      uri = ::Addressable::URI.parse(server.base_url)
+      expect(uri.to_hash).to include(scheme: 'https', host: server.host, port: server.port)
     ensure
       Capybara.server = :default
     end

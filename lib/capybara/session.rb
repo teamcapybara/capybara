@@ -806,6 +806,10 @@ module Capybara
       end
     end
 
+    def server_url
+      @server&.base_url
+    end
+
   private
 
     @@instance_created = false # rubocop:disable Style/ClassVars
@@ -861,10 +865,6 @@ module Capybara
       else
         arg
       end
-    end
-
-    def server_url
-      "http#{'s' if @server.using_ssl?}://#{@server.host}:#{@server.port}" if @server
     end
 
     def adjust_server_port(uri)

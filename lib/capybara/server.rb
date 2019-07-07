@@ -86,6 +86,10 @@ module Capybara
       self
     end
 
+    def base_url
+      "http#{'s' if using_ssl?}://#{host}:#{port}"
+    end
+
   private
 
     def middleware
