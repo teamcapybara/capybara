@@ -1,3 +1,16 @@
+# Version 3.26.0
+Release date: unreleased
+
+### Added
+
+* `w3c_click_offset` configuration option applies to `right_click` and `double_click` as well as `click`
+* Warning when passing `nil` to the text/content assertions/expectations
+* `Session#server_url` returns the base url the AUT is being run at (when controlled by Capybara)
+
+### Fixed
+
+* Default puma server registration now specifies `queue_requests: false` - Issue #2227
+
 # Version 3.25.0
 Release date: 2019-06-27
 
