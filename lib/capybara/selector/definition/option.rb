@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Capybara.add_selector(:option, locator_type: [String, Symbol]) do
+Capybara.add_selector(:option, locator_type: [String, Symbol, Integer]) do
   xpath do |locator|
     xpath = XPath.descendant(:option)
     xpath = xpath[XPath.string.n.is(locator.to_s)] unless locator.nil?
