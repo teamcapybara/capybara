@@ -323,6 +323,8 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
 
       it 'can attach a relative file' do
+        pending 'Geckdoriver on windows requires alternate file separator which path expansion replaces' if Gem.win_platform? && firefox?(session)
+
         session.visit('/form')
         session.attach_file('Single Document', 'spec/fixtures/capybara.csv')
         session.click_button('Upload Single')

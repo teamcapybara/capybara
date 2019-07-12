@@ -300,7 +300,10 @@ private
 
   def set_file(value) # rubocop:disable Naming/AccessorMethodName
     path_names = value.to_s.empty? ? [] : value
-    native.send_keys(Array(path_names).map(&File.method(:expand_path)).join("\n"))
+    file_names = Array(path_names).map do |pn|
+      Pathname.new(pn).absolute? ? pn : File.expand_path(pn)
+    end.join("\n")
+    native.send_keys(file_names)
   end
 
   def set_content_editable(value) # rubocop:disable Naming/AccessorMethodName
