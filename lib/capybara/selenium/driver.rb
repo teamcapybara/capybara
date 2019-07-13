@@ -375,8 +375,11 @@ private
     begin
       wait.until do
         alert = @browser.switch_to.alert
-        regexp = text.is_a?(Regexp) ? text : Regexp.escape(text.to_s)
-        alert.text.match?(regexp) ? alert : nil
+        regexp = text.is_a?(Regexp) ? text : Regexp.new(Regexp.escape(text.to_s))
+        matched = alert.text.match?(regexp)
+        raise Capybara::ModalNotFound, "Unable to find modal dialog with #{text} - found '#{alert.text}' instead." unless matched
+
+        alert
       end
     rescue *find_modal_errors
       raise Capybara::ModalNotFound, "Unable to find modal dialog#{" with #{text}" if text}"

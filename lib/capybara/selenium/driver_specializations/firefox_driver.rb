@@ -39,6 +39,15 @@ module Capybara::Selenium::Driver::W3CFirefoxDriver
     # Use instance variable directly so we avoid starting the browser just to reset the session
     return unless @browser
 
+    if browser_version >= 68
+      begin
+        # Firefox 68 hangs if we try to switch windows while a modal is visible
+        browser.switch_to.alert&.dismiss
+      rescue Selenium::WebDriver::Error::NoSuchAlertError # rubocop:disable Lint/HandleExceptions
+        # Swallow
+      end
+    end
+
     switch_to_window(window_handles.first)
     window_handles.slice(1..-1).each { |win| close_window(win) }
     super
@@ -67,6 +76,10 @@ private
 
   def build_node(native_node, initial_cache = {})
     ::Capybara::Selenium::FirefoxNode.new(self, native_node, initial_cache)
+  end
+
+  def browser_version
+    browser.capabilities[:browser_version].to_f
   end
 end
 
