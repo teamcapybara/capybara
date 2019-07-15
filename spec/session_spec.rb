@@ -6,13 +6,13 @@ RSpec.describe Capybara::Session do
   context '#new' do
     it 'should raise an error if passed non-existent driver' do
       expect do
-        Capybara::Session.new(:quox, TestApp).driver
+        described_class.new(:quox, TestApp).driver
       end.to raise_error(Capybara::DriverNotFoundError)
     end
 
     it 'verifies a passed app is a rack app' do
       expect do
-        Capybara::Session.new(:unknown, random: 'hash')
+        described_class.new(:unknown, random: 'hash')
       end.to raise_error TypeError, 'The second parameter to Session::new should be a rack app if passed.'
     end
   end
@@ -75,14 +75,14 @@ RSpec.describe Capybara::Session do
 
   context 'quit' do
     it 'will reset the driver' do
-      session = Capybara::Session.new(:rack_test, TestApp)
+      session = described_class.new(:rack_test, TestApp)
       driver = session.driver
       session.quit
       expect(session.driver).not_to eql driver
     end
 
     it 'resets the document' do
-      session = Capybara::Session.new(:rack_test, TestApp)
+      session = described_class.new(:rack_test, TestApp)
       document = session.document
       session.quit
       expect(session.document.base).not_to eql document.base

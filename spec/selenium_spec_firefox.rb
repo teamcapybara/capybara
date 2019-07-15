@@ -106,7 +106,7 @@ RSpec.describe 'Capybara::Session with firefox' do # rubocop:disable RSpec/Multi
 end
 
 RSpec.describe Capybara::Selenium::Driver do
-  let(:driver) { Capybara::Selenium::Driver.new(TestApp, browser: :firefox, options: browser_options) }
+  let(:driver) { described_class.new(TestApp, browser: :firefox, options: browser_options) }
 
   describe '#quit' do
     it 'should reset browser when quit' do

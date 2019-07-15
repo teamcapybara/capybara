@@ -4,11 +4,11 @@ require 'spec_helper'
 
 RSpec.describe Capybara::Selector::FilterSet do
   after do
-    Capybara::Selector::FilterSet.remove(:test)
+    described_class.remove(:test)
   end
 
   it 'allows node filters' do
-    fs = Capybara::Selector::FilterSet.add(:test) do
+    fs = described_class.add(:test) do
       node_filter(:node_test, :boolean) { |_node, _value| true }
       expression_filter(:expression_test, :boolean) { |_expr, _value| true }
     end
@@ -18,7 +18,7 @@ RSpec.describe Capybara::Selector::FilterSet do
   end
 
   it 'allows expression filters' do
-    fs = Capybara::Selector::FilterSet.add(:test) do
+    fs = described_class.add(:test) do
       node_filter(:node_test, :boolean) { |_node, _value| true }
       expression_filter(:expression_test, :boolean) { |_expr, _value| true }
     end
@@ -28,7 +28,7 @@ RSpec.describe Capybara::Selector::FilterSet do
   end
 
   it 'allows node filter and expression filter with the same name' do
-    fs = Capybara::Selector::FilterSet.add(:test) do
+    fs = described_class.add(:test) do
       node_filter(:test, :boolean) { |_node, _value| true }
       expression_filter(:test, :boolean) { |_expr, _value| true }
     end
@@ -37,7 +37,7 @@ RSpec.describe Capybara::Selector::FilterSet do
   end
 
   it 'allows `filter` as an alias of `node_filter`' do
-    fs = Capybara::Selector::FilterSet.add(:test) do
+    fs = described_class.add(:test) do
       filter(:node_test, :boolean) { |_node, _value| true }
     end
 

@@ -145,9 +145,6 @@ RSpec/MultipleExpectations:
 RSpec/ContextWording:
   Enabled: false
 
-RSpec/DescribedClass:
-  Enabled: false
-
 RSpec/NestedGroups:
   Enabled: false
 

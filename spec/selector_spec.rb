@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe Capybara do
   describe 'Selectors' do
     let :string do
-      Capybara.string <<-STRING
+      described_class.string <<-STRING
         <html>
           <head>
             <title>selectors</title>
@@ -69,12 +69,12 @@ RSpec.describe Capybara do
     end
 
     before do
-      Capybara.add_selector :custom_selector do
+      described_class.add_selector :custom_selector do
         css { |css_class| "div.#{css_class}" }
         node_filter(:not_empty, boolean: true, default: true, skip_if: :all) { |node, value| value ^ (node.text == '') }
       end
 
-      Capybara.add_selector :custom_css_selector do
+      described_class.add_selector :custom_css_selector do
         css(:name, :other_name) do |selector, name: nil, **|
           selector ||= ''
           selector += "[name='#{name}']" if name
@@ -94,7 +94,7 @@ RSpec.describe Capybara do
         end
       end
 
-      Capybara.add_selector :custom_xpath_selector do
+      described_class.add_selector :custom_xpath_selector do
         xpath(:valid1, :valid2) { |selector| selector }
         match { |value| value == 'match_me' }
       end
@@ -102,7 +102,7 @@ RSpec.describe Capybara do
 
     it 'supports `filter` as an alias for `node_filter`' do
       expect do
-        Capybara.add_selector :filter_alias_selector do
+        described_class.add_selector :filter_alias_selector do
           css { |_unused| 'div' }
           filter(:something) { |_node, _value| true }
         end
@@ -111,7 +111,7 @@ RSpec.describe Capybara do
 
     describe 'adding a selector' do
       it 'can set default visiblity' do
-        Capybara.add_selector :hidden_field do
+        described_class.add_selector :hidden_field do
           visible :hidden
           css { |_sel| 'input[type="hidden"]' }
         end
@@ -125,7 +125,7 @@ RSpec.describe Capybara do
       it 'allows modifying a selector' do
         el = string.find(:custom_selector, 'aa')
         expect(el.tag_name).to eq 'div'
-        Capybara.modify_selector :custom_selector do
+        described_class.modify_selector :custom_selector do
           css { |css_class| "h1.#{css_class}" }
         end
         el = string.find(:custom_selector, 'aa')
@@ -133,7 +133,7 @@ RSpec.describe Capybara do
       end
 
       it "doesn't change existing filters" do
-        Capybara.modify_selector :custom_selector do
+        described_class.modify_selector :custom_selector do
           css { |css_class| "p.#{css_class}" }
         end
         expect(string).to have_selector(:custom_selector, 'bb', count: 1)
@@ -164,7 +164,7 @@ RSpec.describe Capybara do
 
     describe 'xpath' do
       it 'uses filter names passed in' do
-        Capybara.add_selector :test do
+        described_class.add_selector :test do
           xpath(:something, :other) { |_locator| XPath.descendant }
         end
         selector = Capybara::Selector.new :test, config: nil, format: nil
@@ -173,7 +173,7 @@ RSpec.describe Capybara do
       end
 
       it 'gets filter names from block if none passed to xpath method' do
-        Capybara.add_selector :test do
+        described_class.add_selector :test do
           xpath { |_locator, valid3:, valid4: nil| "#{valid3} #{valid4}" }
         end
         selector = Capybara::Selector.new :test, config: nil, format: nil
@@ -182,7 +182,7 @@ RSpec.describe Capybara do
       end
 
       it 'ignores block parameters if names passed in' do
-        Capybara.add_selector :test do
+        described_class.add_selector :test do
           xpath(:valid1) { |_locator, valid3:, valid4: nil| "#{valid3} #{valid4}" }
         end
         selector = Capybara::Selector.new :test, config: nil, format: nil
@@ -205,7 +205,7 @@ RSpec.describe Capybara do
       end
 
       it 'uses filter names passed in' do
-        Capybara.add_selector :test do
+        described_class.add_selector :test do
           css(:name, :other_name) { |_locator| '' }
         end
         selector = Capybara::Selector.new :test, config: nil, format: nil
@@ -214,7 +214,7 @@ RSpec.describe Capybara do
       end
 
       it 'gets filter names from block if none passed to css method' do
-        Capybara.add_selector :test do
+        described_class.add_selector :test do
           css { |_locator, valid3:, valid4: nil| "#{valid3} #{valid4}" }
         end
         selector = Capybara::Selector.new :test, config: nil, format: nil
@@ -223,7 +223,7 @@ RSpec.describe Capybara do
       end
 
       it 'ignores block parameters if names passed in' do
-        Capybara.add_selector :test do
+        described_class.add_selector :test do
           css(:valid1) { |_locator, valid3:, valid4: nil| "#{valid3} #{valid4}" }
         end
         selector = Capybara::Selector.new :test, config: nil, format: nil
@@ -477,7 +477,7 @@ RSpec.describe Capybara do
 
       describe ':link_or_button selector' do
         around(:all) do |example|
-          Capybara.modify_selector(:link_or_button) do
+          described_class.modify_selector(:link_or_button) do
             expression_filter(:random) { |xpath, _| xpath } # do nothing filter
           end
           example.run

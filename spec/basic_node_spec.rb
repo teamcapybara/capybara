@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe Capybara do
   describe '.string' do
     let :string do
-      Capybara.string <<-STRING
+      described_class.string <<-STRING
         <html>
           <head>
             <title>simple_node</title>
@@ -52,7 +52,7 @@ RSpec.describe Capybara do
     end
 
     it 'allows using custom matchers' do
-      Capybara.add_selector :lifeform do
+      described_class.add_selector :lifeform do
         xpath { |name| ".//option[contains(.,'#{name}')]" }
       end
       expect(string).to have_selector(:id, 'page')
@@ -62,7 +62,7 @@ RSpec.describe Capybara do
     end
 
     it 'allows custom matcher using css' do
-      Capybara.add_selector :section do
+      described_class.add_selector :section do
         css { |css_class| "section .#{css_class}" }
       end
       expect(string).to     have_selector(:section, 'subsection')
@@ -112,13 +112,13 @@ RSpec.describe Capybara do
 
     it 'drops illegal fragments when using gumbo' do
       skip 'libxml is less strict than Gumbo' unless Nokogiri.respond_to?(:HTML5)
-      expect(Capybara.string('<td>1</td>')).not_to have_css('td')
+      expect(described_class.string('<td>1</td>')).not_to have_css('td')
     end
 
     it 'can disable use of gumbo' do
       skip "Test doesn't make sense unlesss nokogumbo is loaded" unless Nokogiri.respond_to?(:HTML5)
-      Capybara.allow_gumbo = false
-      expect(Capybara.string('<td>1</td>')).to have_css('td')
+      described_class.allow_gumbo = false
+      expect(described_class.string('<td>1</td>')).to have_css('td')
     end
 
     describe '#title' do

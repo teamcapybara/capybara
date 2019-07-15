@@ -155,27 +155,27 @@ RSpec.describe Capybara::RackTest::Driver do
 
   describe ':headers option' do
     it 'should always set headers' do
-      driver = Capybara::RackTest::Driver.new(TestApp, headers: { 'HTTP_FOO' => 'foobar' })
+      driver = described_class.new(TestApp, headers: { 'HTTP_FOO' => 'foobar' })
       driver.visit('/get_header')
       expect(driver.html).to include('foobar')
     end
 
     it 'should keep headers on link clicks' do
-      driver = Capybara::RackTest::Driver.new(TestApp, headers: { 'HTTP_FOO' => 'foobar' })
+      driver = described_class.new(TestApp, headers: { 'HTTP_FOO' => 'foobar' })
       driver.visit('/header_links')
       driver.find_xpath('.//a').first.click
       expect(driver.html).to include('foobar')
     end
 
     it 'should keep headers on form submit' do
-      driver = Capybara::RackTest::Driver.new(TestApp, headers: { 'HTTP_FOO' => 'foobar' })
+      driver = described_class.new(TestApp, headers: { 'HTTP_FOO' => 'foobar' })
       driver.visit('/header_links')
       driver.find_xpath('.//input').first.click
       expect(driver.html).to include('foobar')
     end
 
     it 'should keep headers on redirects' do
-      driver = Capybara::RackTest::Driver.new(TestApp, headers: { 'HTTP_FOO' => 'foobar' })
+      driver = described_class.new(TestApp, headers: { 'HTTP_FOO' => 'foobar' })
       driver.visit('/get_header_via_redirect')
       expect(driver.html).to include('foobar')
     end
@@ -183,7 +183,7 @@ RSpec.describe Capybara::RackTest::Driver do
 
   describe ':follow_redirects option' do
     it 'defaults to following redirects' do
-      driver = Capybara::RackTest::Driver.new(TestApp)
+      driver = described_class.new(TestApp)
 
       driver.visit('/redirect')
       expect(driver.response.header['Location']).to be_nil
@@ -191,7 +191,7 @@ RSpec.describe Capybara::RackTest::Driver do
     end
 
     it 'is possible to not follow redirects' do
-      driver = Capybara::RackTest::Driver.new(TestApp, follow_redirects: false)
+      driver = described_class.new(TestApp, follow_redirects: false)
 
       driver.visit('/redirect')
       expect(driver.response.header['Location']).to match %r{/redirect_again$}
@@ -201,7 +201,7 @@ RSpec.describe Capybara::RackTest::Driver do
 
   describe ':redirect_limit option' do
     context 'with default redirect limit' do
-      let(:driver) { Capybara::RackTest::Driver.new(TestApp) }
+      let(:driver) { described_class.new(TestApp) }
 
       it 'should follow 5 redirects' do
         driver.visit('/redirect/5/times')
@@ -216,7 +216,7 @@ RSpec.describe Capybara::RackTest::Driver do
     end
 
     context 'with 21 redirect limit' do
-      let(:driver) { Capybara::RackTest::Driver.new(TestApp, redirect_limit: 21) }
+      let(:driver) { described_class.new(TestApp, redirect_limit: 21) }
 
       it 'should follow 21 redirects' do
         driver.visit('/redirect/21/times')
@@ -251,6 +251,6 @@ RSpec.describe Capybara::RackTest::CSSHandlers do
   include CSSHandlerIncludeTester
 
   it 'should not be extended by global includes' do
-    expect(Capybara::RackTest::CSSHandlers.new).not_to respond_to(:dont_extend_css_handler)
+    expect(described_class.new).not_to respond_to(:dont_extend_css_handler)
   end
 end

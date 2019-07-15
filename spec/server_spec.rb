@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe Capybara::Server do
   it 'should spool up a rack server' do
     app = proc { |_env| [200, {}, ['Hello Server!']] }
-    server = Capybara::Server.new(app).boot
+    server = described_class.new(app).boot
 
     res = Net::HTTP.start(server.host, server.port) { |http| http.get('/') }
 
@@ -14,7 +14,7 @@ RSpec.describe Capybara::Server do
 
   it 'should do nothing when no server given' do
     expect do
-      Capybara::Server.new(nil).boot
+      described_class.new(nil).boot
     end.not_to raise_error
   end
 
@@ -26,12 +26,12 @@ RSpec.describe Capybara::Server do
       app = proc { |_env| [200, {}, ['Hello Server!']] }
 
       Capybara.server_host = '127.0.0.1'
-      server = Capybara::Server.new(app).boot
+      server = described_class.new(app).boot
       res = Net::HTTP.get(URI("http://127.0.0.1:#{server.port}"))
       expect(res).to eq('Hello Server!')
 
       Capybara.server_host = '0.0.0.0'
-      server = Capybara::Server.new(app).boot
+      server = described_class.new(app).boot
       res = Net::HTTP.get(URI("http://127.0.0.1:#{server.port}"))
       expect(res).to eq('Hello Server!')
     ensure
@@ -43,7 +43,7 @@ RSpec.describe Capybara::Server do
     Capybara.server_port = 22789
 
     app = proc { |_env| [200, {}, ['Hello Server!']] }
-    server = Capybara::Server.new(app).boot
+    server = described_class.new(app).boot
 
     res = Net::HTTP.start(server.host, 22789) { |http| http.get('/') }
     expect(res.body).to include('Hello Server')
@@ -53,7 +53,7 @@ RSpec.describe Capybara::Server do
 
   it 'should use given port' do
     app = proc { |_env| [200, {}, ['Hello Server!']] }
-    server = Capybara::Server.new(app, port: 22790).boot
+    server = described_class.new(app, port: 22790).boot
 
     res = Net::HTTP.start(server.host, 22790) { |http| http.get('/') }
     expect(res.body).to include('Hello Server')
@@ -66,7 +66,7 @@ RSpec.describe Capybara::Server do
     apps = responses.map do |response|
       proc { |_env| [200, {}, [response]] }
     end
-    servers = apps.map { |app| Capybara::Server.new(app).boot }
+    servers = apps.map { |app| described_class.new(app).boot }
 
     servers.each_with_index do |server, idx|
       result = Net::HTTP.start(server.host, server.port) { |http| http.get('/') }
@@ -76,7 +76,7 @@ RSpec.describe Capybara::Server do
 
   it 'should return its #base_url' do
     app = proc { |_env| [200, {}, ['Hello Server!']] }
-    server = Capybara::Server.new(app).boot
+    server = described_class.new(app).boot
     uri = ::Addressable::URI.parse(server.base_url)
     expect(uri.to_hash).to include(scheme: 'http', host: server.host, port: server.port)
   end
@@ -87,7 +87,7 @@ RSpec.describe Capybara::Server do
       cert = File.join(Dir.pwd, 'spec', 'fixtures', 'certificate.pem')
       Capybara.server = :puma, { Host: "ssl://#{Capybara.server_host}?key=#{key}&cert=#{cert}" }
       app = proc { |_env| [200, {}, ['Hello SSL Server!']] }
-      server = Capybara::Server.new(app).boot
+      server = described_class.new(app).boot
 
       expect do
         Net::HTTP.start(server.host, server.port, max_retries: 0) { |http| http.get('/__identify__') }
@@ -121,7 +121,7 @@ RSpec.describe Capybara::Server do
     it 'should use the existing server if it already running' do
       app = proc { |_env| [200, {}, ['Hello Server!']] }
 
-      servers = Array.new(2) { Capybara::Server.new(app).boot }
+      servers = Array.new(2) { described_class.new(app).boot }
 
       servers.each do |server|
         res = Net::HTTP.start(server.host, server.port) { |http| http.get('/') }
@@ -141,8 +141,8 @@ RSpec.describe Capybara::Server do
         [200, {}, ['Hello Server!']]
       end
 
-      server1 = Capybara::Server.new(app).boot
-      server2 = Capybara::Server.new(app).boot
+      server1 = described_class.new(app).boot
+      server2 = described_class.new(app).boot
 
       expect do
         start_request(server1, 1.0)
@@ -166,7 +166,7 @@ RSpec.describe Capybara::Server do
     it 'should not reuse an already running server' do
       app = proc { |_env| [200, {}, ['Hello Server!']] }
 
-      servers = Array.new(2) { Capybara::Server.new(app).boot }
+      servers = Array.new(2) { described_class.new(app).boot }
 
       servers.each do |server|
         res = Net::HTTP.start(server.host, server.port) { |http| http.get('/') }
@@ -186,8 +186,8 @@ RSpec.describe Capybara::Server do
         [200, {}, ['Hello Server!']]
       end
 
-      server1 = Capybara::Server.new(app).boot
-      server2 = Capybara::Server.new(app).boot
+      server1 = described_class.new(app).boot
+      server2 = described_class.new(app).boot
 
       expect do
         start_request(server1, 1.0)
@@ -210,7 +210,7 @@ RSpec.describe Capybara::Server do
       Capybara.server = :kaboom
 
       expect do
-        Capybara::Server.new(proc { |e| }).boot
+        described_class.new(proc { |e| }).boot
       end.to raise_error(RuntimeError, 'kaboom')
     ensure
       Capybara.server = :default
@@ -219,7 +219,7 @@ RSpec.describe Capybara::Server do
 
   it 'is not #responsive? when Net::HTTP raises a SystemCallError' do
     app = -> { [200, {}, ['Hello, world']] }
-    server = Capybara::Server.new(app)
+    server = described_class.new(app)
     allow(Net::HTTP).to receive(:start).and_raise(SystemCallError.allocate)
     expect(server.responsive?).to eq false
   end
@@ -234,7 +234,7 @@ RSpec.describe Capybara::Server do
       response = Net::HTTPSuccess.allocate
       allow(response).to receive(:body).and_return app.object_id.to_s
       allow(Net::HTTP).to receive(:start).with(anything, anything, hash_including(use_ssl: true)).and_return(response).once
-      Capybara::Server.new(app).boot
+      described_class.new(app).boot
       expect(Net::HTTP).to have_received(:start).exactly(3).times
     end
   end
