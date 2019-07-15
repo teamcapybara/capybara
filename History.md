@@ -6,10 +6,13 @@ Release date: unreleased
 * `w3c_click_offset` configuration option applies to `right_click` and `double_click` as well as `click`
 * Warning when passing `nil` to the text/content assertions/expectations
 * `Session#server_url` returns the base url the AUT is being run at (when controlled by Capybara)
+* `option` selector type accepts an integer as locator
 
 ### Fixed
 
 * Default puma server registration now specifies `queue_requests: false` - Issue #2227
+* Workaround issue with FF 68 and hanging during reset if a system modal is visible
+* Don't expand file path if it's already absolute - Issue #2228
 
 # Version 3.25.0
 Release date: 2019-06-27
