@@ -141,8 +141,8 @@ module Capybara
       # or descendants of the current node.  If options are provided, the assertion
       # will check that each locator is present with those options as well (other than `:wait`).
       #
-      #   page.assert_all_of_selectors(:custom, 'Tom', 'Joe', visible: all)
-      #   page.assert_all_of_selectors(:css, '#my_div', 'a.not_clicked')
+      #     page.assert_all_of_selectors(:custom, 'Tom', 'Joe', visible: all)
+      #     page.assert_all_of_selectors(:css, '#my_div', 'a.not_clicked')
       #
       # It accepts all options that {Capybara::Node::Finders#all} accepts,
       # such as `:text` and `:visible`.
@@ -162,8 +162,8 @@ module Capybara
       # or descendants of the current node. If options are provided, the assertion
       # will check that each locator is not present with those options as well (other than `:wait`).
       #
-      #   page.assert_none_of_selectors(:custom, 'Tom', 'Joe', visible: all)
-      #   page.assert_none_of_selectors(:css, '#my_div', 'a.not_clicked')
+      #     page.assert_none_of_selectors(:custom, 'Tom', 'Joe', visible: all)
+      #     page.assert_none_of_selectors(:css, '#my_div', 'a.not_clicked')
       #
       # It accepts all options that {Capybara::Node::Finders#all} accepts,
       # such as `:text` and `:visible`.
@@ -183,8 +183,8 @@ module Capybara
       # or descendants of the current node. If options are provided, the assertion
       # will check that each locator is present with those options as well (other than `:wait`).
       #
-      #   page.assert_any_of_selectors(:custom, 'Tom', 'Joe', visible: all)
-      #   page.assert_any_of_selectors(:css, '#my_div', 'a.not_clicked')
+      #     page.assert_any_of_selectors(:custom, 'Tom', 'Joe', visible: all)
+      #     page.assert_any_of_selectors(:css, '#my_div', 'a.not_clicked')
       #
       # It accepts all options that {Capybara::Node::Finders#all} accepts,
       # such as `:text` and `:visible`.
