@@ -103,7 +103,6 @@ module Capybara
       def visible?(check_ancestors = true)
         return false if (tag_name == 'input') && (native[:type] == 'hidden')
         return false if tag_name == 'template'
-
         if check_ancestors
           !find_xpath(VISIBILITY_XPATH)
         else
@@ -197,7 +196,8 @@ module Capybara
         x.ancestor_or_self[
           x.attr(:style)[x.contains('display:none') | x.contains('display: none')] |
           x.attr(:hidden) |
-          x.qname.one_of('script', 'head')
+          x.qname.one_of('script', 'head') |
+          (~x.self(:summary) & XPath.parent(:details))
         ].boolean
       end.to_s.freeze
     end
