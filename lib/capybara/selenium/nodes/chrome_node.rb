@@ -55,10 +55,22 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
     click unless selected_or_disabled
   end
 
+  def visible?
+    return super unless native_displayed?
+
+    begin
+      bridge.send(:execute, :is_element_displayed, id: native.ref)
+    rescue Selenium::WebDriver::Error::UnknownCommandError
+      # If the is_element_displayed command is unknown, no point in trying again
+      driver.options[:native_displayed] = false
+      super
+    end
+  end
+
 private
 
   def perform_legacy_drag(element)
-    return super unless (browser_version < 77.0) && w3c? && !element.obscured?
+    return super if chromedriver_fixed_actions_key_state? || !w3c? || element.obscured?
 
     # W3C Chrome/chromedriver < 77 doesn't maintain mouse button state across actions API performs
     # https://bugs.chromium.org/p/chromedriver/issues/detail?id=2981
@@ -78,11 +90,35 @@ private
 
   def w3c?
     (defined?(Selenium::WebDriver::VERSION) && (Selenium::WebDriver::VERSION.to_f >= 4)) ||
-      driver.browser.capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
+      capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
   end
 
-  def browser_version
-    caps = driver.browser.capabilities
-    (caps[:browser_version] || caps[:version]).to_f
+  def browser_version(to_float = true)
+    caps = capabilities
+    ver = (caps[:browser_version] || caps[:version])
+    ver = ver.to_f if to_float
+    ver
+  end
+
+  def chromedriver_fixed_actions_key_state?
+    Gem::Version.new(chromedriver_version) >= Gem::Version.new('76.0.3809.68')
+  end
+
+  def chromedriver_supports_displayed_endpoint?
+    Gem::Version.new(chromedriver_version) >= Gem::Version.new('76.0.3809.25')
+  end
+
+  def chromedriver_version
+    capabilities['chrome']['chromedriverVersion'].split(' ')[0]
+  end
+
+  def capabilities
+    driver.browser.capabilities
+  end
+
+  def native_displayed?
+    (driver.options[:native_displayed] != false) &&
+      (w3c? && chromedriver_supports_displayed_endpoint?) &&
+      (!ENV['DISABLE_CAPYBARA_SELENIUM_OPTIMIZATIONS'])
   end
 end
