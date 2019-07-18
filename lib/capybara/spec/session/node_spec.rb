@@ -233,8 +233,9 @@ Capybara::SpecHelper.spec 'node' do
   end
 
   describe '#visible?' do
+    before { Capybara.ignore_hidden_elements = false }
+
     it 'should extract node visibility' do
-      Capybara.ignore_hidden_elements = false
       expect(@session.first('//a')).to be_visible
 
       expect(@session.find('//div[@id="hidden"]')).not_to be_visible
@@ -245,14 +246,25 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'template elements should not be visible' do
-      Capybara.ignore_hidden_elements = false
       expect(@session.find('//template')).not_to be_visible
     end
 
     it 'should be boolean' do
-      Capybara.ignore_hidden_elements = false
       expect(@session.first('//a').visible?).to be true
       expect(@session.find('//div[@id="hidden"]').visible?).to be false
+    end
+
+    it 'details > summary elements and descendants should be visible' do
+      expect(@session.find(:css, 'details summary')).to be_visible
+      expect(@session.find(:css, 'details summary h6')).to be_visible
+    end
+
+    it 'details non-summary descendants should be non-visible' do
+      # expect(@session.find(:css, 'details ul')).not_to be_visible
+      @session.first(:css, 'details li').visible?
+      @session.all(:css, 'details > *:not(summary), details > *:not(summary) *', minimum: 2).each do |el|
+        expect(el).not_to be_visible
+      end
     end
   end
 
