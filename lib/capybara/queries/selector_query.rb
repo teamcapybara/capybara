@@ -451,9 +451,9 @@ module Capybara
         return (visible != :hidden) && (node.initial_cache[:visible] != false) && !node.obscured? if obscured == false
 
         vis = case visible
-        when :visible then
+        when :visible
           node.initial_cache[:visible] || (node.initial_cache[:visible].nil? && node.visible?)
-        when :hidden then
+        when :hidden
           (node.initial_cache[:visible] == false) || (node.initial_cache[:visbile].nil? && !node.visible?)
         else
           true
