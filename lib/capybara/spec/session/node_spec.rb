@@ -260,11 +260,14 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'details non-summary descendants should be non-visible' do
-      # expect(@session.find(:css, 'details ul')).not_to be_visible
       @session.first(:css, 'details li').visible?
-      @session.all(:css, 'details > *:not(summary), details > *:not(summary) *', minimum: 2).each do |el|
-        expect(el).not_to be_visible
-      end
+      descendants = @session.all(:css, 'details > *:not(summary), details > *:not(summary) *', minimum: 2)
+      expect(descendants).not_to include(be_visible)
+    end
+
+    it 'sees open details as visible', requires: [:js] do
+      @session.find(:css, 'details').click
+      expect(@session.all(:css, 'details *')).to all(be_visible)
     end
   end
 
