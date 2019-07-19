@@ -47,6 +47,8 @@ Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_DRIVER.to_s, capybar
     skip 'Need to figure out testing of file downloading on windows platform' if Gem.win_platform?
   when /Capybara::Session selenium_chrome Capybara::Window#maximize/
     pending "Chrome headless doesn't support maximize" if ENV['HEADLESS']
+  when /details non-summary descendants should be non-visible/
+    pending 'Chromedriver built-in is_displayed is currently broken' if ENV['W3C'] == 'false'
   end
 end
 
