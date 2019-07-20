@@ -65,6 +65,12 @@ class Capybara::Selenium::FirefoxNode < Capybara::Selenium::Node
     click unless selected_or_disabled
   end
 
+  def visible?
+    return super if ENV['DISABLE_CAPYBARA_SELENIUM_OPTIMIZATIONS']
+
+    bridge.send(:execute, :is_element_displayed, id: native.ref)
+  end
+
 private
 
   def click_with_options(click_options)
