@@ -11,7 +11,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     clear_local_storage: nil,
     clear_session_storage: nil
   }.freeze
-  SPECIAL_OPTIONS = %i[browser clear_local_storage clear_session_storage timeout].freeze
+  SPECIAL_OPTIONS = %i[browser clear_local_storage clear_session_storage timeout native_displayed].freeze
   attr_reader :app, :options
 
   class << self

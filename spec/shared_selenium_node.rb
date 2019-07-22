@@ -26,4 +26,40 @@ RSpec.shared_examples 'Capybara::Node' do |session, _mode|
       expect(session.find(:css, '#address1_city').value).to eq 'ocean SIDE'
     end
   end
+
+  context '#visible?' do
+    let(:bridge) do
+      session.driver.browser.send(:bridge)
+    end
+
+    around do |example|
+      native_displayed = session.driver.options[:native_displayed]
+      example.run
+      session.driver.options[:native_displayed] = native_displayed
+    end
+
+    before do
+      allow(bridge).to receive(:execute_atom).and_call_original
+    end
+
+    it 'will use native displayed if told to' do
+      pending "Chromedriver < 76.0.3809.25 doesn't support native displayed in W3C mode" if chrome_lt?(76, session) && (ENV['W3C'] != 'false')
+
+      session.driver.options[:native_displayed] = true
+      session.visit('/form')
+      session.find(:css, '#address1_city', visible: true)
+
+      expect(bridge).not_to have_received(:execute_atom)
+    end
+
+    it "won't use native displayed if told not to" do
+      skip 'Non-W3C uses native' if chrome?(session) && (ENV['W3C'] == 'false')
+
+      session.driver.options[:native_displayed] = false
+      session.visit('/form')
+      session.find(:css, '#address1_city', visible: true)
+
+      expect(bridge).to have_received(:execute_atom).with(:isDisplayed, any_args)
+    end
+  end
 end

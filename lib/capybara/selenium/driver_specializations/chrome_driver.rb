@@ -8,6 +8,7 @@ module Capybara::Selenium::Driver::ChromeDriver
     bridge = base.send(:bridge)
     bridge.extend Capybara::Selenium::ChromeLogs unless bridge.respond_to?(:log)
     bridge.extend Capybara::Selenium::IsDisplayed unless bridge.commands(:is_element_displayed)
+    base.options[:native_displayed] = false if base.options[:native_displayed].nil?
   end
 
   def fullscreen_window(handle)

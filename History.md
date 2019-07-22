@@ -1,6 +1,12 @@
 # Version 3.27.0
 Release date: unreleased
 
+### Added
+
+* Allow to use chromedriver/geckodriver native `is_element_displayed` endpoint via Selenium
+  driver `native_displayed` option for performance reasons. Disabled by default due to endpoints
+  currently not handling &lt;details> element descendants visibility correctly.
+
 ### Fixed
 
 * Ignore negative lookahead/lookbehind regex when performing initial XPath text matching

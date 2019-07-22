@@ -66,12 +66,22 @@ class Capybara::Selenium::FirefoxNode < Capybara::Selenium::Node
   end
 
   def visible?
-    return super if ENV['DISABLE_CAPYBARA_SELENIUM_OPTIMIZATIONS']
+    return super unless native_displayed?
 
-    bridge.send(:execute, :is_element_displayed, id: native.ref)
+    begin
+      bridge.send(:execute, :is_element_displayed, id: native.ref)
+    rescue Selenium::WebDriver::Error::UnknownCommandError
+      # If the is_element_displayed command is unknown, no point in trying again
+      driver.options[:native_displayed] = false
+      super
+    end
   end
 
 private
+
+  def native_displayed?
+    (driver.options[:native_displayed] != false) && !ENV['DISABLE_CAPYBARA_SELENIUM_OPTIMIZATIONS']
+  end
 
   def click_with_options(click_options)
     # Firefox/marionette has an issue clicking with offset near viewport edge

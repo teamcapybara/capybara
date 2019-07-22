@@ -25,6 +25,7 @@ module Capybara::Selenium::Driver::W3CFirefoxDriver
   class << self
     def extended(driver)
       require 'capybara/selenium/patches/pause_duration_fix' if pause_broken?(driver.browser)
+      driver.options[:native_displayed] = false if driver.options[:native_displayed].nil?
     end
 
     def pause_broken?(sel_driver)
