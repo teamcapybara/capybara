@@ -682,12 +682,12 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
     end
 
     it 'treats a given value as a string' do
-      class Foo
+      foo = Class.new do
         def to_s
           'some value'
         end
       end
-      expect(html).to have_field('Text field', with: Foo.new)
+      expect(html).to have_field('Text field', with: foo.new)
     end
 
     it 'supports compounding' do

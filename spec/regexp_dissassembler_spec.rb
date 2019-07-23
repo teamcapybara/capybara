@@ -44,7 +44,7 @@ RSpec.describe Capybara::Selector::RegexpDisassembler, :aggregate_failures do
       /abc?def?g/ => %w[ab de g],
       /d?/ => []
     }.each do |regexp, expected|
-      expect(Capybara::Selector::RegexpDisassembler.new(regexp).substrings).to eq expected
+      expect(described_class.new(regexp).substrings).to eq expected
     end
   end
 
@@ -131,7 +131,7 @@ RSpec.describe Capybara::Selector::RegexpDisassembler, :aggregate_failures do
       /ab(cd|cd)?ef/ => %w[ab ef],
       /ab\\?cd/ => %w[ab cd]
     }.each do |regexp, expected|
-      expect(Capybara::Selector::RegexpDisassembler.new(regexp).substrings).to eq expected
+      expect(described_class.new(regexp).substrings).to eq expected
     end
   end
 
