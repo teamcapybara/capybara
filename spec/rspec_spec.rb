@@ -76,7 +76,7 @@ RSpec.describe 'capybara/rspec' do
   context 'Type: Other', type: :other do
     context 'when RSpec::Matchers is included after Capybara::DSL' do
       let(:test_class_instance) do
-        class DSLMatchersTest
+        Class.new do
           include Capybara::DSL
           include RSpec::Matchers
         end.new
