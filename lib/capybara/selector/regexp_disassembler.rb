@@ -100,6 +100,8 @@ module Capybara
         def extract_strings(process_alternatives)
           strings = []
           each do |exp|
+            next if exp.ignore?
+
             next strings.push(nil) if exp.optional? && !process_alternatives
 
             next strings.push(exp.alternative_strings) if exp.alternation? && process_alternatives
@@ -157,6 +159,11 @@ module Capybara
         def alternative_strings
           alts = alternatives.map { |sub_exp| sub_exp.extract_strings(alternation: true) }
           alts.all?(&:any?) ? Set.new(alts) : nil
+        end
+
+        def ignore?
+          [Regexp::Expression::Assertion::NegativeLookahead,
+           Regexp::Expression::Assertion::NegativeLookbehind].any? { |klass| @exp.is_a? klass }
         end
 
       private

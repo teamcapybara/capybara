@@ -212,6 +212,16 @@ RSpec.describe Capybara::Selector::RegexpDisassembler, :aggregate_failures do
     )
   end
 
+  it 'ignores negative lookaheads' do
+    verify_strings(
+      /^(?!.*\bContributing Editor\b).*$/ => %w[],
+      /abc(?!.*def).*/ => %w[abc],
+      /(?!.*def)abc/ => %w[abc],
+      /abc(?!.*def.*).*ghi/ => %w[abc ghi],
+      /abc(?!.*bcd)def/ => %w[abcdef]
+    )
+  end
+
   it 'handles anchors' do
     verify_strings(
       /^abc/ => %w[abc],
