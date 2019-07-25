@@ -1002,6 +1002,28 @@ Capybara::SpecHelper.spec 'node' do
   end
 
   describe '#reload', requires: [:js] do
+    it 'should reload elements found via ancestor with CSS' do
+      @session.visit('/with_js')
+      node = @session.find(:css, '#reload-me em').ancestor(:css, 'div')
+      node.reload
+      expect(node[:id]).to eq 'reload-me'
+    end
+
+    it 'should reload elements found via ancestor with XPath' do
+      @session.visit('/with_js')
+      node = @session.find(:css, '#reload-me em').ancestor(:xpath, './/div')
+      node.reload
+      expect(node[:id]).to eq 'reload-me'
+    end
+
+    it 'should reload elements found via sibling' do
+      @session.visit('/with_js')
+      node = @session.find(:css, '#the-list li', text: 'Item 1').sibling(:css, 'li')
+      expect(node.text).to eq 'Item 2'
+      node.reload
+      expect(node.text).to eq 'Item 2'
+    end
+
     context 'without automatic reload' do
       before { Capybara.automatic_reload = false }
 

@@ -514,7 +514,8 @@ module Capybara
       def reload
         if @allow_reload
           begin
-            reloaded = query_scope.reload.first(@query.name, @query.locator, @query.options)
+            reloaded = @query.resolve_for(query_scope.reload)&.first
+
             @base = reloaded.base if reloaded
           rescue StandardError => e
             raise e unless catch_error?(e)
