@@ -14,6 +14,7 @@ Release date: unreleased
 * Only default puma settings to `queue_requests: false` when using SSL
 * Visibility of descendants of &lt;details> elements is correctly determined when using rack_test
   and the selenium driver with Capybara optimized atoms
+* local/session storage clearance in Chrome when clearing only one of them - Issue #2233
 
 # Version 3.26.0
 Release date: 2019-07-15
