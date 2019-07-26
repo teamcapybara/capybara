@@ -28,6 +28,22 @@ Capybara.register_driver :selenium_chrome_not_clear_storage do |app|
   Capybara::Selenium::Driver.new(app, chrome_options.merge(clear_local_storage: false, clear_session_storage: false))
 end
 
+Capybara.register_driver :selenium_chrome_not_clear_session_storage do |app|
+  chrome_options = {
+    browser: :chrome,
+    options: browser_options
+  }
+  Capybara::Selenium::Driver.new(app, chrome_options.merge(clear_session_storage: false))
+end
+
+Capybara.register_driver :selenium_chrome_not_clear_local_storage do |app|
+  chrome_options = {
+    browser: :chrome,
+    options: browser_options
+  }
+  Capybara::Selenium::Driver.new(app, chrome_options.merge(clear_local_storage: false))
+end
+
 Capybara.register_driver :selenium_driver_subclass_with_chrome do |app|
   subclass = Class.new(Capybara::Selenium::Driver)
   subclass.new(app, browser: :chrome, options: browser_options, timeout: 30)
@@ -78,6 +94,26 @@ RSpec.describe 'Capybara::Session with chrome' do
         session.visit('/with_js')
         expect(session.evaluate_script('Object.keys(localStorage)')).not_to be_empty
         expect(session.evaluate_script('Object.keys(sessionStorage)')).not_to be_empty
+      end
+
+      it 'can not clear session storage' do
+        session = Capybara::Session.new(:selenium_chrome_not_clear_session_storage, TestApp)
+        session.visit('/with_js')
+        session.find(:css, '#set-storage').click
+        session.reset!
+        session.visit('/with_js')
+        expect(session.evaluate_script('Object.keys(localStorage)')).to be_empty
+        expect(session.evaluate_script('Object.keys(sessionStorage)')).not_to be_empty
+      end
+
+      it 'can not clear local storage' do
+        session = Capybara::Session.new(:selenium_chrome_not_clear_local_storage, TestApp)
+        session.visit('/with_js')
+        session.find(:css, '#set-storage').click
+        session.reset!
+        session.visit('/with_js')
+        expect(session.evaluate_script('Object.keys(localStorage)')).not_to be_empty
+        expect(session.evaluate_script('Object.keys(sessionStorage)')).to be_empty
       end
     end
   end

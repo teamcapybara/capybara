@@ -43,8 +43,8 @@ module Capybara::Selenium::Driver::ChromeDriver
 
     timer = Capybara::Helpers.timer(expire_in: 10)
     begin
-      @browser.navigate.to('about:blank')
       clear_storage unless uniform_storage_clear?
+      @browser.navigate.to('about:blank')
       wait_for_empty_page(timer)
     rescue *unhandled_alert_errors
       accept_unhandled_reset_alert
