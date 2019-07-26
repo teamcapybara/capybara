@@ -68,17 +68,19 @@ private
   end
 
   def clear_all_storage?
-    options.values_at(:clear_session_storage, :clear_local_storage).none? { |s| s == false }
+    storage_clears.none? { |s| s == false }
   end
 
   def uniform_storage_clear?
-    clear = options.values_at(:clear_session_storage, :clear_local_storage)
-    clear.all? { |s| s == false } || clear.none? { |s| s == false }
+    storage_clears.uniq { |s| s == false }.length <= 1
+  end
+
+  def storage_clears
+    options.values_at(:clear_session_storage, :clear_local_storage)
   end
 
   def clear_storage
-    # Chrome errors if attempt to clear storage on about:blank
-    # In W3C mode it crashes chromedriver
+    # Edgedriver crashes if attempt to clear storage on about:blank
     url = current_url
     super unless url.nil? || url.start_with?('about:')
   end
