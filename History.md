@@ -1,3 +1,14 @@
+# Version 3.27.0
+Release date: unreleased
+
+### Fixed
+
+* Ignore negative lookahead/lookbehind regex when performing initial XPath text matching
+* Reloading of elements found via `ancestor` and `sibling`
+* Only default puma settings to `queue_requests: false` when using SSL
+* Visibility of descendants of &lt;details> elements is correctly determined when using rack_test
+  and the selenium driver with Capybara optimized atoms
+
 # Version 3.26.0
 Release date: 2019-07-15
 
