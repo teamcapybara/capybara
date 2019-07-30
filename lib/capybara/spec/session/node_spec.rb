@@ -444,6 +444,20 @@ Capybara::SpecHelper.spec 'node' do
       end
     end
 
+    it 'should work with jsTree' do
+      @session.visit('/with_jstree')
+      @session.within(:css, '#container') do
+        @session.assert_text(/A.*B.*C/m)
+        source = @session.find(:css, '#j1_1_anchor')
+        target = @session.find(:css, '#j1_2_anchor')
+
+        source.drag_to(target)
+
+        @session.assert_no_text(/A.*B.*C/m)
+        @session.assert_text(/B.*C/m)
+      end
+    end
+
     context 'HTML5', requires: %i[js html5_drag] do
       it 'should HTML5 drag and drop an object' do
         @session.visit('/with_js')

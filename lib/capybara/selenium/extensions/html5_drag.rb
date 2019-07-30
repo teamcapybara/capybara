@@ -89,6 +89,7 @@ class Capybara::Selenium::Node
     JS
 
     MOUSEDOWN_TRACKER = <<~JS
+      window.capybara_mousedown_prevented = null;
       document.addEventListener('mousedown', ev => {
         window.capybara_mousedown_prevented = ev.defaultPrevented;
       }, { once: true, passive: true })
@@ -96,7 +97,10 @@ class Capybara::Selenium::Node
 
     LEGACY_DRAG_CHECK = <<~JS
       (function(el){
-        if (window.capybara_mousedown_prevented) return true;
+        if ([true, null].indexOf(window.capybara_mousedown_prevented) >= 0){
+          return true;
+        }
+
         do {
           if (el.draggable) return false;
         } while (el = el.parentElement );
