@@ -1,3 +1,11 @@
+# Version 3.28.0
+Release date: unreleased
+
+### Added
+
+* Allow forcing HTML5 or legacy dragging via the `:html5` option to `drag_to` when using Selenium with Chrome or Firefox
+* Autodetection of drag type interprets not seeing the mousedown event as legacy.
+
 # Version 3.27.0
 Release date: 2019-07-28
 
