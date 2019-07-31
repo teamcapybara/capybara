@@ -93,6 +93,24 @@ Capybara::SpecHelper.spec '#has_field' do
       expect(@session).not_to have_field('Html5 Multiple Email', multiple: false)
     end
   end
+
+  context 'with valid', requires: [:js] do
+    it 'should be true if field is valid' do
+      @session.fill_in 'required', with: 'something'
+      @session.fill_in 'length', with: 'abcd'
+
+      expect(@session).to have_field('required', valid: true)
+      expect(@session).to have_field('length', valid: true)
+    end
+
+    it 'should be false if field is invalid' do
+      expect(@session).not_to have_field('required', valid: true)
+      expect(@session).to have_field('required', valid: false)
+
+      @session.fill_in 'length', with: 'abc'
+      expect(@session).not_to have_field('length', valid: true)
+    end
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_field' do

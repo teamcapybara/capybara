@@ -1,7 +1,7 @@
 
 <h1>Form</h1>
 
-<form action="/form" method="post">
+<form action="/form" method="post" novalidate>
 
   <p>
     <label for="form_title">Title</label>
@@ -459,6 +459,11 @@ New line after and before textarea tag
   <p>
     <input id="readonly" name="form[readonly_test]" readonly/>
     <input id="not_readonly" name="form[readonly_test]" />
+  </p>
+
+  <p>
+    <input id="required" name="form[required]" required />
+    <input id="length" name="form[length]" minlength="4" maxlength="4" />
   </p>
 </form>
 

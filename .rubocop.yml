@@ -31,6 +31,7 @@ Metrics/BlockLength:
     - 'capybara.gemspec'
   ExcludedMethods:
     - Capybara.add_selector
+    - Capybara::Selector::FilterSet.add
 
 Metrics/AbcSize:
   Enabled: false

@@ -18,7 +18,7 @@ Capybara.add_selector(:fillable_field, locator_type: [String, Symbol]) do
     end
   end
 
-  filter_set(:_field, %i[disabled multiple name placeholder])
+  filter_set(:_field, %i[disabled multiple name placeholder valid])
 
   node_filter(:with) do |node, with|
     val = node.value

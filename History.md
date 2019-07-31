@@ -5,6 +5,7 @@ Release date: unreleased
 
 * Allow forcing HTML5 or legacy dragging via the `:html5` option to `drag_to` when using Selenium with Chrome or Firefox
 * Autodetection of drag type interprets not seeing the mousedown event as legacy.
+* HTML5 form validation `:valid` node filter added to `:field` and `:fillable_field` selectors
 
 # Version 3.27.0
 Release date: 2019-07-28

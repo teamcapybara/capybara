@@ -34,6 +34,7 @@ require 'capybara/selector/definition'
 #       * :unchecked (Boolean) - Match unchecked fields?
 #       * :disabled (Boolean, :all) - Match disabled field? (Default: false)
 #       * :multiple (Boolean) - Match fields that accept multiple values
+#       * :valid (Boolean) - Match fields that are valid/invalid according to HTML5 form validation
 #
 # * **:fieldset** - Select fieldset elements
 #   * Locator: Matches id, {Capybara.configure test_id}, or contents of wrapped legend
@@ -72,6 +73,7 @@ require 'capybara/selector/definition'
 #       * :type (String) - Matches the type attribute of the field or element type for 'textarea'
 #       * :disabled (Boolean, :all) - Match disabled field? (Default: false)
 #       * :multiple (Boolean) - Match fields that accept multiple values
+#       * :valid (Boolean) - Match fields that are valid/invalid according to HTML5 form validation
 #
 # * **:radio_button** - Find radio buttons
 #   * Locator: Match id, {Capybara.configure test_id} attribute, name, or associated label text
@@ -166,6 +168,7 @@ Capybara::Selector::FilterSet.add(:_field) do
   node_filter(:checked, :boolean) { |node, value| !(value ^ node.checked?) }
   node_filter(:unchecked, :boolean) { |node, value| (value ^ node.checked?) }
   node_filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| !(value ^ node.disabled?) }
+  node_filter(:valid, :boolean) { |node, value| node.evaluate_script('this.validity.valid') == value }
 
   expression_filter(:name) { |xpath, val| xpath[XPath.attr(:name) == val] }
   expression_filter(:placeholder) { |xpath, val| xpath[XPath.attr(:placeholder) == val] }
@@ -182,12 +185,14 @@ Capybara::Selector::FilterSet.add(:_field) do
     desc
   end
 
-  describe(:node_filters) do |checked: nil, unchecked: nil, disabled: nil, **|
+  describe(:node_filters) do |checked: nil, unchecked: nil, disabled: nil, valid: nil, **|
     desc, states = +'', []
     states << 'checked' if checked || (unchecked == false)
     states << 'not checked' if unchecked || (checked == false)
     states << 'disabled' if disabled == true
     desc << " that is #{states.join(' and ')}" unless states.empty?
+    desc << ' that is valid' if valid == true
+    desc << ' that is invalid' if valid == false
     desc
   end
 end
