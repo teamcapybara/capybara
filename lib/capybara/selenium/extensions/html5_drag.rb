@@ -4,13 +4,14 @@ class Capybara::Selenium::Node
   module Html5Drag
     # Implement methods to emulate HTML5 drag and drop
 
-    def drag_to(element, delay: 0.05)
+    def drag_to(element, html5: nil, delay: 0.05)
       driver.execute_script MOUSEDOWN_TRACKER
       scroll_if_needed { browser_action.click_and_hold(native).perform }
-      if driver.evaluate_script(LEGACY_DRAG_CHECK, self)
-        perform_legacy_drag(element)
-      else
+      html5 = !driver.evaluate_script(LEGACY_DRAG_CHECK, self) if html5.nil?
+      if html5
         perform_html5_drag(element, delay)
+      else
+        perform_legacy_drag(element)
       end
     end
 

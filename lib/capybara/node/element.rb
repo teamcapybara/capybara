@@ -396,8 +396,13 @@ module Capybara
       #
       # @param [Capybara::Node::Element] node     The element to drag to
       # @param [Hash] options  Driver specific options for dragging. May not be supported by all drivers.
+      # @option options [Numeric] :delay   (0.05) When using Chrome/Firefox with Selenium and HTML5 dragging this is the number
+      #                                    of seconds between each stage of the drag.
+      # @option options [Boolean] :html5   When using Chrome/Firefox with Selenium enables to force the use of HTML5
+      #                                    (true) or legacy (false) dragging. If not specified the driver will attempt to
+      #                                    detect the correct method to use.
       #
-      # @return [Capybara::Node::Element]  The element
+      # @return [Capybara::Node::Element]  The dragged element
       def drag_to(node, **options)
         synchronize { base.drag_to(node.base, **options) }
         self
