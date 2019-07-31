@@ -515,6 +515,28 @@ module Capybara
         JS
       end
 
+      ##
+      #
+      # Toggle the elements background color between white and black for a period of time.
+      #
+      # @return [Capybara::Node::Element]  The element
+      def flash
+        execute_script(<<~JS, 100)
+          async function flash(el, delay){
+            var old_bg = el.style.backgroundColor;
+            var colors = ["black", "white"];
+            for(var i=0; i<20; i++){
+              el.style.backgroundColor = colors[i % colors.length];
+              await new Promise(resolve => setTimeout(resolve, delay));
+            }
+            el.style.backgroundColor = old_bg;
+          }
+          flash(this, arguments[0]);
+        JS
+
+        self
+      end
+
       # @api private
       def reload
         if @allow_reload
