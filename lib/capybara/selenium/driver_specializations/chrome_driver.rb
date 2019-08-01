@@ -108,10 +108,6 @@ private
     ::Capybara::Selenium::ChromeNode.new(self, native_node, initial_cache)
   end
 
-  def bridge
-    browser.send(:bridge)
-  end
-
   def chromedriver_version
     @chromedriver_version ||= begin
       caps = browser.capabilities

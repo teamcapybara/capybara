@@ -69,10 +69,6 @@ private
     end
   end
 
-  def bridge
-    driver.browser.send(:bridge)
-  end
-
   def browser_version
     @browser_version ||= begin
       caps = driver.browser.capabilities

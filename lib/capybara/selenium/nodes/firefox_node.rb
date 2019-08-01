@@ -115,10 +115,6 @@ private
     actions
   end
 
-  def bridge
-    driver.browser.send(:bridge)
-  end
-
   def upload(local_file)
     return nil unless local_file
     raise ArgumentError, "You may only upload files: #{local_file.inspect}" unless File.file?(local_file)

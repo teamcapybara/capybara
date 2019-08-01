@@ -299,11 +299,31 @@ private
   end
 
   def set_file(value) # rubocop:disable Naming/AccessorMethodName
-    path_names = value.to_s.empty? ? [] : value
-    file_names = Array(path_names).map do |pn|
-      Pathname.new(pn).absolute? ? pn : File.expand_path(pn)
-    end.join("\n")
-    native.send_keys(file_names)
+    with_file_detector do
+      path_names = value.to_s.empty? ? [] : value
+      file_names = Array(path_names).map do |pn|
+        Pathname.new(pn).absolute? ? pn : File.expand_path(pn)
+      end.join("\n")
+      native.send_keys(file_names)
+    end
+  end
+
+  def with_file_detector
+    if driver.options[:browser] == :remote &&
+       bridge.respond_to?(:file_detector) &&
+       bridge.file_detector.nil?
+      begin
+        bridge.file_detector = lambda do |(fn, *)|
+          str = fn.to_s
+          str if File.exist?(str)
+        end
+        yield
+      ensure
+        bridge.file_detector = nil
+      end
+    else
+      yield
+    end
   end
 
   def set_content_editable(value) # rubocop:disable Naming/AccessorMethodName
@@ -357,6 +377,10 @@ private
 
   def browser
     driver.browser
+  end
+
+  def bridge
+    browser.send(:bridge)
   end
 
   def browser_action

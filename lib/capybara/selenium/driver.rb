@@ -430,6 +430,10 @@ private
     ::Capybara::Selenium::Node.new(self, native_node, initial_cache)
   end
 
+  def bridge
+    browser.send(:bridge)
+  end
+
   def specialize_driver
     browser_type = browser.browser
     Capybara::Selenium::Driver.specializations.select { |k, _v| k === browser_type }.each_value do |specialization| # rubocop:disable Style/CaseEquality

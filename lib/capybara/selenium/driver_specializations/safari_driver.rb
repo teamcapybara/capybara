@@ -18,10 +18,6 @@ private
   def build_node(native_node, initial_cache = {})
     ::Capybara::Selenium::SafariNode.new(self, native_node, initial_cache)
   end
-
-  def bridge
-    browser.send(:bridge)
-  end
 end
 
 Capybara::Selenium::Driver.register_specialization(/^(safari|Safari_Technology_Preview)$/,

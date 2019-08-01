@@ -54,12 +54,6 @@ module TestSessions
   Chrome = Capybara::Session.new(CHROME_REMOTE_DRIVER, TestApp)
 end
 
-TestSessions::Chrome.driver.browser.file_detector = lambda do |args|
-  # args => ["/path/to/file"]
-  str = args.first.to_s
-  str if File.exist?(str)
-end
-
 skipped_tests = %i[response_headers status_code trigger download]
 
 Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_REMOTE_DRIVER.to_s, capybara_skip: skipped_tests do |example|

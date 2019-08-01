@@ -90,10 +90,6 @@ class Capybara::Selenium::SafariNode < Capybara::Selenium::Node
 
 private
 
-  def bridge
-    driver.browser.send(:bridge)
-  end
-
   def _send_keys(keys, actions = browser_action, down_keys = ModifierKeysStack.new)
     case keys
     when *MODIFIER_KEYS

@@ -13,12 +13,6 @@ module Capybara::Selenium::Driver::FirefoxDriver
     (defined?(Selenium::WebDriver::VERSION) && (Selenium::WebDriver::VERSION.to_f >= 4)) ||
       driver.browser.capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
   end
-
-private
-
-  def bridge
-    browser.send(:bridge)
-  end
 end
 
 module Capybara::Selenium::Driver::W3CFirefoxDriver

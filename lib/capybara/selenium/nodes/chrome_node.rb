@@ -84,10 +84,6 @@ private
     end
   end
 
-  def bridge
-    driver.browser.send(:bridge)
-  end
-
   def w3c?
     (defined?(Selenium::WebDriver::VERSION) && (Selenium::WebDriver::VERSION.to_f >= 4)) ||
       capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)

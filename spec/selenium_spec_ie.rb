@@ -39,12 +39,7 @@ Capybara.register_driver :selenium_ie do |app|
     Capybara::Selenium::Driver.new(app,
                                    browser: :remote,
                                    options: options,
-                                   url: url).tap do |driver|
-      driver.browser.file_detector = lambda do |args|
-        str = args.first.to_s
-        str if File.exist?(str)
-      end
-    end
+                                   url: url)
   else
     Capybara::Selenium::Driver.new(
       app,
