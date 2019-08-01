@@ -35,6 +35,14 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#go_forward'
   end
 
+  def freeze_page
+    raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#freeze_page'
+  end
+
+  def thaw_page
+    raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#thaw_page'
+  end
+
   def execute_script(script, *args)
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#execute_script'
   end

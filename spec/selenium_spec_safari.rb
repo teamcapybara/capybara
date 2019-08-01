@@ -36,7 +36,7 @@ module TestSessions
   Safari = Capybara::Session.new(SAFARI_DRIVER, TestApp)
 end
 
-skipped_tests = %i[response_headers status_code trigger windows drag]
+skipped_tests = %i[response_headers status_code trigger windows drag freeze]
 
 Capybara::SpecHelper.log_selenium_driver_version(Selenium::WebDriver::Safari) if ENV['CI']
 
