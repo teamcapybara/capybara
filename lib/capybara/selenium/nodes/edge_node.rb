@@ -63,6 +63,18 @@ class Capybara::Selenium::EdgeNode < Capybara::Selenium::Node
     click unless selected_or_disabled
   end
 
+  def visible?
+    return super unless chrome_edge? && native_displayed?
+
+    begin
+      bridge.send(:execute, :is_element_displayed, id: native.ref)
+    rescue Selenium::WebDriver::Error::UnknownCommandError
+      # If the is_element_displayed command is unknown, no point in trying again
+      driver.options[:native_displayed] = false
+      super
+    end
+  end
+
 private
 
   def file_errors
@@ -80,5 +92,11 @@ private
 
   def chrome_edge?
     browser_version >= 75
+  end
+
+  def native_displayed?
+    (driver.options[:native_displayed] != false) &&
+      # chromedriver_supports_displayed_endpoint? &&
+      (!ENV['DISABLE_CAPYBARA_SELENIUM_OPTIMIZATIONS'])
   end
 end
