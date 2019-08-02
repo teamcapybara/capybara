@@ -36,14 +36,16 @@ class Capybara::Selenium::EdgeNode < Capybara::Selenium::Node
     html5_drop(*args)
   end
 
-  # def click(*)
-  #   super
-  # rescue ::Selenium::WebDriver::Error::WebDriverError => e
-  #   # chromedriver 74 (at least on mac) raises the wrong error for this
-  #   raise ::Selenium::WebDriver::Error::ElementClickInterceptedError, e.message if e.message.match?(/element click intercepted/)
-  #
-  #   raise
-  # end
+  def click(*)
+    super
+  rescue Selenium::WebDriver::Error::InvalidArgumentError => e
+    tag_name, type = attrs(:tagName, :type).map { |val| val&.downcase }
+    if tag_name == 'input' && type == 'file'
+      raise Selenium::WebDriver::Error::InvalidArgumentError, "EdgeChrome can't click on file inputs.\n#{e.message}"
+    end
+
+    raise
+  end
 
   def disabled?
     return super unless chrome_edge?

@@ -7,7 +7,7 @@ require 'shared_selenium_node'
 require 'rspec/shared_spec_matchers'
 
 # unless ENV['CI']
-  # Selenium::WebDriver::Edge::Service.driver_path = '/usr/local/bin/msedgedriver'
+#   Selenium::WebDriver::Edge::Service.driver_path = '/usr/local/bin/msedgedriver'
 # end
 
 if ::Selenium::WebDriver::Platform.mac?
@@ -30,17 +30,13 @@ end
 
 skipped_tests = %i[response_headers status_code trigger]
 
-Capybara::SpecHelper.log_selenium_driver_version(Selenium::WebDriver::Edge) if ENV['CI']
+Capybara::SpecHelper.log_selenium_driver_version(Selenium::WebDriver::EdgeChrome) if ENV['CI']
 
 Capybara::SpecHelper.run_specs TestSessions::SeleniumEdge, 'selenium', capybara_skip: skipped_tests do |example|
-  # case example.metadata[:description]
-  # when /#refresh it reposts$/
-  #   skip 'Edge insists on prompting without providing a way to suppress'
-  # when /should be able to open non-http url/
-  #   skip 'Crashes'
-  # when /when Capybara.always_include_port is true/
-  #   skip 'Crashes'
-  # end
+  case example.metadata[:full_description]
+  when 'Capybara::Session selenium #attach_file with a block can upload by clicking the file input'
+    pending "EdgeChrome doesn't allow clicking on file inputs"
+  end
 end
 
 RSpec.describe 'Capybara::Session with Edge', capybara_skip: skipped_tests do
