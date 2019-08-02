@@ -2,4 +2,4 @@
 --order random
 --require rspec/instafail
 --format RSpec::Instafail
---format progress
+--format documentation
