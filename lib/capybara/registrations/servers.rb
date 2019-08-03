@@ -24,7 +24,7 @@ Capybara.register_server :puma do |app, port, host, **options|
   # If we just run the Puma Rack handler it installs signal handlers which prevent us from being able to interrupt tests.
   # Therefore construct and run the Server instance ourselves.
   # Rack::Handler::Puma.run(app, { Host: host, Port: port, Threads: "0:4", workers: 0, daemon: false }.merge(options))
-  default_options = { Host: host, Port: port, Threads: '0:4', workers: 0, daemon: false}
+  default_options = { Host: host, Port: port, Threads: '0:4', workers: 0, daemon: false }
   options = default_options.merge(options)
 
   conf = Rack::Handler::Puma.config(app, options)
