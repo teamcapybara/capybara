@@ -20,15 +20,18 @@ Capybara.register_server :puma do |app, port, host, **options|
       raise LoadError, 'Capybara requires `puma` version 3.8.0 or higher, please upgrade `puma` or register and specify your own server block'
     end
   end
+
   # If we just run the Puma Rack handler it installs signal handlers which prevent us from being able to interrupt tests.
   # Therefore construct and run the Server instance ourselves.
   # Rack::Handler::Puma.run(app, { Host: host, Port: port, Threads: "0:4", workers: 0, daemon: false }.merge(options))
-  default_options = { Host: host, Port: port, Threads: '0:4', workers: 0, daemon: false, queue_requests: false }
-  default_options[:queue_requests] = false if options[:Host]&.start_with?('ssl://')
+  default_options = { Host: host, Port: port, Threads: '0:4', workers: 0, daemon: false}
   options = default_options.merge(options)
 
   conf = Rack::Handler::Puma.config(app, options)
   events = conf.options[:Silent] ? ::Puma::Events.strings : ::Puma::Events.stdio
+
+  puma_ver = Gem::Version.new(Puma::Const::PUMA_VERSION)
+  require_relative 'patches/puma_ssl' if (Gem::Version.new('4.0.0')...Gem::Version.new('4.1.0')).cover? puma_ver
 
   events.log 'Capybara starting Puma...'
   events.log "* Version #{Puma::Const::PUMA_VERSION} , codename: #{Puma::Const::CODE_NAME}"
