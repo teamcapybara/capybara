@@ -6,6 +6,8 @@ Release date: unreleased
 * Allow forcing HTML5 or legacy dragging via the `:html5` option to `drag_to` when using Selenium with Chrome or Firefox
 * Autodetection of drag type interprets not seeing the mousedown event as legacy.
 * HTML5 form validation `:valid` node filter added to `:field` and `:fillable_field` selectors
+* When using Capybara registered :puma server - patches Puma 4.0.x to fix SSL connection behavior. Removes
+  default `queue_requests` setting - Issue #2227
 
 # Version 3.27.0
 Release date: 2019-07-28
