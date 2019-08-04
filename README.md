@@ -544,7 +544,7 @@ If you find yourself needing to use this a lot you may be better off adding a [c
 find_field('First Name'){ |el| el['data-xyz'] == '123' }
 find("#img_loading"){ |img| img['complete'] == true }
 ```
-
+My addition
 **Note**: `find` will wait for an element to appear on the page, as explained in the
 Ajax section. If the element does not appear it will raise an error.
 
