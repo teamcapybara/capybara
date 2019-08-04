@@ -555,7 +555,7 @@ to specific parts of the page:
 find('#navigation').click_link('Home')
 expect(find('#navigation')).to have_button('Sign out')
 ```
-
+Add some text
 ### <a name="scoping"></a>Scoping
 
 Capybara makes it possible to restrict certain actions, such as interacting with
