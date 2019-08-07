@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
+require 'matrix'
+
 module Capybara
   module Queries
     class SelectorQuery < Queries::BaseQuery
       attr_reader :expression, :selector, :locator, :options
-      VALID_KEYS = COUNT_KEYS +
+      SPATIAL_KEYS = %i[above below left_of right_of near].freeze
+      VALID_KEYS = SPATIAL_KEYS + COUNT_KEYS +
                    %i[text id class style visible obscured exact exact_text normalize_ws match wait filter_set]
       VALID_MATCH = %i[first smart prefer_exact one].freeze
 
@@ -18,6 +21,8 @@ module Capybara
         @resolved_node = nil
         @resolved_count = 0
         @options = options.dup
+        @filter_cache = Hash.new { |hsh, key| hsh[key] = {} }
+
         super(@options)
         self.session_options = session_options
 
@@ -50,13 +55,17 @@ module Capybara
           desc << 'visible ' if visible == :visible
           desc << 'non-visible ' if visible == :hidden
         end
+
         desc << "#{label} #{locator.inspect}"
+
         if show_for[:any]
           desc << " with#{' exact' if exact_text == true} text #{options[:text].inspect}" if options[:text]
           desc << " with exact text #{exact_text}" if exact_text.is_a?(String)
         end
+
         desc << " with id #{options[:id]}" if options[:id]
         desc << " with classes [#{Array(options[:class]).join(',')}]" if options[:class]
+
         desc << case options[:style]
         when String
           " with style attribute #{options[:style].inspect}"
@@ -66,8 +75,15 @@ module Capybara
           " with styles #{options[:style].inspect}"
         else ''
         end
+
+        %i[above below left_of right_of near].each do |spatial_filter|
+          desc << " #{spatial_filter} #{options[spatial_filter] rescue '<ERROR>'}" if options[spatial_filter] && show_for[:spatial] # rubocop:disable Style/RescueModifier
+        end
+
         desc << selector.description(node_filters: show_for[:node], **options)
+
         desc << ' that also matches the custom filter block' if @filter_block && show_for[:node]
+
         desc << " within #{@resolved_node.inspect}" if describe_within?
         if locator.is_a?(String) && locator.start_with?('#', './/', '//')
           unless selector.raw_locator?
@@ -87,6 +103,7 @@ module Capybara
 
         matches_locator_filter?(node) &&
           matches_system_filters?(node) &&
+          matches_spatial_filters?(node) &&
           matches_node_filters?(node, node_filter_errors) &&
           matches_filter_block?(node)
       rescue *(node.respond_to?(:session) ? node.session.driver.invalid_element_errors : [])
@@ -125,8 +142,10 @@ module Capybara
       # @api private
       def resolve_for(node, exact = nil)
         applied_filters.clear
+        @filter_cache.clear
         @resolved_node = node
         @resolved_count += 1
+
         node.synchronize do
           children = find_nodes_by_selector_format(node, exact).map(&method(:to_element))
           Capybara::Result.new(children, self)
@@ -208,6 +227,7 @@ module Capybara
         hints[:uses_visibility] = true unless visible == :all
         hints[:texts] = text_fragments unless selector_format == :xpath
         hints[:styles] = options[:style] if use_default_style_filter?
+        hints[:position] = true if use_spatial_filter?
 
         if selector_format == :css
           if node.method(:find_css).arity != 1
@@ -333,6 +353,10 @@ module Capybara
         options.key?(:style) && !custom_keys.include?(:style)
       end
 
+      def use_spatial_filter?
+        options.values_at(*SPATIAL_KEYS).compact.any?
+      end
+
       def apply_expression_filters(expression)
         unapplied_options = options.keys - valid_keys
         expression_filters.inject(expression) do |expr, (name, ef)|
@@ -395,6 +419,42 @@ module Capybara
           matches_style_filter?(node) &&
           matches_text_filter?(node) &&
           matches_exact_text_filter?(node)
+      end
+
+      def matches_spatial_filters?(node)
+        applied_filters << :spatial
+        return true unless use_spatial_filter?
+
+        node_rect = Rectangle.new(node.initial_cache[:position] || node.rect)
+
+        if options[:above]
+          el_rect = rect_cache(options[:above])
+          return false unless node_rect.above? el_rect
+        end
+
+        if options[:below]
+          el_rect = rect_cache(options[:below])
+          return false unless node_rect.below? el_rect
+        end
+
+        if options[:left_of]
+          el_rect = rect_cache(options[:left_of])
+          return false unless node_rect.left_of? el_rect
+        end
+
+        if options[:right_of]
+          el_rect = rect_cache(options[:right_of])
+          return false unless node_rect.right_of? el_rect
+        end
+
+        if options[:near]
+          return false if node == options[:near]
+
+          el_rect = rect_cache(options[:near])
+          return false unless node_rect.near? el_rect
+        end
+
+        true
       end
 
       def matches_id_filter?(node)
@@ -491,6 +551,147 @@ module Capybara
       def builder(expr)
         selector.builder(expr)
       end
+
+      def position_cache(key)
+        @filter_cache[key][:position] ||= key.evaluate_script('this.getBoundingClientRect()')
+      end
+
+      def rect_cache(key)
+        @filter_cache[key][:rect] ||= Rectangle.new(position_cache(key))
+      end
+
+      class Rectangle
+        attr_reader :top, :bottom, :left, :right
+        def initialize(position)
+          # rubocop:disable Style/RescueModifier
+          @top = position['top'] rescue position['y']
+          @bottom = position['bottom'] rescue (@top + position['height'])
+          @left = position['left'] rescue position['x']
+          @right = position['right'] rescue (@left + position['width'])
+          # rubocop:enable Style/RescueModifier
+        end
+
+        def distance(other)
+          distance = Float::INFINITY
+
+          line_segments.each do |ls1|
+            other.line_segments.each do |ls2|
+              distance = [
+                distance,
+                distance_segment_segment(*ls1, *ls2)
+              ].min
+            end
+          end
+
+          distance
+        end
+
+        def above?(other)
+          bottom <= other.top
+        end
+
+        def below?(other)
+          top >= other.bottom
+        end
+
+        def left_of?(other)
+          right <= other.left
+        end
+
+        def right_of?(other)
+          left >= other.right
+        end
+
+        def near?(other)
+          distance(other) <= 50
+        end
+
+      protected
+
+        def line_segments
+          [
+            [Vector[top, left], Vector[top, right]],
+            [Vector[top, right], Vector[bottom, left]],
+            [Vector[bottom, left], Vector[bottom, right]],
+            [Vector[bottom, right], Vector[top, left]]
+          ]
+        end
+
+      private
+
+        def distance_segment_segment(l1p1, l1p2, l2p1, l2p2)
+          # See http://geomalgorithms.com/a07-_distance.html
+          # rubocop:disable Naming/VariableName
+          u = l1p2 - l1p1
+          v = l2p2 - l2p1
+          w = l1p1 - l2p1
+
+          a = u.dot u
+          b = u.dot v
+          c = v.dot v
+
+          d = u.dot w
+          e = v.dot w
+          cap_d = (a * c) - (b * b)
+          sD = tD = cap_d
+
+          # compute the line parameters of the two closest points
+          if cap_d < Float::EPSILON # the lines are almost parallel
+            sN = 0.0 # force using point P0 on segment S1
+            sD = 1.0 # to prevent possible division by 0.0 later
+            tN = e
+            tD = c
+          else # get the closest points on the infinite lines
+            sN = (b * e) - (c * d)
+            tN = (a * e) - (b * d)
+            if sN.negative? # sc < 0 => the s=0 edge is visible
+              sN = 0
+              tN = e
+              tD = c
+            elsif sN > sD # sc > 1 => the s=1 edge is visible
+              sN = sD
+              tN = e + b
+              tD = c
+            end
+          end
+
+          if tN.negative? # tc < 0 => the t=0 edge is visible
+            tN = 0
+            # recompute sc for this edge
+            if (-d).negative?
+              sN = 0.0
+            elsif -d > a
+              sN = sD
+            else
+              sN = -d
+              sD = a
+            end
+          elsif tN > tD # tc > 1 => the t=1 edge is visible
+            tN = tD
+            # recompute sc for this edge
+            if (-d + b).negative?
+              sN = 0.0
+            elsif (-d + b) > a
+              sN = sD
+            else
+              sN = (-d + b)
+              sD = a
+            end
+          end
+
+          # finally do the division to get sc and tc
+          sc = sN.abs < Float::EPSILON ? 0.0 : sN / sD
+          tc = tN.abs < Float::EPSILON ? 0.0 : tN / tD
+
+          # difference of the two closest points
+          dP = w + (u * sc) - (v * tc)
+
+          Math.sqrt(dP.dot(dP))
+          # rubocop:enable Naming/VariableName
+        end
+      end
+
+      private_constant :Rectangle
     end
   end
 end

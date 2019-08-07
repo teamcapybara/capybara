@@ -371,6 +371,10 @@ module Capybara
         synchronize { base.path }
       end
 
+      def rect
+        synchronize { base.rect }
+      end
+
       ##
       #
       # Trigger any event on the current element, for example mouseover or focus

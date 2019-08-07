@@ -2,6 +2,7 @@
 
 require 'capybara/rspec/matchers/compound'
 require 'capybara/rspec/matchers/count_sugar'
+require 'capybara/rspec/matchers/spatial_sugar'
 
 module Capybara
   module RSpecMatchers
@@ -68,6 +69,7 @@ module Capybara
 
       class CountableWrappedElementMatcher < WrappedElementMatcher
         include ::Capybara::RSpecMatchers::CountSugar
+        include ::Capybara::RSpecMatchers::SpatialSugar
       end
 
       class NegatedMatcher

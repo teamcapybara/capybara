@@ -179,6 +179,10 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     driver.frame_obscured_at?(x: res['x'], y: res['y'])
   end
 
+  def rect
+    native.rect
+  end
+
 protected
 
   def scroll_if_needed

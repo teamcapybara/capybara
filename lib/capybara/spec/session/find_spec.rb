@@ -428,6 +428,38 @@ Capybara::SpecHelper.spec '#find' do
     expect(@session.find(:css, 'input', &:disabled?)[:name]).to eq('disabled_text')
   end
 
+  context 'with spatial filters', requires: [:spatial] do
+    before do
+      @session.visit('/spatial')
+      @center = @session.find(:css, 'div.center')
+    end
+
+    it 'should find an element above another element' do
+      expect(@session.find(:css, 'div:not(.corner)', above: @center).text).to eq('2')
+    end
+
+    it 'should find an element below another element' do
+      expect(@session.find(:css, 'div:not(.corner):not(.footer)', below: @center).text).to eq('8')
+    end
+
+    it 'should find an element left of another element' do
+      expect(@session.find(:css, 'div:not(.corner)', left_of: @center).text).to eq('4')
+    end
+
+    it 'should find an element right of another element' do
+      expect(@session.find(:css, 'div:not(.corner)', right_of: @center).text).to eq('6')
+    end
+
+    it 'should combine spatial filters' do
+      expect(@session.find(:css, 'div', left_of: @center, above: @center).text).to eq('1')
+      expect(@session.find(:css, 'div', right_of: @center, below: @center).text).to eq('9')
+    end
+
+    it 'should find an element "near" another element' do
+      expect(@session.find(:css, 'div.distance', near: @center).text).to eq('2')
+    end
+  end
+
   context 'within a scope' do
     before do
       @session.visit('/with_scope')

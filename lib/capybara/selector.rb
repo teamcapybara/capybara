@@ -9,6 +9,11 @@ require 'capybara/selector/definition'
 #   * :id (String, Regexp, XPath::Expression) - Matches the id attribute
 #   * :class (String, Array<String>, Regexp, XPath::Expression) - Matches the class(es) provided
 #   * :style (String, Regexp, Hash<String, String>) - Match on elements style
+#   * :above (Element) - Match elements above the passed element on the page
+#   * :below (Element) - Match elements below the passed element on the page
+#   * :left_of (Element) - Match elements left of the passed element on the page
+#   * :right_of (Element) - Match elements right of the passed element on the page
+#   * :near (Element) - Match elements near (within 50px) the passed element on the page
 #
 # ### Built-in Selectors
 #

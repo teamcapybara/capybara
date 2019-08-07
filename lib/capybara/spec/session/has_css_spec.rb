@@ -231,6 +231,24 @@ Capybara::SpecHelper.spec '#has_css?' do
     end
   end
 
+  context 'with spatial requirements', requires: [:spatial] do
+    before do
+      @session.visit('/spatial')
+      @center = @session.find(:css, '.center')
+    end
+
+    it 'accepts spatial options' do
+      expect(@session).to have_css('div', above: @center).thrice
+      expect(@session).to have_css('div', above: @center, right_of: @center).once
+    end
+
+    it 'supports spatial sugar' do
+      expect(@session).to have_css('div').left_of(@center).thrice
+      expect(@session).to have_css('div').below(@center).right_of(@center).once
+      expect(@session).to have_css('div').near(@center).exactly(8).times
+    end
+  end
+
   it 'should allow escapes in the CSS selector' do
     expect(@session).to have_css('p[data-random="abc\\\\def"]')
     expect(@session).to have_css("p[data-random='#{Capybara::Selector::CSS.escape('abc\def')}']")

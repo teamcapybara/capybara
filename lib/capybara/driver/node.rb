@@ -113,6 +113,10 @@ module Capybara
         !!self[:multiple]
       end
 
+      def rect
+        raise NotSupportedByDriverError, 'Capybara::Driver::Node#rect'
+      end
+
       def path
         raise NotSupportedByDriverError, 'Capybara::Driver::Node#path'
       end

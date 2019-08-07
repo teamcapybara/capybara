@@ -3,34 +3,35 @@
 module Capybara
   module Selenium
     module Find
-      def find_xpath(selector, uses_visibility: false, styles: nil, **_options)
-        find_by(:xpath, selector, uses_visibility: uses_visibility, texts: [], styles: styles)
+      def find_xpath(selector, uses_visibility: false, styles: nil, position: false, **_options)
+        find_by(:xpath, selector, uses_visibility: uses_visibility, texts: [], styles: styles, position: position)
       end
 
-      def find_css(selector, uses_visibility: false, texts: [], styles: nil, **_options)
-        find_by(:css, selector, uses_visibility: uses_visibility, texts: texts, styles: styles)
+      def find_css(selector, uses_visibility: false, texts: [], styles: nil, position: false, **_options)
+        find_by(:css, selector, uses_visibility: uses_visibility, texts: texts, styles: styles, position: position)
       end
 
     private
 
-      def find_by(format, selector, uses_visibility:, texts:, styles:)
+      def find_by(format, selector, uses_visibility:, texts:, styles:, position:)
         els = find_context.find_elements(format, selector)
         hints = []
 
         if (els.size > 2) && !ENV['DISABLE_CAPYBARA_SELENIUM_OPTIMIZATIONS']
           els = filter_by_text(els, texts) unless texts.empty?
-          hints = gather_hints(els, uses_visibility: uses_visibility, styles: styles)
+          hints = gather_hints(els, uses_visibility: uses_visibility, styles: styles, position: position)
         end
         els.map.with_index { |el, idx| build_node(el, hints[idx] || {}) }
       end
 
-      def gather_hints(elements, uses_visibility:, styles:)
-        hints_js, functions = build_hints_js(uses_visibility, styles)
+      def gather_hints(elements, uses_visibility:, styles:, position:)
+        hints_js, functions = build_hints_js(uses_visibility, styles, position)
         return [] unless functions.any?
 
         es_context.execute_script(hints_js, elements).map! do |results|
           hint = {}
           hint[:style] = results.pop if functions.include?(:style_func)
+          hint[:position] = results.pop if functions.include?(:position_func)
           hint[:visible] = results.pop if functions.include?(:vis_func)
           hint
         end
@@ -50,7 +51,7 @@ module Capybara
         JS
       end
 
-      def build_hints_js(uses_visibility, styles)
+      def build_hints_js(uses_visibility, styles, position)
         functions = []
         hints_js = +''
 
@@ -59,6 +60,15 @@ module Capybara
             var vis_func = #{is_displayed_atom};
           VISIBILITY_JS
           functions << :vis_func
+        end
+
+        if position
+          hints_js << <<~POSITION_JS
+            var position_func = function(el){
+              return el.getBoundingClientRect();
+            };
+          POSITION_JS
+          functions << :position_func
         end
 
         if styles.is_a? Hash

@@ -25,6 +25,7 @@ skipped_tests = %i[
   download
   css
   scroll
+  spatial
 ]
 Capybara::SpecHelper.run_specs TestSessions::RackTest, 'RackTest', capybara_skip: skipped_tests do |example|
   case example.metadata[:full_description]
