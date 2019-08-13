@@ -553,7 +553,7 @@ module Capybara
       end
 
       def position_cache(key)
-        @filter_cache[key][:position] ||= key.evaluate_script('this.getBoundingClientRect()')
+        @filter_cache[key][:position] ||= key.rect
       end
 
       def rect_cache(key)
