@@ -150,15 +150,15 @@ module Capybara
       @rest ||= @elements - full_results
     end
 
-    def lazy_select_elements(&block)
+    if (RUBY_PLATFORM == 'java') && (Gem::Version.new(JRUBY_VERSION) < Gem::Version.new('9.2.8.0'))
       # JRuby < 9.2.8.0 has an issue with lazy enumerators which
       # causes a concurrency issue with network requests here
       # https://github.com/jruby/jruby/issues/4212
-      if (RUBY_PLATFORM == 'java') && (Gem::Version.new(JRUBY_VERSION) < Gem::Version.new('9.2.8.0'))
-        # :nocov:
+      def lazy_select_elements(&block)
         @elements.select(&block).to_enum # non-lazy evaluation
-        # :nocov:
-      else
+      end
+    else
+      def lazy_select_elements(&block)
         @elements.lazy.select(&block)
       end
     end

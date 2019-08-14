@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Capybara::Result do
+RSpec.describe Capybara::Result, :focus_ do
   let :string do
     Capybara.string <<-STRING
       <ul>
@@ -166,7 +166,7 @@ RSpec.describe Capybara::Result do
   context 'lazy select' do
     it 'is compatible' do
       # This test will let us know when JRuby fixes lazy select so we can re-enable it in Result
-      pending 'JRuby has an issue with lazy enumberator evaluation' if RUBY_PLATFORM == 'java'
+      pending 'JRuby < 9.2.8.0 has an issue with lazy enumberator evaluation' if jruby_lazy_enumerator_workaround?
       eval_count = 0
       enum = %w[Text1 Text2 Text3].lazy.select do
         eval_count += 1
