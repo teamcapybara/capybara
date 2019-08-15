@@ -394,7 +394,7 @@ Capybara supports [Selenium 3.5+
 In order to use Selenium, you'll need to install the `selenium-webdriver` gem,
 and add it to your Gemfile if you're using bundler.
 
-Capybara pre-registers a number of named drives that use Selenium - they are:
+Capybara pre-registers a number of named drivers that use Selenium - they are:
 
   * :selenium                 => Selenium driving Firefox
   * :selenium_headless        => Selenium driving Firefox in a headless configuration
