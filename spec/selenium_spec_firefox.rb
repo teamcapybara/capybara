@@ -62,8 +62,6 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumFirefox, 'selenium', capyba
     skip 'Need to figure out testing of file downloading on windows platform' if Gem.win_platform?
   when 'Capybara::Session selenium #reset_session! removes ALL cookies'
     pending "Geckodriver doesn't provide a way to remove cookies outside the current domain"
-  when 'Capybara::Session selenium #attach_file with a block can upload by clicking the file input'
-    pending "Geckodriver doesn't allow clicking on file inputs"
   when /drag_to.*HTML5/
     pending "Firefox < 62 doesn't support a DataTransfer constuctor" if firefox_lt?(62.0, @session)
   end

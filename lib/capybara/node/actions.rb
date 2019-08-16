@@ -288,6 +288,7 @@ module Capybara
             execute_script CAPTURE_FILE_ELEMENT_SCRIPT
             yield
             file_field = evaluate_script 'window._capybara_clicked_file_input'
+            raise ArgumentError, "Capybara was unable to determine the file input you're attaching to" unless file_field
           rescue ::Capybara::NotSupportedByDriverError
             warn 'Block mode of `#attach_file` is not supported by the current driver - ignoring.'
           end
