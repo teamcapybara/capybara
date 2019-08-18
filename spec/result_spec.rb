@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Capybara::Result, :focus_ do
+RSpec.describe Capybara::Result do
   let :string do
     Capybara.string <<-STRING
       <ul>

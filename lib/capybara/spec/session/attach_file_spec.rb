@@ -189,7 +189,7 @@ Capybara::SpecHelper.spec '#attach_file' do
   end
 
   context 'with a block', requires: %i[js] do
-    it 'can upload by clicking the file input', :focus_ do
+    it 'can upload by clicking the file input' do
       @session.attach_file(with_os_path_separators(__FILE__)) do
         @session.find(:file_field, 'form[image]').click
       end
