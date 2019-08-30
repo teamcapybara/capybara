@@ -198,7 +198,7 @@ module Capybara
           x.attr(:style)[x.contains('display:none') | x.contains('display: none')] |
           x.attr(:hidden) |
           x.qname.one_of('script', 'head') |
-          (~x.self(:summary) & XPath.parent(:details))
+          (~x.self(:summary) & XPath.parent(:details)[!XPath.attr(:open)])
         ].boolean
       end.to_s.freeze
     end

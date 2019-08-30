@@ -254,20 +254,24 @@ Capybara::SpecHelper.spec 'node' do
       expect(@session.find('//div[@id="hidden"]').visible?).to be false
     end
 
-    it 'details > summary elements and descendants should be visible' do
-      expect(@session.find(:css, 'details summary')).to be_visible
-      expect(@session.find(:css, 'details summary h6')).to be_visible
+    it 'closed details > summary elements and descendants should be visible' do
+      expect(@session.find(:css, '#closed_details summary')).to be_visible
+      expect(@session.find(:css, '#closed_details summary h6')).to be_visible
     end
 
-    it 'details non-summary descendants should be non-visible' do
-      @session.first(:css, 'details li').visible?
-      descendants = @session.all(:css, 'details > *:not(summary), details > *:not(summary) *', minimum: 2)
+    it 'details non-summary descendants should be non-visible when closed' do
+      descendants = @session.all(:css, '#closed_details > *:not(summary), #closed_details > *:not(summary) *', minimum: 2)
       expect(descendants).not_to include(be_visible)
     end
 
-    it 'sees open details as visible', requires: [:js] do
-      @session.find(:css, 'details').click
-      expect(@session.all(:css, 'details *')).to all(be_visible)
+    it 'deatils descendants should be visible when open' do
+      descendants = @session.all(:css, '#open_details *')
+      expect(descendants).to all(be_visible)
+    end
+
+    it 'sees opened details as visible', requires: [:js] do
+      @session.find(:css, '#closed_details').click
+      expect(@session.all(:css, '#closed_details *')).to all(be_visible)
     end
   end
 
