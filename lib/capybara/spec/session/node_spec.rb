@@ -269,9 +269,15 @@ Capybara::SpecHelper.spec 'node' do
       expect(descendants).to all(be_visible)
     end
 
-    it 'sees opened details as visible', requires: [:js] do
+    it 'works when details is toggled open and closed' do
       @session.find(:css, '#closed_details').click
-      expect(@session.all(:css, '#closed_details *')).to all(be_visible)
+      expect(@session).to have_css('#closed_details *', visible: true, count: 5)
+        .and(have_no_css('#closed_details *', visible: :hidden))
+
+      @session.find(:css, '#closed_details').click
+      descendants_css = '#closed_details > *:not(summary), #closed_details > *:not(summary) *'
+      expect(@session).to have_no_css(descendants_css, visible: true)
+        .and(have_css(descendants_css, visible: :hidden, count: 3))
     end
   end
 

@@ -76,6 +76,8 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
       set(!checked?)
     elsif tag_name == 'label'
       click_label
+    elsif tag_name == 'details'
+      toggle_details
     end
   end
 
@@ -234,6 +236,14 @@ private
     end.first
 
     labelled_control.set(!labelled_control.checked?) if checkbox_or_radio?(labelled_control)
+  end
+
+  def toggle_details
+    if native.has_attribute?('open')
+      native.remove_attribute('open')
+    else
+      native.set_attribute('open', 'open')
+    end
   end
 
   def link?
