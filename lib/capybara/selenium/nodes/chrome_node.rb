@@ -36,10 +36,6 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
 
   def click(*)
     super
-  rescue Selenium::WebDriver::Error::InvalidArgumentError
-    return emulate_click if attaching_file? && visible_file_field?
-
-    raise
   rescue ::Selenium::WebDriver::Error::ElementClickInterceptedError
     raise
   rescue ::Selenium::WebDriver::Error::WebDriverError => e

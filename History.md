@@ -3,7 +3,7 @@ Release date: Unreleased
 
 ### Added
 
-* Allow clicking on file input when using the block version of `attach_file` with Chrome
+* Allow clicking on file input when using the block version of `attach_file` with Chrome and Firefox
 * Spatial filters (`left_of`, `right_of`, `above`, `below`, `near`)
 * rack_test driver now supports clicking on details elements to open/close them
 
