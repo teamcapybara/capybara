@@ -1,3 +1,21 @@
+# Version 3.29.0
+Release date: Unreleased
+
+### Added
+
+* Allow clicking on file input when using the block version of `attach_file` with Chrome
+* Spatial filters (`left_of`, `right_of`, `above`, `below`, `near`)
+* rack_test driver now supports clicking on details elements to open/close them
+
+### Fixed
+
+* rack_test driver correctly determines visibility for open details elements descendants
+
+### Changed
+
+* Results will now be lazily evaluated when using JRuby >= 9.2.8.0
+
+
 # Version 3.28.0
 Release date: 2019-08-03
 
