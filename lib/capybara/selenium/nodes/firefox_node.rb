@@ -9,10 +9,6 @@ class Capybara::Selenium::FirefoxNode < Capybara::Selenium::Node
 
   def click(keys = [], **options)
     super
-  rescue Selenium::WebDriver::Error::InvalidArgumentError
-    return emulate_click if attaching_file? && visible_file_field?
-
-    raise
   rescue ::Selenium::WebDriver::Error::ElementNotInteractableError
     if tag_name == 'tr'
       warn 'You are attempting to click a table row which has issues in geckodriver/marionette - '\
