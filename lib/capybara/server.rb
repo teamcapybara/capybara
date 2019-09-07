@@ -16,7 +16,7 @@ module Capybara
       end
     end
 
-    attr_reader :app, :port, :host
+    attr_reader :app, :host
 
     def initialize(app,
                    *deprecated_options,
@@ -32,8 +32,8 @@ module Capybara
       @reportable_errors = deprecated_options[2] || reportable_errors
       @port = deprecated_options[0] || port
       @port ||= Capybara::Server.ports[port_key]
-      @port ||= find_available_port(host)
-      @checker = Checker.new(@host, @port)
+      @port ||= reserve_available_port(host)
+      @checker = Checker.new(@host, self.port)
     end
 
     def reset_error!
@@ -50,6 +50,7 @@ module Capybara
 
     def responsive?
       return false if @server_thread&.join(0)
+      return false if reserved_port
 
       res = @checker.request { |http| http.get('/__identify__') }
 
@@ -69,7 +70,7 @@ module Capybara
 
     def boot
       unless responsive?
-        Capybara::Server.ports[port_key] = port
+        Capybara::Server.ports[port_key] = resolved_port
 
         @server_thread = Thread.new do
           Capybara.server.call(middleware, port, host)
@@ -90,6 +91,10 @@ module Capybara
       "http#{'s' if using_ssl?}://#{host}:#{port}"
     end
 
+    def port
+      reserved_port || @port
+    end
+
   private
 
     def middleware
@@ -104,11 +109,20 @@ module Capybara
       middleware.pending_requests?
     end
 
-    def find_available_port(host)
-      server = TCPServer.new(host, 0)
-      server.addr[1]
-    ensure
-      server&.close
+    def reserve_available_port(host)
+      TCPServer.new(host, 0)
+    end
+
+    def reserved_port
+      @port.is_a?(TCPServer) && @port.addr[1]
+    end
+
+    def resolved_port
+      if (r_port = reserved_port)
+        @port.close
+        @port = r_port
+      end
+      port
     end
   end
 end
