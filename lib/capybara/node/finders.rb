@@ -49,7 +49,7 @@ module Capybara
       #
       def find(*args, **options, &optional_filter_block)
         options[:session_options] = session_options
-        synced_resolve Capybara::Queries::SelectorQuery.new(*args, options, &optional_filter_block)
+        synced_resolve Capybara::Queries::SelectorQuery.new(*args, **options, &optional_filter_block)
       end
 
       ##
@@ -72,7 +72,7 @@ module Capybara
       #
       def ancestor(*args, **options, &optional_filter_block)
         options[:session_options] = session_options
-        synced_resolve Capybara::Queries::AncestorQuery.new(*args, options, &optional_filter_block)
+        synced_resolve Capybara::Queries::AncestorQuery.new(*args, **options, &optional_filter_block)
       end
 
       ##
@@ -95,7 +95,7 @@ module Capybara
       #
       def sibling(*args, **options, &optional_filter_block)
         options[:session_options] = session_options
-        synced_resolve Capybara::Queries::SiblingQuery.new(*args, options, &optional_filter_block)
+        synced_resolve Capybara::Queries::SiblingQuery.new(*args, **options, &optional_filter_block)
       end
 
       ##
@@ -125,7 +125,7 @@ module Capybara
       # @return [Capybara::Node::Element]   The found element
       #
       def find_field(locator = nil, **options, &optional_filter_block)
-        find(:field, locator, options, &optional_filter_block)
+        find(:field, locator, **options, &optional_filter_block)
       end
 
       ##
@@ -145,7 +145,7 @@ module Capybara
       # @return [Capybara::Node::Element]   The found element
       #
       def find_link(locator = nil, **options, &optional_filter_block)
-        find(:link, locator, options, &optional_filter_block)
+        find(:link, locator, **options, &optional_filter_block)
       end
 
       ##
@@ -172,7 +172,7 @@ module Capybara
       # @return [Capybara::Node::Element]   The found element
       #
       def find_button(locator = nil, **options, &optional_filter_block)
-        find(:button, locator, options, &optional_filter_block)
+        find(:button, locator, **options, &optional_filter_block)
       end
 
       ##
@@ -186,7 +186,7 @@ module Capybara
       # @return [Capybara::Node::Element]   The found element
       #
       def find_by_id(id, **options, &optional_filter_block)
-        find(:id, id, options, &optional_filter_block)
+        find(:id, id, **options, &optional_filter_block)
       end
 
       ##
@@ -245,7 +245,7 @@ module Capybara
         minimum_specified = options_include_minimum?(options)
         options = { minimum: 1 }.merge(options) unless minimum_specified
         options[:session_options] = session_options
-        query = Capybara::Queries::SelectorQuery.new(*args, options, &optional_filter_block)
+        query = Capybara::Queries::SelectorQuery.new(*args, **options, &optional_filter_block)
         result = nil
         begin
           synchronize(query.wait) do
@@ -278,7 +278,7 @@ module Capybara
       #
       def first(*args, **options, &optional_filter_block)
         options = { minimum: 1 }.merge(options) unless options_include_minimum?(options)
-        all(*args, options, &optional_filter_block).first
+        all(*args, **options, &optional_filter_block).first
       end
 
     private

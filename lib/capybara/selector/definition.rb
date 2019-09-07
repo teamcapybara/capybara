@@ -166,7 +166,7 @@ module Capybara
 
       def locator_filter(*types, **options, &block)
         types.each { |type| options[type] = true }
-        @locator_filter = Capybara::Selector::Filters::LocatorFilter.new(block, options) if block
+        @locator_filter = Capybara::Selector::Filters::LocatorFilter.new(block, **options) if block
         @locator_filter
       end
 

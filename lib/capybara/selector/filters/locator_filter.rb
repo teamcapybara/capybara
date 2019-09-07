@@ -7,7 +7,7 @@ module Capybara
     module Filters
       class LocatorFilter < NodeFilter
         def initialize(block, **options)
-          super(nil, nil, block, options)
+          super(nil, nil, block, **options)
         end
 
         def matches?(node, value, context = nil, exact:)

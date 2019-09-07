@@ -163,8 +163,8 @@ module Capybara
       #       offset will be from the element center, otherwise it will be from the top left corner of the element
       # @return [Capybara::Node::Element]  The element
       def click(*keys, **options)
-        perform_click_action(keys, options) do |k, opts|
-          base.click(k, opts)
+        perform_click_action(keys, **options) do |k, **opts|
+          base.click(k, **opts)
         end
       end
 
@@ -176,8 +176,8 @@ module Capybara
       # @macro click_modifiers
       # @return [Capybara::Node::Element]  The element
       def right_click(*keys, **options)
-        perform_click_action(keys, options) do |k, opts|
-          base.right_click(k, opts)
+        perform_click_action(keys, **options) do |k, **opts|
+          base.right_click(k, **opts)
         end
       end
 
@@ -189,8 +189,8 @@ module Capybara
       # @macro click_modifiers
       # @return [Capybara::Node::Element]  The element
       def double_click(*keys, **options)
-        perform_click_action(keys, options) do |k, opts|
-          base.double_click(k, opts)
+        perform_click_action(keys, **options) do |k, **opts|
+          base.double_click(k, **opts)
         end
       end
 
@@ -591,7 +591,7 @@ module Capybara
         raise ArgumentError, 'You must specify both x: and y: for a click offset' if nil ^ options[:x] ^ options[:y]
 
         options[:offset] ||= :center if session_options.w3c_click_offset
-        synchronize(wait) { yield keys, options }
+        synchronize(wait) { yield keys, **options }
         self
       end
     end

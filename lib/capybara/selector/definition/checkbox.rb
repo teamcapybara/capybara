@@ -5,7 +5,7 @@ Capybara.add_selector(:checkbox, locator_type: [String, Symbol]) do
     xpath = XPath.axis(allow_self ? :"descendant-or-self" : :descendant, :input)[
       XPath.attr(:type) == 'checkbox'
     ]
-    locate_field(xpath, locator, options)
+    locate_field(xpath, locator, **options)
   end
 
   filter_set(:_field, %i[checked unchecked disabled name])

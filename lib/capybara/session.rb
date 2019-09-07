@@ -744,15 +744,15 @@ module Capybara
     end
 
     NODE_METHODS.each do |method|
-      define_method method do |*args, &block|
+      define_method method do |*args, **kw, &block|
         @touched = true
-        current_scope.send(method, *args, &block)
+        current_scope.send(method, *args, **kw, &block)
       end
     end
 
     DOCUMENT_METHODS.each do |method|
-      define_method method do |*args, &block|
-        document.send(method, *args, &block)
+      define_method method do |*args, **kw, &block|
+        document.send(method, *args, **kw, &block)
       end
     end
 

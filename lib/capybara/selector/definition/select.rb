@@ -5,7 +5,7 @@ Capybara.add_selector(:select, locator_type: [String, Symbol]) do
 
   xpath do |locator, **options|
     xpath = XPath.descendant(:select)
-    locate_field(xpath, locator, options)
+    locate_field(xpath, locator, **options)
   end
 
   filter_set(:_field, %i[disabled multiple name placeholder])

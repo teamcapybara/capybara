@@ -28,7 +28,7 @@ module Capybara
       #
       # @return [String]    The title of the document
       #
-      def title
+      def title(**)
         session.driver.title
       end
 

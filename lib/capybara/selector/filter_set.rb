@@ -15,15 +15,15 @@ module Capybara
         instance_eval(&block)
       end
 
-      def node_filter(names, *types_and_options, &block)
+      def node_filter(names, *types_and_options, **options, &block)
         Array(names).each do |name|
-          add_filter(name, Filters::NodeFilter, *types_and_options, &block)
+          add_filter(name, Filters::NodeFilter, *types_and_options, **options, &block)
         end
       end
       alias_method :filter, :node_filter
 
-      def expression_filter(name, *types_and_options, &block)
-        add_filter(name, Filters::ExpressionFilter, *types_and_options, &block)
+      def expression_filter(name, *types_and_options, **options, &block)
+        add_filter(name, Filters::ExpressionFilter, *types_and_options, **options, &block)
       end
 
       def describe(what = nil, &block)
@@ -114,7 +114,7 @@ module Capybara
         types.each { |type| options[type] = true }
         raise 'ArgumentError', ':default option is not supported for filters with a :matcher option' if matcher && options[:default]
 
-        filter = filter_class.new(name, matcher, block, options)
+        filter = filter_class.new(name, matcher, block, **options)
         (filter_class <= Filters::ExpressionFilter ? @expression_filters : @node_filters)[name] = filter
       end
     end
