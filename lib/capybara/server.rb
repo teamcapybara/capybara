@@ -105,10 +105,23 @@ module Capybara
     end
 
     def find_available_port(host)
-      server = TCPServer.new(host, 0)
-      server.addr[1]
-    ensure
-      server&.close
+      port = 0
+      while port.zero?
+        begin
+          server = TCPServer.new(host, port)
+          port = server.addr[1]
+        ensure
+          server&.close
+        end
+        begin
+          server = TCPServer.new(host, port)
+        rescue Errno::EADDRINUSE
+          port = 0
+        ensure
+          server&.close
+        end
+      end
+      port
     end
   end
 end

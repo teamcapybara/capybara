@@ -81,12 +81,12 @@ RSpec.describe Capybara::Server do
   end
 
   it 'should handle that getting available ports fails randomly' do
-    expect {
-      100000.times do |count|
-        port = Capybara::Server.new(Object.new).send(:find_available_port, "0.0.0.0")
-        use_port("0.0.0.0", port)
+    expect do
+      100000.times do
+        port = described_class.new(Object.new).send(:find_available_port, '0.0.0.0')
+        use_port('0.0.0.0', port)
       end
-    }.not_to raise_error
+    end.not_to raise_error
   end
 
   it 'should return its #base_url' do
