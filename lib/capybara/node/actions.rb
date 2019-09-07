@@ -307,7 +307,7 @@ module Capybara
       def find_select_or_datalist_input(from, options)
         synchronize(Capybara::Queries::BaseQuery.wait(options, session_options.default_max_wait_time)) do
           begin
-            find(:select, from,** options)
+            find(:select, from, **options)
           rescue Capybara::ElementNotFound => select_error # rubocop:disable Naming/RescuedExceptionsVariableName
             raise if %i[selected with_selected multiple].any? { |option| options.key?(option) }
 

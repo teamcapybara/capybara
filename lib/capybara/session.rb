@@ -746,13 +746,21 @@ module Capybara
     NODE_METHODS.each do |method|
       define_method method do |*args, **kw, &block|
         @touched = true
-        current_scope.send(method, *args, **kw, &block)
+        if kw.empty?
+          current_scope.send(method, *args, &block)
+        else
+          current_scope.send(method, *args, **kw, &block)
+        end
       end
     end
 
     DOCUMENT_METHODS.each do |method|
       define_method method do |*args, **kw, &block|
-        document.send(method, *args, **kw, &block)
+        if kw.empty?
+          document.send(method, *args, &block)
+        else
+          document.send(method, *args, **kw, &block)
+        end
       end
     end
 

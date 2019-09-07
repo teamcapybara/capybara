@@ -5,7 +5,7 @@ require 'capybara/rack_test/errors'
 class Capybara::RackTest::Node < Capybara::Driver::Node
   BLOCK_ELEMENTS = %w[p h1 h2 h3 h4 h5 h6 ol ul pre address blockquote dl div fieldset form hr noscript table].freeze
 
-  def all_text(**)
+  def all_text
     native.text
           .gsub(/[\u200b\u200e\u200f]/, '')
           .gsub(/[\ \n\f\t\v\u2028\u2029]+/, ' ')
@@ -14,7 +14,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
           .tr("\u00a0", ' ')
   end
 
-  def visible_text(**)
+  def visible_text
     displayed_text.gsub(/\ +/, ' ')
                   .gsub(/[\ \n]*\n[\ \n]*/, "\n")
                   .gsub(/\A[[:space:]&&[^\u00a0]]+/, '')
@@ -22,7 +22,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
                   .tr("\u00a0", ' ')
   end
 
-  def [](name, **)
+  def [](name)
     string_node[name]
   end
 
@@ -30,7 +30,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     raise NotImplementedError, 'The rack_test driver does not process CSS'
   end
 
-  def value(**)
+  def value
     string_node.value
   end
 
@@ -50,14 +50,14 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     end
   end
 
-  def select_option(**)
+  def select_option
     return if disabled?
 
     deselect_options unless select_node.multiple?
     native['selected'] = 'selected'
   end
 
-  def unselect_option(**)
+  def unselect_option
     raise Capybara::UnselectNotAllowed, 'Cannot unselect option from single select box.' unless select_node.multiple?
 
     native.remove_attribute('selected')
@@ -81,23 +81,23 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     end
   end
 
-  def tag_name(**)
+  def tag_name
     native.node_name
   end
 
-  def visible?(**)
+  def visible?
     string_node.visible?
   end
 
-  def checked?(**)
+  def checked?
     string_node.checked?
   end
 
-  def selected?(**)
+  def selected?
     string_node.selected?
   end
 
-  def disabled?(**)
+  def disabled?
     return true if string_node.disabled?
 
     if %w[option optgroup].include? tag_name
@@ -107,7 +107,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     end
   end
 
-  def path(**)
+  def path
     native.path
   end
 
@@ -125,7 +125,11 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
 
     define_method meth_name do |*args, **kw|
       stale_check
-      send("unchecked_#{meth_name}", *args, **kw)
+      if kw.empty?
+        send("unchecked_#{meth_name}", *args)
+      else
+        send("unchecked_#{meth_name}", *args, **kw)
+      end
     end
   end
 
