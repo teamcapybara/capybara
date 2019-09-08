@@ -827,11 +827,11 @@ module Capybara
     end
 
     def accept_modal(type, text_or_options, options, &blk)
-      driver.accept_modal(type, modal_options(text_or_options, options), &blk)
+      driver.accept_modal(type, **modal_options(text_or_options, **options), &blk)
     end
 
     def dismiss_modal(type, text_or_options, options, &blk)
-      driver.dismiss_modal(type, modal_options(text_or_options, options), &blk)
+      driver.dismiss_modal(type, **modal_options(text_or_options, **options), &blk)
     end
 
     def modal_options(text = nil, **options)

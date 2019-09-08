@@ -14,7 +14,7 @@ class Capybara::Selenium::FirefoxNode < Capybara::Selenium::Node
       warn 'You are attempting to click a table row which has issues in geckodriver/marionette - '\
            'see https://github.com/mozilla/geckodriver/issues/1228. Your test should probably be '\
            'clicking on a table cell like a user would. Clicking the first cell in the row instead.'
-      return find_css('th:first-child,td:first-child')[0].click(keys, options)
+      return find_css('th:first-child,td:first-child')[0].click(keys, **options)
     end
     raise
   end
