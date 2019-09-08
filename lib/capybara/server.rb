@@ -105,23 +105,20 @@ module Capybara
     end
 
     def find_available_port(host)
-      port = 0
-      while port.zero?
-        begin
-          server = TCPServer.new(host, port)
-          port = server.addr[1]
-        ensure
-          server&.close
-        end
-        begin
-          server = TCPServer.new(host, port)
-        rescue Errno::EADDRINUSE
-          port = 0
-        ensure
-          server&.close
-        end
-      end
+      server = TCPServer.new(host, 0)
+      port = server.addr[1]
+      server.close
+
+      # Workaround issue where some platforms (mac, ???) when passed a host
+      # of '0.0.0.0' will return a port that is only available on one of the
+      # ip addresses that resolves to, but the next binding to that port requires
+      # that port to be available on all ips
+      server = TCPServer.new(host, port)
       port
+    rescue Errno::EADDRINUSE
+      retry
+    ensure
+      server&.close
     end
   end
 end
