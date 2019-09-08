@@ -74,6 +74,28 @@ RSpec.describe Capybara::Server do
     end
   end
 
+  it 'should handle that getting available ports fails randomly' do
+    begin
+      # Use a port to force a EADDRINUSE error to be generated
+      server = TCPServer.new('0.0.0.0', 0)
+      server_port = server.addr[1]
+      d_server = instance_double('TCPServer', addr: [nil, server_port, nil, nil], close: nil)
+      call_count = 0
+      allow(TCPServer).to receive(:new).and_wrap_original do |m, *args|
+        begin
+          call_count.zero? ? d_server : m.call(*args)
+        ensure
+          call_count += 1
+        end
+      end
+
+      port = described_class.new(Object.new, host: '0.0.0.0').port
+      expect(port).not_to eq(server_port)
+    ensure
+      server&.close
+    end
+  end
+
   it 'should return its #base_url' do
     app = proc { |_env| [200, {}, ['Hello Server!']] }
     server = described_class.new(app).boot
