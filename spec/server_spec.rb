@@ -74,6 +74,20 @@ RSpec.describe Capybara::Server do
     end
   end
 
+  it 'should find an available port if server fails to boot' do
+    app = proc { |_env| [200, {}, ['Hello Server!']] }
+    server_obj = described_class.new(app)
+
+    original_boot_attempt = Capybara.server.method(:call)
+    call_count = 0
+    allow(Capybara.server).to receive(:call) do |middleware, port, host|
+      call_count += 1
+      call_count.odd? ? raise(Errno::EADDRINUSE) : original_boot_attempt.call(middleware, port, host)
+    end
+
+    expect { server_obj.boot }.not_to raise_error
+  end
+
   it 'should handle that getting available ports fails randomly' do
     begin
       # Use a port to force a EADDRINUSE error to be generated

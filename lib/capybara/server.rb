@@ -28,6 +28,7 @@ module Capybara
       @app = app
       @extra_middleware = extra_middleware
       @server_thread = nil # suppress warnings
+      @random_port = false
       @host = deprecated_options[1] || host
       @reportable_errors = deprecated_options[2] || reportable_errors
       @port = deprecated_options[0] || port
@@ -69,17 +70,28 @@ module Capybara
 
     def boot
       unless responsive?
-        Capybara::Server.ports[port_key] = port
+        count = 0
+        begin
+          Capybara::Server.ports[port_key] = port
 
-        @server_thread = Thread.new do
-          Capybara.server.call(middleware, port, host)
-        end
+          @server_thread = Thread.new do
+            Capybara.server.call(middleware, port, host)
+          end
 
-        timer = Capybara::Helpers.timer(expire_in: 60)
-        until responsive?
-          raise 'Rack application timed out during boot' if timer.expired?
+          timer = Capybara::Helpers.timer(expire_in: 60)
+          until responsive?
+            raise 'Rack application timed out during boot' if timer.expired?
 
-          @server_thread.join(0.1)
+            @server_thread.join(0.1)
+          end
+        rescue Errno::EADDRINUSE => e
+          raise e unless @random_port && count < 4
+
+          count += 1
+
+          @port ||= find_available_port(host)
+          @checker = Checker.new(@host, @port)
+          retry
         end
       end
 
@@ -105,6 +117,8 @@ module Capybara
     end
 
     def find_available_port(host)
+      @random_port = true
+
       server = TCPServer.new(host, 0)
       port = server.addr[1]
       server.close
