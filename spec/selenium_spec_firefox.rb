@@ -71,7 +71,6 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumFirefox, 'selenium', capyba
   end
 end
 
-
 RSpec.describe 'Capybara::Session with firefox' do # rubocop:disable RSpec/MultipleDescribes
   include Capybara::SpecHelper
   ['Capybara::Session', 'Capybara::Node', Capybara::RSpecMatchers].each do |examples|
