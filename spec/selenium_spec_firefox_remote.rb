@@ -65,6 +65,9 @@ Capybara::SpecHelper.run_specs TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVE
   when /#accept_confirm should work with nested modals$/
     # skip because this is timing based and hence flaky when set to pending
     skip 'Broken in FF 63 - https://bugzilla.mozilla.org/show_bug.cgi?id=1487358' if firefox_gte?(63, @session)
+  when 'Capybara::Session selenium_firefox_remote #accept_alert should handle the alert if the page changes',
+       'Capybara::Session selenium_firefox_remote #accept_alert with an asynchronous alert should return the message presented'
+    skip 'Unstable behavior due to changes in FF 69' if firefox_gte?(69, @session) && ENV['CI']
   end
 end
 
