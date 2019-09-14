@@ -13,6 +13,7 @@ Selenium::WebDriver::Chrome.path = '/usr/bin/google-chrome-beta' if ENV['CI'] &&
 browser_options = ::Selenium::WebDriver::Chrome::Options.new
 browser_options.headless! if ENV['HEADLESS']
 browser_options.add_option(:w3c, ENV['W3C'] != 'false')
+browser_options.args << 'no-sandbox' if ENV['CI']
 # Chromedriver 77 requires setting this for headless mode on linux
 # browser_options.add_preference('download.default_directory', Capybara.save_path)
 browser_options.add_preference(:download, default_directory: Capybara.save_path)
