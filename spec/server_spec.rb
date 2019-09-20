@@ -249,13 +249,13 @@ RSpec.describe Capybara::Server do
     server = described_class.new(app).boot
 
     expect do
-      start_request(server, 59.0)
-      server.wait_for_pending_requests
+      start_request(server, 1.0)
+      server.wait_for_pending_requests(2)
     end.not_to raise_error
 
     expect do
-      start_request(server, 61.0)
-      server.wait_for_pending_requests
+      start_request(server, 2.0)
+      server.wait_for_pending_requests(1)
     end.to raise_error('Requests did not finish in 60 seconds')
   end
 
