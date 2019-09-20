@@ -7,16 +7,16 @@ module Capybara
         attr_reader :value
 
         def initialize
-          @value = 0
+          @value = []
           @mutex = Mutex.new
         end
 
-        def increment
-          @mutex.synchronize { @value += 1 }
+        def increment(env)
+          @mutex.synchronize { @value.push(env) }
         end
 
-        def decrement
-          @mutex.synchronize { @value -= 1 }
+        def decrement(env)
+          @mutex.synchronize { @value.delete_at(@value.index(env)) }
         end
       end
 
@@ -32,7 +32,7 @@ module Capybara
       end
 
       def pending_requests?
-        @counter.value.positive?
+        @counter.value.length.positive?
       end
 
       def clear_error
@@ -43,14 +43,14 @@ module Capybara
         if env['PATH_INFO'] == '/__identify__'
           [200, {}, [@app.object_id.to_s]]
         else
-          @counter.increment
+          @counter.increment(env)
           begin
             @extended_app.call(env)
           rescue *@server_errors => e
             @error ||= e
             raise e
           ensure
-            @counter.decrement
+            @counter.decrement(env)
           end
         end
       end
