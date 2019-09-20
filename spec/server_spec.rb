@@ -239,6 +239,26 @@ RSpec.describe Capybara::Server do
     end
   end
 
+  it 'should raise an error when there are pending requests' do
+    app = proc do |env|
+      request = Rack::Request.new(env)
+      sleep request.params['wait_time'].to_f
+      [200, {}, ['Hello Server!']]
+    end
+
+    server = described_class.new(app).boot
+
+    expect do
+      start_request(server, 59.0)
+      server.wait_for_pending_requests
+    end.not_to raise_error
+
+    expect do
+      start_request(server, 61.0)
+      server.wait_for_pending_requests
+    end.to raise_error('Requests did not finish in 60 seconds')
+  end
+
   it 'is not #responsive? when Net::HTTP raises a SystemCallError' do
     app = -> { [200, {}, ['Hello, world']] }
     server = described_class.new(app)
