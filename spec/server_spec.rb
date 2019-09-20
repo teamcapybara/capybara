@@ -256,7 +256,7 @@ RSpec.describe Capybara::Server do
     expect do
       start_request(server, 2.0)
       server.wait_for_pending_requests(1)
-    end.to raise_error('Requests did not finish in 60 seconds')
+    end.to raise_error('Requests did not finish in 60 seconds: ["/?wait_time=2.0"]')
   end
 
   it 'is not #responsive? when Net::HTTP raises a SystemCallError' do

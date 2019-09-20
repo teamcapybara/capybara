@@ -31,6 +31,10 @@ module Capybara
         @server_errors = server_errors
       end
 
+      def pending_requests
+        @counter.value.map { |env| env["REQUEST_URI"] }
+      end
+
       def pending_requests?
         @counter.value.length.positive?
       end
