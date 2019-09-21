@@ -18,6 +18,14 @@ module Capybara
         def decrement(env)
           @mutex.synchronize { @value.delete_at(@value.index(env) || @value.length) }
         end
+
+        def positive?
+          @mutex.synchronize { @value.length.positive? }
+        end
+
+        def value
+          @mutex.synchronize { @value }
+        end
       end
 
       attr_reader :error
@@ -36,7 +44,7 @@ module Capybara
       end
 
       def pending_requests?
-        @counter.value.length.positive?
+        @counter.positive?
       end
 
       def clear_error
