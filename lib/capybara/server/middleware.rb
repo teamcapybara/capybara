@@ -16,7 +16,7 @@ module Capybara
         end
 
         def decrement(env)
-          @mutex.synchronize { @value.delete_at(@value.index(env)) }
+          @mutex.synchronize { @value.delete_at(@value.index(env) || @value.length) }
         end
       end
 
