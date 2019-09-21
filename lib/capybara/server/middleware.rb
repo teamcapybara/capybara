@@ -11,12 +11,12 @@ module Capybara
           @mutex = Mutex.new
         end
 
-        def increment(env)
-          @mutex.synchronize { @value.push(env) }
+        def increment(uri)
+          @mutex.synchronize { @value.push(uri) }
         end
 
-        def decrement(env)
-          @mutex.synchronize { @value.delete_at(@value.index(env) || @value.length) }
+        def decrement(uri)
+          @mutex.synchronize { @value.delete_at(@value.index(uri) || @value.length) }
         end
 
         def positive?
@@ -40,7 +40,7 @@ module Capybara
       end
 
       def pending_requests
-        @counter.value.map { |env| env["REQUEST_URI"] }
+        @counter.value
       end
 
       def pending_requests?
@@ -55,14 +55,14 @@ module Capybara
         if env['PATH_INFO'] == '/__identify__'
           [200, {}, [@app.object_id.to_s]]
         else
-          @counter.increment(env)
+          @counter.increment(env["REQUEST_URI"])
           begin
             @extended_app.call(env)
           rescue *@server_errors => e
             @error ||= e
             raise e
           ensure
-            @counter.decrement(env)
+            @counter.decrement(env["REQUEST_URI"])
           end
         end
       end
