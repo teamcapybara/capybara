@@ -53,14 +53,14 @@ module Capybara
         if env['PATH_INFO'] == '/__identify__'
           [200, {}, [@app.object_id.to_s]]
         else
-          @counter.increment(env["REQUEST_URI"])
+          @counter.increment(env['REQUEST_URI'])
           begin
             @extended_app.call(env)
           rescue *@server_errors => e
             @error ||= e
             raise e
           ensure
-            @counter.decrement(env["REQUEST_URI"])
+            @counter.decrement(env['REQUEST_URI'])
           end
         end
       end
