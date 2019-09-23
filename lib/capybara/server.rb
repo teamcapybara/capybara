@@ -61,9 +61,7 @@ module Capybara
     def wait_for_pending_requests
       timer = Capybara::Helpers.timer(expire_in: 60)
       while pending_requests?
-        if timer.expired?
-          raise "Requests did not finish in 60 seconds: #{middleware.pending_requests}"
-        end
+        raise "Requests did not finish in 60 seconds: #{middleware.pending_requests}" if timer.expired?
 
         sleep 0.01
       end
