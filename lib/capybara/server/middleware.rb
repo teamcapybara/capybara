@@ -4,8 +4,6 @@ module Capybara
   class Server
     class Middleware
       class Counter
-        attr_reader :value
-
         def initialize
           @value = []
           @mutex = Mutex.new
