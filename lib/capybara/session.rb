@@ -528,7 +528,7 @@ module Capybara
         when Proc
           _switch_to_window { window_or_proc.call }
         else
-          raise ArgumentError('`#within_window` requires a `Capybara::Window` instance or a lambda')
+          raise ArgumentError, '`#within_window` requires a `Capybara::Window` instance or a lambda'
         end
 
         begin
