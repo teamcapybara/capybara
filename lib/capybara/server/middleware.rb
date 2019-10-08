@@ -22,7 +22,7 @@ module Capybara
         end
 
         def value
-          @mutex.synchronize { @value }
+          @mutex.synchronize { @value.dup }
         end
       end
 
