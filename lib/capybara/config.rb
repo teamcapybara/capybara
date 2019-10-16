@@ -27,7 +27,9 @@ module Capybara
     attr_writer :reuse_server
 
     def threadsafe=(bool)
-      raise 'Threadsafe setting cannot be changed once a session is created' if (bool != threadsafe) && Session.instance_created?
+      if (bool != threadsafe) && Session.instance_created?
+        raise 'Threadsafe setting cannot be changed once a session is created'
+      end
 
       @threadsafe = bool
     end
@@ -83,7 +85,9 @@ module Capybara
 
     def deprecate(method, alternate_method, once = false)
       @deprecation_notified ||= {}
-      warn "DEPRECATED: ##{method} is deprecated, please use ##{alternate_method} instead" unless once && @deprecation_notified[method]
+      unless once && @deprecation_notified[method]
+        warn "DEPRECATED: ##{method} is deprecated, please use ##{alternate_method} instead"
+      end
       @deprecation_notified[method] = true
     end
   end

@@ -77,7 +77,9 @@ module Capybara
         end
 
         %i[above below left_of right_of near].each do |spatial_filter|
-          desc << " #{spatial_filter} #{options[spatial_filter] rescue '<ERROR>'}" if options[spatial_filter] && show_for[:spatial] # rubocop:disable Style/RescueModifier
+          if options[spatial_filter] && show_for[:spatial]
+            desc << " #{spatial_filter} #{options[spatial_filter] rescue '<ERROR>'}" # rubocop:disable Style/RescueModifier
+          end
         end
 
         desc << selector.description(node_filters: show_for[:node], **options)

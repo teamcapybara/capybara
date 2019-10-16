@@ -20,7 +20,9 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       require 'capybara/selenium/logger_suppressor'
       require 'capybara/selenium/patches/atoms'
       require 'capybara/selenium/patches/is_displayed'
-      warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade." if Gem.loaded_specs['selenium-webdriver'].version < Gem::Version.new('3.5.0')
+      if Gem.loaded_specs['selenium-webdriver'].version < Gem::Version.new('3.5.0')
+        warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade."
+      end
     rescue LoadError => e
       raise e unless e.message.match?(/selenium-webdriver/)
 
@@ -325,7 +327,9 @@ private
       begin
         @browser&.execute_script('window.sessionStorage.clear()')
       rescue # rubocop:disable Style/RescueStandardError
-        warn 'sessionStorage clear requested but is not supported by this driver' unless options[:clear_session_storage].nil?
+        unless options[:clear_session_storage].nil?
+          warn 'sessionStorage clear requested but is not supported by this driver'
+        end
       end
     end
   end
@@ -337,7 +341,9 @@ private
       begin
         @browser&.execute_script('window.localStorage.clear()')
       rescue # rubocop:disable Style/RescueStandardError
-        warn 'localStorage clear requested but is not supported by this driver' unless options[:clear_local_storage].nil?
+        unless options[:clear_local_storage].nil?
+          warn 'localStorage clear requested but is not supported by this driver'
+        end
       end
     end
   end
@@ -378,7 +384,9 @@ private
         alert = @browser.switch_to.alert
         regexp = text.is_a?(Regexp) ? text : Regexp.new(Regexp.escape(text.to_s))
         matched = alert.text.match?(regexp)
-        raise Capybara::ModalNotFound, "Unable to find modal dialog with #{text} - found '#{alert.text}' instead." unless matched
+        unless matched
+          raise Capybara::ModalNotFound, "Unable to find modal dialog with #{text} - found '#{alert.text}' instead."
+        end
 
         alert
       end

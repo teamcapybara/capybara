@@ -75,7 +75,9 @@ module Capybara
     attr_accessor :synchronized
 
     def initialize(mode, app = nil)
-      raise TypeError, 'The second parameter to Session::new should be a rack app if passed.' if app && !app.respond_to?(:call)
+      if app && !app.respond_to?(:call)
+        raise TypeError, 'The second parameter to Session::new should be a rack app if passed.'
+      end
 
       @@instance_created = true # rubocop:disable Style/ClassVars
       @mode = mode

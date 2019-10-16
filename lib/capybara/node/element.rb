@@ -113,7 +113,9 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The element
       def set(value, **options)
-        raise Capybara::ReadOnlyElementError, "Attempt to set readonly element with value: #{value}" if ENV['CAPYBARA_THOROUGH'] && readonly?
+        if ENV['CAPYBARA_THOROUGH'] && readonly?
+          raise Capybara::ReadOnlyElementError, "Attempt to set readonly element with value: #{value}"
+        end
 
         options = session_options.default_set_options.to_h.merge(options)
         synchronize { base.set(value, options) }

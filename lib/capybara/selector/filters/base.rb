@@ -48,7 +48,12 @@ module Capybara
 
         def apply(subject, name, value, skip_value, ctx)
           return skip_value if skip?(value)
-          raise ArgumentError, "Invalid value #{value.inspect} passed to #{self.class.name.split('::').last} #{name}#{" : #{@name}" if @name.is_a?(Regexp)}" unless valid_value?(value)
+
+          unless valid_value?(value)
+            raise ArgumentError,
+                  "Invalid value #{value.inspect} passed to #{self.class.name.split('::').last} #{name}" \
+                  "#{" : #{name}" if @name.is_a?(Regexp)}"
+          end
 
           if @block.arity == 2
             filter_context(ctx).instance_exec(subject, value, &@block)
