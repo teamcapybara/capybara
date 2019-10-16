@@ -857,7 +857,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
       session.visit('/with_js')
     end
 
-    context '#and' do
+    describe '#and' do
       it "should run 'concurrently'" do
         Capybara.using_wait_time(2) do
           matcher = have_text('this is not there').and have_text('neither is this')
@@ -899,14 +899,14 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
       end
     end
 
-    context '#and_then' do
+    describe '#and_then' do
       it 'should run sequentially' do
         session.click_link('reload-link')
         expect(el).to have_text('waiting to be reloaded').and_then have_text('has been reloaded')
       end
     end
 
-    context '#or' do
+    describe '#or' do
       it "should run 'concurrently'" do
         session.using_wait_time(3) do
           expect(Benchmark.realtime do

@@ -159,6 +159,7 @@ Capybara::SpecHelper.spec '#assert_text' do
             between: 0..4 }
       expect { @session.assert_text('Header', o) }.not_to raise_error
     end
+
     context 'with no :count expectation' do
       it 'fails if :minimum is not met' do
         o = { minimum: 6,
@@ -166,18 +167,21 @@ Capybara::SpecHelper.spec '#assert_text' do
               between: 2..7 }
         expect { @session.assert_text('Header', o) }.to raise_error(Capybara::ExpectationNotMet)
       end
+
       it 'fails if :maximum is not met' do
         o = { minimum: 0,
               maximum: 0,
               between: 2..7 }
         expect { @session.assert_text('Header', o) }.to raise_error(Capybara::ExpectationNotMet)
       end
+
       it 'fails if :between is not met' do
         o = { minimum: 0,
               maximum: 5,
               between: 0..4 }
         expect { @session.assert_text('Header', o) }.to raise_error(Capybara::ExpectationNotMet)
       end
+
       it 'succeeds if all combineable expectations are met' do
         o = { minimum: 0,
               maximum: 5,

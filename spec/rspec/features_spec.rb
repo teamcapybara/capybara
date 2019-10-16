@@ -81,6 +81,7 @@ xfeature 'if xfeature aliases to pending then' do
   scenario "this should be 'temporarily disabled with xfeature'" do
     # dummy
   end
+
   scenario "this also should be 'temporarily disabled with xfeature'" do
     # dummy
   end

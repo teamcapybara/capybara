@@ -6,7 +6,7 @@ require 'selenium-webdriver'
 RSpec.shared_examples 'Capybara::Node' do |session, _mode|
   let(:session) { session }
 
-  context '#content_editable?' do
+  describe '#content_editable?' do
     it 'returns true when the element is content editable' do
       session.visit('/with_js')
       expect(session.find(:css, '#existing_content_editable').base.content_editable?).to be true
@@ -19,7 +19,7 @@ RSpec.shared_examples 'Capybara::Node' do |session, _mode|
     end
   end
 
-  context '#send_keys' do
+  describe '#send_keys' do
     it 'should process space' do
       session.visit('/form')
       session.find(:css, '#address1_city').send_keys('ocean', [:shift, :space, 'side'])
@@ -27,7 +27,7 @@ RSpec.shared_examples 'Capybara::Node' do |session, _mode|
     end
   end
 
-  context '#visible?' do
+  describe '#visible?' do
     let(:bridge) do
       session.driver.browser.send(:bridge)
     end
