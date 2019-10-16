@@ -44,9 +44,9 @@ RSpec.describe Capybara::Result do
   end
 
   it 'can be selected' do
-    expect(result.select do |element|
+    expect(result.count do |element|
       element.text.include? 't'
-    end.length).to eq(2)
+    end).to eq(2)
   end
 
   it 'can be reduced' do

@@ -15,7 +15,7 @@ module Capybara
       end
 
       def self.escape_char(char)
-        char.match?(%r{[ -/:-~]}) ? "\\#{char}" : format('\\%06x', char.ord)
+        char.match?(%r{[ -/:-~]}) ? "\\#{char}" : format('\\%06<hex>x', hex: char.ord)
       end
 
       def self.split(css)
