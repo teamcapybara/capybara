@@ -107,7 +107,9 @@ module Capybara
       #
       def assert_selector(*args, &optional_filter_block)
         _verify_selector_result(args, optional_filter_block) do |result, query|
-          raise Capybara::ExpectationNotMet, result.failure_message unless result.matches_count? && (result.any? || query.expects_none?)
+          unless result.matches_count? && (result.any? || query.expects_none?)
+            raise Capybara::ExpectationNotMet, result.failure_message
+          end
         end
       end
 
@@ -738,7 +740,9 @@ module Capybara
       #
       def assert_ancestor(*args, &optional_filter_block)
         _verify_selector_result(args, optional_filter_block, Capybara::Queries::AncestorQuery) do |result, query|
-          raise Capybara::ExpectationNotMet, result.failure_message unless result.matches_count? && (result.any? || query.expects_none?)
+          unless result.matches_count? && (result.any? || query.expects_none?)
+            raise Capybara::ExpectationNotMet, result.failure_message
+          end
         end
       end
 
@@ -779,7 +783,9 @@ module Capybara
       #
       def assert_sibling(*args, &optional_filter_block)
         _verify_selector_result(args, optional_filter_block, Capybara::Queries::SiblingQuery) do |result, query|
-          raise Capybara::ExpectationNotMet, result.failure_message unless result.matches_count? && (result.any? || query.expects_none?)
+          unless result.matches_count? && (result.any? || query.expects_none?)
+            raise Capybara::ExpectationNotMet, result.failure_message
+          end
         end
       end
 

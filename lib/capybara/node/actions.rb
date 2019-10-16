@@ -276,7 +276,9 @@ module Capybara
       #   @yield Block whose actions will trigger the system file chooser to be shown
       # @return [Capybara::Node::Element]  The file field element
       def attach_file(locator = nil, paths, make_visible: nil, **options) # rubocop:disable Style/OptionalArguments
-        raise ArgumentError, '``#attach_file` does not support passing both a locator and a block' if locator && block_given?
+        if locator && block_given?
+          raise ArgumentError, '``#attach_file` does not support passing both a locator and a block'
+        end
 
         Array(paths).each do |path|
           raise Capybara::FileNotFound, "cannot attach file, #{path} does not exist" unless File.exist?(path.to_s)
@@ -338,7 +340,9 @@ module Capybara
           visible_css = { opacity: 1, display: 'block', visibility: 'visible', width: 'auto', height: 'auto' }
         end
         _update_style(element, visible_css)
-        raise ExpectationNotMet, 'The style changes in :make_visible did not make the file input visible' unless element.visible?
+        unless element.visible?
+          raise ExpectationNotMet, 'The style changes in :make_visible did not make the file input visible'
+        end
 
         begin
           yield element

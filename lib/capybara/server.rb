@@ -24,7 +24,9 @@ module Capybara
                    host: Capybara.server_host,
                    reportable_errors: Capybara.server_errors,
                    extra_middleware: [])
-      warn 'Positional arguments, other than the application, to Server#new are deprecated, please use keyword arguments' unless deprecated_options.empty?
+      unless deprecated_options.empty?
+        warn 'Positional arguments, other than the application, to Server#new are deprecated, please use keyword arguments'
+      end
       @app = app
       @extra_middleware = extra_middleware
       @server_thread = nil # suppress warnings

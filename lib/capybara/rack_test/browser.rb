@@ -53,7 +53,10 @@ class Capybara::RackTest::Browser
         end
       end
     end
-    raise Capybara::InfiniteRedirectError, "redirected more than #{driver.redirect_limit} times, check for infinite redirects." if last_response.redirect?
+
+    if last_response.redirect? # rubocop:disable Style/GuardClause
+      raise Capybara::InfiniteRedirectError, "redirected more than #{driver.redirect_limit} times, check for infinite redirects."
+    end
   end
 
   def process(method, path, attributes = {}, env = {})

@@ -54,7 +54,9 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   #   :backspace => send backspace keystrokes to clear the field <br/>
   #   Array => an array of keys to send before the value being set, e.g. [[:command, 'a'], :backspace]
   def set(value, **options)
-    raise ArgumentError, "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}" if value.is_a?(Array) && !multiple?
+    if value.is_a?(Array) && !multiple?
+      raise ArgumentError, "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"
+    end
 
     tag_name, type = attrs(:tagName, :type).map { |val| val&.downcase }
     @tag_name ||= tag_name

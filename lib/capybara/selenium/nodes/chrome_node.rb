@@ -25,7 +25,9 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
     end
     super
   rescue *file_errors => e
-    raise ArgumentError, "Selenium < 3.14 with remote Chrome doesn't support multiple file upload" if e.message.match?(/File not found : .+\n.+/m)
+    if e.message.match?(/File not found : .+\n.+/m)
+      raise ArgumentError, "Selenium < 3.14 with remote Chrome doesn't support multiple file upload"
+    end
 
     raise
   end
@@ -40,7 +42,9 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
     raise
   rescue ::Selenium::WebDriver::Error::WebDriverError => e
     # chromedriver 74 (at least on mac) raises the wrong error for this
-    raise ::Selenium::WebDriver::Error::ElementClickInterceptedError, e.message if e.message.match?(/element click intercepted/)
+    if e.message.match?(/element click intercepted/)
+      raise ::Selenium::WebDriver::Error::ElementClickInterceptedError, e.message
+    end
 
     raise
   end

@@ -111,6 +111,10 @@ Style/SpecialGlobalVars:
   Exclude:
     - 'capybara.gemspec'
 
+Style/IfUnlessModifier:
+  Exclude:
+    - 'spec/**/*'
+
 Layout/EmptyLineBetweenDefs:
   AllowAdjacentOneLineDefs: true
 

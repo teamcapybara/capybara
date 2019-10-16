@@ -292,7 +292,9 @@ module Capybara
             result = query.resolve_for(self)
           end
 
-          raise Capybara::Ambiguous, "Ambiguous match, found #{result.size} elements matching #{query.applied_description}" if ambiguous?(query, result)
+          if ambiguous?(query, result)
+            raise Capybara::Ambiguous, "Ambiguous match, found #{result.size} elements matching #{query.applied_description}"
+          end
           raise Capybara::ElementNotFound, "Unable to find #{query.applied_description}" if result.empty?
 
           result.first
