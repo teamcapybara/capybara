@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe Capybara::Session do
-  context '#new' do
+  describe '#new' do
     it 'should raise an error if passed non-existent driver' do
       expect do
         described_class.new(:quox, TestApp).driver

@@ -137,7 +137,7 @@ RSpec.describe Capybara::Result do
     expect(result.instance_variable_get('@result_cache').size).to eq 4
   end
 
-  context '#each' do
+  describe '#each' do
     it 'lazily evaluates' do
       skip 'JRuby has an issue with lazy enumerator evaluation' if jruby_lazy_enumerator_workaround?
       results = []

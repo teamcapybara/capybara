@@ -128,6 +128,7 @@ Capybara::SpecHelper.spec '#all' do
       it 'should succeed when the number of elements founds matches the expectation' do
         expect { @session.all(:css, 'h1, p', count: 4) }.not_to raise_error
       end
+
       it 'should raise ExpectationNotMet when the number of elements founds does not match the expectation' do
         expect { @session.all(:css, 'h1, p', count: 5) }.to raise_error(Capybara::ExpectationNotMet)
       end
@@ -137,6 +138,7 @@ Capybara::SpecHelper.spec '#all' do
       it 'should succeed when the number of elements founds matches the expectation' do
         expect { @session.all(:css, 'h1, p', minimum: 0) }.not_to raise_error
       end
+
       it 'should raise ExpectationNotMet when the number of elements founds does not match the expectation' do
         expect { @session.all(:css, 'h1, p', minimum: 5) }.to raise_error(Capybara::ExpectationNotMet)
       end
@@ -146,6 +148,7 @@ Capybara::SpecHelper.spec '#all' do
       it 'should succeed when the number of elements founds matches the expectation' do
         expect { @session.all(:css, 'h1, p', maximum: 4) }.not_to raise_error
       end
+
       it 'should raise ExpectationNotMet when the number of elements founds does not match the expectation' do
         expect { @session.all(:css, 'h1, p', maximum: 0) }.to raise_error(Capybara::ExpectationNotMet)
       end
@@ -155,6 +158,7 @@ Capybara::SpecHelper.spec '#all' do
       it 'should succeed when the number of elements founds matches the expectation' do
         expect { @session.all(:css, 'h1, p', between: 2..7) }.not_to raise_error
       end
+
       it 'should raise ExpectationNotMet when the number of elements founds does not match the expectation' do
         expect { @session.all(:css, 'h1, p', between: 0..3) }.to raise_error(Capybara::ExpectationNotMet)
       end
@@ -175,6 +179,7 @@ Capybara::SpecHelper.spec '#all' do
               between: 0..3 }
         expect { @session.all(:css, 'h1, p', o) }.not_to raise_error
       end
+
       context 'with no :count expectation' do
         it 'fails if :minimum is not met' do
           o = { minimum: 5,
@@ -182,18 +187,21 @@ Capybara::SpecHelper.spec '#all' do
                 between: 2..7 }
           expect { @session.all(:css, 'h1, p', o) }.to raise_error(Capybara::ExpectationNotMet)
         end
+
         it 'fails if :maximum is not met' do
           o = { minimum: 0,
                 maximum: 0,
                 between: 2..7 }
           expect { @session.all(:css, 'h1, p', o) }.to raise_error(Capybara::ExpectationNotMet)
         end
+
         it 'fails if :between is not met' do
           o = { minimum: 0,
                 maximum: 4,
                 between: 0..3 }
           expect { @session.all(:css, 'h1, p', o) }.to raise_error(Capybara::ExpectationNotMet)
         end
+
         it 'succeeds if all combineable expectations are met' do
           o = { minimum: 0,
                 maximum: 4,

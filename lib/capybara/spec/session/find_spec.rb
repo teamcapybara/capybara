@@ -275,14 +275,17 @@ Capybara::SpecHelper.spec '#find' do
           @session.find(:css, '.multiple', match: :one)
         end.to raise_error(Capybara::Ambiguous)
       end
+
       it 'raises an error even if there the match is exact and the others are inexact' do
         expect do
           @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('almost_singular')], exact: false, match: :one)
         end.to raise_error(Capybara::Ambiguous)
       end
+
       it 'returns the element if there is only one' do
         expect(@session.find(:css, '.singular', match: :one).text).to eq('singular')
       end
+
       it 'raises an error if there is no match' do
         expect do
           @session.find(:css, '.does-not-exist', match: :one)
@@ -294,6 +297,7 @@ Capybara::SpecHelper.spec '#find' do
       it 'returns the first matched element' do
         expect(@session.find(:css, '.multiple', match: :first).text).to eq('multiple one')
       end
+
       it 'raises an error if there is no match' do
         expect do
           @session.find(:css, '.does-not-exist', match: :first)
@@ -308,19 +312,23 @@ Capybara::SpecHelper.spec '#find' do
             @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('multiple')], match: :smart, exact: false)
           end.to raise_error(Capybara::Ambiguous)
         end
+
         it 'finds a single exact match when there also are inexact matches' do
           result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('almost_singular')], match: :smart, exact: false)
           expect(result.text).to eq('almost singular')
         end
+
         it 'raises an error when there are multiple inexact matches' do
           expect do
             @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('almost_singul')], match: :smart, exact: false)
           end.to raise_error(Capybara::Ambiguous)
         end
+
         it 'finds a single inexact match' do
           result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('almost_singular but')], match: :smart, exact: false)
           expect(result.text).to eq('almost singular but not quite')
         end
+
         it 'raises an error if there is no match' do
           expect do
             @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('does-not-exist')], match: :smart, exact: false)
@@ -334,20 +342,24 @@ Capybara::SpecHelper.spec '#find' do
             @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('multiple')], match: :smart, exact: true)
           end.to raise_error(Capybara::Ambiguous)
         end
+
         it 'finds a single exact match when there also are inexact matches' do
           result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('almost_singular')], match: :smart, exact: true)
           expect(result.text).to eq('almost singular')
         end
+
         it 'raises an error when there are multiple inexact matches' do
           expect do
             @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('almost_singul')], match: :smart, exact: true)
           end.to raise_error(Capybara::ElementNotFound)
         end
+
         it 'raises an error when there is a single inexact matches' do
           expect do
             @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('almost_singular but')], match: :smart, exact: true)
           end.to raise_error(Capybara::ElementNotFound)
         end
+
         it 'raises an error if there is no match' do
           expect do
             @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('does-not-exist')], match: :smart, exact: true)
@@ -362,18 +374,22 @@ Capybara::SpecHelper.spec '#find' do
           result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('multiple')], match: :prefer_exact, exact: false)
           expect(result.text).to eq('multiple one')
         end
+
         it 'finds a single exact match when there also are inexact matches' do
           result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('almost_singular')], match: :prefer_exact, exact: false)
           expect(result.text).to eq('almost singular')
         end
+
         it 'picks the first one when there are multiple inexact matches' do
           result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('almost_singul')], match: :prefer_exact, exact: false)
           expect(result.text).to eq('almost singular but not quite')
         end
+
         it 'finds a single inexact match' do
           result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('almost_singular but')], match: :prefer_exact, exact: false)
           expect(result.text).to eq('almost singular but not quite')
         end
+
         it 'raises an error if there is no match' do
           expect do
             @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('does-not-exist')], match: :prefer_exact, exact: false)
@@ -386,20 +402,24 @@ Capybara::SpecHelper.spec '#find' do
           result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('multiple')], match: :prefer_exact, exact: true)
           expect(result.text).to eq('multiple one')
         end
+
         it 'finds a single exact match when there also are inexact matches' do
           result = @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('almost_singular')], match: :prefer_exact, exact: true)
           expect(result.text).to eq('almost singular')
         end
+
         it 'raises an error if there are multiple inexact matches' do
           expect do
             @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('almost_singul')], match: :prefer_exact, exact: true)
           end.to raise_error(Capybara::ElementNotFound)
         end
+
         it 'raises an error if there is a single inexact match' do
           expect do
             @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('almost_singular but')], match: :prefer_exact, exact: true)
           end.to raise_error(Capybara::ElementNotFound)
         end
+
         it 'raises an error if there is no match' do
           expect do
             @session.find(:xpath, XPath.descendant[XPath.attr(:class).is('does-not-exist')], match: :prefer_exact, exact: true)

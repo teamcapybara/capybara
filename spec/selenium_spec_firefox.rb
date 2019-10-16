@@ -182,7 +182,7 @@ RSpec.describe Capybara::Selenium::Driver do
 end
 
 RSpec.describe Capybara::Selenium::Node do
-  context '#click' do
+  describe '#click' do
     it 'warns when attempting on a table row' do
       session = TestSessions::SeleniumFirefox
       session.visit('/tables')

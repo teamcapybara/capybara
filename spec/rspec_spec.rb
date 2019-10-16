@@ -43,7 +43,7 @@ RSpec.describe 'capybara/rspec' do
       expect(Capybara.current_driver).to eq(:culerity)
     end
 
-    context '#all' do
+    describe '#all' do
       it 'allows access to the Capybara finder' do
         visit('/with_html')
         found = all(:css, 'h2') { |element| element[:class] == 'head' }
@@ -57,7 +57,7 @@ RSpec.describe 'capybara/rspec' do
       end
     end
 
-    context '#within' do
+    describe '#within' do
       it 'allows access to the Capybara scoper' do
         visit('/with_html')
         expect do
@@ -82,7 +82,7 @@ RSpec.describe 'capybara/rspec' do
         end.new
       end
 
-      context '#all' do
+      describe '#all' do
         it 'allows access to the Capybara finder' do
           test_class_instance.visit('/with_html')
           expect(test_class_instance.all(:css, 'h2.head').size).to eq(5)
@@ -95,7 +95,7 @@ RSpec.describe 'capybara/rspec' do
         end
       end
 
-      context '#within' do
+      describe '#within' do
         it 'allows access to the Capybara scoper' do
           test_class_instance.visit('/with_html')
           expect do

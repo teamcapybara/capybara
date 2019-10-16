@@ -72,7 +72,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
     end
 
-    context '#fill_in_with empty string and no options' do
+    describe '#fill_in_with empty string and no options' do
       it 'should trigger change when clearing a field' do
         pending "safaridriver doesn't trigger change for clear" if safari?(session)
         session.visit('/with_js')
@@ -83,7 +83,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
     end
 
-    context '#fill_in with { :clear => :backspace } fill_option', requires: [:js] do
+    describe '#fill_in with { :clear => :backspace } fill_option', requires: [:js] do
       before do
         # Firefox has an issue with change events if the main window doesn't think it's focused
         session.execute_script('window.focus()')
@@ -150,7 +150,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
     end
 
-    context '#fill_in with { clear: :none } fill_options' do
+    describe '#fill_in with { clear: :none } fill_options' do
       it 'should append to content in a field' do
         pending 'Safari overwrites by default - need to figure out a workaround' if safari?(session)
 
@@ -162,7 +162,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
     end
 
-    context  '#fill_in with Date' do
+    describe '#fill_in with Date' do
       before do
         session.visit('/form')
         session.find(:css, '#form_date').execute_script <<-JS
@@ -194,7 +194,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
     end
 
-    context '#fill_in with { clear: Array } fill_options' do
+    describe '#fill_in with { clear: Array } fill_options' do
       it 'should pass the array through to the element' do
         # this is mainly for use with [[:control, 'a'], :backspace] - however since that is platform dependant I'm testing with something less useful
         session.visit('/form')
