@@ -31,6 +31,11 @@ Capybara::SpecHelper.spec Capybara::Selector do
       expect(@session.find(:label, for: input).text).to eq 'Nested Label'
     end
 
+    it 'finds a label from nested input using :for filter with element when no id on label' do
+      input = @session.find(:css, '#wrapper_label').find(:css, 'input')
+      expect(@session.find(:label, for: input).text).to eq 'Wrapper Label'
+    end
+
     it 'finds the label for an non-nested element when using :for filter' do
       select = @session.find(:id, 'form_other_title')
       expect(@session.find(:label, for: select)['for']).to eq 'form_other_title'
