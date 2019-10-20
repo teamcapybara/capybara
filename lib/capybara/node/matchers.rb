@@ -673,7 +673,7 @@ module Capybara
       # @return [true]
       #
       def assert_text(*args)
-        _verify_text(args) do |count, query|
+        _verify_text(*args) do |count, query|
           unless query.matches_count?(count) && (count.positive? || query.expects_none?)
             raise Capybara::ExpectationNotMet, query.failure_message
           end
@@ -689,7 +689,7 @@ module Capybara
       # @return [true]
       #
       def assert_no_text(*args)
-        _verify_text(args) do |count, query|
+        _verify_text(*args) do |count, query|
           if query.matches_count?(count) && (count.positive? || query.expects_none?)
             raise Capybara::ExpectationNotMet, query.negative_failure_message
           end
@@ -849,9 +849,9 @@ module Capybara
         true
       end
 
-      def _verify_text(query_args)
-        query_args = _set_query_session_options(*query_args)
-        query = Capybara::Queries::TextQuery.new(*query_args)
+      def _verify_text(type = nil, expected_text, **query_options) # rubocop:disable Style/OptionalArguments
+        query_options[:session_options] = session_options
+        query = Capybara::Queries::TextQuery.new(type, expected_text, **query_options)
         synchronize(query.wait) do
           yield query.resolve_for(self), query
         end
