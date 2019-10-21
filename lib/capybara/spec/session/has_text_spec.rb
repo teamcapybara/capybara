@@ -111,6 +111,37 @@ Capybara::SpecHelper.spec '#has_text?' do
     expect(@session).not_to have_text(/xxxxyzzz/)
   end
 
+  context 'with object implementing to_s and to_hash' do
+    it 'should work if the object is passed alone' do
+      with_to_hash = Class.new do
+        def to_s; '42' end
+        def to_hash; { value: 'Other hash' } end
+      end.new
+      @session.visit('/with_html')
+      expect(@session).to have_text(with_to_hash)
+    end
+
+    it 'should work if passed with empty options' do
+      with_to_hash = Class.new do
+        def to_s; '42' end
+        def to_hash; { value: 'Other hash' } end
+      end.new
+      @session.visit('/with_html')
+      expect(@session).to have_text(:visible, with_to_hash, {})
+    end
+
+    it 'should fail if passed without empty options' do
+      with_to_hash = Class.new do
+        def to_s; '42' end
+        def to_hash; { blah: 'Other hash' } end
+      end.new
+      @session.visit('/with_html')
+      expect do
+        expect(@session).to have_text(:visible, with_to_hash)
+      end.to raise_error(ArgumentError)
+    end
+  end
+
   context 'with exact: true option' do
     it 'should be true if text matches exactly' do
       @session.visit('/with_html')

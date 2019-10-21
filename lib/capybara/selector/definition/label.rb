@@ -12,7 +12,7 @@ Capybara.add_selector(:label, locator_type: [String, Symbol]) do
     if options.key?(:for)
       for_option = options[:for]
       for_option = for_option[:id] if for_option.is_a?(Capybara::Node::Element)
-      if for_option && (for_option != "")
+      if for_option && (for_option != '')
         with_attr = builder(XPath.self).add_attribute_conditions(for: for_option)
         wrapped = !XPath.attr(:for) &
                   builder(XPath.self.descendant(*labelable_elements)).add_attribute_conditions(id: for_option)
