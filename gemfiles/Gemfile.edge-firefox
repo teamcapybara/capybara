@@ -5,7 +5,7 @@ gemspec path: '..'
 
 gem 'xpath', github: 'teamcapybara/xpath'
 
-gem 'selenium-webdriver', :path => '../../selenium/build/rb'
+gem 'selenium-webdriver', github: 'seleniumhq/selenium', glob: 'rb/*.gemspec'
 gem 'webdrivers', github: 'titusfortner/webdrivers', branch: 'edge_chrome'
 gem 'rack', github: 'rack/rack'
 gem 'sinatra', github: 'sinatra/sinatra', branch: 'master'
