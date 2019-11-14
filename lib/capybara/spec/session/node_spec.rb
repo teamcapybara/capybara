@@ -493,6 +493,21 @@ Capybara::SpecHelper.spec 'node' do
         expect(@session).to have_css('div.log', text: /DragOver with client position: [1-9]\d*,[1-9]\d*/, count: 2)
       end
 
+      it 'should preserve clientX/Y from last dragover event' do
+        @session.visit('/with_js')
+        element = @session.find('//div[@id="drag_html5"]')
+        target = @session.find('//div[@id="drop_html5"]')
+        element.drag_to(target)
+
+        # The first "DragOver" div is inserted by the last dragover event dispatched
+        drag_over_div = @session.find('//div[@class="log" and starts-with(text(), "DragOver")]', match: :first)
+        position = drag_over_div.text.sub('DragOver ', '')
+
+        expect(@session).to have_css('div.log', text: /DragLeave #{position}/, count: 1)
+        expect(@session).to have_css('div.log', text: /Drop #{position}/, count: 1)
+        expect(@session).to have_css('div.log', text: /DragEnd #{position}/, count: 1)
+      end
+
       it 'should not HTML5 drag and drop on a non HTML5 drop element' do
         @session.visit('/with_js')
         element = @session.find('//div[@id="drag_html5"]')

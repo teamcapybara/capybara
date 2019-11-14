@@ -166,17 +166,18 @@ class Capybara::Selenium::Node
         var dragOverOpts = Object.assign({clientX: targetCenter.x, clientY: targetCenter.y}, opts);
         var dragOverEvent = new DragEvent('dragover', dragOverOpts);
         target.dispatchEvent(dragOverEvent);
-        window.setTimeout(dragLeave, step_delay, dragOverEvent.defaultPrevented);
+        window.setTimeout(dragLeave, step_delay, dragOverEvent.defaultPrevented, dragOverOpts);
       }
 
-      function dragLeave(drop) {
-        var dragLeaveEvent = new DragEvent('dragleave', opts);
+      function dragLeave(drop, dragOverOpts) {
+        var dragLeaveOptions = Object.assign({}, opts, dragOverOpts);
+        var dragLeaveEvent = new DragEvent('dragleave', dragLeaveOptions);
         target.dispatchEvent(dragLeaveEvent);
         if (drop) {
-          var dropEvent = new DragEvent('drop', opts);
+          var dropEvent = new DragEvent('drop', dragLeaveOptions);
           target.dispatchEvent(dropEvent);
         }
-        var dragEndEvent = new DragEvent('dragend', opts);
+        var dragEndEvent = new DragEvent('dragend', dragLeaveOptions);
         source.dispatchEvent(dragEndEvent);
         callback.call(true);
       }
