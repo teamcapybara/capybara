@@ -1,3 +1,16 @@
+# Version 3.30.0
+Release date: unreleased
+
+### Added
+
+* Display pending requests when they don't complete in time [Juan Carlos Medina]
+
+### Fixed
+
+* Issue around automatic port assignment - Issue #2245
+* Label selector when label has no id - Issue #2260
+* Preserve clientX/clientY in Selenium HTML5 drag emulation [Nicolò G.]
+
 # Version 3.29.0
 Release date: 2019-09-02
 
