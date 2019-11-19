@@ -49,7 +49,7 @@ Capybara::SpecHelper.log_selenium_driver_version(Selenium::WebDriver::Firefox) i
 Capybara::SpecHelper.run_specs TestSessions::SeleniumFirefox, 'selenium', capybara_skip: skipped_tests do |example|
   case example.metadata[:full_description]
   when 'Capybara::Session selenium node #click should allow multiple modifiers'
-    pending "Firefox doesn't generate an event for shift+control+click" if firefox_gte?(62, @session) && !Gem.win_platform?
+    pending "Firefox on OSX doesn't generate an event for shift+control+click" if firefox_gte?(62, @session) && Selenium::WebDriver::Platform.mac?
   when /^Capybara::Session selenium node #double_click/
     pending "selenium-webdriver/geckodriver doesn't generate double click event" if firefox_lt?(59, @session)
   when 'Capybara::Session selenium #accept_prompt should accept the prompt with a blank response when there is a default'
