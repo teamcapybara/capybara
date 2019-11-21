@@ -77,6 +77,32 @@ module Capybara
 
       ##
       #
+      # Find the first {Capybara::Node::Element} based on the given arguments that is also an
+      # ancestor of the element called on.
+      #
+      # {#closest} takes the same options as {#find}.
+      #
+      #     element.closest('#foo').find('.bar')
+      #     element.closest(:xpath, './/div[contains(., "bar")]')
+      #     element.closest('ul', text: 'Quox').click_link('Delete')
+      #
+      # @param (see #find)
+      #
+      # @macro waiting_behavior
+      #
+      # @return [Capybara::Node::Element]      The found element
+      # @raise  [Capybara::ElementNotFound]    If the element can't be found before time expires
+      #
+      # TODO: implement it more like first? don't use synced_resolve since it could raise Ambiguous?
+      def closest(*args, **options, &optional_filter_block)
+        options = { minimum: 1 }.merge(options) unless options_include_minimum?(options)
+        options = { match: :first }.merge(options)
+        options[:session_options] = session_options
+        synced_resolve Capybara::Queries::AncestorQuery.new(*args, options, &optional_filter_block)
+      end
+
+      ##
+      #
       # Find an {Capybara::Node::Element} based on the given arguments that is also a sibling of the element called on.
       # {#sibling} will raise an error if the element is not found.
       #
