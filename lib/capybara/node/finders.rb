@@ -262,6 +262,30 @@ module Capybara
       end
       alias_method :find_all, :all
 
+      # TODO: add docs
+      # TODO: remove duplication with all
+      # TODO: add siblings
+      def ancestors(*args, **options, &optional_filter_block)
+        minimum_specified = options_include_minimum?(options)
+        options = { minimum: 1 }.merge(options) unless minimum_specified
+        options[:session_options] = session_options
+        query = Capybara::Queries::AncestorQuery.new(*args, options, &optional_filter_block)
+        result = nil
+        begin
+          synchronize(query.wait) do
+            result = query.resolve_for(self)
+            raise Capybara::ExpectationNotMet, result.failure_message unless result.matches_count?
+
+            result
+          end
+        rescue Capybara::ExpectationNotMet
+          raise if minimum_specified || (result.compare_count == 1)
+
+          Result.new([], nil)
+        end
+      end
+      alias_method :all_ancestors, :ancestors
+
       ##
       #
       # Find the first element on the page matching the given selector
