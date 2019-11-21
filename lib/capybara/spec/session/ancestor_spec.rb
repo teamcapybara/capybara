@@ -26,6 +26,12 @@ Capybara::SpecHelper.spec '#ancestor' do
     expect { el.ancestor('//div', text: 'Ancestor') }.to raise_error(Capybara::Ambiguous)
   end
 
+  it 'with match: first should find closest ancestor' do
+    el = @session.find(:css, '#child')
+    expect(el.ancestor(:css, 'div', match: :first)[:id]).to eq 'ancestor1'
+    expect(el.ancestor(:css, 'div', match: :first, text: 'Ancestor')[:id]).to eq 'ancestor1'
+  end
+
   context 'with css selectors' do
     it 'should find the first element using the given locator' do
       el = @session.find(:css, '#first_image')
