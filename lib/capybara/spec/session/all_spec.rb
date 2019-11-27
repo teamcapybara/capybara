@@ -36,6 +36,13 @@ Capybara::SpecHelper.spec '#all' do
     expect(@result).to include('Smith', 'John', 'John Smith')
   end
 
+  it 'should allow reversing the order' do
+    @session.visit('/form')
+    fields = @session.all(:fillable_field, 'Name', exact: false).to_a
+    reverse_fields = @session.all(:fillable_field, 'Name', order: :reverse, exact: false).to_a
+    expect(fields).to eq(reverse_fields.reverse)
+  end
+
   it 'should raise an error when given invalid options' do
     expect { @session.all('//p', schmoo: 'foo') }.to raise_error(ArgumentError)
   end

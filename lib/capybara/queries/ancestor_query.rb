@@ -12,7 +12,7 @@ module Capybara
           ancestors = node.find_xpath(XPath.ancestor.to_s)
                           .map(&method(:to_element))
                           .select { |el| match_results.include?(el) }
-          Capybara::Result.new(ancestors, self)
+          Capybara::Result.new(ordered_results(ancestors), self)
         end
       end
 
