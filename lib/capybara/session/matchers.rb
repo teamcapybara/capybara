@@ -20,7 +20,7 @@ module Capybara
     # @return [true]
     #
     def assert_current_path(path, **options)
-      _verify_current_path(path, options) do |query|
+      _verify_current_path(path, **options) do |query|
         raise Capybara::ExpectationNotMet, query.failure_message unless query.resolves_for?(self)
       end
     end
@@ -36,7 +36,7 @@ module Capybara
     # @return [true]
     #
     def assert_no_current_path(path, **options)
-      _verify_current_path(path, options) do |query|
+      _verify_current_path(path, **options) do |query|
         raise Capybara::ExpectationNotMet, query.negative_failure_message if query.resolves_for?(self)
       end
     end
@@ -51,7 +51,7 @@ module Capybara
     # @return [Boolean]
     #
     def has_current_path?(path, **options)
-      make_predicate(options) { assert_current_path(path, options) }
+      make_predicate(options) { assert_current_path(path, **options) }
     end
 
     ##
@@ -64,13 +64,13 @@ module Capybara
     # @return [Boolean]
     #
     def has_no_current_path?(path, **options)
-      make_predicate(options) { assert_no_current_path(path, options) }
+      make_predicate(options) { assert_no_current_path(path, **options) }
     end
 
   private
 
-    def _verify_current_path(path, options)
-      query = Capybara::Queries::CurrentPathQuery.new(path, options)
+    def _verify_current_path(path, **options)
+      query = Capybara::Queries::CurrentPathQuery.new(path, **options)
       document.synchronize(query.wait) do
         yield(query)
       end

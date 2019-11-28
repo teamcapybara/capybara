@@ -88,7 +88,14 @@ matrix:
         apt:
           packages:
             - awesome
-
+    - gemfile: Gemfile
+      rvm: ruby-head
+      env: CAPYBARA_FF=true
+      addons:
+        firefox: latest
+        apt:
+          packages:
+            - awesome
     - gemfile: Gemfile
       rvm: 2.4
       env: CAPYBARA_FF=true HEADLESS=true

@@ -49,16 +49,20 @@ RSpec.describe Capybara::Selector::RegexpDisassembler, :aggregate_failures do
   end
 
   it 'handles optional characters for #alternated_substrings' do
+    # rubocop:disable Style/BracesAroundHashParameters
     verify_alternated_strings(
-      /abc*def/ => [%w[ab def]],
-      /abc*/ => [%w[ab]],
-      /c*/ => [],
-      /abc?def/ => [%w[abdef], %w[abcdef]],
-      /abc?/ => [%w[ab]],
-      /abc?def?/ => [%w[abde], %w[abcde]],
-      /abc?def?g/ => [%w[abdeg], %w[abdefg], %w[abcdeg], %w[abcdefg]],
-      /d?/ => []
+      {
+        /abc*def/ => [%w[ab def]],
+        /abc*/ => [%w[ab]],
+        /c*/ => [],
+        /abc?def/ => [%w[abdef], %w[abcdef]],
+        /abc?/ => [%w[ab]],
+        /abc?def?/ => [%w[abde], %w[abcde]],
+        /abc?def?g/ => [%w[abdeg], %w[abdefg], %w[abcdeg], %w[abcdefg]],
+        /d?/ => []
+      }
     )
+    # rubocop:enable Style/BracesAroundHashParameters
   end
 
   it 'handles character classes' do
@@ -136,36 +140,40 @@ RSpec.describe Capybara::Selector::RegexpDisassembler, :aggregate_failures do
   end
 
   it 'handles alternation for #alternated_substrings' do
+    # rubocop:disable Style/BracesAroundHashParameters
     verify_alternated_strings(
-      /abc|def/ => [%w[abc], %w[def]],
-      /ab(?:c|d)/ => [%w[abc], %w[abd]],
-      /ab(c|d|e)fg/ => [%w[abcfg], %w[abdfg], %w[abefg]],
-      /ab?(c|d)fg/ => [%w[acfg], %w[adfg], %w[abcfg], %w[abdfg]],
-      /ab(c|d)ef/ => [%w[abcef], %w[abdef]],
-      /ab(cd?|ef)g/ => [%w[abcg], %w[abcdg], %w[abefg]],
-      /ab(cd|ef*)g/ => [%w[abcdg], %w[abe g]],
-      /ab|cd*/ => [%w[ab], %w[c]],
-      /cd(?:ef|gh)|xyz/ => [%w[cdef], %w[cdgh], %w[xyz]],
-      /(cd(?:ef|gh)|xyz)/ => [%w[cdef], %w[cdgh], %w[xyz]],
-      /cd(ef|gh)+/ => [%w[cdef], %w[cdgh]],
-      /cd(ef|gh)?/ => [%w[cd]],
-      /cd(ef|gh)?ij/ => [%w[cdij], %w[cdefij], %w[cdghij]],
-      /cd(ef|gh)+ij/ => [%w[cdef ij], %w[cdgh ij]],
-      /cd(ef|gh){2}ij/ => [%w[cdefefij], %w[cdefghij], %w[cdghefij], %w[cdghghij]],
-      /(cd(ef|g*))/ => [%w[cd]],
-      /a|b*/ => [],
-      /ab(?:c|d?)/ => [%w[ab]],
-      /ab(c|d)|a*/ => [],
-      /(abc)?(d|e)/ => [%w[d], %w[e]],
-      /(abc*de)?(d|e)/ => [%w[d], %w[e]],
-      /(abc*de)?(d|e?)/ => [],
-      /(abc)?(d|e?)/ => [],
-      /ab(cd){0,2}ef/ => [%w[ab ef]],
-      /ab(cd){0,1}ef/ => [%w[abef], %w[abcdef]],
-      /ab(cd|cd)ef/ => [%w[abcdef]],
-      /ab(cd|cd)?ef/ => [%w[abef], %w[abcdef]],
-      /ab\\?cd/ => [%w[abcd], %w[ab\cd]]
+      {
+        /abc|def/ => [%w[abc], %w[def]],
+        /ab(?:c|d)/ => [%w[abc], %w[abd]],
+        /ab(c|d|e)fg/ => [%w[abcfg], %w[abdfg], %w[abefg]],
+        /ab?(c|d)fg/ => [%w[acfg], %w[adfg], %w[abcfg], %w[abdfg]],
+        /ab(c|d)ef/ => [%w[abcef], %w[abdef]],
+        /ab(cd?|ef)g/ => [%w[abcg], %w[abcdg], %w[abefg]],
+        /ab(cd|ef*)g/ => [%w[abcdg], %w[abe g]],
+        /ab|cd*/ => [%w[ab], %w[c]],
+        /cd(?:ef|gh)|xyz/ => [%w[cdef], %w[cdgh], %w[xyz]],
+        /(cd(?:ef|gh)|xyz)/ => [%w[cdef], %w[cdgh], %w[xyz]],
+        /cd(ef|gh)+/ => [%w[cdef], %w[cdgh]],
+        /cd(ef|gh)?/ => [%w[cd]],
+        /cd(ef|gh)?ij/ => [%w[cdij], %w[cdefij], %w[cdghij]],
+        /cd(ef|gh)+ij/ => [%w[cdef ij], %w[cdgh ij]],
+        /cd(ef|gh){2}ij/ => [%w[cdefefij], %w[cdefghij], %w[cdghefij], %w[cdghghij]],
+        /(cd(ef|g*))/ => [%w[cd]],
+        /a|b*/ => [],
+        /ab(?:c|d?)/ => [%w[ab]],
+        /ab(c|d)|a*/ => [],
+        /(abc)?(d|e)/ => [%w[d], %w[e]],
+        /(abc*de)?(d|e)/ => [%w[d], %w[e]],
+        /(abc*de)?(d|e?)/ => [],
+        /(abc)?(d|e?)/ => [],
+        /ab(cd){0,2}ef/ => [%w[ab ef]],
+        /ab(cd){0,1}ef/ => [%w[abef], %w[abcdef]],
+        /ab(cd|cd)ef/ => [%w[abcdef]],
+        /ab(cd|cd)?ef/ => [%w[abef], %w[abcdef]],
+        /ab\\?cd/ => [%w[abcd], %w[ab\cd]]
+      }
     )
+    # rubocop:enable Style/BracesAroundHashParameters
   end
 
   it 'handles grouping' do

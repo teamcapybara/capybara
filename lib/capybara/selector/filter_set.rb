@@ -15,15 +15,15 @@ module Capybara
         instance_eval(&block)
       end
 
-      def node_filter(names, *types_and_options, &block)
+      def node_filter(names, *types, **options, &block)
         Array(names).each do |name|
-          add_filter(name, Filters::NodeFilter, *types_and_options, &block)
+          add_filter(name, Filters::NodeFilter, *types, **options, &block)
         end
       end
       alias_method :filter, :node_filter
 
-      def expression_filter(name, *types_and_options, &block)
-        add_filter(name, Filters::ExpressionFilter, *types_and_options, &block)
+      def expression_filter(name, *types, **options, &block)
+        add_filter(name, Filters::ExpressionFilter, *types, **options, &block)
       end
 
       def describe(what = nil, &block)
@@ -42,9 +42,9 @@ module Capybara
       def description(node_filters: true, expression_filters: true, **options)
         opts = options_with_defaults(options)
         description = +''
-        description << undeclared_descriptions.map { |desc| desc.call(opts).to_s }.join
-        description << expression_filter_descriptions.map { |desc| desc.call(opts).to_s }.join if expression_filters
-        description << node_filter_descriptions.map { |desc| desc.call(opts).to_s }.join if node_filters
+        description << undeclared_descriptions.map { |desc| desc.call(**opts).to_s }.join
+        description << expression_filter_descriptions.map { |desc| desc.call(**opts).to_s }.join if expression_filters
+        description << node_filter_descriptions.map { |desc| desc.call(**opts).to_s }.join if node_filters
         description
       end
 
@@ -116,7 +116,7 @@ module Capybara
           raise 'ArgumentError', ':default option is not supported for filters with a :matcher option'
         end
 
-        filter = filter_class.new(name, matcher, block, options)
+        filter = filter_class.new(name, matcher, block, **options)
         (filter_class <= Filters::ExpressionFilter ? @expression_filters : @node_filters)[name] = filter
       end
     end

@@ -7,7 +7,7 @@ Capybara.add_selector(:field, locator_type: [String, Symbol]) do
     invalid_types = %w[submit image]
     invalid_types << 'hidden' unless options[:type].to_s == 'hidden'
     xpath = XPath.descendant(:input, :textarea, :select)[!XPath.attr(:type).one_of(*invalid_types)]
-    locate_field(xpath, locator, options)
+    locate_field(xpath, locator, **options)
   end
 
   expression_filter(:type) do |expr, type|

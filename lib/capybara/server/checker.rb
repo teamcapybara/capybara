@@ -29,7 +29,7 @@ module Capybara
       end
 
       def https_request(&block)
-        make_request(ssl_options, &block)
+        make_request(**ssl_options, &block)
       end
 
       def make_request(**options, &block)

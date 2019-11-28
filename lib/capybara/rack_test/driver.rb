@@ -42,7 +42,7 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
   end
 
   def visit(path, **attributes)
-    browser.visit(path, attributes)
+    browser.visit(path, **attributes)
   end
 
   def refresh

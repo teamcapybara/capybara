@@ -16,7 +16,7 @@ Capybara.add_selector(:datalist_option, locator_type: [String, Symbol]) do
   describe_expression_filters do |disabled: nil, **options|
     desc = +''
     desc << ' that is not disabled' if disabled == false
-    desc << describe_all_expression_filters(options)
+    desc << describe_all_expression_filters(**options)
   end
 
   describe_node_filters do |**options|

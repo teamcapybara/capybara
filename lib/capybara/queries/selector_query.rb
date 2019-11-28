@@ -37,7 +37,7 @@ module Capybara
 
         raise ArgumentError, "Unused parameters passed to #{self.class.name} : #{args}" unless args.empty?
 
-        @expression = selector.call(@locator, @options)
+        @expression = selector.call(@locator, **@options)
 
         warn_exact_usage
 
@@ -340,7 +340,7 @@ module Capybara
         conditions[:id] = options[:id] if use_default_id_filter?
         conditions[:class] = options[:class] if use_default_class_filter?
         conditions[:style] = options[:style] if use_default_style_filter? && !options[:style].is_a?(Hash)
-        builder(expr).add_attribute_conditions(conditions)
+        builder(expr).add_attribute_conditions(**conditions)
       end
 
       def use_default_id_filter?

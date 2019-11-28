@@ -123,7 +123,7 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]    If the element doesn't have the specified styles
       #
       def assert_matches_style(styles, **options)
-        query_args = _set_query_session_options(styles, options)
+        query_args = _set_query_session_options(styles, **options)
         query = Capybara::Queries::StyleQuery.new(*query_args)
         synchronize(query.wait) do
           raise Capybara::ExpectationNotMet, query.failure_message unless query.resolves_for?(self)
@@ -155,7 +155,7 @@ module Capybara
       # @overload assert_all_of_selectors([kind = Capybara.default_selector], *locators, **options)
       #
       def assert_all_of_selectors(*args, **options, &optional_filter_block)
-        _verify_multiple(*args, options) do |selector, locator, opts|
+        _verify_multiple(*args, **options) do |selector, locator, opts|
           assert_selector(selector, locator, opts, &optional_filter_block)
         end
       end
@@ -176,7 +176,7 @@ module Capybara
       # @overload assert_none_of_selectors([kind = Capybara.default_selector], *locators, **options)
       #
       def assert_none_of_selectors(*args, **options, &optional_filter_block)
-        _verify_multiple(*args, options) do |selector, locator, opts|
+        _verify_multiple(*args, **options) do |selector, locator, opts|
           assert_no_selector(selector, locator, opts, &optional_filter_block)
         end
       end
@@ -268,7 +268,7 @@ module Capybara
       # @return [Boolean]                         If the expression exists
       #
       def has_xpath?(path, **options, &optional_filter_block)
-        has_selector?(:xpath, path, options, &optional_filter_block)
+        has_selector?(:xpath, path, **options, &optional_filter_block)
       end
 
       ##
@@ -280,7 +280,7 @@ module Capybara
       # @return [Boolean]
       #
       def has_no_xpath?(path, **options, &optional_filter_block)
-        has_no_selector?(:xpath, path, options, &optional_filter_block)
+        has_no_selector?(:xpath, path, **options, &optional_filter_block)
       end
 
       ##
@@ -307,7 +307,7 @@ module Capybara
       # @return [Boolean]                         If the selector exists
       #
       def has_css?(path, **options, &optional_filter_block)
-        has_selector?(:css, path, options, &optional_filter_block)
+        has_selector?(:css, path, **options, &optional_filter_block)
       end
 
       ##
@@ -319,7 +319,7 @@ module Capybara
       # @return [Boolean]
       #
       def has_no_css?(path, **options, &optional_filter_block)
-        has_no_selector?(:css, path, options, &optional_filter_block)
+        has_no_selector?(:css, path, **options, &optional_filter_block)
       end
 
       ##
@@ -332,7 +332,7 @@ module Capybara
       # @return [Boolean]                 Whether it exists
       #
       def has_link?(locator = nil, **options, &optional_filter_block)
-        has_selector?(:link, locator, options, &optional_filter_block)
+        has_selector?(:link, locator, **options, &optional_filter_block)
       end
 
       ##
@@ -344,7 +344,7 @@ module Capybara
       # @return [Boolean]            Whether it doesn't exist
       #
       def has_no_link?(locator = nil, **options, &optional_filter_block)
-        has_no_selector?(:link, locator, options, &optional_filter_block)
+        has_no_selector?(:link, locator, **options, &optional_filter_block)
       end
 
       ##
@@ -356,7 +356,7 @@ module Capybara
       # @return [Boolean]            Whether it exists
       #
       def has_button?(locator = nil, **options, &optional_filter_block)
-        has_selector?(:button, locator, options, &optional_filter_block)
+        has_selector?(:button, locator, **options, &optional_filter_block)
       end
 
       ##
@@ -368,7 +368,7 @@ module Capybara
       # @return [Boolean]            Whether it doesn't exist
       #
       def has_no_button?(locator = nil, **options, &optional_filter_block)
-        has_no_selector?(:button, locator, options, &optional_filter_block)
+        has_no_selector?(:button, locator, **options, &optional_filter_block)
       end
 
       ##
@@ -394,7 +394,7 @@ module Capybara
       # @return [Boolean]                        Whether it exists
       #
       def has_field?(locator = nil, **options, &optional_filter_block)
-        has_selector?(:field, locator, options, &optional_filter_block)
+        has_selector?(:field, locator, **options, &optional_filter_block)
       end
 
       ##
@@ -408,7 +408,7 @@ module Capybara
       # @return [Boolean]                        Whether it doesn't exist
       #
       def has_no_field?(locator = nil, **options, &optional_filter_block)
-        has_no_selector?(:field, locator, options, &optional_filter_block)
+        has_no_selector?(:field, locator, **options, &optional_filter_block)
       end
 
       ##
@@ -421,7 +421,7 @@ module Capybara
       # @return [Boolean]                 Whether it exists
       #
       def has_checked_field?(locator = nil, **options, &optional_filter_block)
-        has_selector?(:field, locator, options.merge(checked: true), &optional_filter_block)
+        has_selector?(:field, locator, **options.merge(checked: true), &optional_filter_block)
       end
 
       ##
@@ -434,7 +434,7 @@ module Capybara
       # @return [Boolean]                 Whether it doesn't exist
       #
       def has_no_checked_field?(locator = nil, **options, &optional_filter_block)
-        has_no_selector?(:field, locator, options.merge(checked: true), &optional_filter_block)
+        has_no_selector?(:field, locator, **options.merge(checked: true), &optional_filter_block)
       end
 
       ##
@@ -447,7 +447,7 @@ module Capybara
       # @return [Boolean]                 Whether it exists
       #
       def has_unchecked_field?(locator = nil, **options, &optional_filter_block)
-        has_selector?(:field, locator, options.merge(unchecked: true), &optional_filter_block)
+        has_selector?(:field, locator, **options.merge(unchecked: true), &optional_filter_block)
       end
 
       ##
@@ -460,7 +460,7 @@ module Capybara
       # @return [Boolean]                 Whether it doesn't exist
       #
       def has_no_unchecked_field?(locator = nil, **options, &optional_filter_block)
-        has_no_selector?(:field, locator, options.merge(unchecked: true), &optional_filter_block)
+        has_no_selector?(:field, locator, **options.merge(unchecked: true), &optional_filter_block)
       end
 
       ##
@@ -493,7 +493,7 @@ module Capybara
       # @return [Boolean]                               Whether it exists
       #
       def has_select?(locator = nil, **options, &optional_filter_block)
-        has_selector?(:select, locator, options, &optional_filter_block)
+        has_selector?(:select, locator, **options, &optional_filter_block)
       end
 
       ##
@@ -505,7 +505,7 @@ module Capybara
       # @return [Boolean]     Whether it doesn't exist
       #
       def has_no_select?(locator = nil, **options, &optional_filter_block)
-        has_no_selector?(:select, locator, options, &optional_filter_block)
+        has_no_selector?(:select, locator, **options, &optional_filter_block)
       end
 
       ##
@@ -527,7 +527,7 @@ module Capybara
       # @return [Boolean]        Whether it exists
       #
       def has_table?(locator = nil, **options, &optional_filter_block)
-        has_selector?(:table, locator, options, &optional_filter_block)
+        has_selector?(:table, locator, **options, &optional_filter_block)
       end
 
       ##
@@ -539,7 +539,7 @@ module Capybara
       # @return [Boolean]       Whether it doesn't exist
       #
       def has_no_table?(locator = nil, **options, &optional_filter_block)
-        has_no_selector?(:table, locator, options, &optional_filter_block)
+        has_no_selector?(:table, locator, **options, &optional_filter_block)
       end
 
       ##
@@ -597,7 +597,7 @@ module Capybara
       # @return [Boolean]
       #
       def matches_xpath?(xpath, **options, &optional_filter_block)
-        matches_selector?(:xpath, xpath, options, &optional_filter_block)
+        matches_selector?(:xpath, xpath, **options, &optional_filter_block)
       end
 
       ##
@@ -608,7 +608,7 @@ module Capybara
       # @return [Boolean]
       #
       def matches_css?(css, **options, &optional_filter_block)
-        matches_selector?(:css, css, options, &optional_filter_block)
+        matches_selector?(:css, css, **options, &optional_filter_block)
       end
 
       ##
@@ -631,7 +631,7 @@ module Capybara
       # @return [Boolean]
       #
       def not_matches_xpath?(xpath, **options, &optional_filter_block)
-        not_matches_selector?(:xpath, xpath, options, &optional_filter_block)
+        not_matches_selector?(:xpath, xpath, **options, &optional_filter_block)
       end
 
       ##
@@ -642,7 +642,7 @@ module Capybara
       # @return [Boolean]
       #
       def not_matches_css?(css, **options, &optional_filter_block)
-        not_matches_selector?(:css, css, options, &optional_filter_block)
+        not_matches_selector?(:css, css, **options, &optional_filter_block)
       end
 
       ##

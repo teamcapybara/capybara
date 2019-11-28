@@ -90,7 +90,7 @@ module Capybara
       @server = if config.run_server && @app && driver.needs_server?
         server_options = { port: config.server_port, host: config.server_host, reportable_errors: config.server_errors }
         server_options[:extra_middleware] = [Capybara::Server::AnimationDisabler] if config.disable_animation
-        Capybara::Server.new(@app, server_options).boot
+        Capybara::Server.new(@app, **server_options).boot
       end
       @touched = false
     end
@@ -496,7 +496,7 @@ module Capybara
                                     '`within` or `within_frame` blocks.'
       end
 
-      _switch_to_window(window, options, &window_locator)
+      _switch_to_window(window, **options, &window_locator)
     end
 
     ##
@@ -723,7 +723,7 @@ module Capybara
     # @param [Hash] options   a customizable set of options
     # @return [String]        the path to which the file was saved
     def save_screenshot(path = nil, **options)
-      prepare_path(path, 'png').tap { |p_path| driver.save_screenshot(p_path, options) }
+      prepare_path(path, 'png').tap { |p_path| driver.save_screenshot(p_path, **options) }
     end
 
     ##
@@ -738,7 +738,7 @@ module Capybara
     # @param [Hash] options   a customizable set of options
     #
     def save_and_open_screenshot(path = nil, **options)
-      save_screenshot(path, options).tap { |s_path| open_file(s_path) } # rubocop:disable Lint/Debugger
+      save_screenshot(path, **options).tap { |s_path| open_file(s_path) } # rubocop:disable Lint/Debugger
     end
 
     def document
@@ -821,11 +821,11 @@ module Capybara
     end
 
     def accept_modal(type, text_or_options, options, &blk)
-      driver.accept_modal(type, modal_options(text_or_options, options), &blk)
+      driver.accept_modal(type, **modal_options(text_or_options, **options), &blk)
     end
 
     def dismiss_modal(type, text_or_options, options, &blk)
-      driver.dismiss_modal(type, modal_options(text_or_options, options), &blk)
+      driver.dismiss_modal(type, **modal_options(text_or_options, **options), &blk)
     end
 
     def modal_options(text = nil, **options)

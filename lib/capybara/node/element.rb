@@ -118,7 +118,7 @@ module Capybara
         end
 
         options = session_options.default_set_options.to_h.merge(options)
-        synchronize { base.set(value, options) }
+        synchronize { base.set(value, **options) }
         self
       end
 
@@ -165,8 +165,8 @@ module Capybara
       #       offset will be from the element center, otherwise it will be from the top left corner of the element
       # @return [Capybara::Node::Element]  The element
       def click(*keys, **options)
-        perform_click_action(keys, options) do |k, opts|
-          base.click(k, opts)
+        perform_click_action(keys, **options) do |k, opts|
+          base.click(k, **opts)
         end
       end
 
@@ -178,8 +178,8 @@ module Capybara
       # @macro click_modifiers
       # @return [Capybara::Node::Element]  The element
       def right_click(*keys, **options)
-        perform_click_action(keys, options) do |k, opts|
-          base.right_click(k, opts)
+        perform_click_action(keys, **options) do |k, opts|
+          base.right_click(k, **opts)
         end
       end
 
@@ -191,8 +191,8 @@ module Capybara
       # @macro click_modifiers
       # @return [Capybara::Node::Element]  The element
       def double_click(*keys, **options)
-        perform_click_action(keys, options) do |k, opts|
-          base.double_click(k, opts)
+        perform_click_action(keys, **options) do |k, opts|
+          base.double_click(k, **opts)
         end
       end
 

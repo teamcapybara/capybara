@@ -23,7 +23,7 @@ module Capybara
       # @return [Capybara::Node::Element]  The element clicked
       #
       def click_link_or_button(locator = nil, **options)
-        find(:link_or_button, locator, options).click
+        find(:link_or_button, locator, **options).click
       end
       alias_method :click_on, :click_link_or_button
 
@@ -39,7 +39,7 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The element clicked
       def click_link(locator = nil, **options)
-        find(:link, locator, options).click
+        find(:link, locator, **options).click
       end
 
       ##
@@ -55,7 +55,7 @@ module Capybara
       #   @param [Hash] options        See {Capybara::Node::Finders#find_button}
       # @return [Capybara::Node::Element]  The element clicked
       def click_button(locator = nil, **options)
-        find(:button, locator, options).click
+        find(:button, locator, **options).click
       end
 
       ##
@@ -88,7 +88,7 @@ module Capybara
       def fill_in(locator = nil, with:, currently_with: nil, fill_options: {}, **find_options)
         find_options[:with] = currently_with if currently_with
         find_options[:allow_self] = true if locator.nil?
-        find(:fillable_field, locator, find_options).set(with, fill_options)
+        find(:fillable_field, locator, **find_options).set(with, **fill_options)
       end
 
       # @!macro label_click
@@ -119,7 +119,7 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The element chosen or the label clicked
       def choose(locator = nil, **options)
-        _check_with_label(:radio_button, true, locator, options)
+        _check_with_label(:radio_button, true, locator, **options)
       end
 
       ##
@@ -147,7 +147,7 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The element checked or the label clicked
       def check(locator = nil, **options)
-        _check_with_label(:checkbox, true, locator, options)
+        _check_with_label(:checkbox, true, locator, **options)
       end
 
       ##
@@ -175,7 +175,7 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The element unchecked or the label clicked
       def uncheck(locator = nil, **options)
-        _check_with_label(:checkbox, false, locator, options)
+        _check_with_label(:checkbox, false, locator, **options)
       end
 
       ##
@@ -205,7 +205,7 @@ module Capybara
         if el.respond_to?(:tag_name) && (el.tag_name == 'input')
           select_datalist_option(el, value)
         else
-          el.find(:option, value, options).select_option
+          el.find(:option, value, **options).select_option
         end
       end
 
@@ -229,8 +229,8 @@ module Capybara
       def unselect(value = nil, from: nil, **options)
         raise ArgumentError, 'The :from option does not take an element' if from.is_a? Capybara::Node::Element
 
-        scope = from ? find(:select, from, options) : self
-        scope.find(:option, value, options).unselect_option
+        scope = from ? find(:select, from, **options) : self
+        scope.find(:option, value, **options).unselect_option
       end
 
       ##
@@ -297,10 +297,10 @@ module Capybara
         end
         # Allow user to update the CSS style of the file input since they are so often hidden on a page
         if make_visible
-          ff = file_field || find(:file_field, locator, options.merge(visible: :all))
+          ff = file_field || find(:file_field, locator, **options.merge(visible: :all))
           while_visible(ff, make_visible) { |el| el.set(paths) }
         else
-          (file_field || find(:file_field, locator, options)).set(paths)
+          (file_field || find(:file_field, locator, **options)).set(paths)
         end
       end
 
@@ -309,12 +309,12 @@ module Capybara
       def find_select_or_datalist_input(from, options)
         synchronize(Capybara::Queries::BaseQuery.wait(options, session_options.default_max_wait_time)) do
           begin
-            find(:select, from, options)
+            find(:select, from, **options)
           rescue Capybara::ElementNotFound => select_error # rubocop:disable Naming/RescuedExceptionsVariableName
             raise if %i[selected with_selected multiple].any? { |option| options.key?(option) }
 
             begin
-              find(:datalist_input, from, options)
+              find(:datalist_input, from, **options)
             rescue Capybara::ElementNotFound => dlinput_error # rubocop:disable Naming/RescuedExceptionsVariableName
               raise Capybara::ElementNotFound, "#{select_error.message} and #{dlinput_error.message}"
             end
@@ -368,13 +368,13 @@ module Capybara
 
         synchronize(Capybara::Queries::BaseQuery.wait(options, session_options.default_max_wait_time)) do
           begin
-            el = find(selector, locator, options)
+            el = find(selector, locator, **options)
             el.set(checked)
           rescue StandardError => e
             raise unless allow_label_click && catch_error?(e)
 
             begin
-              el ||= find(selector, locator, options.merge(visible: :all))
+              el ||= find(selector, locator, **options.merge(visible: :all))
               el.session.find(:label, for: el, visible: true).click unless el.checked? == checked
             rescue StandardError # swallow extra errors - raise original
               raise e

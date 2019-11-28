@@ -29,7 +29,7 @@ Capybara.register_driver :selenium_chrome_not_clear_storage do |app|
     browser: :chrome,
     options: browser_options
   }
-  Capybara::Selenium::Driver.new(app, chrome_options.merge(clear_local_storage: false, clear_session_storage: false))
+  Capybara::Selenium::Driver.new(app, **chrome_options.merge(clear_local_storage: false, clear_session_storage: false))
 end
 
 Capybara.register_driver :selenium_chrome_not_clear_session_storage do |app|
@@ -37,7 +37,7 @@ Capybara.register_driver :selenium_chrome_not_clear_session_storage do |app|
     browser: :chrome,
     options: browser_options
   }
-  Capybara::Selenium::Driver.new(app, chrome_options.merge(clear_session_storage: false))
+  Capybara::Selenium::Driver.new(app, **chrome_options.merge(clear_session_storage: false))
 end
 
 Capybara.register_driver :selenium_chrome_not_clear_local_storage do |app|
@@ -45,7 +45,7 @@ Capybara.register_driver :selenium_chrome_not_clear_local_storage do |app|
     browser: :chrome,
     options: browser_options
   }
-  Capybara::Selenium::Driver.new(app, chrome_options.merge(clear_local_storage: false))
+  Capybara::Selenium::Driver.new(app, **chrome_options.merge(clear_local_storage: false))
 end
 
 Capybara.register_driver :selenium_driver_subclass_with_chrome do |app|

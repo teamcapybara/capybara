@@ -108,7 +108,9 @@ module Capybara
           !find_xpath(VISIBILITY_XPATH)
         else
           # No need for an xpath if only checking the current element
-          !(native.key?('hidden') || (/display:\s?none/.match? native[:style]) || %w[script head].include?(tag_name))
+          !(native.key?('hidden') ||
+            /display:\s?none/.match?(native[:style] || '') ||
+            %w[script head].include?(tag_name))
         end
       end
 

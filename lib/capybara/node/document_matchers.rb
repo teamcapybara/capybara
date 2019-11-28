@@ -42,7 +42,7 @@ module Capybara
       # @return [Boolean]
       #
       def has_title?(title, **options)
-        make_predicate(options) { assert_title(title, options) }
+        make_predicate(options) { assert_title(title, **options) }
       end
 
       ##
@@ -52,13 +52,13 @@ module Capybara
       # @return [Boolean]
       #
       def has_no_title?(title, **options)
-        make_predicate(options) { assert_no_title(title, options) }
+        make_predicate(options) { assert_no_title(title, **options) }
       end
 
     private
 
       def _verify_title(title, options)
-        query = Capybara::Queries::TitleQuery.new(title, options)
+        query = Capybara::Queries::TitleQuery.new(title, **options)
         synchronize(query.wait) { yield(query) }
         true
       end

@@ -61,7 +61,7 @@ module Capybara
       @server = if name.respond_to? :call
         name
       elsif options
-        proc { |app, port, host| Capybara.servers[name.to_sym].call(app, port, host, options) }
+        proc { |app, port, host| Capybara.servers[name.to_sym].call(app, port, host, **options) }
       else
         Capybara.servers[name.to_sym]
       end

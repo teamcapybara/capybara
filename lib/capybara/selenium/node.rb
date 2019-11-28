@@ -79,10 +79,10 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       when 'color'
         set_color(value)
       else
-        set_text(value, options)
+        set_text(value, **options)
       end
     when 'textarea'
-      set_text(value, options)
+      set_text(value, **options)
     else
       set_content_editable(value)
     end

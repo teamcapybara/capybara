@@ -36,7 +36,7 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
     html5_drop(*args)
   end
 
-  def click(*)
+  def click(*, **)
     super
   rescue ::Selenium::WebDriver::Error::ElementClickInterceptedError
     raise
