@@ -69,7 +69,7 @@ Naming/PredicateName:
   Exclude:
     - '**/*/*matchers.rb'
 
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   AllowedNames:
     - 'el'
     - 'id'
@@ -124,7 +124,7 @@ Layout/AccessModifierIndentation:
 Layout/CaseIndentation:
   EnforcedStyle: end
 
-Layout/IndentFirstArrayElement:
+Layout/FirstArrayElementIndentation:
   EnforcedStyle: consistent
 
 Layout/IndentationWidth:

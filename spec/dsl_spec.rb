@@ -92,7 +92,7 @@ RSpec.describe Capybara::DSL do
       driver_before_block = Capybara.current_driver
       begin
         Capybara.using_driver(:selenium) { raise 'ohnoes!' }
-      rescue Exception # rubocop:disable Lint/RescueException,Lint/HandleExceptions
+      rescue Exception # rubocop:disable Lint/RescueException,Lint/SuppressedException
       end
       expect(Capybara.current_driver).to eq(driver_before_block)
     end
@@ -208,7 +208,7 @@ RSpec.describe Capybara::DSL do
         Capybara.using_session(:raise) do
           raise
         end
-      rescue Exception # rubocop:disable Lint/RescueException,Lint/HandleExceptions
+      rescue Exception # rubocop:disable Lint/RescueException,Lint/SuppressedException
       end
       expect(Capybara.session_name).to eq(:default)
     end

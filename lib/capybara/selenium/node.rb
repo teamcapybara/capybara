@@ -204,7 +204,7 @@ protected
     JS
     begin
       driver.execute_script(script, self)
-    rescue StandardError # rubocop:disable Lint/HandleExceptions
+    rescue StandardError # rubocop:disable Lint/SuppressedException
       # Swallow error if scrollIntoView with options isn't supported
     end
   end
