@@ -15,7 +15,7 @@ Capybara::SpecHelper.spec '#save_and_open_screenshot' do
     @session.save_and_open_screenshot
 
     expect(@session.driver).to have_received(:save_screenshot)
-      .with(expected_file_regex, {})
+      .with(expected_file_regex, any_args)
     expect(Launchy).to have_received(:open).with(expected_file_regex)
   end
 
@@ -27,7 +27,7 @@ Capybara::SpecHelper.spec '#save_and_open_screenshot' do
     @session.save_and_open_screenshot(custom_path)
 
     expect(@session.driver).to have_received(:save_screenshot)
-      .with(/#{custom_path}$/, {})
+      .with(/#{custom_path}$/, any_args)
     expect(Launchy).to have_received(:open).with(/#{custom_path}$/)
   end
 

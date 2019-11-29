@@ -19,7 +19,7 @@ Capybara::SpecHelper.spec '#save_screenshot', requires: [:screenshot] do
     @session.save_screenshot
 
     regexp = Regexp.new(File.join(Dir.pwd, 'capybara-\d+\.png'))
-    expect(@session.driver).to have_received(:save_screenshot).with(regexp, {})
+    expect(@session.driver).to have_received(:save_screenshot).with(regexp, any_args)
   end
 
   it 'allows to specify another path' do
@@ -28,7 +28,7 @@ Capybara::SpecHelper.spec '#save_screenshot', requires: [:screenshot] do
     custom_path = 'screenshots/1.png'
     @session.save_screenshot(custom_path)
 
-    expect(@session.driver).to have_received(:save_screenshot).with(/#{custom_path}$/, {})
+    expect(@session.driver).to have_received(:save_screenshot).with(/#{custom_path}$/, any_args)
   end
 
   context 'with Capybara.save_path' do
@@ -39,7 +39,7 @@ Capybara::SpecHelper.spec '#save_screenshot', requires: [:screenshot] do
       @session.save_screenshot
 
       regexp = Regexp.new(File.join(alternative_path, 'capybara-\d+\.png'))
-      expect(@session.driver).to have_received(:save_screenshot).with(regexp, {})
+      expect(@session.driver).to have_received(:save_screenshot).with(regexp, any_args)
     end
 
     it 'relative paths are relative to save_path' do
@@ -49,7 +49,7 @@ Capybara::SpecHelper.spec '#save_screenshot', requires: [:screenshot] do
       custom_path = 'screenshots/2.png'
       @session.save_screenshot(custom_path)
 
-      expect(@session.driver).to have_received(:save_screenshot).with(File.expand_path(custom_path, alternative_path), {})
+      expect(@session.driver).to have_received(:save_screenshot).with(File.expand_path(custom_path, alternative_path), any_args)
     end
   end
 end
