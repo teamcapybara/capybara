@@ -299,8 +299,9 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
     describe 'Element#click' do
       it 'should handle fixed headers/footers' do
         session.visit('/with_fixed_header_footer')
-        # session.click_link('Go to root')
-        session.find(:link, 'Go to root').click
+        session.using_wait_time(2) do
+          session.find(:link, 'Go to root').click
+        end
         expect(session).to have_current_path('/')
       end
     end
