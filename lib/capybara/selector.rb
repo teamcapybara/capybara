@@ -58,7 +58,7 @@ require 'capybara/selector/definition'
 # * **:button** - Find buttons ( input [of type submit, reset, image, button] or button elements )
 #   * Locator: Matches the id, {Capybara.configure test_id} attribute, name, value, or title attributes, string content of a button, or the alt attribute of an image type button or of a descendant image of a button
 #   * Filters:
-#       * :name (String) - Matches the name attribute
+#       * :name (String, Regexp) - Matches the name attribute
 #       * :title (String) - Matches the title attribute
 #       * :value (String) - Matches the value of an input button
 #       * :type (String) - Matches the type attribute
