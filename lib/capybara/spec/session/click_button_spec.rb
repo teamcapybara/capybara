@@ -186,6 +186,11 @@ Capybara::SpecHelper.spec '#click_button' do
       @session.click_button(name: 'form[awesome]')
       expect(extract_results(@session)['first_name']).to eq('John')
     end
+
+    it 'should submit by specific button name regex' do
+      @session.click_button(name: /form\[awes.*\]/)
+      expect(extract_results(@session)['first_name']).to eq('John')
+    end
   end
 
   context 'with fields associated with the form using the form attribute', requires: [:form_attribute] do

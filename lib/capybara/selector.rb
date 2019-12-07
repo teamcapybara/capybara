@@ -30,8 +30,8 @@ require 'capybara/selector/definition'
 #   * Locator: Matches against the id, {Capybara.configure test_id} attribute, name, placeholder, or
 #     associated label text
 #   * Filters:
-#       * :name (String) - Matches the name attribute
-#       * :placeholder (String) - Matches the placeholder attribute
+#       * :name (String, Regexp) - Matches the name attribute
+#       * :placeholder (String, Regexp) - Matches the placeholder attribute
 #       * :type (String) - Matches the type attribute of the field or element type for 'textarea' and 'select'
 #       * :readonly (Boolean) - Match on the element being readonly
 #       * :with (String, Regexp) - Matches the current value of the field
@@ -72,8 +72,8 @@ require 'capybara/selector/definition'
 # * **:fillable_field** - Find text fillable fields ( textarea, input [not of type submit, image, radio, checkbox, hidden, file] )
 #   * Locator: Matches against the id, {Capybara.configure test_id} attribute, name, placeholder, or associated label text
 #   * Filters:
-#       * :name (String) - Matches the name attribute
-#       * :placeholder (String) - Matches the placeholder attribute
+#       * :name (String, Regexp) - Matches the name attribute
+#       * :placeholder (String, Regexp) - Matches the placeholder attribute
 #       * :with (String, Regexp) - Matches the current value of the field
 #       * :type (String) - Matches the type attribute of the field or element type for 'textarea'
 #       * :disabled (Boolean, :all) - Match disabled field? (Default: false)
@@ -83,7 +83,7 @@ require 'capybara/selector/definition'
 # * **:radio_button** - Find radio buttons
 #   * Locator: Match id, {Capybara.configure test_id} attribute, name, or associated label text
 #   * Filters:
-#       * :name (String) - Matches the name attribute
+#       * :name (String, Regexp) - Matches the name attribute
 #       * :checked (Boolean) - Match checked fields?
 #       * :unchecked (Boolean) - Match unchecked fields?
 #       * :disabled (Boolean, :all) - Match disabled field? (Default: false)
@@ -93,18 +93,18 @@ require 'capybara/selector/definition'
 # * **:checkbox** - Find checkboxes
 #   * Locator: Match id, {Capybara.configure test_id} attribute, name, or associated label text
 #   * Filters:
-#       * :name (String) - Matches the name attribute
+#       * :name (String, Regexp) - Matches the name attribute
 #       * :checked (Boolean) - Match checked fields?
 #       * :unchecked (Boolean) - Match unchecked fields?
 #       * :disabled (Boolean, :all) - Match disabled field? (Default: false)
-#       * :option (String, Regexp) - Match the current value
-#       * :with - Alias of :option
+#       * :with (String, Regexp) - Match the current value
+#       * :option - Alias of :with
 #
 # * **:select** - Find select elements
 #   * Locator: Match id, {Capybara.configure test_id} attribute, name, placeholder, or associated label text
 #   * Filters:
-#       * :name (String) - Matches the name attribute
-#       * :placeholder (String) - Matches the placeholder attribute
+#       * :name (String, Regexp) - Matches the name attribute
+#       * :placeholder (String, Placeholder) - Matches the placeholder attribute
 #       * :disabled (Boolean, :all) - Match disabled field? (Default: false)
 #       * :multiple (Boolean) - Match fields that accept multiple values
 #       * :options (Array<String>) - Exact match options
@@ -122,8 +122,8 @@ require 'capybara/selector/definition'
 #   * Locator: Matches against the id, {Capybara.configure test_id} attribute, name,
 #     placeholder, or associated label text
 #   * Filters:
-#       * :name (String) - Matches the name attribute
-#       * :placeholder (String) - Matches the placeholder attribute
+#       * :name (String, Regexp) - Matches the name attribute
+#       * :placeholder (String, Regexp) - Matches the placeholder attribute
 #       * :disabled (Boolean, :all) - Match disabled field? (Default: false)
 #       * :options (Array<String>) - Exact match options
 #       * :with_options (Array<String>) - Partial match options
@@ -136,7 +136,7 @@ require 'capybara/selector/definition'
 # * **:file_field** - Find file input elements
 #   * Locator: Match id, {Capybara.configure test_id} attribute, name, or associated label text
 #   * Filters:
-#       * :name (String) - Matches the name attribute
+#       * :name (String, Regexp) - Matches the name attribute
 #       * :disabled (Boolean, :all) - Match disabled field? (Default: false)
 #       * :multiple (Boolean) - Match field that accepts multiple values
 #
@@ -174,9 +174,15 @@ Capybara::Selector::FilterSet.add(:_field) do
   node_filter(:unchecked, :boolean) { |node, value| (value ^ node.checked?) }
   node_filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| !(value ^ node.disabled?) }
   node_filter(:valid, :boolean) { |node, value| node.evaluate_script('this.validity.valid') == value }
-
-  expression_filter(:name) { |xpath, val| xpath[XPath.attr(:name) == val] }
-  expression_filter(:placeholder) { |xpath, val| xpath[XPath.attr(:placeholder) == val] }
+  node_filter(:name) { |node, value| !value.is_a?(Regexp) || value.match?(node[:name])}
+  node_filter(:placeholder) { |node, value| !value.is_a?(Regexp) || value.match?(node[:placeholder])}
+  
+  expression_filter(:name) do |xpath, val| 
+    builder(xpath).add_attribute_conditions(name: val)
+  end
+  expression_filter(:placeholder) do |xpath, val| 
+    builder(xpath).add_attribute_conditions(placeholder: val)
+  end
   expression_filter(:disabled) { |xpath, val| val ? xpath : xpath[~XPath.attr(:disabled)] }
   expression_filter(:multiple) { |xpath, val| xpath[val ? XPath.attr(:multiple) : ~XPath.attr(:multiple)] }
 
