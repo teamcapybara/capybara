@@ -34,8 +34,8 @@ Capybara.add_selector(:button, locator_type: [String, Symbol]) do
   node_filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| !(value ^ node.disabled?) }
   expression_filter(:disabled) { |xpath, val| val ? xpath : xpath[~XPath.attr(:disabled)] }
 
-  node_filter(:name) { |node, value| !value.is_a?(Regexp) || value.match?(node[:name])}  
-  expression_filter(:name) do |xpath, val| 
+  node_filter(:name) { |node, value| !value.is_a?(Regexp) || value.match?(node[:name]) }
+  expression_filter(:name) do |xpath, val|
     builder(xpath).add_attribute_conditions(name: val)
   end
 

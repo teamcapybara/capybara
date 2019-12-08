@@ -70,10 +70,10 @@ Capybara::SpecHelper.spec Capybara::Selector do
     it 'can find specifically by name string' do
       expect(@session.find(:field, name: 'form[other_title]')['id']).to eq 'form_other_title'
     end
-    
+
     it 'can find specifically by name regex' do
       expect(@session.find(:field, name: /form\[other_.*\]/)['id']).to eq 'form_other_title'
-    end  
+    end
 
     it 'can find specifically by placeholder string' do
       expect(@session.find(:field, placeholder: 'FirstName')['id']).to eq 'form_first_name'
