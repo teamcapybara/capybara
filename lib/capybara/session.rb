@@ -753,13 +753,13 @@ module Capybara
     # end
 
     NODE_METHODS.each do |method|
-      if RUBY_VERSION < "2.7"
+      if RUBY_VERSION < '2.7'
         define_method method do |*args, &block|
           @touched = true
           current_scope.send(method, *args, &block)
         end
       else
-        class_eval <<~RUBY
+        class_eval <<~RUBY, __FILE__, __LINE__ + 1
           def #{method}(...)
             @touched = true
             current_scope.#{method}(...)
@@ -769,8 +769,8 @@ module Capybara
     end
 
     DOCUMENT_METHODS.each do |method|
-      if RUBY_VERSION >= "2.7"
-        class_eval <<~RUBY
+      if RUBY_VERSION >= '2.7'
+        class_eval <<~RUBY, __FILE__, __LINE__ + 1
           def #{method}(...)
             document.#{method}(...)
           end

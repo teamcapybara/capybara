@@ -47,8 +47,8 @@ module Capybara
     end
 
     Session::DSL_METHODS.each do |method|
-      if RUBY_VERSION >= "2.7"
-        class_eval <<~RUBY
+      if RUBY_VERSION >= '2.7'
+        class_eval <<~RUBY, __FILE__, __LINE__ + 1
           def #{method}(...)
             page.#{method}(...)
           end

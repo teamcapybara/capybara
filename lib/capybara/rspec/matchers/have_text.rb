@@ -23,6 +23,7 @@ module Capybara
         end
 
       private
+
         def kwargs
           @args.last.is_a?(Hash) ? @args.last : {}
         end

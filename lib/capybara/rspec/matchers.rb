@@ -161,8 +161,8 @@ module Capybara
     %w[selector css xpath text title current_path link button
        field checked_field unchecked_field select table
        sibling ancestor].each do |matcher_type|
-      if RUBY_VERSION >= "2.7"
-        class_eval <<~RUBY
+      if RUBY_VERSION >= '2.7'
+        class_eval <<~RUBY, __FILE__, __LINE__ + 1
           def have_no_#{matcher_type}(...)
             Matchers::NegatedMatcher.new(have_#{matcher_type}(...))
           end

@@ -55,6 +55,7 @@ module Capybara
     def call(locator, **options)
       if format
         raise ArgumentError, "Selector #{@name} does not support #{format}" unless expressions.key?(format)
+
         instance_exec(locator, **options, &expressions[format])
       else
         warn 'Selector has no format'

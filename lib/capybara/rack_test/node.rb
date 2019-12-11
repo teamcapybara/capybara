@@ -124,7 +124,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     alias_method "unchecked_#{meth_name}", meth_name
     private "unchecked_#{meth_name}" # rubocop:disable Style/AccessModifierDeclarations
 
-    if RUBY_VERSION >= "2.7"
+    if RUBY_VERSION >= '2.7'
       define_method meth_name do |*args, **kwargs|
         stale_check
         send("unchecked_#{meth_name}", *args, **kwargs)

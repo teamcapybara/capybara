@@ -130,7 +130,7 @@ Capybara::SpecHelper.spec '#has_text?' do
       expect(@session).to have_text(:visible, with_to_hash, {})
     end
 
-    if RUBY_VERSION < "2.7"
+    if RUBY_VERSION < '2.7'
       it 'should fail if passed without empty options' do
         with_to_hash = Class.new do
           def to_s; '42' end
