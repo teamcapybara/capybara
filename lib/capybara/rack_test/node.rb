@@ -120,12 +120,20 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   end
 
   public_instance_methods(false).each do |meth_name|
+    puts meth_name
     alias_method "unchecked_#{meth_name}", meth_name
     private "unchecked_#{meth_name}" # rubocop:disable Style/AccessModifierDeclarations
 
-    define_method meth_name do |*args|
-      stale_check
-      send("unchecked_#{meth_name}", *args)
+    if RUBY_VERSION >= "2.7"
+      define_method meth_name do |*args, **kwargs|
+        stale_check
+        send("unchecked_#{meth_name}", *args, **kwargs)
+      end
+    else
+      define_method meth_name do |*args|
+        stale_check
+        send("unchecked_#{meth_name}", *args)
+      end
     end
   end
 

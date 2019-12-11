@@ -94,9 +94,9 @@ private
     @cdp_unsupported_errors ||= [Selenium::WebDriver::Error::WebDriverError]
   end
 
-  def execute_cdp(cmd, params = {})
+  def execute_cdp(cmd, **params)
     if browser.respond_to? :execute_cdp
-      browser.execute_cdp(cmd, params)
+      browser.execute_cdp(cmd, **params)
     else
       args = { cmd: cmd, params: params }
       result = bridge.http.call(:post, "session/#{bridge.session_id}/goog/cdp/execute", args)

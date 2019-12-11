@@ -7,11 +7,11 @@ module Capybara
     module Matchers
       class HaveText < CountableWrappedElementMatcher
         def element_matches?(el)
-          el.assert_text(*@args)
+          el.assert_text(*args, **kwargs)
         end
 
         def element_does_not_match?(el)
-          el.assert_no_text(*@args)
+          el.assert_no_text(*args, **kwargs)
         end
 
         def description
@@ -23,6 +23,13 @@ module Capybara
         end
 
       private
+        def kwargs
+          @args.last.is_a?(Hash) ? @args.last : {}
+        end
+
+        def args
+          @args[0].is_a?(Symbol) ? @args[0..1] : @args[0..0]
+        end
 
         def text
           @args[0].is_a?(Symbol) ? @args[1] : @args[0]

@@ -161,8 +161,16 @@ module Capybara
     %w[selector css xpath text title current_path link button
        field checked_field unchecked_field select table
        sibling ancestor].each do |matcher_type|
-      define_method "have_no_#{matcher_type}" do |*args, &optional_filter_block|
-        Matchers::NegatedMatcher.new(send("have_#{matcher_type}", *args, &optional_filter_block))
+      if RUBY_VERSION >= "2.7"
+        class_eval <<~RUBY
+          def have_no_#{matcher_type}(...)
+            Matchers::NegatedMatcher.new(have_#{matcher_type}(...))
+          end
+        RUBY
+      else
+        define_method "have_no_#{matcher_type}" do |*args, &optional_filter_block|
+          Matchers::NegatedMatcher.new(send("have_#{matcher_type}", *args, &optional_filter_block))
+        end
       end
     end
     alias_method :have_no_content, :have_no_text

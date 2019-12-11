@@ -745,16 +745,40 @@ module Capybara
       @document ||= Capybara::Node::Document.new(self, driver)
     end
 
+    # NODE_METHODS.each do |method|
+    #   define_method method do |*args, &block|
+    #     @touched = true
+    #     current_scope.send(method, *args, &block)
+    #   end
+    # end
+
     NODE_METHODS.each do |method|
-      define_method method do |*args, &block|
-        @touched = true
-        current_scope.send(method, *args, &block)
+      if RUBY_VERSION < "2.7"
+        define_method method do |*args, &block|
+          @touched = true
+          current_scope.send(method, *args, &block)
+        end
+      else
+        class_eval <<~RUBY
+          def #{method}(...)
+            @touched = true
+            current_scope.#{method}(...)
+          end
+        RUBY
       end
     end
 
     DOCUMENT_METHODS.each do |method|
-      define_method method do |*args, &block|
-        document.send(method, *args, &block)
+      if RUBY_VERSION >= "2.7"
+        class_eval <<~RUBY
+          def #{method}(...)
+            document.#{method}(...)
+          end
+        RUBY
+      else
+        define_method method do |*args, &block|
+          document.send(method, *args, &block)
+        end
       end
     end
 
