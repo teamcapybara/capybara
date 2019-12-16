@@ -20,7 +20,7 @@ Capybara.add_selector(:checkbox, locator_type: [String, Symbol]) do
   describe_node_filters do |option: nil, with: nil, **|
     desc = +''
     desc << " with value #{option.inspect}" if option
-    desc << " with value #{with.inspec}" if with
+    desc << " with value #{with.inspect}" if with
     desc
   end
 end
