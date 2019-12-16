@@ -20,6 +20,11 @@ Capybara::SpecHelper.spec '#ancestor' do
     expect(el.ancestor('//div', text: "Ancestor\nAncestor\nAncestor")[:id]).to eq('ancestor3')
   end
 
+  it 'should find the closest ancestor' do
+    el = @session.find(:css, '#child')
+    expect(el.ancestor('.//div', order: :reverse, match: :first)[:id]).to eq('ancestor1')
+  end
+
   it 'should raise an error if there are multiple matches' do
     el = @session.find(:css, '#child')
     expect { el.ancestor('//div') }.to raise_error(Capybara::Ambiguous)

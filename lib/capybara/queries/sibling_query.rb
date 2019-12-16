@@ -11,7 +11,7 @@ module Capybara
           siblings = node.find_xpath((XPath.preceding_sibling + XPath.following_sibling).to_s)
                          .map(&method(:to_element))
                          .select { |el| match_results.include?(el) }
-          Capybara::Result.new(siblings, self)
+          Capybara::Result.new(ordered_results(siblings), self)
         end
       end
 

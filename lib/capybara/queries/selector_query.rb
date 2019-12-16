@@ -16,11 +16,13 @@ module Capybara
                      enable_aria_label: session_options.enable_aria_label,
                      test_id: session_options.test_id,
                      selector_format: nil,
+                     order: nil,
                      **options,
                      &filter_block)
         @resolved_node = nil
         @resolved_count = 0
         @options = options.dup
+        @order = order
         @filter_cache = Hash.new { |hsh, key| hsh[key] = {} }
 
         super(@options)
@@ -150,7 +152,7 @@ module Capybara
 
         node.synchronize do
           children = find_nodes_by_selector_format(node, exact).map(&method(:to_element))
-          Capybara::Result.new(children, self)
+          Capybara::Result.new(ordered_results(children), self)
         end
       end
 
@@ -311,6 +313,15 @@ module Capybara
         filters = @selector.expression_filters
         filters.merge filter_set(options[:filter_set]).expression_filters if options.key?(:filter_set)
         filters
+      end
+
+      def ordered_results(results)
+        case @order
+        when :reverse
+          results.reverse
+        else
+          results
+        end
       end
 
       def custom_keys
