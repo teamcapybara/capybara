@@ -4,12 +4,17 @@ Release date: unreleased
 ### Added
 
 * Display pending requests when they don't complete in time [Juan Carlos Medina]
+* :order option in selector queries - set to :reverse to for reverse document order results
+* Support regexp for :name and :placeholder options in selectors that import filters from
+  _field filter set
 
 ### Fixed
 
 * Issue around automatic port assignment - Issue #2245
 * Label selector when label has no id - Issue #2260
 * Preserve clientX/clientY in Selenium HTML5 drag emulation [Nicolò G.]
+* table selector using :with_cols option if last specified column matched but others didn't - Issue #2287
+* Some tests updated for Ruby 2.7 behavior change around keyword args
 
 # Version 3.29.0
 Release date: 2019-09-02
