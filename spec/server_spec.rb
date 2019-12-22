@@ -75,25 +75,21 @@ RSpec.describe Capybara::Server do
   end
 
   it 'should handle that getting available ports fails randomly' do
-    begin
-      # Use a port to force a EADDRINUSE error to be generated
-      server = TCPServer.new('0.0.0.0', 0)
-      server_port = server.addr[1]
-      d_server = instance_double('TCPServer', addr: [nil, server_port, nil, nil], close: nil)
-      call_count = 0
-      allow(TCPServer).to receive(:new).and_wrap_original do |m, *args|
-        begin
-          call_count.zero? ? d_server : m.call(*args)
-        ensure
-          call_count += 1
-        end
-      end
-
-      port = described_class.new(Object.new, host: '0.0.0.0').port
-      expect(port).not_to eq(server_port)
+    # Use a port to force a EADDRINUSE error to be generated
+    server = TCPServer.new('0.0.0.0', 0)
+    server_port = server.addr[1]
+    d_server = instance_double('TCPServer', addr: [nil, server_port, nil, nil], close: nil)
+    call_count = 0
+    allow(TCPServer).to receive(:new).and_wrap_original do |m, *args|
+      call_count.zero? ? d_server : m.call(*args)
     ensure
-      server&.close
+      call_count += 1
     end
+
+    port = described_class.new(Object.new, host: '0.0.0.0').port
+    expect(port).not_to eq(server_port)
+  ensure
+    server&.close
   end
 
   it 'should return its #base_url' do
@@ -104,29 +100,27 @@ RSpec.describe Capybara::Server do
   end
 
   it 'should support SSL' do
-    begin
-      key = File.join(Dir.pwd, 'spec', 'fixtures', 'key.pem')
-      cert = File.join(Dir.pwd, 'spec', 'fixtures', 'certificate.pem')
-      Capybara.server = :puma, { Host: "ssl://#{Capybara.server_host}?key=#{key}&cert=#{cert}" }
-      app = proc { |_env| [200, {}, ['Hello SSL Server!']] }
-      server = described_class.new(app).boot
+    key = File.join(Dir.pwd, 'spec', 'fixtures', 'key.pem')
+    cert = File.join(Dir.pwd, 'spec', 'fixtures', 'certificate.pem')
+    Capybara.server = :puma, { Host: "ssl://#{Capybara.server_host}?key=#{key}&cert=#{cert}" }
+    app = proc { |_env| [200, {}, ['Hello SSL Server!']] }
+    server = described_class.new(app).boot
 
-      expect do
-        Net::HTTP.start(server.host, server.port, max_retries: 0) { |http| http.get('/__identify__') }
-      end.to(raise_error do |e|
-        expect(e.is_a?(EOFError) || e.is_a?(Net::ReadTimeout)).to be true
-      end)
+    expect do
+      Net::HTTP.start(server.host, server.port, max_retries: 0) { |http| http.get('/__identify__') }
+    end.to(raise_error do |e|
+      expect(e.is_a?(EOFError) || e.is_a?(Net::ReadTimeout)).to be true
+    end)
 
-      res = Net::HTTP.start(server.host, server.port, use_ssl: true, verify_mode: OpenSSL::SSL::VERIFY_NONE) do |https|
-        https.get('/')
-      end
-
-      expect(res.body).to include('Hello SSL Server!')
-      uri = ::Addressable::URI.parse(server.base_url)
-      expect(uri.to_hash).to include(scheme: 'https', host: server.host, port: server.port)
-    ensure
-      Capybara.server = :default
+    res = Net::HTTP.start(server.host, server.port, use_ssl: true, verify_mode: OpenSSL::SSL::VERIFY_NONE) do |https|
+      https.get('/')
     end
+
+    expect(res.body).to include('Hello SSL Server!')
+    uri = ::Addressable::URI.parse(server.base_url)
+    expect(uri.to_hash).to include(scheme: 'https', host: server.host, port: server.port)
+  ensure
+    Capybara.server = :default
   end
 
   context 'When Capybara.reuse_server is true' do
@@ -224,19 +218,17 @@ RSpec.describe Capybara::Server do
   end
 
   it 'should raise server errors when the server errors before the timeout' do
-    begin
-      Capybara.register_server :kaboom do
-        sleep 0.1
-        raise 'kaboom'
-      end
-      Capybara.server = :kaboom
-
-      expect do
-        described_class.new(proc { |e| }).boot
-      end.to raise_error(RuntimeError, 'kaboom')
-    ensure
-      Capybara.server = :default
+    Capybara.register_server :kaboom do
+      sleep 0.1
+      raise 'kaboom'
     end
+    Capybara.server = :kaboom
+
+    expect do
+      described_class.new(proc { |e| }).boot
+    end.to raise_error(RuntimeError, 'kaboom')
+  ensure
+    Capybara.server = :default
   end
 
   it 'should raise an error when there are pending requests' do

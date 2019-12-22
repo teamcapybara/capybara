@@ -33,11 +33,9 @@ module Capybara
                end
 
         Array(data).map do |l|
-          begin
-            ::Selenium::WebDriver::LogEntry.new l.fetch('level', 'UNKNOWN'), l.fetch('timestamp'), l.fetch('message')
-          rescue KeyError
-            next
-          end
+          ::Selenium::WebDriver::LogEntry.new l.fetch('level', 'UNKNOWN'), l.fetch('timestamp'), l.fetch('message')
+        rescue KeyError
+          next
         end
       rescue ::Selenium::WebDriver::Error::UnknownCommandError
         raise NotImplementedError, LOG_MSG

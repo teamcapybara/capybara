@@ -13,11 +13,9 @@ Then(/^Capybara should use the "([^"]*)" driver$/) do |driver|
 end
 
 When(/^I use a matcher that fails$/) do
-  begin
-    expect(page).to have_css('h1#doesnotexist')
-  rescue StandardError, RSpec::Expectations::ExpectationNotMetError => e
-    @error_message = e.message
-  end
+  expect(page).to have_css('h1#doesnotexist')
+rescue StandardError, RSpec::Expectations::ExpectationNotMetError => e
+  @error_message = e.message
 end
 
 Then(/^the failing exception should be nice$/) do

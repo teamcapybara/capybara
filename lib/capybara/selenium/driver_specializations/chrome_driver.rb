@@ -13,14 +13,12 @@ module Capybara::Selenium::Driver::ChromeDriver
 
   def fullscreen_window(handle)
     within_given_window(handle) do
-      begin
-        super
-      rescue NoMethodError => e
-        raise unless e.message.match?(/full_screen_window/)
+      super
+    rescue NoMethodError => e
+      raise unless e.message.match?(/full_screen_window/)
 
-        result = bridge.http.call(:post, "session/#{bridge.session_id}/window/fullscreen", {})
-        result['value']
-      end
+      result = bridge.http.call(:post, "session/#{bridge.session_id}/window/fullscreen", {})
+      result['value']
     end
   end
 
@@ -65,7 +63,7 @@ private
   end
 
   def clear_all_storage?
-    storage_clears.none? { |s| s == false }
+    storage_clears.none? false
   end
 
   def uniform_storage_clear?

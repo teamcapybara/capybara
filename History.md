@@ -1,3 +1,10 @@
+# Version 3.33.0
+Release date: unreleased
+
+### Changed
+
+* Ruby 2.5.0+ is now required
+
 # Version 3.32.1
 Release date: 2020-04-05
 

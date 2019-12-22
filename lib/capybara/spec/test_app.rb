@@ -188,28 +188,24 @@ class TestApp < Sinatra::Base
   end
 
   post '/upload' do
-    begin
-      buffer = []
-      buffer << "Content-type: #{params.dig(:form, :document, :type)}"
-      buffer << "File content: #{params.dig(:form, :document, :tempfile).read}"
-      buffer.join(' | ')
-    rescue StandardError
-      'No file uploaded'
-    end
+    buffer = []
+    buffer << "Content-type: #{params.dig(:form, :document, :type)}"
+    buffer << "File content: #{params.dig(:form, :document, :tempfile).read}"
+    buffer.join(' | ')
+  rescue StandardError
+    'No file uploaded'
   end
 
   post '/upload_multiple' do
-    begin
-      docs = params.dig(:form, :multiple_documents)
-      buffer = [docs.size.to_s]
-      docs.each do |doc|
-        buffer << "Content-type: #{doc[:type]}"
-        buffer << "File content: #{doc[:tempfile].read}"
-      end
-      buffer.join(' | ')
-    rescue StandardError
-      'No files uploaded'
+    docs = params.dig(:form, :multiple_documents)
+    buffer = [docs.size.to_s]
+    docs.each do |doc|
+      buffer << "Content-type: #{doc[:type]}"
+      buffer << "File content: #{doc[:tempfile].read}"
     end
+    buffer.join(' | ')
+  rescue StandardError
+    'No files uploaded'
   end
 
   get '/apple-touch-icon-precomposed.png' do
