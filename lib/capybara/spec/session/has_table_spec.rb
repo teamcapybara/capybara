@@ -143,10 +143,56 @@ Capybara::SpecHelper.spec '#has_no_table?' do
      ])
   end
 
-  it 'should consider columns' do
-    expect(@session).to have_no_table('Vertical Headers', with_cols:
-      [
-        { 'First Name' => 'Joe' }
-      ])
+  context 'using :with_cols' do
+    it 'should consider a single column' do
+      expect(@session).to have_no_table('Vertical Headers', with_cols:
+        [
+          { 'First Name' => 'Joe' }
+        ])
+    end
+
+    it 'should be true even if the last column does exist' do
+      expect(@session).to have_no_table('Vertical Headers', with_cols:
+        [
+          {
+            'First Name' => 'What?',
+            'What?' => 'Walpole',
+            'City' => 'Oceanside' # This line makes the example fail
+          }
+        ])
+    end
+
+    it 'should be true if none of the columns exist' do
+      expect(@session).to have_no_table('Vertical Headers', with_cols:
+        [
+          {
+            'First Name' => 'What?',
+            'What?' => 'Walpole',
+            'City' => 'What?'
+          }
+        ])
+    end
+
+    it 'should be true if the first column does match' do
+      expect(@session).to have_no_table('Vertical Headers', with_cols:
+        [
+          {
+            'First Name' => 'Thomas',
+            'Last Name' => 'What',
+            'City' => 'What'
+          }
+        ])
+    end
+
+    it 'should be true if none of the columns match' do
+      expect(@session).to have_no_table('Vertical Headers', with_cols:
+        [
+          {
+            'First Name' => 'What',
+            'Last Name' => 'What',
+            'City' => 'What'
+          }
+        ])
+    end
   end
 end

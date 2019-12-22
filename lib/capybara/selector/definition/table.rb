@@ -19,7 +19,10 @@ Capybara.add_selector(:table, locator_type: [String, Symbol]) do
           header = XPath.descendant(:th)[XPath.string.n.is(header)]
           td = XPath.descendant(:tr)[header].descendant(:td)
           cell_condition = XPath.string.n.is(cell_str)
-          cell_condition &= prev_col_position?(XPath.ancestor(:table)[1].join(xp)) if xp
+          if xp
+            prev_cell = XPath.ancestor(:table)[1].join(xp)
+            cell_condition &= (prev_cell & prev_col_position?(prev_cell))
+          end
           td[cell_condition]
         end
       else
@@ -28,7 +31,7 @@ Capybara.add_selector(:table, locator_type: [String, Symbol]) do
 
           if prev_cell
             prev_cell = XPath.ancestor(:tr)[1].preceding_sibling(:tr).join(prev_cell)
-            cell_condition &= prev_col_position?(prev_cell)
+            cell_condition &= (prev_cell & prev_col_position?(prev_cell))
           end
 
           XPath.descendant(:td)[cell_condition]
