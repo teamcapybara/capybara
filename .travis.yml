@@ -7,7 +7,7 @@ services:
   - docker
 rvm:
   - 2.6
-  - jruby-9.2.8.0
+  - jruby-9.2.9.0
 gemfile:
   - Gemfile
 env:
