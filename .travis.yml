@@ -97,7 +97,7 @@ matrix:
           packages:
             - awesome
     - gemfile: Gemfile
-      rvm: 2.4
+      rvm: 2.5
       env: CAPYBARA_FF=true HEADLESS=true
       addons:
         firefox: latest
