@@ -2,7 +2,7 @@
 
 Capybara.add_selector(:label, locator_type: [String, Symbol]) do
   label 'label'
-  xpath(:for) do |locator, options|
+  xpath(:for) do |locator, **options|
     xpath = XPath.descendant(:label)
     unless locator.nil?
       locator_matchers = XPath.string.n.is(locator.to_s) | (XPath.attr(:id) == locator.to_s)

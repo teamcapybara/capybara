@@ -127,7 +127,11 @@ Capybara::SpecHelper.spec '#has_text?' do
         def to_hash; { value: 'Other hash' } end
       end.new
       @session.visit('/with_html')
-      expect(@session).to have_text(:visible, with_to_hash, {})
+      if RUBY_VERSION >= '2.7'
+        expect(@session).to have_text(:visible, with_to_hash, **{})
+      else
+        expect(@session).to have_text(:visible, with_to_hash, {})
+      end
     end
 
     it 'should fail if passed without empty options' do

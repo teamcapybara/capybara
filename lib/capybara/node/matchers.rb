@@ -61,7 +61,7 @@ module Capybara
       # @return [Boolean]                       If the styles match
       #
       def matches_style?(styles, **options)
-        make_predicate(options) { assert_matches_style(styles, options) }
+        make_predicate(options) { assert_matches_style(styles, **options) }
       end
 
       ##
@@ -123,8 +123,8 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet]    If the element doesn't have the specified styles
       #
       def assert_matches_style(styles, **options)
-        query_args = _set_query_session_options(styles, **options)
-        query = Capybara::Queries::StyleQuery.new(*query_args)
+        query_args, query_opts = _set_query_session_options(styles, options)
+        query = Capybara::Queries::StyleQuery.new(*query_args, **query_opts)
         synchronize(query.wait) do
           raise Capybara::ExpectationNotMet, query.failure_message unless query.resolves_for?(self)
         end
@@ -672,8 +672,8 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet] if the assertion hasn't succeeded during wait time
       # @return [true]
       #
-      def assert_text(*args)
-        _verify_text(*args) do |count, query|
+      def assert_text(type_or_text, *args, **opts)
+        _verify_text(type_or_text, *args, **opts) do |count, query|
           unless query.matches_count?(count) && (count.positive? || query.expects_none?)
             raise Capybara::ExpectationNotMet, query.failure_message
           end
@@ -688,8 +688,8 @@ module Capybara
       # @raise [Capybara::ExpectationNotMet] if the assertion hasn't succeeded during wait time
       # @return [true]
       #
-      def assert_no_text(*args)
-        _verify_text(*args) do |count, query|
+      def assert_no_text(type_or_text, *args, **opts)
+        _verify_text(type_or_text, *args, **opts) do |count, query|
           if query.matches_count?(count) && (count.positive? || query.expects_none?)
             raise Capybara::ExpectationNotMet, query.negative_failure_message
           end
@@ -711,7 +711,7 @@ module Capybara
       # @return [Boolean]                            Whether it exists
       #
       def has_text?(*args, **options)
-        make_predicate(options) { assert_text(*args, options) }
+        make_predicate(options) { assert_text(*args, **options) }
       end
       alias_method :has_content?, :has_text?
 
@@ -723,7 +723,7 @@ module Capybara
       # @return [Boolean]  Whether it doesn't exist
       #
       def has_no_text?(*args, **options)
-        make_predicate(options) { assert_no_text(*args, options) }
+        make_predicate(options) { assert_no_text(*args, **options) }
       end
       alias_method :has_no_content?, :has_no_text?
 
@@ -832,8 +832,14 @@ module Capybara
       end
 
       def _verify_selector_result(query_args, optional_filter_block, query_type = Capybara::Queries::SelectorQuery)
-        query_args = _set_query_session_options(*query_args)
-        query = query_type.new(*query_args, &optional_filter_block)
+        # query_args, query_opts = if query_args[0].is_a? Symbol
+        #   a,o = _set_query_session_options(*query_args.slice(2..))
+        #   [query_args.slice(0..1).concat(a), o]
+        # else
+        #   _set_query_session_options(*query_args)
+        # end
+        query_args, query_opts = _set_query_session_options(*query_args)
+        query = query_type.new(*query_args, **query_opts, &optional_filter_block)
         synchronize(query.wait) do
           yield query.resolve_for(self), query
         end
@@ -841,8 +847,8 @@ module Capybara
       end
 
       def _verify_match_result(query_args, optional_filter_block)
-        query_args = _set_query_session_options(*query_args)
-        query = Capybara::Queries::MatchQuery.new(*query_args, &optional_filter_block)
+        query_args, query_opts = _set_query_session_options(*query_args)
+        query = Capybara::Queries::MatchQuery.new(*query_args, **query_opts, &optional_filter_block)
         synchronize(query.wait) do
           yield query.resolve_for(parent || session&.document || query_scope)
         end
@@ -858,9 +864,12 @@ module Capybara
         true
       end
 
-      def _set_query_session_options(*query_args, **query_options)
+      def _set_query_session_options(*query_args)
+        query_args, query_options = query_args.dup, {}
+        # query_options = query_args.pop if query_options.empty? && query_args.last.is_a?(Hash)
+        query_options = query_args.pop if query_args.last.is_a?(Hash)
         query_options[:session_options] = session_options
-        query_args.push(query_options)
+        [query_args, query_options]
       end
 
       def make_predicate(options)

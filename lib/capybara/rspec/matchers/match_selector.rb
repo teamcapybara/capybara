@@ -7,11 +7,11 @@ module Capybara
     module Matchers
       class MatchSelector < HaveSelector
         def element_matches?(el)
-          el.assert_matches_selector(*@args, &@filter_block)
+          el.assert_matches_selector(*@args, **session_query_options, &@filter_block)
         end
 
         def element_does_not_match?(el)
-          el.assert_not_matches_selector(*@args, &@filter_block)
+          el.assert_not_matches_selector(*@args, **session_query_options, &@filter_block)
         end
 
         def description
@@ -19,7 +19,7 @@ module Capybara
         end
 
         def query
-          @query ||= Capybara::Queries::MatchQuery.new(*session_query_args, &@filter_block)
+          @query ||= Capybara::Queries::MatchQuery.new(*session_query_args, **session_query_options, &@filter_block)
         end
       end
     end

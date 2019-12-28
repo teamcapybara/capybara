@@ -7,11 +7,11 @@ module Capybara
     module Matchers
       class HaveSibling < CountableWrappedElementMatcher
         def element_matches?(el)
-          el.assert_sibling(*@args, &@filter_block)
+          el.assert_sibling(*@args, **session_query_options, &@filter_block)
         end
 
         def element_does_not_match?(el)
-          el.assert_no_sibling(*@args, &@filter_block)
+          el.assert_no_sibling(*@args, **session_query_options, &@filter_block)
         end
 
         def description
@@ -19,7 +19,7 @@ module Capybara
         end
 
         def query
-          @query ||= Capybara::Queries::SiblingQuery.new(*session_query_args, &@filter_block)
+          @query ||= Capybara::Queries::SiblingQuery.new(*session_query_args, **session_query_options, &@filter_block)
         end
       end
     end

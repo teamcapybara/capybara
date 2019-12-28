@@ -7,7 +7,7 @@ module Capybara
     module Matchers
       class MatchStyle < WrappedElementMatcher
         def element_matches?(el)
-          el.assert_matches_style(*@args)
+          el.assert_matches_style(*@args, **@kw_args)
         end
 
         def does_not_match?(_actual)
@@ -28,7 +28,7 @@ module Capybara
       ##
       # @deprecated
       class HaveStyle < MatchStyle
-        def initialize(*args, &filter_block)
+        def initialize(*args, **kw_args, &filter_block)
           warn 'HaveStyle matcher is deprecated, please use the MatchStyle matcher instead'
           super
         end

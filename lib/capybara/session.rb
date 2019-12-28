@@ -338,8 +338,8 @@ module Capybara
     #
     # @raise  [Capybara::ElementNotFound]      If the scope can't be found before time expires
     #
-    def within(*args)
-      new_scope = args.first.respond_to?(:to_capybara_node) ? args.first.to_capybara_node : find(*args)
+    def within(*args, **kw_args)
+      new_scope = args.first.respond_to?(:to_capybara_node) ? args.first.to_capybara_node : find(*args, **kw_args)
       begin
         scopes.push(new_scope)
         yield if block_given?
@@ -423,8 +423,8 @@ module Capybara
     #   @param [String] locator   The locator for the given selector kind.  For :frame this is the name/id of a frame/iframe element
     # @overload within_frame(index)
     #   @param [Integer] index         index of a frame (0 based)
-    def within_frame(*args)
-      switch_to_frame(_find_frame(*args))
+    def within_frame(*args, **kw_args)
+      switch_to_frame(_find_frame(*args, **kw_args))
       begin
         yield if block_given?
       ensure
@@ -746,15 +746,32 @@ module Capybara
     end
 
     NODE_METHODS.each do |method|
-      define_method method do |*args, &block|
-        @touched = true
-        current_scope.send(method, *args, &block)
+      if RUBY_VERSION >= '2.7'
+        class_eval <<~METHOD, __FILE__, __LINE__ + 1
+          def #{method}(...)
+            @touched = true
+            current_scope.#{method}(...)
+          end
+        METHOD
+      else
+        define_method method do |*args, &block|
+          @touched = true
+          current_scope.send(method, *args, &block)
+        end
       end
     end
 
     DOCUMENT_METHODS.each do |method|
-      define_method method do |*args, &block|
-        document.send(method, *args, &block)
+      if RUBY_VERSION >= '2.7'
+        class_eval <<~METHOD, __FILE__, __LINE__ + 1
+          def #{method}(...)
+            document.#{method}(...)
+          end
+        METHOD
+      else
+        define_method method do |*args, &block|
+          document.send(method, *args, &block)
+        end
       end
     end
 
@@ -873,16 +890,14 @@ module Capybara
       uri.port ||= @server.port if @server && config.always_include_port
     end
 
-    def _find_frame(*args)
-      return find(:frame) if args.length.zero?
-
+    def _find_frame(*args, **kw_args)
       case args[0]
       when Capybara::Node::Element
         args[0]
-      when String, Hash
-        find(:frame, *args)
+      when String, nil
+        find(:frame, *args, **kw_args)
       when Symbol
-        find(*args)
+        find(*args, **kw_args)
       when Integer
         idx = args[0]
         all(:frame, minimum: idx + 1)[idx]

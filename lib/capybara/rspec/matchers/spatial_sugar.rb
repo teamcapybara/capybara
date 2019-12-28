@@ -31,7 +31,8 @@ module Capybara
     private
 
       def options
-        (@args.last.is_a?(Hash) ? @args : @args.push({})).last
+        # (@args.last.is_a?(Hash) ? @args : @args.push({})).last
+        @kw_args
       end
     end
   end

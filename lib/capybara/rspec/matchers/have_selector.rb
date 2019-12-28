@@ -6,12 +6,20 @@ module Capybara
   module RSpecMatchers
     module Matchers
       class HaveSelector < CountableWrappedElementMatcher
+        def initialize(*args, **kw_args, &filter_block)
+          super
+          if (RUBY_VERSION >= '2.7') && (@args.size < 2) && @kw_args.keys.any?(String) # rubocop:disable Style/GuardClause
+            @args.push(@kw_args)
+            @kw_args = {}
+          end
+        end
+
         def element_matches?(el)
-          el.assert_selector(*@args, &@filter_block)
+          el.assert_selector(*@args, **session_query_options, &@filter_block)
         end
 
         def element_does_not_match?(el)
-          el.assert_no_selector(*@args, &@filter_block)
+          el.assert_no_selector(*@args, **session_query_options, &@filter_block)
         end
 
         def description
@@ -19,13 +27,13 @@ module Capybara
         end
 
         def query
-          @query ||= Capybara::Queries::SelectorQuery.new(*session_query_args, &@filter_block)
+          @query ||= Capybara::Queries::SelectorQuery.new(*session_query_args, **session_query_options, &@filter_block)
         end
       end
 
       class HaveAllSelectors < WrappedElementMatcher
         def element_matches?(el)
-          el.assert_all_of_selectors(*@args, &@filter_block)
+          el.assert_all_of_selectors(*@args, **session_query_options, &@filter_block)
         end
 
         def does_not_match?(_actual)
@@ -39,7 +47,7 @@ module Capybara
 
       class HaveNoSelectors < WrappedElementMatcher
         def element_matches?(el)
-          el.assert_none_of_selectors(*@args, &@filter_block)
+          el.assert_none_of_selectors(*@args, **session_query_options, &@filter_block)
         end
 
         def does_not_match?(_actual)
@@ -53,11 +61,11 @@ module Capybara
 
       class HaveAnySelectors < WrappedElementMatcher
         def element_matches?(el)
-          el.assert_any_of_selectors(*@args, &@filter_block)
+          el.assert_any_of_selectors(*@args, **session_query_options, &@filter_block)
         end
 
         def does_not_match?(_actual)
-          el.assert_none_of_selectors(*@args, &@filter_block)
+          el.assert_none_of_selectors(*@args, **session_query_options, &@filter_block)
         end
 
         def description

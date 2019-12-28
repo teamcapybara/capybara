@@ -52,6 +52,7 @@ module Capybara
             raise ::Minitest::Assertion, e.message
           end
         ASSERTION
+        ruby2_keywords "assert_#{assertion_name}" if respond_to?(:ruby2_keywords)
       end
 
       alias_method :refute_title, :assert_no_title
@@ -109,6 +110,7 @@ module Capybara
             raise ::Minitest::Assertion, e.message
           end
         ASSERTION
+        ruby2_keywords "assert_#{assertion_name}" if respond_to?(:ruby2_keywords)
       end
 
       alias_method :refute_selector, :assert_no_selector
@@ -120,14 +122,16 @@ module Capybara
         define_method "assert_#{selector_type}" do |*args, &optional_filter_block|
           subject, args = determine_subject(args)
           locator, options = extract_locator(args)
-          assert_selector(subject, selector_type.to_sym, locator, options, &optional_filter_block)
+          assert_selector(subject, selector_type.to_sym, locator, **options, &optional_filter_block)
         end
+        ruby2_keywords "assert_#{selector_type}" if respond_to?(:ruby2_keywords)
 
         define_method "assert_no_#{selector_type}" do |*args, &optional_filter_block|
           subject, args = determine_subject(args)
           locator, options = extract_locator(args)
-          assert_no_selector(subject, selector_type.to_sym, locator, options, &optional_filter_block)
+          assert_no_selector(subject, selector_type.to_sym, locator, **options, &optional_filter_block)
         end
+        ruby2_keywords "assert_no_#{selector_type}" if respond_to?(:ruby2_keywords)
         alias_method "refute_#{selector_type}", "assert_no_#{selector_type}"
       end
 
@@ -135,14 +139,22 @@ module Capybara
         define_method "assert_#{field_type}_field" do |*args, &optional_filter_block|
           subject, args = determine_subject(args)
           locator, options = extract_locator(args)
-          assert_selector(subject, :field, locator, options.merge(field_type.to_sym => true), &optional_filter_block)
+          assert_selector(subject, :field, locator, **options.merge(field_type.to_sym => true), &optional_filter_block)
         end
+        ruby2_keywords "assert_#{field_type}_field" if respond_to?(:ruby2_keywords)
 
         define_method "assert_no_#{field_type}_field" do |*args, &optional_filter_block|
           subject, args = determine_subject(args)
           locator, options = extract_locator(args)
-          assert_no_selector(subject, :field, locator, options.merge(field_type.to_sym => true), &optional_filter_block)
+          assert_no_selector(
+            subject,
+            :field,
+            locator,
+            **options.merge(field_type.to_sym => true),
+            &optional_filter_block
+          )
         end
+        ruby2_keywords "assert_no_#{field_type}_field" if respond_to?(:ruby2_keywords)
         alias_method "refute_#{field_type}_field", "assert_no_#{field_type}_field"
       end
 
@@ -151,11 +163,13 @@ module Capybara
           subject, args = determine_subject(args)
           assert_matches_selector(subject, selector_type.to_sym, *args, &optional_filter_block)
         end
+        ruby2_keywords "assert_matches_#{selector_type}" if respond_to?(:ruby2_keywords)
 
         define_method "assert_not_matches_#{selector_type}" do |*args, &optional_filter_block|
           subject, args = determine_subject(args)
           assert_not_matches_selector(subject, selector_type.to_sym, *args, &optional_filter_block)
         end
+        ruby2_keywords "assert_not_matches_#{selector_type}" if respond_to?(:ruby2_keywords)
         alias_method "refute_matches_#{selector_type}", "assert_not_matches_#{selector_type}"
       end
 
