@@ -12,20 +12,26 @@ module Capybara
 
         attr_reader :failure_message, :failure_message_when_negated
 
-        def initialize(*args, &filter_block)
+        def initialize(*args, **kw_args, &filter_block)
           @args = args.dup
+          @kw_args = kw_args || {}
           @filter_block = filter_block
         end
 
       private
 
         def session_query_args
-          if @args.last.is_a? Hash
-            @args.last[:session_options] = session_options
-          else
-            @args.push(session_options: session_options)
-          end
+          # if @args.last.is_a? Hash
+          #   @args.last[:session_options] = session_options
+          # else
+          #   @args.push(session_options: session_options)
+          # end
           @args
+        end
+
+        def session_query_options
+          @kw_args[:session_options] = session_options
+          @kw_args
         end
 
         def session_options

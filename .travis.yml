@@ -6,7 +6,7 @@ notifications:
 services:
   - docker
 rvm:
-  - 2.6
+  - 2.7
   - jruby-9.2.9.0
 gemfile:
   - Gemfile
@@ -89,7 +89,7 @@ matrix:
           packages:
             - awesome
     - gemfile: Gemfile
-      rvm: ruby-head
+      rvm: 2.7
       env: CAPYBARA_FF=true
       addons:
         firefox: latest
@@ -97,7 +97,7 @@ matrix:
           packages:
             - awesome
     - gemfile: Gemfile
-      rvm: 2.4
+      rvm: 2.5
       env: CAPYBARA_FF=true HEADLESS=true
       addons:
         firefox: latest
@@ -135,6 +135,7 @@ matrix:
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-firefox
     - env: CHROME_BETA=true HEADLESS=true
+    - rvm: jruby-9.2.9.0
 before_install:
   - gem update --system
   - if [[ $BUNDLE_GEMFILE =~ Gemfile.edge-firefox$ ]]; then

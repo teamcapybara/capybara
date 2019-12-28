@@ -15,45 +15,45 @@ module Capybara
     # RSpec matcher for whether the element(s) matching a given selector exist.
     #
     # @see Capybara::Node::Matchers#assert_selector
-    def have_selector(*args, &optional_filter_block)
-      Matchers::HaveSelector.new(*args, &optional_filter_block)
+    def have_selector(*args, **kw_args, &optional_filter_block)
+      Matchers::HaveSelector.new(*args, **kw_args, &optional_filter_block)
     end
 
     # RSpec matcher for whether the element(s) matching a group of selectors exist.
     #
     # @see Capybara::Node::Matchers#assert_all_of_selectors
-    def have_all_of_selectors(*args, &optional_filter_block)
-      Matchers::HaveAllSelectors.new(*args, &optional_filter_block)
+    def have_all_of_selectors(*args, **kw_args, &optional_filter_block)
+      Matchers::HaveAllSelectors.new(*args, **kw_args, &optional_filter_block)
     end
 
     # RSpec matcher for whether no element(s) matching a group of selectors exist.
     #
     # @see Capybara::Node::Matchers#assert_none_of_selectors
-    def have_none_of_selectors(*args, &optional_filter_block)
-      Matchers::HaveNoSelectors.new(*args, &optional_filter_block)
+    def have_none_of_selectors(*args, **kw_args, &optional_filter_block)
+      Matchers::HaveNoSelectors.new(*args, **kw_args, &optional_filter_block)
     end
 
     # RSpec matcher for whether the element(s) matching any of a group of selectors exist.
     #
     # @see Capybara::Node::Matchers#assert_any_of_selectors
-    def have_any_of_selectors(*args, &optional_filter_block)
-      Matchers::HaveAnySelectors.new(*args, &optional_filter_block)
+    def have_any_of_selectors(*args, **kw_args, &optional_filter_block)
+      Matchers::HaveAnySelectors.new(*args, **kw_args, &optional_filter_block)
     end
 
     # RSpec matcher for whether the current element matches a given selector.
     #
     # @see Capybara::Node::Matchers#assert_matches_selector
-    def match_selector(*args, &optional_filter_block)
-      Matchers::MatchSelector.new(*args, &optional_filter_block)
+    def match_selector(*args, **kw_args, &optional_filter_block)
+      Matchers::MatchSelector.new(*args, **kw_args, &optional_filter_block)
     end
 
     %i[css xpath].each do |selector|
       define_method "have_#{selector}" do |expr, **options, &optional_filter_block|
-        Matchers::HaveSelector.new(selector, expr, options, &optional_filter_block)
+        Matchers::HaveSelector.new(selector, expr, **options, &optional_filter_block)
       end
 
       define_method "match_#{selector}" do |expr, **options, &optional_filter_block|
-        Matchers::MatchSelector.new(selector, expr, options, &optional_filter_block)
+        Matchers::MatchSelector.new(selector, expr, **options, &optional_filter_block)
       end
     end
 
@@ -79,7 +79,7 @@ module Capybara
 
     %i[link button field select table].each do |selector|
       define_method "have_#{selector}" do |locator = nil, **options, &optional_filter_block|
-        Matchers::HaveSelector.new(selector, locator, options, &optional_filter_block)
+        Matchers::HaveSelector.new(selector, locator, **options, &optional_filter_block)
       end
     end
 
@@ -110,7 +110,7 @@ module Capybara
 
     %i[checked unchecked].each do |state|
       define_method "have_#{state}_field" do |locator = nil, **options, &optional_filter_block|
-        Matchers::HaveSelector.new(:field, locator, options.merge(state => true), &optional_filter_block)
+        Matchers::HaveSelector.new(:field, locator, **options.merge(state => true), &optional_filter_block)
       end
     end
 
@@ -127,27 +127,27 @@ module Capybara
     # RSpec matcher for text content.
     #
     # @see Capybara::Node::Matchers#assert_text
-    def have_text(*args)
-      Matchers::HaveText.new(*args)
+    def have_text(text_or_type, *args, **options)
+      Matchers::HaveText.new(text_or_type, *args, **options)
     end
     alias_method :have_content, :have_text
 
     def have_title(title, **options)
-      Matchers::HaveTitle.new(title, options)
+      Matchers::HaveTitle.new(title, **options)
     end
 
     # RSpec matcher for the current path.
     #
     # @see Capybara::SessionMatchers#assert_current_path
     def have_current_path(path, **options)
-      Matchers::HaveCurrentPath.new(path, options)
+      Matchers::HaveCurrentPath.new(path, **options)
     end
 
     # RSpec matcher for element style.
     #
     # @see Capybara::Node::Matchers#matches_style?
     def match_style(styles, **options)
-      Matchers::MatchStyle.new(styles, options)
+      Matchers::MatchStyle.new(styles, **options)
     end
 
     ##
@@ -161,30 +161,30 @@ module Capybara
     %w[selector css xpath text title current_path link button
        field checked_field unchecked_field select table
        sibling ancestor].each do |matcher_type|
-      define_method "have_no_#{matcher_type}" do |*args, &optional_filter_block|
-        Matchers::NegatedMatcher.new(send("have_#{matcher_type}", *args, &optional_filter_block))
+      define_method "have_no_#{matcher_type}" do |*args, **kw_args, &optional_filter_block|
+        Matchers::NegatedMatcher.new(send("have_#{matcher_type}", *args, **kw_args, &optional_filter_block))
       end
     end
     alias_method :have_no_content, :have_no_text
 
     %w[selector css xpath].each do |matcher_type|
-      define_method "not_match_#{matcher_type}" do |*args, &optional_filter_block|
-        Matchers::NegatedMatcher.new(send("match_#{matcher_type}", *args, &optional_filter_block))
+      define_method "not_match_#{matcher_type}" do |*args, **kw_args, &optional_filter_block|
+        Matchers::NegatedMatcher.new(send("match_#{matcher_type}", *args, **kw_args, &optional_filter_block))
       end
     end
 
     # RSpec matcher for whether sibling element(s) matching a given selector exist.
     #
     # @see Capybara::Node::Matchers#assert_sibling
-    def have_sibling(*args, &optional_filter_block)
-      Matchers::HaveSibling.new(*args, &optional_filter_block)
+    def have_sibling(*args, **kw_args, &optional_filter_block)
+      Matchers::HaveSibling.new(*args, **kw_args, &optional_filter_block)
     end
 
     # RSpec matcher for whether ancestor element(s) matching a given selector exist.
     #
     # @see Capybara::Node::Matchers#assert_ancestor
-    def have_ancestor(*args, &optional_filter_block)
-      Matchers::HaveAncestor.new(*args, &optional_filter_block)
+    def have_ancestor(*args, **kw_args, &optional_filter_block)
+      Matchers::HaveAncestor.new(*args, **kw_args, &optional_filter_block)
     end
 
     ##
