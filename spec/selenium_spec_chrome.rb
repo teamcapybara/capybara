@@ -14,7 +14,8 @@ browser_options = ::Selenium::WebDriver::Chrome::Options.new
 browser_options.headless! if ENV['HEADLESS']
 browser_options.add_option(:w3c, ENV['W3C'] != 'false')
 # Chromedriver 77 requires setting this for headless mode on linux
-# browser_options.add_preference('download.default_directory', Capybara.save_path)
+# Different versions of Chrome/selenium-webdriver require setting differently - jus set them all
+browser_options.add_preference('download.default_directory', Capybara.save_path)
 browser_options.add_preference(:download, default_directory: Capybara.save_path)
 
 Capybara.register_driver :selenium_chrome do |app|
