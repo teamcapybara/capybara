@@ -1,3 +1,11 @@
+# Version 3.30.1
+Release date: unreleased
+
+* Fix Ruby 2.7 deprecation notices around keyword arguments. I have tried to do this without
+  any breaking changes, but due to the nature of the 2.7 changes and some selector types accepting
+  Hashes as locators there are a lot of edge cases. If you find any broken cases please report
+  them and I'll see if they're fixable.
+
 # Version 3.30.0
 Release date: 2019-12-24
 
