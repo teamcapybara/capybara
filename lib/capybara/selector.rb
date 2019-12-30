@@ -108,6 +108,8 @@ require 'capybara/selector/definition'
 #       * :disabled (Boolean, :all) - Match disabled field? (Default: false)
 #       * :multiple (Boolean) - Match fields that accept multiple values
 #       * :options (Array<String>) - Exact match options
+#       * :enabled_options (Array<String>) - Exact match enabled options
+#       * :disabled_options (Array<String>) - Exact match disabled options
 #       * :with_options (Array<String>) - Partial match options
 #       * :selected (String, Array<String>) - Match the selection(s)
 #       * :with_selected (String, Array<String>) - Partial match the selection(s)
