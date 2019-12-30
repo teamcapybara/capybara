@@ -117,6 +117,34 @@ Capybara::SpecHelper.spec '#has_select?' do
     end
   end
 
+  context 'with enabled options' do
+    it 'should be true if the listed options exist and are enabled' do
+      expect(@session).to have_select('form_title', enabled_options: %w[Mr Mrs Miss])
+    end
+
+    it 'should be false if the listed options do not exist' do
+      expect(@session).not_to have_select('form_title', enabled_options: ['Not there'])
+    end
+
+    it 'should be false if the listed option exists but is not enabled' do
+      expect(@session).not_to have_select('form_title', enabled_options: %w[Mr Mrs Miss Other])
+    end
+  end
+
+  context 'with disabled options' do
+    it 'should be true if the listed options exist and are disabled' do
+      expect(@session).to have_select('form_title', disabled_options: ['Other'])
+    end
+
+    it 'should be false if the listed options do not exist' do
+      expect(@session).not_to have_select('form_title', disabled_options: ['Not there'])
+    end
+
+    it 'should be false if the listed option exists but is not disabled' do
+      expect(@session).not_to have_select('form_title', disabled_options: %w[Other Mrs])
+    end
+  end
+
   context 'with partial options' do
     it 'should be true if a field with the given partial options is on the page' do
       expect(@session).to have_select('Region', with_options: %w[Norway Sweden])
