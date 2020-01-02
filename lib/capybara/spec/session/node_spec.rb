@@ -468,6 +468,40 @@ Capybara::SpecHelper.spec 'node' do
       end
     end
 
+    it 'should simulate a single held down modifier key' do
+      %I[
+        alt
+        ctrl
+        meta
+        shift
+      ].each do |modifier_key|
+        @session.visit('/with_js')
+
+        element = @session.find('//div[@id="drag"]')
+        target = @session.find('//div[@id="drop"]')
+
+        element.drag_to(target, modifier_keys: [modifier_key])
+        expect(@session).to have_xpath("//div[contains(., 'Dropped!-#{modifier_key}')]")
+      end
+    end
+
+    it 'should simulate multiple held down modifier keys' do
+      @session.visit('/with_js')
+
+      element = @session.find('//div[@id="drag"]')
+      target = @session.find('//div[@id="drop"]')
+
+      modifier_keys = %I[
+        alt
+        ctrl
+        meta
+        shift
+      ]
+
+      element.drag_to(target, modifier_keys: modifier_keys)
+      expect(@session).to have_xpath("//div[contains(., 'Dropped!-#{modifier_keys.join('-')}')]")
+    end
+
     context 'HTML5', requires: %i[js html5_drag] do
       it 'should HTML5 drag and drop an object' do
         @session.visit('/with_js')
@@ -555,6 +589,41 @@ Capybara::SpecHelper.spec 'node' do
         target = @session.find(:id, 'drop_html5')
         source.drag_to target
         expect(@session).to have_xpath('//div[contains(., "HTML5 Dropped")]')
+      end
+
+      it 'should simulate a single held down modifier key' do
+        %I[
+          alt
+          ctrl
+          meta
+          shift
+        ].each do |modifier_key|
+          @session.visit('/with_js')
+
+          element = @session.find('//div[@id="drag_html5"]')
+          target = @session.find('//div[@id="drop_html5"]')
+
+          element.drag_to(target, modifier_keys: [modifier_key])
+
+          expect(@session).to have_xpath("//div[contains(., 'HTML5 Dropped string: text/plain drag_html5-#{modifier_key}')]")
+        end
+      end
+
+      it 'should simulate multiple held down modifier keys' do
+        @session.visit('/with_js')
+
+        element = @session.find('//div[@id="drag_html5"]')
+        target = @session.find('//div[@id="drop_html5"]')
+
+        modifier_keys = %I[
+          alt
+          ctrl
+          meta
+          shift
+        ]
+
+        element.drag_to(target, modifier_keys: modifier_keys)
+        expect(@session).to have_xpath("//div[contains(., 'HTML5 Dropped string: text/plain drag_html5-#{modifier_keys.join('-')}')]")
       end
     end
   end
