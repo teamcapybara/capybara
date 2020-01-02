@@ -4,25 +4,25 @@ class Capybara::Selenium::Node
   module Html5Drag
     # Implement methods to emulate HTML5 drag and drop
 
-    def drag_to(element, html5: nil, delay: 0.05)
+    def drag_to(element, html5: nil, delay: 0.05, modifier_keys: [])
       driver.execute_script MOUSEDOWN_TRACKER
       scroll_if_needed { browser_action.click_and_hold(native).perform }
       html5 = !driver.evaluate_script(LEGACY_DRAG_CHECK, self) if html5.nil?
       if html5
-        perform_html5_drag(element, delay)
+        perform_html5_drag(element, delay, modifier_keys)
       else
-        perform_legacy_drag(element)
+        perform_legacy_drag(element, modifier_keys)
       end
     end
 
   private
 
-    def perform_legacy_drag(element)
-      element.scroll_if_needed { browser_action.move_to(element.native).release.perform }
+    def perform_legacy_drag(element, modifier_keys)
+      move_to(element, modifier_keys: modifier_keys)
     end
 
-    def perform_html5_drag(element, delay)
-      driver.evaluate_async_script HTML5_DRAG_DROP_SCRIPT, self, element, delay * 1000
+    def perform_html5_drag(element, delay, modifier_keys)
+      driver.evaluate_async_script HTML5_DRAG_DROP_SCRIPT, self, element, delay * 1000, modifier_keys
       browser_action.release.perform
     end
 
@@ -185,10 +185,15 @@ class Capybara::Selenium::Node
       var source = arguments[0],
           target = arguments[1],
           step_delay = arguments[2],
-          callback = arguments[3];
+          modifier_keys = arguments[3],
+          callback = arguments[4];
 
       var dt = new DataTransfer();
       var opts = { cancelable: true, bubbles: true, dataTransfer: dt };
+
+      for (var i = 0; i < modifier_keys.length; i++) {
+        opts[modifier_keys[i] + 'Key'] = true;
+      }
 
       while (source && !source.draggable) {
         source = source.parentElement;

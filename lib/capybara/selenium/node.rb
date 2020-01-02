@@ -134,11 +134,19 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     scroll_if_needed { browser_action.move_to(native).perform }
   end
 
-  def drag_to(element, **)
+  def drag_to(element, **kwargs)
     # Due to W3C spec compliance - The Actions API no longer scrolls to elements when necessary
     # which means Seleniums `drag_and_drop` is now broken - do it manually
     scroll_if_needed { browser_action.click_and_hold(native).perform }
-    element.scroll_if_needed { browser_action.move_to(element.native).release.perform }
+    move_to(element, **kwargs)
+  end
+
+  def move_to(element, modifier_keys: [], **)
+    element.scroll_if_needed do
+      keys_down = modifiers_down(browser_action, modifier_keys)
+      keys_up = modifiers_up(keys_down.move_to(element.native).release, modifier_keys)
+      keys_up.perform
+    end
   end
 
   def drop(*_)
@@ -374,11 +382,13 @@ private
   end
 
   def modifiers_down(actions, keys)
-    each_key(keys) { |key| actions.key_down(key) }
+    each_key(keys) { |key| actions = actions.key_down(key) }
+    actions
   end
 
   def modifiers_up(actions, keys)
-    each_key(keys) { |key| actions.key_up(key) }
+    each_key(keys) { |key| actions = actions.key_up(key) }
+    actions
   end
 
   def browser
