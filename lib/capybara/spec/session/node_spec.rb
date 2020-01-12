@@ -499,8 +499,13 @@ Capybara::SpecHelper.spec 'node' do
         target = @session.find('//div[@id="drop_html5"]')
         element.drag_to(target)
 
+        conditions = %w[DragLeave Drop DragEnd].map do |text|
+          have_css('div.log', text: text)
+        end
+        expect(@session).to(conditions.reduce { |memo, cond| memo.and(cond) })
+
         # The first "DragOver" div is inserted by the last dragover event dispatched
-        drag_over_div = @session.find('//div[@class="log" and starts-with(text(), "DragOver")]', match: :first)
+        drag_over_div = @session.first('//div[@class="log" and starts-with(text(), "DragOver")]')
         position = drag_over_div.text.sub('DragOver ', '')
 
         expect(@session).to have_css('div.log', text: /DragLeave #{position}/, count: 1)
