@@ -75,12 +75,15 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
 
 private
 
-  def perform_legacy_drag(element, modifier_keys = [])
+  def perform_legacy_drag(element, drop_modifiers)
     return super if chromedriver_fixed_actions_key_state? || !w3c? || element.obscured?
+
+    raise ArgumentError, 'Modifier keys are not supported while dragging in this version of Chrome.' unless drop_modifiers.empty?
 
     # W3C Chrome/chromedriver < 77 doesn't maintain mouse button state across actions API performs
     # https://bugs.chromium.org/p/chromedriver/issues/detail?id=2981
-    move_to(element, modifier_keys: modifier_keys)
+    browser_action.release.perform
+    browser_action.click_and_hold(native).move_to(element.native).release.perform
   end
 
   def file_errors

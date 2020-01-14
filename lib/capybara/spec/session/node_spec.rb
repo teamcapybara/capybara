@@ -480,7 +480,7 @@ Capybara::SpecHelper.spec 'node' do
         element = @session.find('//div[@id="drag"]')
         target = @session.find('//div[@id="drop"]')
 
-        element.drag_to(target, modifier_keys: [modifier_key])
+        element.drag_to(target, drop_modifiers: modifier_key)
         expect(@session).to have_xpath("//div[contains(., 'Dropped!-#{modifier_key}')]")
       end
     end
@@ -491,15 +491,24 @@ Capybara::SpecHelper.spec 'node' do
       element = @session.find('//div[@id="drag"]')
       target = @session.find('//div[@id="drop"]')
 
-      modifier_keys = %I[
-        alt
-        ctrl
-        meta
-        shift
-      ]
+      modifier_keys = %I[alt ctrl meta shift]
 
-      element.drag_to(target, modifier_keys: modifier_keys)
+      element.drag_to(target, drop_modifiers: modifier_keys)
       expect(@session).to have_xpath("//div[contains(., 'Dropped!-#{modifier_keys.join('-')}')]")
+    end
+
+    it 'should support key aliases' do
+      { control: :ctrl,
+        command: :meta,
+        cmd: :meta }.each do |(key_alias, key)|
+        @session.visit('/with_js')
+
+        element = @session.find('//div[@id="drag"]')
+        target = @session.find('//div[@id="drop"]')
+
+        element.drag_to(target, drop_modifiers: [key_alias])
+        expect(target).to have_text("Dropped!-#{key}", exact: true)
+      end
     end
 
     context 'HTML5', requires: %i[js html5_drag] do
@@ -587,18 +596,13 @@ Capybara::SpecHelper.spec 'node' do
       end
 
       it 'should simulate a single held down modifier key' do
-        %I[
-          alt
-          ctrl
-          meta
-          shift
-        ].each do |modifier_key|
+        %I[alt ctrl meta shift].each do |modifier_key|
           @session.visit('/with_js')
 
           element = @session.find('//div[@id="drag_html5"]')
           target = @session.find('//div[@id="drop_html5"]')
 
-          element.drag_to(target, modifier_keys: [modifier_key])
+          element.drag_to(target, drop_modifiers: modifier_key)
 
           expect(@session).to have_xpath("//div[contains(., 'HTML5 Dropped string: text/plain drag_html5-#{modifier_key}')]")
         end
@@ -610,15 +614,24 @@ Capybara::SpecHelper.spec 'node' do
         element = @session.find('//div[@id="drag_html5"]')
         target = @session.find('//div[@id="drop_html5"]')
 
-        modifier_keys = %I[
-          alt
-          ctrl
-          meta
-          shift
-        ]
+        modifier_keys = %I[alt ctrl meta shift]
 
-        element.drag_to(target, modifier_keys: modifier_keys)
+        element.drag_to(target, drop_modifiers: modifier_keys)
         expect(@session).to have_xpath("//div[contains(., 'HTML5 Dropped string: text/plain drag_html5-#{modifier_keys.join('-')}')]")
+      end
+
+      it 'should support key aliases' do
+        { control: :ctrl,
+          command: :meta,
+          cmd: :meta }.each do |(key_alias, key)|
+          @session.visit('/with_js')
+
+          element = @session.find('//div[@id="drag_html5"]')
+          target = @session.find('//div[@id="drop_html5"]')
+
+          element.drag_to(target, drop_modifiers: [key_alias])
+          expect(target).to have_text(%r{^HTML5 Dropped string: text/plain drag_html5-#{key}$}m, exact: true)
+        end
       end
     end
   end

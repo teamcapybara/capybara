@@ -4,25 +4,32 @@ class Capybara::Selenium::Node
   module Html5Drag
     # Implement methods to emulate HTML5 drag and drop
 
-    def drag_to(element, html5: nil, delay: 0.05, modifier_keys: [])
+    def drag_to(element, html5: nil, delay: 0.05, drop_modifiers: [])
+      drop_modifiers = Array(drop_modifiers)
+
       driver.execute_script MOUSEDOWN_TRACKER
       scroll_if_needed { browser_action.click_and_hold(native).perform }
       html5 = !driver.evaluate_script(LEGACY_DRAG_CHECK, self) if html5.nil?
       if html5
-        perform_html5_drag(element, delay, modifier_keys)
+        perform_html5_drag(element, delay, drop_modifiers)
       else
-        perform_legacy_drag(element, modifier_keys)
+        perform_legacy_drag(element, drop_modifiers)
       end
     end
 
   private
 
-    def perform_legacy_drag(element, modifier_keys)
-      move_to(element, modifier_keys: modifier_keys)
+    def perform_legacy_drag(element, drop_modifiers)
+      element.scroll_if_needed do
+        # browser_action.move_to(element.native).release.perform
+        keys_down = modifiers_down(browser_action, drop_modifiers)
+        keys_up = modifiers_up(keys_down.move_to(element.native).release, drop_modifiers)
+        keys_up.perform
+      end
     end
 
-    def perform_html5_drag(element, delay, modifier_keys)
-      driver.evaluate_async_script HTML5_DRAG_DROP_SCRIPT, self, element, delay * 1000, modifier_keys
+    def perform_html5_drag(element, delay, drop_modifiers)
+      driver.evaluate_async_script HTML5_DRAG_DROP_SCRIPT, self, element, delay * 1000, normalize_keys(drop_modifiers)
       browser_action.release.perform
     end
 
@@ -185,14 +192,18 @@ class Capybara::Selenium::Node
       var source = arguments[0],
           target = arguments[1],
           step_delay = arguments[2],
-          modifier_keys = arguments[3],
+          drop_modifier_keys = arguments[3],
           callback = arguments[4];
 
       var dt = new DataTransfer();
       var opts = { cancelable: true, bubbles: true, dataTransfer: dt };
 
-      for (var i = 0; i < modifier_keys.length; i++) {
-        opts[modifier_keys[i] + 'Key'] = true;
+      for (var i = 0; i < drop_modifier_keys.length; i++) {
+        key = drop_modifier_keys[i];
+        if (key == "control"){
+          key = "ctrl"
+        }
+        opts[key + 'Key'] = true;
       }
 
       while (source && !source.draggable) {
