@@ -134,17 +134,15 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     scroll_if_needed { browser_action.move_to(native).perform }
   end
 
-  def drag_to(element, **kwargs)
+  def drag_to(element, drop_modifiers: [], **)
+    drop_modifiers = Array(drop_modifiers)
     # Due to W3C spec compliance - The Actions API no longer scrolls to elements when necessary
     # which means Seleniums `drag_and_drop` is now broken - do it manually
     scroll_if_needed { browser_action.click_and_hold(native).perform }
-    move_to(element, **kwargs)
-  end
-
-  def move_to(element, modifier_keys: [], **)
+    # element.scroll_if_needed { browser_action.move_to(element.native).release.perform }
     element.scroll_if_needed do
-      keys_down = modifiers_down(browser_action, modifier_keys)
-      keys_up = modifiers_up(keys_down.move_to(element.native).release, modifier_keys)
+      keys_down = modifiers_down(browser_action, drop_modifiers)
+      keys_up = modifiers_up(keys_down.move_to(element.native).release, drop_modifiers)
       keys_up.perform
     end
   end
@@ -382,12 +380,12 @@ private
   end
 
   def modifiers_down(actions, keys)
-    each_key(keys) { |key| actions = actions.key_down(key) }
+    each_key(keys) { |key| actions.key_down(key) }
     actions
   end
 
   def modifiers_up(actions, keys)
-    each_key(keys) { |key| actions = actions.key_up(key) }
+    each_key(keys) { |key| actions.key_up(key) }
     actions
   end
 
@@ -403,16 +401,19 @@ private
     browser.action
   end
 
-  def each_key(keys)
-    keys.each do |key|
-      key = case key
+  def normalize_keys(keys)
+    keys.map do |key|
+      case key
       when :ctrl then :control
       when :command, :cmd then :meta
       else
         key
       end
-      yield key
     end
+  end
+
+  def each_key(keys)
+    normalize_keys(keys).each { |key| yield(key) }
   end
 
   def find_context
