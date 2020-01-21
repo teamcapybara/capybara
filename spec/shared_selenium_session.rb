@@ -205,6 +205,18 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
     end
 
+    describe '#fill_in with input[type="range"]' do
+      before do
+        session.visit('/form')
+      end
+
+      it 'should set the range slider correctly' do
+        session.fill_in('form_age', with: 51)
+        session.click_button('awesome')
+        expect(Integer(extract_results(session)['age'])).to eq 51
+      end
+    end
+
     describe '#path' do
       it 'returns xpath' do
         # this is here because it is testing for an XPath that is specific to the algorithm used in the selenium driver
