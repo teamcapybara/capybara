@@ -78,6 +78,8 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
         set_datetime_local(value)
       when 'color'
         set_color(value)
+      when 'range'
+        set_range(value)
       else
         set_text(value, **options)
       end
@@ -293,6 +295,10 @@ private
   end
 
   def set_color(value) # rubocop:disable Naming/AccessorMethodName
+    update_value_js(value)
+  end
+
+  def set_range(value) # rubocop:disable Naming/AccessorMethodName
     update_value_js(value)
   end
 
