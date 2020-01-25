@@ -160,6 +160,14 @@ class Capybara::Selenium::Node
         var targetRect = target.getBoundingClientRect();
         var sourceCenter = rectCenter(source.getBoundingClientRect());
 
+        for (var i = 0; i < drop_modifier_keys.length; i++) {
+          key = drop_modifier_keys[i];
+          if (key == "control"){
+            key = "ctrl"
+          }
+          opts[key + 'Key'] = true;
+        }
+
         // fire 2 dragover events to simulate dragging with a direction
         var entryPoint = pointOnRect(sourceCenter, targetRect)
         var dragOverOpts = Object.assign({clientX: entryPoint.x, clientY: entryPoint.y}, opts);
@@ -197,14 +205,6 @@ class Capybara::Selenium::Node
 
       var dt = new DataTransfer();
       var opts = { cancelable: true, bubbles: true, dataTransfer: dt };
-
-      for (var i = 0; i < drop_modifier_keys.length; i++) {
-        key = drop_modifier_keys[i];
-        if (key == "control"){
-          key = "ctrl"
-        }
-        opts[key + 'Key'] = true;
-      }
 
       while (source && !source.draggable) {
         source = source.parentElement;

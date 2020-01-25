@@ -481,6 +481,7 @@ Capybara::SpecHelper.spec 'node' do
         target = @session.find('//div[@id="drop"]')
 
         element.drag_to(target, drop_modifiers: modifier_key)
+        expect(@session).to have_css("div.drag_start", exact_text: 'Dragged!')
         expect(@session).to have_xpath("//div[contains(., 'Dropped!-#{modifier_key}')]")
       end
     end
@@ -609,6 +610,7 @@ Capybara::SpecHelper.spec 'node' do
 
           element.drag_to(target, drop_modifiers: modifier_key)
 
+          expect(@session).to have_css('div.drag_start', exact_text: 'HTML5 Dragged!')
           expect(@session).to have_xpath("//div[contains(., 'HTML5 Dropped string: text/plain drag_html5-#{modifier_key}')]")
         end
       end
