@@ -209,12 +209,12 @@ private
     end
   end
 
-  def set_range(value)
+  def set_range(value) # rubocop:disable Naming/AccessorMethodName
     min, max, step = (native['min'] || 0).to_f, (native['max'] || 100).to_f, (native['step'] || 1).to_f
     value = value.to_f
-    value = value.clamp(min,max)
+    value = value.clamp(min, max)
     value = ((value - min) / step).round * step + min
-    native['value'] = value.clamp(min,max)
+    native['value'] = value.clamp(min, max)
   end
 
   def set_input(value) # rubocop:disable Naming/AccessorMethodName
@@ -303,7 +303,7 @@ protected
   end
 
   def range?
-    input_field? && type === 'range'
+    input_field? && type == 'range'
   end
 
   OPTION_OWNER_XPATH = XPath.parent(:optgroup, :select, :datalist).to_s.freeze
