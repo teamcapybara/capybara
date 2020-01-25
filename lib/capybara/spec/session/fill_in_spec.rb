@@ -95,6 +95,26 @@ Capybara::SpecHelper.spec '#fill_in' do
     expect(extract_results(@session)['html5_color']).to eq('#112233')
   end
 
+  describe 'with input[type="range"]' do
+    it 'should set the range slider correctly' do
+      @session.fill_in('form_age', with: 51)
+      @session.click_button('awesome')
+      expect(extract_results(@session)['age'].to_f).to eq 51
+    end
+
+    it 'should set the range slider to valid values' do
+      @session.fill_in('form_age', with: '37.6')
+      @session.click_button('awesome')
+      expect(extract_results(@session)['age'].to_f).to eq 37.5
+    end
+
+    it 'should respect the range slider limits' do
+      @session.fill_in('form_age', with: '3')
+      @session.click_button('awesome')
+      expect(extract_results(@session)['age'].to_f).to eq 13
+    end
+  end
+
   it 'should fill in a field with a custom type' do
     @session.fill_in('Schmooo', with: 'Schmooo is the game')
     @session.click_button('awesome')
