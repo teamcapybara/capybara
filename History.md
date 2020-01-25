@@ -1,8 +1,10 @@
-# Version 3.30.1
+# Version 3.31.0
 Release date: unreleased
 
-* Support setting `<input type="range">` elements with the selenium driver
-
+* Support setting range inputs with the selenium driver [Andrew White]
+* Support setting range inputs with the rack driver
+* Support drop modifier keys in drag & drop with selenium driver [Elliot Crosby-McCullough]
+* `enabled_options` and `disabled options` filters for select selector
 * Fix Ruby 2.7 deprecation notices around keyword arguments. I have tried to do this without
   any breaking changes, but due to the nature of the 2.7 changes and some selector types accepting
   Hashes as locators there are a lot of edge cases. If you find any broken cases please report
