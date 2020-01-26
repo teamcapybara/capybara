@@ -78,6 +78,10 @@ RSpec.describe Capybara::Result do
     eval <<~TEST, binding, __FILE__, __LINE__ + 1 if RUBY_VERSION.to_f > 2.5
       expect(result[2..].map(&:text)).to eq %w[Gamma Delta]
     TEST
+    eval <<~TEST, binding, __FILE__, __LINE__ + 1 if RUBY_VERSION.to_f > 2.6
+      expect(result[..2].map(&:text)).to eq %w[Alpha Beta Gamma]
+      expect(result[...2].map(&:text)).to eq %w[Alpha Beta]
+    TEST
   end
 
   it 'works with filter blocks' do

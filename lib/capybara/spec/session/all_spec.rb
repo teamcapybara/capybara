@@ -209,6 +209,13 @@ Capybara::SpecHelper.spec '#all' do
           expect { @session.all(:css, 'h1, p', between: 5..) }.to raise_error(Capybara::ExpectationNotMet)
         end
       TEST
+
+      eval <<~TEST, binding, __FILE__, __LINE__ + 1 if RUBY_VERSION.to_f > 2.6
+        it'treats a beginless range as maximum' do
+          expect { @session.all(:css, 'h1, p', between: ..7) }.not_to raise_error
+          expect { @session.all(:css, 'h1, p', between: ..3) }.to raise_error(Capybara::ExpectationNotMet)
+        end
+      TEST
     end
 
     context 'with multiple count filters' do

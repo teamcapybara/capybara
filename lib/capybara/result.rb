@@ -60,7 +60,11 @@ module Capybara
           nil
         end
       when Range
-        idx.end && idx.max # endless range will have end == nil
+        # idx.max is broken with beginless ranges
+        # idx.end && idx.max # endless range will have end == nil
+        max = idx.end
+        max -= 1 if max && idx.exclude_end?
+        max
       end
 
       if max_idx.nil?
@@ -95,7 +99,9 @@ module Capybara
       end
 
       if between
-        min, max = between.min, (between.end && between.max)
+        min, max = (between.begin && between.min) || 1, between.end
+        max -= 1 if max && between.exclude_end?
+
         size = load_up_to(max ? max + 1 : min)
         return size <=> min unless between.include?(size)
       end
