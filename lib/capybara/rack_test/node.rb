@@ -77,8 +77,8 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
       set(!checked?)
     elsif tag_name == 'label'
       click_label
-    elsif tag_name == 'details'
-      toggle_details
+    elsif (details = native.xpath('.//ancestor-or-self::details').last)
+      toggle_details(details)
     end
   end
 
@@ -256,11 +256,14 @@ private
     labelled_control.set(!labelled_control.checked?) if checkbox_or_radio?(labelled_control)
   end
 
-  def toggle_details
-    if native.has_attribute?('open')
-      native.remove_attribute('open')
+  def toggle_details(details = nil)
+    details ||= native.xpath('.//ancestor-or-self::details').last
+    return unless details
+
+    if details.has_attribute?('open')
+      details.remove_attribute('open')
     else
-      native.set_attribute('open', 'open')
+      details.set_attribute('open', 'open')
     end
   end
 
