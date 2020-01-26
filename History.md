@@ -1,13 +1,15 @@
 # Version 3.31.0
-Release date: unreleased
+Release date: 2020-01-26
 
 ### Added
 
 * Support setting range inputs with the selenium driver [Andrew White]
 * Support setting range inputs with the rack driver
-* Support drop modifier keys in drag & drop with selenium driver [Elliot Crosby-McCullough]
+* Support drop modifier keys in drag & drop [Elliot Crosby-McCullough]
 * `enabled_options` and `disabled options` filters for select selector
-* Support beingless ranges
+* Support beginless ranges
+* Optionally allow `all` results to be reloaded when stable - Beta feature - may be removed in
+  future version if problems occur
 
 ### Fixed
 
@@ -15,8 +17,7 @@ Release date: unreleased
   any breaking changes, but due to the nature of the 2.7 changes and some selector types accepting
   Hashes as locators there are a lot of edge cases. If you find any broken cases please report
   them and I'll see if they're fixable.
-* Optionally allow `all` results to be reloaded when stable - Beta feature - may be removed in
-  future version
+* Clicking on details/summary element behavior in rack_test driver_
 
 # Version 3.30.0
 Release date: 2019-12-24

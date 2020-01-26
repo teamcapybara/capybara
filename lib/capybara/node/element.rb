@@ -409,6 +409,8 @@ module Capybara
       # @option options [Boolean] :html5   When using Chrome/Firefox with Selenium enables to force the use of HTML5
       #                                    (true) or legacy (false) dragging. If not specified the driver will attempt to
       #                                    detect the correct method to use.
+      # @option options [Array<Symbol>,Symbol] :drop_modifiers   Modifier keys which should be held while the dragged element is dropped.
+      #
       #
       # @return [Capybara::Node::Element]  The dragged element
       def drag_to(node, **options)
