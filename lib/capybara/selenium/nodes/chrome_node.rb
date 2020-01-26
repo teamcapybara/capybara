@@ -18,7 +18,7 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
     # In Chrome 75+ files are appended (due to WebDriver spec - why?) so we have to clear here if its multiple and already set
     if browser_version >= 75.0
       driver.execute_script(<<~JS, self)
-        if (arguments[0].multiple && (arguments[0].files.length > 0)){
+        if (arguments[0].multiple && arguments[0].files.length){
           arguments[0].value = null;
         }
       JS

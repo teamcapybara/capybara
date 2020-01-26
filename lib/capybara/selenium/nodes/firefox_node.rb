@@ -26,7 +26,7 @@ class Capybara::Selenium::FirefoxNode < Capybara::Selenium::Node
   def set_file(value) # rubocop:disable Naming/AccessorMethodName
     # By default files are appended so we have to clear here if its multiple and already set
     driver.execute_script(<<~JS, self)
-      if (arguments[0].multiple && (arguments[0].files.length > 0)){
+      if (arguments[0].multiple && arguments[0].files.length){
         arguments[0].value = null;
       }
     JS
