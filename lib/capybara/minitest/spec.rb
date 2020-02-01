@@ -12,8 +12,8 @@ module Capybara
 
       # rubocop:disable Style/MultilineBlockChain
       (%w[
-         selector xpath css link button field select table checked_field unchecked_field
-         ancestor sibling
+        selector xpath css link button field select table checked_field unchecked_field
+        ancestor sibling
       ].flat_map do |assertion|
         [
           %W[assert_#{assertion} must_have_#{assertion}],

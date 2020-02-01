@@ -7,12 +7,14 @@ module Capybara
         Chromedriver 75+ defaults to W3C mode. Please upgrade to chromedriver >= \
         75.0.3770.90 if you need to access logs while in W3C compliant mode.
       MSG
+      private_constant :LOG_MSG
 
       COMMANDS = {
         get_available_log_types: [:get, 'session/:session_id/se/log/types'],
         get_log: [:post, 'session/:session_id/se/log'],
         get_log_legacy: [:post, 'session/:session_id/log']
       }.freeze
+      private_constant :COMMANDS
 
       def commands(command)
         COMMANDS[command] || super
@@ -42,8 +44,6 @@ module Capybara
       rescue ::Selenium::WebDriver::Error::UnknownCommandError
         raise NotImplementedError, LOG_MSG
       end
-
-      private_constant :LOG_MSG, :COMMANDS
     end
   end
 end

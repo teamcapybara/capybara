@@ -225,6 +225,7 @@ class Capybara::Selenium::Node
       window.setTimeout(dragEnterTarget, step_delay);
     JS
 
-    private_constant :DROP_STRING, :DROP_FILE, :ATTACH_FILE, :MOUSEDOWN_TRACKER, :LEGACY_DRAG_CHECK, :HTML5_DRAG_DROP_SCRIPT
+    private_constant :DROP_STRING, :DROP_FILE, :ATTACH_FILE, :MOUSEDOWN_TRACKER,
+                     :LEGACY_DRAG_CHECK, :HTML5_DRAG_DROP_SCRIPT
   end
 end

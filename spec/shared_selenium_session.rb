@@ -61,7 +61,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         session.visit('/with_js')
         session.click_link('Open alert')
         session.accept_alert
-        expect { session.driver.browser.switch_to.alert }.to raise_error(session.driver.public_send(:modal_error))
+        expect { session.driver.browser.switch_to.alert }.to raise_error(session.driver.__send__(:modal_error))
       end
 
       it 'can be called before visiting' do

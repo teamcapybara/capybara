@@ -41,7 +41,7 @@ module Capybara::Selenium::Driver::ChromeDriver
 
     switch_to_window(window_handles.first)
     window_handles.slice(1..-1).each { |win| close_window(win) }
-    return super if chromedriver_version < 73
+    return super unless supports_cdp?
 
     timer = Capybara::Helpers.timer(expire_in: 10)
     begin
@@ -111,8 +111,12 @@ private
   def chromedriver_version
     @chromedriver_version ||= begin
       caps = browser.capabilities
-      caps['chrome']&.fetch('chromedriverVersion', nil).to_f
+      caps['chrome']&.fetch('chromedriverVersion', nil)
     end
+  end
+
+  def supports_cdp?
+    Gem::Version.new(chromedriver_version.split(' ')[0]) >= Gem::Version.new('73')
   end
 end
 

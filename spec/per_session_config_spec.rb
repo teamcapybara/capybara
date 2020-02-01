@@ -15,8 +15,8 @@ RSpec.describe Capybara::SessionConfig do
         automatic_label_click enable_aria_label save_path
         asset_host
       ].each do |m|
-           expect(session.config.public_send(m)).to eq Capybara.public_send(m)
-         end
+        expect(session.config.public_send(m)).to eq Capybara.public_send(m)
+      end
     end
 
     it "doesn't change global session when changed" do

@@ -282,7 +282,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 private
 
   def selenium_4?
-    defined?(Selenium::WebDriver::VERSION) && (Selenium::WebDriver::VERSION.to_f >= 4)
+    defined?(Selenium::WebDriver::VERSION) &&
+      (Gem::Version.new(Selenium::WebDriver::VERSION) > Gem::Version.new(4))
   end
 
   def native_args(args)

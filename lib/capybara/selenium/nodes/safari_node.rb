@@ -99,11 +99,13 @@ private
       down_keys.push
       keys.each { |sub_keys| _send_keys(sub_keys, actions, down_keys) }
       down_keys.pop.reverse_each { |key| actions.key_up(key) }
-    when *MODIFIER_KEYS
-      down_keys.press(keys)
-      actions.key_down(keys)
     when Symbol
-      actions.send_keys(keys)
+      if MODIFIER_KEYS.include?(keys)
+        down_keys.press(keys)
+        actions.key_down(keys)
+      else
+        actions.send_keys(keys)
+      end
     else
       raise ArgumentError, 'Unknown keys type'
     end

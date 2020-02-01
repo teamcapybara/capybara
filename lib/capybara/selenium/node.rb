@@ -400,7 +400,7 @@ private
   end
 
   def bridge
-    browser.public_send(:bridge)
+    browser.__send__(:bridge)
   end
 
   def browser_action

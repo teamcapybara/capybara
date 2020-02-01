@@ -39,8 +39,15 @@ Layout/MultilineAssignmentLayout:
 Style/ConstantVisibility:
   Exclude:
     - 'spec/**/*'
+Lint/NumberConversion:
+  Exclude:
+    - 'spec/**/*'
+    - 'lib/capybara/spec/**/*'
 RSpec/DescribedClassModuleWrapping:
   Enabled: false
+Style/ConstantVisibility:
+  Enabled: false
+
 
 Style/StringHashKeys:
   Enabled: false
