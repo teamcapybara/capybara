@@ -106,4 +106,6 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
   def invalid_element_errors
     [Capybara::RackTest::Errors::StaleElementReferenceError]
   end
+
+  private_constant :DEFAULT_OPTIONS
 end

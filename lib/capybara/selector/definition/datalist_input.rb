@@ -18,7 +18,7 @@ Capybara.add_selector(:datalist_input, locator_type: [String, Symbol]) do
   end
 
   expression_filter(:with_options) do |expr, options|
-    options.inject(expr) do |xpath, option|
+    options.reduce(expr) do |xpath, option|
       xpath[XPath.attr(:list) == XPath.anywhere(:datalist)[expression_for(:datalist_option, option)].attr(:id)]
     end
   end

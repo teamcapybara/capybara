@@ -29,7 +29,7 @@ if RUBY_ENGINE == 'jruby'
       def included(base)
         warn 'including Capybara::DSL in the global scope is not recommended!' if base == Object
         if defined?(::RSpec::Matchers) && base.include?(::RSpec::Matchers)
-          base.send(:include, ::Capybara::RSpecMatcherProxies)
+          base.public_send(:include, ::Capybara::RSpecMatcherProxies)
         end
         super
       end
@@ -39,7 +39,7 @@ if RUBY_ENGINE == 'jruby'
   if defined?(::RSpec::Matchers)
     module ::RSpec::Matchers
       def self.included(base)
-        base.send(:include, ::Capybara::RSpecMatcherProxies) if base.include?(::Capybara::DSL)
+        base.public_send(:include, ::Capybara::RSpecMatcherProxies) if base.include?(::Capybara::DSL)
         super
       end
     end

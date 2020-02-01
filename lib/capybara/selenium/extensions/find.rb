@@ -99,7 +99,7 @@ module Capybara
 
       def is_displayed_atom # rubocop:disable Naming/PredicateName
         @@is_displayed_atom ||= begin # rubocop:disable Style/ClassVars
-          browser.send(:bridge).send(:read_atom, 'isDisplayed')
+          browser.__send__(:bridge).public_send(:read_atom, 'isDisplayed')
                                 rescue StandardError
                                   # If the atom doesn't exist or other error
                                   ''

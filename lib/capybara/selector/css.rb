@@ -97,6 +97,7 @@ module Capybara
           raise ArgumentError, 'Invalid CSS Selector - string end not found'
         end
       end
+      private_constant :S, :H, :UNICODE, :NONASCII, :ESCAPE, :NMSTART, :Splitter
     end
   end
 end

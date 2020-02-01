@@ -206,7 +206,7 @@ module Capybara
       uri = ::Addressable::URI.parse(current_url)
 
       # Addressable doesn't support opaque URIs - we want nil here
-      return nil if uri&.scheme == 'about'
+      return if uri&.scheme == 'about'
 
       path = uri&.path
       path unless path&.empty?
@@ -756,7 +756,7 @@ module Capybara
       else
         define_method method do |*args, &block|
           @touched = true
-          current_scope.send(method, *args, &block)
+          current_scope.public_send(method, *args, &block)
         end
       end
     end
@@ -770,7 +770,7 @@ module Capybara
         METHOD
       else
         define_method method do |*args, &block|
-          document.send(method, *args, &block)
+          document.public_send(method, *args, &block)
         end
       end
     end
@@ -938,5 +938,8 @@ module Capybara
       wait_time = Capybara::Queries::BaseQuery.wait(options, config.default_max_wait_time)
       document.synchronize(wait_time, errors: [Capybara::WindowError], &block)
     end
+
+    private_constant :NODE_METHODS, :DOCUMENT_METHODS, :MODAL_METHODS, :SESSION_METHODS
+    public_constant :DSL_METHODS
   end
 end

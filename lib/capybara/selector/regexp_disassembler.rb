@@ -162,8 +162,10 @@ module Capybara
         end
 
         def ignore?
-          [Regexp::Expression::Assertion::NegativeLookahead,
-           Regexp::Expression::Assertion::NegativeLookbehind].any? { |klass| @exp.is_a? klass }
+          [
+            Regexp::Expression::Assertion::NegativeLookahead,
+            Regexp::Expression::Assertion::NegativeLookbehind
+          ].any? { |klass| @exp.is_a? klass }
         end
 
       private

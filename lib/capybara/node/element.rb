@@ -552,7 +552,7 @@ module Capybara
         return self unless @allow_reload
 
         begin
-          reloaded = @query.resolve_for(query_scope.reload)[@query_idx.to_i]
+          reloaded = @query.resolve_for(query_scope.reload)[Integer(@query_idx || 0)]
           @base = reloaded.base if reloaded
         rescue StandardError => e
           raise e unless catch_error?(e)
@@ -578,6 +578,8 @@ module Capybara
         base.respond_to?(:initial_cache) ? base.initial_cache : {}
       end
 
+    private
+
       STYLE_SCRIPT = <<~JS
         (function(){
           var s = window.getComputedStyle(this);
@@ -590,8 +592,6 @@ module Capybara
         }).apply(this, arguments)
       JS
 
-    private
-
       def perform_click_action(keys, wait: nil, **options)
         raise ArgumentError, 'You must specify both x: and y: for a click offset' if nil ^ options[:x] ^ options[:y]
 
@@ -599,6 +599,8 @@ module Capybara
         synchronize(wait) { yield keys, options }
         self
       end
+
+      private_constant :STYLE_SCRIPT
     end
   end
 end

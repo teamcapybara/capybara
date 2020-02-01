@@ -11,17 +11,25 @@ module Capybara
       end
 
       # rubocop:disable Style/MultilineBlockChain
-      (%w[selector xpath css link button field select table checked_field unchecked_field
-          ancestor sibling].flat_map do |assertion|
-            [%W[assert_#{assertion} must_have_#{assertion}],
-             %W[refute_#{assertion} wont_have_#{assertion}]]
-          end + [%w[assert_all_of_selectors must_have_all_of_selectors],
-                 %w[assert_none_of_selectors must_have_none_of_selectors],
-                 %w[assert_any_of_selectors must_have_any_of_selectors],
-                 %w[assert_matches_style must_match_style]] +
+      (%w[
+         selector xpath css link button field select table checked_field unchecked_field
+         ancestor sibling
+      ].flat_map do |assertion|
+        [
+          %W[assert_#{assertion} must_have_#{assertion}],
+          %W[refute_#{assertion} wont_have_#{assertion}]
+        ]
+      end + [
+        %w[assert_all_of_selectors must_have_all_of_selectors],
+        %w[assert_none_of_selectors must_have_none_of_selectors],
+        %w[assert_any_of_selectors must_have_any_of_selectors],
+        %w[assert_matches_style must_match_style]
+      ] +
       %w[selector xpath css].flat_map do |assertion|
-        [%W[assert_matches_#{assertion} must_match_#{assertion}],
-         %W[refute_matches_#{assertion} wont_match_#{assertion}]]
+        [
+          %W[assert_matches_#{assertion} must_match_#{assertion}],
+          %W[refute_matches_#{assertion} wont_match_#{assertion}]
+        ]
       end).each do |(meth, new_name)|
         class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
           def #{new_name} *args, &block

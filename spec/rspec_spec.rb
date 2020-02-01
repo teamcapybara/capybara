@@ -68,7 +68,7 @@ RSpec.describe 'capybara/rspec' do
       it 'allows access to the RSpec matcher' do
         visit('/with_html')
         # This reads terribly, but must call #within
-        expect(find(:css, 'span.number').text.to_i).to within(1).of(41)
+        expect(Integer(find(:css, 'span.number').text)).to within(1).of(41)
       end
     end
   end
@@ -106,7 +106,7 @@ RSpec.describe 'capybara/rspec' do
         it 'allows access to the RSpec matcher' do
           test_class_instance.visit('/with_html')
           # This reads terribly, but must call #within
-          expect(test_class_instance.find(:css, 'span.number').text.to_i).to test_class_instance.within(1).of(41)
+          expect(Integer(test_class_instance.find(:css, 'span.number').text)).to test_class_instance.within(1).of(41)
         end
       end
 

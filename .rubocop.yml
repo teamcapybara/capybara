@@ -3,12 +3,61 @@ require:
   - rubocop-performance
 
 AllCops:
-  DisabledByDefault: false
+  EnabledByDefault: true
   TargetRubyVersion: 2.4
   Exclude:
       - 'vendor/**/*'
       - 'gemfiles/vendor/**/*'
 
+
+Style/MethodCallWithArgsParentheses:
+  Enabled: false
+Style/MethodCalledOnDoEndBlock:
+  Enabled: false
+Style/InlineComment:
+  Enabled: false
+Style/Copyright:
+  Enabled: false
+Style/DocumentationMethod:
+  Enabled: false
+Style/MissingElse:
+  Enabled: false
+Style/SingleLineBlockParams:
+  Enabled: false
+Layout/ClassStructure:
+  Enabled: false
+RSpec/Pending:
+  Enabled: false
+RSpec/AlignLeftLetBrace:
+  Enabled: false
+RSpec/AlignRightLetBrace:
+  Enabled: false
+Layout/MultilineArrayLineBreaks:
+  Enabled: false
+Layout/MultilineAssignmentLayout:
+  Enabled: false
+Style/ConstantVisibility:
+  Exclude:
+    - 'spec/**/*'
+RSpec/DescribedClassModuleWrapping:
+  Enabled: false
+
+Style/StringHashKeys:
+  Enabled: false
+Style/ImplicitRuntimeError:
+  Enabled: false
+Style/IpAddresses:
+  Enabled: false
+Layout/MultilineMethodArgumentLineBreaks:
+  Enabled: false
+Layout/FirstMethodArgumentLineBreak:
+  Enabled: false
+Bundler/GemComment:
+  Enabled: false
+Performance/ChainArrayAllocation:
+  Enabled: false
+Style/OptionHash:
+  Enabled: false
 #################### Lint ################################
 
 Layout/LineLength:

@@ -13,7 +13,7 @@ module Capybara
       attr_reader :expression
 
       def add_attribute_conditions(**conditions)
-        @expression = conditions.inject(expression) do |xp, (name, value)|
+        @expression = conditions.reduce(expression) do |xp, (name, value)|
           conditions = name == :class ? class_conditions(value) : attribute_conditions(name => value)
           if xp.is_a? XPath::Expression
             xp[conditions]

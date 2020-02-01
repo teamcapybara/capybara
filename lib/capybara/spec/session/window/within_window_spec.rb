@@ -55,7 +55,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
       end.to raise_error(StandardError, 'some error')
       expect(@session.current_window).to eq(@window)
       expect(@session).to have_css('#doesNotOpenWindows')
-      expect(@session.send(:scopes)).to eq([nil])
+      expect(@session.public_send(:scopes)).to eq([nil])
     end
 
     it 'should leave correct scopes after execution in case of error', requires: %i[windows frames] do
@@ -67,7 +67,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
       end.to raise_error(Capybara::ScopeError)
       expect(@session.current_window).to eq(@window)
       expect(@session).to have_css('#doesNotOpenWindows')
-      expect(@session.send(:scopes)).to eq([nil])
+      expect(@session.public_send(:scopes)).to eq([nil])
     end
 
     it 'should raise error if closed window was passed' do
@@ -82,7 +82,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
       end.to raise_error(@session.driver.no_such_window_error)
       expect(@session.current_window).to eq(@window)
       expect(@session).to have_css('#doesNotOpenWindows')
-      expect(@session.send(:scopes)).to eq([nil])
+      expect(@session.public_send(:scopes)).to eq([nil])
     end
   end
 
@@ -136,7 +136,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
       end.to raise_error(Capybara::WindowError, 'Could not find a window matching block/lambda')
       expect(@session.current_window).to eq(@window)
       expect(@session).to have_css('#doesNotOpenWindows')
-      expect(@session.send(:scopes)).to eq([nil])
+      expect(@session.public_send(:scopes)).to eq([nil])
     end
 
     it 'returns value from the block' do
@@ -151,7 +151,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
         end
       end.to raise_error(StandardError, 'some error')
       expect(@session.current_window).to eq(@window)
-      expect(@session.send(:scopes)).to eq([nil])
+      expect(@session.public_send(:scopes)).to eq([nil])
     end
   end
 end

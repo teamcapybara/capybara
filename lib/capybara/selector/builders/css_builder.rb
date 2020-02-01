@@ -13,7 +13,7 @@ module Capybara
       attr_reader :expression
 
       def add_attribute_conditions(**attributes)
-        @expression = attributes.inject(expression) do |css, (name, value)|
+        @expression = attributes.reduce(expression) do |css, (name, value)|
           conditions = if name == :class
             class_conditions(value)
           elsif value.is_a? Regexp

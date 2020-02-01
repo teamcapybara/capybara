@@ -439,7 +439,7 @@ private
   end
 
   def bridge
-    browser.send(:bridge)
+    browser.__send__(:bridge)
   end
 
   def specialize_driver
@@ -486,6 +486,8 @@ private
     # since FF may have dismissed the alert at first attempt.
     navigate_with_accept('about:blank') if current_url != 'about:blank'
   end
+
+  private_constant :DEFAULT_OPTIONS, :SPECIAL_OPTIONS
 end
 
 require 'capybara/selenium/driver_specializations/chrome_driver'

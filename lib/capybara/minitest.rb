@@ -97,10 +97,12 @@ module Capybara
       # @!method assert_ancestor
       #   @see Capybara::Node::Matchers#assert_ancestor
 
-      %w[selector no_selector matches_style
-         all_of_selectors none_of_selectors any_of_selectors
-         matches_selector not_matches_selector
-         sibling no_sibling ancestor no_ancestor].each do |assertion_name|
+      %w[
+        selector no_selector matches_style
+        all_of_selectors none_of_selectors any_of_selectors
+        matches_selector not_matches_selector
+        sibling no_sibling ancestor no_ancestor
+      ].each do |assertion_name|
         class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
           def assert_#{assertion_name} *args, &optional_filter_block
             self.assertions +=1

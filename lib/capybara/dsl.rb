@@ -55,7 +55,7 @@ module Capybara
         METHOD
       else
         define_method method do |*args, &block|
-          page.send method, *args, &block
+          page.public_send method, *args, &block
         end
       end
     end

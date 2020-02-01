@@ -134,7 +134,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     else
       define_method meth_name do |*args|
         stale_check
-        send("unchecked_#{meth_name}", *args)
+        public_send("unchecked_#{meth_name}", *args)
       end
     end
   end
@@ -210,8 +210,8 @@ private
   end
 
   def set_range(value) # rubocop:disable Naming/AccessorMethodName
-    min, max, step = (native['min'] || 0).to_f, (native['max'] || 100).to_f, (native['step'] || 1).to_f
-    value = value.to_f
+    min, max, step = Float(native['min'] || 0), Float(native['max'] || 100), Float(native['step'] || 1)
+    value = Float(value)
     value = value.clamp(min, max)
     value = ((value - min) / step).round * step + min
     native['value'] = value.clamp(min, max)
@@ -221,7 +221,7 @@ private
     if text_or_password? && attribute_is_not_blank?(:maxlength)
       # Browser behavior for maxlength="0" is inconsistent, so we stick with
       # Firefox, allowing no input
-      value = value.to_s[0...self[:maxlength].to_i]
+      value = value.to_s[0...Integer(self[:maxlength])]
     end
     if value.is_a?(Array) # Assert multiple attribute is present
       value.each do |val|
@@ -322,4 +322,6 @@ protected
       ]
     ]
   end.to_s.freeze
+
+  private_constant :BLOCK_ELEMENTS, :OPTION_OWNER_XPATH, :DISABLED_BY_FIELDSET_XPATH
 end

@@ -400,7 +400,7 @@ private
   end
 
   def bridge
-    browser.send(:bridge)
+    browser.public_send(:bridge)
   end
 
   def browser_action
@@ -520,7 +520,6 @@ private
       value.to_time.strftime('%Y-%m-%dT%H:%M')
     end
   end
-  private_constant :SettableValue
 
   # ClickOptions encapsulates click option logic
   class ClickOptions
@@ -547,5 +546,6 @@ private
       keys.empty? && !coords?
     end
   end
-  private_constant :ClickOptions
+
+  private_constant :SettableValue, :ClickOptions, :GET_XPATH_SCRIPT, :OBSCURED_OR_OFFSET_SCRIPT
 end

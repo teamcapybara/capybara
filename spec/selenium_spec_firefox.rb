@@ -180,7 +180,7 @@ RSpec.describe Capybara::Selenium::Driver do
 
   context 'timeout' do
     it 'sets the http client read timeout' do
-      expect(TestSessions::SeleniumFirefox.driver.browser.send(:bridge).http.read_timeout).to eq 31
+      expect(TestSessions::SeleniumFirefox.driver.browser.__send__(:bridge).http.read_timeout).to eq 31
     end
   end
 end

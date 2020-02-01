@@ -158,7 +158,7 @@ RSpec.describe Capybara::Server do
 
       app = proc do |env|
         request = Rack::Request.new(env)
-        sleep request.params['wait_time'].to_f
+        sleep Float(request.params['wait_time'])
         done += 1
         [200, {}, ['Hello Server!']]
       end
@@ -171,7 +171,7 @@ RSpec.describe Capybara::Server do
         start_request(server2, 3.0)
         server1.wait_for_pending_requests
       end.to change { done }.from(0).to(2)
-      expect(server2.send(:pending_requests?)).to eq(false)
+      expect(server2.public_send(:pending_requests?)).to eq(false)
     end
   end
 
@@ -203,7 +203,7 @@ RSpec.describe Capybara::Server do
 
       app = proc do |env|
         request = Rack::Request.new(env)
-        sleep request.params['wait_time'].to_f
+        sleep Float(request.params['wait_time'])
         done += 1
         [200, {}, ['Hello Server!']]
       end
@@ -216,7 +216,7 @@ RSpec.describe Capybara::Server do
         start_request(server2, 3.0)
         server1.wait_for_pending_requests
       end.to change { done }.from(0).to(1)
-      expect(server2.send(:pending_requests?)).to eq(true)
+      expect(server2.public_send(:pending_requests?)).to eq(true)
       expect do
         server2.wait_for_pending_requests
       end.to change { done }.from(1).to(2)
@@ -242,7 +242,7 @@ RSpec.describe Capybara::Server do
   it 'should raise an error when there are pending requests' do
     app = proc do |env|
       request = Rack::Request.new(env)
-      sleep request.params['wait_time'].to_f
+      sleep Float(request.params['wait_time'])
       [200, {}, ['Hello Server!']]
     end
 

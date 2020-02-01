@@ -34,7 +34,7 @@ module Capybara
 
     def chrome_version(session)
       (session.driver.browser.capabilities[:browser_version] ||
-        session.driver.browser.capabilities[:version]).to_f
+       session.driver.browser.capabilities[:version]).to_f
     end
 
     def chrome_lt?(version, session)

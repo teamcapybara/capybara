@@ -499,9 +499,11 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'should support key aliases' do
-      { control: :ctrl,
+      {
+        control: :ctrl,
         command: :meta,
-        cmd: :meta }.each do |(key_alias, key)|
+        cmd: :meta
+      }.each do |(key_alias, key)|
         @session.visit('/with_js')
 
         element = @session.find('//div[@id="drag"]')
@@ -628,9 +630,11 @@ Capybara::SpecHelper.spec 'node' do
       end
 
       it 'should support key aliases' do
-        { control: :ctrl,
+        {
+          control: :ctrl,
           command: :meta,
-          cmd: :meta }.each do |(key_alias, key)|
+          cmd: :meta
+        }.each do |(key_alias, key)|
           @session.visit('/with_js')
 
           element = @session.find('//div[@id="drag_html5"]')
@@ -761,8 +765,8 @@ Capybara::SpecHelper.spec 'node' do
       locations = link.text.match(/^Has been clicked at (?<x>[\d\.-]+),(?<y>[\d\.-]+)$/)
       # Resulting click location should be very close to 0, 0 relative to top left corner of the element, but may not be exact due to
       # integer/float conversions and rounding.
-      expect(locations[:x].to_f).to be_within(1).of(5)
-      expect(locations[:y].to_f).to be_within(1).of(5)
+      expect(Float(locations[:x])).to be_within(1).of(5)
+      expect(Float(locations[:y])).to be_within(1).of(5)
     end
 
     it 'should raise error if both x and y values are not passed' do
@@ -875,8 +879,8 @@ Capybara::SpecHelper.spec 'node' do
       locations = link.text.match(/^Has been double clicked at (?<x>[\d\.-]+),(?<y>[\d\.-]+)$/)
       # Resulting click location should be very close to 10, 5 relative to top left corner of the element, but may not be exact due
       # to integer/float conversions and rounding.
-      expect(locations[:x].to_f).to be_within(1).of(10)
-      expect(locations[:y].to_f).to be_within(1).of(5)
+      expect(Float(locations[:x])).to be_within(1).of(10)
+      expect(Float(locations[:y])).to be_within(1).of(5)
     end
 
     it 'should retry clicking', requires: [:js] do
@@ -958,8 +962,8 @@ Capybara::SpecHelper.spec 'node' do
       locations = link.text.match(/^Has been right clicked at (?<x>[\d\.-]+),(?<y>[\d\.-]+)$/)
       # Resulting click location should be very close to 10, 10 relative to top left corner of the element, but may not be exact due
       # to integer/float conversions and rounding
-      expect(locations[:x].to_f).to be_within(1).of(10)
-      expect(locations[:y].to_f).to be_within(1).of(10)
+      expect(Float(locations[:x])).to be_within(1).of(10)
+      expect(Float(locations[:y])).to be_within(1).of(10)
     end
 
     it 'should retry clicking', requires: [:js] do

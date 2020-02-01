@@ -5,7 +5,7 @@ require 'capybara/selenium/nodes/firefox_node'
 module Capybara::Selenium::Driver::FirefoxDriver
   def self.extended(driver)
     driver.extend Capybara::Selenium::Driver::W3CFirefoxDriver if w3c?(driver)
-    bridge = driver.send(:bridge)
+    bridge = driver.__send__(:bridge)
     bridge.extend Capybara::Selenium::IsDisplayed unless bridge.commands(:is_element_displayed)
   end
 

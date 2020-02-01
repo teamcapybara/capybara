@@ -158,18 +158,20 @@ module Capybara
       match_style(styles, **options)
     end
 
-    %w[selector css xpath text title current_path link button
-       field checked_field unchecked_field select table
-       sibling ancestor].each do |matcher_type|
+    %w[
+      selector css xpath text title current_path link button
+      field checked_field unchecked_field select table
+      sibling ancestor
+    ].each do |matcher_type|
       define_method "have_no_#{matcher_type}" do |*args, **kw_args, &optional_filter_block|
-        Matchers::NegatedMatcher.new(send("have_#{matcher_type}", *args, **kw_args, &optional_filter_block))
+        Matchers::NegatedMatcher.new(public_send("have_#{matcher_type}", *args, **kw_args, &optional_filter_block))
       end
     end
     alias_method :have_no_content, :have_no_text
 
     %w[selector css xpath].each do |matcher_type|
       define_method "not_match_#{matcher_type}" do |*args, **kw_args, &optional_filter_block|
-        Matchers::NegatedMatcher.new(send("match_#{matcher_type}", *args, **kw_args, &optional_filter_block))
+        Matchers::NegatedMatcher.new(public_send("match_#{matcher_type}", *args, **kw_args, &optional_filter_block))
       end
     end
 

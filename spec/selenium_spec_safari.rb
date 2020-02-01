@@ -33,7 +33,7 @@ Capybara.register_driver :selenium_safari_not_clear_storage do |app|
 end
 
 module TestSessions
-  Safari = Capybara::Session.new(SAFARI_DRIVER, TestApp)
+  public_constant Safari = Capybara::Session.new(SAFARI_DRIVER, TestApp)
 end
 
 skipped_tests = %i[response_headers status_code trigger windows drag]
@@ -111,7 +111,7 @@ RSpec.describe 'Capybara::Session with safari' do
 
   context 'timeout' do
     it 'sets the http client read timeout' do
-      expect(TestSessions::Safari.driver.browser.send(:bridge).http.read_timeout).to eq 30
+      expect(TestSessions::Safari.driver.browser.__send__(:bridge).http.read_timeout).to eq 30
     end
   end
 

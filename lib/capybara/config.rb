@@ -90,5 +90,7 @@ module Capybara
       end
       @deprecation_notified[method] = true
     end
+
+    public_constant :OPTIONS
   end
 end

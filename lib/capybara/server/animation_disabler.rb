@@ -53,6 +53,8 @@ module Capybara
           }
         </style>
       HTML
+
+      private_constant :DISABLE_MARKUP_TEMPLATE
     end
   end
 end

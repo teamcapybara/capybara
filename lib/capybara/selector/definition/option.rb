@@ -15,7 +15,7 @@ Capybara.add_selector(:option, locator_type: [String, Symbol, Integer]) do
   describe_expression_filters do |disabled: nil, **options|
     desc = +''
     desc << ' that is not disabled' if disabled == false
-    (expression_filters.keys & options.keys).inject(desc) { |memo, ef| memo << " with #{ef} #{options[ef]}" }
+    (expression_filters.keys & options.keys).reduce(desc) { |memo, ef| memo << " with #{ef} #{options[ef]}" }
   end
 
   describe_node_filters do |**options|

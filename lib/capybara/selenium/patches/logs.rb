@@ -42,6 +42,8 @@ module Capybara
       rescue ::Selenium::WebDriver::Error::UnknownCommandError
         raise NotImplementedError, LOG_MSG
       end
+
+      private_constant :LOG_MSG, :COMMANDS
     end
   end
 end

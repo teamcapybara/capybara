@@ -37,7 +37,7 @@ RSpec.shared_examples 'Capybara::Node' do |session, _mode|
 
   describe '#visible?' do
     let(:bridge) do
-      session.driver.browser.send(:bridge)
+      session.driver.browser.__send__(:bridge)
     end
 
     around do |example|

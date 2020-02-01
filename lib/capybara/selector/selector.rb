@@ -120,10 +120,12 @@ module Capybara
 
       locate_xpath = xpath # Need to save original xpath for the label wrap
       locator = locator.to_s
-      attr_matchers = [XPath.attr(:id) == locator,
-                       XPath.attr(:name) == locator,
-                       XPath.attr(:placeholder) == locator,
-                       XPath.attr(:id) == XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for)].reduce(:|)
+      attr_matchers = [
+        XPath.attr(:id) == locator,
+        XPath.attr(:name) == locator,
+        XPath.attr(:placeholder) == locator,
+        XPath.attr(:id) == XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for)
+      ].reduce(:|)
       attr_matchers |= XPath.attr(:'aria-label').is(locator) if enable_aria_label
       attr_matchers |= XPath.attr(test_id) == locator if test_id
 
@@ -134,7 +136,7 @@ module Capybara
     def find_by_attr(attribute, value)
       finder_name = "find_by_#{attribute}_attr"
       if respond_to?(finder_name, true)
-        send(finder_name, value)
+        public_send(finder_name, value)
       else
         value ? XPath.attr(attribute) == value : nil
       end

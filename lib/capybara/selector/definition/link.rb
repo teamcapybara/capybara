@@ -7,10 +7,12 @@ Capybara.add_selector(:link, locator_type: [String, Symbol]) do
 
     unless locator.nil?
       locator = locator.to_s
-      matchers = [XPath.attr(:id) == locator,
-                  XPath.string.n.is(locator),
-                  XPath.attr(:title).is(locator),
-                  XPath.descendant(:img)[XPath.attr(:alt).is(locator)]]
+      matchers = [
+        XPath.attr(:id) == locator,
+        XPath.string.n.is(locator),
+        XPath.attr(:title).is(locator),
+        XPath.descendant(:img)[XPath.attr(:alt).is(locator)]
+      ]
       matchers << XPath.attr(:'aria-label').is(locator) if enable_aria_label
       matchers << XPath.attr(test_id).equals(locator) if test_id
       xpath = xpath[matchers.reduce(:|)]

@@ -64,7 +64,7 @@ class TestApp < Sinatra::Base
   end
 
   get '/redirect/:times/times' do
-    times = params[:times].to_i
+    times = Integer(params[:times])
     if times.zero?
       'redirection complete'
     else

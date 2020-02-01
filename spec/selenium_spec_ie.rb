@@ -50,7 +50,7 @@ Capybara.register_driver :selenium_ie do |app|
 end
 
 module TestSessions
-  SeleniumIE = Capybara::Session.new(:selenium_ie, TestApp)
+  public_constant SeleniumIE = Capybara::Session.new(:selenium_ie, TestApp)
 end
 
 TestSessions::SeleniumIE.current_window.resize_to(800, 500)

@@ -99,19 +99,19 @@ Capybara::SpecHelper.spec '#fill_in' do
     it 'should set the range slider correctly' do
       @session.fill_in('form_age', with: 51)
       @session.click_button('awesome')
-      expect(extract_results(@session)['age'].to_f).to eq 51
+      expect(Float(extract_results(@session)['age'])).to eq 51
     end
 
     it 'should set the range slider to valid values' do
       @session.fill_in('form_age', with: '37.6')
       @session.click_button('awesome')
-      expect(extract_results(@session)['age'].to_f).to eq 37.5
+      expect(Float(extract_results(@session)['age'])).to eq 37.5
     end
 
     it 'should respect the range slider limits' do
       @session.fill_in('form_age', with: '3')
       @session.click_button('awesome')
-      expect(extract_results(@session)['age'].to_f).to eq 13
+      expect(Float(extract_results(@session)['age'])).to eq 13
     end
   end
 

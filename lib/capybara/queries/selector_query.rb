@@ -8,17 +8,19 @@ module Capybara
       attr_reader :expression, :selector, :locator, :options
       SPATIAL_KEYS = %i[above below left_of right_of near].freeze
       VALID_KEYS = SPATIAL_KEYS + COUNT_KEYS +
-                   %i[text id class style visible obscured exact exact_text normalize_ws match wait filter_set]
+                                    %i[text id class style visible obscured exact exact_text normalize_ws match wait filter_set]
       VALID_MATCH = %i[first smart prefer_exact one].freeze
 
-      def initialize(*args,
-                     session_options:,
-                     enable_aria_label: session_options.enable_aria_label,
-                     test_id: session_options.test_id,
-                     selector_format: nil,
-                     order: nil,
-                     **options,
-                     &filter_block)
+      def initialize(
+        *args,
+        session_options:,
+        enable_aria_label: session_options.enable_aria_label,
+        test_id: session_options.test_id,
+        selector_format: nil,
+        order: nil,
+        **options,
+        &filter_block
+      )
         @resolved_node = nil
         @resolved_count = 0
         @options = options.dup
@@ -372,11 +374,11 @@ module Capybara
 
       def apply_expression_filters(expression)
         unapplied_options = options.keys - valid_keys
-        expression_filters.inject(expression) do |expr, (name, ef)|
+        expression_filters.reduce(expression) do |expr, (name, ef)|
           next expr unless apply_filter?(ef)
 
           if ef.matcher?
-            unapplied_options.select(&ef.method(:handles_option?)).inject(expr) do |memo, option_name|
+            unapplied_options.select(&ef.method(:handles_option?)).reduce(expr) do |memo, option_name|
               unapplied_options.delete(option_name)
               ef.apply_filter(memo, option_name, options[option_name], @selector)
             end
@@ -704,7 +706,7 @@ module Capybara
         end
       end
 
-      private_constant :Rectangle
+      private_constant :Rectangle, :SPATIAL_KEYS, :VALID_KEYS, :VALID_MATCH
     end
   end
 end

@@ -39,6 +39,8 @@ module Capybara
       def ssl_options
         { use_ssl: true, verify_mode: OpenSSL::SSL::VERIFY_NONE }
       end
+
+      private_constant :TRY_HTTPS_ERRORS
     end
   end
 end

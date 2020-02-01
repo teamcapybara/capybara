@@ -125,7 +125,7 @@ RSpec.describe 'Capybara::Session with chrome' do
 
   context 'timeout' do
     it 'sets the http client read timeout' do
-      expect(TestSessions::Chrome.driver.browser.send(:bridge).http.read_timeout).to eq 30
+      expect(TestSessions::Chrome.driver.browser.__send__(:bridge).http.read_timeout).to eq 30
     end
   end
 

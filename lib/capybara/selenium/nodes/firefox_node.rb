@@ -71,7 +71,7 @@ class Capybara::Selenium::FirefoxNode < Capybara::Selenium::Node
     return super unless native_displayed?
 
     begin
-      bridge.send(:execute, :is_element_displayed, id: native.ref)
+      bridge.public_send(:execute, :is_element_displayed, id: native.ref)
     rescue Selenium::WebDriver::Error::UnknownCommandError
       # If the is_element_displayed command is unknown, no point in trying again
       driver.options[:native_displayed] = false
@@ -118,7 +118,7 @@ private
   end
 
   def upload(local_file)
-    return nil unless local_file
+    return unless local_file
     raise ArgumentError, "You may only upload files: #{local_file.inspect}" unless File.file?(local_file)
 
     file = ::Selenium::WebDriver::Zipper.zip_file(local_file)

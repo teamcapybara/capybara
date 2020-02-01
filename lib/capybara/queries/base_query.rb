@@ -101,6 +101,8 @@ module Capybara
         valid_names = valid_keys.map(&:inspect).join(', ')
         raise ArgumentError, "Invalid option(s) #{invalid_names}, should be one of #{valid_names}"
       end
+
+      private_constant :COUNT_KEYS
     end
   end
 end

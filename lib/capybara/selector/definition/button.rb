@@ -26,7 +26,7 @@ Capybara.add_selector(:button, locator_type: [String, Symbol]) do
       image_btn_xpath = image_btn_xpath[alt_matches]
     end
 
-    %i[value title type].inject(input_btn_xpath.union(btn_xpath).union(image_btn_xpath)) do |memo, ef|
+    %i[value title type].reduce(input_btn_xpath.union(btn_xpath).union(image_btn_xpath)) do |memo, ef|
       memo[find_by_attr(ef, options[ef])]
     end
   end

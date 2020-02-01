@@ -233,7 +233,7 @@ module Capybara
       end
 
       def default_format
-        return nil if @expressions.keys.empty?
+        return if @expressions.keys.empty?
 
         if @expressions.size == 1
           @expressions.keys.first
@@ -244,7 +244,7 @@ module Capybara
 
       # @api private
       def locator_types
-        return nil unless @locator_type
+        return unless @locator_type
 
         Array(@locator_type)
       end

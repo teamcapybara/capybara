@@ -10,7 +10,7 @@ module Puma
 
           data = @socket.read_nonblock(size, exception: false)
           raise IO::EAGAINWaitReadable if %i[wait_readable wait_writable].include? data
-          return nil if data.nil?
+          return if data.nil?
 
           @engine.inject(data)
           output = engine_read_all

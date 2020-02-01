@@ -190,7 +190,7 @@ module Capybara
     private
 
       def option_value(option)
-        return nil if option.nil?
+        return if option.nil?
 
         option[:value] || option.content
       end
@@ -203,6 +203,8 @@ module Capybara
           (~x.self(:summary) & XPath.parent(:details)[!XPath.attr(:open)])
         ].boolean
       end.to_s.freeze
+
+      private_constant :VISIBILITY_XPATH
     end
   end
 end

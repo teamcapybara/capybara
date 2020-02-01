@@ -4,7 +4,7 @@ require 'capybara/selenium/nodes/edge_node'
 
 module Capybara::Selenium::Driver::EdgeDriver
   def self.extended(base)
-    bridge = base.send(:bridge)
+    bridge = base.__send__(:bridge)
     bridge.extend Capybara::Selenium::IsDisplayed unless bridge.commands(:is_element_displayed)
     base.options[:native_displayed] = false if base.options[:native_displayed].nil?
   end

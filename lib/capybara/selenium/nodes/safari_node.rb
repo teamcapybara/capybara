@@ -92,27 +92,31 @@ private
 
   def _send_keys(keys, actions = browser_action, down_keys = ModifierKeysStack.new)
     case keys
-    when *MODIFIER_KEYS
-      down_keys.press(keys)
-      actions.key_down(keys)
     when String
       keys = keys.upcase if down_keys&.include?(:shift)
-      actions.send_keys(keys)
-    when Symbol
       actions.send_keys(keys)
     when Array
       down_keys.push
       keys.each { |sub_keys| _send_keys(sub_keys, actions, down_keys) }
       down_keys.pop.reverse_each { |key| actions.key_up(key) }
+    when *MODIFIER_KEYS
+      down_keys.press(keys)
+      actions.key_down(keys)
+    when Symbol
+      actions.send_keys(keys)
     else
       raise ArgumentError, 'Unknown keys type'
     end
     actions
   end
 
-  MODIFIER_KEYS = %i[control left_control right_control
-                     alt left_alt right_alt
-                     shift left_shift right_shift
-                     meta left_meta right_meta
-                     command].freeze
+  MODIFIER_KEYS = %i[
+    control left_control right_control
+    alt left_alt right_alt
+    shift left_shift right_shift
+    meta left_meta right_meta
+    command
+  ].freeze
+
+  private_constant :MODIFIER_KEYS
 end

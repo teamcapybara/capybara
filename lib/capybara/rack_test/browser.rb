@@ -65,7 +65,7 @@ class Capybara::RackTest::Browser
     @current_scheme, @current_host, @current_port = new_uri.select(:scheme, :host, :port)
 
     reset_cache!
-    send(method, new_uri.to_s, attributes, env.merge(options[:headers] || {}))
+    public_send(method, new_uri.to_s, attributes, env.merge(options[:headers] || {}))
   end
 
   def build_uri(path)

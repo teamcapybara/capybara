@@ -30,7 +30,7 @@ module Capybara
 
       def initialize(app, server_errors, extra_middleware = [])
         @app = app
-        @extended_app = extra_middleware.inject(@app) do |ex_app, klass|
+        @extended_app = extra_middleware.reduce(@app) do |ex_app, klass|
           klass.new(ex_app)
         end
         @counter = Counter.new

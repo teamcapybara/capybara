@@ -4,11 +4,13 @@ require 'delegate'
 
 module Capybara
   class SessionConfig
-    OPTIONS = %i[always_include_port run_server default_selector default_max_wait_time ignore_hidden_elements
-                 automatic_reload match exact exact_text raise_server_errors visible_text_only
-                 automatic_label_click enable_aria_label save_path asset_host default_host app_host
-                 server_host server_port server_errors default_set_options disable_animation test_id
-                 predicates_wait default_normalize_ws w3c_click_offset].freeze
+    OPTIONS = %i[
+      always_include_port run_server default_selector default_max_wait_time ignore_hidden_elements
+      automatic_reload match exact exact_text raise_server_errors visible_text_only
+      automatic_label_click enable_aria_label save_path asset_host default_host app_host
+      server_host server_port server_errors default_set_options disable_animation test_id
+      predicates_wait default_normalize_ws w3c_click_offset
+    ].freeze
 
     attr_accessor(*OPTIONS)
 
@@ -112,6 +114,8 @@ module Capybara
       super
       @server_errors = @server_errors.dup
     end
+
+    public_constant :OPTIONS
   end
 
   class ReadOnlySessionConfig < SimpleDelegator
