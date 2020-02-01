@@ -27,6 +27,14 @@ RSpec.shared_examples 'Capybara::Node' do |session, _mode|
     end
   end
 
+  describe '#[]' do
+    it 'should work for spellcheck' do
+      session.visit('/with_html')
+      expect(session.find('//input[@spellcheck="TRUE"]')[:spellcheck]).to eq('true')
+      expect(session.find('//input[@spellcheck="FALSE"]')[:spellcheck]).to eq('false')
+    end
+  end
+
   describe '#visible?' do
     let(:bridge) do
       session.driver.browser.send(:bridge)
