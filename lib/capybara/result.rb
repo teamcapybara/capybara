@@ -63,6 +63,7 @@ module Capybara
         # idx.max is broken with beginless ranges
         # idx.end && idx.max # endless range will have end == nil
         max = idx.end
+        max = nil if max == -1 && !idx.exclude_end?
         max -= 1 if max && idx.exclude_end?
         max
       end
