@@ -1,3 +1,10 @@
+# Version 3.31.1
+Release date: unreleased
+
+### Fixed
+
+* Result#[] and negative max on ranges (Issue #2302/2303) [Jeremy Evans]
+
 # Version 3.31.0
 Release date: 2020-01-26
 
