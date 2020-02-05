@@ -9,205 +9,205 @@ module Capybara
       # Expectation that there is an ancestor
       #
       # @!method must_have_ancestor
-      #   @see Capybara::Node::Matchers#has_ancestor?
+      #   See {Capybara::Node::Matchers#has_ancestor?}
 
       ##
       # Expectation that there is button
       #
       # @!method must_have_button
-      #   @see Capybara::Node::Matchers#has_button?
+      #   See {Capybara::Node::Matchers#has_button?}
 
       ##
       # Expectation that there is no button
       #
       # @!method wont_have_button
-      #   @see Capybara::Node::Matchers#has_no_button?
+      #   See {Capybara::Node::Matchers#has_no_button?}
 
       ##
       # Expectation that there is checked_field
       #
       # @!method must_have_checked_field
-      #   @see Capybara::Node::Matchers#has_checked_field?
+      #   See {Capybara::Node::Matchers#has_checked_field?}
 
       ##
       # Expectation that there is no checked_field
       #
       # @!method wont_have_checked_field
-      #   @see Capybara::Node::Matchers#has_no_checked_field?
+      #   See {Capybara::Node::Matchers#has_no_checked_field?}
 
       ##
       # Expectation that there is unchecked_field
       #
       # @!method must_have_unchecked_field
-      #   @see Capybara::Node::Matchers#has_unchecked_field?
+      #   See {Capybara::Node::Matchers#has_unchecked_field?}
 
       ##
       # Expectation that there is no unchecked_field
       #
       # @!method wont_have_unchecked_field
-      #   @see Capybara::Node::Matchers#has_no_unchecked_field?
+      #   See {Capybara::Node::Matchers#has_no_unchecked_field?}
 
       ##
       # Expectation that page content does match
       #
       # @!method must_have_content
-      #   @see Capybara::Node::Matchers#has_content?
+      #   See {Capybara::Node::Matchers#has_content?}
 
       ##
       # Expectation that page content does not match
       #
       # @!method wont_have_content
-      #   @see Capybara::Node::Matchers#has_no_content?
+      #   See {Capybara::Node::Matchers#has_no_content?}
 
       ##
       # Expectation that there is css
       #
       # @!method must_have_css
-      #   @see Capybara::Node::Matchers#has_css?
+      #   See {Capybara::Node::Matchers#has_css?}
 
       ##
       # Expectation that there is no css
       #
       # @!method wont_have_css
-      #   @see Capybara::Node::Matchers#has_no_css?
+      #   See {Capybara::Node::Matchers#has_no_css?}
 
       ##
       # Expectation that current path matches
       #
       # @!method must_have_current_path
-      #   @see Capybara::SessionMatchers#has_current_path?
+      #   See {Capybara::SessionMatchers#has_current_path?}
 
       ##
       # Expectation that current page does not match
       #
       # @!method wont_have_current_path
-      #   @see Capybara::SessionMatchers#has_no_current_path?
+      #   See {Capybara::SessionMatchers#has_no_current_path?}
 
       ##
       # Expectation that there is field
       #
       # @!method must_have_field
-      #   @see Capybara::Node::Matchers#has_field?
+      #   See {Capybara::Node::Matchers#has_field?}
 
       ##
       # Expectation that there is no field
       #
       # @!method wont_have_field
-      #   @see Capybara::Node::Matchers#has_no_field?
+      #   See {Capybara::Node::Matchers#has_no_field?}
 
       ##
       # Expectation that there is link
       #
       # @!method must_have_link
-      #   @see Capybara::Node::Matchers#has_link?
+      #   See {Capybara::Node::Matchers#has_link?}
 
       ##
       # Expectation that there is no link
       #
       # @!method wont_have_link
-      #   @see Capybara::Node::Matchers#has_no_link?
+      #   See {Capybara::Node::Matchers#has_no_link?}
 
       ##
       # Expectation that page text does match
       #
       # @!method must_have_text
-      #   @see Capybara::Node::Matchers#has_text?
+      #   See {Capybara::Node::Matchers#has_text?}
 
       ##
       # Expectation that page text does not match
       #
       # @!method wont_have_text
-      #   @see Capybara::Node::Matchers#has_no_text?
+      #   See {Capybara::Node::Matchers#has_no_text?}
 
       ##
       # Expectation that page title does match
       #
       # @!method must_have_title
-      #   @see Capybara::Node::DocumentMatchers#has_title?
+      #   See {Capybara::Node::DocumentMatchers#has_title?}
 
       ##
       # Expectation that page title does not match
       #
       # @!method wont_have_title
-      #   @see Capybara::Node::DocumentMatchers#has_no_title?
+      #   See {Capybara::Node::DocumentMatchers#has_no_title?}
 
       ##
       # Expectation that there is select
       #
       # @!method must_have_select
-      #   @see Capybara::Node::Matchers#has_select?
+      #   See {Capybara::Node::Matchers#has_select?}
 
       ##
       # Expectation that there is no select
       #
       # @!method wont_have_select
-      #   @see Capybara::Node::Matchers#has_no_select?
+      #   See {Capybara::Node::Matchers#has_no_select?}
 
       ##
       # Expectation that there is a selector
       #
       # @!method must_have_selector
-      #   @see Capybara::Node::Matchers#has_selector?
+      #   See {Capybara::Node::Matchers#has_selector?}
 
       ##
       # Expectation that there is no selector
       #
       # @!method wont_have_selector
-      #   @see Capybara::Node::Matchers#has_no_selector?
+      #   See {Capybara::Node::Matchers#has_no_selector?}
 
       ##
       # Expectation that all of the provided selectors are present
       #
       # @!method must_have_all_of_selectors
-      #   @see Capybara::Node::Matchers#assert_all_of_selectors
+      #   See {Capybara::Node::Matchers#assert_all_of_selectors}
 
       ##
       # Expectation that none of the provided selectors are present
       #
       # @!method must_have_none_of_selectors
-      #   @see Capybara::Node::Matchers#assert_none_of_selectors
+      #   See {Capybara::Node::Matchers#assert_none_of_selectors}
 
       ##
       # Expectation that any of the provided selectors are present
       #
       # @!method must_have_any_of_selectors
-      #   @see Capybara::Node::Matchers#assert_any_of_selectors
+      #   See {Capybara::Node::Matchers#assert_any_of_selectors}
 
       ##
       # Expectation that there is a sibling
       #
       # @!method must_have_sibling
-      #   @see Capybara::Node::Matchers#has_sibling?
+      #   See {Capybara::Node::Matchers#has_sibling?}
 
       ##
       # Expectation that element has style
       #
       # @!method must_match_style
-      #   @see Capybara::Node::Matchers#matches_style?
+      #   See {Capybara::Node::Matchers#matches_style?}
 
       ##
       # Expectation that there is table
       #
       # @!method must_have_table
-      #   @see Capybara::Node::Matchers#has_table?
+      #   See {Capybara::Node::Matchers#has_table?}
 
       ##
       # Expectation that there is no table
       #
       # @!method wont_have_table
-      #   @see Capybara::Node::Matchers#has_no_table?
+      #   See {Capybara::Node::Matchers#has_no_table?}
 
       ##
       # Expectation that there is xpath
       #
       # @!method must_have_xpath
-      #   @see Capybara::Node::Matchers#has_xpath?
+      #   See {Capybara::Node::Matchers#has_xpath?}
 
       ##
       # Expectation that there is no xpath
       #
       # @!method wont_have_xpath
-      #   @see Capybara::Node::Matchers#has_no_xpath?
+      #   See {Capybara::Node::Matchers#has_no_xpath?}
 
       %w[text content title current_path].each do |assertion|
         infect_an_assertion "assert_#{assertion}", "must_have_#{assertion}", :reverse
