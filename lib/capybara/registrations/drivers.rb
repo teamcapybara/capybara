@@ -29,6 +29,9 @@ Capybara.register_driver :selenium_chrome_headless do |app|
   browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
     opts.args << '--headless'
     opts.args << '--disable-gpu' if Gem.win_platform?
+    if RbConfig::CONFIG['host_os'] =~ /linux/ && system('grep -q docker /proc/self/cgroup')
+      opts.args << '--disable-dev-shm-usage'
+    end
     # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
     opts.args << '--disable-site-isolation-trials'
   end
