@@ -6,13 +6,19 @@ require 'capybara/dsl'
 module Capybara
   module Minitest
     module Assertions
-      ## Assert text exists
+      ##
+      # Assert text exists
       #
+      # @!method assert_content
       # @!method assert_text
       #   See {Capybara::Node::Matchers#assert_text}
 
-      ## Assert text does not exist
+      ##
+      # Assert text does not exist
       #
+      # @!method refute_content
+      # @!method assert_no_content
+      # @!method refute_text
       # @!method assert_no_text
       #   See {Capybara::Node::Matchers#assert_no_text}
 
@@ -62,40 +68,81 @@ module Capybara
       alias_method :assert_content, :assert_text
       alias_method :assert_no_content, :refute_text
 
-      ## Assert selector exists on page
+      ##
+      # Assert selector exists on page
       #
       # @!method assert_selector
       #   See {Capybara::Node::Matchers#assert_selector}
 
-      ## Assert selector does not exist on page
+      ##
+      # Assert selector does not exist on page
       #
+      # @!method refute_selector
       # @!method assert_no_selector
       #   See {Capybara::Node::Matchers#assert_no_selector}
 
-      ## Assert element matches selector
+      ##
+      # Assert element matches selector
       #
       # @!method assert_matches_selector
       #   See {Capybara::Node::Matchers#assert_matches_selector}
 
-      ## Assert element does not match selector
+      ##
+      # Assert element does not match selector
       #
-      # @!method assert_xpath
+      # @!method refute_matches_selector
+      # @!method assert_not_matches_selector
       #   See {Capybara::Node::Matchers#assert_not_matches_selector}
 
-      ## Assert element has the provided CSS styles
+      ##
+      # Assert all of the provided selectors exist on page
+      #
+      # @!method assert_all_of_selectors
+      #   See {Capybara::Node::Matchers#assert_all_of_selectors}
+
+      ##
+      # Assert none of the provided selectors exist on page
+      #
+      # @!method assert_none_of_selectors
+      #   See {Capybara::Node::Matchers#assert_none_of_selectors}
+
+      ##
+      # Assert any of the provided selectors exist on page
+      #
+      # @!method assert_any_of_selectors
+      #   See {Capybara::Node::Matchers#assert_any_of_selectors}
+
+      ##
+      # Assert element has the provided CSS styles
       #
       # @!method assert_matches_style
       #   See {Capybara::Node::Matchers#assert_matches_style}
 
-      ## Assert element has a matching sibling
+      ##
+      # Assert element has a matching sibling
       #
       # @!method assert_sibling
       #   See {Capybara::Node::Matchers#assert_sibling}
 
-      ## Assert element has a matching ancestor
+      ##
+      # Assert element does not have a matching sibling
+      #
+      # @!method refute_sibling
+      # @!method assert_no_sibling
+      #   See {Capybara::Node::Matchers#assert_no_sibling}
+
+      ##
+      # Assert element has a matching ancestor
       #
       # @!method assert_ancestor
       #   See {Capybara::Node::Matchers#assert_ancestor}
+
+      ##
+      # Assert element does not have a matching ancestor
+      #
+      # @!method refute_ancestor
+      # @!method assert_no_ancestor
+      #   See {Capybara::Node::Matchers#assert_no_ancestor}
 
       %w[selector no_selector matches_style
          all_of_selectors none_of_selectors any_of_selectors
@@ -157,6 +204,32 @@ module Capybara
         ruby2_keywords "assert_no_#{field_type}_field" if respond_to?(:ruby2_keywords)
         alias_method "refute_#{field_type}_field", "assert_no_#{field_type}_field"
       end
+
+      ##
+      # Assert that element matches xpath
+      #
+      # @!method assert_matches_xpath
+      #   See {Capybara::Node::Matchers#matches_xpath?}
+
+      ##
+      # Assert that element does not match xpath
+      #
+      # @!method refute_matches_xpath
+      # @!method assert_not_matches_xpath
+      #   See {Capybara::Node::Matchers#not_matches_xpath?}
+
+      ##
+      # Assert that element matches css
+      #
+      # @!method assert_matches_css
+      #   See {Capybara::Node::Matchers#matches_css?}
+
+      ##
+      # Assert that element matches css
+      #
+      # @!method refute_matches_css
+      # @!method assert_not_matches_css
+      #   See {Capybara::Node::Matchers#not_matches_css?}
 
       %w[xpath css].each do |selector_type|
         define_method "assert_matches_#{selector_type}" do |*args, &optional_filter_block|
@@ -249,6 +322,7 @@ module Capybara
     #
     # @!method assert_no_checked_field
     # @!method refute_checked_field
+    #   See {Capybara::Node::Matchers#has_no_checked_field?}
 
     ##
     # Assertion that there is unchecked_field
@@ -261,6 +335,7 @@ module Capybara
     #
     # @!method assert_no_unchecked_field
     # @!method refute_unchecked_field
+    #   See {Capybara::Node::Matchers#has_no_unchecked_field?}
 
     ##
     # Assertion that there is select
