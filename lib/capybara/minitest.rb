@@ -165,6 +165,123 @@ module Capybara
       alias_method :refute_ancestor, :assert_no_ancestor
       alias_method :refute_sibling, :assert_no_sibling
 
+      ##
+      # Assert that provided xpath exists
+      #
+      # @!method assert_xpath
+      #   See {Capybara::Node::Matchers#has_xpath?}
+
+      ##
+      # Assert that provide xpath does not exist
+      #
+      # @!method refute_xpath
+      # @!method assert_no_xpath
+      #   See {Capybara::Node::Matchers#has_no_xpath?}
+
+      ##
+      # Assert that provided css exists
+      #
+      # @!method assert_css
+      #   See {Capybara::Node::Matchers#has_css?}
+
+      ##
+      # Assert that provided css does not exist
+      #
+      # @!method refute_css
+      # @!method assert_no_css
+      #   See {Capybara::Node::Matchers#has_no_css?}
+
+      ##
+      # Assert that provided link exists
+      #
+      # @!method assert_link
+      #   See {Capybara::Node::Matchers#has_link?}
+
+      ##
+      # Assert that provided link does not exist
+      #
+      # @!method assert_no_link
+      # @!method refute_link
+      #   See {Capybara::Node::Matchers#has_no_link?}
+
+      ##
+      # Assert that provided button exists
+      #
+      # @!method assert_button
+      #   See {Capybara::Node::Matchers#has_button?}
+
+      ##
+      # Assert that provided button does not exist
+      #
+      # @!method refute_button
+      # @!method assert_no_button
+      #   See {Capybara::Node::Matchers#has_no_button?}
+
+      ##
+      # Assert that provided field exists
+      #
+      # @!method assert_field
+      #   See {Capybara::Node::Matchers#has_field?}
+
+      ##
+      # Assert that provided field does not exist
+      #
+      # @!method refute_field
+      # @!method assert_no_field
+      #   See {Capybara::Node::Matchers#has_no_field?}
+
+      ##
+      # Assert that provided checked field exists
+      #
+      # @!method assert_checked_field
+      #   See {Capybara::Node::Matchers#has_checked_field?}
+
+      ##
+      # Assert that provided checked_field does not exist
+      #
+      # @!method assert_no_checked_field
+      # @!method refute_checked_field
+      #   See {Capybara::Node::Matchers#has_no_checked_field?}
+
+      ##
+      # Assert that provided unchecked field exists
+      #
+      # @!method assert_unchecked_field
+      #   See {Capybara::Node::Matchers#has_unchecked_field?}
+
+      ##
+      # Assert that provided unchecked field does not exist
+      #
+      # @!method assert_no_unchecked_field
+      # @!method refute_unchecked_field
+      #   See {Capybara::Node::Matchers#has_no_unchecked_field?}
+
+      ##
+      # Assert that provided select exists
+      #
+      # @!method assert_select
+      #   See {Capybara::Node::Matchers#has_select?}
+
+      ##
+      # Assert that provided select does not exist
+      #
+      # @!method refute_select
+      # @!method assert_no_select
+      #   See {Capybara::Node::Matchers#has_no_select?}
+
+      ##
+      # Assert that provided table exists
+      #
+      # @!method assert_table
+      #   See {Capybara::Node::Matchers#has_table?}
+
+      ##
+      # Assert that provided table does not exist
+      #
+      # @!method refute_table
+      # @!method assert_no_table
+      #   See {Capybara::Node::Matchers#has_no_table?}
+
       %w[xpath css link button field select table].each do |selector_type|
         define_method "assert_#{selector_type}" do |*args, &optional_filter_block|
           subject, args = determine_subject(args)
@@ -245,123 +362,6 @@ module Capybara
         ruby2_keywords "assert_not_matches_#{selector_type}" if respond_to?(:ruby2_keywords)
         alias_method "refute_matches_#{selector_type}", "assert_not_matches_#{selector_type}"
       end
-
-    ##
-    # Assertion that there is xpath
-    #
-    # @!method assert_xpath
-    #   See {Capybara::Node::Matchers#has_xpath?}
-
-    ##
-    # Assertion that there is no xpath
-    #
-    # @!method refute_xpath
-    # @!method assert_no_xpath
-    #   See {Capybara::Node::Matchers#has_no_xpath?}
-
-    ##
-    # Assertion that there is css
-    #
-    # @!method assert_css
-    #   See {Capybara::Node::Matchers#has_css?}
-
-    ##
-    # Assertion that there is no css
-    #
-    # @!method refute_css
-    # @!method assert_no_css
-    #   See {Capybara::Node::Matchers#has_no_css?}
-
-    ##
-    # Assertion that there is link
-    #
-    # @!method assert_link
-    #   See {Capybara::Node::Matchers#has_link?}
-
-    ##
-    # Assertion that there is no link
-    #
-    # @!method assert_no_link
-    # @!method refute_link
-    #   See {Capybara::Node::Matchers#has_no_link?}
-
-    ##
-    # Assertion that there is button
-    #
-    # @!method assert_button
-    #   See {Capybara::Node::Matchers#has_button?}
-
-    ##
-    # Assertion that there is no button
-    #
-    # @!method refute_button
-    # @!method assert_no_button
-    #   See {Capybara::Node::Matchers#has_no_button?}
-
-    ##
-    # Assertion that there is field
-    #
-    # @!method assert_field
-    #   See {Capybara::Node::Matchers#has_field?}
-
-    ##
-    # Assertion that there is no field
-    #
-    # @!method refute_field
-    # @!method assert_no_field
-    #   See {Capybara::Node::Matchers#has_no_field?}
-
-    ##
-    # Assertion that there is checked_field
-    #
-    # @!method assert_checked_field
-    #   See {Capybara::Node::Matchers#has_checked_field?}
-
-    ##
-    # Assertion that there is no checked_field
-    #
-    # @!method assert_no_checked_field
-    # @!method refute_checked_field
-    #   See {Capybara::Node::Matchers#has_no_checked_field?}
-
-    ##
-    # Assertion that there is unchecked_field
-    #
-    # @!method assert_unchecked_field
-    #   See {Capybara::Node::Matchers#has_unchecked_field?}
-
-    ##
-    # Assertion that there is no unchecked_field
-    #
-    # @!method assert_no_unchecked_field
-    # @!method refute_unchecked_field
-    #   See {Capybara::Node::Matchers#has_no_unchecked_field?}
-
-    ##
-    # Assertion that there is select
-    #
-    # @!method assert_select
-    #   See {Capybara::Node::Matchers#has_select?}
-
-    ##
-    # Assertion that there is no select
-    #
-    # @!method refute_select
-    # @!method assert_no_select
-    #   See {Capybara::Node::Matchers#has_no_select?}
-
-    ##
-    # Assertion that there is table
-    #
-    # @!method assert_table
-    #   See {Capybara::Node::Matchers#has_table?}
-
-    ##
-    # Assertion that there is no table
-    #
-    # @!method refute_table
-    # @!method assert_no_table
-    #   See {Capybara::Node::Matchers#has_no_table?}
 
     private
 
