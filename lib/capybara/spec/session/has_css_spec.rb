@@ -234,18 +234,21 @@ Capybara::SpecHelper.spec '#has_css?' do
   context 'with spatial requirements', requires: [:spatial] do
     before do
       @session.visit('/spatial')
-      @center = @session.find(:css, '.center')
+    end
+
+    let :center do
+      @session.find(:css, '.center')
     end
 
     it 'accepts spatial options' do
-      expect(@session).to have_css('div', above: @center).thrice
-      expect(@session).to have_css('div', above: @center, right_of: @center).once
+      expect(@session).to have_css('div', above: center).thrice
+      expect(@session).to have_css('div', above: center, right_of: center).once
     end
 
     it 'supports spatial sugar' do
-      expect(@session).to have_css('div').left_of(@center).thrice
-      expect(@session).to have_css('div').below(@center).right_of(@center).once
-      expect(@session).to have_css('div').near(@center).exactly(8).times
+      expect(@session).to have_css('div').left_of(center).thrice
+      expect(@session).to have_css('div').below(center).right_of(center).once
+      expect(@session).to have_css('div').near(center).exactly(8).times
     end
   end
 

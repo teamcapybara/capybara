@@ -162,5 +162,8 @@ RSpec/FilePath:
 RSpec/PredicateMatcher:
   Enabled: false
 
+# RSpec/InstanceVariable:
+#   Enabled: false
+
 Capybara/FeatureMethods:
   Enabled: false

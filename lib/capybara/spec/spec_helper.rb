@@ -60,7 +60,7 @@ module Capybara
         RSpec.describe Capybara::Session, name, options do # rubocop:disable RSpec/EmptyExampleGroup
           include Capybara::SpecHelper
           include Capybara::RSpecMatchers
-          # rubocop:disable RSpec/ScatteredSetup
+
           before do |example|
             @session = session
             instance_exec(example, &filter_block) if filter_block
@@ -81,7 +81,6 @@ module Capybara
           before :each, :exact_false do
             Capybara.exact = false
           end
-          # rubocop:enable RSpec/ScatteredSetup
 
           specs.each do |spec_name, spec_options, block|
             describe spec_name, *spec_options do # rubocop:disable RSpec/EmptyExampleGroup
