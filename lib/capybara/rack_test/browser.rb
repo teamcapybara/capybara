@@ -30,7 +30,9 @@ class Capybara::RackTest::Browser
 
   def submit(method, path, attributes)
     path = request_path if path.nil? || path.empty?
-    process_and_follow_redirects(method, path, attributes, 'HTTP_REFERER' => current_url)
+    uri = build_uri(path)
+    uri.query = '' if method&.to_s&.downcase == 'get'
+    process_and_follow_redirects(method, uri.to_s, attributes, 'HTTP_REFERER' => current_url)
   end
 
   def follow(method, path, **attributes)
