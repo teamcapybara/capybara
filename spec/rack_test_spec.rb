@@ -127,6 +127,20 @@ RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
           session.find(:label, 'Female').click
           expect(session).to have_unchecked_field('gender_male')
         end
+
+        it 'should rewrite the forms action query for get submission' do
+          session.visit('/form')
+          session.click_button('mediocre')
+          puts session.current_url
+          expect(session).not_to have_current_path(/foo|bar/)
+        end
+
+        it 'should rewrite the submit buttons formaction query for get submission' do
+          session.visit('/form')
+          session.click_button('mediocre2')
+          puts session.current_url
+          expect(session).not_to have_current_path(/foo|bar/)
+        end
       end
     end
 

@@ -141,12 +141,12 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
   end
 
   describe '#maximize' do
-    before do
-      @initial_size = @session.current_window.size
+    let! :initial_size do
+      @session.current_window.size
     end
 
     after do
-      @session.current_window.resize_to(*@initial_size)
+      @session.current_window.resize_to(*initial_size)
       sleep 0.5
     end
 
@@ -176,7 +176,7 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
 
       expect(@session.current_window).to eq(orig_window)
       # Maximizing the browser affects all tabs so this may not be valid in real browsers
-      # expect(@session.current_window.size).to eq(@initial_size)
+      # expect(@session.current_window.size).to eq(initial_size)
 
       ow_width, ow_height = other_window.size
       expect(ow_width).to be > 400
@@ -185,12 +185,12 @@ Capybara::SpecHelper.spec Capybara::Window, requires: [:windows] do
   end
 
   describe '#fullscreen' do
-    before do
-      @initial_size = @session.current_window.size
+    let! :initial_size do
+      @session.current_window.size
     end
 
     after do
-      @session.current_window.resize_to(*@initial_size)
+      @session.current_window.resize_to(*initial_size)
       sleep 1
     end
 

@@ -808,7 +808,10 @@ Capybara::SpecHelper.spec 'node' do
     context 'offset', requires: [:js] do
       before do
         @session.visit('/offset')
-        @clicker = @session.find(:id, 'clicker')
+      end
+
+      let :clicker do
+        @session.find(:id, 'clicker')
       end
 
       context 'when w3c_click_offset is false' do
@@ -817,17 +820,17 @@ Capybara::SpecHelper.spec 'node' do
         end
 
         it 'should offset from top left of element' do
-          @clicker.click(x: 10, y: 5)
+          clicker.click(x: 10, y: 5)
           expect(@session).to have_text(/clicked at 110,105/)
         end
 
         it 'should offset outside the element' do
-          @clicker.click(x: -15, y: -10)
+          clicker.click(x: -15, y: -10)
           expect(@session).to have_text(/clicked at 85,90/)
         end
 
         it 'should default to click the middle' do
-          @clicker.click
+          clicker.click
           expect(@session).to have_text(/clicked at 150,150/)
         end
       end
@@ -838,17 +841,17 @@ Capybara::SpecHelper.spec 'node' do
         end
 
         it 'should offset from center of element' do
-          @clicker.click(x: 10, y: 5)
+          clicker.click(x: 10, y: 5)
           expect(@session).to have_text(/clicked at 160,155/)
         end
 
         it 'should offset outside from center of element' do
-          @clicker.click(x: -65, y: -60)
+          clicker.click(x: -65, y: -60)
           expect(@session).to have_text(/clicked at 85,90/)
         end
 
         it 'should default to click the middle' do
-          @clicker.click
+          clicker.click
           expect(@session).to have_text(/clicked at 150,150/)
         end
       end
@@ -891,7 +894,10 @@ Capybara::SpecHelper.spec 'node' do
     context 'offset', requires: [:js] do
       before do
         @session.visit('/offset')
-        @clicker = @session.find(:id, 'clicker')
+      end
+
+      let :clicker do
+        @session.find(:id, 'clicker')
       end
 
       context 'when w3c_click_offset is false' do
@@ -900,17 +906,17 @@ Capybara::SpecHelper.spec 'node' do
         end
 
         it 'should offset from top left of element' do
-          @clicker.double_click(x: 10, y: 5)
+          clicker.double_click(x: 10, y: 5)
           expect(@session).to have_text(/clicked at 110,105/)
         end
 
         it 'should offset outside the element' do
-          @clicker.double_click(x: -15, y: -10)
+          clicker.double_click(x: -15, y: -10)
           expect(@session).to have_text(/clicked at 85,90/)
         end
 
         it 'should default to click the middle' do
-          @clicker.double_click
+          clicker.double_click
           expect(@session).to have_text(/clicked at 150,150/)
         end
       end
@@ -921,17 +927,17 @@ Capybara::SpecHelper.spec 'node' do
         end
 
         it 'should offset from center of element' do
-          @clicker.double_click(x: 10, y: 5)
+          clicker.double_click(x: 10, y: 5)
           expect(@session).to have_text(/clicked at 160,155/)
         end
 
         it 'should offset outside from center of element' do
-          @clicker.double_click(x: -65, y: -60)
+          clicker.double_click(x: -65, y: -60)
           expect(@session).to have_text(/clicked at 85,90/)
         end
 
         it 'should default to click the middle' do
-          @clicker.double_click
+          clicker.double_click
           expect(@session).to have_text(/clicked at 150,150/)
         end
       end
@@ -974,7 +980,10 @@ Capybara::SpecHelper.spec 'node' do
     context 'offset', requires: [:js] do
       before do
         @session.visit('/offset')
-        @clicker = @session.find(:id, 'clicker')
+      end
+
+      let :clicker do
+        @session.find(:id, 'clicker')
       end
 
       context 'when w3c_click_offset is false' do
@@ -983,17 +992,17 @@ Capybara::SpecHelper.spec 'node' do
         end
 
         it 'should offset from top left of element' do
-          @clicker.right_click(x: 10, y: 5)
+          clicker.right_click(x: 10, y: 5)
           expect(@session).to have_text(/clicked at 110,105/)
         end
 
         it 'should offset outside the element' do
-          @clicker.right_click(x: -15, y: -10)
+          clicker.right_click(x: -15, y: -10)
           expect(@session).to have_text(/clicked at 85,90/)
         end
 
         it 'should default to click the middle' do
-          @clicker.right_click
+          clicker.right_click
           expect(@session).to have_text(/clicked at 150,150/)
         end
       end
@@ -1004,17 +1013,17 @@ Capybara::SpecHelper.spec 'node' do
         end
 
         it 'should offset from center of element' do
-          @clicker.right_click(x: 10, y: 5)
+          clicker.right_click(x: 10, y: 5)
           expect(@session).to have_text(/clicked at 160,155/)
         end
 
         it 'should offset outside from center of element' do
-          @clicker.right_click(x: -65, y: -60)
+          clicker.right_click(x: -65, y: -60)
           expect(@session).to have_text(/clicked at 85,90/)
         end
 
         it 'should default to click the middle' do
-          @clicker.right_click
+          clicker.right_click
           expect(@session).to have_text(/clicked at 150,150/)
         end
       end
