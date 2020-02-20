@@ -49,7 +49,6 @@ RSpec.describe Capybara::Selector::RegexpDisassembler, :aggregate_failures do
   end
 
   it 'handles optional characters for #alternated_substrings' do
-    # rubocop:disable Style/BracesAroundHashParameters
     verify_alternated_strings(
       {
         /abc*def/ => [%w[ab def]],
@@ -62,7 +61,6 @@ RSpec.describe Capybara::Selector::RegexpDisassembler, :aggregate_failures do
         /d?/ => []
       }
     )
-    # rubocop:enable Style/BracesAroundHashParameters
   end
 
   it 'handles character classes' do
@@ -140,7 +138,6 @@ RSpec.describe Capybara::Selector::RegexpDisassembler, :aggregate_failures do
   end
 
   it 'handles alternation for #alternated_substrings' do
-    # rubocop:disable Style/BracesAroundHashParameters
     verify_alternated_strings(
       {
         /abc|def/ => [%w[abc], %w[def]],
@@ -173,7 +170,6 @@ RSpec.describe Capybara::Selector::RegexpDisassembler, :aggregate_failures do
         /ab\\?cd/ => [%w[abcd], %w[ab\cd]]
       }
     )
-    # rubocop:enable Style/BracesAroundHashParameters
   end
 
   it 'handles grouping' do

@@ -115,6 +115,15 @@ Style/IfUnlessModifier:
   Exclude:
     - 'spec/**/*'
 
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
 Layout/EmptyLineBetweenDefs:
   AllowAdjacentOneLineDefs: true
 
