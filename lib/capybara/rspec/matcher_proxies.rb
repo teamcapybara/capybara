@@ -2,17 +2,17 @@
 
 module Capybara
   module RSpecMatcherProxies
-    def all(*args, &block)
+    def all(*args, **kwargs, &block)
       if defined?(::RSpec::Matchers::BuiltIn::All) && args.first.respond_to?(:matches?)
         ::RSpec::Matchers::BuiltIn::All.new(*args)
       else
-        find_all(*args, &block)
+        find_all(*args, **kwargs, &block)
       end
     end
 
-    def within(*args, &block)
+    def within(*args, **kwargs, &block)
       if block_given?
-        within_element(*args, &block)
+        within_element(*args, **kwargs, &block)
       else
         be_within(*args)
       end
