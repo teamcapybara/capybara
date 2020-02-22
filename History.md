@@ -4,6 +4,8 @@ Release date: unreleased
 ### Fixed
 
 * Result#[] and negative max on ranges (Issue #2302/2303) [Jeremy Evans]
+* RackTest form submission rewrites query string when using GET method
+* Ruby 2.7 deprecation warnings in RSpec matcher proxies
 
 # Version 3.31.0
 Release date: 2020-01-26
