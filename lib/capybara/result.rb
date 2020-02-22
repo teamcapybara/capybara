@@ -123,7 +123,7 @@ module Capybara
                 << full_results.map(&:text).map(&:inspect).join(', ')
       end
       unless rest.empty?
-        elements = rest.map { |el| el.text rescue '<<ERROR>>' }.map(&:inspect).join(', ') # rubocop:disable Style/RescueModifier
+        elements = rest.map { |el| (el.text rescue '<<ERROR>>').inspect }.join(', ') # rubocop:disable Style/RescueModifier
         message << '. Also found ' << elements << ', which matched the selector but not all filters. '
         message << @filter_errors.join('. ') if (rest.size == 1) && count.zero?
       end

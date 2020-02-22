@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Capybara::Selector::RegexpDisassembler, :aggregate_failures do
+RSpec.describe Capybara::Selector::RegexpDisassembler, :focus_, :aggregate_failures do
   it 'handles strings' do
     verify_strings(
       /abcdef/ => %w[abcdef],

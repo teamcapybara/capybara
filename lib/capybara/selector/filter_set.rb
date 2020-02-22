@@ -42,9 +42,9 @@ module Capybara
       def description(node_filters: true, expression_filters: true, **options)
         opts = options_with_defaults(options)
         description = +''
-        description << undeclared_descriptions.map { |desc| desc.call(**opts).to_s }.join
-        description << expression_filter_descriptions.map { |desc| desc.call(**opts).to_s }.join if expression_filters
-        description << node_filter_descriptions.map { |desc| desc.call(**opts).to_s }.join if node_filters
+        description << undeclared_descriptions.map { |desc| desc.call(**opts) }.join
+        description << expression_filter_descriptions.map { |desc| desc.call(**opts) }.join if expression_filters
+        description << node_filter_descriptions.map { |desc| desc.call(**opts) }.join if node_filters
         description
       end
 

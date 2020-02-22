@@ -22,10 +22,12 @@ module Capybara
             [attribute_conditions(name => value)]
           end
 
-          ::Capybara::Selector::CSS.split(css).map do |sel|
-            next sel if conditions.empty?
-
-            conditions.map { |cond| sel + cond }.join(', ')
+          ::Capybara::Selector::CSS.split(css).tap do |sels|
+            unless conditions.empty?
+              sels.map! do |sel|
+                conditions.map { |cond| sel + cond }.join(', ')
+              end
+            end
           end.join(', ')
         end
       end
@@ -75,8 +77,8 @@ module Capybara
           end
         else
           cls = Array(classes).group_by { |cl| cl.match?(/^!(?!!!)/) }
-          [(cls[false].to_a.map { |cl| ".#{Capybara::Selector::CSS.escape(cl.sub(/^!!/, ''))}" } +
-          cls[true].to_a.map { |cl| ":not(.#{Capybara::Selector::CSS.escape(cl.slice(1..-1))})" }).join]
+          [(cls[false].to_a.map! { |cl| ".#{Capybara::Selector::CSS.escape(cl.sub(/^!!/, ''))}" } +
+          cls[true].to_a.map! { |cl| ":not(.#{Capybara::Selector::CSS.escape(cl.slice(1..-1))})" }).join]
         end
       end
     end

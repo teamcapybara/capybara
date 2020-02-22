@@ -341,8 +341,9 @@ module Capybara
 
         return if unhandled_options.empty?
 
-        invalid_names = unhandled_options.map(&:inspect).join(', ')
-        valid_names = (valid_keys - [:allow_self]).map(&:inspect).join(', ')
+        invalid_names, valid_names = [unhandled_options, valid_keys - [:allow_self]].map do |keys|
+          keys.map(&:inspect).join(', ')
+        end
         raise ArgumentError, "Invalid option(s) #{invalid_names}, should be one of #{valid_names}"
       end
 

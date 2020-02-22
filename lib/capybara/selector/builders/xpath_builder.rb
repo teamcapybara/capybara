@@ -60,8 +60,8 @@ module Capybara
       def regexp_to_xpath_conditions(regexp)
         condition = XPath.current
         condition = condition.uppercase if regexp.casefold?
-        Selector::RegexpDisassembler.new(regexp).alternated_substrings.map do |strs|
-          strs.map { |str| condition.contains(str) }.reduce(:&)
+        Selector::RegexpDisassembler.new(regexp).alternated_substrings.map! do |strs|
+          strs.map! { |str| condition.contains(str) }.reduce(:&)
         end.reduce(:|)
       end
     end
