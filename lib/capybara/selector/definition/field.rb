@@ -62,20 +62,6 @@ Capybara.add_selector(:field, locator_type: [String, Symbol], supports_exact: tr
 
   filter_set(:_field) # checked/unchecked/disabled/multiple/name/placeholder
 
-  expression_filter(:name) do |expr, val|
-    if default_format == :css
-      ::Capybara::Selector::CSSBuilder.new(expr).add_attribute_conditions(name: val)
-    else
-      expr[XPath.attr(:name) == val]
-    end
-  end
-  expression_filter(:placeholder) do |expr, val|
-    if default_format == :css
-      ::Capybara::Selector::CSSBuilder.new(expr).add_attribute_conditions(placeholder: val)
-    else
-      expr[XPath.attr(:placeholder) == val]
-    end
-  end
   expression_filter(:readonly, :boolean, format: :css) do |expr, val|
     ::Capybara::Selector::CSS.split(expr).map do |css_fragment|
       if val
