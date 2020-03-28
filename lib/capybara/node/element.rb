@@ -165,6 +165,7 @@ module Capybara
       #       offset will be from the element center, otherwise it will be from the top left corner of the element
       #     @option options [Integer] y  Y coordinate to offset the click location. If {Capybara.configure w3c_click_offset} is `true` the
       #       offset will be from the element center, otherwise it will be from the top left corner of the element
+      # @option options [Float] delay  Delay between the mouse down and mouse up events in seconds (0)
       # @return [Capybara::Node::Element]  The element
       def click(*keys, **options)
         perform_click_action(keys, **options) do |k, opts|
@@ -178,6 +179,7 @@ module Capybara
       #
       # @macro action_waiting_behavior
       # @macro click_modifiers
+      # @option options [Float] delay  Delay between the mouse down and mouse up events in seconds (0)
       # @return [Capybara::Node::Element]  The element
       def right_click(*keys, **options)
         perform_click_action(keys, **options) do |k, opts|

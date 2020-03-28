@@ -85,7 +85,7 @@ private
     (driver.options[:native_displayed] != false) && !ENV['DISABLE_CAPYBARA_SELENIUM_OPTIMIZATIONS']
   end
 
-  def click_with_options(click_options)
+  def perform_with_options(click_options)
     # Firefox/marionette has an issue clicking with offset near viewport edge
     # scroll element to middle just in case
     scroll_to_center if click_options.coords?

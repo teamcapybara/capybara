@@ -856,6 +856,15 @@ Capybara::SpecHelper.spec 'node' do
         end
       end
     end
+
+    context 'delay', requires: [:js] do
+      it 'should delay the mouse up' do
+        @session.visit('with_js')
+        @session.find(:css, '#click-test').click(delay: 2)
+        delay = @session.evaluate_script('window.click_delay')
+        expect(delay).to be >= 2
+      end
+    end
   end
 
   describe '#double_click', requires: [:js] do
@@ -1026,6 +1035,15 @@ Capybara::SpecHelper.spec 'node' do
           clicker.right_click
           expect(@session).to have_text(/clicked at 150,150/)
         end
+      end
+    end
+
+    context 'delay', requires: [:js] do
+      it 'should delay the mouse up' do
+        @session.visit('with_js')
+        @session.find(:css, '#click-test').right_click(delay: 2)
+        delay = @session.evaluate_script('window.right_click_delay')
+        expect(delay).to be >= 2
       end
     end
   end

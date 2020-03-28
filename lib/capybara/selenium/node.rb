@@ -104,7 +104,14 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     click_options = ClickOptions.new(keys, options)
     return native.click if click_options.empty?
 
-    click_with_options(click_options)
+    perform_with_options(click_options) do |action|
+      target = click_options.coords? ? nil : native
+      if click_options.delay.zero?
+        action.click(target)
+      else
+        action.click_and_hold(target).pause(action.pointer_inputs.first, click_options.delay).release
+      end
+    end
   rescue StandardError => e
     if e.is_a?(::Selenium::WebDriver::Error::ElementClickInterceptedError) ||
        e.message.match?(/Other element would receive the click/)
@@ -116,14 +123,24 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
 
   def right_click(keys = [], **options)
     click_options = ClickOptions.new(keys, options)
-    click_with_options(click_options) do |action|
-      click_options.coords? ? action.context_click : action.context_click(native)
+    perform_with_options(click_options) do |action|
+      target = click_options.coords? ? nil : native
+      if click_options.delay.zero?
+        action.context_click(target)
+      else
+        action.move_to(target) if target
+        action.pointer_down(:right)
+              .pause(action.pointer_inputs.first, click_options.delay)
+              .pointer_up(:right)
+      end
     end
   end
 
   def double_click(keys = [], **options)
     click_options = ClickOptions.new(keys, options)
-    click_with_options(click_options) do |action|
+    raise ArgumentError, "double_click doesn't support a delay option" unless click_options.delay.zero?
+
+    perform_with_options(click_options) do |action|
       click_options.coords? ? action.double_click : action.double_click(native)
     end
   end
@@ -264,7 +281,9 @@ private
     end
   end
 
-  def click_with_options(click_options)
+  def perform_with_options(click_options, &block)
+    raise ArgumentError, 'A block must be provided' unless block
+
     scroll_if_needed do
       action_with_modifiers(click_options) do |action|
         if block_given?
@@ -550,7 +569,11 @@ private
     end
 
     def empty?
-      keys.empty? && !coords?
+      keys.empty? && !coords? && delay.zero?
+    end
+
+    def delay
+      options[:delay] || 0
     end
   end
   private_constant :ClickOptions
