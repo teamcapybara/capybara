@@ -47,6 +47,15 @@ Capybara::SpecHelper.spec '#fill_in' do
     expect(extract_results(@session)['description']).to eq('Texty text')
   end
 
+  it 'should fill in a textarea in a reasonable time by default' do
+    textarea = @session.find(:fillable_field, 'form[description]')
+    value = 'a' * 4000
+    start = Time.now
+    textarea.fill_in(with: value)
+    expect(Time.now.to_f).to be_within(0.25).of start.to_f
+    expect(textarea.value).to eq value
+  end
+
   it 'should fill in a password field by id' do
     @session.fill_in('form_password', with: 'supasikrit')
     @session.click_button('awesome')

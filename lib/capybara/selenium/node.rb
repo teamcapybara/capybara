@@ -242,7 +242,7 @@ private
     find_xpath(XPath.ancestor(:select)[1]).first
   end
 
-  def set_text(value, clear: nil, **_unused)
+  def set_text(value, clear: nil, rapid: nil, **_unused)
     value = value.to_s
     if value.empty? && clear.nil?
       native.clear
@@ -254,7 +254,13 @@ private
       send_keys(*clear, value)
     else
       driver.execute_script 'arguments[0].select()', self unless clear == :none
-      send_keys(value)
+      if rapid == true || (value.length > 50 && rapid != false)
+        send_keys(value[0..3])
+        driver.execute_script 'arguments[0].value += arguments[1]', self, value[4...-3]
+        send_keys(value[-3..-1])
+      else
+        send_keys(value)
+      end
     end
   end
 
