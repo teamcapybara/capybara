@@ -109,7 +109,13 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       if click_options.delay.zero?
         action.click(target)
       else
-        action.click_and_hold(target).pause(action.pointer_inputs.first, click_options.delay).release
+        action.click_and_hold(target)
+        if w3c?
+          action.pause(action.pointer_inputs.first, click_options.delay)
+        else
+          action.pause(click_options.delay)
+        end
+        action.release
       end
     end
   rescue StandardError => e
@@ -127,11 +133,13 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       target = click_options.coords? ? nil : native
       if click_options.delay.zero?
         action.context_click(target)
-      else
+      elsif w3c?
         action.move_to(target) if target
         action.pointer_down(:right)
               .pause(action.pointer_inputs.first, click_options.delay)
               .pointer_up(:right)
+      else
+        raise ArgumentError, 'Delay is not supported when right clicking with legacy (non-w3c) selenium driver'
       end
     end
   end
