@@ -193,6 +193,17 @@ Capybara::SpecHelper.spec '#click_button' do
     end
   end
 
+  context 'when Capybara.enable_aria_button_role = true' do
+    it 'should click on a button role', requires: [:js] do
+      Capybara.enable_aria_button_role = true
+      @session.using_wait_time(1.5) do
+        @session.visit('/with_js')
+        @session.click_button('ARIA button')
+        expect(@session).to have_button('ARIA button has been clicked')
+      end
+    end
+  end
+
   context 'with fields associated with the form using the form attribute', requires: [:form_attribute] do
     let(:results) { extract_results(@session) }
 

@@ -30,6 +30,7 @@ module Capybara
         Capybara.visible_text_only = false
         Capybara.match = :smart
         Capybara.enable_aria_label = false
+        Capybara.enable_aria_button_role = false
         Capybara.default_set_options = {}
         Capybara.disable_animation = false
         Capybara.test_id = nil
