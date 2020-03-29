@@ -3,10 +3,8 @@ Relesae date: unreleased
 
 ### Added
 
-* Support `delay` setting on click and right_click with Selenium
-
-# Version 3.31.1
-Release date: unreleased
+* Support `delay` setting on click with Selenium
+* Implement rapid set for values longer thn 30 characters in text fields with Selenium
 
 ### Fixed
 

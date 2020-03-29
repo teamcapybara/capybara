@@ -279,7 +279,7 @@ private
       send_keys(*clear, value)
     else
       driver.execute_script 'arguments[0].select()', self unless clear == :none
-      if rapid == true || (value.length > 50 && rapid != false)
+      if rapid == true || (value.length > 30 && rapid != false)
         send_keys(value[0..3])
         driver.execute_script 'arguments[0].value += arguments[1]', self, value[4...-3]
         send_keys(value[-3..-1])
