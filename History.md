@@ -1,3 +1,10 @@
+# Version 3.32.0
+Relesae date: unreleased
+
+### Added
+
+* Support `delay` setting on click and right_click with Selenium
+
 # Version 3.31.1
 Release date: unreleased
 

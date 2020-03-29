@@ -62,6 +62,8 @@ Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_REMOTE_DRIVER.to_s, 
        'Capybara::Session selenium_chrome_remote #attach_file with multipart form should fire change once for each set of files uploaded',
        'Capybara::Session selenium_chrome_remote #attach_file with multipart form should fire change once when uploading multiple files from empty'
     pending "Selenium with Remote Chrome doesn't support multiple file upload" unless selenium_gte?(3.14)
+  when /node #right_click delay should delay the mouse up/
+    skip "Legacy selenium doesn't support separate right button down/up" if ENV['W3C'] == 'false'
   end
 end
 

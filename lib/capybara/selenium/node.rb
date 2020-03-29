@@ -104,7 +104,20 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     click_options = ClickOptions.new(keys, options)
     return native.click if click_options.empty?
 
-    click_with_options(click_options)
+    perform_with_options(click_options) do |action|
+      target = click_options.coords? ? nil : native
+      if click_options.delay.zero?
+        action.click(target)
+      else
+        action.click_and_hold(target)
+        if w3c?
+          action.pause(action.pointer_inputs.first, click_options.delay)
+        else
+          action.pause(click_options.delay)
+        end
+        action.release
+      end
+    end
   rescue StandardError => e
     if e.is_a?(::Selenium::WebDriver::Error::ElementClickInterceptedError) ||
        e.message.match?(/Other element would receive the click/)
@@ -116,14 +129,26 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
 
   def right_click(keys = [], **options)
     click_options = ClickOptions.new(keys, options)
-    click_with_options(click_options) do |action|
-      click_options.coords? ? action.context_click : action.context_click(native)
+    perform_with_options(click_options) do |action|
+      target = click_options.coords? ? nil : native
+      if click_options.delay.zero?
+        action.context_click(target)
+      elsif w3c?
+        action.move_to(target) if target
+        action.pointer_down(:right)
+              .pause(action.pointer_inputs.first, click_options.delay)
+              .pointer_up(:right)
+      else
+        raise ArgumentError, 'Delay is not supported when right clicking with legacy (non-w3c) selenium driver'
+      end
     end
   end
 
   def double_click(keys = [], **options)
     click_options = ClickOptions.new(keys, options)
-    click_with_options(click_options) do |action|
+    raise ArgumentError, "double_click doesn't support a delay option" unless click_options.delay.zero?
+
+    perform_with_options(click_options) do |action|
       click_options.coords? ? action.double_click : action.double_click(native)
     end
   end
@@ -264,7 +289,9 @@ private
     end
   end
 
-  def click_with_options(click_options)
+  def perform_with_options(click_options, &block)
+    raise ArgumentError, 'A block must be provided' unless block
+
     scroll_if_needed do
       action_with_modifiers(click_options) do |action|
         if block_given?
@@ -413,6 +440,15 @@ private
     browser.action
   end
 
+  def capabilities
+    browser.capabilities
+  end
+
+  def w3c?
+    (defined?(Selenium::WebDriver::VERSION) && (Selenium::WebDriver::VERSION.to_f >= 4)) ||
+      capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
+  end
+
   def normalize_keys(keys)
     keys.map do |key|
       case key
@@ -550,7 +586,11 @@ private
     end
 
     def empty?
-      keys.empty? && !coords?
+      keys.empty? && !coords? && delay.zero?
+    end
+
+    def delay
+      options[:delay] || 0
     end
   end
   private_constant :ClickOptions
