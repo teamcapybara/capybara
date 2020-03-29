@@ -92,11 +92,6 @@ private
     end
   end
 
-  def w3c?
-    (defined?(Selenium::WebDriver::VERSION) && (Selenium::WebDriver::VERSION.to_f >= 4)) ||
-      capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
-  end
-
   def browser_version(to_float = true)
     caps = capabilities
     ver = (caps[:browser_version] || caps[:version])
@@ -114,10 +109,6 @@ private
 
   def chromedriver_version
     capabilities['chrome']['chromedriverVersion'].split(' ')[0]
-  end
-
-  def capabilities
-    driver.browser.capabilities
   end
 
   def native_displayed?

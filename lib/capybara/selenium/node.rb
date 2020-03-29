@@ -440,6 +440,15 @@ private
     browser.action
   end
 
+  def capabilities
+    browser.capabilities
+  end
+
+  def w3c?
+    (defined?(Selenium::WebDriver::VERSION) && (Selenium::WebDriver::VERSION.to_f >= 4)) ||
+      capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
+  end
+
   def normalize_keys(keys)
     keys.map do |key|
       case key
