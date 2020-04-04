@@ -46,7 +46,7 @@ module Capybara::Selenium::Driver::W3CFirefoxDriver
       begin
         # Firefox 68 hangs if we try to switch windows while a modal is visible
         browser.switch_to.alert&.dismiss
-      rescue Selenium::WebDriver::Error::NoSuchAlertError # rubocop:disable Lint/SuppressedException
+      rescue Selenium::WebDriver::Error::NoSuchAlertError
         # Swallow
       end
     end
@@ -61,7 +61,7 @@ module Capybara::Selenium::Driver::W3CFirefoxDriver
     accept_modal :confirm, wait: 0.1 do
       super
     end
-  rescue Capybara::ModalNotFound # rubocop:disable Lint/SuppressedException
+  rescue Capybara::ModalNotFound
     # No modal was opened - page has refreshed - ignore
   end
 
