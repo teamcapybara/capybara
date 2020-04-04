@@ -279,14 +279,18 @@ private
       send_keys(*clear, value)
     else
       driver.execute_script 'arguments[0].select()', self unless clear == :none
-      if rapid == true || (value.length > 30 && rapid != false)
+      if rapid == true || ((value.length > auto_rapid_set_length) && rapid != false)
         send_keys(value[0..3])
-        driver.execute_script RAPID_SET_TEXT, self, value[4...-3]
+        driver.execute_script RAPID_SET_TEXT, self, value[0...-3]
         send_keys(value[-3..-1])
       else
         send_keys(value)
       end
     end
+  end
+
+  def auto_rapid_set_length
+    30
   end
 
   def perform_with_options(click_options, &block)
@@ -531,9 +535,8 @@ private
   JS
 
   RAPID_SET_TEXT = <<~'JS'
-    (function(el, val) {
-      var value = el.value + val;
-      if (el.maxLength != -1){
+    (function(el, value) {
+      if (el.maxLength && el.maxLength != -1){
         value = value.slice(0, el.maxLength);
       }
       el.value = value;
