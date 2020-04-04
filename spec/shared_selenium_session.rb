@@ -455,7 +455,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           end
         end
 
-        it  'works with rapid fill' do
+        it 'works with rapid fill' do
           skip "This test doesn't support older browsers" if ie?(session)
 
           session.visit 'react'
@@ -464,8 +464,6 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           session.fill_in('Name:', with: long_string)
           session.accept_prompt "A name was submitted: #{long_string}" do
             session.click_button('Submit')
-            require 'byebug'
-            byebug
           end
         end
       end

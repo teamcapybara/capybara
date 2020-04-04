@@ -1,5 +1,13 @@
+# Version 3.32.1
+Release date: unreleased
+
+### Fixed
+
+* Rapid set now respects field maxlength (Issue #2332)
+* Only path pause into legacy actions in Selenium < 4 (Issue #2334)
+
 # Version 3.32.0
-Relesae date: 2020-03-29
+Release date: 2020-03-29
 
 ### Added
 
