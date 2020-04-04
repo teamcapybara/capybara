@@ -237,7 +237,7 @@ protected
     JS
     begin
       driver.execute_script(script, self)
-    rescue StandardError # rubocop:disable Lint/SuppressedException
+    rescue StandardError
       # Swallow error if scrollIntoView with options isn't supported
     end
   end
@@ -279,14 +279,18 @@ private
       send_keys(*clear, value)
     else
       driver.execute_script 'arguments[0].select()', self unless clear == :none
-      if rapid == true || (value.length > 30 && rapid != false)
+      if rapid == true || ((value.length > auto_rapid_set_length) && rapid != false)
         send_keys(value[0..3])
-        driver.execute_script 'arguments[0].value += arguments[1]', self, value[4...-3]
+        driver.execute_script RAPID_SET_TEXT, self, value[0...-3]
         send_keys(value[-3..-1])
       else
         send_keys(value)
       end
     end
+  end
+
+  def auto_rapid_set_length
+    30
   end
 
   def perform_with_options(click_options, &block)
@@ -528,6 +532,15 @@ private
 
       return { x: px, y: py };
     })(arguments[0], arguments[1], arguments[2])
+  JS
+
+  RAPID_SET_TEXT = <<~'JS'
+    (function(el, value) {
+      if (el.maxLength && el.maxLength != -1){
+        value = value.slice(0, el.maxLength);
+      }
+      el.value = value;
+    })(arguments[0], arguments[1])
   JS
 
   # SettableValue encapsulates time/date field formatting

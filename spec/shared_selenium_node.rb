@@ -35,6 +35,16 @@ RSpec.shared_examples 'Capybara::Node' do |session, _mode|
     end
   end
 
+  describe '#set' do
+    it 'respects maxlength when using rapid set' do
+      session.visit('/form')
+      inp = session.find(:css, '#long_length')
+      value = (0...50).map { |i| ((i % 26) + 65).chr }.join
+      inp.set(value, rapid: true)
+      expect(inp.value).to eq value[0...35]
+    end
+  end
+
   describe '#visible?' do
     let(:bridge) do
       session.driver.browser.send(:bridge)

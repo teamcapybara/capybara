@@ -241,7 +241,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def quit
     @browser&.quit
-  rescue Selenium::WebDriver::Error::SessionNotCreatedError, Errno::ECONNREFUSED # rubocop:disable Lint/SuppressedException
+  rescue Selenium::WebDriver::Error::SessionNotCreatedError, Errno::ECONNREFUSED
     # Browser must have already gone
   rescue Selenium::WebDriver::Error::UnknownError => e
     unless silenced_unknown_error_message?(e.message) # Most likely already gone
@@ -293,7 +293,7 @@ private
   def clear_browser_state
     delete_all_cookies
     clear_storage
-  rescue *clear_browser_state_errors # rubocop:disable Lint/SuppressedException
+  rescue *clear_browser_state_errors
     # delete_all_cookies fails when we've previously gone
     # to about:blank, so we rescue this error and do nothing
     # instead.
@@ -317,7 +317,7 @@ private
   def clear_storage
     clear_session_storage unless options[:clear_session_storage] == false
     clear_local_storage unless options[:clear_local_storage] == false
-  rescue Selenium::WebDriver::Error::JavascriptError # rubocop:disable Lint/SuppressedException
+  rescue Selenium::WebDriver::Error::JavascriptError
     # session/local storage may not be available if on non-http pages (e.g. about:blank)
   end
 
@@ -353,7 +353,7 @@ private
     @browser.navigate.to(url)
     sleep 0.1 # slight wait for alert
     @browser.switch_to.alert.accept
-  rescue modal_error # rubocop:disable Lint/SuppressedException
+  rescue modal_error
     # alert now gone, should mean navigation happened
   end
 

@@ -62,6 +62,12 @@ Lint/UnusedMethodArgument:
     - 'lib/capybara/driver/base.rb'
     - 'lib/capybara/driver/node.rb'
 
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
 
