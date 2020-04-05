@@ -42,7 +42,7 @@ class Capybara::Selenium::FirefoxNode < Capybara::Selenium::Node
 
   def send_keys(*args)
     # https://github.com/mozilla/geckodriver/issues/846
-    return super(*args.map { |arg| arg == :space ? ' ' : arg }) if args.none? { |arg| arg.is_a? Array }
+    return super(*args.map { |arg| arg == :space ? ' ' : arg }) if args.none?(Array)
 
     native.click
     _send_keys(args).perform

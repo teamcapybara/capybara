@@ -34,7 +34,7 @@ module Capybara
     private
 
       def stringify_keys(hsh)
-        hsh.each_with_object({}) { |(k, v), str_keys| str_keys[k.to_s] = v }
+        hsh.transform_keys(&:to_s)
       end
 
       def valid_keys

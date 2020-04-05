@@ -43,7 +43,7 @@ Capybara.add_selector(:table, locator_type: [String, Symbol]) do
   end
 
   expression_filter(:cols, valid_values: [Array]) do |xpath, cols|
-    raise ArgumentError, ':cols must be an Array of Arrays' unless cols.all? { |col| col.is_a? Array }
+    raise ArgumentError, ':cols must be an Array of Arrays' unless cols.all?(Array)
 
     rows = cols.transpose
     col_conditions = rows.map { |row| match_row(row, match_size: true) }.reduce(:&)

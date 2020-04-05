@@ -189,7 +189,7 @@ module Capybara
       def describe_all_expression_filters(**opts)
         expression_filters.map do |ef_name, ef|
           if ef.matcher?
-            handled_custom_keys(ef, opts.keys).map { |key| " with #{ef_name}[#{key} => #{opts[key]}]" }.join
+            handled_custom_options(ef, opts).map { |option, value| " with #{ef_name}[#{option} => #{value}]" }.join
           elsif opts.key?(ef_name)
             " with #{ef_name} #{opts[ef_name]}"
           end
@@ -251,9 +251,9 @@ module Capybara
 
     private
 
-      def handled_custom_keys(filter, keys)
-        keys.select do |key|
-          filter.handles_option?(key) && !::Capybara::Queries::SelectorQuery::VALID_KEYS.include?(key)
+      def handled_custom_options(filter, options)
+        options.select do |option, _|
+          filter.handles_option?(option) && !::Capybara::Queries::SelectorQuery::VALID_KEYS.include?(option)
         end
       end
 
