@@ -81,7 +81,7 @@ module Capybara
     # - **default_selector** (`:css`, `:xpath` = `:css`) - Methods which take a selector use the given type by default. See also {Capybara::Selector}.
     # - **default_set_options** (Hash = `{}`) - The default options passed to {Capybara::Node::Element#set Element#set}.
     # - **enable_aria_label** (Boolean = `false`) - Whether fields, links, and buttons will match against `aria-label` attribute.
-    # - **enable_aria_button_role** (Boolean = `false`) - Buttons will match against element that has `role="button"` attribute.
+    # - **enable_aria_role** (Boolean = `false`) - Selectors will check for relevant aria role (currently only `button`).
     # - **exact** (Boolean = `false`) - Whether locators are matched exactly or with substrings. Only affects selector conditions
     #   written using the `XPath#is` method.
     # - **exact_text** (Boolean = `false`) - Whether the text matchers and `:text` filter match exactly or on substrings.
@@ -502,7 +502,7 @@ Capybara.configure do |config|
   config.visible_text_only = false
   config.automatic_label_click = false
   config.enable_aria_label = false
-  config.enable_aria_button_role = false
+  config.enable_aria_role = false
   config.reuse_server = true
   config.default_set_options = {}
   config.test_id = nil

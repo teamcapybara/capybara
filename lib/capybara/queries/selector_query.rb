@@ -14,7 +14,7 @@ module Capybara
       def initialize(*args,
                      session_options:,
                      enable_aria_label: session_options.enable_aria_label,
-                     enable_aria_button_role: session_options.enable_aria_button_role,
+                     enable_aria_role: session_options.enable_aria_role,
                      test_id: session_options.test_id,
                      selector_format: nil,
                      order: nil,
@@ -33,7 +33,7 @@ module Capybara
           find_selector(args[0].is_a?(Symbol) ? args.shift : args[0]),
           config: {
             enable_aria_label: enable_aria_label,
-            enable_aria_button_role: enable_aria_button_role,
+            enable_aria_role: enable_aria_role,
             test_id: test_id
           },
           format: selector_format

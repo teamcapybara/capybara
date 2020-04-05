@@ -40,12 +40,12 @@ Capybara::SpecHelper.spec '#has_button?' do
     expect(@session).not_to have_button('awe123', type: 'reset')
   end
 
-  it 'should be true for role=button when enable_aria_button_role: true' do
-    expect(@session).to have_button('ARIA button', enable_aria_button_role: true)
+  it 'should be true for role=button when enable_aria_role: true' do
+    expect(@session).to have_button('ARIA button', enable_aria_role: true)
   end
 
-  it 'should be false for role=button when enable_aria_button_role: false' do
-    expect(@session).not_to have_button('ARIA button', enable_aria_button_role: false)
+  it 'should be false for role=button when enable_aria_role: false' do
+    expect(@session).not_to have_button('ARIA button', enable_aria_role: false)
   end
 end
 
@@ -75,11 +75,11 @@ Capybara::SpecHelper.spec '#has_no_button?' do
     expect(@session).to have_no_button('Disabled button', disabled: false)
   end
 
-  it 'should be true for role=button when enable_aria_button_role: false' do
-    expect(@session).to have_no_button('ARIA button', enable_aria_button_role: false)
+  it 'should be true for role=button when enable_aria_role: false' do
+    expect(@session).to have_no_button('ARIA button', enable_aria_role: false)
   end
 
-  it 'should be false for role=button when enable_aria_button_role: true' do
-    expect(@session).not_to have_no_button('ARIA button', enable_aria_button_role: true)
+  it 'should be false for role=button when enable_aria_role: true' do
+    expect(@session).not_to have_no_button('ARIA button', enable_aria_role: true)
   end
 end

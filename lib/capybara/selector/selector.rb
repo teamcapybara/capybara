@@ -48,8 +48,8 @@ module Capybara
       @config[:enable_aria_label]
     end
 
-    def enable_aria_button_role
-      @config[:enable_aria_button_role]
+    def enable_aria_role
+      @config[:enable_aria_role]
     end
 
     def test_id

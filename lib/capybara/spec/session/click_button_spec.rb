@@ -193,9 +193,9 @@ Capybara::SpecHelper.spec '#click_button' do
     end
   end
 
-  context 'when Capybara.enable_aria_button_role = true' do
+  context 'when Capybara.enable_aria_role = true' do
     it 'should click on a button role', requires: [:js] do
-      Capybara.enable_aria_button_role = true
+      Capybara.enable_aria_role = true
       @session.using_wait_time(1.5) do
         @session.visit('/with_js')
         @session.click_button('ARIA button')

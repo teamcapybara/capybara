@@ -4,7 +4,7 @@ Capybara.add_selector(:button, locator_type: [String, Symbol]) do
   xpath(:value, :title, :type, :name) do |locator, **options|
     input_btn_xpath = XPath.descendant(:input)[XPath.attr(:type).one_of('submit', 'reset', 'image', 'button')]
     btn_xpath = XPath.descendant(:button)
-    btn_xpath = btn_xpath.union(XPath.descendant[XPath.attr(:role).equals('button')]) if enable_aria_button_role
+    btn_xpath = btn_xpath.union(XPath.descendant[XPath.attr(:role).equals('button')]) if enable_aria_role
     image_btn_xpath = XPath.descendant(:input)[XPath.attr(:type) == 'image']
 
     unless locator.nil?
