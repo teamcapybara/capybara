@@ -8,7 +8,7 @@ module Capybara
                  automatic_reload match exact exact_text raise_server_errors visible_text_only
                  automatic_label_click enable_aria_label save_path asset_host default_host app_host
                  server_host server_port server_errors default_set_options disable_animation test_id
-                 predicates_wait default_normalize_ws w3c_click_offset].freeze
+                 predicates_wait default_normalize_ws w3c_click_offset enable_aria_button_role].freeze
 
     attr_accessor(*OPTIONS)
 
@@ -36,6 +36,8 @@ module Capybara
     # @!method automatic_label_click
     #   See {Capybara.configure}
     # @!method enable_aria_label
+    #   See {Capybara.configure}
+    # @!method enable_aria_button_role
     #   See {Capybara.configure}
     # @!method save_path
     #   See {Capybara.configure}
