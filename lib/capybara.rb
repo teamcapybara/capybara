@@ -350,7 +350,8 @@ module Capybara
     #
     # Yield a block using a specific session name or {Capybara::Session} instance.
     #
-    def using_session(name_or_session)
+    def using_session(name_or_session, &block)
+      previous_session = current_session
       previous_session_info = {
         specified_session: specified_session,
         session_name: session_name,
@@ -363,7 +364,12 @@ module Capybara
       else
         self.session_name = name_or_session
       end
-      yield
+
+      if block.arity.zero?
+        yield
+      else
+        yield current_session, previous_session
+      end
     ensure
       self.session_name, self.specified_session = previous_session_info.values_at(:session_name, :specified_session)
       self.current_driver, self.app = previous_session_info.values_at(:current_driver, :app) if threadsafe
