@@ -128,11 +128,11 @@ Capybara::SpecHelper.spec '#has_no_current_path?' do
     # Without ignore_query option
     expect do
       expect(@session).not_to have_current_path('/with_js')
-    end. not_to raise_exception
+    end.not_to raise_exception
 
     # With ignore_query option
     expect do
       expect(@session).not_to have_current_path('/with_js', ignore_query: true)
-    end. not_to raise_exception
+    end.not_to raise_exception
   end
 end

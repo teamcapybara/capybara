@@ -238,6 +238,15 @@ RSpec.describe Capybara::DSL do
       end
       expect(Capybara.current_session).to eq(original_session)
     end
+
+    it 'should pass the new session if block accepts' do
+      original_session = Capybara.current_session
+      Capybara.using_session(:administrator) do |admin_session, prev_session|
+        expect(admin_session).to be(Capybara.current_session)
+        expect(prev_session).to be(original_session)
+        expect(prev_session).not_to be(admin_session)
+      end
+    end
   end
 
   describe '#session_name' do
