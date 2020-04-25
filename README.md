@@ -1056,6 +1056,13 @@ additional info about how the underlying driver can be configured.
   are testing for specific server errors and using multiple sessions make sure to test for the
   errors using the initial session (usually :default)
 
+* If WebMock is enabled, you may encounter a "Too many open files"
+  error. A simple `page.find` call may cause thousands of HTTP requests
+  until the timeout occurs. By default, WebMock will cause each of these
+  requests to spawn a new connection. To work around this problem, you
+  may need to [enable WebMock's `net_http_connect_on_start: true`
+  parameter](https://github.com/bblimke/webmock/blob/master/README.md#connecting-on-nethttpstart).
+
 ## <a name="threadsafe"></a>"Threadsafe" mode
 
 In normal mode most of Capybara's configuration options are global settings which can cause issues
