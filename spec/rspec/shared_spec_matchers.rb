@@ -89,29 +89,29 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
     context 'on a page or node' do
       before do
-        visit('/with_html')
+        session.visit('/with_html')
       end
 
       context 'with should' do
         it 'passes if has_css? returns true' do
-          expect(page).to have_css('h1')
+          expect(session).to have_css('h1')
         end
 
         it 'fails if has_css? returns false' do
           expect do
-            expect(page).to have_css('h1#doesnotexist')
+            expect(session).to have_css('h1#doesnotexist')
           end.to raise_error(/expected to find css "h1#doesnotexist" but there were no matches/)
         end
       end
 
       context 'with should_not' do
         it 'passes if has_no_css? returns true' do
-          expect(page).not_to have_css('h1#doesnotexist')
+          expect(session).not_to have_css('h1#doesnotexist')
         end
 
         it 'fails if has_no_css? returns false' do
           expect do
-            expect(page).not_to have_css('h1')
+            expect(session).not_to have_css('h1')
           end.to raise_error(/expected not to find visible css "h1"/)
         end
       end
@@ -158,29 +158,29 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
     context 'on a page or node' do
       before do
-        visit('/with_html')
+        session.visit('/with_html')
       end
 
       context 'with should' do
         it 'passes if has_xpath? returns true' do
-          expect(page).to have_xpath('//h1')
+          expect(session).to have_xpath('//h1')
         end
 
         it 'fails if has_xpath? returns false' do
           expect do
-            expect(page).to have_xpath("//h1[@id='doesnotexist']")
+            expect(session).to have_xpath("//h1[@id='doesnotexist']")
           end.to raise_error(%r{expected to find xpath "//h1\[@id='doesnotexist'\]" but there were no matches})
         end
       end
 
       context 'with should_not' do
         it 'passes if has_no_xpath? returns true' do
-          expect(page).not_to have_xpath('//h1[@id="doesnotexist"]')
+          expect(session).not_to have_xpath('//h1[@id="doesnotexist"]')
         end
 
         it 'fails if has_no_xpath? returns false' do
           expect do
-            expect(page).not_to have_xpath('//h1')
+            expect(session).not_to have_xpath('//h1')
           end.to raise_error(%r{expected not to find visible xpath "//h1"})
         end
       end
@@ -222,35 +222,35 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
     context 'on a page or node' do
       before do
-        visit('/with_html')
+        session.visit('/with_html')
       end
 
       context 'with should' do
         it 'passes if has_selector? returns true' do
-          expect(page).to have_selector('//h1', text: 'test')
+          expect(session).to have_selector('//h1', text: 'test')
         end
 
         it 'fails if has_selector? returns false' do
           expect do
-            expect(page).to have_selector("//h1[@id='doesnotexist']")
+            expect(session).to have_selector("//h1[@id='doesnotexist']")
           end.to raise_error(%r{expected to find xpath "//h1\[@id='doesnotexist'\]" but there were no matches})
         end
 
         it 'includes text in error message' do
           expect do
-            expect(page).to have_selector('//h1', text: 'wrong text')
+            expect(session).to have_selector('//h1', text: 'wrong text')
           end.to raise_error(%r{expected to find visible xpath "//h1" with text "wrong text" but there were no matches})
         end
       end
 
       context 'with should_not' do
         it 'passes if has_no_css? returns true' do
-          expect(page).not_to have_selector(:css, 'h1#doesnotexist')
+          expect(session).not_to have_selector(:css, 'h1#doesnotexist')
         end
 
         it 'fails if has_no_selector? returns false' do
           expect do
-            expect(page).not_to have_selector(:css, 'h1', text: 'test')
+            expect(session).not_to have_selector(:css, 'h1', text: 'test')
           end.to raise_error(/expected not to find visible css "h1" with text "test"/)
         end
       end
@@ -304,21 +304,21 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
     context 'on a page or node' do
       before do
-        visit('/with_html')
+        session.visit('/with_html')
       end
 
       context 'with should' do
         it 'passes if has_content? returns true' do
-          expect(page).to have_content('This is a test')
+          expect(session).to have_content('This is a test')
         end
 
         it 'passes if has_content? returns true using regexp' do
-          expect(page).to have_content(/test/)
+          expect(session).to have_content(/test/)
         end
 
         it 'fails if has_content? returns false' do
           expect do
-            expect(page).to have_content('No such Text')
+            expect(session).to have_content('No such Text')
           end.to raise_error(/expected to find text "No such Text" in "(.*)This is a test(.*)"/)
         end
 
@@ -329,7 +329,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
           it 'fails if has_content? returns false' do
             expect do
-              expect(page).to have_content('No such Text')
+              expect(session).to have_content('No such Text')
             end.to raise_error(/expected to find text "No such Text" in "(.*)This is a test(.*)"/)
           end
         end
@@ -337,13 +337,25 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
       context 'with should_not' do
         it 'passes if has_no_content? returns true' do
-          expect(page).not_to have_content('No such Text')
+          expect(session).not_to have_content('No such Text')
         end
 
         it 'fails if has_no_content? returns false' do
           expect do
-            expect(page).not_to have_content('This is a test')
+            expect(session).not_to have_content('This is a test')
           end.to raise_error(/expected not to find text "This is a test"/)
+        end
+        
+        it 'not_to have_content behaves the same as to have_no_content' do
+          Capybara.using_wait_time(5) do
+            expect(session).to have_content('This is a test')
+            start = Time.now
+            expect(session).to have_no_content('No such Text')
+            to_time = Time.now
+            expect(session).not_to have_content('No such Text')
+            not_to_time = Time.now
+            expect(not_to_time - to_time).to be_within(0.5).of(to_time - start)
+          end
         end
       end
     end
@@ -432,30 +444,30 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
     context 'on a page or node' do
       before do
-        visit('/with_html')
+        session.visit('/with_html')
       end
 
       context 'with should' do
         it 'passes if has_text? returns true' do
-          expect(page).to have_text('This is a test')
+          expect(session).to have_text('This is a test')
         end
 
         it 'passes if has_text? returns true using regexp' do
-          expect(page).to have_text(/test/)
+          expect(session).to have_text(/test/)
         end
 
         it 'can check for all text' do
-          expect(page).to have_text(:all, 'Some of this text is hidden!')
+          expect(session).to have_text(:all, 'Some of this text is hidden!')
         end
 
         it 'can check for visible text' do
-          expect(page).to have_text(:visible, 'Some of this text is')
-          expect(page).not_to have_text(:visible, 'Some of this text is hidden!')
+          expect(session).to have_text(:visible, 'Some of this text is')
+          expect(session).not_to have_text(:visible, 'Some of this text is hidden!')
         end
 
         it 'fails if has_text? returns false' do
           expect do
-            expect(page).to have_text('No such Text')
+            expect(session).to have_text('No such Text')
           end.to raise_error(/expected to find text "No such Text" in "(.*)This is a test(.*)"/)
         end
 
@@ -466,7 +478,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
           it 'fails if has_text? returns false' do
             expect do
-              expect(page).to have_text('No such Text')
+              expect(session).to have_text('No such Text')
             end.to raise_error(/expected to find text "No such Text" in "(.*)This is a test(.*)"/)
           end
         end
@@ -474,12 +486,12 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
       context 'with should_not' do
         it 'passes if has_no_text? returns true' do
-          expect(page).not_to have_text('No such Text')
+          expect(session).not_to have_text('No such Text')
         end
 
         it 'fails if has_no_text? returns false' do
           expect do
-            expect(page).not_to have_text('This is a test')
+            expect(session).not_to have_text('This is a test')
           end.to raise_error(/expected not to find text "This is a test"/)
         end
       end
@@ -542,15 +554,15 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
     context 'on a page or node' do
       it 'passes if there is such a title' do
-        visit('/with_js')
-        expect(page).to have_title('with_js')
+        session.visit('/with_js')
+        expect(session).to have_title('with_js')
       end
 
       it 'fails if there is no such title' do
-        visit('/with_js')
+        session.visit('/with_js')
         expect do
-          expect(page).to have_title('No such title')
-        end.to raise_error('expected "with_js" to include "No such title"')
+          expect(session).to have_title('No such title')
+        end.to raise_error(/ to include "No such title"/)
       end
 
       context 'with wait' do
@@ -560,14 +572,14 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
         it 'waits if wait time is more than timeout' do
           session.click_link('Change title')
-          using_wait_time 0 do
+          session.using_wait_time 0 do
             expect(session).to have_title('changed title', wait: 2)
           end
         end
 
         it "doesn't wait if wait time is less than timeout" do
           session.click_link('Change title')
-          using_wait_time 3 do
+          session.using_wait_time 3 do
             expect(session).not_to have_title('changed title', wait: 0)
           end
         end
@@ -586,15 +598,15 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
     context 'on a page or node' do
       it 'passes if there is such a current path' do
-        visit('/with_js')
-        expect(page).to have_current_path('/with_js')
+        session.visit('/with_js')
+        expect(session).to have_current_path('/with_js')
       end
 
       it 'fails if there is no such current_path' do
         visit('/with_js')
         expect do
-          expect(page).to have_current_path('/not_with_js')
-        end.to raise_error('expected "/with_js" to equal "/not_with_js"')
+          expect(session).to have_current_path('/not_with_js')
+        end.to raise_error(%r{to equal "/not\_with\_js"})
       end
 
       context 'with wait' do
@@ -604,14 +616,14 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
         it 'waits if wait time is more than timeout' do
           session.click_link('Change page')
-          using_wait_time 0 do
+          session.using_wait_time 0 do
             expect(session).to have_current_path('/with_html', wait: 2)
           end
         end
 
         it "doesn't wait if wait time is less than timeout" do
           session.click_link('Change page')
-          using_wait_time 0 do
+          session.using_wait_time 0 do
             expect(session).not_to have_current_path('/with_html')
           end
         end
@@ -619,8 +631,8 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
     end
 
     it 'supports compounding' do
-      visit('/with_html')
-      expect(page).to have_current_path('/not_with_html').or have_current_path('/with_html')
+      session.visit('/with_html')
+      expect(session).to have_current_path('/not_with_html').or have_current_path('/with_html')
     end
   end
 
@@ -859,7 +871,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
     describe '#and' do
       it "should run 'concurrently'" do
-        Capybara.using_wait_time(2) do
+        session.using_wait_time(2) do
           matcher = have_text('this is not there').and have_text('neither is this')
           expect(Benchmark.realtime do
             expect do
