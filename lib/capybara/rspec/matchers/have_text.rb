@@ -15,7 +15,7 @@ module Capybara
         end
 
         def description
-          "text #{format(text)}"
+          "have text #{format(text)}"
         end
 
         def format(content)
