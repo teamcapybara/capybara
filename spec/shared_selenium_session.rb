@@ -425,7 +425,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       it 'can find html5 svg elements' do
         session.visit('with_html5_svg')
         expect(session).to have_selector(:element, :svg)
-        expect(session).to have_selector(:element, :rect, visible: true)
+        expect(session).to have_selector(:element, :rect, visible: :visible)
         expect(session).to have_selector(:element, :circle)
         expect(session).to have_selector(:element, :linearGradient, visible: :all)
       end

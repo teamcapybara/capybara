@@ -61,12 +61,12 @@ Capybara::SpecHelper.spec '#has_selector?' do
     end
 
     it 'should respect visibility setting' do
-      expect(@session).to have_selector(:id, 'hidden-text', text: 'Some of this text is hidden!', visible: false)
-      expect(@session).not_to have_selector(:id, 'hidden-text', text: 'Some of this text is hidden!', visible: true)
+      expect(@session).to have_selector(:id, 'hidden-text', text: 'Some of this text is hidden!', visible: :all)
+      expect(@session).not_to have_selector(:id, 'hidden-text', text: 'Some of this text is hidden!', visible: :visible)
       Capybara.ignore_hidden_elements = false
-      expect(@session).to have_selector(:id, 'hidden-text', text: 'Some of this text is hidden!', visible: false)
+      expect(@session).to have_selector(:id, 'hidden-text', text: 'Some of this text is hidden!', visible: :all)
       Capybara.visible_text_only = true
-      expect(@session).not_to have_selector(:id, 'hidden-text', text: 'Some of this text is hidden!', visible: true)
+      expect(@session).not_to have_selector(:id, 'hidden-text', text: 'Some of this text is hidden!', visible: :visible)
     end
 
     it 'should discard all matches where the given regexp is not matched' do

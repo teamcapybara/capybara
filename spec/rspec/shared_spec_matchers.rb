@@ -345,7 +345,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
             expect(session).not_to have_content('This is a test')
           end.to raise_error(/expected not to find text "This is a test"/)
         end
-        
+
         it 'not_to have_content behaves the same as to have_no_content' do
           Capybara.using_wait_time(5) do
             expect(session).to have_content('This is a test')
