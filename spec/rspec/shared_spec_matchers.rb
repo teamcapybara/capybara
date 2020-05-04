@@ -265,7 +265,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
   describe 'have_content matcher' do
     it 'gives proper description' do
-      expect(have_content('Text').description).to eq('text "Text"')
+      expect(have_content('Text').description).to eq('have text "Text"')
     end
 
     context 'on a string' do
@@ -369,7 +369,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
   describe 'have_text matcher' do
     it 'gives proper description' do
-      expect(have_text('Text').description).to eq('text "Text"')
+      expect(have_text('Text').description).to eq('have text "Text"')
     end
 
     context 'on a string' do
