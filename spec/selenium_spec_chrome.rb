@@ -70,8 +70,6 @@ Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_DRIVER.to_s, capybar
     pending "Chrome headless doesn't support maximize" if ENV['HEADLESS']
   when /Capybara::Window#fullscreen should be able to fullscreen the window/
     skip 'Chromedriver hangs on attempts to fullscreen in headless mode' if ENV['HEADLESS']
-  when /details non-summary descendants should be non-visible/
-    pending 'Chromedriver built-in is_displayed is currently broken' if ENV['W3C'] == 'false'
   when /node #right_click delay should delay the mouse up/
     skip "Legacy selenium doesn't support separate right button down/up" if ENV['W3C'] == 'false'
   end
