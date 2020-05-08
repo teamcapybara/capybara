@@ -7,7 +7,7 @@ end
 Capybara.register_server :webrick do |app, port, host, **options|
   require 'rack/handler/webrick'
   options = { Host: host, Port: port, AccessLog: [], Logger: WEBrick::Log.new(nil, 0) }.merge(options)
-  Rack::Handler::WEBrick.run(app, options)
+  Rack::Handler::WEBrick.run(app, **options)
 end
 
 Capybara.register_server :puma do |app, port, host, **options|
