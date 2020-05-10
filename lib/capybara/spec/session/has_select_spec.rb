@@ -63,7 +63,7 @@ Capybara::SpecHelper.spec '#has_select?' do
     end
 
     it "should be true even when the selected option invisible, regardless of the select's visibility" do
-      expect(@session).to have_select('Icecream', visible: false, selected: 'Chocolate')
+      expect(@session).to have_select('Icecream', visible: :hidden, selected: 'Chocolate')
       expect(@session).to have_select('Sorbet', selected: 'Vanilla')
     end
   end
@@ -88,7 +88,7 @@ Capybara::SpecHelper.spec '#has_select?' do
     end
 
     it "should be true even when the selected values are invisible, regardless of the select's visibility" do
-      expect(@session).to have_select('Dessert', visible: false, with_options: %w[Pudding Tiramisu])
+      expect(@session).to have_select('Dessert', visible: :hidden, with_options: %w[Pudding Tiramisu])
       expect(@session).to have_select('Cake', with_selected: ['Chocolate Cake', 'Sponge Cake'])
     end
 
@@ -113,7 +113,7 @@ Capybara::SpecHelper.spec '#has_select?' do
     end
 
     it 'should be true even when the options are invisible, if the select itself is invisible' do
-      expect(@session).to have_select('Icecream', visible: false, options: %w[Chocolate Vanilla Strawberry])
+      expect(@session).to have_select('Icecream', visible: :hidden, options: %w[Chocolate Vanilla Strawberry])
     end
   end
 
@@ -158,7 +158,7 @@ Capybara::SpecHelper.spec '#has_select?' do
     end
 
     it 'should be true even when the options are invisible, if the select itself is invisible' do
-      expect(@session).to have_select('Icecream', visible: false, with_options: %w[Vanilla Strawberry])
+      expect(@session).to have_select('Icecream', visible: :hidden, with_options: %w[Vanilla Strawberry])
     end
   end
 
