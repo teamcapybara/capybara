@@ -94,6 +94,7 @@ module Capybara
     # - **save_path** (String = `Dir.pwd`) - Where to put pages saved through {Capybara::Session#save_page save_page}, {Capybara::Session#save_screenshot save_screenshot},
     #   {Capybara::Session#save_and_open_page save_and_open_page}, or {Capybara::Session#save_and_open_screenshot save_and_open_screenshot}.
     # - **server** (Symbol = `:default` (which uses puma)) - The name of the registered server to use when running the app under test.
+    # - **server_port** (Integer) - The port Capybara will run the application server on, if not specified a random port will be used.
     # - **server_errors** (Array\<Class> = `[Exception]`) - Error classes that should be raised in the tests if they are raised in the server
     #   and {configure raise_server_errors} is `true`.
     # - **test_id** (Symbol, String, `nil` = `nil`) - Optional attribute to match locator against with built-in selectors along with id.
