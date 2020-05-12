@@ -15,6 +15,10 @@ Layout/SpaceAroundMethodCallOperator:
   Enabled: true
 Style/ExponentialNotation:
   Enabled: true
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+Style/SlicingWithRange:
+  Enabled: true
 
 Layout/LineLength:
   Description: 'Limit lines to 80 characters.'

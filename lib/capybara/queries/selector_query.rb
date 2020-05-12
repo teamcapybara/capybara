@@ -6,6 +6,7 @@ module Capybara
   module Queries
     class SelectorQuery < Queries::BaseQuery
       attr_reader :expression, :selector, :locator, :options
+
       SPATIAL_KEYS = %i[above below left_of right_of near].freeze
       VALID_KEYS = SPATIAL_KEYS + COUNT_KEYS +
                    %i[text id class style visible obscured exact exact_text normalize_ws match wait filter_set]
@@ -580,6 +581,7 @@ module Capybara
 
       class Rectangle
         attr_reader :top, :bottom, :left, :right
+
         def initialize(position)
           # rubocop:disable Style/RescueModifier
           @top = position['top'] rescue position['y']

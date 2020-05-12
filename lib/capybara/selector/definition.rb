@@ -10,6 +10,7 @@ module Capybara
   class Selector
     class Definition
       attr_reader :name, :expressions
+
       extend Forwardable
 
       def initialize(name, locator_type: nil, raw_locator: false, supports_exact: nil, &block)
