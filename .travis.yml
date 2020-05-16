@@ -4,6 +4,7 @@ notifications:
   webhooks: https://coveralls.io/webhook
 services:
   - docker
+  - xvfb
 rvm:
   - 2.7
   - jruby-9.2.11.1
@@ -148,9 +149,6 @@ before_install:
     fi
 before_script:
   - if [[ -z $HEADLESS && -z $CAPYBARA_REMOTE ]]; then
-      export DISPLAY=:99.0;
-      sh -e /etc/init.d/xvfb start;
-      sleep 1;
       mkdir -p ~/.config/awesome;
       echo "require('awful'); tags = {}; tags[1] = awful.tag({'name'})" > ~/.config/awesome/rc.lua;
       awesome &
