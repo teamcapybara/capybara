@@ -190,23 +190,7 @@ RSpec.describe Capybara::Result do
     end
   end
 
-  context 'lazy select' do
-    it 'is compatible' do
-      # This test will let us know when JRuby fixes lazy select so we can re-enable it in Result
-      pending 'JRuby < 9.2.8.0 has an issue with lazy enumberator evaluation' if jruby_lazy_enumerator_workaround?
-      eval_count = 0
-      enum = %w[Text1 Text2 Text3].lazy.select do
-        eval_count += 1
-        true
-      end
-      expect(eval_count).to eq 0
-      enum.next
-      sleep 1
-      expect(eval_count).to eq 1
-    end
-  end
-
   def jruby_lazy_enumerator_workaround?
-    (RUBY_PLATFORM == 'java') && (Gem::Version.new(JRUBY_VERSION) < Gem::Version.new('9.2.8.0'))
+    RUBY_PLATFORM == 'java'
   end
 end
