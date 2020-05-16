@@ -1,5 +1,5 @@
 language: ruby
-dist: bionic
+sudo: required
 notifications:
   webhooks: https://coveralls.io/webhook
 services:
