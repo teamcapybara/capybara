@@ -5,6 +5,15 @@ Release date: unreleased
 
 * Ruby 2.5.0+ is now required
 
+# Version 3.32.2
+Release date: 2020-05-16
+
+### Fixed
+
+* Don't use lazy enumerator with JRuby due to leaking threads
+* Ruby 2,7 deprecation warning when registering Webrick [Jon Zeppieri]
+* `have_text` description [Juan Pablo Rinaldi]
+
 # Version 3.32.1
 Release date: 2020-04-05
 
