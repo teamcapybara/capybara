@@ -19,6 +19,10 @@ Capybara::SpecHelper.run_specs TestClass.new, 'DSL', capybara_skip: %i[
 end
 
 RSpec.describe Capybara::DSL do
+  before do
+    Capybara.use_default_driver
+  end
+  
   after do
     Capybara.session_name = nil
     Capybara.default_driver = nil
