@@ -17,6 +17,7 @@ env:
     - WD_CACHE_TIME=0
 
 addons:
+  update: true
   chrome: stable
   apt:
     packages:
@@ -105,6 +106,7 @@ matrix:
       rvm: 2.6
       env: CHROME_BETA=true HEADLESS=true
       addons:
+        update: true
         chrome: beta
     - gemfile: Gemfile
       os: osx
