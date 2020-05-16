@@ -1,9 +1,16 @@
 # Version 3.33.0
 Release date: unreleased
 
+### Added
+
+* Block passed to `within_session` now receives the new and old session
+* Support for aria-role button when enabled [Seiei Miyagi]
+* Support for aria-role link when enabled
+
 ### Changed
 
 * Ruby 2.5.0+ is now required
+
 
 # Version 3.32.2
 Release date: 2020-05-16
@@ -11,7 +18,7 @@ Release date: 2020-05-16
 ### Fixed
 
 * Don't use lazy enumerator with JRuby due to leaking threads
-* Ruby 2,7 deprecation warning when registering Webrick [Jon Zeppieri]
+* Ruby 2.7 deprecation warning when registering Webrick [Jon Zeppieri]
 * `have_text` description [Juan Pablo Rinaldi]
 
 # Version 3.32.1
