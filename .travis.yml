@@ -1,10 +1,10 @@
 language: ruby
 sudo: required
-dist: trusty
 notifications:
   webhooks: https://coveralls.io/webhook
 services:
   - docker
+  - xvfb
 rvm:
   - 2.7
   - jruby-9.2.11.1
@@ -17,6 +17,7 @@ env:
     - WD_CACHE_TIME=0
 
 addons:
+  update: true
   chrome: stable
   apt:
     packages:
@@ -105,6 +106,7 @@ matrix:
       rvm: 2.6
       env: CHROME_BETA=true HEADLESS=true
       addons:
+        update: true
         chrome: beta
     - gemfile: Gemfile
       os: osx
@@ -147,9 +149,6 @@ before_install:
     fi
 before_script:
   - if [[ -z $HEADLESS && -z $CAPYBARA_REMOTE ]]; then
-      export DISPLAY=:99.0;
-      sh -e /etc/init.d/xvfb start;
-      sleep 1;
       mkdir -p ~/.config/awesome;
       echo "require('awful'); tags = {}; tags[1] = awful.tag({'name'})" > ~/.config/awesome/rc.lua;
       awesome &
