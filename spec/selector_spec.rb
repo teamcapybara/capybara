@@ -476,7 +476,7 @@ RSpec.describe Capybara do
       end
 
       describe ':link_or_button selector' do
-        around(:all) do |example|
+        around do |example|
           described_class.modify_selector(:link_or_button) do
             expression_filter(:random) { |xpath, _| xpath } # do nothing filter
           end
