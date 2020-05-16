@@ -1,6 +1,6 @@
 language: ruby
 sudo: required
-dist: trusty
+dist: bionic
 notifications:
   webhooks: https://coveralls.io/webhook
 services:
