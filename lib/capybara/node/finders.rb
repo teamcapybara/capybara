@@ -19,7 +19,7 @@ module Capybara
       # @!macro system_filters
       #   @option options [String, Regexp] text      Only find elements which contain this text or match this regexp
       #   @option options [String, Boolean] exact_text
-      #     When String the elements contained text must match exactly, when Boolean controls whether the `text` option must match exactly.
+      #     When String the element's contained text must match exactly, when Boolean controls whether the `text` option must match exactly.
       #     Defaults to {Capybara.configure exact_text}.
       #   @option options [Boolean] normalize_ws
       #     Whether the `text`/`exact_text` options are compared against elment text with whitespace normalized or as returned by the driver.
@@ -40,7 +40,7 @@ module Capybara
       #
       #                                                class:['a', '!b', '!!!c'] # limit to elements with class 'a' and '!c' but not class 'b'
       #
-      #   @option options [String, Regexp, Hash] style  Only find elements with matching style. String and Regexp will be checked against text of the elements `style` attribute, while a Hash will be compared against the elements full style
+      #   @option options [String, Regexp, Hash] style  Only find elements with matching style. String and Regexp will be checked against text of the element's `style` attribute, while a Hash will be compared against the elements full style
       #   @option options [Boolean] exact            Control whether `is` expressions in the given XPath match exactly or partially. Defaults to {Capybara.configure exact}.
       #   @option options [Symbol] match        The matching strategy to use. Defaults to {Capybara.configure match}.
       #
