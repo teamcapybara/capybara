@@ -446,7 +446,7 @@ Capybara::SpecHelper.spec 'node' do
 
     it 'should work with Dragula' do
       @session.visit('/with_dragula')
-      @session.within(:css, '#sortable') do
+      @session.within(:css, '#sortable.ready') do
         src = @session.find('div', text: 'Item 1')
         target = @session.find('div', text: 'Item 3')
         src.drag_to target

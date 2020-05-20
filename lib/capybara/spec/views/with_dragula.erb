@@ -15,7 +15,9 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.js" type="text/javascript"></script>
     <script>
-      dragula([document.getElementById("sortable")]);
+      let container = document.getElementById("sortable");
+      dragula([container]);
+      container.className = "ready"
     </script>
   </body>
 </html>
