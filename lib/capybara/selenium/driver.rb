@@ -85,10 +85,11 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def html
     browser.page_source
-  rescue Selenium::WebDriver::Error::JavascriptError => e
-    return '' if e.match?(/documentElement is null/)
-
-    raise
+  rescue Selenium::WebDriver::Error::JavascriptError => _e
+    # Sometimes remote browser in the middle of the page load reports document.documentElement is null
+    # when extracting html content. Retrying once after page is loaded or trhowing timeout error.
+    wait_for_page_load(Capybara::Helpers.timer(expire_in: 10))
+    browser.page_source
   end
 
   def title
@@ -479,6 +480,14 @@ private
       # the application under test can navigate the browser away from about:blank
       # if the timing is just right. Ensure we are still at about:blank...
       @browser.navigate.to('about:blank') unless current_url == 'about:blank'
+    end
+  end
+
+  def wait_for_page_load(timer)
+    while find_xpath('/html/body').empty?
+      raise Capybara::ExpectationNotMet, 'Timed out waiting for Selenium to load a page' if timer.expired?
+
+      sleep 0.01
     end
   end
 
