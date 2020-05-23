@@ -19,6 +19,8 @@ Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: true
 Style/SlicingWithRange:
   Enabled: true
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
 
 Layout/LineLength:
   Description: 'Limit lines to 80 characters.'
