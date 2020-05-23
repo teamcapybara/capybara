@@ -46,7 +46,7 @@ module Capybara
     end
 
     def edge?(session)
-      browser_name(session).match?(/^edge/)
+      browser_name(session).to_s.start_with?('edge')
     end
 
     def legacy_edge?(session)
