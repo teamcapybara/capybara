@@ -5,6 +5,7 @@ require 'nokogiri'
 require 'xpath'
 require 'forwardable'
 require 'capybara/config'
+require 'capybara/registration_container'
 
 module Capybara
   class CapybaraError < StandardError; end
@@ -126,7 +127,7 @@ module Capybara
     # @yieldreturn [Capybara::Driver::Base]   A Capybara driver instance
     #
     def register_driver(name, &block)
-      drivers[name] = block
+      drivers.send(:register, name, block)
     end
 
     ##
@@ -145,7 +146,7 @@ module Capybara
     # @yieldparam host                        The host/ip to bind to
     #
     def register_server(name, &block)
-      servers[name.to_sym] = block
+      servers.send(:register, name.to_sym, block)
     end
 
     ##
@@ -199,11 +200,11 @@ module Capybara
     end
 
     def drivers
-      @drivers ||= {}
+      @drivers ||= RegistrationContainer.new
     end
 
     def servers
-      @servers ||= {}
+      @servers ||= RegistrationContainer.new
     end
 
     # Wraps the given string, which should contain an HTML document or fragment

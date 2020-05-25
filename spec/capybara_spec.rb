@@ -32,7 +32,7 @@ RSpec.describe Capybara do
         # do nothing
       end
 
-      expect(described_class.servers).to have_key(:blob)
+      expect(described_class.servers[:blob]).to be_truthy
     end
   end
 
