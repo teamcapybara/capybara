@@ -160,6 +160,15 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
                         fill_options: { clear: :none })
         expect(session.find(:fillable_field, 'form_first_name').value).to eq('JohnHarry')
       end
+
+      it 'works with rapid fill' do
+        pending 'Safari overwrites by default - need to figure out a workaround' if safari?(session)
+
+        long_string = (0...60).map { |i| ((i % 26) + 65).chr }.join
+        session.visit('/form')
+        session.fill_in('form_first_name', with: long_string, fill_options: { clear: :none })
+        expect(session.find(:fillable_field, 'form_first_name').value).to eq('John' + long_string)
+      end
     end
 
     describe '#fill_in with Date' do

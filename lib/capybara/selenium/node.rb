@@ -281,7 +281,7 @@ private
       driver.execute_script 'arguments[0].select()', self unless clear == :none
       if rapid == true || ((value.length > auto_rapid_set_length) && rapid != false)
         send_keys(value[0..3])
-        driver.execute_script RAPID_SET_TEXT, self, value[0...-3]
+        driver.execute_script RAPID_SET_TEXT, self, value[4...-3]
         send_keys(value[-3..-1])
       else
         send_keys(value)
@@ -539,7 +539,7 @@ private
       if (el.maxLength && el.maxLength != -1){
         value = value.slice(0, el.maxLength);
       }
-      el.value = value;
+      el.value = el.value + value;
     })(arguments[0], arguments[1])
   JS
 
