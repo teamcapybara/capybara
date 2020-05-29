@@ -537,9 +537,11 @@ private
   RAPID_SET_TEXT = <<~'JS'
     (function(el, value) {
       if (el.maxLength && el.maxLength != -1){
-        value = value.slice(0, el.maxLength);
+        value = el.value + value;
+        el.value = value.slice(0, el.maxLength);
+      } else {
+        el.value = el.value + value;
       }
-      el.value = el.value + value;
     })(arguments[0], arguments[1])
   JS
 
