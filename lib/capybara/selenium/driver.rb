@@ -86,9 +86,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def html
     browser.page_source
   rescue Selenium::WebDriver::Error::JavascriptError => e
-    return '' if e.match?(/documentElement is null/)
-
-    raise
+    raise unless e.message.match?(/documentElement is null/)
   end
 
   def title

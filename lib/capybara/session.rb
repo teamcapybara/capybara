@@ -192,7 +192,7 @@ module Capybara
     # @return [String] A snapshot of the DOM of the current document, as it looks right now (potentially modified by JavaScript).
     #
     def html
-      driver.html
+      driver.html || ''
     end
     alias_method :body, :html
     alias_method :source, :html
