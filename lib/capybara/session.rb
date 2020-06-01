@@ -97,8 +97,8 @@ module Capybara
 
     def driver
       @driver ||= begin
-        unless Capybara.drivers.key?(mode)
-          other_drivers = Capybara.drivers.keys.map(&:inspect)
+        unless Capybara.drivers[mode]
+          other_drivers = Capybara.drivers.names.map(&:inspect)
           raise Capybara::DriverNotFoundError, "no driver called #{mode.inspect} was found, available drivers: #{other_drivers.join(', ')}"
         end
         driver = Capybara.drivers[mode].call(app)
@@ -192,7 +192,7 @@ module Capybara
     # @return [String] A snapshot of the DOM of the current document, as it looks right now (potentially modified by JavaScript).
     #
     def html
-      driver.html
+      driver.html || ''
     end
     alias_method :body, :html
     alias_method :source, :html
