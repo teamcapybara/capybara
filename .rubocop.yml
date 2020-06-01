@@ -21,6 +21,12 @@ Style/SlicingWithRange:
   Enabled: true
 Lint/DeprecatedOpenSSLConstant:
   Enabled: true
+Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+Style/RedundantRegexpCharacterClass:
+  Enabled: true
+Style/RedundantRegexpEscape:
+  Enabled: true
 
 Layout/LineLength:
   Description: 'Limit lines to 80 characters.'

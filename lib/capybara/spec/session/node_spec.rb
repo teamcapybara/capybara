@@ -758,7 +758,7 @@ Capybara::SpecHelper.spec 'node' do
       @session.visit('with_js')
       @session.find(:css, '#click-test').click(x: 5, y: 5)
       link = @session.find(:link, 'has-been-clicked')
-      locations = link.text.match(/^Has been clicked at (?<x>[\d\.-]+),(?<y>[\d\.-]+)$/)
+      locations = link.text.match(/^Has been clicked at (?<x>[\d.-]+),(?<y>[\d.-]+)$/)
       # Resulting click location should be very close to 0, 0 relative to top left corner of the element, but may not be exact due to
       # integer/float conversions and rounding.
       expect(locations[:x].to_f).to be_within(1).of(5)
@@ -884,7 +884,7 @@ Capybara::SpecHelper.spec 'node' do
       @session.visit('with_js')
       @session.find(:css, '#click-test').double_click(x: 10, y: 5)
       link = @session.find(:link, 'has-been-double-clicked')
-      locations = link.text.match(/^Has been double clicked at (?<x>[\d\.-]+),(?<y>[\d\.-]+)$/)
+      locations = link.text.match(/^Has been double clicked at (?<x>[\d.-]+),(?<y>[\d.-]+)$/)
       # Resulting click location should be very close to 10, 5 relative to top left corner of the element, but may not be exact due
       # to integer/float conversions and rounding.
       expect(locations[:x].to_f).to be_within(1).of(10)
@@ -970,7 +970,7 @@ Capybara::SpecHelper.spec 'node' do
       @session.visit('with_js')
       @session.find(:css, '#click-test').right_click(x: 10, y: 10)
       link = @session.find(:link, 'has-been-right-clicked')
-      locations = link.text.match(/^Has been right clicked at (?<x>[\d\.-]+),(?<y>[\d\.-]+)$/)
+      locations = link.text.match(/^Has been right clicked at (?<x>[\d.-]+),(?<y>[\d.-]+)$/)
       # Resulting click location should be very close to 10, 10 relative to top left corner of the element, but may not be exact due
       # to integer/float conversions and rounding
       expect(locations[:x].to_f).to be_within(1).of(10)
