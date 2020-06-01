@@ -41,6 +41,7 @@ Capybara.register_driver :selenium_chrome_remote do |app|
   url = "http://#{selenium_host}:#{selenium_port}/wd/hub"
   browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
     opts.args << '--disable-features=VizDisplayCompositor'
+    opts.args << '--disable-gpu'
   end
 
   Capybara::Selenium::Driver.new app,
