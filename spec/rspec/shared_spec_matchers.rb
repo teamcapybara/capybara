@@ -606,7 +606,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
         visit('/with_js')
         expect do
           expect(session).to have_current_path('/not_with_js')
-        end.to raise_error(%r{to equal "/not\_with\_js"})
+        end.to raise_error(%r{to equal "/not_with_js"})
       end
 
       context 'with wait' do

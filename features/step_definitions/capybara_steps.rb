@@ -19,5 +19,5 @@ rescue StandardError, RSpec::Expectations::ExpectationNotMetError => e
 end
 
 Then(/^the failing exception should be nice$/) do
-  expect(@error_message).to match(/expected to find css \"h1#doesnotexist\"/)
+  expect(@error_message).to match(/expected to find css "h1#doesnotexist"/)
 end
