@@ -150,7 +150,7 @@ require 'capybara/rspec'
 
 If you are using Rails, put your Capybara specs in `spec/features` or `spec/system` (only works
 if [you have it configured in
-RSpec](https://www.relishapp.com/rspec/rspec-rails/docs/upgrade#file-type-inference-disabled))
+RSpec](https://relishapp.com/rspec/rspec-rails/v/4-0/docs/directory-structure))
 and if you have your Capybara specs in a different directory, then tag the
 example groups with `type: :feature` or `type: :system` depending on which type of test you're writing.
 
