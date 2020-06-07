@@ -403,7 +403,7 @@ module Capybara
             template.inner_html = ''
           end
           document.xpath('//textarea').each do |textarea|
-            textarea['_capybara_raw_value'] = textarea.content.sub(/\A\n/, '')
+            textarea['_capybara_raw_value'] = textarea.content.delete_prefix("\n")
           end
         end
       end
