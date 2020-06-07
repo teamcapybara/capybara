@@ -78,7 +78,6 @@ module Capybara
 
         seconds = session_options.default_max_wait_time if [nil, true].include? seconds
         session.synchronized = true
-        timer = Capybara::Helpers.timer(expire_in: seconds)
         begin
           yield
         rescue StandardError => e
@@ -86,6 +85,7 @@ module Capybara
           raise e unless catch_error?(e, errors)
 
           if driver.wait?
+            timer ||= Capybara::Helpers.timer(expire_in: seconds)
             raise e if timer.expired?
 
             sleep(0.01)
