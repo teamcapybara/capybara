@@ -60,6 +60,22 @@ Capybara::SpecHelper.spec '#has_field' do
     end
   end
 
+  context 'with validation message', requires: [:html_validation] do
+    it 'should accept a regexp' do
+      @session.fill_in('form_zipcode', with: '1234')
+      expect(@session).to have_field('form_zipcode', validation_message: /match the requested format/)
+      expect(@session).not_to have_field('form_zipcode', validation_message: /random/)
+    end
+
+    it 'should accept a string' do
+      @session.fill_in('form_zipcode', with: '1234')
+      expect(@session).to have_field('form_zipcode', validation_message: 'Please match the requested format.')
+      expect(@session).not_to have_field('form_zipcode', validation_message: 'match the requested format.')
+      @session.fill_in('form_zipcode', with: '12345')
+      expect(@session).to have_field('form_zipcode', validation_message: '')
+    end
+  end
+
   context 'with type' do
     it 'should be true if a field with the given type is on the page' do
       expect(@session).to have_field('First Name', type: 'text')

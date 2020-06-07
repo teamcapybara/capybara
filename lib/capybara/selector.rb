@@ -40,6 +40,7 @@ require 'capybara/selector/definition'
 #       * :disabled (Boolean, :all) - Match disabled field? (Default: false)
 #       * :multiple (Boolean) - Match fields that accept multiple values
 #       * :valid (Boolean) - Match fields that are valid/invalid according to HTML5 form validation
+#       * :validation_message (String, Regexp) - Matches the elements current validationMessage
 #
 # * **:fieldset** - Select fieldset elements
 #   * Locator: Matches id, {Capybara.configure test_id}, or contents of wrapped legend
@@ -79,6 +80,7 @@ require 'capybara/selector/definition'
 #       * :disabled (Boolean, :all) - Match disabled field? (Default: false)
 #       * :multiple (Boolean) - Match fields that accept multiple values
 #       * :valid (Boolean) - Match fields that are valid/invalid according to HTML5 form validation
+#       * :validation_message (String, Regexp) - Matches the elements current validationMessage
 #
 # * **:radio_button** - Find radio buttons
 #   * Locator: Match id, {Capybara.configure test_id} attribute, name, or associated label text
@@ -178,6 +180,12 @@ Capybara::Selector::FilterSet.add(:_field) do
   node_filter(:valid, :boolean) { |node, value| node.evaluate_script('this.validity.valid') == value }
   node_filter(:name) { |node, value| !value.is_a?(Regexp) || value.match?(node[:name]) }
   node_filter(:placeholder) { |node, value| !value.is_a?(Regexp) || value.match?(node[:placeholder]) }
+  node_filter(:validation_message) do |node, msg|
+    vm = node[:validationMessage]
+    (msg.is_a?(Regexp) ? msg.match?(vm) : vm == msg.to_s).tap do |res|
+      add_error("Expected validation message to be #{msg.inspect} but was #{vm}") unless res
+    end
+  end
 
   expression_filter(:name) do |xpath, val|
     builder(xpath).add_attribute_conditions(name: val)
@@ -198,7 +206,7 @@ Capybara::Selector::FilterSet.add(:_field) do
     desc
   end
 
-  describe(:node_filters) do |checked: nil, unchecked: nil, disabled: nil, valid: nil, **|
+  describe(:node_filters) do |checked: nil, unchecked: nil, disabled: nil, valid: nil, validation_message: nil, **|
     desc, states = +'', []
     states << 'checked' if checked || (unchecked == false)
     states << 'not checked' if unchecked || (checked == false)
@@ -206,6 +214,7 @@ Capybara::Selector::FilterSet.add(:_field) do
     desc << " that is #{states.join(' and ')}" unless states.empty?
     desc << ' that is valid' if valid == true
     desc << ' that is invalid' if valid == false
+    desc << " with validation message #{validation_message.to_s.inspect}" if validation_message
     desc
   end
 end
