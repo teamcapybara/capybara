@@ -50,15 +50,14 @@ module Capybara
 
       %w[text no_text title no_title current_path no_current_path].each do |assertion_name|
         class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
-          def assert_#{assertion_name} *args
+          def assert_#{assertion_name}(*args, **kwargs)
             self.assertions +=1
             subject, args = determine_subject(args)
-            subject.assert_#{assertion_name}(*args)
+            subject.assert_#{assertion_name}(*args, **kwargs)
           rescue Capybara::ExpectationNotMet => e
             raise ::Minitest::Assertion, e.message
           end
         ASSERTION
-        ruby2_keywords "assert_#{assertion_name}" if respond_to?(:ruby2_keywords)
       end
 
       alias_method :refute_title, :assert_no_title

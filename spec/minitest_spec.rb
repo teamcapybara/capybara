@@ -16,7 +16,7 @@ class MinitestTest < Minitest::Test
   end
 
   def test_assert_text
-    assert_text('Form')
+    assert_text('Form', normalize_ws: false)
     assert_no_text('Not on the page')
     refute_text('Also Not on the page')
   end
