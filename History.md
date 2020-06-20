@@ -6,10 +6,16 @@ Release date: unreleased
 * Block passed to `within_session` now receives the new and old session
 * Support for aria-role button when enabled [Seiei Miyagi]
 * Support for aria-role link when enabled
+* Support for `validation_message` filter with :field and :fillable_field selectors
 
 ### Changed
 
 * Ruby 2.5.0+ is now required
+* Deprecated direct manupulation of the driver and server registries
+
+### Fixed
+
+* Ruby 2.7 warning in minitest `assert_text` [Eileen M. Uchitelle]
 
 
 # Version 3.32.2
