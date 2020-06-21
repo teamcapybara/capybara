@@ -214,6 +214,14 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
     end
 
+    describe '#fill_in with Emoji' do
+      it 'sends emojis' do
+        session.visit('/form')
+        session.fill_in('form_first_name', with: 'a😀cd😴 🛌🏽🇵🇹 e🤾🏽‍♀️f')
+        expect(session.find(:fillable_field, 'form_first_name').value).to eq('a😀cd😴 🛌🏽🇵🇹 e🤾🏽‍♀️f')
+      end
+    end
+
     describe '#path' do
       it 'returns xpath' do
         # this is here because it is testing for an XPath that is specific to the algorithm used in the selenium driver
