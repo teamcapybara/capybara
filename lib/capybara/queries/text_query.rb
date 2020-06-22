@@ -6,7 +6,7 @@ module Capybara
     class TextQuery < BaseQuery
       def initialize(type = nil, expected_text, session_options:, **options) # rubocop:disable Style/OptionalArguments
         @type = type.nil? ? default_type : type
-        raise ArgumentError, '${@type} is not a valid type for a text query' unless valid_types.include?(@type)
+        raise ArgumentError, "#{@type} is not a valid type for a text query" unless valid_types.include?(@type)
 
         @options = options
         super(@options)
