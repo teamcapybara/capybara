@@ -27,6 +27,8 @@ Style/RedundantRegexpCharacterClass:
   Enabled: true
 Style/RedundantRegexpEscape:
   Enabled: true
+Style/RedundantFetchBlock:
+  Enabled: true
 
 Layout/LineLength:
   Description: 'Limit lines to 80 characters.'
