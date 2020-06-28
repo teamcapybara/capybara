@@ -1,3 +1,10 @@
+# Version 3.33.1
+Release date: unreleased
+
+### Fixed
+
+* String interpolation in text query type warning [Wojciech Wnętrzak]
+
 # Version 3.33.0
 Release date: 2020-06-21
 
