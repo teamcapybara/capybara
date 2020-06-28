@@ -1,3 +1,10 @@
+# Version 3.34.0
+Release date: unreleased
+
+### Added
+
+* Ability to fill in with emoji when using Chrome with selenium driver (Firefox already worked)
+
 # Version 3.33.0
 Release date: 2020-06-21
 
