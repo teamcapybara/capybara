@@ -15,6 +15,13 @@ module Capybara::Selenium::Driver::InternetExplorerDriver
 
 private
 
+  def clear_storage
+    clear_session_storage unless !!options[:clear_session_storage]
+    clear_local_storage unless !!options[:clear_local_storage]
+  rescue Selenium::WebDriver::Error::JavascriptError
+    # session/local storage may not be available if on non-http pages (e.g. about:blank)
+  end
+
   def build_node(native_node, initial_cache = {})
     ::Capybara::Selenium::IENode.new(self, native_node, initial_cache)
   end
