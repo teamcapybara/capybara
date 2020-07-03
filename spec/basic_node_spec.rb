@@ -129,25 +129,25 @@ RSpec.describe Capybara do
 
     describe '#has_title?' do
       it 'returns whether the page has the given title' do
-        expect(string.has_title?('simple_node')).to be_truthy
-        expect(string.has_title?('monkey')).to be_falsey
+        expect(string.has_title?('simple_node')).to be true
+        expect(string.has_title?('monkey')).to be false
       end
 
       it 'allows regexp matches' do
-        expect(string.has_title?(/s[a-z]+_node/)).to be_truthy
-        expect(string.has_title?(/monkey/)).to be_falsey
+        expect(string.has_title?(/s[a-z]+_node/)).to be true
+        expect(string.has_title?(/monkey/)).to be false
       end
     end
 
     describe '#has_no_title?' do
       it 'returns whether the page does not have the given title' do
-        expect(string.has_no_title?('simple_node')).to be_falsey
-        expect(string.has_no_title?('monkey')).to be_truthy
+        expect(string.has_no_title?('simple_node')).to be false
+        expect(string.has_no_title?('monkey')).to be true
       end
 
       it 'allows regexp matches' do
-        expect(string.has_no_title?(/s[a-z]+_node/)).to be_falsey
-        expect(string.has_no_title?(/monkey/)).to be_truthy
+        expect(string.has_no_title?(/s[a-z]+_node/)).to be false
+        expect(string.has_no_title?(/monkey/)).to be true
       end
     end
   end

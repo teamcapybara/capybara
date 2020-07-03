@@ -11,32 +11,12 @@ AllCops:
 
 #################### Lint ################################
 
-Layout/SpaceAroundMethodCallOperator:
-  Enabled: true
-Style/ExponentialNotation:
-  Enabled: true
-Layout/EmptyLinesAroundAttributeAccessor:
-  Enabled: true
-Style/SlicingWithRange:
-  Enabled: true
-Lint/DeprecatedOpenSSLConstant:
-  Enabled: true
-Lint/MixedRegexpCaptureTypes:
-  Enabled: true
-Style/RedundantRegexpCharacterClass:
-  Enabled: true
-Style/RedundantRegexpEscape:
-  Enabled: true
-Style/RedundantFetchBlock:
-  Enabled: true
-
 Layout/LineLength:
   Description: 'Limit lines to 80 characters.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#80-character-limits'
   Exclude:
     - 'spec/**/*'
     - 'lib/capybara/spec/**/*'
-    - 'lib/capybara/selector.rb'
   IgnoredPatterns:
     - '\s+# _?rubocop'
     - '^\s*#'
@@ -85,6 +65,12 @@ Lint/RaiseException:
   Enabled: true
 
 Lint/StructNewOverride:
+  Enabled: true
+
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+Lint/MixedRegexpCaptureTypes:
   Enabled: true
 
 Layout/EndAlignment:
@@ -149,6 +135,21 @@ Style/HashTransformKeys:
 Style/HashTransformValues:
   Enabled: true
 
+Style/ExponentialNotation:
+  Enabled: true
+
+Style/SlicingWithRange:
+  Enabled: true
+
+Style/RedundantRegexpCharacterClass:
+  Enabled: true
+
+Style/RedundantRegexpEscape:
+  Enabled: true
+
+Style/RedundantFetchBlock:
+  Enabled: true
+
 Layout/EmptyLineBetweenDefs:
   AllowAdjacentOneLineDefs: true
 
@@ -163,6 +164,12 @@ Layout/FirstArrayElementIndentation:
 
 Layout/IndentationWidth:
   IgnoredPatterns: ['^\s*module']
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
 
 Security/YAMLLoad:
   Exclude:
@@ -194,10 +201,8 @@ RSpec/FilePath:
   Enabled: false
 
 RSpec/PredicateMatcher:
-  Enabled: false
-
-# RSpec/InstanceVariable:
-#   Enabled: false
+  Exclude:
+    - 'spec/basic_node_spec.rb'
 
 Capybara/FeatureMethods:
   Enabled: false
