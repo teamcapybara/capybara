@@ -9,6 +9,8 @@ require 'capybara/rspec/matcher_proxies'
 RSpec.configure do |config|
   config.include Capybara::DSL, type: :feature
   config.include Capybara::RSpecMatchers, type: :feature
+  config.include Capybara::DSL, type: :system
+  config.include Capybara::RSpecMatchers, type: :system
   config.include Capybara::RSpecMatchers, type: :view
 
   # The before and after blocks must run instantaneously, because Capybara
