@@ -58,11 +58,6 @@ matrix:
     - gemfile: Gemfile
       rvm: 2.6
       env: HEADLESS=true
-    - gemfile: Gemfile
-      rvm: 2.6
-      env:
-        - HEADLESS=true
-        - W3C=false
     - gemfile: gemfiles/Gemfile.beta-versions
       rvm: 2.6
       env: CAPYBARA_FF=true
@@ -76,19 +71,9 @@ matrix:
       env:
         - CAPYBARA_FF=true
         - CAPYBARA_REMOTE=true
-    - gemfile: gemfiles/Gemfile.edge-firefox
+    - gemfile: Gemfile
       rvm: ruby-head
-      env:
-        - CAPYBARA_REMOTE=true
-        - HEADLESS=true
-    - gemfile: gemfiles/Gemfile.edge-firefox
-      rvm: ruby-head
-      env: CAPYBARA_FF=true RUBY_OPT=--jit
-      addons:
-        firefox: latest-nightly
-        apt:
-          packages:
-            - awesome
+      env: RUBY_OPT=--jit
     - gemfile: Gemfile
       rvm: 2.7
       env: CAPYBARA_FF=true
@@ -138,6 +123,7 @@ matrix:
     - gemfile: gemfiles/Gemfile.edge-firefox
     - env: CHROME_BETA=true HEADLESS=true
     - rvm: jruby-9.2.11.1
+    - rvm: ruby-head
 before_install:
   - gem update --system
   - if [[ $BUNDLE_GEMFILE =~ Gemfile.edge-firefox$ ]]; then
