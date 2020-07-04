@@ -6,6 +6,11 @@ module Capybara
   module RSpecMatchers
     module Matchers
       class MatchStyle < WrappedElementMatcher
+        def initialize(styles = nil, **kw_args, &filter_block)
+          styles, kw_args = kw_args, {} if styles.nil?
+          super(styles, **kw_args, &filter_block)
+        end
+
         def element_matches?(el)
           el.assert_matches_style(*@args, **@kw_args)
         end

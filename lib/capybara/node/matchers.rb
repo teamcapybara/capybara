@@ -60,14 +60,15 @@ module Capybara
       # @param styles [Hash]
       # @return [Boolean]                       If the styles match
       #
-      def matches_style?(styles, **options)
+      def matches_style?(styles = nil, **options)
+        styles, options = options, {} if styles.nil?
         make_predicate(options) { assert_matches_style(styles, **options) }
       end
 
       ##
       # @deprecated Use {#matches_style?} instead.
       #
-      def has_style?(styles, **options)
+      def has_style?(styles = nil, **options)
         warn "DEPRECATED: has_style? is deprecated, please use matches_style? : #{Capybara::Helpers.filter_backtrace(caller)}"
         matches_style?(styles, **options)
       end
@@ -122,7 +123,8 @@ module Capybara
       # @param styles [Hash]
       # @raise [Capybara::ExpectationNotMet]    If the element doesn't have the specified styles
       #
-      def assert_matches_style(styles, **options)
+      def assert_matches_style(styles = nil, **options)
+        styles, options = options, {} if styles.nil?
         query_args, query_opts = _set_query_session_options(styles, options)
         query = Capybara::Queries::StyleQuery.new(*query_args, **query_opts)
         synchronize(query.wait) do
@@ -134,7 +136,7 @@ module Capybara
       ##
       # @deprecated Use {#assert_matches_style} instead.
       #
-      def assert_style(styles, **options)
+      def assert_style(styles = nil, **options)
         warn 'assert_style is deprecated, please use assert_matches_style instead'
         assert_matches_style(styles, **options)
       end

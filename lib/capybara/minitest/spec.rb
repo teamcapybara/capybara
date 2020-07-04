@@ -209,13 +209,15 @@ module Capybara
       # @!method wont_have_xpath
       #   See {Capybara::Node::Matchers#has_no_xpath?}
 
-      %w[text content title current_path].each do |assertion|
-        infect_an_assertion "assert_#{assertion}", "must_have_#{assertion}", :reverse
-        infect_an_assertion "refute_#{assertion}", "wont_have_#{assertion}", :reverse
-      end
+      # This currently doesn't work for Ruby 2.8 due to Minitest not forwarding keyword args separately
+      # %w[text content title current_path].each do |assertion|
+      #   infect_an_assertion "assert_#{assertion}", "must_have_#{assertion}", :reverse
+      #   infect_an_assertion "refute_#{assertion}", "wont_have_#{assertion}", :reverse
+      # end
 
       # rubocop:disable Style/MultilineBlockChain
-      (%w[selector xpath css link button field select table checked_field unchecked_field
+      (%w[text content title current_path
+          selector xpath css link button field select table checked_field unchecked_field
           ancestor sibling].flat_map do |assertion|
             [%W[assert_#{assertion} must_have_#{assertion}],
              %W[refute_#{assertion} wont_have_#{assertion}]]
@@ -228,14 +230,15 @@ module Capybara
          %W[refute_matches_#{assertion} wont_match_#{assertion}]]
       end).each do |(meth, new_name)|
         class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
-          def #{new_name} *args, &block
-            ::Minitest::Expectation.new(self, ::Minitest::Spec.current).#{new_name}(*args, &block)
+          def #{new_name} *args, **kw_args, &block
+            ::Minitest::Expectation.new(self, ::Minitest::Spec.current).#{new_name}(*args, **kw_args, &block)
           end
         ASSERTION
 
         ::Minitest::Expectation.class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
-          def #{new_name} *args, &block
-            ctx.#{meth}(target, *args, &block)
+          def #{new_name} *args, **kw_args, &block
+            raise "Calling ##{new_name} outside of test." unless ctx
+            ctx.#{meth}(target, *args, **kw_args, &block)
           end
         ASSERTION
       end
@@ -243,9 +246,9 @@ module Capybara
 
       ##
       # @deprecated
-      def must_have_style(*args, &block)
+      def must_have_style(*args, **kw_args, &block)
         warn 'must_have_style is deprecated, please use must_match_style'
-        must_match_style(*args, &block)
+        must_match_style(*args, **kw_args, &block)
       end
     end
   end

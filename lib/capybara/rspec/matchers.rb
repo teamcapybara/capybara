@@ -146,14 +146,15 @@ module Capybara
     # RSpec matcher for element style.
     #
     # @see Capybara::Node::Matchers#matches_style?
-    def match_style(styles, **options)
+    def match_style(styles = nil, **options)
+      styles, options = options, {} if styles.nil?
       Matchers::MatchStyle.new(styles, **options)
     end
 
     ##
     # @deprecated
     #
-    def have_style(styles, **options)
+    def have_style(styles = nil, **options)
       warn "DEPRECATED: have_style is deprecated, please use match_style : #{Capybara::Helpers.filter_backtrace(caller)}"
       match_style(styles, **options)
     end
