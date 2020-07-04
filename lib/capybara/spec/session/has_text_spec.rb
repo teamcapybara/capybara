@@ -133,17 +133,6 @@ Capybara::SpecHelper.spec '#has_text?' do
         expect(@session).to have_text(:visible, with_to_hash, {})
       end
     end
-
-    it 'should fail if passed without empty options' do
-      with_to_hash = Class.new do
-        def to_s; '42' end
-        def to_hash; { blah: 'Other hash' } end
-      end.new
-      @session.visit('/with_html')
-      expect do
-        expect(@session).to have_text(:visible, with_to_hash)
-      end.to raise_error(ArgumentError)
-    end
   end
 
   context 'with exact: true option' do
