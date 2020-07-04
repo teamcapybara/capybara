@@ -53,7 +53,7 @@ Capybara::SpecHelper.spec '#accept_alert', requires: [:modals] do
       @session.click_link('Alert page change')
       sleep 1 # ensure page change occurs before the accept_alert block exits
     end
-    expect(@session).to have_current_path('/with_html')
+    expect(@session).to have_current_path('/with_html', wait: 5)
   end
 
   context 'with an asynchronous alert' do
