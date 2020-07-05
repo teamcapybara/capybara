@@ -70,6 +70,17 @@ module Capybara
       count == 1 ? singular : plural
     end
 
+    def filter_backtrace(trace)
+      return 'No backtrace' unless trace
+
+      filter = %r{lib/capybara/|lib/rspec/|lib/minitest/}
+      new_trace = trace.take_while { |line| line !~ filter }
+      new_trace = trace.reject { |line| line =~ filter } if new_trace.empty?
+      new_trace = trace.dup if new_trace.empty?
+
+      new_trace.first.split(/:in /, 2).first
+    end
+
     if defined?(Process::CLOCK_MONOTONIC)
       def monotonic_time; Process.clock_gettime Process::CLOCK_MONOTONIC; end
     else

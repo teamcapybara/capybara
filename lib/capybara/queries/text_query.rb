@@ -14,7 +14,7 @@ module Capybara
 
         if expected_text.nil? && !exact?
           warn 'Checking for expected text of nil is confusing and/or pointless since it will always match. '\
-               'Please specify a string or regexp instead.'
+               "Please specify a string or regexp instead. #{Capybara::Helpers.filter_backtrace(caller)}"
         end
 
         @expected_text = expected_text.is_a?(Regexp) ? expected_text : expected_text.to_s

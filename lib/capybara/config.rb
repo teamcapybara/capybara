@@ -86,7 +86,7 @@ module Capybara
     def deprecate(method, alternate_method, once = false)
       @deprecation_notified ||= {}
       unless once && @deprecation_notified[method]
-        warn "DEPRECATED: ##{method} is deprecated, please use ##{alternate_method} instead"
+        warn "DEPRECATED: ##{method} is deprecated, please use ##{alternate_method} instead: #{Capybara::Helpers.filter_backtrace(caller)}"
       end
       @deprecation_notified[method] = true
     end
