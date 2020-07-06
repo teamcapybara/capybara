@@ -25,8 +25,7 @@ Capybara::SpecHelper.spec '#refresh' do
     @session.visit('/form')
     @session.select('Sweden', from: 'form_region')
     @session.click_button('awesome')
-    expect(@session).to have_text('Sinatra::IndifferentHash')
-
+    sleep 2
     expect do
       @session.refresh
       sleep 2
