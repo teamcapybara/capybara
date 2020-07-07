@@ -9,11 +9,9 @@ module Capybara
 
     OPTIONS = %i[app reuse_server threadsafe server default_driver javascript_driver allow_gumbo].freeze
 
-    attr_accessor :app
-    attr_reader :reuse_server, :threadsafe
-    attr_reader :session_options
+    attr_accessor :app, :allow_gumbo
+    attr_reader :reuse_server, :threadsafe, :session_options
     attr_writer :default_driver, :javascript_driver
-    attr_accessor :allow_gumbo
 
     SessionConfig::OPTIONS.each do |method|
       def_delegators :session_options, method, "#{method}="

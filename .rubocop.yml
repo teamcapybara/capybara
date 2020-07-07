@@ -151,10 +151,10 @@ Style/RedundantFetchBlock:
   Enabled: true
 
 Style/AccessorGrouping:
-  Enabled: true
+  Enabled: false
   
 Style/BisectedAttrAccessor:
-  Enabled: true
+  Enabled: false
   
 Style/RedundantAssignment:
   Enabled: true
