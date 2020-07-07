@@ -92,7 +92,8 @@ module Capybara
       end
 
       def reset_threadsafe(bool = false, session = nil)
-        Capybara::Session.class_variable_set(:@@instance_created, false) # Work around limit on when threadsafe can be changed
+        # Work around limit on when threadsafe can be changed
+        Capybara::Session.class_variable_set(:@@instance_created, false) # rubocop:disable Style/ClassVars
         Capybara.threadsafe = bool
         session = session.current_session if session.respond_to?(:current_session)
         session&.instance_variable_set(:@config, nil)

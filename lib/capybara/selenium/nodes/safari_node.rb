@@ -43,7 +43,7 @@ class Capybara::Selenium::SafariNode < Capybara::Selenium::Node
     return '' unless visible?
 
     vis_text = driver.execute_script('return arguments[0].innerText', self)
-    vis_text.gsub(/\ +/, ' ')
+    vis_text.squeeze(' ')
             .gsub(/[\ \n]*\n[\ \n]*/, "\n")
             .gsub(/\A[[:space:]&&[^\u00a0]]+/, '')
             .gsub(/[[:space:]&&[^\u00a0]]+\z/, '')
