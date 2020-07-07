@@ -15,7 +15,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   end
 
   def visible_text
-    displayed_text.gsub(/\ +/, ' ')
+    displayed_text.squeeze(' ')
                   .gsub(/[\ \n]*\n[\ \n]*/, "\n")
                   .gsub(/\A[[:space:]&&[^\u00a0]]+/, '')
                   .gsub(/[[:space:]&&[^\u00a0]]+\z/, '')

@@ -120,7 +120,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     end
   rescue StandardError => e
     if e.is_a?(::Selenium::WebDriver::Error::ElementClickInterceptedError) ||
-       e.message.match?(/Other element would receive the click/)
+       e.message.include?('Other element would receive the click')
       scroll_to_center
     end
 

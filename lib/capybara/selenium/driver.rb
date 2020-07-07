@@ -25,7 +25,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade."
       end
     rescue LoadError => e
-      raise e unless e.message.match?(/selenium-webdriver/)
+      raise e unless e.message.include?('selenium-webdriver')
 
       raise LoadError, "Capybara's selenium driver is unable to load `selenium-webdriver`, please install the gem and add `gem 'selenium-webdriver'` to your Gemfile if you are using bundler."
     end
@@ -86,7 +86,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def html
     browser.page_source
   rescue Selenium::WebDriver::Error::JavascriptError => e
-    raise unless e.message.match?(/documentElement is null/)
+    raise unless e.message.include?('documentElement is null')
   end
 
   def title
