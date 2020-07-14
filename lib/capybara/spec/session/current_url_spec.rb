@@ -83,7 +83,7 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
     @session.visit("#{bases[0]}/redirect")
     should_be_on 0, '/landed'
   end
-  
+
   it 'maintains fragment' do
     @session.visit("#{bases[0]}/redirect#fragment")
     should_be_on 0, '/landed#fragment'
