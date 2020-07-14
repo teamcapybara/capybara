@@ -484,7 +484,7 @@ module Capybara
   require 'capybara/rack_test/node'
   require 'capybara/rack_test/form'
   require 'capybara/rack_test/browser'
-  require 'capybara/rack_test/css_handlers.rb'
+  require 'capybara/rack_test/css_handlers'
 
   require 'capybara/selenium/node'
   require 'capybara/selenium/driver'

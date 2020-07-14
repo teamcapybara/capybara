@@ -239,13 +239,14 @@ module Capybara
         hints[:styles] = options[:style] if use_default_style_filter?
         hints[:position] = true if use_spatial_filter?
 
-        if selector_format == :css
+        case selector_format
+        when :css
           if node.method(:find_css).arity != 1
             node.find_css(css, **hints)
           else
             node.find_css(css)
           end
-        elsif selector_format == :xpath
+        when :xpath
           if node.method(:find_xpath).arity != 1
             node.find_xpath(xpath(exact), **hints)
           else

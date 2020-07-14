@@ -73,6 +73,9 @@ Lint/DeprecatedOpenSSLConstant:
 Lint/MixedRegexpCaptureTypes:
   Enabled: true
 
+Lint/DuplicateElsifCondition:
+  Enabled: true
+
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
 
@@ -157,6 +160,21 @@ Style/BisectedAttrAccessor:
   Enabled: false
   
 Style/RedundantAssignment:
+  Enabled: true
+
+Style/ArrayCoercion:
+  Enabled: true
+
+Style/CaseLikeIf:
+  Enabled: true
+
+Style/HashAsLastArrayItem:
+  Enabled: true
+
+Style/HashLikeCase:
+  Enabled: true
+
+Style/RedundantFileExtensionInRequire:
   Enabled: true
   
 Layout/EmptyLineBetweenDefs:
