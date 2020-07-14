@@ -22,7 +22,7 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
 
     expect(@session.current_url.chomp('?')).to eq("#{scheme}://#{s.host}:#{s.port}#{path}")
     expect(@session.current_host).to eq("#{scheme}://#{s.host}") # no port
-    expect(@session.current_path).to eq(path)
+    expect(@session.current_path).to eq(path.split('#')[0])
     # Server should agree with us
     expect(@session).to have_content("Current host is #{scheme}://#{s.host}:#{s.port}") if path == '/host'
   end
@@ -82,6 +82,16 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
   it 'is affected by following a redirect' do
     @session.visit("#{bases[0]}/redirect")
     should_be_on 0, '/landed'
+  end
+  
+  it 'maintains fragment' do
+    @session.visit("#{bases[0]}/redirect#fragment")
+    should_be_on 0, '/landed#fragment'
+  end
+
+  it 'redirects to a fragment' do
+    @session.visit("#{bases[0]}/redirect_with_fragment")
+    should_be_on 0, '/landed#with_fragment'
   end
 
   it 'is affected by pushState', requires: [:js] do
