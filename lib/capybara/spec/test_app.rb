@@ -33,6 +33,10 @@ class TestApp < Sinatra::Base
     redirect '/redirect_again'
   end
 
+  get '/redirect_with_fragment' do
+    redirect '/landed#with_fragment'
+  end
+
   get '/redirect_again' do
     redirect '/landed'
   end

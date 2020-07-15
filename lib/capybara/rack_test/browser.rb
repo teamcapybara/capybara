@@ -8,6 +8,7 @@ class Capybara::RackTest::Browser
 
   def initialize(driver)
     @driver = driver
+    @current_fragment = nil
   end
 
   def app
@@ -42,6 +43,7 @@ class Capybara::RackTest::Browser
   end
 
   def process_and_follow_redirects(method, path, attributes = {}, env = {})
+    @current_fragment = build_uri(path).fragment
     process(method, path, attributes, env)
 
     return unless driver.follow_redirects?
@@ -65,7 +67,7 @@ class Capybara::RackTest::Browser
     method = method.downcase
     new_uri = build_uri(path)
     @current_scheme, @current_host, @current_port = new_uri.select(:scheme, :host, :port)
-
+    @current_fragment = new_uri.fragment || @current_fragment
     reset_cache!
     send(method, new_uri.to_s, attributes, env.merge(options[:headers] || {}))
   end
@@ -83,7 +85,9 @@ class Capybara::RackTest::Browser
   end
 
   def current_url
-    last_request.url
+    uri = build_uri(last_request.url)
+    uri.fragment = @current_fragment if @current_fragment
+    uri.to_s
   rescue Rack::Test::Error
     ''
   end
