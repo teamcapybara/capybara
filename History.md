@@ -5,6 +5,10 @@ Release date: unreleased
 
 * Ability to fill in with emoji when using Chrome with selenium driver (Firefox already worked)
 
+### Fixed
+
+* racktest driver better handles fragments and redirection to urls that include fragments
+
 # Version 3.33.0
 Release date: 2020-06-21
 
