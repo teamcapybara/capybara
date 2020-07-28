@@ -9,7 +9,7 @@ module Capybara
 
       SPATIAL_KEYS = %i[above below left_of right_of near].freeze
       VALID_KEYS = SPATIAL_KEYS + COUNT_KEYS +
-                   %i[text id class style visible obscured exact exact_text normalize_ws match wait filter_set]
+                   %i[text id class style visible obscured exact exact_text normalize_ws match wait filter_set message]
       VALID_MATCH = %i[first smart prefer_exact one].freeze
 
       def initialize(*args,

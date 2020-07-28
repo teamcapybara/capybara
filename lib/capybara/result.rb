@@ -115,6 +115,8 @@ module Capybara
     end
 
     def failure_message
+      return @query.options[:message] if @query.options[:message]
+
       message = @query.failure_message
       if count.zero?
         message << ' but there were no matches'
