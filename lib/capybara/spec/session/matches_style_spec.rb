@@ -28,8 +28,8 @@ Capybara::SpecHelper.spec '#matches_style?', requires: [:css] do
       output(/have_style is deprecated/).to_stderr
 
     el = @session.find(:css, '#first')
-    allow(el).to receive(:warn).and_return(nil)
+    allow(Capybara::Helpers).to receive(:warn).and_return(nil)
     el.has_style?('display' => /^bl/)
-    expect(el).to have_received(:warn)
+    expect(Capybara::Helpers).to have_received(:warn)
   end
 end

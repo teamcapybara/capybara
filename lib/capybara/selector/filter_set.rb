@@ -49,7 +49,7 @@ module Capybara
       end
 
       def descriptions
-        warn 'DEPRECATED: FilterSet#descriptions is deprecated without replacement'
+        Capybara::Helpers.warn 'DEPRECATED: FilterSet#descriptions is deprecated without replacement'
         [undeclared_descriptions, node_filter_descriptions, expression_filter_descriptions].flatten
       end
 

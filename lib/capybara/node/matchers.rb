@@ -69,7 +69,7 @@ module Capybara
       # @deprecated Use {#matches_style?} instead.
       #
       def has_style?(styles = nil, **options)
-        warn "DEPRECATED: has_style? is deprecated, please use matches_style? : #{Capybara::Helpers.filter_backtrace(caller)}"
+        Capybara::Helpers.warn "DEPRECATED: has_style? is deprecated, please use matches_style? : #{Capybara::Helpers.filter_backtrace(caller)}"
         matches_style?(styles, **options)
       end
 

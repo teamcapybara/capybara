@@ -12,13 +12,13 @@ module Capybara
     end
 
     def []=(name, value)
-      warn 'DEPRECATED: Directly setting drivers/servers is deprecated, please use Capybara.register_driver/register_server instead'
+      Capybara::Helpers.warn 'DEPRECATED: Directly setting drivers/servers is deprecated, please use Capybara.register_driver/register_server instead'
       @registered[name] = value
     end
 
     def method_missing(method_name, *args, **options, &block)
       if @registered.respond_to?(method_name)
-        warn "DEPRECATED: Calling '#{method_name}' on the drivers/servers container is deprecated without replacement"
+        Capybara::Helpers.warn "DEPRECATED: Calling '#{method_name}' on the drivers/servers container is deprecated without replacement"
         # RUBY 2.6 will send an empty hash rather than nothing with **options so fix that
         return @registered.public_send(method_name, *args, &block) if options.empty?
 
