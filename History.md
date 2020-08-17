@@ -22,7 +22,7 @@ Release date: 2020-06-21
 ### Changed
 
 * Ruby 2.5.0+ is now required
-* Deprecated direct manupulation of the driver and server registries
+* Deprecated direct manipulation of the driver and server registries
 
 ### Fixed
 
@@ -52,7 +52,7 @@ Release date: 2020-03-29
 ### Added
 
 * Support `delay` setting on click with Selenium
-* Implement rapid set for values longer thn 30 characters in text fields with Selenium
+* Implement rapid set for values longer than 30 characters in text fields with Selenium
 
 ### Fixed
 
@@ -173,8 +173,8 @@ Release date: 2019-06-27
 
 ### Fixed
 
-* Woraround issue with chromedriver 76/77 in W3C mode losing mouse state during legacy drag. Only fixed if
-  both source and target are simultaenously inside the viewport - Issue #2223
+* Work around issue with chromedriver 76/77 in W3C mode losing mouse state during legacy drag. Only fixed if
+  both source and target are simultaneously inside the viewport - Issue #2223
 * Negative ancestor expectations/predicates were incorrectly checking siblings rather than ancestors
 
 # Version 3.24.0
@@ -453,7 +453,7 @@ Release date: 2018-10-23
 
 ### Fixed
 
-* Selector `css` expression definiton declared filters now work again
+* Selector `css` expression definition declared filters now work again
 * Cleaned up warnings [Yuji Yaginuma]
 * Workaround installation of rspec matcher proxies under jruby by reverting to the old solution not using prepend, so jruby bugs are not hit - Issue #2115
 
@@ -570,7 +570,7 @@ Release date: 2018-07-19
 
 ### Fixed
 
-* Make selenium driver :backspace clear stategy work even if caret location is in middle of field content [Champier Cyril]
+* Make selenium driver :backspace clear strategy work even if caret location is in middle of field content [Champier Cyril]
 * Selenium issue with fieldset nested in disabled fieldset not being considered disabled
 * `Session#evaluate_script` and `Element#evaluate_script` now strip leading/trailing whitespace from scripts [Ian Lesperance]
 
@@ -669,7 +669,7 @@ Release date: 2018-04-13
 ### Fixes
 
 * Fix expression filter descriptions in some selector failure messages
-* Fix compounding of negated matechers - Issue #2010
+* Fix compounding of negated matchers - Issue #2010
 
 # Version 3.0.1
 Release date: 2018-04-06
@@ -943,7 +943,7 @@ Release date: 2016-12-05
 * Options for clearing session/local storage on reset added to the Selenium driver
 * Window size changes wait for the size to stabilize
 * Defined return value for most actions
-* Ignore specific error when qutting selenium driver instance - Issue #1773 [Dylan Reichstadt, Thomas Walpole]
+* Ignore specific error when quitting selenium driver instance - Issue #1773 [Dylan Reichstadt, Thomas Walpole]
 * Warn on selenium unknown errors rather than raising when quitting driver [Adam Pohorecki, Thomas Walpole]
 * Capybara::Result#each now returns an `Enumerator` when called without a block - Issue #1777 [Thomas Walpole]
 
@@ -1005,7 +1005,7 @@ Release date: 2016-09-19
 
 ### Fixed
 
-* Issue with rack-test driver and obselete mime-types when using `#attach_file` - Issue #1756 [Thomas Walpole]
+* Issue with rack-test driver and obsolete mime-types when using `#attach_file` - Issue #1756 [Thomas Walpole]
 
 ### Added
 
@@ -1072,7 +1072,7 @@ Release date: 2016-04-07
 
 ### Added
 
-* Capybara now waits for requests to Capybaras server to complete while restting the session [John Hawthorn, Thomas Walpole]
+* Capybara now waits for requests to Capybaras server to complete while resetting the session [John Hawthorn, Thomas Walpole]
 * Capybara.reuse_server option to allow disabling of sharing server instance between sessions [Thomas Walpole]
 * :multiple filter added to relevant selectors [Thomas Walpole]
 * Provided server registrations for :webrick and :puma. Capybara.server = :puma for testing with Rails 5 [Thomas Walpole]
@@ -1086,7 +1086,7 @@ Release date: 2016-04-07
 
 # Version 2.6.2
 
-Relase date: 2016-01-27
+Release date: 2016-01-27
 
 ### Fixed
 
@@ -1632,8 +1632,8 @@ Release date: 2011-06-14
 * Rack::Test driver honours maxlength on input fields [Guilherme Carvalho]
 * Rack::Test now works as expected with domains and subdomains [Jonas Nicklas]
 * Session is reset more thoroughly between tests. [Jonas Nicklas]
-* Raise error when uploading non-existant file [Jonas Nicklas]
-* Rack reponse body should respond to #each [Piotr Sarnacki]
+* Raise error when uploading non-existent file [Jonas Nicklas]
+* Rack response body should respond to #each [Piotr Sarnacki]
 * Deprecation warnings with selenium webdriver 0.2.0 [Aaron Gibraltar]
 * Selenium Chrome no longer YELLS tagname [Carl Jackson & David W. Frank]
 * Capybara no longer strips encoding before sending to Rack [Jonas Nicklas]
@@ -1775,7 +1775,7 @@ Release date: 2010-05-12
 
 Release date: 2010-04-09
 
-This is a drop in compatible maintainance release. It's mostly
+This is a drop in compatible maintenance release. It's mostly
 important for driver authors.
 
 ### Added
@@ -1794,7 +1794,7 @@ important for driver authors.
 
 Release date: 2010-03-22
 
-This is a maintainance release with minor bug fixes, should be
+This is a maintenance release with minor bug fixes, should be
 drop in compatible.
 
 ### Added
