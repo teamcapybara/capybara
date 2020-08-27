@@ -8,6 +8,7 @@ services:
 rvm:
   - 2.7
   - jruby-9.2.11.1
+  - truffleruby-head
 gemfile:
   - Gemfile
 env:
@@ -124,6 +125,7 @@ matrix:
     - env: CHROME_BETA=true HEADLESS=true
     - rvm: jruby-9.2.11.1
     - rvm: ruby-head
+    - rvm: truffleruby-head
 before_install:
   - gem update --system
   - if [[ $BUNDLE_GEMFILE =~ Gemfile.edge-firefox$ ]]; then
