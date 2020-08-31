@@ -21,7 +21,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       require 'capybara/selenium/patches/atoms'
       require 'capybara/selenium/patches/is_displayed'
       require 'capybara/selenium/patches/action_pauser'
-      if Gem.loaded_specs['selenium-webdriver'].version < Gem::Version.new('3.5.0')
+      if Gem::Version.new(Selenium::WebDriver::VERSION) < Gem::Version.new('3.5.0')
         warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade."
       end
     rescue LoadError => e
