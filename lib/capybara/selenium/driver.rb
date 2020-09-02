@@ -21,7 +21,24 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       require 'capybara/selenium/patches/atoms'
       require 'capybara/selenium/patches/is_displayed'
       require 'capybara/selenium/patches/action_pauser'
-      if Gem::Version.new(Selenium::WebDriver::VERSION) < Gem::Version.new('3.5.0')
+
+      # Look up the version of `selenium-webdriver` to
+      # see if it's a version we support.
+      #
+      # By default, we use Gem.loaded_specs to determine
+      # the version number. However, in some cases, such
+      # as when loading `selenium-webdriver` outside of
+      # Rubygems, we fall back to referencing
+      # Selenium::WebDriver::VERSION. Ideally we'd
+      # use the constant in all cases, but earlier versions
+      # of `selenium-webdriver` didn't provide the constant.
+      selenium_webdriver_version =
+        if Gem.loaded_specs['selenium-webdriver'].present?
+          Gem.loaded_specs['selenium-webdriver'].version
+        else
+          Gem::Version.new(Selenium::WebDriver::VERSION)
+        end
+      if selenium_webdriver_version < Gem::Version.new('3.5.0')
         warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade."
       end
     rescue LoadError => e
