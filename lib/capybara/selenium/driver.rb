@@ -33,7 +33,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       # use the constant in all cases, but earlier versions
       # of `selenium-webdriver` didn't provide the constant.
       selenium_webdriver_version =
-        if Gem.loaded_specs['selenium-webdriver'].present?
+        if Gem.loaded_specs['selenium-webdriver']
           Gem.loaded_specs['selenium-webdriver'].version
         else
           Gem::Version.new(Selenium::WebDriver::VERSION)
