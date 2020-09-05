@@ -40,7 +40,7 @@ module Capybara
       end
 
       def insert_disable(html)
-        html.sub(%r{(</head>)}, disable_markup + '\\1')
+        html.sub(%r{(</head>)}, "#{disable_markup}\\1")
       end
 
       DISABLE_MARKUP_TEMPLATE = <<~HTML

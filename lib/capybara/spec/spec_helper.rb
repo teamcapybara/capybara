@@ -58,7 +58,7 @@ module Capybara
 
       def run_specs(session, name, **options, &filter_block)
         specs = @specs
-        RSpec.describe Capybara::Session, name, options do # rubocop:disable RSpec/EmptyExampleGroup
+        RSpec.describe Capybara::Session, name, options do
           include Capybara::SpecHelper
           include Capybara::RSpecMatchers
 
@@ -72,11 +72,11 @@ module Capybara
           end
 
           before :each, psc: true do
-            SpecHelper.reset_threadsafe(true, session)
+            SpecHelper.reset_threadsafe(bool: true, session: session)
           end
 
           after psc: true do
-            SpecHelper.reset_threadsafe(false, session)
+            SpecHelper.reset_threadsafe(session: session)
           end
 
           before :each, :exact_false do
@@ -91,7 +91,7 @@ module Capybara
         end
       end
 
-      def reset_threadsafe(bool = false, session = nil)
+      def reset_threadsafe(bool: false, session: nil)
         # Work around limit on when threadsafe can be changed
         Capybara::Session.class_variable_set(:@@instance_created, false) # rubocop:disable Style/ClassVars
         Capybara.threadsafe = bool
@@ -109,11 +109,9 @@ module Capybara
       stream.reopen(old_stream)
     end
 
-    def quietly
-      silence_stream(STDOUT) do
-        silence_stream(STDERR) do
-          yield
-        end
+    def quietly(&block)
+      silence_stream($stdout) do
+        silence_stream($stderr, &block)
       end
     end
 
@@ -133,4 +131,4 @@ module Capybara
   end
 end
 
-Dir[File.dirname(__FILE__) + '/session/**/*.rb'].each { |file| require_relative file }
+Dir["#{File.dirname(__FILE__)}/session/**/*.rb"].each { |file| require_relative file }

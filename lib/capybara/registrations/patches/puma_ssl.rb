@@ -4,12 +4,14 @@ module Puma
   module MiniSSL
     class Socket
       def read_nonblock(size, *_)
+        wait_states = %i[wait_readable wait_writable]
+
         loop do
           output = engine_read_all
           return output if output
 
           data = @socket.read_nonblock(size, exception: false)
-          raise IO::EAGAINWaitReadable if %i[wait_readable wait_writable].include? data
+          raise IO::EAGAINWaitReadable if wait_states.include? data
           return nil if data.nil?
 
           @engine.inject(data)

@@ -3,6 +3,7 @@ require:
   - rubocop-performance
 
 AllCops:
+  NewCops: enable
   DisabledByDefault: false
   TargetRubyVersion: 2.5
   Exclude:

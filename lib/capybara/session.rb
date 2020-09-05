@@ -355,8 +355,8 @@ module Capybara
     #
     # @param [String] locator    Id or legend of the fieldset
     #
-    def within_fieldset(locator)
-      within(:fieldset, locator) { yield }
+    def within_fieldset(locator, &block)
+      within(:fieldset, locator, &block)
     end
 
     ##
@@ -365,8 +365,8 @@ module Capybara
     #
     # @param [String] locator    Id or caption of the table
     #
-    def within_table(locator)
-      within(:table, locator) { yield }
+    def within_table(locator, &block)
+      within(:table, locator, &block)
     end
 
     ##
@@ -398,8 +398,9 @@ module Capybara
         driver.switch_to_frame(:parent)
       when :top
         idx = scopes.index(:frame)
+        top_level_scopes = [:frame, nil]
         if idx
-          if scopes.slice(idx..-1).any? { |scope| ![:frame, nil].include?(scope) }
+          if scopes.slice(idx..-1).any? { |scope| !top_level_scopes.include?(scope) }
             raise Capybara::ScopeError, "`switch_to_frame(:top)` cannot be called from inside a descendant frame's "\
                                         '`within` block.'
           end
@@ -788,7 +789,7 @@ module Capybara
     #
     # Yield a block using a specific maximum wait time.
     #
-    def using_wait_time(seconds)
+    def using_wait_time(seconds, &block)
       if Capybara.threadsafe
         begin
           previous_wait_time = config.default_max_wait_time
@@ -798,7 +799,7 @@ module Capybara
           config.default_max_wait_time = previous_wait_time
         end
       else
-        Capybara.using_wait_time(seconds) { yield }
+        Capybara.using_wait_time(seconds, &block)
       end
     end
 

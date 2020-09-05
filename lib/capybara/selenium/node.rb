@@ -464,8 +464,8 @@ private
     end
   end
 
-  def each_key(keys)
-    normalize_keys(keys).each { |key| yield(key) }
+  def each_key(keys, &block)
+    normalize_keys(keys).each(&block)
   end
 
   def find_context

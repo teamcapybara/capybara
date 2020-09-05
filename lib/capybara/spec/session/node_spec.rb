@@ -388,8 +388,8 @@ Capybara::SpecHelper.spec 'node' do
 
   describe '#==' do
     it 'preserve object identity' do
-      expect(@session.find('//h1') == @session.find('//h1')).to be true # rubocop:disable Lint/UselessComparison
-      expect(@session.find('//h1') === @session.find('//h1')).to be true # rubocop:disable Style/CaseEquality, Lint/UselessComparison
+      expect(@session.find('//h1') == @session.find('//h1')).to be true # rubocop:disable Lint/BinaryOperatorWithIdenticalOperands
+      expect(@session.find('//h1') === @session.find('//h1')).to be true # rubocop:disable Style/CaseEquality, Lint/BinaryOperatorWithIdenticalOperands
       expect(@session.find('//h1').eql?(@session.find('//h1'))).to be false
     end
 

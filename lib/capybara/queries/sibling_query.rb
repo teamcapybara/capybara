@@ -15,7 +15,7 @@ module Capybara
         end
       end
 
-      def description(applied = false)
+      def description(applied = false) # rubocop:disable Style/OptionalBooleanParameter
         desc = super
         sibling_query = @sibling_node&.instance_variable_get(:@query)
         desc += " that is a sibling of #{sibling_query.description}" if sibling_query

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable RSpec/MultipleDescribes
+
 require 'spec_helper'
 require 'capybara/rspec'
 
@@ -17,3 +19,5 @@ feature 'if xscenario aliases to pending then' do
   xscenario "this test should be 'temporarily disabled with xscenario'" do
   end
 end
+
+# rubocop:enable RSpec/MultipleDescribes

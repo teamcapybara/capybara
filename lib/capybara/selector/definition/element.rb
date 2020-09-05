@@ -18,7 +18,8 @@ Capybara.add_selector(:element, locator_type: [String, Symbol]) do
   end
 
   describe_expression_filters do |**options|
-    booleans, values = options.partition { |_k, v| [true, false].include? v }.map(&:to_h)
+    boolean_values = [true, false]
+    booleans, values = options.partition { |_k, v| boolean_values.include? v }.map(&:to_h)
     desc = describe_all_expression_filters(**values)
     desc + booleans.map do |k, v|
       v ? " with #{k} attribute" : "without #{k} attribute"

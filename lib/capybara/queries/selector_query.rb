@@ -55,7 +55,7 @@ module Capybara
       def name; selector.name; end
       def label; selector.label || selector.name; end
 
-      def description(only_applied = false)
+      def description(only_applied = false) # rubocop:disable Style/OptionalBooleanParameter
         desc = +''
         show_for = show_for_stage(only_applied)
 
@@ -95,11 +95,9 @@ module Capybara
         desc << ' that also matches the custom filter block' if @filter_block && show_for[:node]
 
         desc << " within #{@resolved_node.inspect}" if describe_within?
-        if locator.is_a?(String) && locator.start_with?('#', './/', '//')
-          unless selector.raw_locator?
-            desc << "\nNote: It appears you may be passing a CSS selector or XPath expression rather than a locator. " \
-                    "Please see the documentation for acceptable locator values.\n\n"
-          end
+        if locator.is_a?(String) && locator.start_with?('#', './/', '//') && !selector.raw_locator?
+          desc << "\nNote: It appears you may be passing a CSS selector or XPath expression rather than a locator. " \
+                  "Please see the documentation for acceptable locator values.\n\n"
         end
         desc
       end
@@ -653,7 +651,7 @@ module Capybara
 
           d = u.dot w
           e = v.dot w
-          cap_d = (a * c) - (b * b)
+          cap_d = (a * c) - (b**2)
           sD = tD = cap_d
 
           # compute the line parameters of the two closest points

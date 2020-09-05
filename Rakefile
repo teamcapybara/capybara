@@ -81,7 +81,7 @@ end
 task :release do
   version = Capybara::VERSION
   puts "Releasing #{version}, y/n?"
-  exit(1) unless STDIN.gets.chomp == 'y'
+  exit(1) unless $stdin.gets.chomp == 'y'
   sh "git commit -am 'tagged #{version}' && " \
      "git tag #{version} && " \
      'gem build capybara.gemspec && ' \

@@ -16,7 +16,7 @@ module Capybara
         end
       end
 
-      def description(applied = false)
+      def description(applied = false) # rubocop:disable Style/OptionalBooleanParameter
         child_query = @child_node&.instance_variable_get(:@query)
         desc = super
         desc += " that is an ancestor of #{child_query.description}" if child_query

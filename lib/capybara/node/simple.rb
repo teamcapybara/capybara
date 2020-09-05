@@ -100,7 +100,7 @@ module Capybara
       # @param  [Boolean] check_ancestors  Whether to inherit visibility from ancestors
       # @return [Boolean]     Whether the element is visible
       #
-      def visible?(check_ancestors = true)
+      def visible?(check_ancestors = true) # rubocop:disable Style/OptionalBooleanParameter
         return false if (tag_name == 'input') && (native[:type] == 'hidden')
         return false if tag_name == 'template'
 

@@ -259,7 +259,8 @@ module Capybara
       end
 
       def parameter_names(block)
-        block.parameters.select { |(type, _name)| %i[key keyreq].include? type }.map { |(_type, name)| name }
+        key_types = %i[key keyreq]
+        block.parameters.select { |(type, _name)| key_types.include? type }.map { |(_type, name)| name }
       end
 
       def expression(type, allowed_filters, &block)

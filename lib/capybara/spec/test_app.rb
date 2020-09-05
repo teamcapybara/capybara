@@ -9,6 +9,7 @@ class TestApp < Sinatra::Base
   class TestAppError < Exception; end # rubocop:disable Lint/InheritException
   class TestAppOtherError < Exception # rubocop:disable Lint/InheritException
     def initialize(string1, msg)
+      super()
       @something = string1
       @message = msg
     end
@@ -89,11 +90,11 @@ class TestApp < Sinatra::Base
   end
 
   get '/form/get' do
-    '<pre id="results">' + params[:form].to_yaml + '</pre>'
+    %(<pre id="results">#{params[:form].to_yaml}</pre>)
   end
 
   post '/relative' do
-    '<pre id="results">' + params[:form].to_yaml + '</pre>'
+    %(<pre id="results">#{params[:form].to_yaml}</pre>)
   end
 
   get '/favicon.ico' do
@@ -180,7 +181,7 @@ class TestApp < Sinatra::Base
 
   post '/form' do
     self.class.form_post_count += 1
-    '<pre id="results">' + params[:form].merge('post_count' => self.class.form_post_count).to_yaml + '</pre>'
+    %(<pre id="results">#{params[:form].merge('post_count' => self.class.form_post_count).to_yaml}</pre>)
   end
 
   post '/upload_empty' do

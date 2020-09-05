@@ -27,7 +27,7 @@ module Capybara
       super
     end
 
-    def respond_to_missing?(method_name, include_private = false)
+    def respond_to_missing?(method_name, include_all)
       @registered.respond_to?(method_name) || super
     end
 

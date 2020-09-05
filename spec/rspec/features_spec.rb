@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable RSpec/MultipleDescribes
+
 require 'spec_helper'
 require 'capybara/rspec'
 
@@ -96,4 +98,4 @@ ffeature 'if ffeature aliases focused tag then' do # rubocop:disable RSpec/Focus
     expect(example.metadata[:focus]).to eq true
   end
 end
-# rubocop:enable RSpec/RepeatedExample
+# rubocop:enable RSpec/RepeatedExample, RSpec/MultipleDescribes

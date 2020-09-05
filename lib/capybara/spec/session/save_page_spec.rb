@@ -31,7 +31,7 @@ Capybara::SpecHelper.spec '#save_page' do
   it 'can store files in a specified directory' do
     Capybara.save_path = alternative_path
     @session.save_page
-    path = Dir.glob(alternative_path + '/capybara-*.html').first
+    path = Dir.glob("#{alternative_path}/capybara-*.html").first
     expect(File.read(path)).to include('Another World')
   end
 
@@ -43,14 +43,14 @@ Capybara::SpecHelper.spec '#save_page' do
   it 'can store files in a specified directory with a given filename' do
     Capybara.save_path = alternative_path
     @session.save_page('capybara-001133.html')
-    path = alternative_path + '/capybara-001133.html'
+    path = "#{alternative_path}/capybara-001133.html"
     expect(File.read(path)).to include('Another World')
   end
 
   it 'can store files in a specified directory with a given relative filename' do
     Capybara.save_path = alternative_path
     @session.save_page('tmp/capybara-001144.html')
-    path = alternative_path + '/tmp/capybara-001144.html'
+    path = "#{alternative_path}/tmp/capybara-001144.html"
     expect(File.read(path)).to include('Another World')
   end
 
@@ -63,7 +63,7 @@ Capybara::SpecHelper.spec '#save_page' do
   it 'returns an absolute path in given directory' do
     Capybara.save_path = alternative_path
     result = @session.save_page
-    path = File.expand_path(Dir.glob(alternative_path + '/capybara-*.html').first, alternative_path)
+    path = File.expand_path(Dir.glob("#{alternative_path}/capybara-*.html").first, alternative_path)
     expect(result).to eq(path)
   end
 

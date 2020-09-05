@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable RSpec/MultipleDescribes
+
 require 'spec_helper'
 
 RSpec.describe 'capybara/rspec' do
@@ -143,3 +145,5 @@ feature 'Feature DSL' do
     expect(page.body).to include('Another World')
   end
 end
+
+# rubocop:enable RSpec/MultipleDescribes

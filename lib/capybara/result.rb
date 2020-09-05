@@ -91,13 +91,9 @@ module Capybara
         return load_up_to(count + 1) <=> count
       end
 
-      if min && (min = Integer(min))
-        return -1 if load_up_to(min) < min
-      end
+      return -1 if min && (min = Integer(min)) && (load_up_to(min) < min)
 
-      if max && (max = Integer(max))
-        return 1 if load_up_to(max + 1) > max
-      end
+      return 1 if max && (max = Integer(max)) && (load_up_to(max + 1) > max)
 
       if between
         min, max = (between.begin && between.min) || 1, between.end
