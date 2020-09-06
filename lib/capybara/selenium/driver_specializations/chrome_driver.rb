@@ -7,7 +7,7 @@ module Capybara::Selenium::Driver::ChromeDriver
   def self.extended(base)
     bridge = base.send(:bridge)
     bridge.extend Capybara::Selenium::ChromeLogs unless bridge.respond_to?(:log)
-    bridge.extend Capybara::Selenium::IsDisplayed unless bridge.commands(:is_element_displayed)
+    bridge.extend Capybara::Selenium::IsDisplayed unless commands(:is_element_displayed)
     base.options[:native_displayed] = false if base.options[:native_displayed].nil?
   end
 
