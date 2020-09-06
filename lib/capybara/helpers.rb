@@ -81,8 +81,11 @@ module Capybara
       new_trace.first.split(/:in /, 2).first
     end
 
-    # Workaround for emulating `warn '...', uplevel: n` in Ruby 2.5 or lower.
     def warn(message, uplevel: 1)
+      return Kernel.warn(message, uplevel: uplevel) if RUBY_VERSION >= '2.6'
+
+      # TODO: Remove when we drop support for Ruby 2.5
+      # Workaround for emulating `warn '...', uplevel: n` in Ruby 2.5 or lower.      
       if (match = /^(?<file>.+?):(?<line>\d+)(?::in `.*')?/.match(caller[uplevel]))
         location = [match[:file], match[:line]].join(':')
         Kernel.warn "#{location}: #{message}"
