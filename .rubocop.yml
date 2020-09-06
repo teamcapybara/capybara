@@ -21,7 +21,7 @@ Layout/LineLength:
   IgnoredPatterns:
     - '\s+# _?rubocop'
     - '^\s*#'
-    - '^\s*(raise|warn) '
+    - '^\s*(raise|warn|Capybara::Helpers.warn) '
   Max: 120
 
 Metrics/BlockLength:

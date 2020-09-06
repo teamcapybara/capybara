@@ -15,7 +15,7 @@ module Capybara
     # @return [String]         Normalized text
     #
     def normalize_whitespace(text)
-      warn 'DEPRECATED: Capybara::Helpers::normalize_whitespace is deprecated, please update your driver'
+      Capybara::Helpers.warn 'DEPRECATED: Capybara::Helpers::normalize_whitespace is deprecated, please update your driver'
       text.to_s.gsub(/[[:space:]]+/, ' ').strip
     end
 
@@ -79,6 +79,16 @@ module Capybara
       new_trace = trace.dup if new_trace.empty?
 
       new_trace.first.split(/:in /, 2).first
+    end
+
+    # Workaround for emulating `warn '...', uplevel: n` in Ruby 2.5 or lower.
+    def warn(message, uplevel: 1)
+      if (match = /^(?<file>.+?):(?<line>\d+)(?::in `.*')?/.match(caller[uplevel]))
+        location = [match[:file], match[:line]].join(':')
+        Kernel.warn "#{location}: #{message}"
+      else
+        Kernel.warn message
+      end
     end
 
     if defined?(Process::CLOCK_MONOTONIC)

@@ -155,7 +155,7 @@ module Capybara
     # @deprecated
     #
     def have_style(styles = nil, **options)
-      warn "DEPRECATED: have_style is deprecated, please use match_style : #{Capybara::Helpers.filter_backtrace(caller)}"
+      Capybara::Helpers.warn "DEPRECATED: have_style is deprecated, please use match_style : #{Capybara::Helpers.filter_backtrace(caller)}"
       match_style(styles, **options)
     end
 
