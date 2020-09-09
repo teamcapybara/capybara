@@ -463,7 +463,7 @@ private
     browser.send(:bridge)
   end
   
-  def commands(md)
+  def commands(cmd)
     bridge.send(:commands, cmd)
   end
   
