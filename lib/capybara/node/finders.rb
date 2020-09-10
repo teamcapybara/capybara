@@ -24,12 +24,13 @@ module Capybara
       #   @option options [Boolean] normalize_ws
       #     Whether the `text`/`exact_text` options are compared against elment text with whitespace normalized or as returned by the driver.
       #     Defaults to {Capybara.configure default_normalize_ws}.
-      #   @option options [Boolean, Symbol] visible  Only find elements with the specified visibility:
-      #                                              * true - only finds visible elements.
-      #                                              * false - finds invisible _and_ visible elements.
-      #                                              * :all - same as false; finds visible and invisible elements.
-      #                                              * :hidden - only finds invisible elements.
-      #                                              * :visible - same as true; only finds visible elements.
+      #   @option options [Boolean, Symbol] visible
+      #     Only find elements with the specified visibility. Defaults to behavior indicated by {Capybara.configure ignore_hidden_elements}.
+      #       * true - only finds visible elements.
+      #       * false - finds invisible _and_ visible elements.
+      #       * :all - same as false; finds visible and invisible elements.
+      #       * :hidden - only finds invisible elements.
+      #       * :visible - same as true; only finds visible elements.
       #   @option options [Boolean] obscured  Only find elements with the specified obscured state:
       #                                       * true - only find elements whose centerpoint is not in the viewport or is obscured by another non-descendant element.
       #                                       * false - only find elements whose centerpoint is in the viewport and is not obscured by other non-descendant elements.
