@@ -94,7 +94,7 @@ module Capybara
     #   @see Capybara::Node::Matchers#has_button?
 
     # @!method have_field(locator = nil, **options, &optional_filter_block)
-    #   RSpec matcher for links.
+    #   RSpec matcher for form fields.
     #
     #   @see Capybara::Node::Matchers#has_field?
 
