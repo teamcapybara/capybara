@@ -2,11 +2,11 @@
 
 require 'spec_helper'
 nokogumbo_required = begin
-                       require 'nokogumbo'
-                       true
-                     rescue LoadError
-                       false
-                     end
+  require 'nokogumbo'
+  true
+rescue LoadError
+  false
+end
 
 module TestSessions
   RackTest = Capybara::Session.new(:rack_test, TestApp)

@@ -148,6 +148,10 @@ module Capybara
         native.has_attribute?('multiple')
       end
 
+      def readonly?
+        native.has_attribute?('readonly')
+      end
+
       def synchronize(_seconds = nil)
         yield # simple nodes don't need to wait
       end

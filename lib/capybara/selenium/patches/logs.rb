@@ -27,10 +27,10 @@ module Capybara
 
       def log(type)
         data = begin
-                 execute :get_log, {}, type: type.to_s
-               rescue ::Selenium::WebDriver::Error::UnknownCommandError
-                 execute :get_log_legacy, {}, type: type.to_s
-               end
+          execute :get_log, {}, type: type.to_s
+        rescue ::Selenium::WebDriver::Error::UnknownCommandError
+          execute :get_log_legacy, {}, type: type.to_s
+        end
 
         Array(data).map do |l|
           ::Selenium::WebDriver::LogEntry.new l.fetch('level', 'UNKNOWN'), l.fetch('timestamp'), l.fetch('message')
