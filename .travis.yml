@@ -7,7 +7,7 @@ services:
   - xvfb
 rvm:
   - 2.7
-  - jruby-9.2.11.1
+  - jruby-9.2.13.0
 gemfile:
   - Gemfile
 env:
@@ -122,7 +122,7 @@ matrix:
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-firefox
     - env: CHROME_BETA=true HEADLESS=true
-    - rvm: jruby-9.2.11.1
+    - rvm: jruby-9.2.13.0
     - rvm: ruby-head
 before_install:
   - gem update --system
