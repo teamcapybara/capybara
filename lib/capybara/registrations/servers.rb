@@ -39,6 +39,9 @@ Capybara.register_server :puma do |app, port, host, **options|
 
   Puma::Server.new(conf.app, events, conf.options).tap do |s|
     s.binder.parse conf.options[:binds], s.events
-    s.min_threads, s.max_threads = conf.options[:min_threads], conf.options[:max_threads]
+    # Puma v5.0.1 dropped these setters
+    if s.respond_to?(:min_threads=) && s.respond_to?(:max_threads=)
+      s.min_threads, s.max_threads = conf.options[:min_threads], conf.options[:max_threads]
+    end
   end.run.join
 end
