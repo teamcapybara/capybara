@@ -388,6 +388,39 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           @animation_session.find_link('animate me away').right_click
           expect(@animation_session).to have_content('Animation Ended', wait: 0.1)
         end
+
+        it 'should scroll the page instantly', requires: [:js] do
+          @animation_session.visit('with_animation')
+          scroll_y = @animation_session.evaluate_script(<<~JS)
+            (function(){
+              window.scrollTo(0,500);
+              return window.scrollY;
+            })()
+          JS
+          expect(scroll_y).to eq 500
+        end
+      end
+
+      context 'when set to `false`' do
+        before(:context) do # rubocop:disable RSpec/BeforeAfterAll
+          skip "Safari doesn't support multiple sessions" if safari?(session)
+          # NOTE: Although Capybara.SpecHelper.reset! sets Capybara.disable_animation to false,
+          # it doesn't affect any of these tests because the settings are applied per-session
+          Capybara.disable_animation = false
+          @animation_session = Capybara::Session.new(session.mode, TestApp.new)
+        end
+
+        it 'should scroll the page with a smooth animation', requires: [:js] do
+          @animation_session.visit('with_animation')
+          scroll_y = @animation_session.evaluate_script(<<~JS)
+            (function(){
+              window.scrollTo(0,500);
+              return window.scrollY;
+            })()
+          JS
+          # measured over 0.5 seconds: 0, 75, 282, 478, 500
+          expect(scroll_y).to be < 500
+        end
       end
 
       context 'if we pass in css that matches elements' do

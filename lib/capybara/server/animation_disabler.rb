@@ -46,10 +46,11 @@ module Capybara
       DISABLE_MARKUP_TEMPLATE = <<~HTML
         <script defer>(typeof jQuery !== 'undefined') && (jQuery.fx.off = true);</script>
         <style>
-           %<selector>s, %<selector>s::before, %<selector>s::after {
+          %<selector>s, %<selector>s::before, %<selector>s::after {
              transition: none !important;
              animation-duration: 0s !important;
              animation-delay: 0s !important;
+             scroll-behavior: auto !important;
           }
         </style>
       HTML
