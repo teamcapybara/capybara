@@ -19,11 +19,12 @@ Capybara.add_selector(:button, locator_type: [String, Symbol]) do
       locator_matchers |= XPath.attr(test_id) == locator if test_id
 
       input_btn_xpath = input_btn_xpath[locator_matchers]
+      input_btn_xpath += XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(input_btn_xpath)
 
       btn_xpath = btn_xpath[locator_matchers |
                             XPath.string.n.is(locator) |
-                            XPath.descendant(:label)[XPath.string.n.is(locator)] |
                             XPath.descendant(:img)[XPath.attr(:alt).is(locator)]]
+      btn_xpath += XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(btn_xpath)
 
       alt_matches = XPath.attr(:alt).is(locator)
       alt_matches |= XPath.attr(:'aria-label').is(locator) if enable_aria_label
