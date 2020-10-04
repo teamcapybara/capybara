@@ -12,19 +12,21 @@ Capybara.add_selector(:button, locator_type: [String, Symbol]) do
       locator_matchers = XPath.attr(:id).equals(locator) |
                          XPath.attr(:name).equals(locator) |
                          XPath.attr(:value).is(locator) |
-                         XPath.attr(:title).is(locator)
+                         XPath.attr(:title).is(locator) |
+                         (XPath.attr(:id) == XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for))
       locator_matchers |= XPath.attr(:'aria-label').is(locator) if enable_aria_label
       locator_matchers |= XPath.attr(test_id) == locator if test_id
 
-      input_btn_xpath = input_btn_xpath[locator_matchers]
+      input_btn_xpath = input_btn_xpath[locator_matchers] + locate_label(locator).descendant(input_btn_xpath)
 
       btn_xpath = btn_xpath[locator_matchers |
                             XPath.string.n.is(locator) |
-                            XPath.descendant(:img)[XPath.attr(:alt).is(locator)]]
+                            XPath.descendant(:img)[XPath.attr(:alt).is(locator)]
+                           ] + locate_label(locator).descendant(btn_xpath)
 
       alt_matches = XPath.attr(:alt).is(locator)
       alt_matches |= XPath.attr(:'aria-label').is(locator) if enable_aria_label
-      image_btn_xpath = image_btn_xpath[alt_matches]
+      image_btn_xpath = image_btn_xpath[alt_matches] + locate_label(locator).descendant(image_btn_xpath)
     end
 
     %i[value title type].inject(input_btn_xpath.union(btn_xpath).union(image_btn_xpath)) do |memo, ef|

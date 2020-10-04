@@ -132,7 +132,11 @@ module Capybara
       attr_matchers |= XPath.attr(test_id) == locator if test_id
 
       locate_xpath = locate_xpath[attr_matchers]
-      locate_xpath + XPath.descendant(:label)[XPath.string.n.is(locator)].descendant(xpath)
+      locate_xpath + locate_label(locator).descendant(xpath)
+    end
+
+    def locate_label(locator)
+      XPath.descendant(:label)[XPath.string.n.is(locator)]
     end
 
     def find_by_attr(attribute, value)
