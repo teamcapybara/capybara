@@ -94,6 +94,13 @@ Capybara::SpecHelper.spec '#has_current_path?' do
       expect(@session).to have_current_path(nil, ignore_query: true)
     end.not_to raise_exception
   end
+
+  it 'should accept a filter block that receives Addressable::URL' do
+    @session.visit('/with_js?a=3&b=defgh')
+    expect(@session).to have_current_path('/with_js', ignore_query: true) { |url|
+      url.query_values.keys == ['a','b']
+    }
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_current_path?' do
@@ -134,5 +141,11 @@ Capybara::SpecHelper.spec '#has_no_current_path?' do
     expect do
       expect(@session).not_to have_current_path('/with_js', ignore_query: true)
     end.not_to raise_exception
+  end
+
+  it 'should accept a filter block that receives Addressable::URL' do
+    expect(@session).to have_no_current_path('/with_js', ignore_query: true) { |url|
+      !url.query.nil?
+    }
   end
 end

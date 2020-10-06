@@ -7,11 +7,11 @@ module Capybara
     module Matchers
       class HaveCurrentPath < WrappedElementMatcher
         def element_matches?(el)
-          el.assert_current_path(current_path, **@kw_args)
+          el.assert_current_path(current_path, **@kw_args, &@filter_block)
         end
 
         def element_does_not_match?(el)
-          el.assert_no_current_path(current_path, **@kw_args)
+          el.assert_no_current_path(current_path, **@kw_args, &@filter_block)
         end
 
         def description

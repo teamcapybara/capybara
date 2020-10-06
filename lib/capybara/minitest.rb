@@ -50,10 +50,10 @@ module Capybara
 
       %w[text no_text title no_title current_path no_current_path].each do |assertion_name|
         class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
-          def assert_#{assertion_name}(*args, **kwargs)
+          def assert_#{assertion_name}(*args, **kwargs, &optional_filter_block)
             self.assertions +=1
             subject, args = determine_subject(args)
-            subject.assert_#{assertion_name}(*args, **kwargs)
+            subject.assert_#{assertion_name}(*args, **kwargs, &optional_filter_block)
           rescue Capybara::ExpectationNotMet => e
             raise ::Minitest::Assertion, e.message
           end

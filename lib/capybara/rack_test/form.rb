@@ -6,7 +6,7 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
   # That check should be based solely on the form element's 'enctype' attribute value,
   # which should probably be provided to Rack::Test in its non-GET request methods.
   class NilUploadedFile < Rack::Test::UploadedFile
-    def initialize # rubocop:disable Lint/MissingSuper
+    def initialize
       @empty_file = Tempfile.new('nil_uploaded_file')
       @empty_file.close
     end

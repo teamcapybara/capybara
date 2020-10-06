@@ -30,6 +30,7 @@ class MinitestTest < Minitest::Test
 
   def test_assert_current_path
     assert_current_path('/form')
+    assert_current_path('/form') { |url| url.query.nil? }
     assert_no_current_path('/not_form')
     refute_current_path('/not_form')
   end
@@ -158,6 +159,6 @@ RSpec.describe 'capybara/minitest' do
     reporter.start
     MinitestTest.run reporter, {}
     reporter.report
-    expect(output.string).to include('22 runs, 52 assertions, 0 failures, 0 errors, 1 skips')
+    expect(output.string).to include('22 runs, 53 assertions, 0 failures, 0 errors, 1 skips')
   end
 end
