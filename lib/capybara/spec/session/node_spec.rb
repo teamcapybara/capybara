@@ -409,6 +409,17 @@ Capybara::SpecHelper.spec 'node' do
       element = @session.find(:link, 'Second Link')
       expect(@session.find(:xpath, element.path)).to eq(element)
     end
+
+    it 'reports when element in shadow dom', requires: [:shadow_dom] do
+      @session.visit('/with_js')
+      shadow = @session.find(:css, '#shadow')
+      element = @session.evaluate_script(<<~JS, shadow)
+        (function(root){
+          return root.shadowRoot.querySelector('span');
+        })(arguments[0])
+      JS
+      expect(element.path).to eq ": Shadow DOM element - no XPath :"
+    end
   end
 
   describe '#trigger', requires: %i[js trigger] do
