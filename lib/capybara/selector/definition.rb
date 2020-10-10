@@ -215,7 +215,7 @@ module Capybara
       end
 
       def default_visibility(fallback = Capybara.ignore_hidden_elements, options = {})
-        vis = if @default_visibility&.respond_to?(:call)
+        vis = if @default_visibility.respond_to?(:call)
           @default_visibility.call(options)
         else
           @default_visibility

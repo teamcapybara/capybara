@@ -53,7 +53,7 @@ Capybara.add_selector(:label, locator_type: [String, Symbol]) do
     end
   end
   describe_node_filters do |**options|
-    " for element #{options[:for]}" if options[:for]&.is_a?(Capybara::Node::Element)
+    " for element #{options[:for]}" if options[:for].is_a?(Capybara::Node::Element)
   end
 
   def labelable_elements

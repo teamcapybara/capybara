@@ -62,6 +62,9 @@ Lint/UnusedMethodArgument:
     - 'lib/capybara/driver/base.rb'
     - 'lib/capybara/driver/node.rb'
 
+Lint/RedundantSafeNavigation:
+  Enabled: false
+
 Lint/RaiseException:
   Enabled: true
 
@@ -156,10 +159,10 @@ Style/RedundantFetchBlock:
 
 Style/AccessorGrouping:
   Enabled: false
-  
+
 Style/BisectedAttrAccessor:
   Enabled: false
-  
+
 Style/RedundantAssignment:
   Enabled: true
 
@@ -177,7 +180,7 @@ Style/HashLikeCase:
 
 Style/RedundantFileExtensionInRequire:
   Enabled: true
-  
+
 Layout/EmptyLineBetweenDefs:
   AllowAdjacentOneLineDefs: true
 
@@ -206,28 +209,28 @@ Security/YAMLLoad:
 
 Performance/AncestorsInclude:
   Enabled: true
-  
+
 Performance/BigDecimalWithNumericArgument:
   Enabled: true
-  
+
 Performance/RedundantSortBlock:
   Enabled: true
-  
+
 Performance/RedundantStringChars:
   Enabled: true
-  
+
 Performance/ReverseFirst:
   Enabled: true
-  
+
 Performance/SortReverse:
   Enabled: true
-  
+
 Performance/Squeeze:
   Enabled: true
-  
+
 Performance/StringInclude:
   Enabled: true
-  
+
 
 
 RSpec/ExampleWording:
