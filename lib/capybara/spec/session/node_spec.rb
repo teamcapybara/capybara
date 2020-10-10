@@ -419,7 +419,7 @@ Capybara::SpecHelper.spec 'node' do
         })(arguments[0])
       JS
       expect(element.path).to eq '(: Shadow DOM element - no XPath :)'
-    end()
+    end
   end
 
   describe '#trigger', requires: %i[js trigger] do
