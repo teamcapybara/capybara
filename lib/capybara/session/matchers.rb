@@ -19,8 +19,8 @@ module Capybara
     # @raise [Capybara::ExpectationNotMet] if the assertion hasn't succeeded during wait time
     # @return [true]
     #
-    def assert_current_path(path, **options)
-      _verify_current_path(path, **options) do |query|
+    def assert_current_path(path, **options, &optional_filter_block)
+      _verify_current_path(path, optional_filter_block, **options) do |query|
         raise Capybara::ExpectationNotMet, query.failure_message unless query.resolves_for?(self)
       end
     end
@@ -35,8 +35,8 @@ module Capybara
     # @raise [Capybara::ExpectationNotMet] if the assertion hasn't succeeded during wait time
     # @return [true]
     #
-    def assert_no_current_path(path, **options)
-      _verify_current_path(path, **options) do |query|
+    def assert_no_current_path(path, **options, &optional_filter_block)
+      _verify_current_path(path, optional_filter_block, **options) do |query|
         raise Capybara::ExpectationNotMet, query.negative_failure_message if query.resolves_for?(self)
       end
     end
@@ -50,8 +50,8 @@ module Capybara
     # @macro current_path_query_params
     # @return [Boolean]
     #
-    def has_current_path?(path, **options)
-      make_predicate(options) { assert_current_path(path, **options) }
+    def has_current_path?(path, **options, &optional_filter_block)
+      make_predicate(options) { assert_current_path(path, **options, &optional_filter_block) }
     end
 
     ##
@@ -63,14 +63,14 @@ module Capybara
     # @macro current_path_query_params
     # @return [Boolean]
     #
-    def has_no_current_path?(path, **options)
-      make_predicate(options) { assert_no_current_path(path, **options) }
+    def has_no_current_path?(path, **options, &optional_filter_block)
+      make_predicate(options) { assert_no_current_path(path, **options, &optional_filter_block) }
     end
 
   private
 
-    def _verify_current_path(path, **options)
-      query = Capybara::Queries::CurrentPathQuery.new(path, **options)
+    def _verify_current_path(path, filter_block, **options)
+      query = Capybara::Queries::CurrentPathQuery.new(path, **options, &filter_block)
       document.synchronize(query.wait) do
         yield(query)
       end
