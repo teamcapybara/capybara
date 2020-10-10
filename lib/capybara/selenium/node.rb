@@ -494,8 +494,8 @@ private
     	var pos, tempitem2;
 
       if (el.getRootNode && el.getRootNode() instanceof ShadowRoot) {
-        return ": Shadow DOM element - no XPath :"
-        };
+        return "(: Shadow DOM element - no XPath :)";
+      };
       while(el !== xml.documentElement) {
         pos = 0;
         tempitem2 = el;

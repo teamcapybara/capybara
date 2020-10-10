@@ -418,8 +418,8 @@ Capybara::SpecHelper.spec 'node' do
           return root.shadowRoot.querySelector('span');
         })(arguments[0])
       JS
-      expect(element.path).to eq ": Shadow DOM element - no XPath :"
-    end
+      expect(element.path).to eq '(: Shadow DOM element - no XPath :)'
+    end()
   end
 
   describe '#trigger', requires: %i[js trigger] do
