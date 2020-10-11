@@ -78,12 +78,18 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
         .each do |contains_emoji, inputs|
       if contains_emoji
         inputs.join.grapheme_clusters.chunk { |gc| gc.match?(/\p{Emoji Presentation}/) }
-              .each do |emoji, clusters|
-          if emoji
-            driver.send(:execute_cdp, 'Input.insertText', text: clusters.join)
-          else
-            super(clusters.join)
-          end
+              .each do |_emoji, clusters|
+          # For non-headless we can send non-emoji normally and then send emoji via CDP
+          # thereby getting key events and emoji. Unfortunately that doesn't work for
+          # headless chrome currently so just send via cdp
+          driver.send(:execute_cdp, 'Input.insertText', text: clusters.join)
+
+          #     .each do |emoji, clusters|
+          # if emoji
+          #   driver.send(:execute_cdp, 'Input.insertText', text: clusters.join)
+          # else
+          #   super(clusters.join)
+          # end
         end
       else
         super(*inputs)
