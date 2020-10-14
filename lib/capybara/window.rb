@@ -138,9 +138,5 @@ module Capybara
       end
       raise Capybara::WindowError, "Window size not stable within #{seconds} seconds."
     end
-
-    def raise_unless_current(what)
-      raise Capybara::WindowError, "#{what} not current window is not possible." unless current?
-    end
   end
 end
