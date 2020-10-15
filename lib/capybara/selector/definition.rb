@@ -83,7 +83,7 @@ module Capybara
       # Automatic selector detection
       #
       # @yield [locator]                   This block takes the passed in locator string and returns whether or not it matches the selector
-      # @yieldparam [String], locator      The locator string used to determin if it matches the selector
+      # @yieldparam [String], locator      The locator string used to determine if it matches the selector
       # @yieldreturn [Boolean]             Whether this selector matches the locator string
       # @return [#call]                    The block that will be used to detect selector match
       #

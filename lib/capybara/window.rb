@@ -4,7 +4,7 @@ module Capybara
   ##
   # The {Window} class represents a browser window.
   #
-  # You can get an instance of the class by calling either of:
+  # You can get an instance of the class by calling any of:
   #
   # * {Capybara::Session#windows}
   # * {Capybara::Session#current_window}
@@ -82,8 +82,8 @@ module Capybara
     # Resize window.
     #
     # @macro about_current
-    # @param width [String]  the new window width in pixels
-    # @param height [String]  the new window height in pixels
+    # @param width [Integer]  the new window width in pixels
+    # @param height [Integer]  the new window height in pixels
     #
     def resize_to(width, height)
       wait_for_stable_size { @driver.resize_window_to(handle, width, height) }
