@@ -28,6 +28,7 @@ Capybara.register_server :puma do |app, port, host, **options|
   options = default_options.merge(options)
 
   conf = Rack::Handler::Puma.config(app, options)
+  conf.clamp
   events = conf.options[:Silent] ? ::Puma::Events.strings : ::Puma::Events.stdio
 
   puma_ver = Gem::Version.new(Puma::Const::PUMA_VERSION)

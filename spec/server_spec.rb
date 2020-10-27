@@ -99,6 +99,21 @@ RSpec.describe Capybara::Server do
     expect(uri.to_hash).to include(scheme: 'http', host: server.host, port: server.port)
   end
 
+  it 'should call #clamp on the puma configuration to ensure that environment is a string' do
+    Capybara.server = :puma
+    app_proc = proc { |_env| [200, {}, ['Hello Puma!']] }
+    require 'puma'
+    allow(Puma::Server).to receive(:new).and_wrap_original do |method, app, events, options|
+      # If #clamp is not called on the puma config then this will be a Proc
+      expect(options.fetch(:environment)).to eq 'development'
+      method.call(app, events, options)
+    end
+    described_class.new(app_proc).boot
+    expect(Puma::Server).to have_received(:new)
+  ensure
+    Capybara.server = :default
+  end
+
   it 'should support SSL' do
     key = File.join(Dir.pwd, 'spec', 'fixtures', 'key.pem')
     cert = File.join(Dir.pwd, 'spec', 'fixtures', 'certificate.pem')
