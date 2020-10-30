@@ -4,6 +4,8 @@ Release date: unreleased
 ### Added
 
 * Ability to fill in with emoji when using Chrome with selenium driver (Firefox already worked)
+* Added `Capybara.disable_animation_extra_css` option, which can be used to add additional CSS rules
+  to the AnimationDisabler middleware [Nathan Broadbent]
 
 ### Fixed
 

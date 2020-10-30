@@ -33,6 +33,7 @@ module Capybara
         Capybara.enable_aria_role = false
         Capybara.default_set_options = {}
         Capybara.disable_animation = false
+        Capybara.disable_animation_extra_css = nil
         Capybara.test_id = nil
         Capybara.predicates_wait = true
         Capybara.default_normalize_ws = false
@@ -84,7 +85,7 @@ module Capybara
           end
 
           specs.each do |spec_name, spec_options, block|
-            describe spec_name, *spec_options do # rubocop:disable RSpec/EmptyExampleGroup
+            describe spec_name, *spec_options do
               class_eval(&block)
             end
           end

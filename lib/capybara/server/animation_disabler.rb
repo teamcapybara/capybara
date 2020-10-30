@@ -16,7 +16,11 @@ module Capybara
 
       def initialize(app)
         @app = app
-        @disable_markup = format(DISABLE_MARKUP_TEMPLATE, selector: self.class.selector_for(Capybara.disable_animation))
+        @disable_markup = format(
+          DISABLE_MARKUP_TEMPLATE,
+          selector: self.class.selector_for(Capybara.disable_animation),
+          extra_css: Capybara.disable_animation_extra_css || ''
+        )
       end
 
       def call(env)
@@ -51,6 +55,7 @@ module Capybara
              animation-duration: 0s !important;
              animation-delay: 0s !important;
              scroll-behavior: auto !important;
+             %<extra_css>s
           }
         </style>
       HTML
