@@ -475,6 +475,24 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         end
       end
     end
+
+    describe 'Capybara#disable_animation_extra_css' do
+      before(:context) do # rubocop:disable RSpec/BeforeAfterAll
+        skip "Safari doesn't support multiple sessions" if safari?(session)
+        # NOTE: Although Capybara.SpecHelper.reset! sets Capybara.disable_animation to false,
+        # it doesn't affect any of these tests because the settings are applied per-session
+        Capybara.disable_animation = true
+        Capybara.disable_animation_extra_css = 'color: rgba(0, 0, 249, 1);'
+        @animation_session = Capybara::Session.new(session.mode, TestApp.new)
+      end
+
+      it 'should add custom CSS rules to the selector' do
+        @animation_session.visit('with_animation')
+        rgba_color = @animation_session.find(:css, '#with_animation .animation').native.css_value('color')
+        expect(rgba_color).to eq 'rgba(0, 0, 249, 1)'
+      end
+    end
+
     # rubocop:enable RSpec/InstanceVariable
 
     describe ':element selector' do
