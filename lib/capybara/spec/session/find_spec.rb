@@ -60,7 +60,7 @@ Capybara::SpecHelper.spec '#find' do
     end
   end
 
-  context 'with frozen time', requires: [:js] do # rubocop:disable RSpec/EmptyExampleGroup
+  context 'with frozen time', requires: [:js] do
     if defined?(Process::CLOCK_MONOTONIC)
       it 'will time out even if time is frozen' do
         @session.visit('/with_js')
