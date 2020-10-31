@@ -99,13 +99,13 @@ RSpec.describe Capybara::Server do
     expect(uri.to_hash).to include(scheme: 'http', host: server.host, port: server.port)
   end
 
-  it 'should call #clamp on the puma configuration to ensure that environment is a string' do
+  it 'should call #clamp on the puma configuration to ensure that environment is a string', :focus_ do
     Capybara.server = :puma
     app_proc = proc { |_env| [200, {}, ['Hello Puma!']] }
     require 'puma'
     allow(Puma::Server).to receive(:new).and_wrap_original do |method, app, events, options|
       # If #clamp is not called on the puma config then this will be a Proc
-      expect(options.fetch(:environment)).to eq 'development'
+      expect(options.fetch(:environment)).to be_a(String)
       method.call(app, events, options)
     end
     described_class.new(app_proc).boot
