@@ -30,7 +30,7 @@ Capybara.add_selector(:button, locator_type: [String, Symbol]) do
     end
 
     %i[value title type].inject(input_btn_xpath.union(btn_xpath).union(image_btn_xpath)) do |memo, ef|
-      memo[find_by_attr(ef, options[ef])]
+      memo.where(find_by_attr(ef, options[ef]))
     end
   end
 
