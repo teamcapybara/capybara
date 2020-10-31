@@ -4,10 +4,23 @@ Release date: unreleased
 ### Added
 
 * Ability to fill in with emoji when using Chrome with selenium driver (Firefox already worked)
+* Current path assetsions/expectations accept optional filter block
+* Animation disabler now specifies `scroll-behavior: auto;` [Nathan Broadbent]
+* :button selector can now find elements by label text [Sean Doyle]
+
+### Changed
+
+* Text query validates the type parameter to prevent undefined behavior
 
 ### Fixed
 
 * racktest driver better handles fragments and redirection to urls that include fragments
+* Don't error when attempting to get XPath location of a shadow element
+* Missing `readonly?` added to Node::Simple
+* Selenium version detection when loaded via alternate method [Joel Hawksley]
+* Connection count issue if REQUEST_URI value changed by app [Blake Williams]
+* Maintain URI fragment when redirecting in rack-test driver 
+* Text query error message [Wojciech Wnętrzak]
 
 # Version 3.33.0
 Release date: 2020-06-21
@@ -18,6 +31,7 @@ Release date: 2020-06-21
 * Support for aria-role button when enabled [Seiei Miyagi]
 * Support for aria-role link when enabled
 * Support for `validation_message` filter with :field and :fillable_field selectors
+* Deprecation warnings show source location [Koichi ITO]
 
 ### Changed
 
