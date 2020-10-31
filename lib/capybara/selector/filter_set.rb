@@ -12,7 +12,7 @@ module Capybara
         @node_filters = {}
         @expression_filters = {}
         @descriptions = Hash.new { |hsh, key| hsh[key] = [] }
-        instance_eval(&block)
+        instance_eval(&block) if block
       end
 
       def node_filter(names, *types, **options, &block)

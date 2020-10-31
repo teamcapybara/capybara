@@ -83,6 +83,11 @@ Lint/DuplicateElsifCondition:
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
 
+Lint/EmptyBlock:
+  Exclude:
+    - 'lib/capybara/spec/**/*'
+    - 'spec/**/*.rb'
+  
 Naming/PredicateName:
   Exclude:
     - '**/*/*matchers.rb'
@@ -109,6 +114,9 @@ Style/Documentation:
   Exclude:
     - 'lib/capybara/spec/**/*'
     - 'spec/**/*'
+  Enabled: false
+
+Style/DocumentDynamicEvalDefinition:
   Enabled: false
 
 Style/DoubleNegation:
@@ -261,5 +269,11 @@ RSpec/PredicateMatcher:
   Exclude:
     - 'spec/basic_node_spec.rb'
 
-Capybara/FeatureMethods:
+RSpec/Capybara:
+  Enabled: false
+
+RSpec/Capybara/FeatureMethods:
+  Enabled: false
+
+RSpec/Capybara/VisibilityMatcher:
   Enabled: false

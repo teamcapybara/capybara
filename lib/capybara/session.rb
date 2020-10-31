@@ -739,7 +739,7 @@ module Capybara
     # @param [Hash] options   a customizable set of options
     #
     def save_and_open_screenshot(path = nil, **options)
-      save_screenshot(path, **options).tap { |s_path| open_file(s_path) } # rubocop:disable Lint/Debugger
+      save_screenshot(path, **options).tap { |s_path| open_file(s_path) }
     end
 
     def document

@@ -84,7 +84,7 @@ module Capybara
           end
 
           specs.each do |spec_name, spec_options, block|
-            describe spec_name, *spec_options do # rubocop:disable RSpec/EmptyExampleGroup
+            describe spec_name, *spec_options do
               class_eval(&block)
             end
           end

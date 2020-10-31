@@ -15,7 +15,7 @@ module Capybara
 
       def initialize(name, locator_type: nil, raw_locator: false, supports_exact: nil, &block)
         @name = name
-        @filter_set = Capybara::Selector::FilterSet.add(name) {}
+        @filter_set = Capybara::Selector::FilterSet.add(name)
         @match = nil
         @label = nil
         @failure_message = nil
