@@ -229,6 +229,12 @@ Capybara::SpecHelper.spec '#check' do
           @session.click_button('awesome')
           expect(extract_results(@session)['cars']).to include('bugatti')
         end
+
+        it 'should check via label if multiple labels' do
+          expect(@session).to have_field('multi_label_checkbox', checked: false, visible: :hidden)
+          @session.check('Label to click', allow_label_click: true)
+          expect(@session).to have_field('multi_label_checkbox', checked: true, visible: :hidden)
+        end
       end
     end
   end
