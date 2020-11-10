@@ -58,7 +58,7 @@ module Capybara
     ].freeze
     SESSION_METHODS = %i[
       body html source current_url current_host current_path
-      execute_script evaluate_script visit refresh go_back go_forward
+      execute_script evaluate_script visit refresh go_back go_forward send_keys
       within within_element within_fieldset within_table within_frame switch_to_frame
       current_window windows open_new_window switch_to_window within_window window_opened_by
       save_page save_and_open_page save_screenshot
@@ -301,6 +301,14 @@ module Capybara
     #
     def go_forward
       driver.go_forward
+    end
+
+    ##
+    # @!method send_keys
+    #   @see Capybara::Node::Element#send_keys
+    #
+    def send_keys(*args, **kw_args)
+      driver.send_keys(*args, **kw_args)
     end
 
     ##
