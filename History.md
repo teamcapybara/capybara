@@ -21,6 +21,7 @@ Release date: unreleased
 * Connection count issue if REQUEST_URI value changed by app [Blake Williams]
 * Maintain URI fragment when redirecting in rack-test driver 
 * Text query error message [Wojciech Wnętrzak]
+* Checking a checkbox/radio button with `allow_label_click` now works if there are multiple labels (Issue #2421)
 
 # Version 3.33.0
 Release date: 2020-06-21
