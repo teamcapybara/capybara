@@ -435,11 +435,7 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The element
       def drop(*args)
-        options = args.map do |arg|
-          return arg.to_path if arg.respond_to?(:to_path)
-
-          arg
-        end
+        options = args.map { |arg| arg.respond_to?(:to_path) ? arg.to_path : arg }
         synchronize { base.drop(*options) }
         self
       end
