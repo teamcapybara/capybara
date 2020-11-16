@@ -11,7 +11,7 @@ module Capybara
     end
 
     def within(*args, **kwargs, &block)
-      if block_given?
+      if block
         within_element(*args, **kwargs, &block)
       else
         be_within(*args)

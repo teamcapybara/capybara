@@ -39,7 +39,7 @@ module Capybara
     alias index find_index
 
     def each(&block)
-      return enum_for(:each) unless block_given?
+      return enum_for(:each) unless block
 
       @result_cache.each(&block)
       loop do

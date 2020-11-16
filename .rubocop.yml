@@ -239,7 +239,11 @@ Performance/Squeeze:
 Performance/StringInclude:
   Enabled: true
 
-
+Performance/MethodObjectAsBlock:
+  Enabled: false
+  
+Performance/BlockGivenWithExplicitBlock:
+  Enabled: false
 
 RSpec/ExampleWording:
   Enabled: false

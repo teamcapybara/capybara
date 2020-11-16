@@ -489,8 +489,8 @@ module Capybara
     # @raise [ArgumentError]               if both or neither arguments were provided
     #
     def switch_to_window(window = nil, **options, &window_locator)
-      raise ArgumentError, '`switch_to_window` can take either a block or a window, not both' if window && block_given?
-      raise ArgumentError, '`switch_to_window`: either window or block should be provided' if !window && !block_given?
+      raise ArgumentError, '`switch_to_window` can take either a block or a window, not both' if window && window_locator
+      raise ArgumentError, '`switch_to_window`: either window or block should be provided' if !window && !window_locator
 
       unless scopes.last.nil?
         raise Capybara::ScopeError, '`switch_to_window` is not supposed to be invoked from '\
