@@ -133,6 +133,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     unwrap_script_result(result)
   end
 
+  def send_keys(*args)
+    active_element.send_keys(*args)
+  end
+
   def save_screenshot(path, **_options)
     browser.save_screenshot(path)
   end
@@ -453,6 +457,10 @@ private
 
   def find_context
     browser
+  end
+
+  def active_element
+    browser.switch_to.active_element
   end
 
   def build_node(native_node, initial_cache = {})

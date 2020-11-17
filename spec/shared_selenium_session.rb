@@ -222,6 +222,18 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
     end
 
+    describe '#send_keys' do
+      it 'defaults to sending keys to the document.activeElement' do
+        session.visit('/form')
+
+        expect(session.evaluate_script('document.activeElement')).to eq(session.find('//body'))
+
+        session.send_keys(:tab)
+
+        expect(session.evaluate_script('document.activeElement')).to eq(session.first(:field))
+      end
+    end
+
     describe '#path' do
       it 'returns xpath' do
         # this is here because it is testing for an XPath that is specific to the algorithm used in the selenium driver

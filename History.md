@@ -7,6 +7,12 @@ Release date: unreleased
 * Current path assetsions/expectations accept optional filter block
 * Animation disabler now specifies `scroll-behavior: auto;` [Nathan Broadbent]
 * :button selector can now find elements by label text [Sean Doyle]
+* In Selenium-enabled environments, `Session#send_keys` delegates to the current
+  element with focus (via [document.activeElement][]). When called from Rack
+  Test environments, `Session#send_keys` raises an error [Sean Doyle]
+
+[document.activeElement]: https://developer.mozilla.org/en-US/docs/Web/API/DocumentOrShadowRoot/activeElement
+[Sean Doyle]: https://github.com/seanpdoyle/
 
 ### Changed
 
