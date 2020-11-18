@@ -682,6 +682,15 @@ Capybara::SpecHelper.spec 'node' do
       expect(@session).to have_xpath('//div[contains(., "HTML5 Dropped string: text/plain Some dropped text")]')
     end
 
+    it 'can drop a pathname' do
+      @session.visit('/with_js')
+      target = @session.find('//div[@id="drop_html5"]')
+      target.drop(
+        Pathname.new with_os_path_separators(File.expand_path('../fixtures/capybara.jpg', File.dirname(__FILE__)))
+      )
+      expect(@session).to have_xpath('//div[contains(., "HTML5 Dropped file: capybara.jpg")]')
+    end
+
     it 'can drop multiple strings' do
       @session.visit('/with_js')
       target = @session.find('//div[@id="drop_html5"]')
