@@ -9,7 +9,7 @@ Capybara.add_selector(:table_row, locator_type: [Array, Hash]) do
         cell_xp = XPath.descendant(:td)[
           XPath.string.n.is(cell) & XPath.position.equals(header_xp.preceding_sibling.count.plus(1))
         ]
-        xp[cell_xp]
+        xp.where(cell_xp)
       end
     else
       initial_td = XPath.descendant(:td)[XPath.string.n.is(locator.shift)]

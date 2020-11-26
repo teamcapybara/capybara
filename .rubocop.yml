@@ -87,7 +87,10 @@ Lint/EmptyBlock:
   Exclude:
     - 'lib/capybara/spec/**/*'
     - 'spec/**/*.rb'
-  
+
+Lint/DuplicateBranch:
+  Enabled: false
+
 Naming/PredicateName:
   Exclude:
     - '**/*/*matchers.rb'

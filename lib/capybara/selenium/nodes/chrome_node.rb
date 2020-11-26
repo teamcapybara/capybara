@@ -126,7 +126,7 @@ private
   end
 
   def chromedriver_version
-    capabilities['chrome']['chromedriverVersion'].split(' ')[0]
+    capabilities['chrome']['chromedriverVersion'].split(' ')[0] # rubocop:disable Style/RedundantArgument
   end
 
   def native_displayed?

@@ -54,10 +54,10 @@ module Capybara
       idx, length = args
       max_idx = case idx
       when Integer
-        if !idx.negative?
-          length.nil? ? idx : idx + length - 1
-        else
+        if idx.negative?
           nil
+        else
+          length.nil? ? idx : idx + length - 1
         end
       when Range
         # idx.max is broken with beginless ranges
