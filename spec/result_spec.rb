@@ -78,14 +78,10 @@ RSpec.describe Capybara::Result do
     expect(recalc_result[1...3].map(&:text)).to eq %w[Beta Gamma]
     expect(recalc_result[1..7].map(&:text)).to eq %w[Beta Gamma Delta]
     expect(recalc_result[2...-1].map(&:text)).to eq %w[Gamma]
-    expect(recalc_result[2..-1].map(&:text)).to eq %w[Gamma Delta]
+    expect(recalc_result[2...].map(&:text)).to eq %w[Gamma Delta]
+    expect(recalc_result[2..-1].map(&:text)).to eq %w[Gamma Delta] # rubocop:disable Style/SlicingWithRange
+    expect(recalc_result[2..].map(&:text)).to eq %w[Gamma Delta]
   end
-
-  eval <<~TEST, binding, __FILE__, __LINE__ + 1 if RUBY_VERSION.to_f > 2.5
-    it 'supports endless ranges' do
-      expect(result[2..].map(&:text)).to eq %w[Gamma Delta]
-    end
-  TEST
 
   eval <<~TEST, binding, __FILE__, __LINE__ + 1 if RUBY_VERSION.to_f > 2.6
     it 'supports inclusive positive beginless ranges' do

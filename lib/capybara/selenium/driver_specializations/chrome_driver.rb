@@ -38,7 +38,7 @@ module Capybara::Selenium::Driver::ChromeDriver
     return unless @browser
 
     switch_to_window(window_handles.first)
-    window_handles.slice(1..-1).each { |win| close_window(win) }
+    window_handles.slice(1..).each { |win| close_window(win) }
     return super if chromedriver_version < 73
 
     timer = Capybara::Helpers.timer(expire_in: 10)

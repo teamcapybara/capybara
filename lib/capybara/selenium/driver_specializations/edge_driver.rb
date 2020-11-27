@@ -39,7 +39,7 @@ module Capybara::Selenium::Driver::EdgeDriver
     return unless @browser
 
     switch_to_window(window_handles.first)
-    window_handles.slice(1..-1).each { |win| close_window(win) }
+    window_handles.slice(1..).each { |win| close_window(win) }
 
     timer = Capybara::Helpers.timer(expire_in: 10)
     begin

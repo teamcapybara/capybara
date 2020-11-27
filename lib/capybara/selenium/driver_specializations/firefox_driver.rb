@@ -52,7 +52,7 @@ module Capybara::Selenium::Driver::W3CFirefoxDriver
     end
 
     switch_to_window(window_handles.first)
-    window_handles.slice(1..-1).each { |win| close_window(win) }
+    window_handles.slice(1..).each { |win| close_window(win) }
     super
   end
 

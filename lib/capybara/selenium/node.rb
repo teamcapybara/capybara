@@ -37,8 +37,8 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def style(styles)
-    styles.each_with_object({}) do |style, result|
-      result[style] = native.css_value(style)
+    styles.to_h do |style|
+      [style, native.css_value(style)]
     end
   end
 
@@ -282,7 +282,7 @@ private
       if rapid == true || ((value.length > auto_rapid_set_length) && rapid != false)
         send_keys(value[0..3])
         driver.execute_script RAPID_APPEND_TEXT, self, value[4...-3]
-        send_keys(value[-3..-1])
+        send_keys(value[-3..])
       else
         send_keys(value)
       end

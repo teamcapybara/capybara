@@ -49,7 +49,7 @@ module Capybara
         else
           Array(classes).map do |klass|
             if klass.match?(/^!(?!!!)/)
-              !XPath.attr(:class).contains_word(klass.slice(1..-1))
+              !XPath.attr(:class).contains_word(klass.slice(1..))
             else
               XPath.attr(:class).contains_word(klass.sub(/^!!/, ''))
             end
