@@ -4,7 +4,7 @@ Release date: 2020-11-26
 ### Added
 
 * Ability to fill in with emoji when using Chrome with selenium driver (Firefox already worked)
-* Current path assetsions/expectations accept optional filter block
+* Current path assertions/expectations accept optional filter block
 * Animation disabler now specifies `scroll-behavior: auto;` [Nathan Broadbent]
 * :button selector can now find elements by label text [Sean Doyle]
 * `Session#send_keys` to send keys to the current element with focus in drivers that support the 
