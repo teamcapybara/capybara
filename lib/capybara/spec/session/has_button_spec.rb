@@ -46,8 +46,24 @@ Capybara::SpecHelper.spec '#has_button?' do
     expect(@session).to have_button('ARIA button', enable_aria_role: true)
   end
 
+  it 'should be true for a role=button within a label when enable_aria_role: true' do
+    expect(@session).to have_button('role=button within label', enable_aria_role: true)
+  end
+
   it 'should be false for role=button when enable_aria_role: false' do
     expect(@session).not_to have_button('ARIA button', enable_aria_role: false)
+  end
+
+  it 'should be false for a role=button within a label when enable_aria_role: false' do
+    expect(@session).not_to have_button('role=button within label', enable_aria_role: false)
+  end
+
+  it 'should not affect other selectors when enable_aria_role: true' do
+    expect(@session).to have_button('Click me!', enable_aria_role: true)
+  end
+
+  it 'should not affect other selectors when enable_aria_role: false' do
+    expect(@session).to have_button('Click me!', enable_aria_role: false)
   end
 end
 
@@ -81,7 +97,23 @@ Capybara::SpecHelper.spec '#has_no_button?' do
     expect(@session).to have_no_button('ARIA button', enable_aria_role: false)
   end
 
+  it 'should be true for role=button within a label when enable_aria_role: false' do
+    expect(@session).to have_no_button('role=button within label', enable_aria_role: false)
+  end
+
   it 'should be false for role=button when enable_aria_role: true' do
     expect(@session).not_to have_no_button('ARIA button', enable_aria_role: true)
+  end
+
+  it 'should be false for a role=button within a label when enable_aria_role: true' do
+    expect(@session).not_to have_no_button('role=button within label', enable_aria_role: true)
+  end
+
+  it 'should not affect other selectors when enable_aria_role: true' do
+    expect(@session).to have_no_button('Junk button that does not exist', enable_aria_role: true)
+  end
+
+  it 'should not affect other selectors when enable_aria_role: false' do
+    expect(@session).to have_no_button('Junk button that does not exist', enable_aria_role: false)
   end
 end
