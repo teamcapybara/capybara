@@ -44,7 +44,11 @@ module Capybara
       end
 
       DISABLE_MARKUP_TEMPLATE = <<~HTML
-        <script defer>(typeof jQuery !== 'undefined') && (jQuery.fx.off = true);</script>
+        <script defer="defer">
+        //<![CDATA[
+          (typeof jQuery !== 'undefined') && (jQuery.fx.off = true);
+        //]]>
+        </script>
         <style>
           %<selector>s, %<selector>s::before, %<selector>s::after {
              transition: none !important;
