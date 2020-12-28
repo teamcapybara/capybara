@@ -66,7 +66,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         end
       end
       processed_options = options.reject { |key, _val| SPECIAL_OPTIONS.include?(key) }
-      @browser = Selenium::WebDriver.for(options[:browser], processed_options)
+      @browser = Selenium::WebDriver.for(options[:browser], **processed_options)
 
       specialize_driver
       setup_exit_handler
