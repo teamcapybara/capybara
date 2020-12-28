@@ -18,6 +18,7 @@ RSpec::Core::RakeTask.new(:spec_firefox) do |t|
 end
 
 %w[chrome ie edge chrome_remote firefox_remote safari].each do |driver|
+  desc "Run tests using #{driver} driver"
   RSpec::Core::RakeTask.new(:"spec_#{driver}") do |t|
     t.rspec_opts = rspec_opts
     t.pattern = "./spec/{selenium_spec_#{driver}.rb}"
@@ -35,8 +36,10 @@ RSpec::Core::RakeTask.new(:spec_rack) do |t|
   t.pattern = './spec{,/*/**}/*{_spec.rb}'
 end
 
+desc 'Run specs with Firefox'
 task spec: [:spec_firefox]
 
+desc 'Run basic smoke tests (rack test and rubocop)'
 task rack_smoke: %i[rubocop spec_rack]
 
 YARD::Rake::YardocTask.new do |t|
@@ -47,6 +50,7 @@ Cucumber::Rake::Task.new(:cucumber) do |task|
   task.cucumber_opts = ['--format=progress', 'features']
 end
 
+desc 'Task for running CI'
 task :travis do
   if ENV['CAPYBARA_REMOTE'] && ENV['CAPYBARA_FF']
     Rake::Task[:spec_firefox_remote].invoke
@@ -64,6 +68,7 @@ task :travis do
   Rake::Task[:cucumber].invoke
 end
 
+desc 'Build updated JS replacements for Selenium atoms'
 task :build_js do
   require 'uglifier'
   Dir.glob('./lib/capybara/selenium/atoms/src/*.js').each do |fn|
@@ -78,6 +83,7 @@ task :build_js do
   end
 end
 
+desc 'Release new version'
 task :release do
   version = Capybara::VERSION
   puts "Releasing #{version}, y/n?"
