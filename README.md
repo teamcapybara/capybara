@@ -188,6 +188,21 @@ describe 'some stuff which requires js', js: true do
 end
 ```
 
+To permanently select a driver, you can add the following to your `rspec_helper.rb`:
+
+```ruby
+...
+RSpec.configure do |config|
+  ...
+  # select driver for each system spec.
+  # if you use feature specs use type: :feature
+  config.before(:each, type: :system) do
+    # see Drivers section for supported drivers
+    driven_by(:selenium_chrome_headless)
+  end
+end
+```
+
 Capybara also comes with a built in DSL for creating descriptive acceptance tests:
 
 ```ruby
