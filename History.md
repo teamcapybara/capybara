@@ -1,3 +1,8 @@
+# Version 3.34.1
+Release date: unreleased
+
+* Ignore Selenium::WebDriver::Error::InvalidSessionIdError when quitting driver [Robin Daugherty]
+
 # Version 3.34.0
 Release date: 2020-11-26
 
