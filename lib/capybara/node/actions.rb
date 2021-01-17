@@ -363,7 +363,6 @@ module Capybara
       def _check_with_label(selector, checked, locator,
                             allow_label_click: session_options.automatic_label_click, **options)
         options[:allow_self] = true if locator.nil?
-
         synchronize(Capybara::Queries::BaseQuery.wait(options, session_options.default_max_wait_time)) do
           el = find(selector, locator, **options)
           el.set(checked)
@@ -372,7 +371,7 @@ module Capybara
 
           begin
             el ||= find(selector, locator, **options.merge(visible: :all))
-            el.session.find(:label, for: el, visible: true).click unless el.checked? == checked
+            el.session.find(:label, for: el, visible: true, match: :first).click unless el.checked? == checked
           rescue StandardError # swallow extra errors - raise original
             raise e
           end

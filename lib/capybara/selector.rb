@@ -171,7 +171,7 @@ require 'capybara/selector/definition'
 #   * Filters:
 #       * :\<any> (String, Regexp) - Match on any specified element attribute
 #
-class Capybara::Selector; end
+class Capybara::Selector; end # rubocop:disable Lint/EmptyClass
 
 Capybara::Selector::FilterSet.add(:_field) do
   node_filter(:checked, :boolean) { |node, value| !(value ^ node.checked?) }

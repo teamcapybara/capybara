@@ -39,7 +39,7 @@ module Capybara
     alias index find_index
 
     def each(&block)
-      return enum_for(:each) unless block_given?
+      return enum_for(:each) unless block
 
       @result_cache.each(&block)
       loop do
@@ -54,10 +54,10 @@ module Capybara
       idx, length = args
       max_idx = case idx
       when Integer
-        if !idx.negative?
-          length.nil? ? idx : idx + length - 1
-        else
+        if idx.negative?
           nil
+        else
+          length.nil? ? idx : idx + length - 1
         end
       when Range
         # idx.max is broken with beginless ranges

@@ -178,7 +178,7 @@ module Capybara
       def_delegator :@filter_set, :describe
 
       def describe_expression_filters(&block)
-        if block_given?
+        if block
           describe(:expression_filters, &block)
         else
           describe(:expression_filters) do |**options|

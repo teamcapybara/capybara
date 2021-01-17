@@ -239,16 +239,16 @@ module Capybara
 
         case selector_format
         when :css
-          if node.method(:find_css).arity != 1
-            node.find_css(css, **hints)
-          else
+          if node.method(:find_css).arity == 1
             node.find_css(css)
+          else
+            node.find_css(css, **hints)
           end
         when :xpath
-          if node.method(:find_xpath).arity != 1
-            node.find_xpath(xpath(exact), **hints)
-          else
+          if node.method(:find_xpath).arity == 1
             node.find_xpath(xpath(exact))
+          else
+            node.find_xpath(xpath(exact), **hints)
           end
         else
           raise ArgumentError, "Unknown format: #{selector_format}"

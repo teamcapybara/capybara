@@ -28,7 +28,7 @@ module Capybara
         hints_js, functions = build_hints_js(uses_visibility, styles, position)
         return [] unless functions.any?
 
-        es_context.execute_script(hints_js, elements).map! do |results|
+        (es_context.execute_script(hints_js, elements) || []).map! do |results|
           hint = {}
           hint[:style] = results.pop if functions.include?(:style_func)
           hint[:position] = results.pop if functions.include?(:position_func)

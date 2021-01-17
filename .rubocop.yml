@@ -1,7 +1,9 @@
 require:
   - rubocop-rspec
   - rubocop-performance
-
+  - rubocop-minitest
+  - rubocop-rake
+  
 AllCops:
   NewCops: enable
   DisabledByDefault: false
@@ -29,7 +31,7 @@ Metrics/BlockLength:
     - 'spec/**/*'
     - 'lib/capybara/spec/**/*'
     - 'capybara.gemspec'
-  ExcludedMethods:
+  IgnoredMethods:
     - Capybara.add_selector
     - Capybara::Selector::FilterSet.add
 
@@ -87,7 +89,10 @@ Lint/EmptyBlock:
   Exclude:
     - 'lib/capybara/spec/**/*'
     - 'spec/**/*.rb'
-  
+
+Lint/DuplicateBranch:
+  Enabled: false
+
 Naming/PredicateName:
   Exclude:
     - '**/*/*matchers.rb'
@@ -239,7 +244,11 @@ Performance/Squeeze:
 Performance/StringInclude:
   Enabled: true
 
-
+Performance/MethodObjectAsBlock:
+  Enabled: false
+  
+Performance/BlockGivenWithExplicitBlock:
+  Enabled: false
 
 RSpec/ExampleWording:
   Enabled: false

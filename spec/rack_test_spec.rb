@@ -145,6 +145,14 @@ RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
       end
     end
 
+    describe '#send_keys' do
+      it 'raises an UnsupportedMethodError' do
+        session.visit('/form')
+
+        expect { session.send_keys(:tab) }.to raise_error(Capybara::NotSupportedByDriverError)
+      end
+    end
+
     describe '#text' do
       it 'should return original text content for textareas' do
         session.visit('/with_html')

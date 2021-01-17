@@ -58,7 +58,7 @@ module Capybara
     ].freeze
     SESSION_METHODS = %i[
       body html source current_url current_host current_path
-      execute_script evaluate_script visit refresh go_back go_forward
+      execute_script evaluate_script visit refresh go_back go_forward send_keys
       within within_element within_fieldset within_table within_frame switch_to_frame
       current_window windows open_new_window switch_to_window within_window window_opened_by
       save_page save_and_open_page save_screenshot
@@ -304,6 +304,14 @@ module Capybara
     end
 
     ##
+    # @!method send_keys
+    #   @see Capybara::Node::Element#send_keys
+    #
+    def send_keys(*args, **kw_args)
+      driver.send_keys(*args, **kw_args)
+    end
+
+    ##
     #
     # Executes the given block within the context of a node. {#within} takes the
     # same options as {Capybara::Node::Finders#find #find}, as well as a block. For the duration of the
@@ -489,8 +497,8 @@ module Capybara
     # @raise [ArgumentError]               if both or neither arguments were provided
     #
     def switch_to_window(window = nil, **options, &window_locator)
-      raise ArgumentError, '`switch_to_window` can take either a block or a window, not both' if window && block_given?
-      raise ArgumentError, '`switch_to_window`: either window or block should be provided' if !window && !block_given?
+      raise ArgumentError, '`switch_to_window` can take either a block or a window, not both' if window && window_locator
+      raise ArgumentError, '`switch_to_window`: either window or block should be provided' if !window && !window_locator
 
       unless scopes.last.nil?
         raise Capybara::ScopeError, '`switch_to_window` is not supposed to be invoked from '\

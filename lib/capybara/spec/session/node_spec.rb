@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Note: This file uses `sleep` to sync up parts of the tests. This is only implemented like this
+# NOTE: This file uses `sleep` to sync up parts of the tests. This is only implemented like this
 # because of the methods being tested. In tests using Capybara this type of behavior should be implemented
 # using Capybara provided assertions with builtin waiting behavior.
 
@@ -680,6 +680,15 @@ Capybara::SpecHelper.spec 'node' do
       target = @session.find('//div[@id="drop_html5"]')
       target.drop('text/plain' => 'Some dropped text')
       expect(@session).to have_xpath('//div[contains(., "HTML5 Dropped string: text/plain Some dropped text")]')
+    end
+
+    it 'can drop a pathname' do
+      @session.visit('/with_js')
+      target = @session.find('//div[@id="drop_html5"]')
+      target.drop(
+        Pathname.new(with_os_path_separators(File.expand_path('../fixtures/capybara.jpg', File.dirname(__FILE__))))
+      )
+      expect(@session).to have_xpath('//div[contains(., "HTML5 Dropped file: capybara.jpg")]')
     end
 
     it 'can drop multiple strings' do

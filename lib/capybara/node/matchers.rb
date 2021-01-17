@@ -386,7 +386,7 @@ module Capybara
       #
       #     page.has_field?('Email', type: 'email')
       #
-      # Note: 'textarea' and 'select' are valid type values, matching the associated tag names.
+      # NOTE: 'textarea' and 'select' are valid type values, matching the associated tag names.
       #
       # @param [String] locator                  The label, name or id of a field to check for
       # @option options [String, Regexp] :with   The text content of the field or a Regexp to match

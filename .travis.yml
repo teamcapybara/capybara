@@ -6,8 +6,8 @@ services:
   - docker
   - xvfb
 rvm:
-  - 2.7
-  - jruby-9.2.13.0
+  - 3.0
+  - jruby-9.2.14.0
 gemfile:
   - Gemfile
 env:
@@ -35,7 +35,7 @@ cache:
 matrix:
   include:
     - gemfile: gemfiles/Gemfile.gumbo
-      rvm: 2.6
+      rvm: 2.7
       script: bundle exec rake rack_smoke
     - gemfile: Gemfile
       rvm: 2.6
@@ -56,7 +56,7 @@ matrix:
     - gemfile: gemfiles/Gemfile.base-versions
       rvm: 2.5
     - gemfile: Gemfile
-      rvm: 2.6
+      rvm: 2.7
       env: HEADLESS=true
     - gemfile: gemfiles/Gemfile.beta-versions
       rvm: 2.6

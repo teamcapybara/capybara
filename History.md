@@ -1,12 +1,14 @@
 # Version 3.34.0
-Release date: unreleased
+Release date: 2020-11-26
 
 ### Added
 
 * Ability to fill in with emoji when using Chrome with selenium driver (Firefox already worked)
-* Current path assetsions/expectations accept optional filter block
+* Current path assertions/expectations accept optional filter block
 * Animation disabler now specifies `scroll-behavior: auto;` [Nathan Broadbent]
 * :button selector can now find elements by label text [Sean Doyle]
+* `Session#send_keys` to send keys to the current element with focus in drivers that support the 
+  concept of a current element [Sean Doyle]
 
 ### Changed
 
@@ -21,6 +23,8 @@ Release date: unreleased
 * Connection count issue if REQUEST_URI value changed by app [Blake Williams]
 * Maintain URI fragment when redirecting in rack-test driver 
 * Text query error message [Wojciech Wnętrzak]
+* Checking a checkbox/radio button with `allow_label_click` now works if there are multiple labels (Issue #2421)
+* `drop` with `Pathname` (Issue #2424)[Máximo Mussini]
 
 # Version 3.33.0
 Release date: 2020-06-21
