@@ -40,11 +40,16 @@ class Capybara::Selenium::FirefoxNode < Capybara::Selenium::Node
     path_names.each { |path| native.send_keys(path) }
   end
 
+  def focused?
+    driver.evaluate_script('arguments[0] == document.activeElement', self)
+  end
+
   def send_keys(*args)
     # https://github.com/mozilla/geckodriver/issues/846
     return super(*args.map { |arg| arg == :space ? ' ' : arg }) if args.none?(Array)
 
-    native.click
+    native.click unless focused?
+
     _send_keys(args).perform
   end
 

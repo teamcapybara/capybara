@@ -6,6 +6,7 @@ Release date: unreleased
 * :button selector type use with `enable_aria_role` [Sean Doyle]
 * <label> elements don't associate with aria-role buttons
 * Ignore Selenium::WebDriver::Error::InvalidSessionIdError when quitting driver [Robin Daugherty]
+* Firefox: Don't click input when sending keys if already focused
 
 # Version 3.34.0
 Release date: 2020-11-26
