@@ -1,6 +1,10 @@
 # Version 3.34.1
 Release date: unreleased
 
+### Fixed
+
+* :button selector type use with `enable_aria_role` [Sean Doyle]
+* <label> elements don't associate with aria-role buttons
 * Ignore Selenium::WebDriver::Error::InvalidSessionIdError when quitting driver [Robin Daugherty]
 
 # Version 3.34.0
@@ -12,7 +16,7 @@ Release date: 2020-11-26
 * Current path assertions/expectations accept optional filter block
 * Animation disabler now specifies `scroll-behavior: auto;` [Nathan Broadbent]
 * :button selector can now find elements by label text [Sean Doyle]
-* `Session#send_keys` to send keys to the current element with focus in drivers that support the 
+* `Session#send_keys` to send keys to the current element with focus in drivers that support the
   concept of a current element [Sean Doyle]
 
 ### Changed
@@ -26,7 +30,7 @@ Release date: 2020-11-26
 * Missing `readonly?` added to Node::Simple
 * Selenium version detection when loaded via alternate method [Joel Hawksley]
 * Connection count issue if REQUEST_URI value changed by app [Blake Williams]
-* Maintain URI fragment when redirecting in rack-test driver 
+* Maintain URI fragment when redirecting in rack-test driver
 * Text query error message [Wojciech Wnętrzak]
 * Checking a checkbox/radio button with `allow_label_click` now works if there are multiple labels (Issue #2421)
 * `drop` with `Pathname` (Issue #2424)[Máximo Mussini]
