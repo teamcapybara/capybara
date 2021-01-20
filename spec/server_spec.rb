@@ -108,8 +108,12 @@ RSpec.describe Capybara::Server do
       expect(options.fetch(:environment)).to be_a(String)
       method.call(app, events, options)
     end
-    described_class.new(app_proc).boot
-    expect(Puma::Server).to have_received(:new)
+    server = described_class.new(app_proc).boot
+    expect(Puma::Server).to have_received(:new).with(
+      anything,
+      anything,
+      satisfy { |opts| opts.final_options[:Port] == server.port }
+    )
   ensure
     Capybara.server = :default
   end
