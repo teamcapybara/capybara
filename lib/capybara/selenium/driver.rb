@@ -12,6 +12,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     clear_session_storage: nil
   }.freeze
   SPECIAL_OPTIONS = %i[browser clear_local_storage clear_session_storage timeout native_displayed].freeze
+  CAPS_VERSION = Gem::Requirement.new('~> 4.0.0.alpha6')
+
   attr_reader :app, :options
 
   class << self
@@ -41,7 +43,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
           Gem::Version.new(Selenium::WebDriver::VERSION)
         end
 
-      if @selenium_webdriver_version < Gem::Version.new('3.5.0')
+      unless Gem::Requirement.new('>= 3.5.0').satisfied_by? @selenium_webdriver_version
         warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade."
       end
 

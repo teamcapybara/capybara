@@ -118,15 +118,15 @@ private
   end
 
   def chromedriver_fixed_actions_key_state?
-    Gem::Version.new(chromedriver_version) >= Gem::Version.new('76.0.3809.68')
+    Gem::Requirement.new('>= 76.0.3809.68').satisfied_by?(chromedriver_version)
   end
 
   def chromedriver_supports_displayed_endpoint?
-    Gem::Version.new(chromedriver_version) >= Gem::Version.new('76.0.3809.25')
+    Gem::Requirement.new('>= 76.0.3809.25').satisfied_by?(chromedriver_version)
   end
 
   def chromedriver_version
-    capabilities['chrome']['chromedriverVersion'].split(' ')[0] # rubocop:disable Style/RedundantArgument
+    Gem::Version.new(capabilities['chrome']['chromedriverVersion'].split(' ')[0]) # rubocop:disable Style/RedundantArgument
   end
 
   def native_displayed?

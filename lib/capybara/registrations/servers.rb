@@ -32,7 +32,7 @@ Capybara.register_server :puma do |app, port, host, **options|
   events = conf.options[:Silent] ? ::Puma::Events.strings : ::Puma::Events.stdio
 
   puma_ver = Gem::Version.new(Puma::Const::PUMA_VERSION)
-  require_relative 'patches/puma_ssl' if (Gem::Version.new('4.0.0')...Gem::Version.new('4.1.0')).cover? puma_ver
+  require_relative 'patches/puma_ssl' if Gem::Requirement.new('>=4.0.0', '< 4.1.0').satisfied_by?(puma_ver)
 
   events.log 'Capybara starting Puma...'
   events.log "* Version #{Puma::Const::PUMA_VERSION} , codename: #{Puma::Const::CODE_NAME}"

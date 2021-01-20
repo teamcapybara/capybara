@@ -81,7 +81,7 @@ RSpec.describe 'Capybara::Session with remote Chrome' do
     before { skip 'Only makes sense in W3C mode' if ENV['W3C'] == 'false' }
 
     it 'does not error when getting log types' do
-      skip if Gem::Version.new(session.driver.browser.capabilities['chrome']['chromedriverVersion'].split[0]) < Gem::Version.new('75.0.3770.90')
+      skip unless Gem::Requirement.new('>= 75.0.3770.90').satisfied_by? chromedriver_version
       expect do
         session.driver.browser.manage.logs.available_types
       end.not_to raise_error
@@ -92,5 +92,9 @@ RSpec.describe 'Capybara::Session with remote Chrome' do
         session.driver.browser.manage.logs.get(:browser)
       end.not_to raise_error
     end
+  end
+
+  def chromedriver_version
+    Gem::Version.new(session.driver.browser.capabilities['chrome']['chromedriverVersion'].split[0])
   end
 end

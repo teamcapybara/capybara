@@ -20,12 +20,9 @@ browser_options.add_preference(:download, default_directory: Capybara.save_path)
 
 Capybara.register_driver :selenium_chrome do |app|
   version = Capybara::Selenium::Driver.load_selenium
+  options_key = Capybara::Selenium::Driver::CAPS_VERSION.satisfied_by?(version) ? :capabilities : :options
   driver_options = { browser: :chrome, timeout: 30 }.tap do |opts|
-    if version >= Gem::Version.new('4.0.0.alpha6')
-      opts[:capabilities] = browser_options
-    else
-      opts[:options] = browser_options
-    end
+    opts[options_key] = browser_options
   end
 
   Capybara::Selenium::Driver.new(app, **driver_options).tap do |driver|
@@ -36,12 +33,9 @@ end
 
 Capybara.register_driver :selenium_chrome_not_clear_storage do |app|
   version = Capybara::Selenium::Driver.load_selenium
+  options_key = Capybara::Selenium::Driver::CAPS_VERSION.satisfied_by?(version) ? :capabilities : :options
   chrome_options = { browser: :chrome, clear_local_storage: false, clear_session_storage: false }.tap do |opts|
-    if version >= Gem::Version.new('4.0.0.alpha6')
-      opts[:capabilities] = browser_options
-    else
-      opts[:options] = browser_options
-    end
+    opts[options_key] = browser_options
   end
 
   Capybara::Selenium::Driver.new(app, **chrome_options)
@@ -49,12 +43,9 @@ end
 
 Capybara.register_driver :selenium_chrome_not_clear_session_storage do |app|
   version = Capybara::Selenium::Driver.load_selenium
+  options_key = Capybara::Selenium::Driver::CAPS_VERSION.satisfied_by?(version) ? :capabilities : :options
   chrome_options = { browser: :chrome, clear_session_storage: false }.tap do |opts|
-    if version >= Gem::Version.new('4.0.0.alpha6')
-      opts[:capabilities] = browser_options
-    else
-      opts[:options] = browser_options
-    end
+    opts[options_key] = browser_options
   end
 
   Capybara::Selenium::Driver.new(app, **chrome_options)
@@ -62,25 +53,19 @@ end
 
 Capybara.register_driver :selenium_chrome_not_clear_local_storage do |app|
   version = Capybara::Selenium::Driver.load_selenium
+  options_key = Capybara::Selenium::Driver::CAPS_VERSION.satisfied_by?(version) ? :capabilities : :options
   chrome_options = { browser: :chrome, clear_local_storage: false }.tap do |opts|
-    if version >= Gem::Version.new('4.0.0.alpha6')
-      opts[:capabilities] = browser_options
-    else
-      opts[:options] = browser_options
-    end
+    opts[options_key] = browser_options
   end
   Capybara::Selenium::Driver.new(app, **chrome_options)
 end
 
 Capybara.register_driver :selenium_driver_subclass_with_chrome do |app|
   version = Capybara::Selenium::Driver.load_selenium
+  options_key = Capybara::Selenium::Driver::CAPS_VERSION.satisfied_by?(version) ? :capabilities : :options
   subclass = Class.new(Capybara::Selenium::Driver)
   chrome_options = { browser: :chrome, timeout: 30 }.tap do |opts|
-    if version >= Gem::Version.new('4.0.0.alpha6')
-      opts[:capabilities] = browser_options
-    else
-      opts[:options] = browser_options
-    end
+    opts[options_key] = browser_options
   end
 
   subclass.new(app, **chrome_options)
@@ -203,7 +188,7 @@ RSpec.describe 'Capybara::Session with chrome' do
     before { skip 'Only makes sense in W3C mode' if ENV['W3C'] == 'false' }
 
     it 'does not error getting log types' do
-      skip if Gem::Version.new(session.driver.browser.capabilities['chrome']['chromedriverVersion'].split[0]) < Gem::Version.new('75.0.3770.90')
+      skip if Gem::Requirement.new('< 75.0.3770.90').satisfied_by? chromedriver_version
       expect do
         session.driver.browser.manage.logs.available_types
       end.not_to raise_error
@@ -214,5 +199,9 @@ RSpec.describe 'Capybara::Session with chrome' do
         session.driver.browser.manage.logs.get(:browser)
       end.not_to raise_error
     end
+  end
+
+  def chromedriver_version
+    Gem::Version.new(session.driver.browser.capabilities['chrome']['chromedriverVersion'].split[0])
   end
 end

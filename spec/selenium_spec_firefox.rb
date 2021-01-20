@@ -20,12 +20,9 @@ end
 Capybara.register_driver :selenium_firefox do |app|
   # ::Selenium::WebDriver.logger.level = "debug"
   version = Capybara::Selenium::Driver.load_selenium
+  options_key = Capybara::Selenium::Driver::CAPS_VERSION.satisfied_by?(version) ? :capabilities : :options
   driver_options = { browser: :firefox, timeout: 31 }.tap do |opts|
-    if version >= Gem::Version.new('4.0.0.alpha6')
-      opts[:capabilities] = browser_options
-    else
-      opts[:options] = browser_options
-    end
+    opts[options_key] = browser_options
     # Get a trace level log from geckodriver
     # :driver_opts => { args: ['-vv'] }
   end
@@ -35,12 +32,9 @@ end
 
 Capybara.register_driver :selenium_firefox_not_clear_storage do |app|
   version = Capybara::Selenium::Driver.load_selenium
+  options_key = Capybara::Selenium::Driver::CAPS_VERSION.satisfied_by?(version) ? :capabilities : :options
   driver_options = { browser: :firefox, clear_local_storage: false, clear_session_storage: false }.tap do |opts|
-    if version >= Gem::Version.new('4.0.0.alpha6')
-      opts[:capabilities] = browser_options
-    else
-      opts[:options] = browser_options
-    end
+    opts[options_key] = browser_options
   end
 
   Capybara::Selenium::Driver.new(app, **driver_options)
