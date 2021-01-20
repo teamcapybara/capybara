@@ -59,7 +59,7 @@ matrix:
       rvm: 2.7
       env: HEADLESS=true
     - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: 2.6
+      rvm: 3.0
       env: CAPYBARA_FF=true
       addons:
         firefox: latest-beta
