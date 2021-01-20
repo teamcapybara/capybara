@@ -15,6 +15,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   attr_reader :app, :options
 
   class << self
+    attr_reader :selenium_webdriver_version
+
     def load_selenium
       require 'selenium-webdriver'
       require 'capybara/selenium/logger_suppressor'
@@ -32,15 +34,18 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       # Selenium::WebDriver::VERSION. Ideally we'd
       # use the constant in all cases, but earlier versions
       # of `selenium-webdriver` didn't provide the constant.
-      selenium_webdriver_version =
+      @selenium_webdriver_version =
         if Gem.loaded_specs['selenium-webdriver']
           Gem.loaded_specs['selenium-webdriver'].version
         else
           Gem::Version.new(Selenium::WebDriver::VERSION)
         end
-      if selenium_webdriver_version < Gem::Version.new('3.5.0')
+
+      if @selenium_webdriver_version < Gem::Version.new('3.5.0')
         warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade."
       end
+
+      @selenium_webdriver_version
     rescue LoadError => e
       raise e unless e.message.include?('selenium-webdriver')
 
@@ -66,7 +71,15 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         end
       end
       processed_options = options.reject { |key, _val| SPECIAL_OPTIONS.include?(key) }
-      @browser = Selenium::WebDriver.for(options[:browser], **processed_options)
+
+      @browser = if options[:browser] == :firefox &&
+                    RUBY_VERSION >= '3.0' &&
+                    Capybara::Selenium::Driver.selenium_webdriver_version <= Gem::Version.new('4.0.0.alpha1')
+        # selenium-webdriver 3.x doesn't correctly pass options through for Firefox with Ruby 3 so workaround that
+        Selenium::WebDriver::Firefox::Driver.new(**processed_options)
+      else
+        Selenium::WebDriver.for(options[:browser], processed_options)
+      end
 
       specialize_driver
       setup_exit_handler
