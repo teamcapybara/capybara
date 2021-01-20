@@ -38,9 +38,12 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         else
           Gem::Version.new(Selenium::WebDriver::VERSION)
         end
+
       if selenium_webdriver_version < Gem::Version.new('3.5.0')
         warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade."
       end
+
+      selenium_webdriver_version
     rescue LoadError => e
       raise e unless e.message.include?('selenium-webdriver')
 
@@ -66,7 +69,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         end
       end
       processed_options = options.reject { |key, _val| SPECIAL_OPTIONS.include?(key) }
-      @browser = Selenium::WebDriver.for(options[:browser], **processed_options)
+      @browser = Selenium::WebDriver.for(options[:browser], processed_options)
 
       specialize_driver
       setup_exit_handler

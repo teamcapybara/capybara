@@ -19,39 +19,71 @@ browser_options.add_preference('download.default_directory', Capybara.save_path)
 browser_options.add_preference(:download, default_directory: Capybara.save_path)
 
 Capybara.register_driver :selenium_chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options, timeout: 30).tap do |driver|
+  version = Capybara::Selenium::Driver.load_selenium
+  driver_options = { browser: :chrome, timeout: 30 }.tap do |opts|
+    if version >= Gem::Version.new('4.0.0.alpha6')
+      opts[:capabilities] = browser_options
+    else
+      opts[:options] = browser_options
+    end
+  end
+
+  Capybara::Selenium::Driver.new(app, **driver_options).tap do |driver|
     # Set download dir for Chrome < 77
     driver.browser.download_path = Capybara.save_path
   end
 end
 
 Capybara.register_driver :selenium_chrome_not_clear_storage do |app|
-  chrome_options = {
-    browser: :chrome,
-    options: browser_options
-  }
-  Capybara::Selenium::Driver.new(app, **chrome_options.merge(clear_local_storage: false, clear_session_storage: false))
+  version = Capybara::Selenium::Driver.load_selenium
+  chrome_options = { browser: :chrome, clear_local_storage: false, clear_session_storage: false }.tap do |opts|
+    if version >= Gem::Version.new('4.0.0.alpha6')
+      opts[:capabilities] = browser_options
+    else
+      opts[:options] = browser_options
+    end
+  end
+
+  Capybara::Selenium::Driver.new(app, **chrome_options)
 end
 
 Capybara.register_driver :selenium_chrome_not_clear_session_storage do |app|
-  chrome_options = {
-    browser: :chrome,
-    options: browser_options
-  }
-  Capybara::Selenium::Driver.new(app, **chrome_options.merge(clear_session_storage: false))
+  version = Capybara::Selenium::Driver.load_selenium
+  chrome_options = { browser: :chrome, clear_session_storage: false }.tap do |opts|
+    if version >= Gem::Version.new('4.0.0.alpha6')
+      opts[:capabilities] = browser_options
+    else
+      opts[:options] = browser_options
+    end
+  end
+
+  Capybara::Selenium::Driver.new(app, **chrome_options)
 end
 
 Capybara.register_driver :selenium_chrome_not_clear_local_storage do |app|
-  chrome_options = {
-    browser: :chrome,
-    options: browser_options
-  }
-  Capybara::Selenium::Driver.new(app, **chrome_options.merge(clear_local_storage: false))
+  version = Capybara::Selenium::Driver.load_selenium
+  chrome_options = { browser: :chrome, clear_local_storage: false }.tap do |opts|
+    if version >= Gem::Version.new('4.0.0.alpha6')
+      opts[:capabilities] = browser_options
+    else
+      opts[:options] = browser_options
+    end
+  end
+  Capybara::Selenium::Driver.new(app, **chrome_options)
 end
 
 Capybara.register_driver :selenium_driver_subclass_with_chrome do |app|
+  version = Capybara::Selenium::Driver.load_selenium
   subclass = Class.new(Capybara::Selenium::Driver)
-  subclass.new(app, browser: :chrome, options: browser_options, timeout: 30)
+  chrome_options = { browser: :chrome, timeout: 30 }.tap do |opts|
+    if version >= Gem::Version.new('4.0.0.alpha6')
+      opts[:capabilities] = browser_options
+    else
+      opts[:options] = browser_options
+    end
+  end
+
+  subclass.new(app, **chrome_options)
 end
 
 module TestSessions

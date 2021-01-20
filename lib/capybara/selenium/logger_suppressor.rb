@@ -8,7 +8,7 @@ module Capybara
         super
       end
 
-      def deprecate(*)
+      def deprecate(*, **, &block)
         super unless @suppress_for_capybara
       end
 
