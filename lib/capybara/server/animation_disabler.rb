@@ -40,11 +40,11 @@ module Capybara
       end
 
       def insert_disable(html)
-        html.sub(%r{(</head>)}, "#{disable_markup}\\1")
+        html.sub(%r{(</body>)}, "#{disable_markup}\\1")
       end
 
       DISABLE_MARKUP_TEMPLATE = <<~HTML
-        <script defer="defer">
+        <script>
         //<![CDATA[
           (typeof jQuery !== 'undefined') && (jQuery.fx.off = true);
         //]]>
