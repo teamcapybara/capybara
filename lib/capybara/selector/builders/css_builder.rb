@@ -74,7 +74,7 @@ module Capybara
             end.join
           end
         else
-          cls = Array(classes).group_by { |cl| cl.match?(/^!(?!!!)/) }
+          cls = Array(classes).reject { |c| c.is_a? Regexp }.group_by { |cl| cl.match?(/^!(?!!!)/) }
           [(cls[false].to_a.map { |cl| ".#{Capybara::Selector::CSS.escape(cl.sub(/^!!/, ''))}" } +
           cls[true].to_a.map { |cl| ":not(.#{Capybara::Selector::CSS.escape(cl.slice(1..-1))})" }).join]
         end

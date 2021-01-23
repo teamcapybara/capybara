@@ -15,6 +15,8 @@ module Capybara
       def add_attribute_conditions(**conditions)
         @expression = conditions.inject(expression) do |xp, (name, value)|
           conditions = name == :class ? class_conditions(value) : attribute_conditions(name => value)
+          return xp if conditions.nil?
+
           if xp.is_a? XPath::Expression
             xp[conditions]
           else
@@ -47,7 +49,7 @@ module Capybara
         when XPath::Expression, Regexp
           attribute_conditions(class: classes)
         else
-          Array(classes).map do |klass|
+          Array(classes).reject { |c| c.is_a? Regexp }.map do |klass|
             if klass.match?(/^!(?!!!)/)
               !XPath.attr(:class).contains_word(klass.slice(1..-1))
             else

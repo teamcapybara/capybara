@@ -482,9 +482,25 @@ module Capybara
       end
 
       def matches_class_filter?(node)
-        return true unless use_default_class_filter? && options[:class].is_a?(Regexp)
+        return true unless use_default_class_filter? && need_to_process_classes?
 
-        options[:class].match? node[:class]
+        if options[:class].is_a? Regexp
+          options[:class].match? node[:class]
+        else
+          classes = (node[:class] || '').split
+          options[:class].select { |c| c.is_a? Regexp }.all? do |r|
+            classes.any? { |cls| r.match? cls }
+          end
+        end
+      end
+
+      def need_to_process_classes?
+        case options[:class]
+        when Regexp then true
+        when Array then options[:class].any?(Regexp)
+        else
+          false
+        end
       end
 
       def matches_style_filter?(node)
