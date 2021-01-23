@@ -411,6 +411,13 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           JS
           expect(scroll_y).to eq 500
         end
+
+        it 'should scroll the page instantly without jquery animation', requires: [:js] do
+          @animation_session.visit('with_jquery_animation')
+          @animation_session.click_link('scroll top 500')
+          scroll_y = @animation_session.evaluate_script('window.scrollY')
+          expect(scroll_y).to eq 500
+        end
       end
 
       context 'when set to `false`' do
@@ -431,6 +438,13 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
             })()
           JS
           # measured over 0.5 seconds: 0, 75, 282, 478, 500
+          expect(scroll_y).to be < 500
+        end
+
+        it 'should scroll the page with jquery animation', requires: [:js] do
+          @animation_session.visit('with_jquery_animation')
+          @animation_session.click_link('scroll top 500')
+          scroll_y = @animation_session.evaluate_script('window.scrollY')
           expect(scroll_y).to be < 500
         end
       end
