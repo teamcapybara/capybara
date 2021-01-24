@@ -7,7 +7,7 @@ require 'capybara/selector/definition'
 #
 # All Selectors below support the listed selector specific filters in addition to the following system-wide filters
 #   * :id (String, Regexp, XPath::Expression) - Matches the id attribute
-#   * :class (String, Array<String>, Regexp, XPath::Expression) - Matches the class(es) provided
+#   * :class (String, Array<String | Regexp>, Regexp, XPath::Expression) - Matches the class(es) provided
 #   * :style (String, Regexp, Hash<String, String>) - Match on elements style
 #   * :above (Element) - Match elements above the passed element on the page
 #   * :below (Element) - Match elements below the passed element on the page

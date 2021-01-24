@@ -1,5 +1,10 @@
-# Version 3.34.1
+# Version 3.35.0
 Release date: unreleased
+
+### Added
+
+* Support Regexp matching for individual class names in :class filter passed an Array
+* Animation disabler now supports JQuery animation disabling when JQuery loaded from body [Chien-Wei Huang]
 
 ### Fixed
 
@@ -7,6 +12,9 @@ Release date: unreleased
 * <label> elements don't associate with aria-role buttons
 * Ignore Selenium::WebDriver::Error::InvalidSessionIdError when quitting driver [Robin Daugherty]
 * Firefox: Don't click input when sending keys if already focused
+* Miscellaneous issues with selenium-webdriver 4.0.0.alphas
+* Nil return error in node details optimizations
+* Animation disabler now inserts XHTML compliant content [Dale Morgan]
 
 # Version 3.34.0
 Release date: 2020-11-26
