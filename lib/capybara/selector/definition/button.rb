@@ -57,7 +57,7 @@ Capybara.add_selector(:button, locator_type: [String, Symbol]) do
       XPath.attr(:title).is(locator),
       (XPath.attr(:id) == XPath.anywhere(:label)[XPath.string.n.is(locator)].attr(:for)),
       (XPath.attr(:'aria-label').is(locator) if config.enable_aria_label),
-      (XPath.attr(test_id) == locator if config.test_id)
+      (XPath.attr(config.test_id) == locator if config.test_id)
     ].compact.inject(&:|)
   end
 end

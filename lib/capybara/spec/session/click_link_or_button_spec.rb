@@ -38,6 +38,15 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
     expect(extract_results(@session)['first_name']).to eq('John')
   end
 
+  context 'with test_id' do
+    it 'should click on a button' do
+      Capybara.test_id = 'data-test-id'
+      @session.visit('/form')
+      @session.click_link_or_button('test_id_button')
+      expect(extract_results(@session)['first_name']).to eq('John')
+    end
+  end
+
   context 'with :exact option' do
     context 'when `false`' do
       it 'clicks on approximately matching link' do
