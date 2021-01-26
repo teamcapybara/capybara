@@ -1,3 +1,11 @@
+# Version 3.35.1
+Release date: 2020-01-26
+
+### Fixed
+
+* Default chrome driver registrations use chrome - Issue #2442 [Yuriy Alekseyev]
+* 'Capybara.test_id' usage with the :button selector - Issue #2443
+
 # Version 3.35.0
 Release date: 2020-01-25
 
