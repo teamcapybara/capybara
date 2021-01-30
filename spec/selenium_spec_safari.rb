@@ -16,7 +16,6 @@ end.driver_path = '/Applications/Safari Technology Preview.app/Contents/MacOS/sa
 
 browser_options = ::Selenium::WebDriver::Safari::Options.new
 # browser_options.headless! if ENV['HEADLESS']
-# browser_options.add_option(:w3c, !!ENV['W3C'])
 
 Capybara.register_driver :selenium_safari do |app|
   Capybara::Selenium::Driver.new(app, browser: :safari, options: browser_options, timeout: 30).tap do |driver|
