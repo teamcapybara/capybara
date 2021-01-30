@@ -8,8 +8,14 @@ module Capybara
         super
       end
 
-      def deprecate(*, **, &block)
-        super unless @suppress_for_capybara
+      def deprecate(*args, **opts, &block)
+        return if @suppress_for_capybara
+
+        if opts.empty?
+          super(*args, &block) # support Selenium 3
+        else
+          super
+        end
       end
 
       def suppress_deprecations
