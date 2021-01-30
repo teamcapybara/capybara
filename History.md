@@ -1,3 +1,9 @@
+# Version 3.35.3
+Release date: 2021-01-29
+
+### Fixed
+* Just a release to have the correct dates in the History.md in released gem
+
 # Version 3.35.2
 Release date: 2021-01-29
 
