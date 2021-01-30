@@ -61,8 +61,6 @@ RSpec.shared_examples 'Capybara::Node' do |session, _mode|
     end
 
     it 'will use native displayed if told to' do
-      pending "Chromedriver < 76.0.3809.25 doesn't support native displayed in W3C mode" if chrome_lt?(76, session) && (ENV['W3C'] != 'false')
-
       session.driver.options[:native_displayed] = true
       session.visit('/form')
       session.find(:css, '#address1_city', visible: true)
@@ -71,8 +69,6 @@ RSpec.shared_examples 'Capybara::Node' do |session, _mode|
     end
 
     it "won't use native displayed if told not to" do
-      skip 'Non-W3C uses native' if chrome?(session) && (ENV['W3C'] == 'false')
-
       session.driver.options[:native_displayed] = false
       session.visit('/form')
       session.find(:css, '#address1_city', visible: true)

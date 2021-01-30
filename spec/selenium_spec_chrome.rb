@@ -12,7 +12,7 @@ Selenium::WebDriver::Chrome.path = '/usr/bin/google-chrome-beta' if ENV['CI'] &&
 
 browser_options = ::Selenium::WebDriver::Chrome::Options.new
 browser_options.headless! if ENV['HEADLESS']
-browser_options.add_option(:w3c, ENV['W3C'] != 'false')
+
 # Chromedriver 77 requires setting this for headless mode on linux
 # Different versions of Chrome/selenium-webdriver require setting differently - jus set them all
 browser_options.add_preference('download.default_directory', Capybara.save_path)
@@ -87,8 +87,6 @@ Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_DRIVER.to_s, capybar
     pending "Chrome headless doesn't support maximize" if ENV['HEADLESS']
   when /Capybara::Window#fullscreen should be able to fullscreen the window/
     skip 'Chromedriver hangs on attempts to fullscreen in headless mode' if ENV['HEADLESS']
-  when /node #right_click delay should delay the mouse up/
-    skip "Legacy selenium doesn't support separate right button down/up" if ENV['W3C'] == 'false'
   end
 end
 
@@ -185,10 +183,7 @@ RSpec.describe 'Capybara::Session with chrome' do
   end
 
   describe 'log access' do
-    before { skip 'Only makes sense in W3C mode' if ENV['W3C'] == 'false' }
-
     it 'does not error getting log types' do
-      skip if Gem::Requirement.new('< 75.0.3770.90').satisfied_by? chromedriver_version
       expect do
         session.driver.browser.manage.logs.available_types
       end.not_to raise_error
