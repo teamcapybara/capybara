@@ -1,3 +1,10 @@
+# Version 3.35.2
+Release date: 2020-01-29
+
+### Fixed
+
+* Selenium deprecation suppressor with Selenium 3.x
+
 # Version 3.35.1
 Release date: 2020-01-26
 
