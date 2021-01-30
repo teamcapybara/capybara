@@ -1,5 +1,5 @@
 # Version 3.35.2
-Release date: 2020-01-29
+Release date: 2021-01-29
 
 ### Fixed
 
