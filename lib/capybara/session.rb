@@ -313,6 +313,16 @@ module Capybara
 
     ##
     #
+    # Returns the element with focus.
+    #
+    # Not supported by Rack Test
+    #
+    def active_element
+      driver.active_element
+    end
+
+    ##
+    #
     # Executes the given block within the context of a node. {#within} takes the
     # same options as {Capybara::Node::Finders#find #find}, as well as a block. For the duration of the
     # block, any command to Capybara will be handled as though it were scoped

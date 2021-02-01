@@ -12,6 +12,7 @@ skipped_tests = %i[
   screenshot
   frames
   windows
+  active_element
   send_keys
   server
   hover
@@ -144,6 +145,14 @@ RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
         session.visit('/form')
 
         expect { session.send_keys(:tab) }.to raise_error(Capybara::NotSupportedByDriverError)
+      end
+    end
+
+    describe '#active_element' do
+      it 'raises an UnsupportedMethodError' do
+        session.visit('/form')
+
+        expect { session.active_element }.to raise_error(Capybara::NotSupportedByDriverError)
       end
     end
 

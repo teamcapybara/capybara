@@ -63,6 +63,10 @@ class Capybara::Driver::Base
     raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#send_keys'
   end
 
+  def active_element
+    raise Capybara::NotSupportedByDriverError, 'Capybara::Driver::Base#active_element'
+  end
+
   ##
   #
   # @param frame [Capybara::Node::Element, :parent, :top]  The iframe element to switch to
