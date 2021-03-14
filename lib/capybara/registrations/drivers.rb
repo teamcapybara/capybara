@@ -14,7 +14,7 @@ Capybara.register_driver :selenium_headless do |app|
   browser_options = ::Selenium::WebDriver::Firefox::Options.new.tap do |opts|
     opts.add_argument '-headless'
   end
-  Capybara::Selenium::Driver.new(app, **Hash[:browser => :firefox, options_key => browser_options])
+  Capybara::Selenium::Driver.new(app, **{ :browser => :firefox, options_key => browser_options })
 end
 
 Capybara.register_driver :selenium_chrome do |app|
@@ -25,7 +25,7 @@ Capybara.register_driver :selenium_chrome do |app|
     opts.add_argument('--disable-site-isolation-trials')
   end
 
-  Capybara::Selenium::Driver.new(app, **Hash[:browser => :chrome, options_key => browser_options])
+  Capybara::Selenium::Driver.new(app, **{ :browser => :chrome, options_key => browser_options })
 end
 
 Capybara.register_driver :selenium_chrome_headless do |app|
@@ -38,5 +38,5 @@ Capybara.register_driver :selenium_chrome_headless do |app|
     opts.add_argument('--disable-site-isolation-trials')
   end
 
-  Capybara::Selenium::Driver.new(app, **Hash[:browser => :chrome, options_key => browser_options])
+  Capybara::Selenium::Driver.new(app, **{ :browser => :chrome, options_key => browser_options })
 end

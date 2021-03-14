@@ -194,6 +194,7 @@ module Capybara
       def ==(other)
         native == other.native
       end
+
     private
 
       def option_value(option)
