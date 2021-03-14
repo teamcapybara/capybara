@@ -1,7 +1,20 @@
+# Version 3.36.0
+Release date: unreleased
+
+### Fixed
+
+* Sibling and ancestor queries now work with Simple::Node - Issue #2452
+* rack_test correctly ignores readonly attribute on specific input element types
+
+### Removed
+
+* References to non-w3c mode in drivers/tests. Non-w3c mode is obsolete and no one should be using it anymore. Capybara hasn't been testing/supporting it in a while
+
 # Version 3.35.3
 Release date: 2021-01-29
 
 ### Fixed
+
 * Just a release to have the correct dates in the History.md in released gem
 
 # Version 3.35.2
@@ -1898,4 +1911,3 @@ too many users, please read the release notes carefully!
 * clicking links where the image's alt attribute contains the text is now possible
 * within_fieldset and within_table work when the default selector is CSS
 * boolean attributes work the same across drivers (return true/false)
-
