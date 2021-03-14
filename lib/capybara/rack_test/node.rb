@@ -108,6 +108,13 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     end
   end
 
+  def readonly?
+    # readonly attribute not valid on these input types
+    return false if input_field? && %w[hidden range color checkbox radio file submit image reset button].include?(type)
+
+    super
+  end
+
   def path
     native.path
   end

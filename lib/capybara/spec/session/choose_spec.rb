@@ -11,6 +11,12 @@ Capybara::SpecHelper.spec '#choose' do
     expect(extract_results(@session)['gender']).to eq('male')
   end
 
+  it 'ignores readonly attribute on radio buttons' do
+    @session.choose('gender_both')
+    @session.click_button('awesome')
+    expect(extract_results(@session)['gender']).to eq('both')
+  end
+
   it 'should choose a radio button by label' do
     @session.choose('Both')
     @session.click_button('awesome')
