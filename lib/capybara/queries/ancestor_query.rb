@@ -8,7 +8,8 @@ module Capybara
         @child_node = node
 
         node.synchronize do
-          match_results = super(node.session.current_scope, exact)
+          scope = node.respond_to?(:session) ? node.session.current_scope : node.find(:xpath, '/*')
+          match_results = super(scope, exact)
           ancestors = node.find_xpath(XPath.ancestor.to_s)
                           .map(&method(:to_element))
                           .select { |el| match_results.include?(el) }

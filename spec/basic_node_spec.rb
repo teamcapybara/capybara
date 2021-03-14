@@ -111,6 +111,18 @@ RSpec.describe Capybara do
       expect(string.find('//form/input[@name="meh"]')).not_to be_disabled
     end
 
+    it 'allows finding siblings' do
+      h1 = string.find(:css, 'h1')
+      expect(h1).to have_sibling(:css, 'p', text: 'Yes it is')
+      expect(h1).not_to have_sibling(:css, 'p', text: 'Jonas Nicklas')
+    end
+
+    it 'allows finding ancestor' do
+      h1 = string.find(:css, 'h1')
+      expect(h1).to have_ancestor(:css, '#content')
+      expect(h1).not_to have_ancestor(:css, '#footer')
+    end
+
     it 'drops illegal fragments when using gumbo' do
       skip 'libxml is less strict than Gumbo' unless Nokogiri.respond_to?(:HTML5)
       expect(described_class.string('<td>1</td>')).not_to have_css('td')
