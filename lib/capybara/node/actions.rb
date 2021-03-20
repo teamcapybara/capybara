@@ -277,7 +277,7 @@ module Capybara
       # @return [Capybara::Node::Element]  The file field element
       def attach_file(locator = nil, paths, make_visible: nil, **options) # rubocop:disable Style/OptionalArguments
         if locator && block_given?
-          raise ArgumentError, '``#attach_file` does not support passing both a locator and a block'
+          raise ArgumentError, '`#attach_file` does not support passing both a locator and a block'
         end
 
         Array(paths).each do |path|
