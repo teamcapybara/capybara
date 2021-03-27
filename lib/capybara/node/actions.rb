@@ -314,7 +314,7 @@ module Capybara
 
           begin
             find(:datalist_input, from, **options)
-          rescue Capybara::ElementNotFound => dlinput_error # rubocop:disable Naming/RescuedExceptionsVariableName
+          rescue Capybara::ElementNotFound => dlinput_error
             raise Capybara::ElementNotFound, "#{select_error.message} and #{dlinput_error.message}"
           end
         end
