@@ -3,11 +3,11 @@ require:
   - rubocop-performance
   - rubocop-minitest
   - rubocop-rake
-  
+
 AllCops:
   NewCops: enable
   DisabledByDefault: false
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 2.6
   Exclude:
       - 'vendor/**/*'
       - 'gemfiles/vendor/**/*'
@@ -15,7 +15,7 @@ AllCops:
 #################### Lint ################################
 
 Layout/LineLength:
-  Description: 'Limit lines to 80 characters.'
+  Description: 'Limit lines to 120 characters.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#80-character-limits'
   Exclude:
     - 'spec/**/*'
@@ -246,7 +246,7 @@ Performance/StringInclude:
 
 Performance/MethodObjectAsBlock:
   Enabled: false
-  
+
 Performance/BlockGivenWithExplicitBlock:
   Enabled: false
 
