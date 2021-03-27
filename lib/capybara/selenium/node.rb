@@ -298,7 +298,7 @@ private
 
     scroll_if_needed do
       action_with_modifiers(click_options) do |action|
-        if block_given?
+        if block
           yield action
         else
           click_options.coords? ? action.click : action.click(native)
