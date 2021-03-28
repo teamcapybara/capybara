@@ -408,11 +408,11 @@ module Capybara
         idx = scopes.index(:frame)
         top_level_scopes = [:frame, nil]
         if idx
-          if scopes.slice(idx..-1).any? { |scope| !top_level_scopes.include?(scope) }
+          if scopes.slice(idx..).any? { |scope| !top_level_scopes.include?(scope) }
             raise Capybara::ScopeError, "`switch_to_frame(:top)` cannot be called from inside a descendant frame's "\
                                         '`within` block.'
           end
-          scopes.slice!(idx..-1)
+          scopes.slice!(idx..)
           driver.switch_to_frame(:top)
         end
       else

@@ -101,13 +101,11 @@ module Capybara
     private
 
       def options_with_defaults(options)
-        options = options.dup
-        [expression_filters, node_filters].each do |filters|
-          filters.select { |_n, filter| filter.default? }.each do |name, filter|
-            options[name] = filter.default unless options.key?(name)
-          end
+        expression_filters.chain(node_filters)
+                          .select { |_n, filter| filter.default? }
+                          .each_with_object(options.dup) do |(name, filter), opts|
+          opts[name] = filter.default unless opts.key?(name)
         end
-        options
       end
 
       def add_filter(name, filter_class, *types, matcher: nil, **options, &block)

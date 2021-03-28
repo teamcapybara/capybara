@@ -74,7 +74,7 @@ class Capybara::Selenium::SafariNode < Capybara::Selenium::Node
     if clear == :backspace
       # Clear field by sending the correct number of backspace keys.
       backspaces = [:backspace] * self.value.to_s.length
-      send_keys(*([[:control, 'e']] + backspaces + [value]))
+      send_keys([:control, 'e'], *backspaces, value)
     else
       super.tap do
         # React doesn't see the safaridriver element clear
