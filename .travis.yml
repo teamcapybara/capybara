@@ -38,15 +38,15 @@ matrix:
       rvm: 2.7
       script: bundle exec rake rack_smoke
     - gemfile: Gemfile
-      rvm: 2.6
+      rvm: 2.7
       env: CAPYBARA_REMOTE=true
     - gemfile: Gemfile
-      rvm: 2.6
+      rvm: 2.7
       env:
         - CAPYBARA_REMOTE=true
         - CAPYBARA_FF=true
     - gemfile: gemfiles/Gemfile.base-versions
-      rvm: 2.5
+      rvm: 2.6
       env: CAPYBARA_FF=true
       addons:
         firefox: latest
@@ -54,7 +54,7 @@ matrix:
           packages:
             - awesome
     - gemfile: gemfiles/Gemfile.base-versions
-      rvm: 2.5
+      rvm: 2.6
     - gemfile: Gemfile
       rvm: 2.7
       env: HEADLESS=true
@@ -82,11 +82,6 @@ matrix:
         apt:
           packages:
             - awesome
-    - gemfile: Gemfile
-      rvm: 2.5
-      env: CAPYBARA_FF=true HEADLESS=true
-      addons:
-        firefox: latest
     - gemfile: Gemfile
       rvm: 2.6
       env: CHROME_BETA=true HEADLESS=true
