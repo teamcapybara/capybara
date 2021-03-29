@@ -7,7 +7,7 @@ services:
   - xvfb
 rvm:
   - 3.0
-  - jruby-9.2.14.0
+  # - jruby-9.2.14.0
 gemfile:
   - Gemfile
 env:
