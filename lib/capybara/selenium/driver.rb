@@ -293,7 +293,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def invalid_element_errors
-    @invalid_element_errors ||= begin
+    @invalid_element_errors ||=
       [
         ::Selenium::WebDriver::Error::StaleElementReferenceError,
         ::Selenium::WebDriver::Error::ElementNotInteractableError,
@@ -313,7 +313,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
           end
         end
       end
-    end
   end
 
   def no_such_window_error

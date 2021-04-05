@@ -71,13 +71,10 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumIE, 'selenium', capybara_sk
     pending "IE 11 doesn't support date input types"
   when /#click_link_or_button with :disabled option happily clicks on links which incorrectly have the disabled attribute$/
     skip 'IE 11 obeys non-standard disabled attribute on anchor tag'
-  when /#right_click should allow modifiers$/
-    skip "Windows can't :meta click because :meta triggers start menu"
-  when /#click should allow modifiers$/
+  when /#click should allow modifiers$/, /#double_click should allow modifiers$/
     pending "Doesn't work with IE for some unknown reason$"
-  when /#double_click should allow modifiers$/
     pending "Doesn't work with IE for some unknown reason$"
-  when /#click should allow multiple modifiers$/
+  when /#click should allow multiple modifiers$/, /#right_click should allow modifiers$/
     skip "Windows can't :meta click because :meta triggers start menu"
   when /#double_click should allow multiple modifiers$/
     skip "Windows can't :alt double click due to being properties shortcut"

@@ -10,7 +10,7 @@ module Capybara
     OPTIONS = %i[app reuse_server threadsafe server default_driver javascript_driver allow_gumbo].freeze
 
     attr_accessor :app, :allow_gumbo
-    attr_reader :reuse_server, :threadsafe, :session_options
+    attr_reader :reuse_server, :threadsafe, :session_options # rubocop:disable Style/BisectedAttrAccessor
     attr_writer :default_driver, :javascript_driver
 
     SessionConfig::OPTIONS.each do |method|
@@ -22,7 +22,7 @@ module Capybara
       @javascript_driver = nil
     end
 
-    attr_writer :reuse_server
+    attr_writer :reuse_server # rubocop:disable Style/BisectedAttrAccessor
 
     def threadsafe=(bool)
       if (bool != threadsafe) && Session.instance_created?

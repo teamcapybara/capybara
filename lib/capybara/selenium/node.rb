@@ -274,7 +274,7 @@ private
     elsif clear == :backspace
       # Clear field by sending the correct number of backspace keys.
       backspaces = [:backspace] * self.value.to_s.length
-      send_keys(*([:end] + backspaces + [value]))
+      send_keys(:end, *backspaces, value)
     elsif clear.is_a? Array
       send_keys(*clear, value)
     else
@@ -282,7 +282,7 @@ private
       if rapid == true || ((value.length > auto_rapid_set_length) && rapid != false)
         send_keys(value[0..3])
         driver.execute_script RAPID_APPEND_TEXT, self, value[4...-3]
-        send_keys(value[-3..-1])
+        send_keys(value[-3..])
       else
         send_keys(value)
       end
@@ -298,7 +298,7 @@ private
 
     scroll_if_needed do
       action_with_modifiers(click_options) do |action|
-        if block_given?
+        if block
           yield action
         else
           click_options.coords? ? action.click : action.click(native)

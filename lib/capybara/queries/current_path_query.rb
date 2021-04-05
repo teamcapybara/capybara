@@ -19,7 +19,7 @@ module Capybara
 
       def resolves_for?(session)
         uri = ::Addressable::URI.parse(session.current_url)
-        @actual_path = (options[:ignore_query] ? uri&.omit(:query) : uri).yield_self do |u|
+        @actual_path = (options[:ignore_query] ? uri&.omit(:query) : uri).then do |u|
           options[:url] ? u&.to_s : u&.request_uri
         end
 

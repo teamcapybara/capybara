@@ -74,7 +74,7 @@ GitHub): http://groups.google.com/group/ruby-capybara
 
 ## <a name="setup"></a>Setup
 
-Capybara requires Ruby 2.5.0 or later. To install, add this line to your
+Capybara requires Ruby 2.6.0 or later. To install, add this line to your
 `Gemfile` and run `bundle install`:
 
 ```ruby

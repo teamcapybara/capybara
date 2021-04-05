@@ -1,6 +1,10 @@
 # Version 3.36.0
 Release date: unreleased
 
+### Changed
+
+* Ruby 2.6.0+ is now required
+
 ### Fixed
 
 * Sibling and ancestor queries now work with Simple::Node - Issue #2452

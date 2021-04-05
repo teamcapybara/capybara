@@ -166,7 +166,7 @@ protected
       end.join || ''
       text = "\n#{text}\n" if BLOCK_ELEMENTS.include?(tag_name)
       text
-    else
+    else # rubocop:disable Lint/DuplicateBranch
       ''
     end
   end

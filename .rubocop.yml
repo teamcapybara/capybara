@@ -3,11 +3,11 @@ require:
   - rubocop-performance
   - rubocop-minitest
   - rubocop-rake
-  
+
 AllCops:
   NewCops: enable
   DisabledByDefault: false
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 2.6
   Exclude:
       - 'vendor/**/*'
       - 'gemfiles/vendor/**/*'
@@ -15,7 +15,7 @@ AllCops:
 #################### Lint ################################
 
 Layout/LineLength:
-  Description: 'Limit lines to 80 characters.'
+  Description: 'Limit lines to 120 characters.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#80-character-limits'
   Exclude:
     - 'spec/**/*'
@@ -64,24 +64,6 @@ Lint/UnusedMethodArgument:
     - 'lib/capybara/driver/base.rb'
     - 'lib/capybara/driver/node.rb'
 
-Lint/RedundantSafeNavigation:
-  Enabled: false
-
-Lint/RaiseException:
-  Enabled: true
-
-Lint/StructNewOverride:
-  Enabled: true
-
-Lint/DeprecatedOpenSSLConstant:
-  Enabled: true
-
-Lint/MixedRegexpCaptureTypes:
-  Enabled: true
-
-Lint/DuplicateElsifCondition:
-  Enabled: true
-
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
 
@@ -89,9 +71,6 @@ Lint/EmptyBlock:
   Exclude:
     - 'lib/capybara/spec/**/*'
     - 'spec/**/*.rb'
-
-Lint/DuplicateBranch:
-  Enabled: false
 
 Naming/PredicateName:
   Exclude:
@@ -124,9 +103,6 @@ Style/Documentation:
 Style/DocumentDynamicEvalDefinition:
   Enabled: false
 
-Style/DoubleNegation:
-  Enabled: false
-
 Style/EmptyElse:
   EnforcedStyle: empty
 
@@ -146,53 +122,8 @@ Style/IfUnlessModifier:
   Exclude:
     - 'spec/**/*'
 
-Style/HashEachMethods:
-  Enabled: true
-
-Style/HashTransformKeys:
-  Enabled: true
-
-Style/HashTransformValues:
-  Enabled: true
-
-Style/ExponentialNotation:
-  Enabled: true
-
-Style/SlicingWithRange:
-  Enabled: true
-
-Style/RedundantRegexpCharacterClass:
-  Enabled: true
-
-Style/RedundantRegexpEscape:
-  Enabled: true
-
-Style/RedundantFetchBlock:
-  Enabled: true
-
 Style/AccessorGrouping:
   Enabled: false
-
-Style/BisectedAttrAccessor:
-  Enabled: false
-
-Style/RedundantAssignment:
-  Enabled: true
-
-Style/ArrayCoercion:
-  Enabled: true
-
-Style/CaseLikeIf:
-  Enabled: true
-
-Style/HashAsLastArrayItem:
-  Enabled: true
-
-Style/HashLikeCase:
-  Enabled: true
-
-Style/RedundantFileExtensionInRequire:
-  Enabled: true
 
 Layout/EmptyLineBetweenDefs:
   AllowAdjacentOneLineDefs: true
@@ -209,45 +140,12 @@ Layout/FirstArrayElementIndentation:
 Layout/IndentationWidth:
   IgnoredPatterns: ['^\s*module']
 
-Layout/SpaceAroundMethodCallOperator:
-  Enabled: true
-
-Layout/EmptyLinesAroundAttributeAccessor:
-  Enabled: true
-
 Security/YAMLLoad:
   Exclude:
     - 'lib/capybara/spec/**/*'
     - 'spec/**/*'
 
-Performance/AncestorsInclude:
-  Enabled: true
-
-Performance/BigDecimalWithNumericArgument:
-  Enabled: true
-
-Performance/RedundantSortBlock:
-  Enabled: true
-
-Performance/RedundantStringChars:
-  Enabled: true
-
-Performance/ReverseFirst:
-  Enabled: true
-
-Performance/SortReverse:
-  Enabled: true
-
-Performance/Squeeze:
-  Enabled: true
-
-Performance/StringInclude:
-  Enabled: true
-
 Performance/MethodObjectAsBlock:
-  Enabled: false
-  
-Performance/BlockGivenWithExplicitBlock:
   Enabled: false
 
 RSpec/ExampleWording:
@@ -278,11 +176,5 @@ RSpec/PredicateMatcher:
   Exclude:
     - 'spec/basic_node_spec.rb'
 
-RSpec/Capybara:
-  Enabled: false
-
 RSpec/Capybara/FeatureMethods:
-  Enabled: false
-
-RSpec/Capybara/VisibilityMatcher:
   Enabled: false
