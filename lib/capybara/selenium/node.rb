@@ -199,10 +199,6 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
     native.attribute('isContentEditable') == 'true'
   end
 
-  def ==(other)
-    native == other.native
-  end
-
   def path
     driver.evaluate_script GET_XPATH_SCRIPT, self
   end

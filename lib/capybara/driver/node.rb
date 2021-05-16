@@ -132,7 +132,7 @@ module Capybara
       end
 
       def ==(other)
-        raise NotSupportedByDriverError, 'Capybara::Driver::Node#=='
+        eql?(other) || (other.respond_to?(:native) && native == other.native)
       end
     end
   end

@@ -14,16 +14,17 @@ Capybara.add_selector(:button, locator_type: [String, Symbol]) do
                      XPath.string.n.is(locator) |
                      XPath.descendant(:img)[XPath.attr(:alt).is(locator)]
 
-      input_btn_xpath = input_btn_xpath[locator_matchers] + locate_label(locator).descendant(input_btn_xpath)
-      btn_xpath = btn_xpath[btn_matchers] + locate_label(locator).descendant(btn_xpath)
+      label_contains_xpath = locate_label(locator).descendant[labellable_elements]
+      input_btn_xpath = input_btn_xpath[locator_matchers]
+      btn_xpath = btn_xpath[btn_matchers]
       aria_btn_xpath = aria_btn_xpath[btn_matchers]
 
       alt_matches = XPath.attr(:alt).is(locator)
       alt_matches |= XPath.attr(:'aria-label').is(locator) if enable_aria_label
-      image_btn_xpath = image_btn_xpath[alt_matches] + locate_label(locator).descendant(image_btn_xpath)
+      image_btn_xpath = image_btn_xpath[alt_matches]
     end
 
-    btn_xpaths = [input_btn_xpath, btn_xpath, image_btn_xpath]
+    btn_xpaths = [input_btn_xpath, btn_xpath, image_btn_xpath, label_contains_xpath].compact
     btn_xpaths << aria_btn_xpath if enable_aria_role
 
     %i[value title type].inject(btn_xpaths.inject(&:union)) do |memo, ef|
@@ -59,5 +60,9 @@ Capybara.add_selector(:button, locator_type: [String, Symbol]) do
       (XPath.attr(:'aria-label').is(locator) if config.enable_aria_label),
       (XPath.attr(config.test_id) == locator if config.test_id)
     ].compact.inject(&:|)
+  end
+
+  def labellable_elements
+    (XPath.self(:input) & XPath.attr(:type).one_of('submit', 'reset', 'image', 'button')) | XPath.self(:button)
   end
 end
