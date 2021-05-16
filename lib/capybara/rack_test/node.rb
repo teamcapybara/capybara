@@ -146,10 +146,6 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     end
   end
 
-  def ==(other)
-    native == other.native
-  end
-
 protected
 
   # @api private
