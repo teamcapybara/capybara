@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
               'such as Rails, Sinatra or Merb'
 
   s.add_runtime_dependency('addressable')
+  s.add_runtime_dependency('matrix')
   s.add_runtime_dependency('mini_mime', ['>= 0.1.3'])
   s.add_runtime_dependency('nokogiri', ['~> 1.8'])
   s.add_runtime_dependency('rack', ['>= 1.6.0'])
