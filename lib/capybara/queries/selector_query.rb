@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'matrix'
-
 module Capybara
   module Queries
     class SelectorQuery < Queries::BaseQuery
