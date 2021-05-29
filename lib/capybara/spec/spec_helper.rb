@@ -117,8 +117,9 @@ module Capybara
 
     def extract_results(session)
       expect(session).to have_xpath("//pre[@id='results']")
-      # YAML.load Nokogiri::HTML(session.body).xpath("//pre[@id='results']").first.inner_html.lstrip
-      YAML.load Capybara::HTML(session.body).xpath("//pre[@id='results']").first.inner_html.lstrip
+      perms = [(::Sinatra::IndifferentHash if defined? ::Sinatra::IndifferentHash)].compact
+      results = Capybara::HTML(session.body).xpath("//pre[@id='results']").first.inner_html.lstrip
+      YAML.safe_load results, permitted_classes: perms
     end
 
     def be_an_invalid_element_error(session)
