@@ -7,7 +7,6 @@ services:
   - xvfb
 rvm:
   - 3.0
-  # - jruby-9.2.14.0
 gemfile:
   - Gemfile
 env:
@@ -35,13 +34,13 @@ cache:
 matrix:
   include:
     - gemfile: gemfiles/Gemfile.gumbo
-      rvm: 2.7
+      rvm: 3.0
       script: bundle exec rake rack_smoke
     - gemfile: Gemfile
       rvm: 2.7
       env: CAPYBARA_REMOTE=true
     - gemfile: Gemfile
-      rvm: 2.7
+      rvm: 3.0
       env:
         - CAPYBARA_REMOTE=true
         - CAPYBARA_FF=true
@@ -56,7 +55,7 @@ matrix:
     - gemfile: gemfiles/Gemfile.base-versions
       rvm: 2.6
     - gemfile: Gemfile
-      rvm: 2.7
+      rvm: 3.0
       env: HEADLESS=true
     - gemfile: gemfiles/Gemfile.beta-versions
       rvm: 3.0
@@ -72,10 +71,7 @@ matrix:
         - CAPYBARA_FF=true
         - CAPYBARA_REMOTE=true
     - gemfile: Gemfile
-      rvm: ruby-head
-      env: RUBY_OPT=--jit
-    - gemfile: Gemfile
-      rvm: 2.7
+      rvm: 3.0
       env: CAPYBARA_FF=true
       addons:
         firefox: latest
@@ -83,7 +79,7 @@ matrix:
           packages:
             - awesome
     - gemfile: Gemfile
-      rvm: 2.6
+      rvm: 2.7
       env: CHROME_BETA=true HEADLESS=true
       addons:
         update: true
@@ -117,7 +113,6 @@ matrix:
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-firefox
     - env: CHROME_BETA=true HEADLESS=true
-    - rvm: jruby-9.2.13.0
     - rvm: ruby-head
 before_install:
   - gem update --system
