@@ -64,7 +64,7 @@ module Capybara
           el.assert_any_of_selectors(*@args, **session_query_options, &@filter_block)
         end
 
-        def does_not_match?(_actual)
+        def does_not_match?(el)
           el.assert_none_of_selectors(*@args, **session_query_options, &@filter_block)
         end
 

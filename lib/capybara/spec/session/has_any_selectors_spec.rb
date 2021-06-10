@@ -22,4 +22,8 @@ Capybara::SpecHelper.spec '#have_any_of_selectors' do
       expect(@session).to have_any_of_selectors('p a#blah', 'h2#h2three')
     end.to raise_error ::RSpec::Expectations::ExpectationNotMetError
   end
+
+  it 'should be negateable' do
+    expect(@session).not_to have_any_of_selectors(:css, 'span a#foo', 'h2#h2nope', 'h2#h2one_no')
+  end
 end
