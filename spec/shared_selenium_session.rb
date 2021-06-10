@@ -514,8 +514,8 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
 
       it 'can query attributes with strange characters' do
         session.visit('/form')
-        expect(session).to have_selector(:element, "{custom}": true)
-        expect(session).to have_selector(:element, "{custom}": 'abcdef')
+        expect(session).to have_selector(:element, '{custom}': true)
+        expect(session).to have_selector(:element, '{custom}': 'abcdef')
       end
     end
 

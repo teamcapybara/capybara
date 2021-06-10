@@ -3,7 +3,7 @@
 Capybara.add_selector(:radio_button, locator_type: [String, Symbol]) do
   label 'radio button'
   xpath do |locator, allow_self: nil, **options|
-    xpath = XPath.axis(allow_self ? :"descendant-or-self" : :descendant, :input)[
+    xpath = XPath.axis(allow_self ? :'descendant-or-self' : :descendant, :input)[
       XPath.attr(:type) == 'radio'
     ]
     locate_field(xpath, locator, **options)

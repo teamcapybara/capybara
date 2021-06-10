@@ -3,7 +3,7 @@
 Capybara.add_selector(:fillable_field, locator_type: [String, Symbol]) do
   label 'field'
   xpath do |locator, allow_self: nil, **options|
-    xpath = XPath.axis(allow_self ? :"descendant-or-self" : :descendant, :input, :textarea)[
+    xpath = XPath.axis(allow_self ? :'descendant-or-self' : :descendant, :input, :textarea)[
       !XPath.attr(:type).one_of('submit', 'image', 'radio', 'checkbox', 'hidden', 'file')
     ]
     locate_field(xpath, locator, **options)
