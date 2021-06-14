@@ -22,7 +22,7 @@ module Capybara
       #     When String the elements contained text must match exactly, when Boolean controls whether the `text` option must match exactly.
       #     Defaults to {Capybara.configure exact_text}.
       #   @option options [Boolean] normalize_ws
-      #     Whether the `text`/`exact_text` options are compared against elment text with whitespace normalized or as returned by the driver.
+      #     Whether the `text`/`exact_text` options are compared against element text with whitespace normalized or as returned by the driver.
       #     Defaults to {Capybara.configure default_normalize_ws}.
       #   @option options [Boolean, Symbol] visible
       #     Only find elements with the specified visibility. Defaults to behavior indicated by {Capybara.configure ignore_hidden_elements}.
