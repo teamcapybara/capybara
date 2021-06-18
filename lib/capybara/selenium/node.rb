@@ -14,7 +14,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def all_text
-    text = driver.evaluate_script('arguments[0].textContent', self)
+    text = driver.evaluate_script('arguments[0].textContent', self) || ''
     text.gsub(/[\u200b\u200e\u200f]/, '')
         .gsub(/[\ \n\f\t\v\u2028\u2029]+/, ' ')
         .gsub(/\A[[:space:]&&[^\u00a0]]+/, '')
