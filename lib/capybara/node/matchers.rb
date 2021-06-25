@@ -104,6 +104,7 @@ module Capybara
       #
       # @param (see Capybara::Node::Finders#all)
       # @option options [Integer] :count (nil)    Number of times the expression should occur
+      # @option options [String] :message (nil)   Custom message to display if assertion fails
       # @raise [Capybara::ExpectationNotMet]      If the selector does not exist
       #
       def assert_selector(*args, &optional_filter_block)
