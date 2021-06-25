@@ -258,7 +258,7 @@ module Capybara
     #
     def current_driver
       if threadsafe
-        Thread.current['capybara_current_driver']
+        Thread.current[:capybara_current_driver]
       else
         @current_driver
       end || default_driver
@@ -267,7 +267,7 @@ module Capybara
 
     def current_driver=(name)
       if threadsafe
-        Thread.current['capybara_current_driver'] = name
+        Thread.current[:capybara_current_driver] = name
       else
         @current_driver = name
       end
@@ -334,7 +334,7 @@ module Capybara
     #
     def session_name
       if threadsafe
-        Thread.current['capybara_session_name'] ||= :default
+        Thread.current[:capybara_session_name] ||= :default
       else
         @session_name ||= :default
       end
@@ -342,7 +342,7 @@ module Capybara
 
     def session_name=(name)
       if threadsafe
-        Thread.current['capybara_session_name'] = name
+        Thread.current[:capybara_session_name] = name
       else
         @session_name = name
       end
@@ -427,7 +427,7 @@ module Capybara
 
     def specified_session
       if threadsafe
-        Thread.current['capybara_specified_session']
+        Thread.current[:capybara_specified_session]
       else
         @specified_session ||= nil
       end
@@ -435,7 +435,7 @@ module Capybara
 
     def specified_session=(session)
       if threadsafe
-        Thread.current['capybara_specified_session'] = session
+        Thread.current[:capybara_specified_session] = session
       else
         @specified_session = session
       end
