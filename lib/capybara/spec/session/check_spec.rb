@@ -236,6 +236,15 @@ Capybara::SpecHelper.spec '#check' do
           expect(@session).to have_field('multi_label_checkbox', checked: true, visible: :hidden)
         end
       end
+
+      context 'with allow_label_click options', requires: [:js] do
+        it 'should allow offsets to click location on label' do
+          expect(@session.find(:checkbox, 'form_cars_lotus', unchecked: true, visible: :hidden)).to be_truthy
+          @session.check('form_cars_lotus', allow_label_click: { x: 90, y: 10 })
+          @session.click_button('awesome')
+          expect(extract_results(@session)['cars']).to include('lotus')
+        end
+      end
     end
   end
 end
