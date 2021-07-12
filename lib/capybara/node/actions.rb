@@ -92,8 +92,9 @@ module Capybara
       end
 
       # @!macro label_click
-      #   @option options [Boolean] allow_label_click
+      #   @option options [Boolean, Hash] allow_label_click
       #     Attempt to click the label to toggle state if element is non-visible. Defaults to {Capybara.configure automatic_label_click}.
+      #     If set to a Hash it as passed as options to the `click` on the label
 
       ##
       #
@@ -371,7 +372,10 @@ module Capybara
 
           begin
             el ||= find(selector, locator, **options.merge(visible: :all))
-            el.session.find(:label, for: el, visible: true, match: :first).click unless el.checked? == checked
+            unless el.checked? == checked
+              label = el.session.find(:label, for: el, visible: true, match: :first)
+              label.click(**(Hash.try_convert(allow_label_click) || {}))
+            end
           rescue StandardError # swallow extra errors - raise original
             raise e
           end
