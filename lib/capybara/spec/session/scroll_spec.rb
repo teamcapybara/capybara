@@ -15,7 +15,7 @@ Capybara::SpecHelper.spec '#scroll_to', requires: [:scroll] do
     el = @session.find(:css, '#scroll')
     @session.scroll_to(el, align: :bottom)
     el_bottom = el.evaluate_script('this.getBoundingClientRect().bottom')
-    viewport_bottom = el.evaluate_script('document.body.clientHeight')
+    viewport_bottom = el.evaluate_script('document.documentElement.clientHeight')
     expect(el_bottom).to be_within(1).of(viewport_bottom)
   end
 
@@ -23,7 +23,7 @@ Capybara::SpecHelper.spec '#scroll_to', requires: [:scroll] do
     el = @session.find(:css, '#scroll')
     @session.scroll_to(el, align: :center)
     el_center = el.evaluate_script('(function(rect){return (rect.top + rect.bottom)/2})(this.getBoundingClientRect())')
-    viewport_bottom = el.evaluate_script('document.body.clientHeight')
+    viewport_bottom = el.evaluate_script('document.documentElement.clientHeight')
     expect(el_center).to be_within(2).of(viewport_bottom / 2)
   end
 
@@ -35,13 +35,13 @@ Capybara::SpecHelper.spec '#scroll_to', requires: [:scroll] do
 
   it 'can scroll the window to the vertical bottom' do
     @session.scroll_to :bottom
-    max_scroll = @session.evaluate_script('document.body.scrollHeight - document.body.clientHeight')
+    max_scroll = @session.evaluate_script('document.documentElement.scrollHeight - document.documentElement.clientHeight')
     expect(@session.evaluate_script('[window.scrollX || window.pageXOffset, window.scrollY || window.pageYOffset]')).to eq [0, max_scroll]
   end
 
   it 'can scroll the window to the vertical center' do
     @session.scroll_to :center
-    max_scroll = @session.evaluate_script('document.documentElement.scrollHeight - document.body.clientHeight')
+    max_scroll = @session.evaluate_script('document.documentElement.scrollHeight - document.documentElement.clientHeight')
     expect(@session.evaluate_script('[window.scrollX || window.pageXOffset, window.scrollY || window.pageYOffset]')).to eq [0, max_scroll / 2]
   end
 

@@ -41,7 +41,7 @@ module Capybara
       end
 
       def scroll_to(*args, **options)
-        find(:xpath, '//body').scroll_to(*args, **options)
+        find(:xpath, '/html').scroll_to(*args, **options)
       end
     end
   end
