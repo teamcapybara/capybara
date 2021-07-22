@@ -163,10 +163,17 @@ class TestApp < Sinatra::Base
 
   get '/with_title' do
     <<-HTML
-      <title>#{params[:title] || 'Test Title'}</title>
-      <body>
-        <svg><title>abcdefg</title></svg>
-      </body>
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+          <title>#{params[:title] || 'Test Title'}</title>
+        </head>
+
+        <body>
+          <svg><title>abcdefg</title></svg>
+        </body>
+      </html>
     HTML
   end
 
@@ -177,7 +184,9 @@ class TestApp < Sinatra::Base
   end
 
   get '/:view' do |view|
-    erb view.to_sym, locals: { referrer: request.referrer }
+    view_template = "#{__dir__}/views/#{view}.erb"
+    has_layout = File.exist?(view_template) && File.open(view_template) { |f| f.first.downcase.include?('doctype') }
+    erb view.to_sym, locals: { referrer: request.referrer }, layout: !has_layout
   end
 
   post '/form' do
