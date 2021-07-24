@@ -40,8 +40,8 @@ module Capybara
         find(:xpath, '/html').evaluate_script(*args)
       end
 
-      def scroll_to(*args, **options)
-        find(:xpath, '/html').scroll_to(*args, **options)
+      def scroll_to(*args, quirks: false, **options)
+        find(:xpath, quirks ? '//body' : '/html').scroll_to(*args, **options)
       end
     end
   end
