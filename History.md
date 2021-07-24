@@ -9,6 +9,9 @@ Release date: unreleased
 
 * Sibling and ancestor queries now work with Simple::Node - Issue #2452
 * rack_test correctly ignores readonly attribute on specific input element types
+* Node#all_text always returns a string - Issue #2477
+* have_any_of_selectors negated match - Issue #2473
+* Document#scroll_to - pass quirks: true if you need the older behavior [Eric Anderson]
 
 ### Removed
 
