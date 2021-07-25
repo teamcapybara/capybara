@@ -23,7 +23,7 @@ end
 if RUBY_ENGINE == 'jruby'
   # :nocov:
   module Capybara::DSL
-    class <<self
+    class << self
       remove_method :included
 
       def included(base)
@@ -55,7 +55,7 @@ else
     end
 
     def self.prepended(base)
-      class <<base
+      class << base
         prepend ClassMethods
       end
     end
@@ -70,7 +70,7 @@ else
     end
 
     def self.prepended(base)
-      class <<base
+      class << base
         prepend ClassMethods
       end
     end

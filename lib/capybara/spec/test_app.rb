@@ -53,8 +53,8 @@ class TestApp < Sinatra::Base
 
   get '/referer_base' do
     '<a href="/get_referer">direct link</a>' \
-    '<a href="/redirect_to_get_referer">link via redirect</a>' \
-    '<form action="/get_referer" method="get"><input type="submit"></form>'
+      '<a href="/redirect_to_get_referer">link via redirect</a>' \
+      '<form action="/get_referer" method="get"><input type="submit"></form>'
   end
 
   get '/redirect_to_get_referer' do
@@ -180,7 +180,7 @@ class TestApp < Sinatra::Base
   get '/download.csv' do
     content_type 'text/csv'
     'This, is, comma, separated' \
-    'Thomas, Walpole, was , here'
+      'Thomas, Walpole, was , here'
   end
 
   get '/:view' do |view|
