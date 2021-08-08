@@ -110,7 +110,7 @@ module Capybara
           # No need for an xpath if only checking the current element
           !(native.key?('hidden') ||
             /display:\s?none/.match?(native[:style] || '') ||
-            %w[script head].include?(tag_name))
+            %w[script head style].include?(tag_name))
         end
       end
 

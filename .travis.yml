@@ -33,8 +33,9 @@ cache:
 
 matrix:
   include:
-    - gemfile: gemfiles/Gemfile.gumbo
+    - gemfile: Gemfile
       rvm: 3.0
+      env: HTML5_PARSING=true
       script: bundle exec rake rack_smoke
     - gemfile: Gemfile
       rvm: 2.7

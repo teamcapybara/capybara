@@ -39,7 +39,7 @@ module Capybara
     #   See {Capybara.configure}
     # @!method javascript_driver
     #   See {Capybara.configure}
-    # @!method allow_gumbo
+    # @!method use_html5_parsing
     #   See {Capybara.configure}
     Config::OPTIONS.each do |method|
       def_delegators :config, method, "#{method}="
@@ -69,7 +69,7 @@ module Capybara
     #
     # #### Configurable options
     #
-    # - **allow_gumbo** (Boolean = `false`) - When `nokogumbo` is available, whether it will be used to parse HTML strings.
+    # - **use_html5_parsing** (Boolean = `false`) - When Nokogiri >= 1.12.0 or `nokogumbo` is installed, whether HTML5 parsing will be used for HTML strings.
     # - **always_include_port** (Boolean = `false`) - Whether the Rack server's port should automatically be inserted into every visited URL
     #   unless another port is explicitly specified.
     # - **app_host** (String, `nil`) - The default host to use when giving a relative URL to visit, must be a valid URL e.g. `http://www.example.com`.
@@ -385,26 +385,21 @@ module Capybara
     # @return [Nokogiri::HTML::Document]      HTML document
     #
     def HTML(html) # rubocop:disable Naming/MethodName
-      if Nokogiri.respond_to?(:HTML5) && Capybara.allow_gumbo # Nokogumbo installed and allowed for use
-        Nokogiri::HTML5(html).tap do |document|
-          document.xpath('//template').each do |template|
-            # template elements content is not part of the document
-            template.inner_html = ''
-          end
-          document.xpath('//textarea').each do |textarea|
-            # The Nokogumbo HTML5 parser already returns spec compliant contents
-            textarea['_capybara_raw_value'] = textarea.content
-          end
-        end
+      # Nokogiri >= 1.12.0 or Nokogumbo installed and allowed for use
+      html_parser, using_html5 = if defined?(Nokogiri::HTML5) && Capybara.use_html5_parsing
+        [Nokogiri::HTML5, true]
       else
-        Nokogiri::HTML(html).tap do |document|
-          document.xpath('//template').each do |template|
-            # template elements content is not part of the document
-            template.inner_html = ''
-          end
-          document.xpath('//textarea').each do |textarea|
-            textarea['_capybara_raw_value'] = textarea.content.delete_prefix("\n")
-          end
+        [defined?(Nokogiri::HTML4) ? Nokogiri::HTML4 : Nokogiri::HTML, false]
+      end
+
+      html_parser.parse(html).tap do |document|
+        document.xpath('//template').each do |template|
+          # template elements content is not part of the document
+          template.inner_html = ''
+        end
+        document.xpath('//textarea').each do |textarea|
+          # The Nokogiri HTML5 parser already returns spec compliant contents
+          textarea['_capybara_raw_value'] = using_html5 ? textarea.content : textarea.content.delete_prefix("\n")
         end
       end
     end
@@ -516,6 +511,6 @@ Capybara.configure do |config|
   config.test_id = nil
   config.predicates_wait = true
   config.default_normalize_ws = false
-  config.allow_gumbo = false
+  config.use_html5_parsing = false
   config.w3c_click_offset = false
 end

@@ -7,9 +7,11 @@ module Capybara
   class Config
     extend Forwardable
 
-    OPTIONS = %i[app reuse_server threadsafe server default_driver javascript_driver allow_gumbo].freeze
+    OPTIONS = %i[
+      app reuse_server threadsafe server default_driver javascript_driver use_html5_parsing allow_gumbo
+    ].freeze
 
-    attr_accessor :app, :allow_gumbo
+    attr_accessor :app, :use_html5_parsing
     attr_reader :reuse_server, :threadsafe, :session_options # rubocop:disable Style/BisectedAttrAccessor
     attr_writer :default_driver, :javascript_driver
 
@@ -87,6 +89,16 @@ module Capybara
         Capybara::Helpers.warn "DEPRECATED: ##{method} is deprecated, please use ##{alternate_method} instead: #{Capybara::Helpers.filter_backtrace(caller)}"
       end
       @deprecation_notified[method] = true
+    end
+
+    def allow_gumbo=(val)
+      deprecate('allow_gumbo=', 'use_html5_parsing=')
+      self.use_html5_parsing = val
+    end
+
+    def allow_gumbo
+      deprecate('allow_gumbo', 'use_html5_parsing')
+      use_html5_parsing
     end
   end
 end
