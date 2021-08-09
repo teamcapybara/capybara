@@ -36,7 +36,7 @@ module Capybara
         Capybara.test_id = nil
         Capybara.predicates_wait = true
         Capybara.default_normalize_ws = false
-        Capybara.allow_gumbo = true
+        Capybara.use_html5_parsing = !ENV['HTML5_PARSING'].nil?
         Capybara.w3c_click_offset = false
         reset_threadsafe
       end

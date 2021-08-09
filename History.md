@@ -8,6 +8,7 @@ Release date: unreleased
 ### Added
 
 * `allow_label_click` accepts click options to be used when clicking an associated label
+* Deprecated `allow_gumbo=` in favor of `use_html5_parsing=` to enable use of Nokogiri::HTL5 when available
 
 ### Fixed
 

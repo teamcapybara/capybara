@@ -125,12 +125,13 @@ RSpec.describe Capybara do
 
     it 'drops illegal fragments when using gumbo' do
       skip 'libxml is less strict than Gumbo' unless Nokogiri.respond_to?(:HTML5)
+      described_class.use_html5_parsing = true
       expect(described_class.string('<td>1</td>')).not_to have_css('td')
     end
 
-    it 'can disable use of gumbo' do
-      skip "Test doesn't make sense unlesss nokogumbo is loaded" unless Nokogiri.respond_to?(:HTML5)
-      described_class.allow_gumbo = false
+    it 'can disable use of HTML5 parsing' do
+      skip "Test doesn't make sense unlesss HTML5 parsing is loaded (Nokogumbo or Nokogiri >= 1.12.0)" unless Nokogiri.respond_to?(:HTML5)
+      described_class.use_html5_parsing = false
       expect(described_class.string('<td>1</td>')).to have_css('td')
     end
 
