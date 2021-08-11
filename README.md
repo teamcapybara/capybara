@@ -174,6 +174,33 @@ describe "the signin process", type: :feature do
 end
 ```
 
+### Setting the driver in Rails projects
+
+Rails system tests (with RSpec) override Capybara's driver setting with the
+`driven_by` method. Follow the [rails and rspec system test
+instructions](https://relishapp.com/rspec/rspec-rails/docs/system-specs/system-spec#system-specs-driven-by-selenium-chrome-headless).
+
+```ruby
+RSpec.describe "My feature", js: true, type: :system do
+  before do
+    driven_by :selenium_chrome_headless
+  end
+end
+```
+
+Alternatively, define a `before` hook in your RSpec configuration.
+
+```ruby
+# spec/rails_helper.rb
+RSpec.configure do |config|
+  config.before(:each, js: true) do
+    driven_by :selenium_chrome_headless
+  end
+end
+```
+
+### Setting the driver in Non-Rails projects
+
 Use `js: true` to switch to the `Capybara.javascript_driver`
 (`:selenium` by default), or provide a `:driver` option to switch
 to one specific driver. For example:
@@ -184,6 +211,8 @@ describe 'some stuff which requires js', js: true do
   it 'will switch to one specific driver', driver: :apparition
 end
 ```
+
+### Capybara's RSpec DSL
 
 Capybara also comes with a built in DSL for creating descriptive acceptance tests:
 
