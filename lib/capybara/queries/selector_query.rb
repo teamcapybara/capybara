@@ -9,7 +9,7 @@ module Capybara
 
       SPATIAL_KEYS = %i[above below left_of right_of near].freeze
       VALID_KEYS = SPATIAL_KEYS + COUNT_KEYS +
-                   %i[text id class style visible obscured exact exact_text normalize_ws match wait filter_set]
+                   %i[text id class style visible obscured exact exact_text normalize_ws match wait filter_set focused]
       VALID_MATCH = %i[first smart prefer_exact one].freeze
 
       def initialize(*args,
@@ -73,6 +73,8 @@ module Capybara
 
         desc << " with id #{options[:id]}" if options[:id]
         desc << " with classes [#{Array(options[:class]).join(',')}]" if options[:class]
+        desc << ' that is focused' if options[:focused]
+        desc << ' that is not focused' if options[:focused] == false
 
         desc << case options[:style]
         when String
@@ -435,6 +437,7 @@ module Capybara
           matches_id_filter?(node) &&
           matches_class_filter?(node) &&
           matches_style_filter?(node) &&
+          matches_focused_filter?(node) &&
           matches_text_filter?(node) &&
           matches_exact_text_filter?(node)
       end
@@ -491,6 +494,16 @@ module Capybara
           options[:class].select { |c| c.is_a? Regexp }.all? do |r|
             classes.any? { |cls| r.match? cls }
           end
+        end
+      end
+
+      def matches_focused_filter?(node)
+        if options.key?(:focused)
+          node_is_focused = node == node.session.active_element
+
+          node_is_focused == options[:focused]
+        else
+          true
         end
       end
 

@@ -65,6 +65,18 @@ Capybara::SpecHelper.spec '#has_button?' do
   it 'should not affect other selectors when enable_aria_role: false' do
     expect(@session).to have_button('Click me!', enable_aria_role: false)
   end
+
+  context 'with focused:', requires: [:js] do
+    it 'should be true if a field has focus when focused: true' do
+      @session.send_keys(:tab)
+
+      expect(@session).to have_button('A Button', focused: true)
+    end
+
+    it 'should be false if a field does not have focus when focused: false' do
+      expect(@session).not_to have_button('A Button', focused: false)
+    end
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_button?' do
@@ -116,5 +128,17 @@ Capybara::SpecHelper.spec '#has_no_button?' do
 
   it 'should not affect other selectors when enable_aria_role: false' do
     expect(@session).to have_no_button('Junk button that does not exist', enable_aria_role: false)
+  end
+
+  context 'with focused:', requires: [:js] do
+    it 'should be true if a field has focus when focused: true' do
+      expect(@session).to have_no_button('A Button', focused: false)
+    end
+
+    it 'should be false if a field does not have focus when focused: false' do
+      @session.send_keys(:tab)
+
+      expect(@session).to have_no_button('A Button', focused: true)
+    end
   end
 end

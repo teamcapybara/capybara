@@ -110,6 +110,18 @@ Capybara::SpecHelper.spec '#has_field' do
     end
   end
 
+  context 'with focused', requires: [:js] do
+    it 'should be true if a field has focus' do
+      2.times { @session.send_keys(:tab) }
+
+      expect(@session).to have_field('An Input', focused: true)
+    end
+
+    it 'should be false if a field does not have focus' do
+      expect(@session).to have_field('An Input', focused: false)
+    end
+  end
+
   context 'with valid', requires: [:js] do
     it 'should be true if field is valid' do
       @session.fill_in 'required', with: 'something'
@@ -182,6 +194,18 @@ Capybara::SpecHelper.spec '#has_no_field' do
       expect(@session).to have_no_field('Description', type: '')
       expect(@session).to have_no_field('Description', type: 'email')
       expect(@session).to have_no_field('Languages', type: 'textarea')
+    end
+  end
+
+  context 'with focused', requires: [:js] do
+    it 'should be true if a field does not have focus' do
+      expect(@session).to have_field('An Input', focused: true)
+    end
+
+    it 'should be false if a field has focus' do
+      2.times { @session.send_keys(:tab) }
+
+      expect(@session).to have_field('An Input', focused: false)
     end
   end
 end

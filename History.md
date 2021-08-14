@@ -10,6 +10,7 @@ Release date: unreleased
 * `allow_label_click` accepts click options to be used when clicking an associated label
 * Deprecated `allow_gumbo=` in favor of `use_html5_parsing=` to enable use of Nokogiri::HTL5 when available
 * `Session#active_element` returns the element with focus - Not supported by the `RackTest` driver [Sean Doyle]
+* Support `focused:` filter for finding interactive elements - Not supported by the `RackTest` driver [Sean Doyle]
 
 ### Fixed
 

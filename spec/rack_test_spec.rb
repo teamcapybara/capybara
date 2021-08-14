@@ -12,7 +12,6 @@ skipped_tests = %i[
   screenshot
   frames
   windows
-  active_element
   send_keys
   server
   hover
