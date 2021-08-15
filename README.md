@@ -151,6 +151,8 @@ RSpec](https://relishapp.com/rspec/rspec-rails/v/4-0/docs/directory-structure))
 and if you have your Capybara specs in a different directory, then tag the
 example groups with `type: :feature` or `type: :system` depending on which type of test you're writing.
 
+If you are using Rails system specs please see [their documentation](https://relishapp.com/rspec/rspec-rails/docs/system-specs/system-spec#system-specs-driven-by-selenium-chrome-headless) for selecting the driver you wish to use.
+
 If you are not using Rails, tag all the example groups in which you want to use
 Capybara with `type: :feature`.
 
@@ -257,6 +259,8 @@ end
     ```
 
 ## <a name="using-capybara-with-minitest"></a>Using Capybara with Minitest
+
+* If you are using Rails system tests please see their documentation for information on selecting the driver you wish to use.
 
 * If you are using Rails, but not using Rails system tests, add the following code in your `test_helper.rb`
     file to make Capybara available in all test cases deriving from
