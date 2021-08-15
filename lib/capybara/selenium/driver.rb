@@ -149,11 +149,12 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def active_element
-    build_node(browser.switch_to.active_element)
+    build_node(native_active_element)
   end
 
   def send_keys(*args)
-    active_element.native.send_keys(*args)
+    # Should this call the specialized nodes rather than native???
+    native_active_element.send_keys(*args)
   end
 
   def save_screenshot(path, **_options)
@@ -331,6 +332,10 @@ private
 
   def native_args(args)
     args.map { |arg| arg.is_a?(Capybara::Selenium::Node) ? arg.native : arg }
+  end
+
+  def native_active_element
+    browser.switch_to.active_element
   end
 
   def clear_browser_state

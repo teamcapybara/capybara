@@ -318,7 +318,9 @@ module Capybara
     # Not supported by Rack Test
     #
     def active_element
-      driver.active_element
+      Capybara::Node::Element.new(self, driver.active_element, nil, nil) do
+        active_element
+      end.tap(&:allow_reload!)
     end
 
     ##

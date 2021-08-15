@@ -22,11 +22,12 @@ module Capybara
     # @see Capybara::Node
     #
     class Element < Base
-      def initialize(session, base, query_scope, query)
+      def initialize(session, base, query_scope, query, &reload_proc)
         super(session, base)
         @query_scope = query_scope
         @query = query
         @allow_reload = false
+        @reload_proc = reload_proc
         @query_idx = nil
       end
 
@@ -550,7 +551,11 @@ module Capybara
         return self unless @allow_reload
 
         begin
-          reloaded = @query.resolve_for(query_scope.reload)[@query_idx.to_i]
+          reloaded = if @reload_proc
+            @reload_proc.call
+          else
+            @query.resolve_for(query_scope.reload)[@query_idx.to_i]
+          end
           @base = reloaded.base if reloaded
         rescue StandardError => e
           raise e unless catch_error?(e)
