@@ -36,6 +36,8 @@ Capybara.add_selector(:link, locator_type: [String, Symbol]) do
     end
   end
 
+  node_filter(:described_by) { |node, text| text_from_tokens(node, 'aria-describedby').include?(text.to_s) }
+
   expression_filter(:download, valid_values: [true, false, String]) do |expr, download|
     builder(expr).add_attribute_conditions(download: download)
   end

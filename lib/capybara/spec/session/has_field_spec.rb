@@ -127,6 +127,26 @@ Capybara::SpecHelper.spec '#has_field' do
       expect(@session).not_to have_field('length', valid: true)
     end
   end
+
+  context 'with described_by:' do
+    it 'should be true if field is described by the text' do
+      expect(@session).to have_field(described_by: 'description (part 1)')
+      expect(@session).to have_field(described_by: 'description (part 2)')
+      expect(@session).to have_field(described_by: 'description (part 1) description (part 2)')
+      expect(@session).to have_field('Input with aria-describedby', described_by: 'description (part 1)')
+      expect(@session).to have_field('Input with aria-describedby', described_by: 'description (part 2)')
+      expect(@session).to have_field('Input with aria-describedby', described_by: 'description (part 1) description (part 2)')
+    end
+
+    it 'should be false if field is not described by the text' do
+      expect(@session).not_to have_field(described_by: 'does not exist')
+      expect(@session).not_to have_field('Input with aria-describedby', described_by: 'does not exist')
+    end
+
+    it 'should be false if the field is described by missing elements' do
+      expect(@session).not_to have_field('Input described by missing elements', described_by: 'elements are missing')
+    end
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_field' do
@@ -182,6 +202,26 @@ Capybara::SpecHelper.spec '#has_no_field' do
       expect(@session).to have_no_field('Description', type: '')
       expect(@session).to have_no_field('Description', type: 'email')
       expect(@session).to have_no_field('Languages', type: 'textarea')
+    end
+  end
+
+  context 'with described_by:' do
+    it 'should be true if field is not described by the text' do
+      expect(@session).to have_no_field(described_by: 'does not exist')
+      expect(@session).to have_no_field('Input with aria-describedby', described_by: 'does not exist')
+    end
+
+    it 'should be true if the field is described by missing elements' do
+      expect(@session).to have_no_field('Input described by missing elements', described_by: 'elements are missing')
+    end
+
+    it 'should be false if field is described by the text' do
+      expect(@session).not_to have_no_field(described_by: 'description (part 1)')
+      expect(@session).not_to have_no_field(described_by: 'description (part 2)')
+      expect(@session).not_to have_no_field(described_by: 'description (part 1) description (part 2)')
+      expect(@session).not_to have_no_field('Input with aria-describedby', described_by: 'description (part 1)')
+      expect(@session).not_to have_no_field('Input with aria-describedby', described_by: 'description (part 2)')
+      expect(@session).not_to have_no_field('Input with aria-describedby', described_by: 'description (part 1) description (part 2)')
     end
   end
 end

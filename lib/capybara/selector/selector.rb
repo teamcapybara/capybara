@@ -139,6 +139,13 @@ module Capybara
       XPath.descendant(:label)[XPath.string.n.is(locator)]
     end
 
+    def text_from_tokens(node, attribute)
+      ids = node[attribute].to_s.split
+      elements = ids.map { |id| node.session.find_by_id(id) }
+
+      elements.map(&:text).join(' ')
+    end
+
     def find_by_attr(attribute, value)
       finder_name = "find_by_#{attribute}_attr"
       if respond_to?(finder_name, true)

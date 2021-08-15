@@ -708,3 +708,21 @@ New line after and before textarea tag
     <div>Visual representation of the checkbox</div>
   </div>
 </label>
+
+<p>
+  <button aria-describedby="description_part_1 description_part_2">Button with aria-describedby</button>
+
+  <label>
+    Input with aria-describedby
+    <input type="text" aria-describedby="description_part_1 description_part_2">
+  </label>
+  <span id="description_part_1">description (part 1)</span>
+  <span id="description_part_2">description (part 2)</span>
+
+  <button aria-describedby="missing_element">Button described by missing elements</button>
+
+  <label>
+    Input described by missing elements
+    <input type="text" aria-describedby="missing_element">
+  </label>
+</p>

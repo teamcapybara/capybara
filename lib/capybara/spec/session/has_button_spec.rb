@@ -65,6 +65,26 @@ Capybara::SpecHelper.spec '#has_button?' do
   it 'should not affect other selectors when enable_aria_role: false' do
     expect(@session).to have_button('Click me!', enable_aria_role: false)
   end
+
+  context 'with described_by:' do
+    it 'should be true if button is described by the text' do
+      expect(@session).to have_button(described_by: 'description (part 1)')
+      expect(@session).to have_button(described_by: 'description (part 2)')
+      expect(@session).to have_button(described_by: 'description (part 1) description (part 2)')
+      expect(@session).to have_button('Button with aria-describedby', described_by: 'description (part 1)')
+      expect(@session).to have_button('Button with aria-describedby', described_by: 'description (part 2)')
+      expect(@session).to have_button('Button with aria-describedby', described_by: 'description (part 1) description (part 2)')
+    end
+
+    it 'should be false if the button is described by missing elements' do
+      expect(@session).not_to have_button(described_by: 'elements are missing')
+      expect(@session).not_to have_button('Button described by missing elements', described_by: 'elements are missing')
+    end
+
+    it 'should be false if button is not described by the text' do
+      expect(@session).not_to have_button('Button with aria-describedby', described_by: 'does not exist')
+    end
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_button?' do
@@ -116,5 +136,23 @@ Capybara::SpecHelper.spec '#has_no_button?' do
 
   it 'should not affect other selectors when enable_aria_role: false' do
     expect(@session).to have_no_button('Junk button that does not exist', enable_aria_role: false)
+  end
+
+  context 'with described_by:' do
+    it 'should be true if button is not described by the text' do
+      expect(@session).to have_no_button('Button with aria-describedby', described_by: 'does not exist')
+    end
+
+    it 'should be true if the button is described by missing elements' do
+      expect(@session).to have_no_button(described_by: 'elements are missing')
+      expect(@session).to have_no_button('Button described by missing elements', described_by: 'elements are missing')
+    end
+
+    it 'should be false if button is described by the text' do
+      expect(@session).not_to have_no_button(described_by: 'description (part 1)')
+      expect(@session).not_to have_no_button(described_by: 'description (part 2)')
+      expect(@session).not_to have_no_button(described_by: 'description (part 1) description (part 2)')
+      expect(@session).not_to have_no_button('Button with aria-describedby', described_by: 'description (part 1) description (part 2)')
+    end
   end
 end

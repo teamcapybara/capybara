@@ -40,6 +40,8 @@ Capybara.add_selector(:button, locator_type: [String, Symbol]) do
     builder(xpath).add_attribute_conditions(name: val)
   end
 
+  node_filter(:described_by) { |node, text| text_from_tokens(node, 'aria-describedby').include?(text.to_s) }
+
   describe_expression_filters do |disabled: nil, **options|
     desc = +''
     desc << ' that is not disabled' if disabled == false

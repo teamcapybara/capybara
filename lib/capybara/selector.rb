@@ -41,6 +41,7 @@ require 'capybara/selector/definition'
 #       * :multiple (Boolean) - Match fields that accept multiple values
 #       * :valid (Boolean) - Match fields that are valid/invalid according to HTML5 form validation
 #       * :validation_message (String, Regexp) - Matches the elements current validationMessage
+#       * :described_by (String) - Matches the element's description generated from its aria-describedby
 #
 # * **:fieldset** - Select fieldset elements
 #   * Locator: Matches id, {Capybara.configure test_id}, or contents of wrapped legend
@@ -55,6 +56,7 @@ require 'capybara/selector/definition'
 #       * :title (String) - Matches the title attribute
 #       * :alt (String) - Matches the alt attribute of a contained img element
 #       * :href (String, Regexp, nil, false) - Matches the normalized href of the link, if nil will find `<a>` elements with no href attribute, if false ignores href presence
+#       * :described_by (String) - Matches the element's description generated from its aria-describedby
 #
 # * **:button** - Find buttons ( input [of type submit, reset, image, button] or button elements )
 #   * Locator: Matches the id, {Capybara.configure test_id} attribute, name, value, or title attributes, string content of a button, or the alt attribute of an image type button or of a descendant image of a button
@@ -64,11 +66,13 @@ require 'capybara/selector/definition'
 #       * :value (String) - Matches the value of an input button
 #       * :type (String) - Matches the type attribute
 #       * :disabled (Boolean, :all) - Match disabled buttons (Default: false)
+#       * :described_by (String) - Matches the element's description generated from its aria-describedby
 #
 # * **:link_or_button** - Find links or buttons
 #   * Locator: See :link and :button selectors
 #   * Filters:
 #       * :disabled (Boolean, :all) - Match disabled buttons? (Default: false)
+#       * :described_by (String) - Matches the element's description generated from its aria-describedby
 #
 # * **:fillable_field** - Find text fillable fields ( textarea, input [not of type submit, image, radio, checkbox, hidden, file] )
 #   * Locator: Matches against the id, {Capybara.configure test_id} attribute, name, placeholder, or associated label text
@@ -81,6 +85,7 @@ require 'capybara/selector/definition'
 #       * :multiple (Boolean) - Match fields that accept multiple values
 #       * :valid (Boolean) - Match fields that are valid/invalid according to HTML5 form validation
 #       * :validation_message (String, Regexp) - Matches the elements current validationMessage
+#       * :described_by (String) - Matches the element's description generated from its aria-describedby
 #
 # * **:radio_button** - Find radio buttons
 #   * Locator: Match id, {Capybara.configure test_id} attribute, name, or associated label text
@@ -91,6 +96,7 @@ require 'capybara/selector/definition'
 #       * :disabled (Boolean, :all) - Match disabled field? (Default: false)
 #       * :option (String, Regexp) - Match the current value
 #       * :with - Alias of :option
+#       * :described_by (String) - Matches the element's description generated from its aria-describedby
 #
 # * **:checkbox** - Find checkboxes
 #   * Locator: Match id, {Capybara.configure test_id} attribute, name, or associated label text
@@ -101,6 +107,7 @@ require 'capybara/selector/definition'
 #       * :disabled (Boolean, :all) - Match disabled field? (Default: false)
 #       * :with (String, Regexp) - Match the current value
 #       * :option - Alias of :with
+#       * :described_by (String) - Matches the element's description generated from its aria-describedby
 #
 # * **:select** - Find select elements
 #   * Locator: Match id, {Capybara.configure test_id} attribute, name, placeholder, or associated label text
@@ -115,6 +122,7 @@ require 'capybara/selector/definition'
 #       * :with_options (Array<String>) - Partial match options
 #       * :selected (String, Array<String>) - Match the selection(s)
 #       * :with_selected (String, Array<String>) - Partial match the selection(s)
+#       * :described_by (String) - Matches the element's description generated from its aria-describedby
 #
 # * **:option** - Find option elements
 #   * Locator: Match text of option
@@ -143,6 +151,7 @@ require 'capybara/selector/definition'
 #       * :name (String, Regexp) - Matches the name attribute
 #       * :disabled (Boolean, :all) - Match disabled field? (Default: false)
 #       * :multiple (Boolean) - Match field that accepts multiple values
+#       * :described_by (String) - Matches the element's description generated from its aria-describedby
 #
 # * **:label** - Find label elements
 #   * Locator: Match id, {Capybara.configure test_id}, or text contents
@@ -186,6 +195,7 @@ Capybara::Selector::FilterSet.add(:_field) do
       add_error("Expected validation message to be #{msg.inspect} but was #{vm}") unless res
     end
   end
+  node_filter(:described_by) { |node, text| text_from_tokens(node, 'aria-describedby').include?(text.to_s) }
 
   expression_filter(:name) do |xpath, val|
     builder(xpath).add_attribute_conditions(name: val)
@@ -206,7 +216,7 @@ Capybara::Selector::FilterSet.add(:_field) do
     desc
   end
 
-  describe(:node_filters) do |checked: nil, unchecked: nil, disabled: nil, valid: nil, validation_message: nil, **|
+  describe(:node_filters) do |checked: nil, unchecked: nil, disabled: nil, valid: nil, validation_message: nil, described_by: nil, **|
     desc, states = +'', []
     states << 'checked' if checked || (unchecked == false)
     states << 'not checked' if unchecked || (checked == false)
@@ -215,6 +225,7 @@ Capybara::Selector::FilterSet.add(:_field) do
     desc << ' that is valid' if valid == true
     desc << ' that is invalid' if valid == false
     desc << " with validation message #{validation_message.to_s.inspect}" if validation_message
+    desc << " with ARIA description #{described_by.to_s.inspect}" if described_by
     desc
   end
 end
