@@ -462,6 +462,7 @@ module Capybara
   require 'capybara/queries/ancestor_query'
   require 'capybara/queries/sibling_query'
   require 'capybara/queries/style_query'
+  require 'capybara/queries/active_element_query'
 
   require 'capybara/node/finders'
   require 'capybara/node/matchers'
