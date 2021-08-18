@@ -73,8 +73,8 @@ Capybara::SpecHelper.spec '#has_button?' do
       expect(@session).to have_button('A Button', focused: true)
     end
 
-    it 'should be false if a field does not have focus when focused: false' do
-      expect(@session).not_to have_button('A Button', focused: false)
+    it 'should be true if a field does not have focus when focused: false' do
+      expect(@session).to have_button('A Button', focused: false)
     end
   end
 end
@@ -131,14 +131,14 @@ Capybara::SpecHelper.spec '#has_no_button?' do
   end
 
   context 'with focused:', requires: [:js] do
-    it 'should be true if a field has focus when focused: true' do
-      expect(@session).to have_no_button('A Button', focused: false)
+    it 'should be true if a button does not have focus when focused: true' do
+      expect(@session).to have_no_button('A Button', focused: true)
     end
 
-    it 'should be false if a field does not have focus when focused: false' do
+    it 'should be false if a button has focus when focused: false' do
       @session.send_keys(:tab)
 
-      expect(@session).to have_no_button('A Button', focused: true)
+      expect(@session).to have_no_button('A Button', focused: false)
     end
   end
 end
