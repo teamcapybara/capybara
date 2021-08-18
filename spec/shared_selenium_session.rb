@@ -223,14 +223,14 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
     end
 
     describe '#send_keys' do
-      it 'defaults to sending keys to the document.activeElement' do
+      it 'defaults to sending keys to the active_element' do
         session.visit('/form')
 
-        expect(session.evaluate_script('document.activeElement')).to eq(session.find('//body'))
+        expect(session.active_element).to match_selector(:css, 'body')
 
         session.send_keys(:tab)
 
-        expect(session.evaluate_script('document.activeElement')).to eq(session.first(:field))
+        expect(session.active_element).to match_selector(:css, '[tabindex="1"]')
       end
     end
 

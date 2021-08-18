@@ -5,11 +5,11 @@ Capybara::SpecHelper.spec '#active_element', requires: [:js] do
     @session.visit('/form')
     @session.send_keys(:tab)
 
-    expect(@session.active_element).to match_selector(:css, '#form_title')
+    expect(@session.active_element).to match_selector(:css, '[tabindex="1"]')
 
     @session.send_keys(:tab)
 
-    expect(@session.active_element).not_to match_selector(:css, '#form_title')
+    expect(@session.active_element).to match_selector(:css, '[tabindex="2"]')
   end
 
   it 'should support reloading' do
