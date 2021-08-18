@@ -19,7 +19,7 @@ Capybara::SpecHelper.spec '#has_link?' do
     expect(@session).not_to have_link('A link', href: /nonexistent/)
   end
 
-  context 'with focused:', requires: [:js] do
+  context 'with focused:', requires: [:active_element] do
     it 'should be true if the given link is on the page and has focus' do
       @session.send_keys(:tab)
 
@@ -49,7 +49,7 @@ Capybara::SpecHelper.spec '#has_no_link?' do
     expect(@session).to have_no_link('A link', href: %r{/nonexistent-href})
   end
 
-  context 'with focused:', requires: [:js] do
+  context 'with focused:', requires: [:active_element] do
     it 'should be true if the given link is on the page and has focus' do
       expect(@session).to have_no_link('labore', focused: true)
     end

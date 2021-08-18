@@ -110,7 +110,7 @@ Capybara::SpecHelper.spec '#has_field' do
     end
   end
 
-  context 'with focused:', requires: [:js] do
+  context 'with focused:', requires: [:active_element] do
     it 'should be true if a field has focus' do
       2.times { @session.send_keys(:tab) }
 
@@ -197,7 +197,7 @@ Capybara::SpecHelper.spec '#has_no_field' do
     end
   end
 
-  context 'with focused:', requires: [:js] do
+  context 'with focused:', requires: [:active_element] do
     it 'should be true if a field does not have focus when focused: true' do
       expect(@session).to have_no_field('An Input', focused: true)
     end

@@ -66,7 +66,7 @@ Capybara::SpecHelper.spec '#has_button?' do
     expect(@session).to have_button('Click me!', enable_aria_role: false)
   end
 
-  context 'with focused:', requires: [:js] do
+  context 'with focused:', requires: [:active_element] do
     it 'should be true if a field has focus when focused: true' do
       @session.send_keys(:tab)
 
@@ -130,7 +130,7 @@ Capybara::SpecHelper.spec '#has_no_button?' do
     expect(@session).to have_no_button('Junk button that does not exist', enable_aria_role: false)
   end
 
-  context 'with focused:', requires: [:js] do
+  context 'with focused:', requires: [:active_element] do
     it 'should be true if a button does not have focus when focused: true' do
       expect(@session).to have_no_button('A Button', focused: true)
     end

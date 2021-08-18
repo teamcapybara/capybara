@@ -22,6 +22,7 @@ skipped_tests = %i[
   spatial
   html_validation
   shadow_dom
+  active_element
 ]
 Capybara::SpecHelper.run_specs TestSessions::RackTest, 'RackTest', capybara_skip: skipped_tests do |example|
   case example.metadata[:full_description]
