@@ -14,7 +14,7 @@ require 'capybara/selector/definition'
 #   * :left_of (Element) - Match elements left of the passed element on the page
 #   * :right_of (Element) - Match elements right of the passed element on the page
 #   * :near (Element) - Match elements near (within 50px) the passed element on the page
-#   * :focused (Boolean) - Match elements with focus (requires JavaScript)
+#   * :focused (Boolean) - Match elements with focus (requires driver support)
 #
 # ### Built-in Selectors
 #

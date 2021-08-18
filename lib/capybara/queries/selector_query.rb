@@ -373,6 +373,10 @@ module Capybara
         options.key?(:style) && !custom_keys.include?(:style)
       end
 
+      def use_default_focused_filter?
+        options.key?(:focused) && !custom_keys.include?(:focused)
+      end
+
       def use_spatial_filter?
         options.values_at(*SPATIAL_KEYS).compact.any?
       end
@@ -498,13 +502,9 @@ module Capybara
       end
 
       def matches_focused_filter?(node)
-        if options.key?(:focused)
-          node_is_focused = node == node.session.active_element
+        return true unless use_default_focused_filter?
 
-          node_is_focused == options[:focused]
-        else
-          true
-        end
+        (node == node.session.active_element) == options[:focused]
       end
 
       def need_to_process_classes?
