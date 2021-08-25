@@ -35,6 +35,7 @@ GitHub): http://groups.google.com/group/ruby-capybara
     - [RackTest](#racktest)
     - [Selenium](#selenium)
     - [Apparition](#apparition)
+    - [Cuprite](#cuprite)
 - [The DSL](#the-dsl)
     - [Navigating](#navigating)
     - [Clicking links and buttons](#clicking-links-and-buttons)
@@ -417,6 +418,10 @@ and [capybara-webkit API](https://github.com/thoughtbot/capybara-webkit) while a
 uses CDP to communicate with Chrome, thereby obviating the need for chromedriver. This driver is being developed by the
 current developer of Capybara and will attempt to keep up to date with new Capybara releases. It will probably be moved into the
 teamcapybara repo once it reaches v1.0.
+
+### <a name="cuprite"></a>Cuprite
+
+[Cuprite](https://cuprite.rubycdp.com/) is a pure Ruby driver for Capybara, with no Selenium / chromedriver dependency. It allows you to run Capybara tests on a headless Chrome or Chromium. Under the hood it uses [Ferrum](https://ferrum.rubycdp.com/) which is high-level API to the browser by CDP protocol. The design of the driver is as close to Poltergeist as possible though it's not a goal.
 
 ## <a name="the-dsl"></a>The DSL
 
