@@ -413,7 +413,7 @@ module Capybara
             this.removeEventListener('click', file_catcher);
             e.preventDefault();
           }
-        })
+        }, {capture: true})
       JS
     end
   end
