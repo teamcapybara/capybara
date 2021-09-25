@@ -16,7 +16,10 @@ module Capybara
 
       def initialize(app)
         @app = app
-        @disable_markup = format(DISABLE_MARKUP_TEMPLATE, selector: self.class.selector_for(Capybara.disable_animation))
+        @disable_css_markup = format(DISABLE_CSS_MARKUP_TEMPLATE,
+                                     selector: self.class.selector_for(Capybara.disable_animation))
+        @disable_js_markup = format(DISABLE_JS_MARKUP_TEMPLATE,
+                                    selector: self.class.selector_for(Capybara.disable_animation))
       end
 
       def call(env)
@@ -33,22 +36,17 @@ module Capybara
 
     private
 
-      attr_reader :disable_markup
+      attr_reader :disable_css_markup, :disable_js_markup
 
       def html_content?
         /html/.match?(@headers['Content-Type'])
       end
 
       def insert_disable(html)
-        html.sub(%r{(</body>)}, "#{disable_markup}\\1")
+        html.sub(%r{(</head>)}, "#{disable_css_markup}\\1").sub(%r{(</body>)}, "#{disable_js_markup}\\1")
       end
 
-      DISABLE_MARKUP_TEMPLATE = <<~HTML
-        <script>
-        //<![CDATA[
-          (typeof jQuery !== 'undefined') && (jQuery.fx.off = true);
-        //]]>
-        </script>
+      DISABLE_CSS_MARKUP_TEMPLATE = <<~HTML
         <style>
           %<selector>s, %<selector>s::before, %<selector>s::after {
              transition: none !important;
@@ -57,6 +55,14 @@ module Capybara
              scroll-behavior: auto !important;
           }
         </style>
+      HTML
+
+      DISABLE_JS_MARKUP_TEMPLATE = <<~HTML
+        <script>
+        //<![CDATA[
+          (typeof jQuery !== 'undefined') && (jQuery.fx.off = true);
+        //]]>
+        </script>
       HTML
     end
   end
