@@ -381,6 +381,12 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           @animation_session = Capybara::Session.new(session.mode, TestApp.new)
         end
 
+        it 'should add CSS to the <head> element' do
+          @animation_session.visit('with_animation')
+
+          expect(@animation_session).to have_selector(:css, 'head > style', text: 'transition: none', visible: :hidden)
+        end
+
         it 'should disable CSS transitions' do
           @animation_session.visit('with_animation')
           @animation_session.click_link('transition me away')
