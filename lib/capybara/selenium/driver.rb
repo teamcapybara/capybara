@@ -254,7 +254,11 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def open_new_window(kind = :tab)
-    browser.manage.new_window(kind)
+    if browser.switch_to.respond_to?(:new_window)
+      browser.switch_to.new_window(kind)
+    else
+      browser.manage.new_window(kind)
+    end
   rescue NoMethodError, Selenium::WebDriver::Error::WebDriverError
     # If not supported by the driver or browser default to using JS
     browser.execute_script('window.open();')
