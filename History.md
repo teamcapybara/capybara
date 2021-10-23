@@ -4,9 +4,11 @@ Release date: unreleased
 ### Changed
 
 * Ruby 2.6.0+ is now required
+* Minimum selenium-webdriver support is now 3.142.7
 
 ### Added
 
+* Support for selenium-webdriver 4.x
 * `allow_label_click` accepts click options to be used when clicking an associated label
 * Deprecated `allow_gumbo=` in favor of `use_html5_parsing=` to enable use of Nokogiri::HTL5 when available
 * `Session#active_element` returns the element with focus - Not supported by the `RackTest` driver [Sean Doyle]

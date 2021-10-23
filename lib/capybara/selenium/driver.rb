@@ -43,7 +43,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
           Gem::Version.new(Selenium::WebDriver::VERSION)
         end
 
-      unless Gem::Requirement.new('>= 3.5.0').satisfied_by? @selenium_webdriver_version
+      unless Gem::Requirement.new('>= 3.142.7').satisfied_by? @selenium_webdriver_version
         warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade."
       end
 
