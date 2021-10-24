@@ -88,7 +88,7 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumIE, 'selenium', capybara_sk
     pending "Window 7 and 8.1 don't support 308 http status code"
   when /#scroll_to can scroll an element to the center of the viewport$/,
        /#scroll_to can scroll an element to the center of the scrolling element$/
-    pending " IE doesn't support ScrollToOptions"
+    pending "IE doesn't support ScrollToOptions"
   when /#attach_file with multipart form should fire change once for each set of files uploaded$/,
        /#attach_file with multipart form should fire change once when uploading multiple files from empty$/,
        /#attach_file with multipart form should not break when using HTML5 multiple file input uploading multiple files$/

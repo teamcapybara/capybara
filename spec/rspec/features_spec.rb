@@ -94,7 +94,7 @@ ffeature 'if ffeature aliases focused tag then' do # rubocop:disable RSpec/Focus
     expect(example.metadata[:focus]).to eq true
   end
 
-  scenario 'other scenarios also has metatag focus tag ' do |example|
+  scenario 'other scenarios also has metatag focus tag' do |example|
     expect(example.metadata[:focus]).to eq true
   end
 end

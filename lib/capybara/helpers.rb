@@ -75,7 +75,7 @@ module Capybara
 
       filter = %r{lib/capybara/|lib/rspec/|lib/minitest/}
       new_trace = trace.take_while { |line| line !~ filter }
-      new_trace = trace.reject { |line| line =~ filter } if new_trace.empty?
+      new_trace = trace.grep_v(filter) if new_trace.empty?
       new_trace = trace.dup if new_trace.empty?
 
       new_trace.first.split(/:in /, 2).first

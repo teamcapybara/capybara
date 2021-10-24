@@ -43,7 +43,7 @@ module Capybara
               when '"', "'"
                 selector << parse_string(char, str)
               when '\\'
-                selector << char + str.getc
+                selector << (char + str.getc)
               when ','
                 selectors << selector.strip
                 selector.clear
