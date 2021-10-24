@@ -1,10 +1,10 @@
 # Version 3.36.0
-Release date: unreleased
+Release date: 2021-10-24
 
 ### Changed
 
 * Ruby 2.6.0+ is now required
-* Minimum selenium-webdriver support is now 3.142.7
+* Minimum selenium-webdriver supported is now 3.142.7
 
 ### Added
 
@@ -21,7 +21,8 @@ Release date: unreleased
 * `Node#all_text` always returns a string - Issue #2477
 * `have_any_of_selectors` negated match - Issue #2473
 * `Document#scroll_to` fixed for standards behavior - pass quirks: true if you need the older behavior [Eric Anderson]
-
+* Use capture on attach file event listener for better React compatibility [Jeff Way]
+* Animation disabler produces valid HTML [Javi Martin]
 
 ### Removed
 
