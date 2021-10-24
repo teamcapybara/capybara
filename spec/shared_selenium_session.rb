@@ -74,7 +74,6 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
 
     describe '#fill_in_with empty string and no options' do
       it 'should trigger change when clearing a field' do
-        pending "safaridriver doesn't trigger change for clear" if safari?(session)
         session.visit('/with_js')
         session.fill_in('with_change_event', with: '')
         # click outside the field to trigger the change event
@@ -188,14 +187,12 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
 
       it 'should generate standard events on changing value' do
         pending "IE 11 doesn't support date input type" if ie?(session)
-        pending "Safari doesn't support date input type" if safari?(session)
         session.fill_in('form_date', with: Date.today)
         expect(session.evaluate_script('window.capybara_formDateFiredEvents')).to eq %w[focus input change]
       end
 
       it 'should not generate input and change events if the value is not changed' do
         pending "IE 11 doesn't support date input type" if ie?(session)
-        pending "Safari doesn't support date input type" if safari?(session)
         session.fill_in('form_date', with: Date.today)
         session.fill_in('form_date', with: Date.today)
         # Chrome adds an extra focus for some reason - ok for now
