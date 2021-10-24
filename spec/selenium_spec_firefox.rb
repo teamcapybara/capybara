@@ -15,6 +15,7 @@ browser_options.profile = Selenium::WebDriver::Firefox::Profile.new.tap do |prof
   profile['browser.download.folderList'] = 2
   profile['browser.helperApps.neverAsk.saveToDisk'] = 'text/csv'
   profile['browser.startup.homepage'] = 'about:blank' # workaround bug in Selenium 4 alpha4-7
+  profile['accessibility.tabfocus'] = 7 # make tab move over links too
 end
 
 Capybara.register_driver :selenium_firefox do |app|
@@ -102,7 +103,7 @@ RSpec.describe 'Capybara::Session with firefox' do # rubocop:disable RSpec/Multi
     end
 
     it 'should fill in a datetime input with a String' do
-      # FF doesn't currently support datetime-local so this is really just a text input
+      pending "Need to figure out what string format this will actually accept"
       session.fill_in('form_datetime', with: datetime.iso8601)
       session.click_button('awesome')
       expect(Time.parse(extract_results(session)['datetime'])).to eq datetime
