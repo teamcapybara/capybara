@@ -255,7 +255,9 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def open_new_window(kind = :tab)
     if browser.switch_to.respond_to?(:new_window)
+      handle = current_window_handle
       browser.switch_to.new_window(kind)
+      switch_to_window(handle)
     else
       browser.manage.new_window(kind)
     end
