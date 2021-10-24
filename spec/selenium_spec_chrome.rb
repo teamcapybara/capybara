@@ -181,15 +181,21 @@ RSpec.describe 'Capybara::Session with chrome' do
   end
 
   describe 'log access' do
+    let(:logs) do
+      session.driver.browser.then do |chrome_driver|
+        chrome_driver.respond_to?(:logs) ? chrome_driver : chrome_driver.manage
+      end.logs
+    end
+
     it 'does not error getting log types' do
       expect do
-        session.driver.browser.manage.logs.available_types
+        logs.available_types
       end.not_to raise_error
     end
 
     it 'does not error when getting logs' do
       expect do
-        session.driver.browser.manage.logs.get(:browser)
+        logs.get(:browser)
       end.not_to raise_error
     end
   end
