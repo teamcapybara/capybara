@@ -484,6 +484,12 @@ private
     JS
   end
 
+  def native_id
+    # Selenium 3 -> 4 changed the return of ref
+    type_or_id, id = native.ref
+    id || type_or_id
+  end
+
   GET_XPATH_SCRIPT = <<~'JS'
     (function(el, xml){
       var xpath = '';
