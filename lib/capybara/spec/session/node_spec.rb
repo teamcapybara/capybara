@@ -1115,7 +1115,7 @@ Capybara::SpecHelper.spec 'node' do
   end
 
   describe '#evaluate_script', requires: %i[js es_args] do
-    it 'should evaluate the given script in the context of the element and  return whatever it produces' do
+    it 'should evaluate the given script in the context of the element and return whatever it produces' do
       @session.visit('/with_js')
       el = @session.find(:css, '#with_change_event')
       expect(el.evaluate_script('this.value')).to eq('default value')

@@ -356,7 +356,7 @@ Capybara::SpecHelper.spec '#has_no_text?' do
     expect(@session).to have_no_text(/xxxxyzzz/)
   end
 
-  it 'should be false if the text in the page  matches given regexp' do
+  it 'should be false if the text in the page matches given regexp' do
     @session.visit('/with_html')
     expect(@session).not_to have_no_text(/Lorem/)
   end

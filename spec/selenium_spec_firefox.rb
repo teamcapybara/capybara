@@ -59,8 +59,8 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumFirefox, 'selenium', capyba
   when 'Capybara::Session selenium #attach_file with multipart form should fire change once when uploading multiple files from empty'
     pending "FF < 62 doesn't support setting all files at once" if firefox_lt?(62, @session)
   when 'Capybara::Session selenium #accept_confirm should work with nested modals'
-    skip 'Broken in 63 <= FF < 69  - https://bugzilla.mozilla.org/show_bug.cgi?id=1487358' if firefox_gte?(63, @session) && firefox_lt?(69, @session)
-    skip 'Hangs in 69 <= FF < 71  - Dont know what issue for this - previous issue was closed as fixed but it is not' if firefox_gte?(69, @session) && firefox_lt?(71, @session)
+    skip 'Broken in 63 <= FF < 69 - https://bugzilla.mozilla.org/show_bug.cgi?id=1487358' if firefox_gte?(63, @session) && firefox_lt?(69, @session)
+    skip 'Hangs in 69 <= FF < 71 - Dont know what issue for this - previous issue was closed as fixed but it is not' if firefox_gte?(69, @session) && firefox_lt?(71, @session)
     skip 'Broken again intermittently in FF 71 - jus skip it'
   when 'Capybara::Session selenium #click_link can download a file'
     skip 'Need to figure out testing of file downloading on windows platform' if Gem.win_platform?

@@ -216,7 +216,7 @@ private
     min, max, step = (native['min'] || 0).to_f, (native['max'] || 100).to_f, (native['step'] || 1).to_f
     value = value.to_f
     value = value.clamp(min, max)
-    value = ((value - min) / step).round * step + min
+    value = (((value - min) / step).round * step) + min
     native['value'] = value.clamp(min, max)
   end
 
