@@ -47,7 +47,7 @@ YARD::Rake::YardocTask.new do |t|
 end
 
 Cucumber::Rake::Task.new(:cucumber) do |task|
-  task.cucumber_opts = ['--format=progress', 'features']
+  task.cucumber_opts = ['--format=progress', '--publish-quiet', 'features']
 end
 
 desc 'Task for running CI'
