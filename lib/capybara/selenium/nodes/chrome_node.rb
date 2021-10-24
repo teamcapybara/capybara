@@ -63,9 +63,8 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
 
   def visible?
     return super unless native_displayed?
-
     begin
-      bridge.send(:execute, :is_element_displayed, id: native.ref)
+      bridge.send(:execute, :is_element_displayed, id: native_id)
     rescue Selenium::WebDriver::Error::UnknownCommandError
       # If the is_element_displayed command is unknown, no point in trying again
       driver.options[:native_displayed] = false
