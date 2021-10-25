@@ -66,6 +66,8 @@ Gem::Specification.new do |s|
     s.add_development_dependency('rubysl')
   end
 
-  s.signing_key = 'gem-private_key.pem' if File.exist?('gem-private_key.pem')
-  s.cert_chain = ['gem-public_cert.pem']
+  if File.exist?('gem-private_key.pem')
+    s.signing_key = 'gem-private_key.pem'
+    s.cert_chain = ['gem-public_cert.pem']
+  end
 end
