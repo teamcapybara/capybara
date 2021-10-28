@@ -100,7 +100,7 @@ module Capybara
     remove_method :test_id=
     ##
     #
-    # Set an attribue to be optionally matched against the locator for builtin selector types.
+    # Set an attribute to be optionally matched against the locator for builtin selector types.
     # This attribute will be checked by builtin selector types whenever id would normally be checked.
     # If `nil` then it will be ignored.
     #
