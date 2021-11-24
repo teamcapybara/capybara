@@ -96,6 +96,7 @@ module Capybara
     #   {Capybara::Session#save_and_open_page save_and_open_page}, or {Capybara::Session#save_and_open_screenshot save_and_open_screenshot}.
     # - **server** (Symbol = `:default` (which uses puma)) - The name of the registered server to use when running the app under test.
     # - **server_port** (Integer) - The port Capybara will run the application server on, if not specified a random port will be used.
+    # - **server_host** (String = "127.0.0.1") - The IP address Capybara will bind the application server to. If the test application is to be accessed from an external host, you will want to change this to "0.0.0.0" or to a more specific IP address that your test client can reach.
     # - **server_errors** (Array\<Class> = `[Exception]`) - Error classes that should be raised in the tests if they are raised in the server
     #   and {configure raise_server_errors} is `true`.
     # - **test_id** (Symbol, String, `nil` = `nil`) - Optional attribute to match locator against with built-in selectors along with id.
