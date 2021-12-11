@@ -142,6 +142,39 @@ RSpec.describe Capybara::Server do
     Capybara.server = :default
   end
 
+  context "with ssl: option not provided" do
+    it 'should be set to http before booting' do
+      server = described_class.new(-> { })
+      expect(server.using_ssl?).to eq(true)
+      expect(server.base_url).to match(/^http:/)
+      server.boot
+      expect(server.using_ssl?).to eq(true)
+      expect(server.base_url).to match(/^https:/)
+    end
+  end
+
+  context "with ssl: false" do
+    it 'should be set to http before booting' do
+      server = described_class.new(-> { }, ssl: true)
+      expect(server.using_ssl?).to eq(false)
+      expect(server.base_url).to match(/^http:/)
+      server.boot
+      expect(server.using_ssl?).to eq(true)
+      expect(server.base_url).to match(/^https:/)
+    end
+  end
+
+  context "with ssl: true" do
+    it 'should be set to https before booting' do
+      server = described_class.new(-> { }, ssl: true)
+      expect(server.using_ssl?).to eq(true)
+      expect(server.base_url).to match(/^https:/)
+      server.boot
+      expect(server.using_ssl?).to eq(true)
+      expect(server.base_url).to match(/^https:/)
+    end
+  end
+
   context 'When Capybara.reuse_server is true' do
     let!(:old_reuse_server) { Capybara.reuse_server }
 

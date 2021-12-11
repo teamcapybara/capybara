@@ -5,9 +5,9 @@ module Capybara
     class Checker
       TRY_HTTPS_ERRORS = [EOFError, Net::ReadTimeout, Errno::ECONNRESET].freeze
 
-      def initialize(host, port)
+      def initialize(host, port, ssl: false)
         @host, @port = host, port
-        @ssl = false
+        @ssl = ssl
       end
 
       def request(&block)

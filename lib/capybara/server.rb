@@ -22,6 +22,7 @@ module Capybara
                    *deprecated_options,
                    port: Capybara.server_port,
                    host: Capybara.server_host,
+                   ssl: false,
                    reportable_errors: Capybara.server_errors,
                    extra_middleware: [])
       unless deprecated_options.empty?
@@ -35,7 +36,7 @@ module Capybara
       @port = deprecated_options[0] || port
       @port ||= Capybara::Server.ports[port_key]
       @port ||= find_available_port(host)
-      @checker = Checker.new(@host, @port)
+      @checker = Checker.new(@host, @port, ssl: ssl)
     end
 
     def reset_error!
