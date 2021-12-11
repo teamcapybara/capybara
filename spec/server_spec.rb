@@ -118,55 +118,70 @@ RSpec.describe Capybara::Server do
     Capybara.server = :default
   end
 
-  it 'should support SSL' do
-    key = File.join(Dir.pwd, 'spec', 'fixtures', 'key.pem')
-    cert = File.join(Dir.pwd, 'spec', 'fixtures', 'certificate.pem')
-    Capybara.server = :puma, { Host: "ssl://#{Capybara.server_host}?key=#{key}&cert=#{cert}" }
-    app = proc { |_env| [200, {}, ['Hello SSL Server!']] }
-    server = described_class.new(app).boot
+  context "with an HTTPS server" do
+    let!(:key) { File.join(Dir.pwd, 'spec', 'fixtures', 'key.pem') }
+    let!(:cert) { File.join(Dir.pwd, 'spec', 'fixtures', 'certificate.pem') }
+    let!(:app) { proc { |_env| [200, {}, ['Hello SSL Server!']] } }
 
-    expect do
-      Net::HTTP.start(server.host, server.port, max_retries: 0) { |http| http.get('/__identify__') }
-    end.to(raise_error do |e|
-      expect(e.is_a?(EOFError) || e.is_a?(Net::ReadTimeout)).to be true
-    end)
-
-    res = Net::HTTP.start(server.host, server.port, use_ssl: true, verify_mode: OpenSSL::SSL::VERIFY_NONE) do |https|
-      https.get('/')
+    before do
+      Capybara.server = :puma, {
+        Host: "ssl://#{Capybara.server_host}?key=#{key}&cert=#{cert}"
+      }
     end
 
-    expect(res.body).to include('Hello SSL Server!')
-    uri = ::Addressable::URI.parse(server.base_url)
-    expect(uri.to_hash).to include(scheme: 'https', host: server.host, port: server.port)
-  ensure
-    Capybara.server = :default
-  end
-
-  context "with ssl: option not provided" do
-    it 'should be set to http before booting' do
-      server = described_class.new(-> { })
-      expect(server.using_ssl?).to eq(true)
-      expect(server.base_url).to match(/^http:/)
-      server.boot
-      expect(server.using_ssl?).to eq(true)
-      expect(server.base_url).to match(/^https:/)
+    after do
+      Capybara.server = :default
     end
-  end
 
-  context "with ssl: false" do
-    it 'should be set to http before booting' do
-      server = described_class.new(-> { }, ssl: true)
+    it 'should support SSL' do
+      server = described_class.new(app).boot
+
+      expect do
+        Net::HTTP.start(server.host, server.port, max_retries: 0) do |http|
+          http.get('/__identify__')
+        end
+      end.to(raise_error do |e|
+        expect(e.is_a?(EOFError) || e.is_a?(Net::ReadTimeout)).to be true
+      end)
+
+      res = Net::HTTP.start(
+        server.host,
+        server.port,
+        use_ssl: true,
+        verify_mode: OpenSSL::SSL::VERIFY_NONE
+      ) do |https|
+        https.get('/')
+      end
+
+      expect(res.body).to include('Hello SSL Server!')
+      uri = ::Addressable::URI.parse(server.base_url)
+      expect(uri.to_hash).to include(
+        scheme: 'https',
+        host: server.host,
+        port: server.port
+      )
+    end
+
+    it 'is not SSL enabled by default' do
+      server = described_class.new(app)
       expect(server.using_ssl?).to eq(false)
       expect(server.base_url).to match(/^http:/)
       server.boot
       expect(server.using_ssl?).to eq(true)
       expect(server.base_url).to match(/^https:/)
     end
-  end
 
-  context "with ssl: true" do
-    it 'should be set to https before booting' do
-      server = described_class.new(-> { }, ssl: true)
+    it 'can have SSL disabled by default' do
+      server = described_class.new(app, ssl: false)
+      expect(server.using_ssl?).to eq(false)
+      expect(server.base_url).to match(/^http:/)
+      server.boot
+      expect(server.using_ssl?).to eq(true)
+      expect(server.base_url).to match(/^https:/)
+    end
+
+    it 'can have SSL enabled by default' do
+      server = described_class.new(app, ssl: true)
       expect(server.using_ssl?).to eq(true)
       expect(server.base_url).to match(/^https:/)
       server.boot
