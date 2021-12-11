@@ -13,6 +13,7 @@ Release date: 2021-10-24
 * Deprecated `allow_gumbo=` in favor of `use_html5_parsing=` to enable use of Nokogiri::HTML5 when available
 * `Session#active_element` returns the element with focus - Not supported by the `RackTest` driver [Sean Doyle]
 * Support `focused:` filter for finding interactive elements - Not supported by the `RackTest` driver [Sean Doyle]
+* Add `config.server_ssl` to skip HTTP request
 
 ### Fixed
 
