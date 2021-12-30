@@ -12,7 +12,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     clear_session_storage: nil
   }.freeze
   SPECIAL_OPTIONS = %i[browser clear_local_storage clear_session_storage timeout native_displayed].freeze
-  CAPS_VERSION = Gem::Requirement.new('~> 4.0.0.alpha6')
+  CAPS_VERSION = Gem::Requirement.new('>= 4.0.0.alpha6')
 
   attr_reader :app, :options
 
