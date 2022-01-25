@@ -53,6 +53,11 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   #   :none =>  append the new value to the existing value <br/>
   #   :backspace => send backspace keystrokes to clear the field <br/>
   #   Array => an array of keys to send before the value being set, e.g. [[:command, 'a'], :backspace]
+  # @option options [Boolean] :rapid (nil) Whether setting text inputs should use a faster &quot;rapid&quot; mode<br/>
+  #   nil => Text inputs with length greater than 30 characters will be set using a faster driver script mode<br/>
+  #   true => Rapid mode will be used regardless of input length<br/>
+  #   false => Sends keys via conventional mode. This may be required to avoid losing key-presses if you have certain
+  #            Javascript interactions on form inputs<br/>
   def set(value, **options)
     if value.is_a?(Array) && !multiple?
       raise ArgumentError, "Value cannot be an Array when 'multiple' attribute is not present. Not a #{value.class}"
