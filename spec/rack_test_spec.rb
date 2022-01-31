@@ -216,6 +216,12 @@ RSpec.describe Capybara::RackTest::Driver do
       expect(driver.current_url).to match %r{/landed$}
     end
 
+    it 'should not include fragments in the referer header' do
+      driver.visit('/header_links#an-anchor')
+      driver.find_xpath('.//input').first.click
+      expect(driver.request.get_header("HTTP_REFERER")).to eq('http://www.example.com/header_links')
+    end
+
     it 'is possible to not follow redirects' do
       driver = described_class.new(TestApp, follow_redirects: false)
 

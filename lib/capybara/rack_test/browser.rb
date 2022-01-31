@@ -33,13 +33,13 @@ class Capybara::RackTest::Browser
     path = request_path if path.nil? || path.empty?
     uri = build_uri(path)
     uri.query = '' if method.to_s.casecmp('get').zero?
-    process_and_follow_redirects(method, uri.to_s, attributes, 'HTTP_REFERER' => current_url)
+    process_and_follow_redirects(method, uri.to_s, attributes, 'HTTP_REFERER' => referer_url)
   end
 
   def follow(method, path, **attributes)
     return if fragment_or_script?(path)
 
-    process_and_follow_redirects(method, path, attributes, 'HTTP_REFERER' => current_url)
+    process_and_follow_redirects(method, path, attributes, 'HTTP_REFERER' => referer_url)
   end
 
   def process_and_follow_redirects(method, path, attributes = {}, env = {})
@@ -140,5 +140,11 @@ private
 
   def fragment_or_script?(path)
     path.gsub(/^#{Regexp.escape(request_path)}/, '').start_with?('#') || path.downcase.start_with?('javascript:')
+  end
+
+  def referer_url
+    build_uri(last_request.url).to_s
+  rescue Rack::Test::Error
+    ''
   end
 end
