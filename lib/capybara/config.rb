@@ -54,6 +54,8 @@ module Capybara
     # @overload server=([name, options])
     #   @param [Symbol] name Name of the server type to use
     #   @param [Hash] options Options to pass to the server block
+    # @overload server=(callable)
+    #   @param [Callable] callable Object responding to #call(middleware, port, host)
     # @see register_server
     #
     def server=(name)
