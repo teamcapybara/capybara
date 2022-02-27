@@ -29,17 +29,24 @@ Capybara.register_server :puma do |app, port, host, **options|
 
   conf = Rack::Handler::Puma.config(app, options)
   conf.clamp
-  events = conf.options[:Silent] ? ::Puma::Events.strings : ::Puma::Events.stdio
 
   puma_ver = Gem::Version.new(Puma::Const::PUMA_VERSION)
   require_relative 'patches/puma_ssl' if Gem::Requirement.new('>=4.0.0', '< 4.1.0').satisfied_by?(puma_ver)
+  
+  logger = (defined?(::Puma::LogWriter) ? ::Puma::LogWriter : ::Puma::Events).then do |cls|
+    conf.options[:Silent] ? cls.strings : cls.stdio
+  end
 
-  events.log 'Capybara starting Puma...'
-  events.log "* Version #{Puma::Const::PUMA_VERSION} , codename: #{Puma::Const::CODE_NAME}"
-  events.log "* Min threads: #{conf.options[:min_threads]}, max threads: #{conf.options[:max_threads]}"
+  logger.log 'Capybara starting Puma...'
+  logger.log "* Version #{Puma::Const::PUMA_VERSION} , codename: #{Puma::Const::CODE_NAME}"
+  logger.log "* Min threads: #{conf.options[:min_threads]}, max threads: #{conf.options[:max_threads]}"
 
-  Puma::Server.new(conf.app, events, conf.options).tap do |s|
-    s.binder.parse conf.options[:binds], s.events
+  Puma::Server.new(
+    conf.app,
+    *[logger, (::Puma::Events.new if defined?(::Puma::LogWriter))].compact,
+    conf.options
+  ).tap do |s|
+    s.binder.parse conf.options[:binds], (s.log_writer rescue s.events) 
     s.min_threads, s.max_threads = conf.options[:min_threads], conf.options[:max_threads]
   end.run.join
 end
