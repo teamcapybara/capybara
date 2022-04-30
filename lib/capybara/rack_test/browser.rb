@@ -73,14 +73,18 @@ class Capybara::RackTest::Browser
   end
 
   def build_uri(path)
-    URI.parse(path).tap do |uri|
-      uri.path = request_path if path.empty? || path.start_with?('?')
-      uri.path = '/' if uri.path.empty?
-      uri.path = request_path.sub(%r{/[^/]*$}, '/') + uri.path unless uri.path.start_with?('/')
+    uri = URI.parse(path)
+    base_uri = base_relative_uri_for(uri)
 
+    uri.path = base_uri.path + uri.path unless uri.absolute? || uri.path.start_with?('/')
+
+    if base_uri.absolute?
+      base_uri.merge(uri)
+    else
       uri.scheme ||= @current_scheme
       uri.host ||= @current_host
       uri.port ||= @current_port unless uri.default_port == @current_port
+      uri
     end
   end
 
@@ -125,6 +129,25 @@ class Capybara::RackTest::Browser
 
 protected
 
+  def base_href
+    find(:css, 'head > base').first&.[](:href).to_s
+  end
+
+  def base_relative_uri_for(uri)
+    base_uri = URI.parse(base_href)
+    current_uri = URI.parse(safe_last_request&.url.to_s).tap do |c|
+      c.path.sub!(%r{/[^/]*$}, '/') unless uri.path.empty?
+      c.path = '/' if c.path.empty?
+    end
+
+    if [current_uri, base_uri].any?(&:absolute?)
+      current_uri.merge(base_uri)
+    else
+      base_uri.path = current_uri.path if base_uri.path.empty?
+      base_uri
+    end
+  end
+
   def build_rack_mock_session
     reset_host! unless current_host
     Rack::MockSession.new(app, current_host)
@@ -134,6 +157,12 @@ protected
     last_request.path
   rescue Rack::Test::Error
     '/'
+  end
+
+  def safe_last_request
+    last_request
+  rescue Rack::Test::Error
+    nil
   end
 
 private
