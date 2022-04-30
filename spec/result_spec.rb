@@ -86,25 +86,23 @@ RSpec.describe Capybara::Result do
     expect(result[2..].map(&:text)).to eq %w[Gamma Delta]
   end
 
-  eval <<~TEST, binding, __FILE__, __LINE__ + 1 if RUBY_VERSION.to_f > 2.6
-    it 'supports inclusive positive beginless ranges' do
-      expect(result[..2].map(&:text)).to eq %w[Alpha Beta Gamma]
-    end
+  it 'supports inclusive positive beginless ranges' do
+    expect(result[..2].map(&:text)).to eq %w[Alpha Beta Gamma]
+  end
 
-    it 'supports inclusive negative beginless ranges' do
-      expect(result[..-2].map(&:text)).to eq %w[Alpha Beta Gamma]
-      expect(result[..-1].map(&:text)).to eq %w[Alpha Beta Gamma Delta]
-    end
+  it 'supports inclusive negative beginless ranges' do
+    expect(result[..-2].map(&:text)).to eq %w[Alpha Beta Gamma]
+    expect(result[..-1].map(&:text)).to eq %w[Alpha Beta Gamma Delta]
+  end
 
-    it 'supports exclusive positive beginless ranges' do
-      expect(result[...2].map(&:text)).to eq %w[Alpha Beta]
-    end
+  it 'supports exclusive positive beginless ranges' do
+    expect(result[...2].map(&:text)).to eq %w[Alpha Beta]
+  end
 
-    it 'supports exclusive negative beginless ranges' do
-      expect(result[...-2].map(&:text)).to eq %w[Alpha Beta]
-      expect(result[...-1].map(&:text)).to eq %w[Alpha Beta Gamma]
-    end
-  TEST
+  it 'supports exclusive negative beginless ranges' do
+    expect(result[...-2].map(&:text)).to eq %w[Alpha Beta]
+    expect(result[...-1].map(&:text)).to eq %w[Alpha Beta Gamma]
+  end
 
   it 'works with filter blocks' do
     result = string.all('//li') { |node| node.text == 'Alpha' }
@@ -115,52 +113,52 @@ RSpec.describe Capybara::Result do
   it 'should evaluate filters lazily for idx' do
     skip 'JRuby has an issue with lazy enumerator evaluation' if jruby_lazy_enumerator_workaround?
     # Not processed until accessed
-    expect(result.instance_variable_get('@result_cache').size).to be 0
+    expect(result.instance_variable_get(:@result_cache).size).to be 0
 
     # Only one retrieved when needed
     result.first
-    expect(result.instance_variable_get('@result_cache').size).to be 1
+    expect(result.instance_variable_get(:@result_cache).size).to be 1
 
     # works for indexed access
     result[0]
-    expect(result.instance_variable_get('@result_cache').size).to be 1
+    expect(result.instance_variable_get(:@result_cache).size).to be 1
 
     result[2]
-    expect(result.instance_variable_get('@result_cache').size).to be 3
+    expect(result.instance_variable_get(:@result_cache).size).to be 3
 
     # All cached when converted to array
     result.to_a
-    expect(result.instance_variable_get('@result_cache').size).to eq 4
+    expect(result.instance_variable_get(:@result_cache).size).to eq 4
   end
 
   it 'should evaluate filters lazily for range' do
     skip 'JRuby has an issue with lazy enumerator evaluation' if jruby_lazy_enumerator_workaround?
     result[0..1]
-    expect(result.instance_variable_get('@result_cache').size).to be 2
+    expect(result.instance_variable_get(:@result_cache).size).to be 2
 
     expect(result[0..7].size).to eq 4
-    expect(result.instance_variable_get('@result_cache').size).to be 4
+    expect(result.instance_variable_get(:@result_cache).size).to be 4
   end
 
   it 'should evaluate filters lazily for idx and length' do
     skip 'JRuby has an issue with lazy enumerator evaluation' if jruby_lazy_enumerator_workaround?
     result[1, 2]
-    expect(result.instance_variable_get('@result_cache').size).to be 3
+    expect(result.instance_variable_get(:@result_cache).size).to be 3
 
     expect(result[2, 5].size).to eq 2
-    expect(result.instance_variable_get('@result_cache').size).to be 4
+    expect(result.instance_variable_get(:@result_cache).size).to be 4
   end
 
   it 'should only need to evaluate one result for any?' do
     skip 'JRuby has an issue with lazy enumerator evaluation' if jruby_lazy_enumerator_workaround?
     result.any?
-    expect(result.instance_variable_get('@result_cache').size).to be 1
+    expect(result.instance_variable_get(:@result_cache).size).to be 1
   end
 
   it 'should evaluate all elements when #to_a called' do
     # All cached when converted to array
     result.to_a
-    expect(result.instance_variable_get('@result_cache').size).to eq 4
+    expect(result.instance_variable_get(:@result_cache).size).to eq 4
   end
 
   describe '#each' do
@@ -169,7 +167,7 @@ RSpec.describe Capybara::Result do
       results = []
       result.each do |el|
         results << el
-        expect(result.instance_variable_get('@result_cache').size).to eq results.size
+        expect(result.instance_variable_get(:@result_cache).size).to eq results.size
       end
 
       expect(results.size).to eq 4
@@ -183,7 +181,7 @@ RSpec.describe Capybara::Result do
       it 'lazily evaluates' do
         skip 'JRuby has an issue with lazy enumerator evaluation' if jruby_lazy_enumerator_workaround?
         result.each.with_index do |_el, idx|
-          expect(result.instance_variable_get('@result_cache').size).to eq(idx + 1) # 0 indexing
+          expect(result.instance_variable_get(:@result_cache).size).to eq(idx + 1) # 0 indexing
         end
       end
     end

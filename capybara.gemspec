@@ -8,7 +8,7 @@ require 'capybara/version'
 Gem::Specification.new do |s|
   s.name = 'capybara'
   s.version = Capybara::VERSION
-  s.required_ruby_version = '>= 2.6.0'
+  s.required_ruby_version = '>= 2.7.0'
   s.license = 'MIT'
 
   s.authors = ['Thomas Walpole', 'Jonas Nicklas']
@@ -21,7 +21,8 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/teamcapybara/capybara'
   s.metadata = {
     'changelog_uri' => 'https://github.com/teamcapybara/capybara/blob/master/History.md',
-    'source_code_uri' => 'https://github.com/teamcapybara/capybara'
+    'source_code_uri' => 'https://github.com/teamcapybara/capybara',
+    'rubygems_mfa_required' => 'true'
   }
   s.require_paths = ['lib']
   s.summary = 'Capybara aims to simplify the process of integration testing Rack applications, '\

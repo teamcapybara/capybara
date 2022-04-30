@@ -7,7 +7,7 @@ require:
 AllCops:
   NewCops: enable
   DisabledByDefault: false
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 2.7
   Exclude:
       - 'vendor/**/*'
       - 'gemfiles/vendor/**/*'
@@ -20,7 +20,7 @@ Layout/LineLength:
   Exclude:
     - 'spec/**/*'
     - 'lib/capybara/spec/**/*'
-  IgnoredPatterns:
+  AllowedPatterns:
     - '\s+# _?rubocop'
     - '^\s*#'
     - '^\s*(raise|warn|Capybara::Helpers.warn) '
@@ -138,7 +138,7 @@ Layout/FirstArrayElementIndentation:
   EnforcedStyle: consistent
 
 Layout/IndentationWidth:
-  IgnoredPatterns: ['^\s*module']
+  AllowedPatterns: ['^\s*module']
 
 Security/YAMLLoad:
   Exclude:

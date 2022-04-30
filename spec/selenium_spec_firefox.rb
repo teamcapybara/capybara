@@ -103,7 +103,7 @@ RSpec.describe 'Capybara::Session with firefox' do # rubocop:disable RSpec/Multi
     end
 
     it 'should fill in a datetime input with a String' do
-      pending "Need to figure out what string format this will actually accept"
+      pending 'Need to figure out what string format this will actually accept'
       session.fill_in('form_datetime', with: datetime.iso8601)
       session.click_button('awesome')
       expect(Time.parse(extract_results(session)['datetime'])).to eq datetime

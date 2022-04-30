@@ -383,7 +383,7 @@ Capybara::SpecHelper.spec '#has_no_unchecked_field?' do
   end
 
   it 'should support locator-less usage' do
-    expect(@session.has_no_unchecked_field?(disabled: false, id: 'form_disabled_unchecked_checkbox')).to eq true
+    expect(@session.has_no_unchecked_field?(disabled: false, id: 'form_disabled_unchecked_checkbox')).to be true
     expect(@session).to have_no_unchecked_field(disabled: false, id: 'form_disabled_unchecked_checkbox')
   end
 end

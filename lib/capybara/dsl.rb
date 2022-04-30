@@ -47,17 +47,11 @@ module Capybara
     end
 
     Session::DSL_METHODS.each do |method|
-      if RUBY_VERSION >= '2.7'
-        class_eval <<~METHOD, __FILE__, __LINE__ + 1
-          def #{method}(...)
-            page.method("#{method}").call(...)
-          end
-        METHOD
-      else
-        define_method method do |*args, &block|
-          page.send method, *args, &block
+      class_eval <<~METHOD, __FILE__, __LINE__ + 1
+        def #{method}(...)
+          page.method("#{method}").call(...)
         end
-      end
+      METHOD
     end
   end
 

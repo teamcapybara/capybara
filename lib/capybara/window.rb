@@ -118,7 +118,7 @@ module Capybara
     alias_method :==, :eql?
 
     def hash
-      @session.hash ^ @handle.hash
+      [@session, @handle].hash
     end
 
     def inspect

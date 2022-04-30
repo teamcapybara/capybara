@@ -8,10 +8,10 @@ module Capybara
       class HaveSelector < CountableWrappedElementMatcher
         def initialize(*args, **kw_args, &filter_block)
           super
-          if (RUBY_VERSION >= '2.7') && (@args.size < 2) && @kw_args.keys.any?(String) # rubocop:disable Style/GuardClause
-            @args.push(@kw_args)
-            @kw_args = {}
-          end
+          return unless (@args.size < 2) && @kw_args.keys.any?(String)
+
+          @args.push(@kw_args)
+          @kw_args = {}
         end
 
         def element_matches?(el)

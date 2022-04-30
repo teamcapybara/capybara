@@ -765,33 +765,20 @@ module Capybara
     end
 
     NODE_METHODS.each do |method|
-      if RUBY_VERSION >= '2.7'
-        class_eval <<~METHOD, __FILE__, __LINE__ + 1
-          def #{method}(...)
-            @touched = true
-            current_scope.#{method}(...)
-          end
-        METHOD
-      else
-        define_method method do |*args, &block|
+      class_eval <<~METHOD, __FILE__, __LINE__ + 1
+        def #{method}(...)
           @touched = true
-          current_scope.send(method, *args, &block)
+          current_scope.#{method}(...)
         end
-      end
+      METHOD
     end
 
     DOCUMENT_METHODS.each do |method|
-      if RUBY_VERSION >= '2.7'
-        class_eval <<~METHOD, __FILE__, __LINE__ + 1
-          def #{method}(...)
-            document.#{method}(...)
-          end
-        METHOD
-      else
-        define_method method do |*args, &block|
-          document.send(method, *args, &block)
+      class_eval <<~METHOD, __FILE__, __LINE__ + 1
+        def #{method}(...)
+          document.#{method}(...)
         end
-      end
+      METHOD
     end
 
     def inspect

@@ -3,16 +3,16 @@
 Capybara::SpecHelper.spec '#assert_text' do
   it 'should be true if the given text is on the page' do
     @session.visit('/with_html')
-    expect(@session.assert_text('est')).to eq(true)
-    expect(@session.assert_text('Lorem')).to eq(true)
-    expect(@session.assert_text('Redirect')).to eq(true)
-    expect(@session.assert_text(:Redirect)).to eq(true)
-    expect(@session.assert_text('text with   whitespace')).to eq(true)
+    expect(@session.assert_text('est')).to be(true)
+    expect(@session.assert_text('Lorem')).to be(true)
+    expect(@session.assert_text('Redirect')).to be(true)
+    expect(@session.assert_text(:Redirect)).to be(true)
+    expect(@session.assert_text('text with   whitespace')).to be(true)
   end
 
   it 'should support collapsing whitespace' do
     @session.visit('/with_html')
-    expect(@session.assert_text('text with whitespace', normalize_ws: true)).to eq(true)
+    expect(@session.assert_text('text with whitespace', normalize_ws: true)).to be(true)
   end
 
   context 'with enabled default collapsing whitespace' do
@@ -20,19 +20,19 @@ Capybara::SpecHelper.spec '#assert_text' do
 
     it 'should be true if the given unnormalized text is on the page' do
       @session.visit('/with_html')
-      expect(@session.assert_text('text with   whitespace', normalize_ws: false)).to eq(true)
+      expect(@session.assert_text('text with   whitespace', normalize_ws: false)).to be(true)
     end
 
     it 'should support collapsing whitespace' do
       @session.visit('/with_html')
-      expect(@session.assert_text('text with whitespace')).to eq(true)
+      expect(@session.assert_text('text with whitespace')).to be(true)
     end
   end
 
   it 'should take scopes into account' do
     @session.visit('/with_html')
     @session.within("//a[@title='awesome title']") do
-      expect(@session.assert_text('labore')).to eq(true)
+      expect(@session.assert_text('labore')).to be(true)
     end
   end
 
@@ -47,13 +47,13 @@ Capybara::SpecHelper.spec '#assert_text' do
 
   it 'should be true if :all given and text is invisible.' do
     @session.visit('/with_html')
-    expect(@session.assert_text(:all, 'Some of this text is hidden!')).to eq(true)
+    expect(@session.assert_text(:all, 'Some of this text is hidden!')).to be(true)
   end
 
   it 'should be true if `Capybara.ignore_hidden_elements = true` and text is invisible.' do
     Capybara.ignore_hidden_elements = false
     @session.visit('/with_html')
-    expect(@session.assert_text('Some of this text is hidden!')).to eq(true)
+    expect(@session.assert_text('Some of this text is hidden!')).to be(true)
   end
 
   it 'should raise error with a helpful message if the requested text is present but invisible' do
@@ -88,7 +88,7 @@ Capybara::SpecHelper.spec '#assert_text' do
 
   it 'should be true if the text in the page matches given regexp' do
     @session.visit('/with_html')
-    expect(@session.assert_text(/Lorem/)).to eq(true)
+    expect(@session.assert_text(/Lorem/)).to be(true)
   end
 
   it "should raise error if the text in the page doesn't match given regexp" do
@@ -109,13 +109,13 @@ Capybara::SpecHelper.spec '#assert_text' do
     Capybara.default_max_wait_time = 2
     @session.visit('/with_js')
     @session.click_link('Click me')
-    expect(@session.assert_text('Has been clicked')).to eq(true)
+    expect(@session.assert_text('Has been clicked')).to be(true)
   end
 
   context 'with between' do
     it 'should be true if the text occurs within the range given' do
       @session.visit('/with_count')
-      expect(@session.assert_text('count', between: 1..3)).to eq(true)
+      expect(@session.assert_text('count', between: 1..3)).to be(true)
     end
 
     it 'should be false if the text occurs more or fewer times than range' do
@@ -203,13 +203,13 @@ Capybara::SpecHelper.spec '#assert_no_text' do
   it 'should be true if scoped to an element which does not have the text' do
     @session.visit('/with_html')
     @session.within("//a[@title='awesome title']") do
-      expect(@session.assert_no_text('monkey')).to eq(true)
+      expect(@session.assert_no_text('monkey')).to be(true)
     end
   end
 
   it 'should be true if the given text is on the page but not visible' do
     @session.visit('/with_html')
-    expect(@session.assert_no_text('Inside element with hidden ancestor')).to eq(true)
+    expect(@session.assert_no_text('Inside element with hidden ancestor')).to be(true)
   end
 
   it 'should raise error if :all given and text is invisible.' do
@@ -236,7 +236,7 @@ Capybara::SpecHelper.spec '#assert_no_text' do
   context 'with count' do
     it 'should be true if the text occurs within the range given' do
       @session.visit('/with_count')
-      expect(@session.assert_text('count', count: 2)).to eq(true)
+      expect(@session.assert_text('count', count: 2)).to be(true)
     end
 
     it 'should be false if the text occurs more or fewer times than range' do

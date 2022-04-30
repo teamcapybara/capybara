@@ -15,9 +15,9 @@ Capybara.register_driver :sauce_chrome do |app|
     browser_name: 'chrome',
     version: '65.0',
     name: 'Capybara test',
-    build: ENV['TRAVIS_REPO_SLUG'] || "Ruby-RSpec-Selenium: Local-#{Time.now.to_i}",
-    username: ENV['SAUCE_USERNAME'],
-    access_key: ENV['SAUCE_ACCESS_KEY']
+    build: ENV.fetch('TRAVIS_REPO_SLUG', "Ruby-RSpec-Selenium: Local-#{Time.now.to_i}"),
+    username: ENV.fetch('SAUCE_USERNAME', nil),
+    access_key: ENV.fetch('SAUCE_ACCESS_KEY', nil)
   }
 
   options.delete(:browser_name)
