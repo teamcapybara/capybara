@@ -244,7 +244,7 @@ private
   end
 
   def follow_link
-    method = self['data-method'] if driver.options[:respect_data_method]
+    method = self['data-method'] || self['data-turbo-method'] if driver.options[:respect_data_method]
     method ||= :get
     driver.follow(method, self[:href].to_s)
   end

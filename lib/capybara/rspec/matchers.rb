@@ -15,36 +15,36 @@ module Capybara
     # RSpec matcher for whether the element(s) matching a given selector exist.
     #
     # @see Capybara::Node::Matchers#assert_selector
-    def have_selector(*args, **kw_args, &optional_filter_block)
-      Matchers::HaveSelector.new(*args, **kw_args, &optional_filter_block)
+    def have_selector(...)
+      Matchers::HaveSelector.new(...)
     end
 
     # RSpec matcher for whether the element(s) matching a group of selectors exist.
     #
     # @see Capybara::Node::Matchers#assert_all_of_selectors
-    def have_all_of_selectors(*args, **kw_args, &optional_filter_block)
-      Matchers::HaveAllSelectors.new(*args, **kw_args, &optional_filter_block)
+    def have_all_of_selectors(...)
+      Matchers::HaveAllSelectors.new(...)
     end
 
     # RSpec matcher for whether no element(s) matching a group of selectors exist.
     #
     # @see Capybara::Node::Matchers#assert_none_of_selectors
-    def have_none_of_selectors(*args, **kw_args, &optional_filter_block)
-      Matchers::HaveNoSelectors.new(*args, **kw_args, &optional_filter_block)
+    def have_none_of_selectors(...)
+      Matchers::HaveNoSelectors.new(...)
     end
 
     # RSpec matcher for whether the element(s) matching any of a group of selectors exist.
     #
     # @see Capybara::Node::Matchers#assert_any_of_selectors
-    def have_any_of_selectors(*args, **kw_args, &optional_filter_block)
-      Matchers::HaveAnySelectors.new(*args, **kw_args, &optional_filter_block)
+    def have_any_of_selectors(...)
+      Matchers::HaveAnySelectors.new(...)
     end
 
     # RSpec matcher for whether the current element matches a given selector.
     #
     # @see Capybara::Node::Matchers#assert_matches_selector
-    def match_selector(*args, **kw_args, &optional_filter_block)
-      Matchers::MatchSelector.new(*args, **kw_args, &optional_filter_block)
+    def match_selector(...)
+      Matchers::MatchSelector.new(...)
     end
 
     %i[css xpath].each do |selector|
@@ -177,15 +177,15 @@ module Capybara
     # RSpec matcher for whether sibling element(s) matching a given selector exist.
     #
     # @see Capybara::Node::Matchers#assert_sibling
-    def have_sibling(*args, **kw_args, &optional_filter_block)
-      Matchers::HaveSibling.new(*args, **kw_args, &optional_filter_block)
+    def have_sibling(...)
+      Matchers::HaveSibling.new(...)
     end
 
     # RSpec matcher for whether ancestor element(s) matching a given selector exist.
     #
     # @see Capybara::Node::Matchers#assert_ancestor
-    def have_ancestor(*args, **kw_args, &optional_filter_block)
-      Matchers::HaveAncestor.new(*args, **kw_args, &optional_filter_block)
+    def have_ancestor(...)
+      Matchers::HaveAncestor.new(...)
     end
 
     ##

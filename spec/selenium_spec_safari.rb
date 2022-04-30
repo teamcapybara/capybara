@@ -80,7 +80,7 @@ Capybara::SpecHelper.run_specs TestSessions::Safari, SAFARI_DRIVER.to_s, capybar
   when 'Capybara::Session selenium_safari node #double_click should allow modifiers'
     pending "safaridriver doesn't generate double click with key modifiers"
   when /when w3c_click_offset is true should offset/
-    pending "w3c_click_offset is not currently supported with safaridriver"
+    pending 'w3c_click_offset is not currently supported with safaridriver'
   when 'Capybara::Session selenium_safari #go_back should fetch a response from the driver from the previous page',
        'Capybara::Session selenium_safari #go_forward should fetch a response from the driver from the previous page'
     skip 'safaridriver loses the ability to find elements in the document after `go_back`'

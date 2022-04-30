@@ -201,4 +201,18 @@ Capybara::SpecHelper.spec '#visit' do
     @session.visit('/get_cookie')
     expect(@session).to have_content('root cookie')
   end
+
+  context 'with base element' do
+    it 'should use base href with relative links' do
+      @session.visit('/base/with_base')
+      @session.click_link('Title page')
+      expect(@session).to have_current_path('/with_title')
+    end
+
+    it 'should use base href with bare queries' do
+      @session.visit('/base/with_base')
+      @session.click_link('Bare query')
+      expect(@session).to have_current_path('/?a=3')
+    end
+  end
 end

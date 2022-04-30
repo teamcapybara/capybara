@@ -115,7 +115,7 @@ module Capybara
       #
       # @return [Capybara::Node::Element]  The element
       def set(value, **options)
-        if ENV['CAPYBARA_THOROUGH'] && readonly?
+        if ENV.fetch('CAPYBARA_THOROUGH', nil) && readonly?
           raise Capybara::ReadOnlyElementError, "Attempt to set readonly element with value: #{value}"
         end
 

@@ -115,7 +115,7 @@ RSpec.describe Capybara::DSL do
     it 'should yield the passed block' do
       called = false
       Capybara.using_driver(:selenium) { called = true }
-      expect(called).to eq(true)
+      expect(called).to be(true)
     end
   end
 
@@ -220,7 +220,7 @@ RSpec.describe Capybara::DSL do
     it 'should yield the passed block' do
       called = false
       Capybara.using_session(:administrator) { called = true }
-      expect(called).to eq(true)
+      expect(called).to be(true)
     end
 
     it 'should be nestable' do

@@ -20,7 +20,7 @@ RSpec.describe Capybara::Server do
 
   it 'should bind to the specified host' do
     # TODO: travis with jruby in container mode has an issue with this test
-    skip 'This platform has an issue with this test' if (ENV['TRAVIS'] && (RUBY_ENGINE == 'jruby')) || Gem.win_platform?
+    skip 'This platform has an issue with this test' if (ENV.fetch('TRAVIS', nil) && (RUBY_ENGINE == 'jruby')) || Gem.win_platform?
 
     begin
       app = proc { |_env| [200, {}, ['Hello Server!']] }
@@ -78,7 +78,7 @@ RSpec.describe Capybara::Server do
     # Use a port to force a EADDRINUSE error to be generated
     server = TCPServer.new('0.0.0.0', 0)
     server_port = server.addr[1]
-    d_server = instance_double('TCPServer', addr: [nil, server_port, nil, nil], close: nil)
+    d_server = instance_double(TCPServer, addr: [nil, server_port, nil, nil], close: nil)
     call_count = 0
     allow(TCPServer).to receive(:new).and_wrap_original do |m, *args|
       call_count.zero? ? d_server : m.call(*args)
@@ -184,7 +184,7 @@ RSpec.describe Capybara::Server do
         start_request(server2, 3.0)
         server1.wait_for_pending_requests
       end.to change { done }.from(0).to(2)
-      expect(server2.send(:pending_requests?)).to eq(false)
+      expect(server2.send(:pending_requests?)).to be(false)
     end
   end
 
@@ -229,7 +229,7 @@ RSpec.describe Capybara::Server do
         start_request(server2, 3.0)
         server1.wait_for_pending_requests
       end.to change { done }.from(0).to(1)
-      expect(server2.send(:pending_requests?)).to eq(true)
+      expect(server2.send(:pending_requests?)).to be(true)
       expect do
         server2.wait_for_pending_requests
       end.to change { done }.from(1).to(2)
@@ -274,7 +274,7 @@ RSpec.describe Capybara::Server do
     app = -> { [200, {}, ['Hello, world']] }
     server = described_class.new(app)
     allow(Net::HTTP).to receive(:start).and_raise(SystemCallError.allocate)
-    expect(server.responsive?).to eq false
+    expect(server.responsive?).to be false
   end
 
   [EOFError, Net::ReadTimeout].each do |err|

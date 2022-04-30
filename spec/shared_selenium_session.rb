@@ -23,7 +23,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       it 'freshly reset session should not be touched' do
         session.instance_variable_set(:@touched, true)
         session.reset!
-        expect(session.instance_variable_get(:@touched)).to eq false
+        expect(session.instance_variable_get(:@touched)).to be false
       end
     end
 
@@ -336,7 +336,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       it 'can attach a directory' do
         pending "Geckodriver doesn't support uploading a directory" if firefox?(session)
         pending "Selenium remote doesn't support transferring a directory" if remote?(session)
-        pending "Headless Chrome doesn't support directory upload - https://bugs.chromium.org/p/chromedriver/issues/detail?id=2521&q=directory%20upload&colspec=ID%20Status%20Pri%20Owner%20Summary" if chrome?(session) && ENV['HEADLESS']
+        pending "Headless Chrome doesn't support directory upload - https://bugs.chromium.org/p/chromedriver/issues/detail?id=2521&q=directory%20upload&colspec=ID%20Status%20Pri%20Owner%20Summary" if chrome?(session) && ENV.fetch('HEADLESS', nil)
         pending "IE doesn't support uploading a directory" if ie?(session)
         pending 'Chrome/chromedriver 73 breaks this' if chrome?(session) && chrome_gte?(73, session) && chrome_lt?(75, session)
         pending "Safari doesn't support uploading a directory" if safari?(session)

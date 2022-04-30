@@ -177,6 +177,22 @@ class TestApp < Sinatra::Base
     HTML
   end
 
+  get '/base/with_base' do
+    <<-HTML
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <base href="/">
+          <title>Origin</title>
+        </head>
+        <body>
+          <a href="with_title">Title page</a>
+          <a href="?a=3">Bare query</a>
+        </body>
+      </html>
+    HTML
+  end
+
   get '/download.csv' do
     content_type 'text/csv'
     'This, is, comma, separated' \

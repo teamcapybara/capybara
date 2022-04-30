@@ -159,7 +159,7 @@ RSpec.describe Capybara do
       end
 
       it 'returns nil if no match' do
-        expect(Capybara::Selector.for('nothing')).to be nil
+        expect(Capybara::Selector.for('nothing')).to be_nil
       end
     end
 

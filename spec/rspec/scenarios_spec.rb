@@ -11,7 +11,7 @@ end
 
 feature 'if fscenario aliases focused tag then' do
   fscenario 'scenario should have focused meta tag' do |example| # rubocop:disable RSpec/Focus
-    expect(example.metadata[:focus]).to eq true
+    expect(example.metadata[:focus]).to be true
   end
 end
 
