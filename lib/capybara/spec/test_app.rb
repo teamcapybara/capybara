@@ -193,6 +193,23 @@ class TestApp < Sinatra::Base
     HTML
   end
 
+  get '/csp' do
+    response.headers['Content-Security-Policy'] = "default-src 'none'; connect-src 'self'; base-uri 'none'; font-src 'self'; img-src 'self' data:; object-src 'none'; script-src 'self' 'nonce-jAviMuMisoTisVXjgLoWdA=='; style-src 'self' 'nonce-jAviMuMisoTisVXjgLoWdA=='; form-action 'self';"
+    <<-HTML
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+          <title>CSP</title>
+        </head>
+
+        <body>
+          <div>CSP</div>
+        </body>
+      </html>
+    HTML
+  end
+
   get '/download.csv' do
     content_type 'text/csv'
     'This, is, comma, separated' \
@@ -242,7 +259,7 @@ class TestApp < Sinatra::Base
   get '/apple-touch-icon-precomposed.png' do
     halt(404)
   end
-
+  
   class << self
     attr_accessor :form_post_count
   end

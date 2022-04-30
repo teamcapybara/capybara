@@ -26,9 +26,10 @@ module Capybara
         @status, @headers, @body = @app.call(env)
         return [@status, @headers, @body] unless html_content?
 
+        nonces = directive_nonces.transform_values { |nonce| "nonce=\"#{nonce}\"" if nonce && !nonce.empty? }
         response = Rack::Response.new([], @status, @headers)
 
-        @body.each { |html| response.write insert_disable(html) }
+        @body.each { |html| response.write insert_disable(html, nonces) }
         @body.close if @body.respond_to?(:close)
 
         response.finish
@@ -42,28 +43,35 @@ module Capybara
         /html/.match?(@headers['Content-Type'])
       end
 
-      def insert_disable(html)
-        html.sub(%r{(</head>)}, "#{disable_css_markup}\\1").sub(%r{(</body>)}, "#{disable_js_markup}\\1")
+      def insert_disable(html, nonces)
+        puts nonces
+        h=html.sub(%r{(</head>)}, "<style #{nonces['style-src']}>#{disable_css_markup}</style>\\1")
+            .sub(%r{(</body>)}, "<script #{nonces['script-src']}>#{disable_js_markup}</script>\\1")
+        puts h
+        h
+      end
+      
+      def directive_nonces
+        @headers.fetch('Content-Security-Policy', '')
+          .split(';')
+          .map { |s| s.split(' ') }
+          .to_h { |s| [s[0], s[1..].filter_map { |value| /^\'nonce-(?<nonce>.+)\'/ =~ value; nonce}[0]]}
       end
 
-      DISABLE_CSS_MARKUP_TEMPLATE = <<~HTML
-        <style>
+      DISABLE_CSS_MARKUP_TEMPLATE = <<~CSS
           %<selector>s, %<selector>s::before, %<selector>s::after {
              transition: none !important;
              animation-duration: 0s !important;
              animation-delay: 0s !important;
              scroll-behavior: auto !important;
           }
-        </style>
-      HTML
+      CSS
 
-      DISABLE_JS_MARKUP_TEMPLATE = <<~HTML
-        <script>
+      DISABLE_JS_MARKUP_TEMPLATE = <<~SCRIPT
         //<![CDATA[
           (typeof jQuery !== 'undefined') && (jQuery.fx.off = true);
         //]]>
-        </script>
-      HTML
+      SCRIPT
     end
   end
 end

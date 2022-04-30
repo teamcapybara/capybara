@@ -505,7 +505,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
     end
     # rubocop:enable RSpec/InstanceVariable
-
+    
     describe ':element selector' do
       it 'can find html5 svg elements' do
         session.visit('with_html5_svg')
