@@ -259,7 +259,7 @@ class TestApp < Sinatra::Base
   get '/apple-touch-icon-precomposed.png' do
     halt(404)
   end
-  
+
   class << self
     attr_accessor :form_post_count
   end

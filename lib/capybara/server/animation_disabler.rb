@@ -44,27 +44,31 @@ module Capybara
       end
 
       def insert_disable(html, nonces)
-        puts nonces
-        h=html.sub(%r{(</head>)}, "<style #{nonces['style-src']}>#{disable_css_markup}</style>\\1")
+        html.sub(%r{(</head>)}, "<style #{nonces['style-src']}>#{disable_css_markup}</style>\\1")
             .sub(%r{(</body>)}, "<script #{nonces['script-src']}>#{disable_js_markup}</script>\\1")
-        puts h
-        h
       end
-      
+
       def directive_nonces
         @headers.fetch('Content-Security-Policy', '')
-          .split(';')
-          .map { |s| s.split(' ') }
-          .to_h { |s| [s[0], s[1..].filter_map { |value| /^\'nonce-(?<nonce>.+)\'/ =~ value; nonce}[0]]}
+                .split(';')
+                .map(&:split)
+                .to_h do |s|
+                  [
+                    s[0], s[1..].filter_map do |value|
+                      /^'nonce-(?<nonce>.+)'/ =~ value
+                      nonce
+                    end[0]
+                  ]
+                end
       end
 
       DISABLE_CSS_MARKUP_TEMPLATE = <<~CSS
-          %<selector>s, %<selector>s::before, %<selector>s::after {
-             transition: none !important;
-             animation-duration: 0s !important;
-             animation-delay: 0s !important;
-             scroll-behavior: auto !important;
-          }
+        %<selector>s, %<selector>s::before, %<selector>s::after {
+           transition: none !important;
+           animation-duration: 0s !important;
+           animation-delay: 0s !important;
+           scroll-behavior: auto !important;
+        }
       CSS
 
       DISABLE_JS_MARKUP_TEMPLATE = <<~SCRIPT
