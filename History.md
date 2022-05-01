@@ -5,6 +5,16 @@ Release date: unreleased
 
 * Ruby 2.7.0+ is now required
 
+### Added
+
+* [Beta] CSP nonces inserted into animation disabler additions - Issue #2542
+* Support `<base>` element in rack-test driver - ISsue #2544
+
+### Fixed
+
+* Fragments in referer headers in rack-test driver - Issue #2525
+* Selenium v4.1 deprecation notice
+
 # Version 3.36.0
 Release date: 2021-10-24
 
