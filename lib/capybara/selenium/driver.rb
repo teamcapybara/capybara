@@ -473,12 +473,16 @@ private
   end
 
   def unwrap_script_result(arg)
+    # TODO - move into the case when we drop support for Selenium < 4.1
+    element_types = [Selenium::WebDriver::Element]
+    element_types.push(Selenium::WebDriver::ShadowRoot) if defined?(Selenium::WebDriver::ShadowRoot)
+
     case arg
     when Array
       arg.map { |arr| unwrap_script_result(arr) }
     when Hash
       arg.transform_values! { |value| unwrap_script_result(value) }
-    when Selenium::WebDriver::Element
+    when *element_types
       build_node(arg)
     else
       arg

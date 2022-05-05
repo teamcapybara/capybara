@@ -72,6 +72,10 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumFirefox, 'selenium', capyba
   when 'Capybara::Session selenium #accept_alert should handle the alert if the page changes',
        'Capybara::Session selenium #accept_alert with an asynchronous alert should accept the alert'
     skip 'No clue what Firefox is doing here - works fine on MacOS locally'
+  when 'Capybara::Session selenium node #shadow_root should get the shadow root',
+       'Capybara::Session selenium node #shadow_root should find elements inside the shadow dom using CSS',
+       'Capybara::Session selenium node #shadow_root should find nested shadow roots'
+    pending "Firefox doesn't yet have W3C shadow root support"
   end
 end
 

@@ -125,6 +125,10 @@ module Capybara
         raise NotSupportedByDriverError, 'Capybara::Driver::Node#trigger'
       end
 
+      def shadow_root
+        raise NotSupportedByDriverError, 'Capybara::Driver::Node#shadow_root'
+      end
+
       def inspect
         %(#<#{self.class} tag="#{tag_name}" path="#{path}">)
       rescue NotSupportedByDriverError
