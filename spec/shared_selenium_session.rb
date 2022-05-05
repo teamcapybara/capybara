@@ -280,6 +280,13 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         expect(element).to eq session.find(:id, 'form_title')
       end
 
+      it 'returns a shadow root' do
+        session.visit('/with_shadow')
+        shadow = session.find(:css, '#shadow_host')
+        element = session.evaluate_script("arguments[0].shadowRoot", shadow)
+        expect(element).to be_instance_of(Capybara::Node::Element)
+      end
+
       it 'can return arrays of nested elements' do
         session.visit('/form')
         elements = session.evaluate_script('document.querySelectorAll("#form_city option")')

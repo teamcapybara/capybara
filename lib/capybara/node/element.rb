@@ -474,6 +474,17 @@ module Capybara
 
       ##
       #
+      # Return the shadow_root for the current element
+      #
+      # @return [Capybara::Node::Element]  The shadow root
+
+      def shadow_root
+        root = synchronize { base.shadow_root }
+        root && Capybara::Node::Element.new(self.session, root, nil, nil)
+      end
+
+      ##
+      #
       # Execute the given JS in the context of the element not returning a result. This is useful for scripts that return
       # complex objects, such as jQuery statements. {#execute_script} should be used over
       # {#evaluate_script} whenever a result is not expected or needed. `this` in the script will refer to the element this is called on.

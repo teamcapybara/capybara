@@ -1176,6 +1176,29 @@ Capybara::SpecHelper.spec 'node' do
     end
   end
 
+  describe '#shadow_root', requires: %i[js] do
+    it 'should get the shadow root' do
+      @session.visit('/with_shadow')
+      expect do
+        shadow_root = @session.find(:css, '#shadow_host').shadow_root
+        expect(shadow_root).not_to be_nil
+      end.not_to raise_error
+    end
+
+    it 'should find elements inside the shadow dom using CSS' do
+      @session.visit('/with_shadow')
+      shadow_root = @session.find(:css, '#shadow_host').shadow_root
+      expect(shadow_root).to have_css('#shadow_content', text: 'some text')
+    end
+
+    it 'should find nested shadow roots' do
+      @session.visit('/with_shadow')
+      shadow_root = @session.find(:css, '#shadow_host').shadow_root
+      nested_shadow_root = shadow_root.find(:css, '#nested_shadow_host').shadow_root
+      expect(nested_shadow_root).to have_css('#nested_shadow_content', text: 'nested text')
+    end
+  end
+
   describe '#reload', requires: [:js] do
     it 'should reload elements found via ancestor with CSS' do
       @session.visit('/with_js')
