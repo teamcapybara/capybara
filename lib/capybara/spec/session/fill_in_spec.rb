@@ -98,6 +98,12 @@ Capybara::SpecHelper.spec '#fill_in' do
     expect(extract_results(@session)['description']).to eq("\r\nSome text\r\n")
   end
 
+  it 'should handle carriage returns with line feeds in a textarea correct' do
+    @session.fill_in('form_description', with: "\r\nSome text\r\n")
+    @session.click_button('awesome')
+    expect(extract_results(@session)['description']).to eq("\r\nSome text\r\n")
+  end
+
   it 'should fill in a color field' do
     @session.fill_in('Html5 Color', with: '#112233')
     @session.click_button('html5_submit')
