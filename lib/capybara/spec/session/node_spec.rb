@@ -1197,6 +1197,25 @@ Capybara::SpecHelper.spec 'node' do
       nested_shadow_root = shadow_root.find(:css, '#nested_shadow_host').shadow_root
       expect(nested_shadow_root).to have_css('#nested_shadow_content', text: 'nested text')
     end
+
+    it 'should click on elements' do
+      @session.visit('/with_shadow')
+      shadow_root = @session.find(:css, '#shadow_host').shadow_root
+      checkbox = shadow_root.find(:css, 'input[type="checkbox"]')
+      expect(checkbox).not_to be_checked
+      checkbox.click
+      expect(checkbox).to be_checked
+    end
+
+    it 'should use convenience methods once moved to a descendant of the shadow root' do
+      @session.visit('/with_shadow')
+      shadow_root = @session.find(:css, '#shadow_host').shadow_root
+      descendant = shadow_root.find(:css, '#controls_wrapper')
+      expect do
+        descendant.check('shadow_checkbox')
+      end.not_to raise_error
+      expect(descendant).to have_checked_field('shadow_checkbox')
+    end
   end
 
   describe '#reload', requires: [:js] do

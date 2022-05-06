@@ -9,7 +9,7 @@ Release date: unreleased
 
 * [Beta] CSP nonces inserted into animation disabler additions - Issue #2542
 * Support `<base>` element in rack-test driver - ISsue #2544
-* [Beta] `Element#shadow_root` support. Requires selenium-webdriver 4.1+. Only currently supported with Chrome when using the selenium driver. Note: only CSS can be used to find elements inside the shadow dom so you won't be able to use most Capybara helper methods (`fill_in`, `click_link`, `find_field`, etc) since those locators are built using XPath.  Stick to `find(:css, ...)` and direct interaction methods.
+* [Beta] `Element#shadow_root` support. Requires selenium-webdriver 4.1+. Only currently supported with Chrome when using the selenium driver. Note: only CSS can be used to find elements from the shadow root. Therefore you won't be able to use most Capybara helper methods (`fill_in`, `click_link`, `find_field`, etc) directly from the shadow root since those locators are built using XPath. If you first locate a descendant from the shadow root using CSS then you should be able to use all the Capybara methods from there.
 
 ### Fixed
 
