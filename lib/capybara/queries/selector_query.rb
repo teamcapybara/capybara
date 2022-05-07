@@ -27,6 +27,12 @@ module Capybara
         @order = order
         @filter_cache = Hash.new { |hsh, key| hsh[key] = {} }
 
+        if @options[:text].is_a?(Regexp) && [true, false].include?(@options[:exact_text])
+          Capybara::Helpers.warn(
+            "Boolean 'exact_text' option is not supported when 'text' option is a Regexp - ignoring"
+          )
+        end
+
         super(@options)
         self.session_options = session_options
 
@@ -541,16 +547,19 @@ module Capybara
       def matches_text_filter?(node)
         value = options[:text]
         return true unless value
-        return matches_text_exactly?(node, value) if exact_text == true
+        return matches_text_exactly?(node, value) if exact_text == true && !value.is_a?(Regexp)
 
         regexp = value.is_a?(Regexp) ? value : Regexp.escape(value.to_s)
         matches_text_regexp?(node, regexp)
       end
 
       def matches_exact_text_filter?(node)
-        return true unless exact_text.is_a?(String)
-
-        matches_text_exactly?(node, exact_text)
+        case exact_text
+        when String, Regexp
+          matches_text_exactly?(node, exact_text)
+        else
+          true
+        end
       end
 
       def matches_visibility_filters?(node)
@@ -578,17 +587,21 @@ module Capybara
 
       def matches_text_exactly?(node, value)
         regexp = value.is_a?(Regexp) ? value : /\A#{Regexp.escape(value.to_s)}\z/
-        matches_text_regexp?(node, regexp)
+        matches_text_regexp(node, regexp).then { |m| m&.pre_match == '' && m&.post_match == '' }
       end
 
       def normalize_ws
         options.fetch(:normalize_ws, session_options.default_normalize_ws)
       end
 
-      def matches_text_regexp?(node, regexp)
+      def matches_text_regexp(node, regexp)
         text_visible = visible
         text_visible = :all if text_visible == :hidden
-        node.text(text_visible, normalize_ws: normalize_ws).match?(regexp)
+        node.text(text_visible, normalize_ws: normalize_ws).match(regexp)
+      end
+
+      def matches_text_regexp?(node, regexp)
+        !matches_text_regexp(node, regexp).nil?
       end
 
       def default_visibility

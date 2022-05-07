@@ -117,6 +117,21 @@ Capybara::SpecHelper.spec '#has_selector?' do
         expect(@session).to have_selector(:id, 'h2one', text: 'Header Class Test One', exact_text: false)
         expect(@session).to have_selector(:id, 'h2one', text: 'Header Class Test', exact_text: false)
       end
+      
+      it 'should warn if text option is a regexp that it is ignoring exact_text' do
+        allow(Capybara::Helpers).to receive(:warn)
+        expect(@session).to have_selector(:id, 'h2one', text: /Class Test/, exact_text: true)
+        expect(Capybara::Helpers).to have_received(:warn).with(/'exact_text' option is not supported/)
+      end
+    end
+
+    context 'regexp' do
+      it 'should only match when it fully matches' do
+        expect(@session).to have_selector(:id, 'h2one', exact_text: /Header Class Test One/)
+        expect(@session).to have_no_selector(:id, 'h2one', exact_text: /Header Class Test/)
+        expect(@session).to have_no_selector(:id, 'h2one', exact_text: /Class Test One/)
+        expect(@session).to have_no_selector(:id, 'h2one', exact_text: /Class Test/)
+      end
     end
   end
 

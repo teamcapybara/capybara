@@ -18,7 +18,7 @@ module Capybara
       #
       # @!macro system_filters
       #   @option options [String, Regexp] text      Only find elements which contain this text or match this regexp
-      #   @option options [String, Boolean] exact_text
+      #   @option options [String, Regexp, String] exact_text
       #     When String the elements contained text must match exactly, when Boolean controls whether the `text` option must match exactly.
       #     Defaults to {Capybara.configure exact_text}.
       #   @option options [Boolean] normalize_ws
