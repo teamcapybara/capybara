@@ -473,7 +473,7 @@ private
   end
 
   def unwrap_script_result(arg)
-    # TODO - move into the case when we drop support for Selenium < 4.1
+    # TODO: move into the case when we drop support for Selenium < 4.1
     element_types = [Selenium::WebDriver::Element]
     element_types.push(Selenium::WebDriver::ShadowRoot) if defined?(Selenium::WebDriver::ShadowRoot)
 

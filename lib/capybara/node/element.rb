@@ -480,7 +480,7 @@ module Capybara
 
       def shadow_root
         root = synchronize { base.shadow_root }
-        root && Capybara::Node::Element.new(self.session, root, nil, nil)
+        root && Capybara::Node::Element.new(session, root, nil, nil)
       end
 
       ##
