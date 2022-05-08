@@ -1,3 +1,10 @@
+# Version 3.37.1
+Relesae date: unreleased
+
+### Fixed
+
+* Regression in rack-test visit - Issue #2548
+
 # Version 3.37.0
 Release date: 2022-05-07
 

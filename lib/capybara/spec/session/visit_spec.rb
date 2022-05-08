@@ -214,5 +214,11 @@ Capybara::SpecHelper.spec '#visit' do
       @session.click_link('Bare query')
       expect(@session).to have_current_path('/?a=3')
     end
+
+    it 'should not use the base href with a new visit call' do
+      @session.visit('/base/with_other_base')
+      @session.visit('with_html')
+      expect(@session).to have_current_path('/with_html')
+    end
   end
 end
