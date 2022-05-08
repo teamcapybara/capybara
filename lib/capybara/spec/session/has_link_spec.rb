@@ -19,6 +19,12 @@ Capybara::SpecHelper.spec '#has_link?' do
     expect(@session).not_to have_link('A link', href: /nonexistent/)
   end
 
+  it 'should notify if an invalid locator is specified' do
+    allow(Capybara::Helpers).to receive(:warn).and_return(nil)
+    @session.has_link?(@session)
+    expect(Capybara::Helpers).to have_received(:warn).with(/Called from: .+/)
+  end
+
   context 'with focused:', requires: [:active_element] do
     it 'should be true if the given link is on the page and has focus' do
       @session.send_keys(:tab)

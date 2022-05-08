@@ -66,7 +66,11 @@ module Capybara
       end
     ensure
       unless locator_valid?(locator)
-        warn "Locator #{locator.class}:#{locator.inspect} for selector #{name.inspect} must #{locator_description}. This will raise an error in a future version of Capybara."
+        Capybara::Helpers.warn(
+          "Locator #{locator.class}:#{locator.inspect} for selector #{name.inspect} must #{locator_description}. " \
+          'This will raise an error in a future version of Capybara. ' \
+          "Called from: #{Capybara::Helpers.filter_backtrace(caller)}"
+        )
       end
     end
 
