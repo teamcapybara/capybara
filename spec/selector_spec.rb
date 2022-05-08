@@ -471,7 +471,7 @@ RSpec.describe Capybara do
         end
 
         it 'includes wildcarded keys in description' do
-          expect { string.find(:element, 'input', not_there: 'bad', presence: true, absence: false, count: 1) }
+          expect { string.all(:element, 'input', not_there: 'bad', presence: true, absence: false, count: 1) }
             .to(raise_error do |e|
               expect(e).to be_a(Capybara::ElementNotFound)
               expect(e.message).to include 'not_there => bad'

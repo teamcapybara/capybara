@@ -50,6 +50,13 @@ module Capybara
       #
       def find(*args, **options, &optional_filter_block)
         options[:session_options] = session_options
+        count_options = options.slice(*Capybara::Queries::BaseQuery::COUNT_KEYS)
+        unless count_options.empty?
+          Capybara::Helpers.warn(
+            "'find' does not support count options (#{count_options}) ignoring. " \
+            "Called from: #{Capybara::Helpers.filter_backtrace(caller)}"
+          )
+        end
         synced_resolve Capybara::Queries::SelectorQuery.new(*args, **options, &optional_filter_block)
       end
 
