@@ -193,6 +193,22 @@ class TestApp < Sinatra::Base
     HTML
   end
 
+  get '/base/with_other_base' do
+    <<-HTML
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <base href="/base/">
+          <title>Origin</title>
+        </head>
+        <body>
+          <a href="with_title">Title page</a>
+          <a href="?a=3">Bare query</a>
+        </body>
+      </html>
+    HTML
+  end
+
   get '/csp' do
     response.headers['Content-Security-Policy'] = "default-src 'none'; connect-src 'self'; base-uri 'none'; font-src 'self'; img-src 'self' data:; object-src 'none'; script-src 'self' 'nonce-jAviMuMisoTisVXjgLoWdA=='; style-src 'self' 'nonce-jAviMuMisoTisVXjgLoWdA=='; form-action 'self';"
     <<-HTML

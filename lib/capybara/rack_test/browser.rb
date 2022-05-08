@@ -20,6 +20,8 @@ class Capybara::RackTest::Browser
   end
 
   def visit(path, **attributes)
+    @new_visit_request = true
+    reset_cache!
     reset_host!
     process_and_follow_redirects(:get, path, attributes)
   end
@@ -45,7 +47,6 @@ class Capybara::RackTest::Browser
   def process_and_follow_redirects(method, path, attributes = {}, env = {})
     @current_fragment = build_uri(path).fragment
     process(method, path, attributes, env)
-
     return unless driver.follow_redirects?
 
     driver.redirect_limit.times do
@@ -69,6 +70,7 @@ class Capybara::RackTest::Browser
     @current_scheme, @current_host, @current_port = new_uri.select(:scheme, :host, :port)
     @current_fragment = new_uri.fragment || @current_fragment
     reset_cache!
+    @new_visit_request = false
     send(method, new_uri.to_s, attributes, env.merge(options[:headers] || {}))
   end
 
@@ -125,6 +127,18 @@ class Capybara::RackTest::Browser
 
   def title
     dom.title
+  end
+
+  def last_request
+    raise Rack::Test::Error if @new_visit_request
+
+    super
+  end
+
+  def last_response
+    raise Rack::Test::Error if @new_visit_request
+
+    super
   end
 
 protected
