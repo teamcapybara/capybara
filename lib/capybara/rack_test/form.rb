@@ -16,6 +16,8 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
     def path; @empty_file.path; end
     def size; 0; end
     def read; ''; end
+    def append_to(_); end
+    def set_encoding(_); end
   end
 
   def params(button)
