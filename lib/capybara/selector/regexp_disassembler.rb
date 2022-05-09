@@ -69,11 +69,8 @@ module Capybara
         suffixes = [[]]
         strs.reverse_each do |str|
           if str.is_a? Set
-            prefixes = str.each_with_object([]) { |s, memo| memo.concat combine(s) }
-
-            result = []
-            prefixes.product(suffixes) { |pair| result << pair.flatten(1) }
-            suffixes = result
+            prefixes = str.flat_map { |s| combine(s) }
+            suffixes = prefixes.product(suffixes).map { |pair| pair.flatten(1) }
           else
             suffixes.each { |arr| arr.unshift str }
           end

@@ -528,7 +528,7 @@ Capybara::SpecHelper.spec '#find' do
       expect(@session.find(:link, 'test-foo')[:id]).to eq 'foo'
     end
   end
-  
+
   it 'should warn if passed count options' do
     allow(Capybara::Helpers).to receive(:warn)
     @session.find('//h1', count: 44)
