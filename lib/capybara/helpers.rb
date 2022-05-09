@@ -84,7 +84,7 @@ module Capybara
     def warn(message, uplevel: 1)
       Kernel.warn(message, uplevel: uplevel)
     end
-    
+
     if defined?(Process::CLOCK_MONOTONIC_RAW)
       def monotonic_time; Process.clock_gettime Process::CLOCK_MONOTONIC_RAW; end
     elsif defined?(Process::CLOCK_MONOTONIC_PRECISE)

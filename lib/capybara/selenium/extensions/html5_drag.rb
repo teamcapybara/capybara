@@ -39,10 +39,8 @@ class Capybara::Selenium::Node
         input.set_file(args)
         driver.execute_script DROP_FILE, self, input
       else
-        items = args.each_with_object([]) do |arg, arr|
-          arg.each_with_object(arr) do |(type, data), arr_|
-            arr_ << { type: type, data: data }
-          end
+        items = args.flat_map do |arg|
+          arg.map { |(type, data)| { type: type, data: data } }
         end
         driver.execute_script DROP_STRING, items, self
       end
