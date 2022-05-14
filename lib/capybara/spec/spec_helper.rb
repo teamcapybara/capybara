@@ -132,4 +132,4 @@ module Capybara
   end
 end
 
-Dir["#{File.dirname(__FILE__)}/session/**/*.rb"].each { |file| require_relative file }
+Dir["#{File.dirname(__FILE__)}/session/**/*.rb"].sort.each { |file| require_relative file }
