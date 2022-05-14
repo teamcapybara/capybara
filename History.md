@@ -1,3 +1,12 @@
+# Version 3.37.2
+Release date: unreleased
+
+### Fixed
+
+* Support file upload requirement changes in upcoming rack-test release
+* Use higher precision clock in Capybara::Helpers::Timer if available
+* rack-test driver behavior with \r\n - Issue #2547 [Stefan Hoffmann]
+
 # Version 3.37.1
 Relesae date: 2022-05-09
 
