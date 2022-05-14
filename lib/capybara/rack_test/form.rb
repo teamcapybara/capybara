@@ -120,7 +120,7 @@ private
   end
 
   def add_textarea_param(field, params)
-    merge_param!(params, field['name'], field['_capybara_raw_value'].to_s.gsub(/\n/, "\r\n"))
+    merge_param!(params, field['name'], field['_capybara_raw_value'].to_s.gsub(/\r?\n/, "\r\n"))
   end
 
   def submitter?(el)
