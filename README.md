@@ -161,7 +161,7 @@ You can now write your specs like so:
 ```ruby
 describe "the signin process", type: :feature do
   before :each do
-    User.make(email: 'user@example.com', password: 'password')
+    User.create(email: 'user@example.com', password: 'password')
   end
 
   it "signs me in" do
@@ -192,7 +192,7 @@ Capybara also comes with a built in DSL for creating descriptive acceptance test
 ```ruby
 feature "Signing in" do
   background do
-    User.make(email: 'user@example.com', password: 'caplin')
+    User.create(email: 'user@example.com', password: 'caplin')
   end
 
   scenario "Signing in with correct credentials" do
@@ -205,7 +205,7 @@ feature "Signing in" do
     expect(page).to have_content 'Success'
   end
 
-  given(:other_user) { User.make(email: 'other@example.com', password: 'rous') }
+  given(:other_user) { User.create(email: 'other@example.com', password: 'rous') }
 
   scenario "Signing in as another user" do
     visit '/sessions/new'
