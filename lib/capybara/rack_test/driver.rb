@@ -50,8 +50,8 @@ class Capybara::RackTest::Driver < Capybara::Driver::Base
     browser.refresh
   end
 
-  def submit(method, path, attributes)
-    browser.submit(method, path, attributes)
+  def submit(method, path, attributes, multipart: false)
+    browser.submit(method, path, attributes, multipart: multipart)
   end
 
   def follow(method, path, **attributes)

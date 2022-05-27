@@ -1,25 +1,6 @@
 # frozen_string_literal: true
 
 class Capybara::RackTest::Form < Capybara::RackTest::Node
-  # This only needs to inherit from Rack::Test::UploadedFile because Rack::Test checks for
-  # the class specifically when determining whether to construct the request as multipart.
-  # That check should be based solely on the form element's 'enctype' attribute value,
-  # which should probably be provided to Rack::Test in its non-GET request methods.
-  class NilUploadedFile < Rack::Test::UploadedFile
-    def initialize # rubocop:disable Lint/MissingSuper
-      @empty_file = Tempfile.new('nil_uploaded_file')
-      @empty_file.close
-    end
-
-    def original_filename; ''; end
-    def content_type; 'application/octet-stream'; end
-    def path; @empty_file.path; end
-    def size; 0; end
-    def read; ''; end
-    def append_to(_); end
-    def set_encoding(_); end # rubocop:disable Naming/AccessorMethodName
-  end
-
   def params(button)
     form_element_types = %i[input select textarea button]
     form_elements_xpath = XPath.generate do |xp|
@@ -42,7 +23,7 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
   def submit(button)
     action = button&.[]('formaction') || native['action']
     method = button&.[]('formmethod') || request_method
-    driver.submit(method, action.to_s, params(button))
+    driver.submit(method, action.to_s, params(button), multipart: multipart?)
   end
 
   def multipart?
@@ -88,6 +69,8 @@ private
 
       Capybara::RackTest::Node.new(driver, field).value.to_s
     when 'file'
+      return if value.blank?
+
       if multipart?
         file_to_upload(value)
       else
@@ -100,12 +83,8 @@ private
   end
 
   def file_to_upload(filename)
-    if filename.empty?
-      NilUploadedFile.new
-    else
-      mime_info = MiniMime.lookup_by_filename(filename)
-      Rack::Test::UploadedFile.new(filename, mime_info&.content_type&.to_s)
-    end
+    mime_info = MiniMime.lookup_by_filename(filename)
+    Rack::Test::UploadedFile.new(filename, mime_info&.content_type&.to_s)
   end
 
   def add_select_param(field, params)
