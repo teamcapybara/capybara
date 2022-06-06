@@ -129,6 +129,7 @@ module Capybara
       if @touched
         driver.reset!
         @touched = false
+        @scopes = [nil]
       end
       @server&.wait_for_pending_requests
       raise_server_error!
