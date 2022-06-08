@@ -15,7 +15,7 @@ RSpec.describe 'capybara/rspec' do
       expect(self.class.ancestors).to include Capybara::RSpecMatcherProxies
     end
 
-    context 'resetting session' do
+    context 'resetting session', order: :defined do
       it 'sets a cookie in one example...' do
         visit('/set_cookie')
         expect(page.body).to include('Cookie set to test_cookie')
@@ -27,7 +27,7 @@ RSpec.describe 'capybara/rspec' do
       end
     end
 
-    context 'setting the current driver' do
+    context 'setting the current driver', order: :defined do
       it 'sets the current driver in one example...' do
         Capybara.current_driver = :selenium
       end
