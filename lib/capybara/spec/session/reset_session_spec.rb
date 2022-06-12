@@ -95,6 +95,19 @@ Capybara::SpecHelper.spec '#reset_session!' do
     expect(@session.windows.size).to eq 1
   end
 
+  it 'does not block opening a new window after a frame was switched to and not switched back', requires: [:windows] do
+    @session.visit('/with_iframe?id=test_iframe&url=/')
+    @session.switch_to_frame(@session.find(:frame, 'test_iframe'))
+    within_window_test = lambda do
+      @session.within_window(@session.open_new_window) do
+        @session.visit('/')
+      end
+    end
+    expect(&within_window_test).to raise_error(Capybara::ScopeError)
+    @session.reset_session!
+    expect(&within_window_test).not_to raise_error
+  end
+
   context 'When reuse_server == false' do
     let!(:orig_reuse_server) { Capybara.reuse_server }
 

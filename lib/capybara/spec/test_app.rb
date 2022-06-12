@@ -177,6 +177,22 @@ class TestApp < Sinatra::Base
     HTML
   end
 
+  get '/with_iframe' do
+    <<-HTML
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+          <title>Test with Iframe</title>
+        </head>
+
+        <body>
+          <iframe src="#{params[:url]}" id="#{params[:id]}"></iframe>
+        </body>
+      </html>
+    HTML
+  end
+
   get '/base/with_base' do
     <<-HTML
       <!DOCTYPE html>
