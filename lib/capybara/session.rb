@@ -40,6 +40,7 @@ module Capybara
 
     NODE_METHODS = %i[
       all first attach_file text check choose scroll_to scroll_by
+      click double_click right_click
       click_link_or_button click_button click_link
       fill_in find find_all find_button find_by_id find_field find_link
       has_content? has_text? has_css? has_no_content? has_no_text?
@@ -360,7 +361,7 @@ module Capybara
       new_scope = args.first.respond_to?(:to_capybara_node) ? args.first.to_capybara_node : find(*args, **kw_args)
       begin
         scopes.push(new_scope)
-        yield if block_given?
+        yield new_scope if block_given?
       ensure
         scopes.pop
       end

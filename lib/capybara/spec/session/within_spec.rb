@@ -49,6 +49,19 @@ Capybara::SpecHelper.spec '#within' do
         expect { @session.text }.to raise_error(StandardError)
       end
     end
+
+    it 'should pass scope element to the block' do
+      @session.within(:css, '#another_foo') do |scope|
+        expect(scope).to match_css('#another_foo')
+      end
+    end
+
+    it 'should scope click', requires: [:js] do
+      @session.within(:css, '#another_foo') do |scope|
+        @session.click
+        expect(scope).to have_text('I was clicked')
+      end
+    end
   end
 
   context 'with XPath selector' do

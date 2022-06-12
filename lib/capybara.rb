@@ -101,7 +101,7 @@ module Capybara
     #   and {configure raise_server_errors} is `true`.
     # - **test_id** (Symbol, String, `nil` = `nil`) - Optional attribute to match locator against with built-in selectors along with id.
     # - **threadsafe** (Boolean = `false`) - Whether sessions can be configured individually.
-    # - **w3c_click_offset** (Boolean = 'false') - Whether click offsets should be from element center (true) or top left (false)
+    # - **w3c_click_offset** (Boolean = 'true') - Whether click offsets should be from element center (true) or top left (false)
     #
     # #### DSL Options
     #
@@ -514,5 +514,5 @@ Capybara.configure do |config|
   config.predicates_wait = true
   config.default_normalize_ws = false
   config.use_html5_parsing = false
-  config.w3c_click_offset = false
+  config.w3c_click_offset = true
 end

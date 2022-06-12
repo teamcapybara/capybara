@@ -239,6 +239,7 @@ Capybara::SpecHelper.spec '#check' do
 
       context 'with allow_label_click options', requires: [:js] do
         it 'should allow offsets to click location on label' do
+          Capybara.w3c_click_offset = false
           expect(@session.find(:checkbox, 'form_cars_lotus', unchecked: true, visible: :hidden)).to be_truthy
           @session.check('form_cars_lotus', allow_label_click: { x: 90, y: 10 })
           @session.click_button('awesome')
