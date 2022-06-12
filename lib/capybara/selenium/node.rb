@@ -113,11 +113,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
         action.click(target)
       else
         action.click_and_hold(target)
-        if w3c?
-          action.pause(action.pointer_inputs.first, click_options.delay)
-        else
-          action.pause(click_options.delay)
-        end
+        action_pause(action, click_options.delay)
         action.release
       end
     end
@@ -138,9 +134,9 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
         action.context_click(target)
       elsif w3c?
         action.move_to(target) if target
-        action.pointer_down(:right)
-              .pause(action.pointer_inputs.first, click_options.delay)
-              .pointer_up(:right)
+        action.pointer_down(:right).then do |act|
+          action_pause(act, click_options.delay)
+        end.pointer_up(:right)
       else
         raise ArgumentError, 'Delay is not supported when right clicking with legacy (non-w3c) selenium driver'
       end
@@ -413,10 +409,30 @@ private
 
   def action_with_modifiers(click_options)
     actions = browser_action.tap do |acts|
-      if click_options.center_offset? && click_options.coords?
-        acts.move_to(native).move_by(*click_options.coords)
+      if click_options.coords?
+        if click_options.center_offset?
+          if Selenium::WebDriver::VERSION.to_f >= 4.3
+            acts.move_to(native, *click_options.coords)
+          else
+            ::Selenium::WebDriver.logger.suppress_deprecations do
+              acts.move_to(native).move_by(*click_options.coords)
+            end
+          end
+        elsif Selenium::WebDriver::VERSION.to_f >= 4.3
+          right_by, down_by = *click_options.coords
+          size = native.size
+          left_offset = (size[:width] / 2).to_i
+          top_offset = (size[:height] / 2).to_i
+          left = -left_offset + right_by
+          top = -top_offset + down_by
+          acts.move_to(native, left, top)
+        else
+          ::Selenium::WebDriver.logger.suppress_deprecations do
+            acts.move_to(native, *click_options.coords)
+          end
+        end
       else
-        acts.move_to(native, *click_options.coords)
+        acts.move_to(native)
       end
     end
     modifiers_down(actions, click_options.keys)
@@ -457,6 +473,18 @@ private
   def w3c?
     (defined?(Selenium::WebDriver::VERSION) && (Selenium::WebDriver::VERSION.to_f >= 4)) ||
       capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
+  end
+
+  def action_pause(action, duration)
+    if w3c?
+      if Selenium::WebDriver::VERSION.to_f >= 4.2
+        action.pause(device: action.pointer_inputs.first, duration: duration)
+      else
+        action.pause(action.pointer_inputs.first, duration)
+      end
+    else
+      action.pause(duration)
+    end
   end
 
   def normalize_keys(keys)

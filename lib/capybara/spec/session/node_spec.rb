@@ -775,6 +775,7 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'should allow to adjust the click offset', requires: [:js] do
+      Capybara.w3c_click_offset = false
       @session.visit('with_js')
       @session.find(:css, '#click-test').click(x: 5, y: 5)
       link = @session.find(:link, 'has-been-clicked')
@@ -901,6 +902,7 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'should allow to adjust the offset', requires: [:js] do
+      Capybara.w3c_click_offset = false
       @session.visit('with_js')
       @session.find(:css, '#click-test').double_click(x: 10, y: 5)
       link = @session.find(:link, 'has-been-double-clicked')
@@ -987,6 +989,7 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'should allow to adjust the offset', requires: [:js] do
+      Capybara.w3c_click_offset = false
       @session.visit('with_js')
       @session.find(:css, '#click-test').right_click(x: 10, y: 10)
       link = @session.find(:link, 'has-been-right-clicked')

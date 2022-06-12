@@ -18,6 +18,10 @@ module Capybara
         end
       end
 
+      def warn(*args, **opts)
+        super unless @suppress_for_capybara
+      end
+
       def suppress_deprecations
         prev_suppress_for_capybara, @suppress_for_capybara = @suppress_for_capybara, true
         yield

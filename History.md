@@ -1,14 +1,25 @@
-# Version 3.37.2
+# Version 3.38.0
 Release date: unreleased
+
+### Changed
+
+* Capybara.w3c_click_offset now defaults to true. If you need click offsets to be from the elements top left corner set it to false in your config
+
+### Added
+
+* Support upcoming Selenium 4.3 changes to click offset calculations
+* `click`, `double_click`, `right_click` can now be called on the session to click the currently scoped element (or document)
+* `Session#within` now passes the scoped element to the block
 
 ### Fixed
 
 * Support file upload requirement changes in upcoming rack-test release
 * Use higher precision clock in Capybara::Helpers::Timer if available
 * rack-test driver behavior with \r\n - Issue #2547 [Stefan Hoffmann]
+* Updated for deprecation of positional parameters in Selenium::WebDriver::ActionBuilder#pause
 
 # Version 3.37.1
-Relesae date: 2022-05-09
+Release date: 2022-05-09
 
 ### Fixed
 

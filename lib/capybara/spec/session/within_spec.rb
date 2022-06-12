@@ -56,7 +56,7 @@ Capybara::SpecHelper.spec '#within' do
       end
     end
 
-    it 'should scope click', requires: [:js], focus_: true do
+    it 'should scope click', requires: [:js] do
       @session.within(:css, '#another_foo') do |scope|
         @session.click
         expect(scope).to have_text('I was clicked')
