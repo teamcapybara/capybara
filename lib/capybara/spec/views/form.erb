@@ -586,6 +586,19 @@ New line after and before textarea tag
   <p>
 </form>
 
+<form action="/form" method="post" enctype="multipart/form-data">
+  <input type="hidden" name="form[document2]" value="hidden_field"/>
+
+  <p>
+    <label for="form_document">Document with hidden</label>
+    <input type="file" name="form[document2]" id="form_document2"/>
+  </p>
+
+  <p>
+    <input type="submit" value="Upload Empty With Hidden"/>
+  <p>
+</form>
+
 <form action="/upload_multiple" method="post" enctype="multipart/form-data">
   <p>
     <label for="form_multiple_file_name">File Name</label>

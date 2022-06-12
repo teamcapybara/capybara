@@ -30,6 +30,8 @@ Capybara::SpecHelper.run_specs TestSessions::RackTest, 'RackTest', capybara_skip
     skip "Nokogiri doesn't support case insensitive CSS attribute matchers"
   when /#click_button should follow permanent redirects that maintain method/
     skip "Rack < 2 doesn't support 308" if Gem.loaded_specs['rack'].version < Gem::Version.new('2.0.0')
+  when /#attach_file with multipart form should send prior hidden field if no file submitted/
+    skip 'Rack-test < 2 needs an empty file to detect multipart form' if Gem.loaded_specs['rack-test'].version < Gem::Version.new('2.0.0')
   end
 end
 
@@ -92,6 +94,12 @@ RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
           session.visit('/form')
           session.click_button('Upload Empty')
           expect(session.html).to include('Successfully ignored empty file field.')
+        end
+
+        it 'should submit multipart even if no file is submitted' do
+          session.visit('/form')
+          session.click_button('Upload Empty')
+          expect(session.html).to include('Content type was multipart/form-data;')
         end
       end
 

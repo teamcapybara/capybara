@@ -256,12 +256,15 @@ class TestApp < Sinatra::Base
 
   post '/form' do
     self.class.form_post_count += 1
-    %(<pre id="results">#{params[:form].merge('post_count' => self.class.form_post_count).to_yaml}</pre>)
+    %(
+      <pre id="content_type">#{request.content_type}</pre>
+      <pre id="results">#{params.fetch(:form, {}).merge('post_count' => self.class.form_post_count).to_yaml}</pre>
+    )
   end
 
   post '/upload_empty' do
     if params[:form][:file].nil?
-      'Successfully ignored empty file field.'
+      "Successfully ignored empty file field. Content type was #{request.content_type}"
     else
       'Something went wrong.'
     end

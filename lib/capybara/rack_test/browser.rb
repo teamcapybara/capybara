@@ -31,11 +31,17 @@ class Capybara::RackTest::Browser
     request(last_request.fullpath, last_request.env)
   end
 
-  def submit(method, path, attributes)
+  def submit(method, path, attributes, content_type: nil)
     path = request_path if path.nil? || path.empty?
     uri = build_uri(path)
     uri.query = '' if method.to_s.casecmp('get').zero?
-    process_and_follow_redirects(method, uri.to_s, attributes, 'HTTP_REFERER' => referer_url)
+    process_and_follow_redirects(
+      method,
+      uri.to_s,
+      attributes,
+      'HTTP_REFERER' => referer_url,
+      'CONTENT_TYPE' => content_type
+    )
   end
 
   def follow(method, path, **attributes)

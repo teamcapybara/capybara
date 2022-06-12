@@ -55,6 +55,12 @@ Capybara::SpecHelper.spec '#attach_file' do
       expect(@session).to have_content('No file uploaded')
     end
 
+    it 'should send prior hidden field if no file submitted' do
+      @session.click_button('Upload Empty With Hidden')
+      expect(extract_results(@session)['document2']).to eq('hidden_field')
+      expect(extract_content_type(@session)).to start_with('multipart/form-data;')
+    end
+
     it 'should send content type text/plain when uploading a text file' do
       @session.attach_file 'Single Document', with_os_path_separators(test_file_path)
       @session.click_button 'Upload Single'
