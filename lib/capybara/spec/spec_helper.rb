@@ -122,6 +122,11 @@ module Capybara
       YAML.safe_load results, permitted_classes: perms
     end
 
+    def extract_content_type(session)
+      expect(session).to have_xpath("//pre[@id='content_type']")
+      Capybara::HTML(session.body).xpath("//pre[@id='content_type']").first.text
+    end
+
     def be_an_invalid_element_error(session)
       satisfy { |error| session.driver.invalid_element_errors.any? { |e| error.is_a? e } }
     end

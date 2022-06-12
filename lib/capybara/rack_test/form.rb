@@ -30,19 +30,29 @@ class Capybara::RackTest::Form < Capybara::RackTest::Node
 
     form_elements = native.xpath(form_elements_xpath).reject { |el| submitter?(el) && (el != button.native) }
 
-    form_elements.each_with_object(make_params) do |field, params|
+    form_elements.each_with_object({}.compare_by_identity) do |field, params|
       case field.name
       when 'input', 'button' then add_input_param(field, params)
       when 'select' then add_select_param(field, params)
       when 'textarea' then add_textarea_param(field, params)
       end
+    end.each_with_object(make_params) do |(name, value), params|
+      merge_param!(params, name, value)
     end.to_params_hash
+
+    # form_elements.each_with_object(make_params) do |field, params|
+    #   case field.name
+    #   when 'input', 'button' then add_input_param(field, params)
+    #   when 'select' then add_select_param(field, params)
+    #   when 'textarea' then add_textarea_param(field, params)
+    #   end
+    # end.to_params_hash
   end
 
   def submit(button)
     action = button&.[]('formaction') || native['action']
     method = button&.[]('formmethod') || request_method
-    driver.submit(method, action.to_s, params(button))
+    driver.submit(method, action.to_s, params(button), content_type: native['enctype'])
   end
 
   def multipart?
@@ -88,6 +98,8 @@ private
 
       Capybara::RackTest::Node.new(driver, field).value.to_s
     when 'file'
+      return if value.empty? && params.keys.include?(name) && Rack::Test::VERSION.to_f >= 2.0
+
       if multipart?
         file_to_upload(value)
       else
@@ -96,7 +108,8 @@ private
     else
       value
     end
-    merge_param!(params, name, value)
+    # merge_param!(params, name, value)
+    params[name] = value
   end
 
   def file_to_upload(filename)
@@ -109,18 +122,23 @@ private
   end
 
   def add_select_param(field, params)
+    name = field['name']
     if field.has_attribute?('multiple')
-      field.xpath('.//option[@selected]').each do |option|
-        merge_param!(params, field['name'], (option['value'] || option.text).to_s)
+      value = field.xpath('.//option[@selected]').map do |option|
+        # merge_param!(params, field['name'], (option['value'] || option.text).to_s)
+        (option['value'] || option.text).to_s
       end
+      params[name] = value unless value.empty?
     else
       option = field.xpath('.//option[@selected]').first || field.xpath('.//option').first
-      merge_param!(params, field['name'], (option['value'] || option.text).to_s) if option
+      # merge_param!(params, field['name'], (option['value'] || option.text).to_s) if option
+      params[name] = (option['value'] || option.text).to_s if option
     end
   end
 
   def add_textarea_param(field, params)
-    merge_param!(params, field['name'], field['_capybara_raw_value'].to_s.gsub(/\r?\n/, "\r\n"))
+    # merge_param!(params, field['name'], field['_capybara_raw_value'].to_s.gsub(/\r?\n/, "\r\n"))
+    params[field['name']] = field['_capybara_raw_value'].to_s.gsub(/\r?\n/, "\r\n")
   end
 
   def submitter?(el)
