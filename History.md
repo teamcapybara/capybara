@@ -10,10 +10,10 @@ Release date: unreleased
 * Support upcoming Selenium 4.3 changes to click offset calculations
 * `click`, `double_click`, `right_click` can now be called on the session to click the currently scoped element (or document)
 * `Session#within` now passes the scoped element to the block
+* Support rack-test 2+
 
 ### Fixed
 
-* Support file upload requirement changes in upcoming rack-test release
 * Use higher precision clock in Capybara::Helpers::Timer if available
 * rack-test driver behavior with \r\n - Issue #2547 [Stefan Hoffmann]
 * Updated for deprecation of positional parameters in Selenium::WebDriver::ActionBuilder#pause
