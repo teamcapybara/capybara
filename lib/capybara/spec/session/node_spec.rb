@@ -1184,7 +1184,7 @@ Capybara::SpecHelper.spec 'node' do
       @session.visit('/with_shadow')
       expect do
         shadow_root = @session.find(:css, '#shadow_host').shadow_root
-        expect(shadow_root).not_to be_nil
+        expect(shadow_root).to be_a(Capybara::Node::Element)
       end.not_to raise_error
     end
 

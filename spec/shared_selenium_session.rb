@@ -281,6 +281,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       end
 
       it 'returns a shadow root' do
+        pending "Geckodriver doesn't fully support shadow root yet" if firefox?(session)
         session.visit('/with_shadow')
         shadow = session.find(:css, '#shadow_host')
         element = session.evaluate_script('arguments[0].shadowRoot', shadow)

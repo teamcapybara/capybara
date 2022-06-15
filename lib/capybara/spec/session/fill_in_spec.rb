@@ -98,7 +98,7 @@ Capybara::SpecHelper.spec '#fill_in' do
     expect(extract_results(@session)['description']).to eq("\r\nSome text\r\n")
   end
 
-  it 'should handle carriage returns with line feeds in a textarea correct' do
+  it 'should handle carriage returns with line feeds in a textarea correctly' do
     @session.fill_in('form_description', with: "\r\nSome text\r\n")
     @session.click_button('awesome')
     expect(extract_results(@session)['description']).to eq("\r\nSome text\r\n")
