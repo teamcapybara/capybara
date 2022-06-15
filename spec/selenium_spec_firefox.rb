@@ -75,11 +75,11 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumFirefox, 'selenium', capyba
   when 'Capybara::Session selenium node #shadow_root should find elements inside the shadow dom using CSS',
        'Capybara::Session selenium node #shadow_root should find nested shadow roots',
        'Capybara::Session selenium node #shadow_root should click on elements',
-       'Capybara::Session selenium node #shadow_root should use convenience methods once moved to a descendant of the shadow root'
+       'Capybara::Session selenium node #shadow_root should use convenience methods once moved to a descendant of the shadow root',
        'Capybara::Session with firefox with selenium driver #evaluate_script returns a shadow root'
     pending "Firefox doesn't yet have full W3C shadow root support"
   when 'Capybara::Session selenium #fill_in should handle carriage returns with line feeds in a textarea correctly'
-    pending "Not sure what firefox is doing here"
+    pending 'Not sure what firefox is doing here'
   end
 end
 

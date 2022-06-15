@@ -130,6 +130,7 @@ module Capybara
       if @touched
         driver.reset!
         @touched = false
+        switch_to_frame(:top) rescue nil # rubocop:disable Style/RescueModifier
         @scopes = [nil]
       end
       @server&.wait_for_pending_requests
