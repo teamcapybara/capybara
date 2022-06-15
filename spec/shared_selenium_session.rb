@@ -347,14 +347,12 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         pending "Headless Chrome doesn't support directory upload - https://bugs.chromium.org/p/chromedriver/issues/detail?id=2521&q=directory%20upload&colspec=ID%20Status%20Pri%20Owner%20Summary" if chrome?(session) && ENV.fetch('HEADLESS', nil)
         pending "IE doesn't support uploading a directory" if ie?(session)
         pending 'Chrome/chromedriver 73 breaks this' if chrome?(session) && chrome_gte?(73, session) && chrome_lt?(75, session)
-        pending "Safari doesn't support uploading a directory" if safari?(session)
-        # pending "Edge/msedgedriver doesn't support directory upload" if edge?(session) && edge_gte?(75, session)
 
         session.visit('/form')
         test_file_dir = File.expand_path('./fixtures', File.dirname(__FILE__))
         session.attach_file('Directory Upload', test_file_dir)
         session.click_button('Upload Multiple')
-        expect(session.body).to include('5 | ') # number of files
+        expect(session).to have_text('5 | ') # number of files
       end
 
       it 'can attach a relative file' do
@@ -363,7 +361,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         session.visit('/form')
         session.attach_file('Single Document', 'spec/fixtures/capybara.csv')
         session.click_button('Upload Single')
-        expect(session.body).to include('Content-type: text/csv')
+        expect(session).to have_text('Content-type: text/csv')
       end
     end
 

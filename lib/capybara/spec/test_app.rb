@@ -248,6 +248,10 @@ class TestApp < Sinatra::Base
       'Thomas, Walpole, was , here'
   end
 
+  get '/apple-touch-icon-precomposed.png' do
+    halt(404)
+  end
+
   get '/:view' do |view|
     view_template = "#{__dir__}/views/#{view}.erb"
     has_layout = File.exist?(view_template) && File.open(view_template) { |f| f.first.downcase.include?('doctype') }
@@ -289,10 +293,6 @@ class TestApp < Sinatra::Base
     buffer.join(' | ')
   rescue StandardError
     'No files uploaded'
-  end
-
-  get '/apple-touch-icon-precomposed.png' do
-    halt(404)
   end
 
   class << self
