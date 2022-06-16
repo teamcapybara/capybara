@@ -14,7 +14,7 @@ module Capybara
         end
 
         def decrement(uri)
-          @mutex.synchronize { @value.delete_at(@value.index(uri) || @value.length) }
+          @mutex.synchronize { @value.delete_at(@value.index(uri) || @value.length - 1) }
         end
 
         def positive?
