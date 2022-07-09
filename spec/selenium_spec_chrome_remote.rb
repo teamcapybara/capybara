@@ -21,8 +21,8 @@ def ensure_selenium_running!
   rescue StandardError
     if timer.expired?
       raise 'Selenium is not running. ' \
-            "You can run a selenium server easily with: \n" \
-            '  $ docker-compose up -d selenium_chrome'
+            "You can run a selenium server easily with: \n  " \
+            '$ docker-compose up -d selenium_chrome'
     else
       puts 'Waiting for Selenium docker instance...'
       sleep 1

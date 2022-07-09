@@ -3,31 +3,32 @@
 require 'spec_helper'
 
 RSpec.describe Capybara::Server::Middleware::Counter do
-  let(:counter) { Capybara::Server::Middleware::Counter.new  }
+  let(:counter) { described_class.new }
   let(:uri) { '/example' }
 
-  context '#increment' do
+  describe '#increment' do
     it 'successfully' do
       counter.increment(uri)
-      expect(counter.positive?).to be true
+      expect(counter).to be_positive
     end
   end
 
-  context 'decrement' do
+  describe '#decrement' do
     before do
       counter.increment(uri)
-      expect(counter.positive?).to be true
     end
 
     context 'successfully' do
       it 'with same uri' do
+        expect(counter).to be_positive
         counter.decrement(uri)
-        expect(counter.positive?).to be false
+        expect(counter).not_to be_positive
       end
 
       it 'with changed uri' do
+        expect(counter).to be_positive
         counter.decrement('/')
-        expect(counter.positive?).to be false
+        expect(counter).not_to be_positive
       end
     end
   end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable RSpec/Capybara/SpecificMatcher
+
 Capybara::SpecHelper.spec '#has_css?' do
   before do
     @session.visit('/with_html')
@@ -373,3 +375,5 @@ Capybara::SpecHelper.spec '#has_no_css?' do
     end
   end
 end
+
+# rubocop:enable RSpec/Capybara/SpecificMatcher
