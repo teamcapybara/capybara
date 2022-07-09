@@ -795,13 +795,25 @@ Be aware that because of this behaviour, the following two statements are **not*
 equivalent, and you should **always** use the latter!
 
 ```ruby
-!page.has_xpath?('a')
-page.has_no_xpath?('a')
+# Given use of a driver where the page is loaded when visit returns
+# and that Capybara.predicates_wait is `true`
+# consider a page where the `a` tag is removed through AJAX after 1s
+visit(some_path)
+!page.has_xpath?('a')  # is false
+page.has_no_xpath?('a')  # is true
 ```
 
-The former would immediately fail because the content has not yet been removed.
-Only the latter would wait for the asynchronous process to remove the content
-from the page.
+First expression:
+- `has_xpath?('a')` is called right after `visit` returns. It is `true` because the link has not yet been removed
+- Capybara does not wait upon successful predicates/assertions, therefore **has_xpath? returns `true` immediately**
+- The expression returns `false` (because it is negated with the leading `!`)
+
+Second expression:
+- `has_no_xpath?('a')` is called right after `visit` returns. It is `false` because the link has not yet been removed.
+- Capybara waits upon failed predicates/assertions, therefore **has_no_xpath? does not return `false` immediately**
+- Capybara will periodically re-check the predicate/assertion up to the `default_max_wait_time` defined
+- after 1s, the predicate becomes `true` (because the link has been removed)
+- The expression returns `true`
 
 Capybara's RSpec matchers, however, are smart enough to handle either form.
 The two following statements are functionally equivalent:
