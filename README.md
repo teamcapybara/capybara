@@ -795,22 +795,24 @@ Be aware that because of this behaviour, the following two statements are **not*
 equivalent, and you should **always** use the latter!
 
 ```ruby
+# Given use of a driver where the page is loaded when visit returns
+# and that Capybara.predicates_wait is `true`
 # consider a page where the `a` tag is removed through AJAX after 1s
 visit(some_path)
 !page.has_xpath?('a')  # is false
 page.has_no_xpath?('a')  # is true
 ```
 
-First expression: 
-- `has_xpath?('a')` is called right after the page visit. It is `true` because the link has not yet been removed
-- Capybara does not wait upon successful assertions, therefore **it returns `true` right ahead**
-- The expression returns `false` (because it is inverted with the leading `!`)
+First expression:
+- `has_xpath?('a')` is called right after `visit` returns. It is `true` because the link has not yet been removed
+- Capybara does not wait upon successful predicates/assertions, therefore **has_xpath? returns `true` immediately**
+- The expression returns `false` (because it is negated with the leading `!`)
 
 Second expression:
-- `has_no_xpath?('a')` is called right after the page visit. It is `false` because the link has not yet been removed. 
-- Capybara waits upon failed assertions, therefore **it does not return `false` right ahead** 
-- Capybara will periodically re-check the assertion up to the `default_max_wait_time` defined
-- after 1s, the assertion becomes `true` (because the link has been removed)
+- `has_no_xpath?('a')` is called right after `visit` returns. It is `false` because the link has not yet been removed.
+- Capybara waits upon failed predicates/assertions, therefore **has_no_xpath? does not return `false` immediately**
+- Capybara will periodically re-check the predicate/assertion up to the `default_max_wait_time` defined
+- after 1s, the predicate becomes `true` (because the link has been removed)
 - The expression returns `true`
 
 Capybara's RSpec matchers, however, are smart enough to handle either form.
