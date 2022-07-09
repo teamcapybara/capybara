@@ -13,7 +13,7 @@ module Capybara
         self.session_options = session_options
 
         if expected_text.nil? && !exact?
-          warn 'Checking for expected text of nil is confusing and/or pointless since it will always match. '\
+          warn 'Checking for expected text of nil is confusing and/or pointless since it will always match. ' \
                "Please specify a string or regexp instead. #{Capybara::Helpers.filter_backtrace(caller)}"
         end
 

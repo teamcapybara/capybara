@@ -412,7 +412,7 @@ module Capybara
         scopes.push(:frame)
       when :parent
         if scopes.last != :frame
-          raise Capybara::ScopeError, "`switch_to_frame(:parent)` cannot be called from inside a descendant frame's "\
+          raise Capybara::ScopeError, "`switch_to_frame(:parent)` cannot be called from inside a descendant frame's " \
                                       '`within` block.'
         end
         scopes.pop
@@ -422,7 +422,7 @@ module Capybara
         top_level_scopes = [:frame, nil]
         if idx
           if scopes.slice(idx..).any? { |scope| !top_level_scopes.include?(scope) }
-            raise Capybara::ScopeError, "`switch_to_frame(:top)` cannot be called from inside a descendant frame's "\
+            raise Capybara::ScopeError, "`switch_to_frame(:top)` cannot be called from inside a descendant frame's " \
                                         '`within` block.'
           end
           scopes.slice!(idx..)
@@ -514,7 +514,7 @@ module Capybara
       raise ArgumentError, '`switch_to_window`: either window or block should be provided' if !window && !window_locator
 
       unless scopes.last.nil?
-        raise Capybara::ScopeError, '`switch_to_window` is not supposed to be invoked from '\
+        raise Capybara::ScopeError, '`switch_to_window` is not supposed to be invoked from ' \
                                     '`within` or `within_frame` blocks.'
       end
 
@@ -585,7 +585,7 @@ module Capybara
       synchronize_windows(options) do
         opened_handles = (driver.window_handles - old_handles)
         if opened_handles.size != 1
-          raise Capybara::WindowError, 'block passed to #window_opened_by '\
+          raise Capybara::WindowError, 'block passed to #window_opened_by ' \
                                        "opened #{opened_handles.size} windows instead of 1"
         end
         Window.new(self, opened_handles.first)

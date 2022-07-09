@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
 
   s.authors = ['Thomas Walpole', 'Jonas Nicklas']
   s.email = ['twalpole@gmail.com', 'jonas.nicklas@gmail.com']
-  s.description = 'Capybara is an integration testing tool for rack based web applications. '\
+  s.description = 'Capybara is an integration testing tool for rack based web applications. ' \
                   'It simulates how a user would interact with a website'
 
   s.files = Dir.glob('{lib,spec}/**/*') + %w[README.md History.md License.txt .yardopts]
@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
     'rubygems_mfa_required' => 'true'
   }
   s.require_paths = ['lib']
-  s.summary = 'Capybara aims to simplify the process of integration testing Rack applications, '\
+  s.summary = 'Capybara aims to simplify the process of integration testing Rack applications, ' \
               'such as Rails, Sinatra or Merb'
 
   s.add_runtime_dependency('addressable')

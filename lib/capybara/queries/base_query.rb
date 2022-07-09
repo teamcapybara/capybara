@@ -79,8 +79,8 @@ module Capybara
         if count
           message << " #{occurrences count}"
         elsif between
-          message << " between #{between.begin ? between.first : 1} and" \
-                     " #{between.end ? between.last : 'infinite'} times"
+          message << " between #{between.begin ? between.first : 1} and " \
+                     "#{between.end ? between.last : 'infinite'} times"
         elsif maximum
           message << " at most #{occurrences maximum}"
         elsif minimum
