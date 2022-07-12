@@ -23,14 +23,14 @@ module Capybara
       end
 
       def call(env)
-        @status, @headers, @body = @app.call(env)
-        return [@status, @headers, @body] unless html_content?
+        status, headers, body = @app.call(env)
+        return [status, headers, body] unless html_content?(headers)
 
-        nonces = directive_nonces.transform_values { |nonce| "nonce=\"#{nonce}\"" if nonce && !nonce.empty? }
-        response = Rack::Response.new([], @status, @headers)
+        nonces = directive_nonces(headers).transform_values { |nonce| "nonce=\"#{nonce}\"" if nonce && !nonce.empty? }
+        response = Rack::Response.new([], status, headers)
 
-        @body.each { |html| response.write insert_disable(html, nonces) }
-        @body.close if @body.respond_to?(:close)
+        body.each { |html| response.write insert_disable(html, nonces) }
+        body.close if body.respond_to?(:close)
 
         response.finish
       end
@@ -39,8 +39,8 @@ module Capybara
 
       attr_reader :disable_css_markup, :disable_js_markup
 
-      def html_content?
-        /html/.match?(@headers['Content-Type'])
+      def html_content?(headers)
+        /html/.match?(headers['Content-Type'])
       end
 
       def insert_disable(html, nonces)
@@ -48,8 +48,8 @@ module Capybara
             .sub(%r{(</body>)}, "<script #{nonces['script-src']}>#{disable_js_markup}</script>\\1")
       end
 
-      def directive_nonces
-        @headers.fetch('Content-Security-Policy', '')
+      def directive_nonces(headers)
+        headers.fetch('Content-Security-Policy', '')
                 .split(';')
                 .map(&:split)
                 .to_h do |s|
