@@ -77,6 +77,12 @@ Capybara::SpecHelper.spec '#has_button?' do
       expect(@session).to have_button('A Button', focused: false)
     end
   end
+
+  it 'should raise an error if an invalid option is passed' do
+    expect do
+      expect(@session).to have_button('A Button', invalid: true)
+    end.to raise_error(ArgumentError, 'Invalid option(s) :invalid, should be one of :above, :below, :left_of, :right_of, :near, :count, :minimum, :maximum, :between, :text, :id, :class, :style, :visible, :obscured, :exact, :exact_text, :normalize_ws, :match, :wait, :filter_set, :focused, :disabled, :name, :value, :title, :type')
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_button?' do
