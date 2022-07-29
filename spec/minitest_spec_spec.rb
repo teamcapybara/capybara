@@ -16,6 +16,10 @@ class MinitestSpecTest < Minitest::Spec
     Capybara.reset_sessions!
   end
 
+  def self.test_order
+    :sorted
+  end
+
   it 'supports text expectations' do
     _(page).must_have_text('Form', minimum: 1)
     _(page).wont_have_text('Not a form')

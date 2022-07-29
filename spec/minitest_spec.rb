@@ -15,6 +15,10 @@ class MinitestTest < Minitest::Test
     Capybara.reset_sessions!
   end
 
+  def self.test_order
+    :sorted
+  end
+
   def test_assert_text
     assert_text('Form', normalize_ws: false)
     assert_no_text('Not on the page')
@@ -157,7 +161,7 @@ RSpec.describe 'capybara/minitest' do
     output = StringIO.new
     reporter = Minitest::SummaryReporter.new(output)
     reporter.start
-    MinitestTest.run reporter, {}
+    MinitestTest.run reporter, { }
     reporter.report
     expect(output.string).to include('22 runs, 53 assertions, 0 failures, 0 errors, 1 skips')
   end
