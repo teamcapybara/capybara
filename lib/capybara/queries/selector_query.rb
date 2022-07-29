@@ -272,7 +272,7 @@ module Capybara
       end
 
       def valid_keys
-        VALID_KEYS + custom_keys
+        (VALID_KEYS + custom_keys).uniq
       end
 
       def matches_node_filters?(node, errors)
@@ -355,7 +355,7 @@ module Capybara
         return if unhandled_options.empty?
 
         invalid_names = unhandled_options.map(&:inspect).join(', ')
-        valid_names = (valid_keys - [:allow_self]).map(&:inspect).uniq.join(', ')
+        valid_names = (valid_keys - [:allow_self]).map(&:inspect).join(', ')
         raise ArgumentError, "Invalid option(s) #{invalid_names}, should be one of #{valid_names}"
       end
 
