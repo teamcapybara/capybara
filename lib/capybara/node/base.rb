@@ -77,6 +77,7 @@ module Capybara
         return yield if session.synchronized
 
         seconds = session_options.default_max_wait_time if [nil, true].include? seconds
+        interval = session_options.default_retry_interval
         session.synchronized = true
         timer = Capybara::Helpers.timer(expire_in: seconds)
         begin
@@ -88,7 +89,7 @@ module Capybara
           if driver.wait?
             raise e if timer.expired?
 
-            sleep(0.01)
+            sleep interval
             reload if session_options.automatic_reload
           else
             old_base = @base

@@ -79,6 +79,7 @@ module Capybara
     # - **automatic_reload** (Boolean = `true`) - Whether to automatically reload elements as Capybara is waiting.
     # - **default_max_wait_time** (Numeric = `2`) - The maximum number of seconds to wait for asynchronous processes to finish.
     # - **default_normalize_ws** (Boolean = `false`) - Whether text predicates and matchers use normalize whitespace behavior.
+    # - **default_retry_interval** (Numeric = `0.01`) - The number of seconds to delay the next check in asynchronous processes.
     # - **default_selector** (`:css`, `:xpath` = `:css`) - Methods which take a selector use the given type by default. See also {Capybara::Selector}.
     # - **default_set_options** (Hash = `{}`) - The default options passed to {Capybara::Node::Element#set Element#set}.
     # - **enable_aria_label** (Boolean = `false`) - Whether fields, links, and buttons will match against `aria-label` attribute.
@@ -496,6 +497,7 @@ Capybara.configure do |config|
   config.server = :default
   config.default_selector = :css
   config.default_max_wait_time = 2
+  config.default_retry_interval = 0.01
   config.ignore_hidden_elements = true
   config.default_host = 'http://www.example.com'
   config.automatic_reload = true

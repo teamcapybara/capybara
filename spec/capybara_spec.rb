@@ -15,6 +15,18 @@ RSpec.describe Capybara do
     end
   end
 
+  describe 'default_retry_interval' do
+    before { @previous_default_interval = described_class.default_retry_interval }
+
+    after { described_class.default_retry_interval = @previous_default_interval } # rubocop:disable RSpec/InstanceVariable
+
+    it 'should be changeable' do
+      expect(described_class.default_retry_interval).not_to eq(0.1)
+      described_class.default_retry_interval = 0.1
+      expect(described_class.default_retry_interval).to eq(0.1)
+    end
+  end
+
   describe '.register_driver' do
     it 'should add a new driver' do
       described_class.register_driver :schmoo do |app|
