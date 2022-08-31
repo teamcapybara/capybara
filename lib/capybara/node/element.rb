@@ -110,7 +110,7 @@ module Capybara
       # @return [Hash]            Hash of the element's attributes
       #
       def attributes(*attributes)
-        attributes = attributess.flatten.map(&:to_s)
+        attributes = attributes.flatten.map(&:to_s)
         
         raise ArgumentError, 'You must specify at least one attribute' if attributes.empty?
 
