@@ -97,6 +97,29 @@ module Capybara
           end
         end
       end
+      
+      ##
+      #
+      # Retrieve the given element's attributes and not their underlying properties. 
+      #   Each attribute is equivalent to +element.getAttribute(attribute_name)+.
+      #
+      #     <button type="button" class="btn btn-primary">Button</button> 
+      #     element.attributes('type', 'class') # => { "type": "button", "class": "btn btn-primary" }
+      #
+      # @param [Array<String>] attributes   Names of the desired element attributes
+      # @return [Hash]            Hash of the element's attributes
+      #
+      def attributes(*attributes)
+        attributes = attributess.flatten.map(&:to_s)
+        
+        raise ArgumentError, 'You must specify at least one attribute' if attributes.empty?
+
+        begin
+          node.evaluate_script(ATTRIBUTE_SCRIPT, *attributes)
+        rescue Capybara::NotSupportedByDriverError
+          raise e
+        end
+      end
 
       ##
       #
@@ -597,6 +620,17 @@ module Capybara
           }
           return result;
         }).apply(this, arguments)
+      JS
+        
+      ATTRIBUTE_SCRIPT = <<~JS
+        (function(){
+          var result = {};
+          for (var i = arguments.length; i--; ) {
+            var property_name = arguments[i];
+            result[property_name] = this.getAttribute(property_name);
+          }
+          return result;
+         }).apply(this, arguments)
       JS
 
     private
