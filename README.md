@@ -336,7 +336,7 @@ By default, Capybara uses the `:rack_test` driver, which is fast but limited: it
 does not support JavaScript, nor is it able to access HTTP resources outside of
 your Rack application, such as remote APIs and OAuth services. To get around
 these limitations, you can set up a different default driver for your features.
-For example if you'd prefer to run everything in Selenium, you could do:
+For example, if you'd prefer to run everything in Selenium, you could do:
 
 ```ruby
 Capybara.default_driver = :selenium # :selenium_chrome and :selenium_chrome_headless are also registered
@@ -630,7 +630,7 @@ JS
 
 ### <a name="modals"></a>Modals
 
-In drivers which support it, you can accept, dismiss and respond to alerts, confirms and prompts.
+In drivers which support it, you can accept, dismiss and respond to alerts, confirms, and prompts.
 
 You can accept or dismiss alert messages by wrapping the code that produces an alert in a block:
 
@@ -781,7 +781,7 @@ expect(page).to have_content('baz')
 If clicking on the *foo* link triggers an asynchronous process, such as
 an Ajax request, which, when complete will add the *bar* link to the page,
 clicking on the *bar* link would be expected to fail, since that link doesn't
-exist yet. However Capybara is smart enough to retry finding the link for a
+exist yet. However, Capybara is smart enough to retry finding the link for a
 brief period of time before giving up and throwing an error. The same is true of
 the next line, which looks for the content *baz* on the page; it will retry
 looking for that content for a brief time. You can adjust how long this period
