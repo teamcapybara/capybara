@@ -8,7 +8,7 @@ module Capybara
                  automatic_reload match exact exact_text raise_server_errors visible_text_only
                  automatic_label_click enable_aria_label save_path asset_host default_host app_host
                  server_host server_port server_errors default_set_options disable_animation test_id
-                 predicates_wait default_normalize_ws w3c_click_offset enable_aria_role].freeze
+                 predicates_wait default_normalize_ws w3c_click_offset enable_aria_role default_retry_interval].freeze
 
     attr_accessor(*OPTIONS)
 
@@ -20,6 +20,8 @@ module Capybara
     # @!method default_selector
     #   See {Capybara.configure}
     # @!method default_max_wait_time
+    #   See {Capybara.configure}
+    # @!method default_retry_interval
     #   See {Capybara.configure}
     # @!method ignore_hidden_elements
     #   See {Capybara.configure}
