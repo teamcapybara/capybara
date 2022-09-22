@@ -1236,7 +1236,7 @@ Release date: 2016-01-27
 
 # Version 2.6.0
 
-Relase date: 2016-01-17
+Release date: 2016-01-17
 
 ### Fixed
 
@@ -1300,7 +1300,7 @@ Release date: 2014-10-13
 
 # Version 2.4.3
 
-Relase date: 2014-09-21
+Release date: 2014-09-21
 
 ### Fixed
 
