@@ -570,7 +570,7 @@ module Capybara
         when :visible
           node.initial_cache[:visible] || (node.initial_cache[:visible].nil? && node.visible?)
         when :hidden
-          (node.initial_cache[:visible] == false) || (node.initial_cache[:visbile].nil? && !node.visible?)
+          (node.initial_cache[:visible] == false) || (node.initial_cache[:visible].nil? && !node.visible?)
         else
           true
         end
