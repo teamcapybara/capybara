@@ -166,6 +166,9 @@ RSpec/ContextWording:
 RSpec/NestedGroups:
   Enabled: false
 
+RSpec/NoExpectationExample:
+  Enabled: false
+
 RSpec/DescribeClass:
   Enabled: false
 
