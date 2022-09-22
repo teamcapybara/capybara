@@ -31,7 +31,7 @@ Metrics/BlockLength:
     - 'spec/**/*'
     - 'lib/capybara/spec/**/*'
     - 'capybara.gemspec'
-  IgnoredMethods:
+  AllowedMethods:
     - Capybara.add_selector
     - Capybara::Selector::FilterSet.add
 
