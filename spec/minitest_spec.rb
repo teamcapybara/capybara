@@ -161,7 +161,7 @@ RSpec.describe 'capybara/minitest' do
     output = StringIO.new
     reporter = Minitest::SummaryReporter.new(output)
     reporter.start
-    MinitestTest.run reporter, { }
+    MinitestTest.run reporter, {}
     reporter.report
     expect(output.string).to include('22 runs, 53 assertions, 0 failures, 0 errors, 1 skips')
   end
