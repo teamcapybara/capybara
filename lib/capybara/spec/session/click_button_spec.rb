@@ -51,23 +51,23 @@ Capybara::SpecHelper.spec '#click_button' do
         @session.click_button('html5_submit')
       end
 
-      it 'should serialise and submit search fields' do
+      it 'should serialize and submit search fields' do
         expect(results['html5_search']).to eq('what are you looking for')
       end
 
-      it 'should serialise and submit email fields' do
+      it 'should serialize and submit email fields' do
         expect(results['html5_email']).to eq('person@email.com')
       end
 
-      it 'should serialise and submit url fields' do
+      it 'should serialize and submit url fields' do
         expect(results['html5_url']).to eq('http://www.example.com')
       end
 
-      it 'should serialise and submit tel fields' do
+      it 'should serialize and submit tel fields' do
         expect(results['html5_tel']).to eq('911')
       end
 
-      it 'should serialise and submit color fields' do
+      it 'should serialize and submit color fields' do
         expect(results['html5_color'].upcase).to eq('#FFFFFF')
       end
     end
