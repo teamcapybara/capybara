@@ -223,7 +223,7 @@ Capybara::SpecHelper.spec '#click_button' do
       expect(results['outside_select']).to eq('Ruby')
     end
 
-    it 'should not serliaze fields associated with a different form' do
+    it 'should not serialize fields associated with a different form' do
       expect(results['for_form2']).to be_nil
     end
   end
