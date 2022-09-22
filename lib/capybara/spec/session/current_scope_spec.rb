@@ -7,7 +7,7 @@ Capybara::SpecHelper.spec '#current_scope' do
 
   context 'when not in a #within block' do
     it 'should return the document' do
-      expect(@session.current_scope).to be_kind_of Capybara::Node::Document
+      expect(@session.current_scope).to be_a Capybara::Node::Document
     end
   end
 
