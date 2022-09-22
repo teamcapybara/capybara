@@ -47,7 +47,7 @@ Capybara::SpecHelper.spec '#accept_prompt', requires: [:modals] do
     expect(@session).to have_xpath("//a[@id='open-prompt-with-default' and @response='']")
   end
 
-  it 'should allow special characters in the reponse' do
+  it 'should allow special characters in the response' do
     @session.accept_prompt with: '\'the\' \b "response"' do
       @session.click_link('Open prompt')
     end
