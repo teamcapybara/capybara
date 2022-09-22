@@ -119,7 +119,7 @@ Capybara::SpecHelper.spec '#visit' do
       expect(session.driver).to have_received(:visit).with('http://www.google.com')
     end
 
-    it "shouldn't overwrite port if port specfified", requires: [:server] do
+    it "shouldn't overwrite port if port specified", requires: [:server] do
       session = Capybara::Session.new(@session.mode, nil)
       Capybara.app_host = 'http://www.example.com:6666'
       allow(session.driver).to receive(:visit)
