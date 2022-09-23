@@ -203,7 +203,7 @@ module Capybara
 
       ##
       #
-      # Set the default visibility mode that shouble be used if no visibile option is passed when using the selector.
+      # Set the default visibility mode that should be used if no visible option is passed when using the selector.
       # If not specified will default to the behavior indicated by Capybara.ignore_hidden_elements
       #
       # @param [Symbol] default_visibility  Only find elements with the specified visibility:

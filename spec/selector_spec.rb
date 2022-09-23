@@ -111,7 +111,7 @@ RSpec.describe Capybara do
     end
 
     describe 'adding a selector' do
-      it 'can set default visiblity' do
+      it 'can set default visibility' do
         described_class.add_selector :hidden_field do
           visible :hidden
           css { |_sel| 'input[type="hidden"]' }
