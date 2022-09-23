@@ -117,7 +117,7 @@ RSpec.describe Capybara do
           css { |_sel| 'input[type="hidden"]' }
         end
 
-        expect(string).to have_no_field('this is hidden')
+        expect(string).to have_no_css('input[type="hidden"]')
         expect(string).to have_selector(:hidden_field)
       end
     end
