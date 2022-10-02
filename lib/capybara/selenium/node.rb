@@ -178,7 +178,12 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def tag_name
-    @tag_name ||= native.tag_name.downcase
+    @tag_name ||=
+      if native.respond_to? :tag_name || true
+        native.tag_name.downcase
+      else
+        native.is_a?(::Selenium::WebDriver::ShadowRoot) ? 'ShadowRoot' : 'Unknown'
+      end
   end
 
   def visible?; boolean_attr(native.displayed?); end

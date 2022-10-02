@@ -1219,6 +1219,14 @@ Capybara::SpecHelper.spec 'node' do
       end.not_to raise_error
       expect(descendant).to have_checked_field('shadow_checkbox')
     end
+
+    it 'should produce error messages when failing', :focus_ do
+      @session.visit('/with_shadow')
+      shadow_root = @session.find(:css, '#shadow_host').shadow_root
+      expect do
+        expect(shadow_root).to have_css('#shadow_content', text: 'Not in the document')
+      end.to raise_error(/tag="ShadowRoot"/)
+    end
   end
 
   describe '#reload', requires: [:js] do
