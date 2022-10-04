@@ -179,7 +179,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
 
   def tag_name
     @tag_name ||=
-      if native.respond_to? :tag_name || true
+      if native.respond_to? :tag_name
         native.tag_name.downcase
       else
         native.is_a?(::Selenium::WebDriver::ShadowRoot) ? 'ShadowRoot' : 'Unknown'
