@@ -306,6 +306,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   def invalid_element_errors
     @invalid_element_errors ||=
       [
+        ::Selenium::WebDriver::Error::DetachedShadowRootError,
         ::Selenium::WebDriver::Error::StaleElementReferenceError,
         ::Selenium::WebDriver::Error::ElementNotInteractableError,
         ::Selenium::WebDriver::Error::InvalidSelectorError, # Work around chromedriver go_back/go_forward race condition
