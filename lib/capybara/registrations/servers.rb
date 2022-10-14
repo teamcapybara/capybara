@@ -27,19 +27,35 @@ Capybara.register_server :puma do |app, port, host, **options|
   default_options = { Host: host, Port: port, Threads: '0:4', workers: 0, daemon: false }
   options = default_options.merge(options)
 
+  puma_ver = Gem::Version.new(Puma::Const::PUMA_VERSION)
+
+  if Gem::Requirement.new('>=6.0.0').satisfied_by?(puma_ver)
+    log_writer = options[:Silent] ? ::Puma::LogWriter.strings : ::Puma::LogWriter.stdio
+    options[:log_writer] = log_writer
+  end
+
   conf = Rack::Handler::Puma.config(app, options)
   conf.clamp
-  events = conf.options[:Silent] ? ::Puma::Events.strings : ::Puma::Events.stdio
+  events = conf.options[:Silent] ? ::Puma::Events.strings : ::Puma::Events.stdio if Gem::Requirement.new('< 6.0.0').satisfied_by?(puma_ver)
 
-  puma_ver = Gem::Version.new(Puma::Const::PUMA_VERSION)
   require_relative 'patches/puma_ssl' if Gem::Requirement.new('>=4.0.0', '< 4.1.0').satisfied_by?(puma_ver)
 
-  events.log 'Capybara starting Puma...'
-  events.log "* Version #{Puma::Const::PUMA_VERSION} , codename: #{Puma::Const::CODE_NAME}"
-  events.log "* Min threads: #{conf.options[:min_threads]}, max threads: #{conf.options[:max_threads]}"
+  if Gem::Requirement.new('>=6.0.0').satisfied_by?(puma_ver)
+    log_writer.log 'Capybara starting Puma...'
+    log_writer.log "* Version #{Puma::Const::PUMA_VERSION} , codename: #{Puma::Const::CODE_NAME}"
+    log_writer.log "* Min threads: #{conf.options[:min_threads]}, max threads: #{conf.options[:max_threads]}"
 
-  Puma::Server.new(conf.app, events, conf.options).tap do |s|
-    s.binder.parse conf.options[:binds], s.events
-    s.min_threads, s.max_threads = conf.options[:min_threads], conf.options[:max_threads]
-  end.run.join
+    Puma::Server.new(conf.app, nil, conf.options).tap do |s|
+      s.binder.parse conf.options[:binds], s.log_writer
+    end.run.join
+  else
+    events.log 'Capybara starting Puma...'
+    events.log "* Version #{Puma::Const::PUMA_VERSION} , codename: #{Puma::Const::CODE_NAME}"
+    events.log "* Min threads: #{conf.options[:min_threads]}, max threads: #{conf.options[:max_threads]}"
+
+    Puma::Server.new(conf.app, events, conf.options).tap do |s|
+      s.binder.parse conf.options[:binds], s.events
+      s.min_threads, s.max_threads = conf.options[:min_threads], conf.options[:max_threads]
+    end.run.join
+  end
 end
