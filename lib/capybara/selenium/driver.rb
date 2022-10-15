@@ -323,6 +323,9 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
             ]
           end
         end
+        if defined?(::Selenium::WebDriver::Error::DetachedShadowRootError)
+          errors.concat([::Selenium::WebDriver::Error::DetachedShadowRootError])
+        end
       end
   end
 
