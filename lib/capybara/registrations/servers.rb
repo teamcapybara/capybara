@@ -10,7 +10,7 @@ Capybara.register_server :webrick do |app, port, host, **options|
   Rack::Handler::WEBrick.run(app, **options)
 end
 
-Capybara.register_server :puma do |app, port, host, **options|
+Capybara.register_server :puma do |app, port, host, **options| # rubocop:disable Metrics/BlockLength
   begin
     require 'rack/handler/puma'
   rescue LoadError
@@ -29,17 +29,25 @@ Capybara.register_server :puma do |app, port, host, **options|
 
   conf = Rack::Handler::Puma.config(app, options)
   conf.clamp
-  events = conf.options[:Silent] ? ::Puma::Events.strings : ::Puma::Events.stdio
 
   puma_ver = Gem::Version.new(Puma::Const::PUMA_VERSION)
   require_relative 'patches/puma_ssl' if Gem::Requirement.new('>=4.0.0', '< 4.1.0').satisfied_by?(puma_ver)
 
-  events.log 'Capybara starting Puma...'
-  events.log "* Version #{Puma::Const::PUMA_VERSION} , codename: #{Puma::Const::CODE_NAME}"
-  events.log "* Min threads: #{conf.options[:min_threads]}, max threads: #{conf.options[:max_threads]}"
+  logger = (defined?(::Puma::LogWriter) ? ::Puma::LogWriter : ::Puma::Events).then do |cls|
+    conf.options[:Silent] ? cls.strings : cls.stdio
+  end
+  conf.options[:log_writer] = logger
 
-  Puma::Server.new(conf.app, events, conf.options).tap do |s|
-    s.binder.parse conf.options[:binds], s.events
-    s.min_threads, s.max_threads = conf.options[:min_threads], conf.options[:max_threads]
+  logger.log 'Capybara starting Puma...'
+  logger.log "* Version #{Puma::Const::PUMA_VERSION} , codename: #{Puma::Const::CODE_NAME}"
+  logger.log "* Min threads: #{conf.options[:min_threads]}, max threads: #{conf.options[:max_threads]}"
+
+  Puma::Server.new(
+    conf.app,
+    defined?(::Puma::LogWriter) ? nil : logger,
+    conf.options
+  ).tap do |s|
+    s.binder.parse conf.options[:binds], (s.log_writer rescue s.events) # rubocop:disable Style/RescueModifier
+    s.min_threads, s.max_threads = conf.options[:min_threads], conf.options[:max_threads] if s.respond_to? :min_threads=
   end.run.join
 end
