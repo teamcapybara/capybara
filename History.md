@@ -11,6 +11,8 @@ Release date: unreleased
 * `click`, `double_click`, `right_click` can now be called on the session to click the currently scoped element (or document)
 * `Session#within` now passes the scoped element to the block
 * Support rack-test 2+
+* Support Puma 6 - Issue #2590
+* Selenium DetachedShadowRootError is treated as an invalid element error [Perryn Fowler]
 
 ### Fixed
 
