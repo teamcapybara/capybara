@@ -1220,7 +1220,7 @@ Capybara::SpecHelper.spec 'node' do
       expect(descendant).to have_checked_field('shadow_checkbox')
     end
 
-    it 'should produce error messages when failing', :focus_ do
+    it 'should produce error messages when failing' do
       @session.visit('/with_shadow')
       shadow_root = @session.find(:css, '#shadow_host').shadow_root
       expect do
