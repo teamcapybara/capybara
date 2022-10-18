@@ -1220,12 +1220,24 @@ Capybara::SpecHelper.spec 'node' do
       expect(descendant).to have_checked_field('shadow_checkbox')
     end
 
-    it 'should produce error messages when failing', :focus_ do
+    it 'should produce error messages when failing' do
       @session.visit('/with_shadow')
       shadow_root = @session.find(:css, '#shadow_host').shadow_root
       expect do
         expect(shadow_root).to have_css('#shadow_content', text: 'Not in the document')
       end.to raise_error(/tag="ShadowRoot"/)
+    end
+
+    it 'should get visible text' do
+      @session.visit('/with_shadow')
+      shadow_root = @session.find(:css, '#shadow_host').shadow_root
+      expect(shadow_root).to have_text('some text scroll.html')
+    end
+
+    it 'should get all text' do
+      @session.visit('/with_shadow')
+      shadow_root = @session.find(:css, '#shadow_host').shadow_root
+      expect(shadow_root).to have_text(:all, 'some text scroll.html')
     end
   end
 

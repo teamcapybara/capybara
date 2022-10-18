@@ -80,6 +80,8 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumFirefox, 'selenium', capyba
     pending "Firefox doesn't yet have full W3C shadow root support"
   when 'Capybara::Session selenium #fill_in should handle carriage returns with line feeds in a textarea correctly'
     pending 'Not sure what firefox is doing here'
+  when /Capybara::Session selenium_chrome node #shadow_root should get visible text/
+    pending "Selenium doesn't currently support getting visible text for shadow root elements"
   end
 end
 

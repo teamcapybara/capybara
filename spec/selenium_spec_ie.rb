@@ -108,6 +108,8 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumIE, 'selenium', capybara_sk
     skip "IE doesn't support template elements"
   when /Element#drop/
     pending "IE doesn't support DataTransfer constructor"
+  when /Capybara::Session selenium_chrome node #shadow_root should get visible text/
+    pending "Selenium doesn't currently support getting visible text for shadow root elements"
   end
 end
 
