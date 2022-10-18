@@ -88,6 +88,8 @@ Capybara::SpecHelper.run_specs TestSessions::Safari, SAFARI_DRIVER.to_s, capybar
     'Capybara::Session selenium node #shadow_root should find elements inside the shadow dom using CSS',
     'Capybara::Session selenium node #shadow_root should find nested shadow roots'
     pending "Safari doesn't yet have W3C shadow root support"
+  when /Capybara::Session selenium_chrome node #shadow_root should get visible text/
+    pending "Selenium doesn't currently support getting visible text for shadow root elements"
   end
 end
 

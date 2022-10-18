@@ -36,6 +36,8 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumEdge, 'selenium', capybara_
   case example.metadata[:full_description]
   when 'Capybara::Session selenium #attach_file with a block can upload by clicking the file input'
     pending "EdgeChrome doesn't allow clicking on file inputs"
+  when /Capybara::Session selenium_chrome node #shadow_root should get visible text/
+    pending "Selenium doesn't currently support getting visible text for shadow root elements"
   end
 end
 
