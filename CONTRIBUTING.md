@@ -30,7 +30,9 @@ particular feature into Capybara.
 
 ## Pull Requests
 
-- **Add tests!** Your patch won't be accepted if it doesn't have tests.
+- **Add tests!** Your patch won't be accepted if it doesn't have tests.  
+To run a single test or scenario in development use `:focus_` metadada, e.g.:  
+`it 'should simulate multiple held down modifier keys', :focus_ do`
 
 - **Document any change in behaviour**. Make sure the README and any other
   relevant documentation are kept up-to-date.
