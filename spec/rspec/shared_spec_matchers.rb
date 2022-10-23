@@ -120,7 +120,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
   describe 'have_xpath matcher' do
     it 'gives proper description' do
-      expect(have_xpath('//h1').description).to eq("have visible xpath \"\/\/h1\"")
+      expect(have_xpath('//h1').description).to eq('have visible xpath "//h1"')
     end
 
     context 'on a string' do

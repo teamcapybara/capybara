@@ -162,7 +162,7 @@ module Capybara
         if config.raise_server_errors
           raise CapybaraError, 'Your application server raised an error - It has been raised in your test code because Capybara.raise_server_errors == true'
         end
-      rescue CapybaraError => capy_error
+      rescue CapybaraError => capy_error # rubocop:disable Naming/RescuedExceptionsVariableName
         raise @server.error, cause: capy_error
       ensure
         @server.reset_error!
