@@ -165,6 +165,9 @@ class Capybara::Selenium::Node
           }
           opts[key + 'Key'] = true;
         }
+        
+        var dragEnterEvent = new DragEvent('dragenter', opts);
+        target.dispatchEvent(dragEnterEvent);
 
         // fire 2 dragover events to simulate dragging with a direction
         var entryPoint = pointOnRect(sourceCenter, targetRect)
