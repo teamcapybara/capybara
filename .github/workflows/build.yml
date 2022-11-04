@@ -1,0 +1,153 @@
+# This workflow will download a prebuilt Ruby version, install dependencies and
+# run tests with Rake
+# For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
+
+name: Build
+
+"on": push
+
+env:
+  CUCUMBER_PUBLISH_QUIET: true
+  RUBYOPTS: "--disable-did-you-mean"
+  NOKOGIRI_USE_SYSTEM_LIBRARIES: true
+  JAVA_OPTS: "-Djava.security.egd=file:/dev/urandom"
+  WD_CACHE_TIME: 0
+
+jobs:
+  rack_smoke:
+    runs-on: ubuntu-latest
+
+    env:
+      HTML5_PARSING: true
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.0"
+          bundler-cache: true
+      - name: Run rack_smoke
+        run: bundle exec rake rack_smoke
+
+  headless:
+    runs-on: ubuntu-latest
+
+    env:
+      HEADLESS: true
+
+    strategy:
+      # Ensure all jobs are run to completion
+      fail-fast: false
+      matrix:
+        ruby: ["3.0"]
+        task: ["spec_chrome", "spec_firefox", "cucumber"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Run tests
+        run: bundle exec rake ${{ matrix.task }}
+
+  headless_base_versions:
+    runs-on: ubuntu-latest
+
+    env:
+      HEADLESS: true
+      BUNDLE_GEMFILE: gemfiles/Gemfile.base-versions
+
+    strategy:
+      # Ensure all jobs are run to completion
+      fail-fast: false
+      matrix:
+        ruby: ["2.7"]
+        task: ["spec_chrome", "spec_firefox", "cucumber"]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install non-ruby dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install libxslt-dev
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Run tests
+        run: bundle exec rake ${{ matrix.task }}
+
+  remote_chrome:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        ruby: ["2.7"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Run remote Chrome
+        run: docker-compose up -d selenium_chrome
+      - name: Run specs
+        run: bundle exec rake spec_chrome_remote
+      - name: Run cukes
+        run: bundle exec rake cucumber
+
+  remote_firefox:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        ruby: ["3.0"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Run remote Firefox
+        run: docker-compose up -d selenium_firefox
+      - name: Run specs
+        run: bundle exec rake spec_firefox_remote
+      - name: Run cukes
+        run: bundle exec rake cucumber
+
+  non_headless:
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Ensure all jobs are run to completion
+      fail-fast: false
+      matrix:
+        ruby: ["3.0"]
+        task: ["spec_chrome", "spec_firefox", "cucumber"]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install non-ruby dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install xvfb awesome
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Run tests inside a window manager
+        run: xvfb-run sh -c "awesome & bundle exec rake ${{ matrix.task }}"
