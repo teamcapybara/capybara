@@ -181,3 +181,6 @@ RSpec/PredicateMatcher:
 
 RSpec/Capybara/FeatureMethods:
   Enabled: false
+
+RSpec/Capybara/NegationMatcher:
+  Enabled: false
