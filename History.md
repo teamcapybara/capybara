@@ -1,5 +1,5 @@
 # Version 3.38.0
-Release date: unreleased
+Release date: 2022-11-03
 
 ### Changed
 
