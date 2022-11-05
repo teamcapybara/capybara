@@ -27,7 +27,7 @@ Capybara.register_driver :sauce_chrome do |app|
 
   Capybara::Selenium::Driver.new(app,
                                  browser: :remote, url: url,
-                                 desired_capabilities: capabilities,
+                                 capabilities: capabilities,
                                  options: Selenium::WebDriver::Chrome::Options.new(args: ['']))
 end
 
