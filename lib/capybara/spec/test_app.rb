@@ -260,9 +260,10 @@ class TestApp < Sinatra::Base
 
   post '/form' do
     self.class.form_post_count += 1
+    form_params = params[:form] || {}
     %(
       <pre id="content_type">#{request.content_type}</pre>
-      <pre id="results">#{params.fetch(:form, {}).merge('post_count' => self.class.form_post_count).to_yaml}</pre>
+      <pre id="results">#{form_params.merge('post_count' => self.class.form_post_count).to_yaml}</pre>
     )
   end
 
