@@ -45,6 +45,15 @@ module Capybara
       chrome?(session) && (chrome_version(session) >= version)
     end
 
+    def selenium?(session)
+      session.driver.is_a? Capybara::Selenium::Driver
+    end
+
+    def selenium_lt?(version, session)
+      selenium?(session) &&
+        Gem::Version.new(::Selenium::WebDriver::VERSION) < Gem::Version.new(version)
+    end
+
     def edge?(session)
       browser_name(session).to_s.start_with?('edge')
     end

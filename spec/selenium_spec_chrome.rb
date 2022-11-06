@@ -87,6 +87,8 @@ Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_DRIVER.to_s, capybar
     pending "Chrome headless doesn't support maximize" if ENV['HEADLESS']
   when /Capybara::Session selenium_chrome node #shadow_root should get visible text/
     pending "Selenium doesn't currently support getting visible text for shadow root elements"
+  when /Capybara::Session selenium_chrome node #shadow_root/
+    skip 'Not supported with this Selenium version' if selenium_lt?('4.1', @session)
   end
 end
 
