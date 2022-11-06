@@ -82,6 +82,8 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumFirefox, 'selenium', capyba
     pending 'Not sure what firefox is doing here'
   when /Capybara::Session selenium_chrome node #shadow_root should get visible text/
     pending "Selenium doesn't currently support getting visible text for shadow root elements"
+  when /Capybara::Session selenium node #shadow_root/
+    skip 'Not supported with this Selenium version' if selenium_lt?('4.1', @session)
   end
 end
 
