@@ -221,7 +221,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   end
 
   def shadow_root
-    raise_error 'You must be using Selenium 4.1+ for shadow_root support' unless native.respond_to? :shadow_root
+    raise 'You must be using Selenium 4.1+ for shadow_root support' unless native.respond_to? :shadow_root
 
     root = native.shadow_root
     root && build_node(native.shadow_root)
