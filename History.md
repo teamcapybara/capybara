@@ -1,3 +1,10 @@
+# Version 3.39.0
+Release date: unreleased
+
+###  Changed
+
+* Dropped support for rack 1.x
+
 # Version 3.38.1
 Release date: unreleased
 
