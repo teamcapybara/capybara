@@ -1,3 +1,10 @@
+# Version 3.38.1
+Release date: unreleased
+
+### Fixed
+
+* Support for base versions [Matijs van Zuijlen]
+
 # Version 3.38.0
 Release date: 2022-11-03
 
