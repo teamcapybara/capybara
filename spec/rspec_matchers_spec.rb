@@ -56,6 +56,29 @@ RSpec.describe 'Capybara RSpec Matchers', type: :feature do
     end
   end
 
+  context 'with a filter block' do
+    it 'applies the filter' do
+      visit('/with_html')
+      expect(page).to have_selector(:css, 'input#test_field') { |input| input.value == 'monkey' }
+      expect(page).to have_selector(:css, 'input#test_field') do |input|
+        input.value == 'monkey'
+      end
+      expect(page).to have_no_selector(:css, 'input#test_field') { |input| input.value == 'not a monkey' }
+      expect(page).to have_no_selector(:css, 'input#test_field') do |input|
+        input.value == 'not a monkey'
+      end
+
+      expect(page).not_to have_selector(:css, 'input#test_field') { |input| input.value == 'not a monkey' }
+      expect(page).not_to have_selector(:css, 'input#test_field') do |input|
+        input.value == 'not a monkey'
+      end
+      expect(page).not_to have_no_selector(:css, 'input#test_field') { |input| input.value == 'monkey' }
+      expect(page).not_to have_no_selector(:css, 'input#test_field') do |input|
+        input.value == 'monkey'
+      end
+    end
+  end
+
   def error_msg_for(&block)
     expect(&block).to(raise_error { |e| return e.message })
   end
