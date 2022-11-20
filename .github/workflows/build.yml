@@ -142,7 +142,7 @@ jobs:
       - name: Install non-ruby dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install xvfb awesome
+          sudo apt-get install xvfb fluxbox
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -150,4 +150,4 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
       - name: Run tests inside a window manager
-        run: xvfb-run sh -c "awesome & bundle exec rake ${{ matrix.task }}"
+        run: xvfb-run sh -c "fluxbox & bundle exec rake ${{ matrix.task }}; killall fluxbox"
