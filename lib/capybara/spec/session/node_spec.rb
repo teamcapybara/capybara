@@ -1190,6 +1190,10 @@ Capybara::SpecHelper.spec 'node' do
   end
 
   describe '#shadow_root', requires: %i[js] do
+    before do
+      skip 'Not supported with this Selenium version' if selenium_lt?('4.1', @session)
+    end
+
     it 'should get the shadow root' do
       @session.visit('/with_shadow')
       expect do
@@ -1199,12 +1203,14 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'should find elements inside the shadow dom using CSS' do
+      pending "Firefox doesn't yet have full W3C shadow root support" if firefox?(@session)
       @session.visit('/with_shadow')
       shadow_root = @session.find(:css, '#shadow_host').shadow_root
       expect(shadow_root).to have_css('#shadow_content', text: 'some text')
     end
 
     it 'should find nested shadow roots' do
+      pending "Firefox doesn't yet have full W3C shadow root support" if firefox?(@session)
       @session.visit('/with_shadow')
       shadow_root = @session.find(:css, '#shadow_host').shadow_root
       nested_shadow_root = shadow_root.find(:css, '#nested_shadow_host').shadow_root
@@ -1212,6 +1218,7 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'should click on elements' do
+      pending "Firefox doesn't yet have full W3C shadow root support" if firefox?(@session)
       @session.visit('/with_shadow')
       shadow_root = @session.find(:css, '#shadow_host').shadow_root
       checkbox = shadow_root.find(:css, 'input[type="checkbox"]')
@@ -1221,6 +1228,7 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'should use convenience methods once moved to a descendant of the shadow root' do
+      pending "Firefox doesn't yet have full W3C shadow root support" if firefox?(@session)
       @session.visit('/with_shadow')
       shadow_root = @session.find(:css, '#shadow_host').shadow_root
       descendant = shadow_root.find(:css, '#controls_wrapper')
@@ -1231,6 +1239,7 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'should produce error messages when failing' do
+      pending "Firefox doesn't yet have full W3C shadow root support" if firefox?(@session)
       @session.visit('/with_shadow')
       shadow_root = @session.find(:css, '#shadow_host').shadow_root
       expect do
@@ -1239,6 +1248,7 @@ Capybara::SpecHelper.spec 'node' do
     end
 
     it 'should get visible text' do
+      pending "Selenium doesn't currently support getting visible text for shadow root elements" if selenium?(@session)
       @session.visit('/with_shadow')
       shadow_root = @session.find(:css, '#shadow_host').shadow_root
       expect(shadow_root).to have_text('some text scroll.html')
