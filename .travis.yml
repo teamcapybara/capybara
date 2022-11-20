@@ -11,9 +11,9 @@ gemfile:
   - Gemfile
 env:
   global:
-    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
-    - JAVA_OPTS=-Djava.security.egd=file:/dev/urandom
-    - WD_CACHE_TIME=0
+    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true   # DONE
+    - JAVA_OPTS=-Djava.security.egd=file:/dev/urandom   # DONE
+    - WD_CACHE_TIME=0   # DONE
 
 addons:
   update: true
@@ -33,14 +33,14 @@ cache:
 
 matrix:
   include:
-    - gemfile: Gemfile
+    - gemfile: Gemfile   # DONE
       rvm: 3.0
       env: HTML5_PARSING=true
       script: bundle exec rake rack_smoke
-    - gemfile: Gemfile
+    - gemfile: Gemfile   # DONE
       rvm: 2.7
       env: CAPYBARA_REMOTE=true
-    - gemfile: Gemfile
+    - gemfile: Gemfile   # DONE
       rvm: 3.0
       env:
         - CAPYBARA_REMOTE=true
@@ -53,9 +53,9 @@ matrix:
         apt:
           packages:
             - awesome
-    - gemfile: gemfiles/Gemfile.base-versions
+    - gemfile: gemfiles/Gemfile.base-versions   # DONE, but with Ruby 2.7
       rvm: 2.6
-    - gemfile: Gemfile
+    - gemfile: Gemfile   # DONE
       rvm: 3.0
       env: HEADLESS=true
     - gemfile: gemfiles/Gemfile.beta-versions
