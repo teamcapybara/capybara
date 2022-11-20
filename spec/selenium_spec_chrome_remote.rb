@@ -96,8 +96,4 @@ RSpec.describe 'Capybara::Session with remote Chrome' do
       end.not_to raise_error
     end
   end
-
-  def chromedriver_version
-    Gem::Version.new(session.driver.browser.capabilities['chrome']['chromedriverVersion'].split[0])
-  end
 end
