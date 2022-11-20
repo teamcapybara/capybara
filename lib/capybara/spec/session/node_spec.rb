@@ -1192,6 +1192,7 @@ Capybara::SpecHelper.spec 'node' do
   describe '#shadow_root', requires: %i[js] do
     before do
       skip 'Not supported with this Selenium version' if selenium_lt?('4.1', @session)
+      skip 'Not supported with this geckodriver version' if geckodriver_lt?('0.31.0', @session)
     end
 
     it 'should get the shadow root' do

@@ -28,6 +28,18 @@ module Capybara
       firefox?(session) && (session.driver.browser.capabilities[:browser_version].to_f >= version)
     end
 
+    def geckodriver_version(session)
+      Gem::Version.new(session.driver.browser.capabilities['moz:geckodriverVersion'])
+    end
+
+    def geckodriver_gte?(version, session)
+      firefox?(session) && geckodriver_version(session) >= Gem::Version.new(version)
+    end
+
+    def geckodriver_lt?(version, session)
+      firefox?(session) && geckodriver_version(session) < Gem::Version.new(version)
+    end
+
     def chrome?(session)
       browser_name(session) == :chrome
     end
