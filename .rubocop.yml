@@ -1,8 +1,8 @@
 require:
-  - rubocop-rspec
-  - rubocop-performance
   - rubocop-minitest
+  - rubocop-performance
   - rubocop-rake
+  - rubocop-rspec
 
 AllCops:
   NewCops: enable
