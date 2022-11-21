@@ -12,7 +12,7 @@ AllCops:
       - 'vendor/**/*'
       - 'gemfiles/vendor/**/*'
 
-#################### Lint ################################
+#################### Layout ####################
 
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
@@ -44,6 +44,8 @@ Layout/LineLength:
     - '^\s*(raise|warn|Capybara::Helpers.warn) '
   Max: 120
 
+#################### Lint ####################
+
 Lint/EmptyBlock:
   Exclude:
     - 'lib/capybara/spec/**/*'
@@ -53,6 +55,8 @@ Lint/UnusedMethodArgument:
   Exclude:
     - 'lib/capybara/driver/base.rb'
     - 'lib/capybara/driver/node.rb'
+
+#################### Metrics ####################
 
 Metrics/AbcSize:
   Enabled: false
@@ -87,6 +91,8 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Enabled: false
 
+#################### Naming ####################
+
 Naming/MethodParameterName:
   AllowedNames:
     - 'el'
@@ -100,8 +106,12 @@ Naming/PredicateName:
   Exclude:
     - '**/*/*matchers.rb'
 
+#################### Performance ####################
+
 Performance/MethodObjectAsBlock:
   Enabled: false
+
+#################### RSpec ####################
 
 RSpec/Capybara/FeatureMethods:
   Enabled: false
@@ -140,10 +150,14 @@ RSpec/PredicateMatcher:
   Exclude:
     - 'spec/basic_node_spec.rb'
 
+#################### Security ####################
+
 Security/YAMLLoad:
   Exclude:
     - 'lib/capybara/spec/**/*'
     - 'spec/**/*'
+
+#################### Style ####################
 
 Style/AccessorGrouping:
   Enabled: false
