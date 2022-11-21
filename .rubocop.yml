@@ -14,6 +14,24 @@ AllCops:
 
 #################### Lint ################################
 
+Layout/AccessModifierIndentation:
+  EnforcedStyle: outdent
+
+Layout/CaseIndentation:
+  EnforcedStyle: end
+
+Layout/EmptyLineBetweenDefs:
+  AllowAdjacentOneLineDefs: true
+
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
+
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/IndentationWidth:
+  AllowedPatterns: ['^\s*module']
+
 Layout/LineLength:
   Description: 'Limit lines to 120 characters.'
   StyleGuide: 'https://github.com/rubocop/ruby-style-guide#maximum-line-length'
@@ -26,6 +44,19 @@ Layout/LineLength:
     - '^\s*(raise|warn|Capybara::Helpers.warn) '
   Max: 120
 
+Lint/EmptyBlock:
+  Exclude:
+    - 'lib/capybara/spec/**/*'
+    - 'spec/**/*.rb'
+
+Lint/UnusedMethodArgument:
+  Exclude:
+    - 'lib/capybara/driver/base.rb'
+    - 'lib/capybara/driver/node.rb'
+
+Metrics/AbcSize:
+  Enabled: false
+
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
@@ -34,9 +65,6 @@ Metrics/BlockLength:
   AllowedMethods:
     - Capybara.add_selector
     - Capybara::Selector::FilterSet.add
-
-Metrics/AbcSize:
-  Enabled: false
 
 Metrics/ClassLength:
   CountComments: false
@@ -53,28 +81,11 @@ Metrics/ModuleLength:
   Enabled: false
   CountComments: false
 
-Metrics/PerceivedComplexity:
-  Enabled: false
-
 Metrics/ParameterLists:
   CountKeywordArgs: false
 
-Lint/UnusedMethodArgument:
-  Exclude:
-    - 'lib/capybara/driver/base.rb'
-    - 'lib/capybara/driver/node.rb'
-
-Layout/EndAlignment:
-  EnforcedStyleAlignWith: variable
-
-Lint/EmptyBlock:
-  Exclude:
-    - 'lib/capybara/spec/**/*'
-    - 'spec/**/*.rb'
-
-Naming/PredicateName:
-  Exclude:
-    - '**/*/*matchers.rb'
+Metrics/PerceivedComplexity:
+  Enabled: false
 
 Naming/MethodParameterName:
   AllowedNames:
@@ -85,13 +96,62 @@ Naming/MethodParameterName:
     - 'y'
     - 'on'
 
-Style/ParallelAssignment:
+Naming/PredicateName:
+  Exclude:
+    - '**/*/*matchers.rb'
+
+Performance/MethodObjectAsBlock:
   Enabled: false
 
-Style/SingleLineMethods:
+RSpec/Capybara/FeatureMethods:
+  Enabled: false
+
+RSpec/Capybara/NegationMatcher:
+  Enabled: false
+
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/DescribeClass:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/ExampleWording:
+  Enabled: false
+
+RSpec/FilePath:
+  Enabled: false
+
+RSpec/InstanceVariable:
+  AssignmentOnly: true
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
+
+RSpec/NoExpectationExample:
+  Enabled: false
+
+RSpec/PredicateMatcher:
+  Exclude:
+    - 'spec/basic_node_spec.rb'
+
+Security/YAMLLoad:
+  Exclude:
+    - 'lib/capybara/spec/**/*'
+    - 'spec/**/*'
+
+Style/AccessorGrouping:
   Enabled: false
 
 Style/Alias:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
   Enabled: false
 
 Style/Documentation:
@@ -106,81 +166,21 @@ Style/DocumentDynamicEvalDefinition:
 Style/EmptyElse:
   EnforcedStyle: empty
 
-Style/ClassAndModuleChildren:
-  Enabled: false
+Style/IfUnlessModifier:
+  Exclude:
+    - 'spec/**/*'
 
 Style/NumericLiterals:
   Exclude:
     - 'lib/capybara/spec/**/*'
     - 'spec/**/*'
 
+Style/ParallelAssignment:
+  Enabled: false
+
+Style/SingleLineMethods:
+  Enabled: false
+
 Style/SpecialGlobalVars:
   Exclude:
     - 'capybara.gemspec'
-
-Style/IfUnlessModifier:
-  Exclude:
-    - 'spec/**/*'
-
-Style/AccessorGrouping:
-  Enabled: false
-
-Layout/EmptyLineBetweenDefs:
-  AllowAdjacentOneLineDefs: true
-
-Layout/AccessModifierIndentation:
-  EnforcedStyle: outdent
-
-Layout/CaseIndentation:
-  EnforcedStyle: end
-
-Layout/FirstArrayElementIndentation:
-  EnforcedStyle: consistent
-
-Layout/IndentationWidth:
-  AllowedPatterns: ['^\s*module']
-
-Security/YAMLLoad:
-  Exclude:
-    - 'lib/capybara/spec/**/*'
-    - 'spec/**/*'
-
-Performance/MethodObjectAsBlock:
-  Enabled: false
-
-RSpec/ExampleWording:
-  Enabled: false
-
-RSpec/InstanceVariable:
-  AssignmentOnly: true
-
-RSpec/ExampleLength:
-  Enabled: false
-
-RSpec/MultipleExpectations:
-  Enabled: false
-
-RSpec/ContextWording:
-  Enabled: false
-
-RSpec/NestedGroups:
-  Enabled: false
-
-RSpec/NoExpectationExample:
-  Enabled: false
-
-RSpec/DescribeClass:
-  Enabled: false
-
-RSpec/FilePath:
-  Enabled: false
-
-RSpec/PredicateMatcher:
-  Exclude:
-    - 'spec/basic_node_spec.rb'
-
-RSpec/Capybara/FeatureMethods:
-  Enabled: false
-
-RSpec/Capybara/NegationMatcher:
-  Enabled: false
