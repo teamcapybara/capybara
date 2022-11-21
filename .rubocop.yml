@@ -16,7 +16,7 @@ AllCops:
 
 Layout/LineLength:
   Description: 'Limit lines to 120 characters.'
-  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#80-character-limits'
+  StyleGuide: 'https://github.com/rubocop/ruby-style-guide#maximum-line-length'
   Exclude:
     - 'spec/**/*'
     - 'lib/capybara/spec/**/*'
