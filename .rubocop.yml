@@ -33,8 +33,8 @@ Layout/IndentationWidth:
   AllowedPatterns: ['^\s*module']
 
 Layout/LineLength:
-  Description: 'Limit lines to 120 characters.'
-  StyleGuide: 'https://github.com/rubocop/ruby-style-guide#maximum-line-length'
+  # Limit lines to 120 characters
+  # https://github.com/rubocop/ruby-style-guide#maximum-line-length
   Exclude:
     - 'spec/**/*'
     - 'lib/capybara/spec/**/*'
