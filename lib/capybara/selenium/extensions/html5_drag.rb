@@ -165,7 +165,7 @@ class Capybara::Selenium::Node
           }
           opts[key + 'Key'] = true;
         }
-        
+
         var dragEnterEvent = new DragEvent('dragenter', opts);
         target.dispatchEvent(dragEnterEvent);
 

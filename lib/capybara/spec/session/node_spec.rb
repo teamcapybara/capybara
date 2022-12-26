@@ -651,13 +651,13 @@ Capybara::SpecHelper.spec 'node' do
           expect(target).to have_text(%r{^HTML5 Dropped string: text/plain drag_html5-#{key}$}m, exact: true)
         end
       end
-      
+
       it 'should trigger a dragenter event, before the first dragover event' do
         @session.visit('/with_js')
         element = @session.find('//div[@id="drag_html5"]')
         target = @session.find('//div[@id="drop_html5"]')
         element.drag_to(target)
-      
+
         # Events are listed in reverse chronological order
         expect(@session).to have_text(/DragOver.*DragEnter/m)
       end
