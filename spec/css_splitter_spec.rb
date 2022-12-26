@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe Capybara::Selector::CSS::Splitter do
   let :splitter do
-    ::Capybara::Selector::CSS::Splitter.new
+    described_class.new
   end
 
   context 'split not needed' do

@@ -10,14 +10,14 @@ require 'rspec/shared_spec_matchers'
 #   Selenium::WebDriver::Edge::Service.driver_path = '/usr/local/bin/msedgedriver'
 # end
 
-if ::Selenium::WebDriver::Platform.mac?
+if Selenium::WebDriver::Platform.mac?
   Selenium::WebDriver::EdgeChrome.path = '/Applications/Microsoft Edge Dev.app/Contents/MacOS/Microsoft Edge Dev'
 end
 
 Capybara.register_driver :selenium_edge do |app|
   # ::Selenium::WebDriver.logger.level = "debug"
   # If we don't create an options object the path set above won't be used
-  browser_options = ::Selenium::WebDriver::EdgeChrome::Options.new
+  browser_options = Selenium::WebDriver::EdgeChrome::Options.new
   Capybara::Selenium::Driver.new(app, browser: :edge_chrome, options: browser_options).tap do |driver|
     driver.browser
     driver.download_path = Capybara.save_path

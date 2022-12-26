@@ -14,7 +14,7 @@ SAFARI_DRIVER = :selenium_safari
 #   ::Selenium::WebDriver::Safari
 # end.driver_path = '/Applications/Safari Technology Preview.app/Contents/MacOS/safaridriver'
 
-browser_options = ::Selenium::WebDriver::Safari::Options.new
+browser_options = Selenium::WebDriver::Safari::Options.new
 # browser_options.headless! if ENV['HEADLESS']
 
 Capybara.register_driver :selenium_safari do |app|

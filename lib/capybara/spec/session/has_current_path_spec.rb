@@ -75,7 +75,7 @@ Capybara::SpecHelper.spec '#has_current_path?' do
     @session.visit('/with_js?test=test')
     expect(@session).to have_current_path('/with_js?test=test')
     expect(@session).to have_current_path('/with_js', ignore_query: true)
-    uri = ::Addressable::URI.parse(@session.current_url)
+    uri = Addressable::URI.parse(@session.current_url)
     uri.query = nil
     expect(@session).to have_current_path(uri.to_s, ignore_query: true)
   end

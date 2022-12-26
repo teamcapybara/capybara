@@ -15,4 +15,4 @@ private
   end
 end
 
-::Selenium::WebDriver::Remote::Bridge.prepend CapybaraAtoms unless ENV['DISABLE_CAPYBARA_SELENIUM_OPTIMIZATIONS']
+Selenium::WebDriver::Remote::Bridge.prepend CapybaraAtoms unless ENV['DISABLE_CAPYBARA_SELENIUM_OPTIMIZATIONS']

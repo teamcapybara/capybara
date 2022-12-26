@@ -236,7 +236,7 @@ Capybara::SpecHelper.spec '#find' do
   it 'should accept an XPath instance' do
     @session.visit('/form')
     @xpath = Capybara::Selector.new(:fillable_field, config: {}, format: :xpath).call('First Name')
-    expect(@xpath).to be_a(::XPath::Union)
+    expect(@xpath).to be_a(XPath::Union)
     expect(@session.find(@xpath).value).to eq('John')
   end
 

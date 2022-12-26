@@ -5,7 +5,7 @@ require 'spec_helper'
 # rubocop:disable RSpec/InstanceVariable
 RSpec.describe Capybara::Selector::CSSBuilder do
   let :builder do
-    ::Capybara::Selector::CSSBuilder.new(@css)
+    described_class.new(@css)
   end
 
   context 'add_attribute_conditions' do

@@ -6,7 +6,7 @@ require 'shared_selenium_session'
 require 'shared_selenium_node'
 require 'rspec/shared_spec_matchers'
 
-browser_options = ::Selenium::WebDriver::Firefox::Options.new
+browser_options = Selenium::WebDriver::Firefox::Options.new
 browser_options.headless! if ENV['HEADLESS']
 # browser_options.add_option("log", {"level": "trace"})
 

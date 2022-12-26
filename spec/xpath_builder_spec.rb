@@ -5,7 +5,7 @@ require 'spec_helper'
 # rubocop:disable RSpec/InstanceVariable
 RSpec.describe Capybara::Selector::XPathBuilder do
   let :builder do
-    ::Capybara::Selector::XPathBuilder.new(@xpath)
+    described_class.new(@xpath)
   end
 
   context 'add_attribute_conditions' do

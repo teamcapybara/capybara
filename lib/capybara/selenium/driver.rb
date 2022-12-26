@@ -315,16 +315,16 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       ].tap do |errors|
         unless selenium_4?
           ::Selenium::WebDriver.logger.suppress_deprecations do
-            errors.concat [
+            errors.push(
               ::Selenium::WebDriver::Error::UnhandledError,
               ::Selenium::WebDriver::Error::ElementNotVisibleError,
               ::Selenium::WebDriver::Error::InvalidElementStateError,
               ::Selenium::WebDriver::Error::ElementNotSelectableError
-            ]
+            )
           end
         end
         if defined?(::Selenium::WebDriver::Error::DetachedShadowRootError)
-          errors.concat([::Selenium::WebDriver::Error::DetachedShadowRootError])
+          errors.push(::Selenium::WebDriver::Error::DetachedShadowRootError)
         end
       end
   end

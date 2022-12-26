@@ -20,7 +20,7 @@ module ActionPauser
   private_constant :Pauser
 end
 
-if defined?(::Selenium::WebDriver::VERSION) && (::Selenium::WebDriver::VERSION.to_f < 4) &&
-   defined?(::Selenium::WebDriver::ActionBuilder)
-  ::Selenium::WebDriver::ActionBuilder.prepend(ActionPauser)
+if defined?(Selenium::WebDriver::VERSION) && (Selenium::WebDriver::VERSION.to_f < 4) &&
+   defined?(Selenium::WebDriver::ActionBuilder)
+  Selenium::WebDriver::ActionBuilder.prepend(ActionPauser)
 end

@@ -39,7 +39,7 @@ Capybara.register_driver :selenium_chrome_remote do |app|
   ensure_selenium_running!
 
   url = "http://#{selenium_host}:#{selenium_port}/wd/hub"
-  browser_options = ::Selenium::WebDriver::Chrome::Options.new
+  browser_options = Selenium::WebDriver::Chrome::Options.new
 
   Capybara::Selenium::Driver.new app,
                                  browser: :remote,

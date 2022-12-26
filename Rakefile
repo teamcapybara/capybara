@@ -72,7 +72,7 @@ desc 'Build updated JS replacements for Selenium atoms'
 task :build_js do
   require 'uglifier'
   Dir.glob('./lib/capybara/selenium/atoms/src/*.js').each do |fn|
-    js = ::Uglifier.compile(
+    js = Uglifier.compile(
       File.read(fn),
       compress: {
         negate_iife: false, # Negate immediately invoked function expressions to avoid extra parens

@@ -33,7 +33,7 @@ Capybara.register_server :puma do |app, port, host, **options| # rubocop:disable
   puma_ver = Gem::Version.new(Puma::Const::PUMA_VERSION)
   require_relative 'patches/puma_ssl' if Gem::Requirement.new('>=4.0.0', '< 4.1.0').satisfied_by?(puma_ver)
 
-  logger = (defined?(::Puma::LogWriter) ? ::Puma::LogWriter : ::Puma::Events).then do |cls|
+  logger = (defined?(Puma::LogWriter) ? Puma::LogWriter : Puma::Events).then do |cls|
     conf.options[:Silent] ? cls.strings : cls.stdio
   end
   conf.options[:log_writer] = logger
@@ -44,7 +44,7 @@ Capybara.register_server :puma do |app, port, host, **options| # rubocop:disable
 
   Puma::Server.new(
     conf.app,
-    defined?(::Puma::LogWriter) ? nil : logger,
+    defined?(Puma::LogWriter) ? nil : logger,
     conf.options
   ).tap do |s|
     s.binder.parse conf.options[:binds], (s.log_writer rescue s.events) # rubocop:disable Style/RescueModifier

@@ -8,10 +8,10 @@ Capybara::SpecHelper.spec '#have_none_of_selectors' do
   it 'should be false if any of the given locators are on the page' do
     expect do
       expect(@session).to have_none_of_selectors(:xpath, '//p', '//a')
-    end.to raise_error ::RSpec::Expectations::ExpectationNotMetError
+    end.to raise_error RSpec::Expectations::ExpectationNotMetError
     expect do
       expect(@session).to have_none_of_selectors(:css, 'p a#foo')
-    end.to raise_error ::RSpec::Expectations::ExpectationNotMetError
+    end.to raise_error RSpec::Expectations::ExpectationNotMetError
   end
 
   it 'should be true if none of the given locators are on the page' do
@@ -24,7 +24,7 @@ Capybara::SpecHelper.spec '#have_none_of_selectors' do
     expect(@session).to have_none_of_selectors('p a#doesnotexist', 'abbr')
     expect do
       expect(@session).to have_none_of_selectors('abbr', 'p a#foo')
-    end.to raise_error ::RSpec::Expectations::ExpectationNotMetError
+    end.to raise_error RSpec::Expectations::ExpectationNotMetError
   end
 
   context 'should respect scopes' do
@@ -32,7 +32,7 @@ Capybara::SpecHelper.spec '#have_none_of_selectors' do
       @session.within "//p[@id='first']" do
         expect do
           expect(@session).to have_none_of_selectors(".//a[@id='foo']")
-        end.to raise_error ::RSpec::Expectations::ExpectationNotMetError
+        end.to raise_error RSpec::Expectations::ExpectationNotMetError
         expect(@session).to have_none_of_selectors(".//a[@id='red']")
       end
     end
@@ -41,7 +41,7 @@ Capybara::SpecHelper.spec '#have_none_of_selectors' do
       el = @session.find "//p[@id='first']"
       expect do
         expect(el).to have_none_of_selectors(".//a[@id='foo']")
-      end.to raise_error ::RSpec::Expectations::ExpectationNotMetError
+      end.to raise_error RSpec::Expectations::ExpectationNotMetError
       expect(el).to have_none_of_selectors(".//a[@id='red']")
     end
   end
@@ -50,14 +50,14 @@ Capybara::SpecHelper.spec '#have_none_of_selectors' do
     it 'should apply the options to all locators' do
       expect do
         expect(@session).to have_none_of_selectors('//p//a', text: 'Redirect')
-      end.to raise_error ::RSpec::Expectations::ExpectationNotMetError
+      end.to raise_error RSpec::Expectations::ExpectationNotMetError
       expect(@session).to have_none_of_selectors('//p', text: 'Doesnotexist')
     end
 
     it 'should discard all matches where the given regexp is matched' do
       expect do
         expect(@session).to have_none_of_selectors('//p//a', text: /re[dab]i/i, count: 1)
-      end.to raise_error ::RSpec::Expectations::ExpectationNotMetError
+      end.to raise_error RSpec::Expectations::ExpectationNotMetError
       expect(@session).to have_none_of_selectors('//p//a', text: /Red$/)
     end
   end

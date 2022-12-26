@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if defined?(::RSpec::Expectations::Version)
+if defined?(RSpec::Expectations::Version)
   module Capybara
     module RSpecMatchers
       module Matchers

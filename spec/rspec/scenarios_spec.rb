@@ -16,7 +16,7 @@ feature 'if fscenario aliases focused tag then' do
 end
 
 feature 'if xscenario aliases to pending then' do
-  xscenario "this test should be 'temporarily disabled with xscenario'" do
+  xscenario "this test should be 'temporarily disabled with xscenario'" do # rubocop:disable RSpec/PendingWithoutReason
   end
 end
 

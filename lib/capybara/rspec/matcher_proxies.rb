@@ -36,7 +36,7 @@ if RUBY_ENGINE == 'jruby'
     end
   end
 
-  if defined?(::RSpec::Matchers)
+  if defined?(RSpec::Matchers)
     module ::RSpec::Matchers
       def self.included(base)
         base.send(:include, ::Capybara::RSpecMatcherProxies) if base.include?(::Capybara::DSL)
@@ -76,7 +76,7 @@ else
     end
   end
 
-  Capybara::DSL.prepend ::Capybara::DSLRSpecProxyInstaller
+  Capybara::DSL.prepend Capybara::DSLRSpecProxyInstaller
 
-  ::RSpec::Matchers.prepend ::Capybara::RSpecMatcherProxyInstaller if defined?(::RSpec::Matchers)
+  RSpec::Matchers.prepend Capybara::RSpecMatcherProxyInstaller if defined?(RSpec::Matchers)
 end

@@ -6,4 +6,4 @@ module PauseDurationFix
   end
 end
 
-::Selenium::WebDriver::Interactions::Pause.prepend PauseDurationFix
+Selenium::WebDriver::Interactions::Pause.prepend PauseDurationFix
