@@ -59,7 +59,7 @@ module Capybara
     ].freeze
     SESSION_METHODS = %i[
       body html source current_url current_host current_path
-      execute_script evaluate_script evaluate_async_script visit refresh go_back go_forward send_keys
+      execute_script evaluate_script evaluate_async_script execute_async_script visit refresh go_back go_forward send_keys
       within within_element within_fieldset within_table within_frame switch_to_frame
       current_window windows open_new_window switch_to_window within_window window_opened_by
       save_page save_and_open_page save_screenshot
@@ -603,6 +603,18 @@ module Capybara
     def execute_script(script, *args)
       @touched = true
       driver.execute_script(script, *driver_args(args))
+    end
+
+    ##
+    #
+    # Execute the given JavaScript asynchronously, not returning a result. A callback function which will be passed as the last argument to the script.
+    #
+    # @param  [String] script   A string of JavaScript to execute
+    # @param           args     Optional arguments that will be passed to the script
+    #
+    def execute_async_script(script, *args)
+      @touched = true
+      driver.execute_async_script(script, *driver_args(args))
     end
 
     ##

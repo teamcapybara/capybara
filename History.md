@@ -1,3 +1,9 @@
+# Unreleased
+
+### Added
+
+* Support for `Sesison#execute_async_script`
+
 # Version 3.39.0
 Release date: unreleased
 
