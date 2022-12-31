@@ -17,8 +17,8 @@ module Capybara
       def initialize(app)
         @app = app
         @disable_css_markup = format(DISABLE_CSS_MARKUP_TEMPLATE,
-                                     { selector: self.class.selector_for(Capybara.disable_animation) })
-        @disable_js_markup = DISABLE_JS_MARKUP_TEMPLATE
+                                     selector: self.class.selector_for(Capybara.disable_animation))
+        @disable_js_markup = +DISABLE_JS_MARKUP_TEMPLATE
       end
 
       def call(env)
