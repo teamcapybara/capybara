@@ -12,3 +12,5 @@ services:
       - "/dev/shm:/dev/shm"
     environment:
       - SE_OPTS=-port 4445
+extra_hosts:
+  - "host.docker.internal:host-gateway"
