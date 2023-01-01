@@ -28,6 +28,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: Install non-ruby dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install libxslt-dev
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
