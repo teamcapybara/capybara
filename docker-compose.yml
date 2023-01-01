@@ -5,6 +5,8 @@ services:
     image: "selenium/${SELENIUM_IMAGE:-standalone-chrome}"
     volumes:
       - "/dev/shm:/dev/shm"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   selenium_firefox:
     network_mode: "host"
     image: "selenium/${SELENIUM_IMAGE:-standalone-firefox}"
@@ -12,5 +14,3 @@ services:
       - "/dev/shm:/dev/shm"
     environment:
       - SE_OPTS=-port 4445
-extra_hosts:
-  - "host.docker.internal:host-gateway"
