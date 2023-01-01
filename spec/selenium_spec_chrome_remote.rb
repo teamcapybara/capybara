@@ -31,8 +31,6 @@ def ensure_selenium_running!
   end
 end
 
-Capybara.server_host = 'host.docker.internal'
-
 def selenium_gte?(version)
   defined?(Selenium::WebDriver::VERSION) && (Selenium::WebDriver::VERSION.to_f >= version)
 end
