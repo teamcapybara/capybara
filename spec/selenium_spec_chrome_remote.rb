@@ -7,7 +7,7 @@ require 'shared_selenium_node'
 require 'rspec/shared_spec_matchers'
 
 def selenium_host
-  ENV.fetch('SELENIUM_HOST', '0.0.0.0')
+  ENV.fetch('SELENIUM_HOST', '127.0.0.1')
 end
 
 def selenium_port
