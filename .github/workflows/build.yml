@@ -65,7 +65,7 @@ jobs:
       # Ensure all jobs are run to completion
       fail-fast: false
       matrix:
-        ruby: ["2.7"]
+        ruby: ["2.7.0"]
         task: ["spec_chrome", "spec_firefox", "cucumber"]
 
     steps:
