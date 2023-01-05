@@ -57,6 +57,18 @@ module Capybara
       chrome?(session) && (chrome_version(session) >= version)
     end
 
+    def chromedriver_version(session)
+      Gem::Version.new(session.driver.browser.capabilities['chrome']['chromedriverVersion'].split[0])
+    end
+
+    def chromedriver_gte?(version, session)
+      chrome?(session) && chromedriver_version(session) >= Gem::Version.new(version)
+    end
+
+    def chromedriver_lt?(version, session)
+      chrome?(session) && chromedriver_version(session) < Gem::Version.new(version)
+    end
+
     def selenium?(session)
       session.driver.is_a? Capybara::Selenium::Driver
     end
