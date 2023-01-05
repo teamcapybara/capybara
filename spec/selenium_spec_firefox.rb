@@ -85,6 +85,7 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumFirefox, 'selenium', capyba
     pending "Selenium doesn't currently support getting visible text for shadow root elements"
   when /Capybara::Session selenium node #shadow_root/
     skip 'Not supported with this Selenium version' if selenium_lt?('4.1', @session)
+    skip 'Not supported with this geckodriver version' if geckodriver_lt?('0.31.0', @session)
   end
 end
 

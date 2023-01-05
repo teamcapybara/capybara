@@ -76,6 +76,7 @@ Capybara::SpecHelper.run_specs TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVE
     pending "Selenium doesn't currently support getting visible text for shadow root elements"
   when /Capybara::Session selenium_firefox_remote node #shadow_root/
     skip 'Not supported with this Selenium version' if selenium_lt?('4.1', @session)
+    skip 'Not supported with this geckodriver version' if geckodriver_lt?('0.31.0', @session)
   end
 end
 
