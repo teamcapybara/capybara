@@ -89,6 +89,7 @@ Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_DRIVER.to_s, capybar
     pending "Selenium doesn't currently support getting visible text for shadow root elements"
   when /Capybara::Session selenium_chrome node #shadow_root/
     skip 'Not supported with this Selenium version' if selenium_lt?('4.1', @session)
+    skip 'Not supported with this chromedriver version' if chromedriver_lt?('96.0', @session)
   end
 end
 
@@ -202,9 +203,5 @@ RSpec.describe 'Capybara::Session with chrome' do
         logs.get(:browser)
       end.not_to raise_error
     end
-  end
-
-  def chromedriver_version
-    Gem::Version.new(session.driver.browser.capabilities['chrome']['chromedriverVersion'].split[0])
   end
 end

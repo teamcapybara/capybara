@@ -39,7 +39,7 @@ Capybara.register_driver :selenium_firefox_remote do |app|
 
   Capybara::Selenium::Driver.new app,
                                  browser: :remote,
-                                 desired_capabilities: :firefox,
+                                 capabilities: :firefox,
                                  options: browser_options,
                                  url: url
 end
@@ -65,8 +65,20 @@ Capybara::SpecHelper.run_specs TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVE
   when /#accept_confirm should work with nested modals$/
     # skip because this is timing based and hence flaky when set to pending
     skip 'Broken in FF 63 - https://bugzilla.mozilla.org/show_bug.cgi?id=1487358' if firefox_gte?(63, @session)
-  when /Capybara::Session selenium_chrome node #shadow_root should get visible text/
+  when 'Capybara::Session selenium_firefox_remote #fill_in should handle carriage returns with line feeds in a textarea correctly'
+    pending 'Not sure what firefox is doing here'
+  when 'Capybara::Session selenium_firefox_remote node #shadow_root should find elements inside the shadow dom using CSS',
+       'Capybara::Session selenium_firefox_remote node #shadow_root should find nested shadow roots',
+       'Capybara::Session selenium_firefox_remote node #shadow_root should click on elements',
+       'Capybara::Session selenium_firefox_remote node #shadow_root should use convenience methods once moved to a descendant of the shadow root',
+       'Capybara::Session selenium_firefox_remote node #shadow_root should produce error messages when failing',
+       'Capybara::Session with firefox with selenium driver #evaluate_script returns a shadow root'
+    pending "Firefox doesn't yet have full W3C shadow root support"
+  when /Capybara::Session selenium_firefox_remote node #shadow_root should get visible text/
     pending "Selenium doesn't currently support getting visible text for shadow root elements"
+  when /Capybara::Session selenium_firefox_remote node #shadow_root/
+    skip 'Not supported with this Selenium version' if selenium_lt?('4.1', @session)
+    skip 'Not supported with this geckodriver version' if geckodriver_lt?('0.31.0', @session)
   end
 end
 

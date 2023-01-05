@@ -43,7 +43,7 @@ Capybara.register_driver :selenium_chrome_remote do |app|
 
   Capybara::Selenium::Driver.new app,
                                  browser: :remote,
-                                 desired_capabilities: :chrome,
+                                 capabilities: :chrome,
                                  options: browser_options,
                                  url: url
 end
@@ -62,8 +62,11 @@ Capybara::SpecHelper.run_specs TestSessions::Chrome, CHROME_REMOTE_DRIVER.to_s, 
        'Capybara::Session selenium_chrome_remote #attach_file with multipart form should fire change once for each set of files uploaded',
        'Capybara::Session selenium_chrome_remote #attach_file with multipart form should fire change once when uploading multiple files from empty'
     pending "Selenium with Remote Chrome doesn't support multiple file upload" unless selenium_gte?(3.14)
-  when /Capybara::Session selenium_chrome node #shadow_root should get visible text/
+  when /Capybara::Session selenium_chrome_remote node #shadow_root should get visible text/
     pending "Selenium doesn't currently support getting visible text for shadow root elements"
+  when /Capybara::Session selenium_chrome_remote node #shadow_root/
+    skip 'Not supported with this Selenium version' if selenium_lt?('4.1', @session)
+    skip 'Not supported with this chromedriver version' if chromedriver_lt?('96.0', @session)
   end
 end
 
@@ -95,9 +98,5 @@ RSpec.describe 'Capybara::Session with remote Chrome' do
         logs.get(:browser)
       end.not_to raise_error
     end
-  end
-
-  def chromedriver_version
-    Gem::Version.new(session.driver.browser.capabilities['chrome']['chromedriverVersion'].split[0])
   end
 end
