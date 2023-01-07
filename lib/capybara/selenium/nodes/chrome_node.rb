@@ -106,7 +106,11 @@ private
 
   def file_errors
     @file_errors = ::Selenium::WebDriver.logger.suppress_deprecations do
-      [::Selenium::WebDriver::Error::ExpectedError]
+      if defined? ::Selenium::WebDriver::Error::ExpectedError # Selenium < 4
+        [::Selenium::WebDriver::Error::ExpectedError]
+      else
+        []
+      end
     end
   end
 
