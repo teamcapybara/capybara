@@ -1073,8 +1073,12 @@ additional info about how the underlying driver can be configured.
   error. A simple `page.find` call may cause thousands of HTTP requests
   until the timeout occurs. By default, WebMock will cause each of these
   requests to spawn a new connection. To work around this problem, you
-  may need to [enable WebMock's `net_http_connect_on_start: true`
-  parameter](https://github.com/bblimke/webmock/blob/master/README.md#connecting-on-nethttpstart).
+  may need to [enable WebMock's `net_http_connect_on_start`
+  parameter](https://github.com/bblimke/webmock/blob/master/README.md#connecting-on-nethttpstart) for the Capybara server (or localhost). e.g.:
+  
+  ```
+  WebMock.disallow_net_connect!(allow: Capybara.server_host, net_http_connect_on_start: Capybara.server_host)
+  ```
 
 ## <a name="threadsafe"></a>"Threadsafe" mode
 
