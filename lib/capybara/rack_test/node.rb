@@ -6,20 +6,11 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   BLOCK_ELEMENTS = %w[p h1 h2 h3 h4 h5 h6 ol ul pre address blockquote dl div fieldset form hr noscript table].freeze
 
   def all_text
-    native.text
-          .gsub(/[\u200b\u200e\u200f]/, '')
-          .gsub(/[\ \n\f\t\v\u2028\u2029]+/, ' ')
-          .gsub(/\A[[:space:]&&[^\u00a0]]+/, '')
-          .gsub(/[[:space:]&&[^\u00a0]]+\z/, '')
-          .tr("\u00a0", ' ')
+    normalize_spacing(native.text)
   end
 
   def visible_text
-    displayed_text.squeeze(' ')
-                  .gsub(/[\ \n]*\n[\ \n]*/, "\n")
-                  .gsub(/\A[[:space:]&&[^\u00a0]]+/, '')
-                  .gsub(/[[:space:]&&[^\u00a0]]+\z/, '')
-                  .tr("\u00a0", ' ')
+    normalize_visible_spacing(displayed_text)
   end
 
   def [](name)
@@ -153,9 +144,11 @@ protected
     if !string_node.visible?(check_ancestor)
       ''
     elsif native.text?
-      native.text
-            .gsub(/[\u200b\u200e\u200f]/, '')
-            .gsub(/[\ \n\f\t\v\u2028\u2029]+/, ' ')
+      native
+        .text
+        .delete(REMOVED_CHARACTERS)
+        .tr(SQUEEZED_SPACES, ' ')
+        .squeeze(' ')
     elsif native.element?
       text = native.children.map do |child|
         Capybara::RackTest::Node.new(driver, child).displayed_text(check_ancestor: false)

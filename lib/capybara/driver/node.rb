@@ -5,6 +5,24 @@ module Capybara
     class Node
       attr_reader :driver, :native, :initial_cache
 
+      NON_BREAKING_SPACE = "\u00a0"
+      LINE_SEPERATOR = "\u2028"
+      PARAGRAPH_SEPERATOR = "\u2029"
+
+      BREAKING_SPACES = "[[:space:]&&[^#{NON_BREAKING_SPACE}]]"
+
+      SQUEEZED_SPACES = "\ \n\f\t\v#{LINE_SEPERATOR}#{PARAGRAPH_SEPERATOR}"
+      LEADING_SPACES = /\A#{BREAKING_SPACES}+/
+      TRAILING_SPACES = /#{BREAKING_SPACES}+\z/
+
+      ZERO_WIDTH_SPACE = "\u200b"
+      LEFT_TO_RIGHT_MARK = "\u200e"
+      RIGHT_TO_LEFT_MARK = "\u200f"
+
+      REMOVED_CHARACTERS = [ZERO_WIDTH_SPACE, LEFT_TO_RIGHT_MARK, RIGHT_TO_LEFT_MARK].join
+
+      EMPTY_LINES = /[\ \n]*\n[\ \n]*/
+
       def initialize(driver, native, initial_cache = {})
         @driver = driver
         @native = native
@@ -137,6 +155,27 @@ module Capybara
 
       def ==(other)
         eql?(other) || (other.respond_to?(:native) && native == other.native)
+      end
+
+      protected
+
+      def normalize_spacing(text)
+        text
+          .delete(REMOVED_CHARACTERS)
+          .tr(SQUEEZED_SPACES, ' ')
+          .squeeze(' ')
+          .sub(LEADING_SPACES, '')
+          .sub(TRAILING_SPACES, '')
+          .tr(NON_BREAKING_SPACE, ' ')
+      end
+
+      def normalize_visible_spacing(text)
+        text
+          .squeeze(' ')
+          .gsub(EMPTY_LINES, "\n")
+          .sub(LEADING_SPACES, '')
+          .sub(TRAILING_SPACES, '')
+          .tr(NON_BREAKING_SPACE, ' ')
       end
     end
   end

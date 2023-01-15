@@ -56,9 +56,12 @@ module Capybara
       # @return [String]              The text of the element
       #
       def text(type = nil, normalize_ws: false)
-        type ||= :all unless session_options.ignore_hidden_elements || session_options.visible_text_only
-        txt = synchronize { type == :all ? base.all_text : base.visible_text }
-        normalize_ws ? txt.gsub(/[[:space:]]+/, ' ').strip : txt
+        unless session_options.ignore_hidden_elements || session_options.visible_text_only
+          type ||= :all
+        end
+
+        extracted_text = synchronize { type == :all ? base.all_text : base.visible_text }
+        normalize_ws ? extracted_text.gsub(/[[:space:]]+/, ' ').strip : extracted_text
       end
 
       ##
