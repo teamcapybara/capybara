@@ -6,6 +6,7 @@ require 'capybara/selenium/extensions/find'
 require 'capybara/selenium/extensions/scroll'
 
 class Capybara::Selenium::Node < Capybara::Driver::Node
+  include Capybara::Node::WhitespaceNormalizer
   include Capybara::Selenium::Find
   include Capybara::Selenium::Scroll
 

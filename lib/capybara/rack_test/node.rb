@@ -3,6 +3,8 @@
 require 'capybara/rack_test/errors'
 
 class Capybara::RackTest::Node < Capybara::Driver::Node
+  include Capybara::Node::WhitespaceNormalizer
+
   BLOCK_ELEMENTS = %w[p h1 h2 h3 h4 h5 h6 ol ul pre address blockquote dl div fieldset form hr noscript table].freeze
 
   def all_text

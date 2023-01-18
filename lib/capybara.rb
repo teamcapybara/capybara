@@ -474,6 +474,7 @@ module Capybara
   require 'capybara/node/base'
   require 'capybara/node/element'
   require 'capybara/node/document'
+  require 'capybara/node/whitespace_normalizer'
 
   require 'capybara/driver/base'
   require 'capybara/driver/node'
