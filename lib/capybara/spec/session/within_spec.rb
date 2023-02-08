@@ -62,6 +62,13 @@ Capybara::SpecHelper.spec '#within' do
         expect(scope).to have_text('I was clicked')
       end
     end
+
+    it 'should scope hover', requires: [:js] do
+      @session.within(:css, '#another_foo') do |scope|
+        @session.hover
+        expect(scope).to have_text('I was hovered')
+      end
+    end
   end
 
   context 'with XPath selector' do
