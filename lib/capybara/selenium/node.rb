@@ -4,8 +4,10 @@
 
 require 'capybara/selenium/extensions/find'
 require 'capybara/selenium/extensions/scroll'
+require 'capybara/node/whitespace_normalizer'
 
 class Capybara::Selenium::Node < Capybara::Driver::Node
+  include Capybara::Node::WhitespaceNormalizer
   include Capybara::Selenium::Find
   include Capybara::Selenium::Scroll
 
@@ -17,11 +19,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
 
   def all_text
     text = driver.evaluate_script('arguments[0].textContent', self) || ''
-    text.gsub(/[\u200b\u200e\u200f]/, '')
-        .gsub(/[\ \n\f\t\v\u2028\u2029]+/, ' ')
-        .gsub(/\A[[:space:]&&[^\u00a0]]+/, '')
-        .gsub(/[[:space:]&&[^\u00a0]]+\z/, '')
-        .tr("\u00a0", ' ')
+    normalize_spacing(text)
   end
 
   def [](name)
