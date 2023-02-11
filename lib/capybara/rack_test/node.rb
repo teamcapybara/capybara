@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'capybara/rack_test/errors'
+require 'capybara/node/whitespace_normalizer'
 
 class Capybara::RackTest::Node < Capybara::Driver::Node
   include Capybara::Node::WhitespaceNormalizer

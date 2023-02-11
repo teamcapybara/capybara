@@ -4,6 +4,7 @@
 
 require 'capybara/selenium/extensions/find'
 require 'capybara/selenium/extensions/scroll'
+require 'capybara/node/whitespace_normalizer'
 
 class Capybara::Selenium::Node < Capybara::Driver::Node
   include Capybara::Node::WhitespaceNormalizer

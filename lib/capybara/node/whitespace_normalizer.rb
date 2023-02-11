@@ -19,13 +19,13 @@ module Capybara
       BREAKING_SPACES = "[[:space:]&&[^#{NON_BREAKING_SPACE}]]"
 
       # Whitespace we want to substitute with plain spaces
-      SQUEEZED_SPACES = "\ \n\f\t\v#{LINE_SEPERATOR}#{PARAGRAPH_SEPERATOR}"
+      SQUEEZED_SPACES = " \n\f\t\v#{LINE_SEPERATOR}#{PARAGRAPH_SEPERATOR}"
 
       # Any whitespace at the front of text
-      LEADING_SPACES = /\A#{BREAKING_SPACES}+/
+      LEADING_SPACES = /\A#{BREAKING_SPACES}+/.freeze
 
       # Any whitespace at the end of text
-      TRAILING_SPACES = /#{BREAKING_SPACES}+\z/
+      TRAILING_SPACES = /#{BREAKING_SPACES}+\z/.freeze
 
       # "Invisible" space character
       ZERO_WIDTH_SPACE = "\u200b"
@@ -40,7 +40,7 @@ module Capybara
       REMOVED_CHARACTERS = [ZERO_WIDTH_SPACE, LEFT_TO_RIGHT_MARK, RIGHT_TO_LEFT_MARK].join
 
       # Matches multiple empty lines
-      EMPTY_LINES = /[\ \n]*\n[\ \n]*/
+      EMPTY_LINES = /[\ \n]*\n[\ \n]*/.freeze
 
       ##
       #
