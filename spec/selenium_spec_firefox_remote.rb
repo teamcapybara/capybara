@@ -78,6 +78,8 @@ Capybara::SpecHelper.run_specs TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVE
   when /Capybara::Session selenium_firefox_remote node #shadow_root/
     skip 'Not supported with this Selenium version' if selenium_lt?('4.1', @session)
     skip 'Not supported with this geckodriver version' if geckodriver_lt?('0.31.0', @session)
+  when /Capybara::Session selenium_firefox_remote node #set should submit single text input forms if ended with \\n/
+    pending 'Firefox/geckodriver doesn\'t submit with values ending in \n'
   end
 end
 
