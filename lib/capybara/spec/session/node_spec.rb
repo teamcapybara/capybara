@@ -157,6 +157,12 @@ Capybara::SpecHelper.spec 'node' do
         expect(@session.find(:css, '#existing_content_editable_child_parent').text).to eq("Some content\nWYSIWYG")
       end
     end
+
+    it 'should submit single text input forms if ended with \n' do
+      @session.visit('/form')
+      @session.find(:css, '#single_input').set("my entry\n")
+      expect(extract_results(@session)['single_input']).to eq('my entry')
+    end
   end
 
   describe '#tag_name' do
