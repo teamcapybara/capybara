@@ -5,9 +5,17 @@ Capybara.register_server :default do |app, port, _host|
 end
 
 Capybara.register_server :webrick do |app, port, host, **options|
-  require 'rack/handler/webrick'
+  base_class = begin
+    require 'rack/handler/webrick'
+    Rack
+  rescue LoadError
+    # Rack 3 separated out the webrick handle - no way test currently in Capybaras automated
+    # tests due to Sinatra not yet supporting Rack 3 - experimental
+    require 'rackup/handler/webrick'
+    Rackup
+  end
   options = { Host: host, Port: port, AccessLog: [], Logger: WEBrick::Log.new(nil, 0) }.merge(options)
-  Rack::Handler::WEBrick.run(app, **options)
+  base_class::Handler::WEBrick.run(app, **options)
 end
 
 Capybara.register_server :puma do |app, port, host, **options| # rubocop:disable Metrics/BlockLength
