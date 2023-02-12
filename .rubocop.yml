@@ -14,7 +14,7 @@ AllCops:
 
 #################### Capybara ##################
 
-RSpec/Capybara/NegationMatcher:
+Capybara/NegationMatcher:
   Enabled: false
 
 #################### Gemspec ###################
