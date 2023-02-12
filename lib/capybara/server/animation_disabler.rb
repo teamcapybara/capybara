@@ -39,7 +39,7 @@ module Capybara
       attr_reader :disable_css_markup, :disable_js_markup
 
       def html_content?(headers)
-        /html/.match?(headers['Content-Type'])
+        /html/.match?(headers['Content-Type']) # rubocop:todo Performance/StringInclude
       end
 
       def insert_disable(html, nonces)

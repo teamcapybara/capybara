@@ -64,7 +64,9 @@ Capybara::SpecHelper.spec '#within_frame', requires: [:frames] do
     end
     expect do
       # Multiple frames in scope here
+      # rubocop:disable Style/Semicolon
       @session.within_frame { ; }
+      # rubocop:enable Style/Semicolon
     end.to raise_error Capybara::Ambiguous
   end
 

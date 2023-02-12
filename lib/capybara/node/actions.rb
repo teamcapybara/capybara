@@ -383,7 +383,7 @@ module Capybara
         end
       end
 
-      UPDATE_STYLE_SCRIPT = <<~'JS'
+      UPDATE_STYLE_SCRIPT = <<~JS
         this.capybara_style_cache = this.style.cssText;
         var css = arguments[0];
         for (var prop in css){
@@ -393,20 +393,20 @@ module Capybara
         }
       JS
 
-      RESET_STYLE_SCRIPT = <<~'JS'
+      RESET_STYLE_SCRIPT = <<~JS
         if (this.hasOwnProperty('capybara_style_cache')) {
           this.style.cssText = this.capybara_style_cache;
           delete this.capybara_style_cache;
         }
       JS
 
-      DATALIST_OPTIONS_SCRIPT = <<~'JS'
+      DATALIST_OPTIONS_SCRIPT = <<~JS
         Array.prototype.slice.call((this.list||{}).options || []).
           filter(function(el){ return !el.disabled }).
           map(function(el){ return { "value": el.value, "label": el.label} })
       JS
 
-      CAPTURE_FILE_ELEMENT_SCRIPT = <<~'JS'
+      CAPTURE_FILE_ELEMENT_SCRIPT = <<~JS
         document.addEventListener('click', function file_catcher(e){
           if (e.target.matches("input[type='file']")) {
             window._capybara_clicked_file_input = e.target;

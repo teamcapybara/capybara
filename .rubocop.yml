@@ -12,6 +12,16 @@ AllCops:
       - 'vendor/**/*'
       - 'gemfiles/vendor/**/*'
 
+#################### Capybara ##################
+
+RSpec/Capybara/NegationMatcher:
+  Enabled: false
+
+#################### Gemspec ###################
+
+Gemspec/DevelopmentDependencies:
+  Enabled: false
+
 #################### Layout ####################
 
 Layout/AccessModifierIndentation:
@@ -114,9 +124,6 @@ Performance/MethodObjectAsBlock:
 #################### RSpec ####################
 
 RSpec/Capybara/FeatureMethods:
-  Enabled: false
-
-RSpec/Capybara/NegationMatcher:
   Enabled: false
 
 RSpec/ContextWording:

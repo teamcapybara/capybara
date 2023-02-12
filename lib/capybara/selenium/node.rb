@@ -235,7 +235,7 @@ protected
   end
 
   def scroll_to_center
-    script = <<-'JS'
+    script = <<-JS
       try {
         arguments[0].scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
       } catch(e) {
@@ -518,7 +518,7 @@ private
   def attrs(*attr_names)
     return attr_names.map { |name| self[name.to_s] } if ENV['CAPYBARA_THOROUGH']
 
-    driver.evaluate_script <<~'JS', self, attr_names.map(&:to_s)
+    driver.evaluate_script <<~JS, self, attr_names.map(&:to_s)
       (function(el, names){
         return names.map(function(name){
           return el[name]
@@ -569,7 +569,7 @@ private
     })(arguments[0], document)
   JS
 
-  OBSCURED_OR_OFFSET_SCRIPT = <<~'JS'
+  OBSCURED_OR_OFFSET_SCRIPT = <<~JS
     (function(el, x, y) {
       var box = el.getBoundingClientRect();
       if (x == null) x = box.width/2;
@@ -586,7 +586,7 @@ private
     })(arguments[0], arguments[1], arguments[2])
   JS
 
-  RAPID_APPEND_TEXT = <<~'JS'
+  RAPID_APPEND_TEXT = <<~JS
     (function(el, value) {
       value = el.value + value;
       if (el.maxLength && el.maxLength != -1){
