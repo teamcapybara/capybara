@@ -11,7 +11,7 @@ CHROME_DRIVER = :selenium_chrome
 Selenium::WebDriver::Chrome.path = '/usr/bin/google-chrome-beta' if ENV.fetch('CI', nil) && ENV.fetch('CHROME_BETA', nil)
 
 browser_options = Selenium::WebDriver::Chrome::Options.new
-browser_options.headless! if ENV['HEADLESS']
+browser_options.add_argument('--headless') if ENV['HEADLESS']
 
 # Chromedriver 77 requires setting this for headless mode on linux
 # Different versions of Chrome/selenium-webdriver require setting differently - jus set them all
