@@ -62,7 +62,7 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumFirefox, 'selenium', capyba
   when 'Capybara::Session selenium #accept_confirm should work with nested modals'
     skip 'Broken in 63 <= FF < 69 - https://bugzilla.mozilla.org/show_bug.cgi?id=1487358' if firefox_gte?(63, @session) && firefox_lt?(69, @session)
     skip 'Hangs in 69 <= FF < 71 - Dont know what issue for this - previous issue was closed as fixed but it is not' if firefox_gte?(69, @session) && firefox_lt?(71, @session)
-    skip 'Broken again intermittently in FF 71 - jus skip it'
+    skip 'Broken again intermittently in FF 71 - jus skip it' if firefox_lt?(109, @session) # don't really know when it was fixed
   when 'Capybara::Session selenium #click_link can download a file'
     skip 'Need to figure out testing of file downloading on windows platform' if Gem.win_platform?
   when 'Capybara::Session selenium #reset_session! removes ALL cookies'
@@ -71,7 +71,7 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumFirefox, 'selenium', capyba
     pending "Firefox < 62 doesn't support a DataTransfer constructor" if firefox_lt?(62.0, @session)
   when 'Capybara::Session selenium #accept_alert should handle the alert if the page changes',
        'Capybara::Session selenium #accept_alert with an asynchronous alert should accept the alert'
-    skip 'No clue what Firefox is doing here - works fine on MacOS locally'
+    skip 'No clue what Firefox is doing here - works fine on MacOS locally' if firefox_lt?(109, @session) # don't really know when it was fixed
   when 'Capybara::Session selenium node #shadow_root should find elements inside the shadow dom using CSS',
        'Capybara::Session selenium node #shadow_root should find nested shadow roots',
        'Capybara::Session selenium node #shadow_root should click on elements',
