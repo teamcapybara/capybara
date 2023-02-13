@@ -20,6 +20,10 @@ end
 
 Capybara.register_server :puma do |app, port, host, **options| # rubocop:disable Metrics/BlockLength
   begin
+    require 'rackup'
+  rescue LoadError
+  end
+  begin
     require 'rack/handler/puma'
   rescue LoadError
     raise LoadError, 'Capybara is unable to load `puma` for its server, please add `puma` to your project or specify a different server via something like `Capybara.server = :webrick`.'

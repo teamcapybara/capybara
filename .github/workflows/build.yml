@@ -154,3 +154,29 @@ jobs:
           bundler-cache: true
       - name: Run tests inside a window manager
         run: xvfb-run sh -c "fluxbox & bundle exec rake ${{ matrix.task }}; killall fluxbox"
+
+  rack_3:
+    runs-on: ubuntu-latest
+
+    env:
+      HEADLESS: true
+      BUNDLE_GEMFILE: gemfiles/Gemfile.rack3
+
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ["3.2"]
+        task: ["spec_rack"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Run smoke tests
+        run: bundle exec rake ${{ matrix.task }}
+
+

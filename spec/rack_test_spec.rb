@@ -220,7 +220,7 @@ RSpec.describe Capybara::RackTest::Driver do
       driver = described_class.new(TestApp)
 
       driver.visit('/redirect')
-      expect(driver.response.header['Location']).to be_nil
+      expect(driver.response.headers['Location']).to be_nil
       expect(driver.current_url).to match %r{/landed$}
     end
 
@@ -234,7 +234,7 @@ RSpec.describe Capybara::RackTest::Driver do
       driver = described_class.new(TestApp, follow_redirects: false)
 
       driver.visit('/redirect')
-      expect(driver.response.header['Location']).to match %r{/redirect_again$}
+      expect(driver.response.headers['Location']).to match %r{/redirect_again$}
       expect(driver.current_url).to match %r{/redirect$}
     end
   end
