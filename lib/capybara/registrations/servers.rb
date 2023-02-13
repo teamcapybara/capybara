@@ -21,7 +21,7 @@ end
 Capybara.register_server :puma do |app, port, host, **options| # rubocop:disable Metrics/BlockLength
   begin
     require 'rackup'
-  rescue LoadError
+  rescue LoadError # rubocop:disable Lint/SuppressedException
   end
   begin
     require 'rack/handler/puma'
