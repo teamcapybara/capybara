@@ -353,7 +353,9 @@ private
         arguments[0].focus();
       }
       if (arguments[0].value != arguments[1]) {
-        arguments[0].value = arguments[1]
+        var nativeInputValueSetter = Object.getOwnPropertyDescriptor(arguments[0].__proto__, "value").set;
+        nativeInputValueSetter.call(arguments[0], arguments[1]);
+
         arguments[0].dispatchEvent(new InputEvent('input'));
         arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
       }
