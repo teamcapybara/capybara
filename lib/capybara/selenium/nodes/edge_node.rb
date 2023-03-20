@@ -38,7 +38,7 @@ class Capybara::Selenium::EdgeNode < Capybara::Selenium::Node
     html5_drop(*args)
   end
 
-  def click(*)
+  def click(*, **)
     super
   rescue Selenium::WebDriver::Error::InvalidArgumentError => e
     tag_name, type = attrs(:tagName, :type).map { |val| val&.downcase }
