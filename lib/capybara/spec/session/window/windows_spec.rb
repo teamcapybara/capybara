@@ -29,6 +29,6 @@ Capybara::SpecHelper.spec '#windows', requires: [:windows] do
     titles = @session.windows.map do |window|
       @session.within_window(window) { @session.title }
     end
-    expect(titles).to match_array(['With Windows', 'Title of the first popup', 'Title of popup two'])
+    expect(titles).to contain_exactly('With Windows', 'Title of the first popup', 'Title of popup two')
   end
 end
