@@ -149,6 +149,8 @@ module Capybara
       #   @option options [String, Regexp] id         Match links with the id provided
       #   @option options [String] title              Match links with the title provided
       #   @option options [String] alt                Match links with a contained img element whose alt matches
+      #   @option options [String, Boolean] download  Match links with the download provided
+      #   @option options [String] target             Match links with the target provided
       #   @option options [String, Array<String>, Regexp] class    Match links that match the class(es) provided
       # @return [Capybara::Node::Element]   The found element
       #

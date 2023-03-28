@@ -67,4 +67,14 @@ Capybara::SpecHelper.spec '#find_link' do
       expect { @session.find_link(download: 37) }.to raise_error ArgumentError
     end
   end
+
+  context 'with :target option' do
+    it 'should accept partial matches when false' do
+      expect(@session.find_link(target: '_self').text).to eq('labore')
+    end
+
+    it 'should not accept partial matches when true' do
+      expect { @session.find_link(target: '_blank') }.to raise_error Capybara::ElementNotFound
+    end
+  end
 end

@@ -1,6 +1,10 @@
 # Version 3.39.0
 Release date: unreleased
 
+### Added
+
+* Support `:target` filter option on `:link` selector [Yudai Takada]
+
 ###  Changed
 
 * Dropped support for rack 1.x

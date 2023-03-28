@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Capybara.add_selector(:link, locator_type: [String, Symbol]) do
-  xpath do |locator, href: true, alt: nil, title: nil, **|
+  xpath do |locator, href: true, alt: nil, title: nil, target: nil, **|
     xpath = XPath.descendant(:a)
     xpath = builder(xpath).add_attribute_conditions(href: href) unless href == false
 
@@ -25,6 +25,7 @@ Capybara.add_selector(:link, locator_type: [String, Symbol]) do
 
     xpath = xpath[find_by_attr(:title, title)]
     xpath = xpath[XPath.descendant(:img)[XPath.attr(:alt) == alt]] if alt
+    xpath = xpath[find_by_attr(:target, target)] if target
 
     xpath
   end
