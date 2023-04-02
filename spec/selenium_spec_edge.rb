@@ -18,6 +18,8 @@ Capybara.register_driver :selenium_edge do |app|
   # ::Selenium::WebDriver.logger.level = "debug"
   # If we don't create an options object the path set above won't be used
   browser_options = Selenium::WebDriver::Edge::Options.new
+  browser_options.add_argument('--headless') if ENV['HEADLESS']
+
   Capybara::Selenium::Driver.new(app, browser: :edge, options: browser_options).tap do |driver|
     driver.browser
     driver.download_path = Capybara.save_path
@@ -35,9 +37,11 @@ Capybara::SpecHelper.log_selenium_driver_version(Selenium::WebDriver::Edge) if E
 Capybara::SpecHelper.run_specs TestSessions::SeleniumEdge, 'selenium', capybara_skip: skipped_tests do |example|
   case example.metadata[:full_description]
   when 'Capybara::Session selenium #attach_file with a block can upload by clicking the file input'
-    pending "EdgeChrome doesn't allow clicking on file inputs"
-  when /Capybara::Session selenium_chrome node #shadow_root should get visible text/
+    pending "Edge doesn't allow clicking on file inputs"
+  when /Capybara::Session selenium node #shadow_root should get visible text/
     pending "Selenium doesn't currently support getting visible text for shadow root elements"
+  when /Capybara::Session selenium Capybara::Window#maximize/
+    pending "Edge headless doesn't support maximize" if ENV['HEADLESS']
   end
 end
 

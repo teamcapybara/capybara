@@ -77,6 +77,24 @@ class Capybara::Selenium::EdgeNode < Capybara::Selenium::Node
     end
   end
 
+  def send_keys(*args)
+    args.chunk { |inp| inp.is_a?(String) && inp.match?(/\p{Emoji Presentation}/) }
+        .each do |contains_emoji, inputs|
+      if contains_emoji
+        inputs.join.grapheme_clusters.chunk { |gc| gc.match?(/\p{Emoji Presentation}/) }
+              .each do |emoji, clusters|
+          if emoji
+            driver.send(:execute_cdp, 'Input.insertText', text: clusters.join)
+          else
+            super(clusters.join)
+          end
+        end
+      else
+        super(*inputs)
+      end
+    end
+  end
+
 private
 
   def file_errors

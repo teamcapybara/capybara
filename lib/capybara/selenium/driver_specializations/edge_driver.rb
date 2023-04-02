@@ -103,9 +103,13 @@ private
   end
 
   def execute_cdp(cmd, params = {})
-    args = { cmd: cmd, params: params }
-    result = bridge.http.call(:post, "session/#{bridge.session_id}/goog/cdp/execute", args)
-    result['value']
+    if browser.respond_to? :execute_cdp
+      browser.execute_cdp(cmd, **params)
+    else
+      args = { cmd: cmd, params: params }
+      result = bridge.http.call(:post, "session/#{bridge.session_id}/ms/cdp/execute", args)
+      result['value']
+    end
   end
 
   def build_node(native_node, initial_cache = {})
@@ -115,7 +119,7 @@ private
   def edgedriver_version
     @edgedriver_version ||= begin
       caps = browser.capabilities
-      caps['chrome']&.fetch('chromedriverVersion', nil).to_f
+      caps['msedge']&.fetch('msedgedriverVersion', nil).to_f
     end
   end
 end
