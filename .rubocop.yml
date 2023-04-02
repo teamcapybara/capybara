@@ -3,6 +3,7 @@ require:
   - rubocop-performance
   - rubocop-rake
   - rubocop-rspec
+  - rubocop-capybara
 
 AllCops:
   NewCops: enable

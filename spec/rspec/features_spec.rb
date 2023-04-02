@@ -79,7 +79,7 @@ feature "Capybara's feature DSL with driver", driver: :culerity do
 end
 
 # rubocop:disable RSpec/RepeatedExample
-xfeature 'if xfeature aliases to pending then' do # rubocop:disable RSpec/PendingWithoutReason
+xfeature 'if xfeature aliases to pending then' do
   scenario "this should be 'temporarily disabled with xfeature'" do
     # dummy
   end
