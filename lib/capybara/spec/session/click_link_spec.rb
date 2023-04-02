@@ -131,6 +131,17 @@ Capybara::SpecHelper.spec '#click_link' do
     end
   end
 
+  context 'with :target option given' do
+    it 'should find links with valid target' do
+      @session.click_link('labore', target: '_self')
+      expect(@session).to have_content('Bar')
+    end
+
+    it "should raise error if link wasn't found" do
+      expect { @session.click_link('labore', target: '_blank') }.to raise_error(Capybara::ElementNotFound, /Unable to find link "labore"/)
+    end
+  end
+
   it 'should follow relative links' do
     @session.visit('/')
     @session.click_link('Relative')
