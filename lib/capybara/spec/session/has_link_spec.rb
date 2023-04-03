@@ -62,7 +62,7 @@ Capybara::SpecHelper.spec '#has_no_link?' do
     expect(@session).to have_no_link('monkey')
     expect(@session).to have_no_link('A link', href: '/nonexistent-href')
     expect(@session).to have_no_link('A link', href: %r{/nonexistent-href})
-    expect(@session).not_to have_no_link('labore', target: '_blank')
+    expect(@session).to have_no_link('labore', target: '_blank')
   end
 
   context 'with focused:', requires: [:active_element] do
