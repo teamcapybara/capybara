@@ -4,17 +4,19 @@ Release date: unreleased
 ### Added
 
 * Support `:target` filter option on `:link` selector [Yudai Takada]
-
-###  Changed
-
-* Dropped support for rack 1.x
-
-# Version 3.38.1
-Release date: unreleased
+* Experimental Rack 3 support
+* Text normalization performance improvements [Brandon Weaver]
 
 ### Fixed
 
+* MS Edge button click [Brian J. Bayer]
+* Options/Capabilities choosing based on Selenium versions
 * Support for base versions [Matijs van Zuijlen]
+* ExpectedError not defined in Selenium 4+
+* Filter block forwarding to a number of matchers [Christophe Bliard]
+###  Changed
+
+* Dropped support for rack 1.x
 
 # Version 3.38.0
 Release date: 2022-11-03
