@@ -12,7 +12,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     clear_session_storage: nil
   }.freeze
   SPECIAL_OPTIONS = %i[browser clear_local_storage clear_session_storage timeout native_displayed].freeze
-  CAPS_VERSION = Gem::Requirement.new('> 4.0.0.alpha6', '< 4.8.0')
+  CAPS_VERSION = Gem::Requirement.new('< 4.8.0')
 
   attr_reader :app, :options
 
@@ -43,7 +43,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
           Gem::Version.new(Selenium::WebDriver::VERSION)
         end
 
-      unless Gem::Requirement.new('>= 3.142.7').satisfied_by? @selenium_webdriver_version
+      unless Gem::Requirement.new('>= 4.1').satisfied_by? @selenium_webdriver_version
         warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade."
       end
 
@@ -72,16 +72,9 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
           ::Capybara::Selenium::PersistentClient.new
         end
       end
-      processed_options = options.reject { |key, _val| SPECIAL_OPTIONS.include?(key) }
+      processed_options = options.except(*SPECIAL_OPTIONS)
 
-      @browser = if options[:browser] == :firefox &&
-                    RUBY_VERSION >= '3.0' &&
-                    Capybara::Selenium::Driver.selenium_webdriver_version <= Gem::Version.new('4.0.0.alpha1')
-        # selenium-webdriver 3.x doesn't correctly pass options through for Firefox with Ruby 3 so workaround that
-        Selenium::WebDriver::Firefox::Driver.new(**processed_options)
-      else
-        Selenium::WebDriver.for(options[:browser], processed_options)
-      end
+      @browser = Selenium::WebDriver.for(options[:browser], processed_options)
 
       specialize_driver
       setup_exit_handler
@@ -313,16 +306,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
         ::Selenium::WebDriver::Error::NoSuchElementError, # IE
         ::Selenium::WebDriver::Error::InvalidArgumentError # IE
       ].tap do |errors|
-        unless selenium_4?
-          ::Selenium::WebDriver.logger.suppress_deprecations do
-            errors.push(
-              ::Selenium::WebDriver::Error::UnhandledError,
-              ::Selenium::WebDriver::Error::ElementNotVisibleError,
-              ::Selenium::WebDriver::Error::InvalidElementStateError,
-              ::Selenium::WebDriver::Error::ElementNotSelectableError
-            )
-          end
-        end
         if defined?(::Selenium::WebDriver::Error::DetachedShadowRootError)
           errors.push(::Selenium::WebDriver::Error::DetachedShadowRootError)
         end
@@ -334,10 +317,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
 private
-
-  def selenium_4?
-    defined?(Selenium::WebDriver::VERSION) && (Selenium::WebDriver::VERSION.to_f >= 4)
-  end
 
   def native_args(args)
     args.map { |arg| arg.is_a?(Capybara::Selenium::Node) ? arg.native : arg }
@@ -361,10 +340,7 @@ private
   end
 
   def unhandled_alert_errors
-    @unhandled_alert_errors ||= with_legacy_error(
-      [Selenium::WebDriver::Error::UnexpectedAlertOpenError],
-      'UnhandledAlertError'
-    )
+    @unhandled_alert_errors ||= [Selenium::WebDriver::Error::UnexpectedAlertOpenError]
   end
 
   def delete_all_cookies
@@ -454,17 +430,7 @@ private
   end
 
   def find_modal_errors
-    @find_modal_errors ||= with_legacy_error([Selenium::WebDriver::Error::TimeoutError], 'TimeOutError')
-  end
-
-  def with_legacy_error(errors, legacy_error)
-    errors.tap do |errs|
-      unless selenium_4?
-        ::Selenium::WebDriver.logger.suppress_deprecations do
-          errs << Selenium::WebDriver::Error.const_get(legacy_error)
-        end
-      end
-    end
+    @find_modal_errors ||= [Selenium::WebDriver::Error::TimeoutError]
   end
 
   def silenced_unknown_error_message?(msg)
@@ -476,16 +442,12 @@ private
   end
 
   def unwrap_script_result(arg)
-    # TODO: move into the case when we drop support for Selenium < 4.1
-    element_types = [Selenium::WebDriver::Element]
-    element_types.push(Selenium::WebDriver::ShadowRoot) if defined?(Selenium::WebDriver::ShadowRoot)
-
     case arg
     when Array
       arg.map { |arr| unwrap_script_result(arr) }
     when Hash
       arg.transform_values! { |value| unwrap_script_result(value) }
-    when *element_types
+    when Selenium::WebDriver::Element, Selenium::WebDriver::ShadowRoot
       build_node(arg)
     else
       arg

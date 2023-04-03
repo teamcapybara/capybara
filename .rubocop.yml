@@ -8,7 +8,7 @@ require:
 AllCops:
   NewCops: enable
   DisabledByDefault: false
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 3.0
   Exclude:
       - 'vendor/**/*'
       - 'gemfiles/vendor/**/*'

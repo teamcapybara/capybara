@@ -24,12 +24,6 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
       JS
     end
     super
-  rescue *file_errors => e
-    if e.message.match?(/File not found : .+\n.+/m)
-      raise ArgumentError, "Selenium < 3.14 with remote Chrome doesn't support multiple file upload"
-    end
-
-    raise
   end
 
   def drop(*args)

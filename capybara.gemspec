@@ -8,7 +8,7 @@ require 'capybara/version'
 Gem::Specification.new do |s|
   s.name = 'capybara'
   s.version = Capybara::VERSION
-  s.required_ruby_version = '>= 2.7.0'
+  s.required_ruby_version = '>= 3.0.0'
   s.license = 'MIT'
 
   s.authors = ['Thomas Walpole', 'Jonas Nicklas']
@@ -57,7 +57,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rubocop-rspec', ['~>2.0'])
   s.add_development_dependency('sauce_whisk')
   s.add_development_dependency('selenium_statistics')
-  s.add_development_dependency('selenium-webdriver', ['>=3.142.7', '<5.0'])
+  s.add_development_dependency('selenium-webdriver', ['~>4.1'])
   s.add_development_dependency('sinatra', ['>= 1.4.0'])
   s.add_development_dependency('uglifier')
   s.add_development_dependency('webdrivers', ['>=3.6.0']) # if ENV['CI']

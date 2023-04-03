@@ -84,7 +84,6 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumFirefox, 'selenium', capyba
   when /Capybara::Session selenium node #shadow_root should get visible text/
     pending "Selenium doesn't currently support getting visible text for shadow root elements"
   when /Capybara::Session selenium node #shadow_root/
-    skip 'Not supported with this Selenium version' if selenium_lt?('4.1', @session)
     skip 'Not supported with this geckodriver version' if geckodriver_lt?('0.31.0', @session)
   when /Capybara::Session selenium node #set should submit single text input forms if ended with \\n/
     pending 'Firefox/geckodriver doesn\'t submit with values ending in \n'

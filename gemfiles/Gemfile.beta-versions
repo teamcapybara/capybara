@@ -16,5 +16,5 @@ gem 'cucumber', github: 'cucumber/cucumber-ruby'
 gem 'cucumber-core', github: 'cucumber/cucumber-ruby-core'
 gem 'cucumber-wire', github: 'cucumber/cucumber-ruby-wire'
 gem 'puma', github: 'puma/puma'
-gem 'selenium-webdriver', '>= 4.0.0.alpha7'
+gem 'selenium-webdriver', '>= 4.8.6'
 
