@@ -60,7 +60,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('selenium-webdriver', ['~>4.1'])
   s.add_development_dependency('sinatra', ['>= 1.4.0'])
   s.add_development_dependency('uglifier')
-  s.add_development_dependency('webdrivers', ['>=3.6.0']) # if ENV['CI']
+  s.add_development_dependency('webdrivers', ['>=5.0.0']) # if ENV['CI']
   s.add_development_dependency('yard', ['>= 0.9.0'])
 
   if RUBY_ENGINE == 'rbx'
