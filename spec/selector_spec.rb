@@ -117,7 +117,7 @@ RSpec.describe Capybara do
           css { |_sel| 'input[type="hidden"]' }
         end
 
-        expect(string).to have_no_css('input[type="hidden"]') # rubocop:disable RSpec/Capybara/SpecificMatcher
+        expect(string).to have_no_css('input[type="hidden"]') # rubocop:disable Capybara/SpecificMatcher
         expect(string).to have_selector(:hidden_field)
       end
     end
