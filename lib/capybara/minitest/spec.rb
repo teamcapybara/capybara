@@ -230,15 +230,15 @@ module Capybara
          %W[refute_matches_#{assertion} wont_match_#{assertion}]]
       end).each do |(meth, new_name)|
         class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
-          def #{new_name} *args, **kw_args, &block
-            ::Minitest::Expectation.new(self, ::Minitest::Spec.current).#{new_name}(*args, **kw_args, &block)
+          def #{new_name}(...)
+            ::Minitest::Expectation.new(self, ::Minitest::Spec.current).#{new_name}(...)
           end
         ASSERTION
 
         ::Minitest::Expectation.class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
-          def #{new_name} *args, **kw_args, &block
+          def #{new_name}(...)
             raise "Calling ##{new_name} outside of test." unless ctx
-            ctx.#{meth}(target, *args, **kw_args, &block)
+            ctx.#{meth}(target, ...)
           end
         ASSERTION
       end

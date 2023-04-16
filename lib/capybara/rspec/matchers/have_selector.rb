@@ -22,9 +22,7 @@ module Capybara
           el.assert_no_selector(*@args, **session_query_options, &@filter_block)
         end
 
-        def description
-          "have #{query.description}"
-        end
+        def description = "have #{query.description}"
 
         def query
           @query ||= Capybara::Queries::SelectorQuery.new(*session_query_args, **session_query_options, &@filter_block)
@@ -40,9 +38,7 @@ module Capybara
           raise ArgumentError, 'The have_all_selectors matcher does not support use with not_to/should_not'
         end
 
-        def description
-          'have all selectors'
-        end
+        def description = 'have all selectors'
       end
 
       class HaveNoSelectors < WrappedElementMatcher
@@ -54,9 +50,7 @@ module Capybara
           raise ArgumentError, 'The have_none_of_selectors matcher does not support use with not_to/should_not'
         end
 
-        def description
-          'have no selectors'
-        end
+        def description = 'have no selectors'
       end
 
       class HaveAnySelectors < WrappedElementMatcher
@@ -68,9 +62,7 @@ module Capybara
           el.assert_none_of_selectors(*@args, **session_query_options, &@filter_block)
         end
 
-        def description
-          'have any selectors'
-        end
+        def description = 'have any selectors'
       end
     end
   end

@@ -309,8 +309,8 @@ module Capybara
     # @!method send_keys
     #   @see Capybara::Node::Element#send_keys
     #
-    def send_keys(*args, **kw_args)
-      driver.send_keys(*args, **kw_args)
+    def send_keys(...)
+      driver.send_keys(...)
     end
 
     ##

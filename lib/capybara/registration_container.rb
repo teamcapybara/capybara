@@ -16,10 +16,10 @@ module Capybara
       @registered[name] = value
     end
 
-    def method_missing(method_name, *args, **options, &block)
+    def method_missing(method_name, ...)
       if @registered.respond_to?(method_name)
         Capybara::Helpers.warn "DEPRECATED: Calling '#{method_name}' on the drivers/servers container is deprecated without replacement"
-        return @registered.public_send(method_name, *args, **options, &block)
+        return @registered.public_send(method_name, ...)
       end
       super
     end
