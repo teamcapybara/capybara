@@ -71,13 +71,14 @@ Capybara::SpecHelper.run_specs TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVE
        'Capybara::Session selenium_firefox_remote node #shadow_root should click on elements',
        'Capybara::Session selenium_firefox_remote node #shadow_root should use convenience methods once moved to a descendant of the shadow root',
        'Capybara::Session selenium_firefox_remote node #shadow_root should produce error messages when failing',
-       'Capybara::Session with firefox with selenium driver #evaluate_script returns a shadow root'
+       'Capybara::Session with remote firefox with selenium driver #evaluate_script returns a shadow root'
     pending "Firefox doesn't yet have full W3C shadow root support"
   when /Capybara::Session selenium_firefox_remote node #shadow_root should get visible text/
     pending "Selenium doesn't currently support getting visible text for shadow root elements"
   when /Capybara::Session selenium_firefox_remote node #shadow_root/
+    skip 'Not supported with this Selenium version' if selenium_lt?('4.1', @session)
     skip 'Not supported with this geckodriver version' if geckodriver_lt?('0.31.0', @session)
-  when /Capybara::Session selenium_firefox_remote node #set should submit single text input forms if ended with \\n/
+  when /Capybara::Session selenium node #set should submit single text input forms if ended with \\n/
     pending 'Firefox/geckodriver doesn\'t submit with values ending in \n'
   end
 end
