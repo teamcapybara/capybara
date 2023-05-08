@@ -3,7 +3,7 @@
 module Capybara
   module Selenium
     module DeprecationSuppressor
-      def initialize(*)
+      def initialize(*, **)
         @suppress_for_capybara = false
         super
       end
