@@ -3,7 +3,7 @@
 module Capybara
   module Selenium
     module DeprecationSuppressor
-      def initialize(*)
+      def initialize(...)
         @suppress_for_capybara = false
         super
       end
@@ -31,7 +31,7 @@ module Capybara
     end
 
     module ErrorSuppressor
-      def for_code(*)
+      def for_code(...)
         ::Selenium::WebDriver.logger.suppress_deprecations do
           super
         end
