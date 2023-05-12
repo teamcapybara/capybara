@@ -21,7 +21,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
     def load_selenium
       require 'selenium-webdriver'
-      require 'capybara/selenium/logger_suppressor'
       require 'capybara/selenium/patches/atoms'
       require 'capybara/selenium/patches/is_displayed'
       require 'capybara/selenium/patches/action_pauser'
