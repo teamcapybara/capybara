@@ -1,6 +1,10 @@
 # Version 3.39.1
 Release date: 2023-05-12
 
+### Fixed
+
+* Fix usage of Selenium logger
+
 # Version 3.39.0
 Release date: 2023-04-02
 
