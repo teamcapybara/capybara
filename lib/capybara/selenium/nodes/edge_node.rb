@@ -91,16 +91,6 @@ class Capybara::Selenium::EdgeNode < Capybara::Selenium::Node
 
 private
 
-  def file_errors
-    @file_errors = ::Selenium::WebDriver.logger.suppress_deprecations do
-      if defined? ::Selenium::WebDriver::Error::ExpectedError # Selenium < 4
-        [::Selenium::WebDriver::Error::ExpectedError]
-      else
-        []
-      end
-    end
-  end
-
   def browser_version
     @browser_version ||= begin
       caps = driver.browser.capabilities

@@ -98,16 +98,6 @@ private
     browser_action.click_and_hold(native).move_to(element.native).release.perform
   end
 
-  def file_errors
-    @file_errors = ::Selenium::WebDriver.logger.suppress_deprecations do
-      if defined? ::Selenium::WebDriver::Error::ExpectedError # Selenium < 4
-        [::Selenium::WebDriver::Error::ExpectedError]
-      else
-        []
-      end
-    end
-  end
-
   def browser_version(to_float: true)
     caps = capabilities
     ver = (caps[:browser_version] || caps[:version])

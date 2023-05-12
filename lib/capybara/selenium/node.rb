@@ -417,9 +417,7 @@ private
           if Selenium::WebDriver::VERSION.to_f >= 4.3
             acts.move_to(native, *click_options.coords)
           else
-            ::Selenium::WebDriver.logger.suppress_deprecations do
-              acts.move_to(native).move_by(*click_options.coords)
-            end
+            acts.move_to(native).move_by(*click_options.coords)
           end
         elsif Selenium::WebDriver::VERSION.to_f >= 4.3
           right_by, down_by = *click_options.coords
@@ -430,9 +428,7 @@ private
           top = -top_offset + down_by
           acts.move_to(native, left, top)
         else
-          ::Selenium::WebDriver.logger.suppress_deprecations do
-            acts.move_to(native, *click_options.coords)
-          end
+          acts.move_to(native, *click_options.coords)
         end
       else
         acts.move_to(native)
