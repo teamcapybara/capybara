@@ -31,7 +31,8 @@ class Capybara::RackTest::Browser
     request(last_request.fullpath, last_request.env)
   end
 
-  def submit(method, path, attributes, content_type: nil)
+  def submit(method, path, attributes)
+    content_type = attributes.delete(:content_type)
     path = request_path if path.nil? || path.empty?
     uri = build_uri(path)
     uri.query = '' if method.to_s.casecmp('get').zero?
