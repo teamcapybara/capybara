@@ -249,7 +249,6 @@ class TestApp < Sinatra::Base
   end
 
   get %r{/apple-touch-.*\.png/} do
-  # get '/apple-touch-icon-precomposed.png' do
     halt(404)
   end
 
