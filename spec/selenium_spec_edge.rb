@@ -10,6 +10,8 @@ require 'rspec/shared_spec_matchers'
 #   Selenium::WebDriver::Edge::Service.driver_path = '/usr/local/bin/msedgedriver'
 # end
 
+Selenium::WebDriver.logger.ignore(:selenium_manager)
+
 if Selenium::WebDriver::Platform.mac?
   Selenium::WebDriver::Edge.path = '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge'
 end
@@ -17,8 +19,15 @@ end
 Capybara.register_driver :selenium_edge do |app|
   # ::Selenium::WebDriver.logger.level = "debug"
   # If we don't create an options object the path set above won't be used
-  browser_options = Selenium::WebDriver::Edge::Options.new
-  browser_options.add_argument('--headless') if ENV['HEADLESS']
+
+  # browser_options = Selenium::WebDriver::Edge::Options.new
+  # browser_options.add_argument('--headless') if ENV['HEADLESS']
+
+  browser_options = if ENV['HEADLESS']
+    Selenium::WebDriver::Options.edge(args: ['--headless=new'])
+  else
+    Selenium::WebDriver::Options.edge
+  end
 
   Capybara::Selenium::Driver.new(app, browser: :edge, options: browser_options).tap do |driver|
     driver.browser
@@ -40,8 +49,6 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumEdge, 'selenium', capybara_
     pending "Edge doesn't allow clicking on file inputs"
   when /Capybara::Session selenium node #shadow_root should get visible text/
     pending "Selenium doesn't currently support getting visible text for shadow root elements"
-  when /Capybara::Session selenium Capybara::Window#maximize/
-    pending "Edge headless doesn't support maximize" if ENV['HEADLESS']
   end
 end
 
