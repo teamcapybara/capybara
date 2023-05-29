@@ -6,6 +6,8 @@ require 'shared_selenium_session'
 require 'shared_selenium_node'
 require 'rspec/shared_spec_matchers'
 
+Selenium::WebDriver.logger.ignore(:selenium_manager)
+
 browser_options = Selenium::WebDriver::Firefox::Options.new
 browser_options.add_argument '-headless' if ENV['HEADLESS']
 # browser_options.add_option("log", {"level": "trace"})
@@ -78,7 +80,7 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumFirefox, 'selenium', capyba
        'Capybara::Session selenium node #shadow_root should use convenience methods once moved to a descendant of the shadow root',
        'Capybara::Session selenium node #shadow_root should produce error messages when failing',
        'Capybara::Session with firefox with selenium driver #evaluate_script returns a shadow root'
-    pending "Firefox doesn't yet have full W3C shadow root support"
+    pending firefox_lt(113, @session) && "Firefox doesn't yet have full W3C shadow root support"
   when 'Capybara::Session selenium #fill_in should handle carriage returns with line feeds in a textarea correctly'
     pending 'Not sure what firefox is doing here'
   when /Capybara::Session selenium node #shadow_root should get visible text/
