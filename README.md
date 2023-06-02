@@ -3,7 +3,6 @@
 [![Build Status](https://github.com/teamcapybara/capybara/actions/workflows/build.yml/badge.svg)](https://github.com/teamcapybara/capybara/actions/workflows/build.yml)
 [![Code Climate](https://codeclimate.com/github/teamcapybara/capybara.svg)](https://codeclimate.com/github/teamcapybara/capybara)
 [![Coverage Status](https://coveralls.io/repos/github/teamcapybara/capybara/badge.svg?branch=master)](https://coveralls.io/github/teamcapybara/capybara?branch=master)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jnicklas/capybara?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![SemVer](https://api.dependabot.com/badges/compatibility_score?dependency-name=capybara&package-manager=bundler&version-scheme=semver)](https://dependabot.com/compatibility-score.html?dependency-name=capybara&package-manager=bundler&version-scheme=semver)
 
 Capybara helps you test web applications by simulating how a real user would
@@ -17,8 +16,7 @@ If you and/or your company find value in Capybara and would like to contribute f
 <a href="https://www.patreon.com/capybara">Patreon</a>
 
 
-**Need help?** Ask on the mailing list (please do not open an issue on
-GitHub): http://groups.google.com/group/ruby-capybara
+**Need help?** Ask on the discussions (please do not open an issue): https://github.com/orgs/teamcapybara/discussions/categories/q-a
 
 ## Table of contents
 
