@@ -3,7 +3,6 @@
 [![Build Status](https://github.com/teamcapybara/capybara/actions/workflows/build.yml/badge.svg)](https://github.com/teamcapybara/capybara/actions/workflows/build.yml)
 [![Code Climate](https://codeclimate.com/github/teamcapybara/capybara.svg)](https://codeclimate.com/github/teamcapybara/capybara)
 [![Coverage Status](https://coveralls.io/repos/github/teamcapybara/capybara/badge.svg?branch=master)](https://coveralls.io/github/teamcapybara/capybara?branch=master)
-[![SemVer](https://api.dependabot.com/badges/compatibility_score?dependency-name=capybara&package-manager=bundler&version-scheme=semver)](https://dependabot.com/compatibility-score.html?dependency-name=capybara&package-manager=bundler&version-scheme=semver)
 
 Capybara helps you test web applications by simulating how a real user would
 interact with your app. It is agnostic about the driver running your tests and
