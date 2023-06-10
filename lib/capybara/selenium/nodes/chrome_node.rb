@@ -88,7 +88,7 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
 private
 
   def perform_legacy_drag(element, drop_modifiers)
-    return super if chromedriver_fixed_actions_key_state? || !w3c? || element.obscured?
+    return super if chromedriver_fixed_actions_key_state? || element.obscured?
 
     raise ArgumentError, 'Modifier keys are not supported while dragging in this version of Chrome.' unless drop_modifiers.empty?
 
@@ -119,7 +119,7 @@ private
 
   def native_displayed?
     (driver.options[:native_displayed] != false) &&
-      (w3c? && chromedriver_supports_displayed_endpoint?) &&
+      chromedriver_supports_displayed_endpoint? &&
       (!ENV['DISABLE_CAPYBARA_SELENIUM_OPTIMIZATIONS'])
   end
 end

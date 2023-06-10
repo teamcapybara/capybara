@@ -132,13 +132,11 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
       target = click_options.coords? ? nil : native
       if click_options.delay.zero?
         action.context_click(target)
-      elsif w3c?
+      else
         action.move_to(target) if target
         action.pointer_down(:right).then do |act|
           action_pause(act, click_options.delay)
         end.pointer_up(:right)
-      else
-        raise ArgumentError, 'Delay is not supported when right clicking with legacy (non-w3c) selenium driver'
       end
     end
   end
@@ -414,12 +412,8 @@ private
     actions = browser_action.tap do |acts|
       if click_options.coords?
         if click_options.center_offset?
-          if Gem::Version.new(Selenium::WebDriver::VERSION) >= Gem::Version.new('4.3')
-            acts.move_to(native, *click_options.coords)
-          else
-            acts.move_to(native).move_by(*click_options.coords)
-          end
-        elsif Gem::Version.new(Selenium::WebDriver::VERSION) >= Gem::Version.new('4.3')
+          acts.move_to(native, *click_options.coords)
+        else
           right_by, down_by = *click_options.coords
           size = native.size
           left_offset = (size[:width] / 2).to_i
@@ -427,8 +421,6 @@ private
           left = -left_offset + right_by
           top = -top_offset + down_by
           acts.move_to(native, left, top)
-        else
-          acts.move_to(native, *click_options.coords)
         end
       else
         acts.move_to(native)
@@ -469,21 +461,8 @@ private
     browser.capabilities
   end
 
-  def w3c?
-    (defined?(Selenium::WebDriver::VERSION) && (Gem::Version.new(Selenium::WebDriver::VERSION) >= Gem::Version.new('4'))) ||
-      capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
-  end
-
   def action_pause(action, duration)
-    if w3c?
-      if Gem::Version.new(Selenium::WebDriver::VERSION) >= Gem::Version.new('4.2')
-        action.pause(device: action.pointer_inputs.first, duration: duration)
-      else
-        action.pause(action.pointer_inputs.first, duration)
-      end
-    else
-      action.pause(duration)
-    end
+    action.pause(device: action.pointer_inputs.first, duration: duration)
   end
 
   def normalize_keys(keys)
