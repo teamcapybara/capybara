@@ -4,14 +4,9 @@ require 'capybara/selenium/nodes/firefox_node'
 
 module Capybara::Selenium::Driver::FirefoxDriver
   def self.extended(driver)
-    driver.extend Capybara::Selenium::Driver::W3CFirefoxDriver if w3c?(driver)
+    driver.extend Capybara::Selenium::Driver::W3CFirefoxDriver
     bridge = driver.send(:bridge)
     bridge.extend Capybara::Selenium::IsDisplayed unless bridge.send(:commands, :is_element_displayed)
-  end
-
-  def self.w3c?(driver)
-    (defined?(Selenium::WebDriver::VERSION) && (Gem::Version.new(Selenium::WebDriver::VERSION) >= Gem::Version.new('4'))) ||
-      driver.browser.capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
   end
 end
 

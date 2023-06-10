@@ -23,7 +23,6 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       require 'selenium-webdriver'
       require 'capybara/selenium/patches/atoms'
       require 'capybara/selenium/patches/is_displayed'
-      require 'capybara/selenium/patches/action_pauser'
 
       # Look up the version of `selenium-webdriver` to
       # see if it's a version we support.
@@ -42,8 +41,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
           Gem::Version.new(Selenium::WebDriver::VERSION)
         end
 
-      unless Gem::Requirement.new('>= 4.1').satisfied_by? @selenium_webdriver_version
-        warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade."
+      unless Gem::Requirement.new('>= 4.8').satisfied_by? @selenium_webdriver_version
+        warn "Warning: You're using an unsupported version of selenium-webdriver, please upgrade to 4.8+."
       end
 
       @selenium_webdriver_version

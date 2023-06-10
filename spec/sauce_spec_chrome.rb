@@ -10,7 +10,7 @@ require 'sauce_whisk'
 
 Capybara.register_driver :sauce_chrome do |app|
   options = {
-    selenium_version: '4.0.0',
+    selenium_version: '4.8.0',
     platform: 'macOS 10.12',
     browser_name: 'chrome',
     version: '65.0',
