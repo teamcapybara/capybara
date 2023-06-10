@@ -416,14 +416,14 @@ private
     actions = browser_action.tap do |acts|
       if click_options.coords?
         if click_options.center_offset?
-          if Selenium::WebDriver::VERSION.to_f >= 4.3
+          if Gem::Version.new(Selenium::WebDriver::VERSION) >= Gem::Version.new('4.3')
             acts.move_to(native, *click_options.coords)
           else
             ::Selenium::WebDriver.logger.suppress_deprecations do
               acts.move_to(native).move_by(*click_options.coords)
             end
           end
-        elsif Selenium::WebDriver::VERSION.to_f >= 4.3
+        elsif Gem::Version.new(Selenium::WebDriver::VERSION) >= Gem::Version.new('4.3')
           right_by, down_by = *click_options.coords
           size = native.size
           left_offset = (size[:width] / 2).to_i
@@ -476,13 +476,13 @@ private
   end
 
   def w3c?
-    (defined?(Selenium::WebDriver::VERSION) && (Selenium::WebDriver::VERSION.to_f >= 4)) ||
+    (defined?(Selenium::WebDriver::VERSION) && (Gem::Version.new(Selenium::WebDriver::VERSION) >= Gem::Version.new('4'))) ||
       capabilities.is_a?(::Selenium::WebDriver::Remote::W3C::Capabilities)
   end
 
   def action_pause(action, duration)
     if w3c?
-      if Selenium::WebDriver::VERSION.to_f >= 4.2
+      if Gem::Version.new(Selenium::WebDriver::VERSION) >= Gem::Version.new('4.2')
         action.pause(device: action.pointer_inputs.first, duration: duration)
       else
         action.pause(action.pointer_inputs.first, duration)

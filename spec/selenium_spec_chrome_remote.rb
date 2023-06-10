@@ -32,7 +32,7 @@ def ensure_selenium_running!
 end
 
 def selenium_gte?(version)
-  defined?(Selenium::WebDriver::VERSION) && (Selenium::WebDriver::VERSION.to_f >= version)
+  defined?(Selenium::WebDriver::VERSION) && (Gem::Version.new(Selenium::WebDriver::VERSION) >= Gem::Version.new(version))
 end
 
 Capybara.register_driver :selenium_chrome_remote do |app|
