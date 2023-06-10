@@ -1,10 +1,15 @@
 #Version 3.40.0
 Release date: unreleased
 
-### Changed
-
 * Dropped support for Ruby 2.7, 3.0+ is now required
 * Dropped support for Selenium < 4.1
+
+# Version 3.39.2
+Release date: 2023-06-10
+
+### Fixed
+
+* Fix Selenium version comparison [aki77]
 
 # Version 3.39.1
 Release date: 2023-05-12
