@@ -19,16 +19,18 @@ Capybara.register_server :webrick do |app, port, host, **options|
 end
 
 Capybara.register_server :puma do |app, port, host, **options| # rubocop:disable Metrics/BlockLength
-  begin
+  base_module = begin
     require 'rackup'
+    Rackup
   rescue LoadError # rubocop:disable Lint/SuppressedException
+    Rack
   end
   begin
     require 'rack/handler/puma'
   rescue LoadError
     raise LoadError, 'Capybara is unable to load `puma` for its server, please add `puma` to your project or specify a different server via something like `Capybara.server = :webrick`.'
   else
-    unless Rack::Handler::Puma.respond_to?(:config)
+    unless base_module::Handler::Puma.respond_to?(:config)
       raise LoadError, 'Capybara requires `puma` version 3.8.0 or higher, please upgrade `puma` or register and specify your own server block'
     end
   end
@@ -39,7 +41,7 @@ Capybara.register_server :puma do |app, port, host, **options| # rubocop:disable
   default_options = { Host: host, Port: port, Threads: '0:4', workers: 0, daemon: false }
   options = default_options.merge(options)
 
-  conf = Rack::Handler::Puma.config(app, options)
+  conf = base_module::Handler::Puma.config(app, options)
   conf.clamp
 
   puma_ver = Gem::Version.new(Puma::Const::PUMA_VERSION)
