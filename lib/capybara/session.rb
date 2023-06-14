@@ -768,17 +768,29 @@ module Capybara
 
     NODE_METHODS.each do |method|
       class_eval <<~METHOD, __FILE__, __LINE__ + 1
-        def #{method}(...)
+        def #{method}(*args, &block)
           @touched = true
-          current_scope.#{method}(...)
+          if current_scope.method(:#{method}).parameters.size > 1 && current_scope.method(:#{method}).parameters.find { |p| p[0] == :key || p[0] == :keyrest }
+            named_and_options = args.select { |a| a.class == Hash }
+            actual_args = args - named_and_options
+            block_given? ? current_scope.#{method}(*actual_args, **(named_and_options[0] || {}), &block) : current_scope.#{method}(*actual_args, **(named_and_options[0] || {}))
+          else
+            block_given? ? current_scope.#{method}(*args, &block) : current_scope.#{method}(*args)
+          end
         end
       METHOD
     end
 
     DOCUMENT_METHODS.each do |method|
       class_eval <<~METHOD, __FILE__, __LINE__ + 1
-        def #{method}(...)
-          document.#{method}(...)
+        def #{method}(*args, &block)
+          if current_scope.method(:#{method}).parameters.size > 1 && current_scope.method(:#{method}).parameters.find { |p| p[0] == :key || p[0] == :keyrest }
+            named_and_options = args.select { |a| a.class == Hash }
+            actual_args = args - named_and_options
+            block_given? ? document.#{method}(*actual_args, **(named_and_options[0] || {}), &block) : document.#{method}(*actual_args, **(named_and_options[0] || {}))
+          else
+            block_given? ? document.#{method}(*args, &block) : document.#{method}(*args)
+          end
         end
       METHOD
     end
