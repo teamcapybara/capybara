@@ -36,7 +36,7 @@ module Capybara::Selenium::Driver::EdgeDriver
   def reset!
     return super if edgedriver_version < 75
     # Use instance variable directly so we avoid starting the browser just to reset the session
-    return unless @browser
+    return unless @browser && window_handles.first
 
     switch_to_window(window_handles.first)
     window_handles.slice(1..).each { |win| close_window(win) }

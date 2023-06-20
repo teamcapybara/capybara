@@ -92,6 +92,9 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def visit(path)
+    if window_handles.empty?
+      open_new_window
+    end
     browser.navigate.to(path)
   end
 
@@ -252,7 +255,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     else
       browser.manage.new_window(kind)
     end
-  rescue NoMethodError, Selenium::WebDriver::Error::WebDriverError
+  rescue NoMethodError, Selenium::WebDriver::Error::WebDriverError => err
     # If not supported by the driver or browser default to using JS
     browser.execute_script('window.open();')
   end

@@ -35,7 +35,7 @@ module Capybara::Selenium::Driver::W3CFirefoxDriver
 
   def reset!
     # Use instance variable directly so we avoid starting the browser just to reset the session
-    return unless @browser
+    return unless @browser && window_handles.first
 
     if browser_version >= 68
       begin

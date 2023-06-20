@@ -25,6 +25,22 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         session.reset!
         expect(session.instance_variable_get(:@touched)).to be false
       end
+
+      it "shouldn't error if users somehow close the primary window", :focus_ do
+        session.windows.each do |window|
+          require 'byebug'
+          byebug
+          session.within_window(window) do
+            session.execute_script('window.close()')
+          end
+        end
+
+        expect {
+          session.reset!
+        }.not_to raise_error
+
+        session.visit('with_html')
+      end
     end
 
     describe 'exit codes' do
