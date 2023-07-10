@@ -8,7 +8,7 @@ module Capybara
                  automatic_reload match exact exact_text raise_server_errors visible_text_only
                  automatic_label_click enable_aria_label save_path asset_host default_host app_host
                  server_host server_port server_errors default_set_options disable_animation test_id
-                 predicates_wait default_normalize_ws w3c_click_offset enable_aria_role default_retry_interval].freeze
+                 predicates_wait default_normalize_ws w3c_click_offset enable_aria_role default_retry_interval extra_middlewares].freeze
 
     attr_accessor(*OPTIONS)
 
@@ -65,6 +65,8 @@ module Capybara
     #   See {Capybara.configure}
     # @!method w3c_click_offset
     #   See {Capybara.configure}
+    # @!method extra_middlewares
+    #   See {Capybara.configure}
 
     remove_method :server_host
 
@@ -112,9 +114,27 @@ module Capybara
       @test_id = id&.to_sym
     end
 
+    remove_method :extra_middlewares
+    def extra_middlewares=(middlewares)
+      (@extra_middlewares ||= Set.new).replace(middlewares.dup)
+    end
+
+    remove_method :disable_animation
+    def disable_animation=(bool)
+      @extra_middlewares ||= Set.new
+      if bool
+        @extra_middlewares.merge(Capybara::Server::AnimationDisabler)
+      else
+        @extra_middlewares.delete(Capybara::Server::AnimationDisabler)
+      end
+
+      @disable_animation = bool
+    end
+
     def initialize_copy(other)
       super
       @server_errors = @server_errors.dup
+      @extra_middlewares = @extra_middlewares.dup
     end
   end
 

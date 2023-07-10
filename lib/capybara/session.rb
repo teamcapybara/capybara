@@ -90,7 +90,9 @@ module Capybara
       end
       @server = if config.run_server && @app && driver.needs_server?
         server_options = { port: config.server_port, host: config.server_host, reportable_errors: config.server_errors }
-        server_options[:extra_middleware] = [Capybara::Server::AnimationDisabler] if config.disable_animation
+
+        server_options[:extra_middlewares] = config.extra_middlewares.to_a if config.extra_middlewares.any?
+
         Capybara::Server.new(@app, **server_options).boot
       end
       @touched = false
