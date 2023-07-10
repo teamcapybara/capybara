@@ -103,7 +103,7 @@ module Capybara
     # - **test_id** (Symbol, String, `nil` = `nil`) - Optional attribute to match locator against with built-in selectors along with id.
     # - **threadsafe** (Boolean = `false`) - Whether sessions can be configured individually.
     # - **w3c_click_offset** (Boolean = 'true') - Whether click offsets should be from element center (true) or top left (false)
-    # - **extra_middlewares** (Set\<Class> = `Set.new`) - Middleware classes that adds to Capybara::Server::Middleware's middleware stack
+    # - **extra_middleware** (Set\<Class> = `Set.new`) - Middleware classes that adds to Capybara::Server::Middleware's middleware stack
     #
     # #### DSL Options
     #

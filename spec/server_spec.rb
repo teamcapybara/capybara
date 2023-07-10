@@ -292,7 +292,7 @@ RSpec.describe Capybara::Server do
     end
   end
 
-  context 'when has extra middlewares' do
+  context 'when has extra middleware' do
     let(:middleware_foo) do
       Class.new do
         def initialize(app)
@@ -321,9 +321,9 @@ RSpec.describe Capybara::Server do
       end
     end
 
-    it 'goes through extra middlewares' do
+    it 'goes through extra middleware' do
       app = proc { |_env| [200, {}, ['Hello Server!']] }
-      server = described_class.new(app, extra_middlewares: [middleware_foo, middleware_bar]).boot
+      server = described_class.new(app, extra_middleware: [middleware_foo, middleware_bar]).boot
 
       res = Net::HTTP.start(server.host, server.port) { |http| http.get('/') }
 

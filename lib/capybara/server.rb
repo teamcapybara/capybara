@@ -23,12 +23,12 @@ module Capybara
                    port: Capybara.server_port,
                    host: Capybara.server_host,
                    reportable_errors: Capybara.server_errors,
-                   extra_middlewares: [])
+                   extra_middleware: [])
       unless deprecated_options.empty?
         warn 'Positional arguments, other than the application, to Server#new are deprecated, please use keyword arguments'
       end
       @app = app
-      @extra_middlewares = extra_middlewares
+      @extra_middleware = extra_middleware
       @server_thread = nil # suppress warnings
       @host = deprecated_options[1] || host
       @reportable_errors = deprecated_options[2] || reportable_errors
@@ -95,7 +95,7 @@ module Capybara
   private
 
     def middleware
-      @middleware ||= Middleware.new(app, @reportable_errors, @extra_middlewares)
+      @middleware ||= Middleware.new(app, @reportable_errors, @extra_middleware)
     end
 
     def port_key

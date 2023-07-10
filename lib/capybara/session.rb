@@ -91,7 +91,7 @@ module Capybara
       @server = if config.run_server && @app && driver.needs_server?
         server_options = { port: config.server_port, host: config.server_host, reportable_errors: config.server_errors }
 
-        server_options[:extra_middlewares] = config.extra_middlewares.to_a if config.extra_middlewares&.any?
+        server_options[:extra_middleware] = config.extra_middleware.to_a if config.extra_middleware&.any?
 
         Capybara::Server.new(@app, **server_options).boot
       end

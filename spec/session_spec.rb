@@ -16,7 +16,7 @@ RSpec.describe Capybara::Session do
       end.to raise_error TypeError, 'The second parameter to Session::new should be a rack app if passed.'
     end
 
-    context 'with extra middlewares' do
+    context 'with extra middleware' do
       let(:middleware_bar) do
         Class.new do
           def initialize(app)
@@ -30,13 +30,13 @@ RSpec.describe Capybara::Session do
       end
 
       before do
-        Capybara.extra_middlewares = [middleware_bar]
+        Capybara.extra_middleware = [middleware_bar]
       end
 
-      it 'sets server with extra middlewares' do
+      it 'sets server with extra middleware' do
         server = described_class.new(:selenium, TestApp).server
 
-        expect(server.instance_variable_get(:@extra_middlewares)).to include(middleware_bar)
+        expect(server.instance_variable_get(:@extra_middleware)).to include(middleware_bar)
       end
     end
   end
