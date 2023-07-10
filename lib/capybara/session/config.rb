@@ -114,12 +114,12 @@ module Capybara
       @test_id = id&.to_sym
     end
 
-    remove_method :extra_middlewares
+    remove_method :extra_middlewares=
     def extra_middlewares=(middlewares)
       (@extra_middlewares ||= Set.new).replace(middlewares.dup)
     end
 
-    remove_method :disable_animation
+    remove_method :disable_animation=
     def disable_animation=(bool)
       @extra_middlewares ||= Set.new
       if bool
