@@ -292,6 +292,46 @@ RSpec.describe Capybara::Server do
     end
   end
 
+  context 'when has extra middlewares' do
+    let(:middleware_foo) do
+      Class.new do
+        def initialize(app)
+          @app = app
+        end
+
+        def call(env)
+          status, headers, body = @app.call(env)
+
+          [status, headers, ["#{body} with foo"]]
+        end
+      end
+    end
+
+    let(:middleware_bar) do
+      Class.new do
+        def initialize(app)
+          @app = app
+        end
+
+        def call(env)
+          status, headers, body = @app.call(env)
+
+          [status, headers, ["#{body} with bar"]]
+        end
+      end
+    end
+
+    it 'goes through extra middlewares' do
+      app = proc { |_env| [200, {}, ['Hello Server!']] }
+      server = described_class.new(app, extra_middlewares: [middleware_foo, middleware_bar]).boot
+
+      res = Net::HTTP.start(server.host, server.port) { |http| http.get('/') }
+
+      expect(res.body).to include('with foo')
+      expect(res.body).to include('with bar')
+    end
+  end
+
   def start_request(server, wait_time)
     # Start request, but don't wait for it to finish
     socket = TCPSocket.new(server.host, server.port)
