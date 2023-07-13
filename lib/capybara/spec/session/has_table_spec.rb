@@ -19,11 +19,16 @@ Capybara::SpecHelper.spec '#has_table?' do
       ])
   end
 
-  it 'should accept rows with partial column header hashses' do
+  it 'should accept rows with partial column header hashes' do
     expect(@session).to have_table('Horizontal Headers', with_rows:
       [
         { 'First Name' => 'Thomas' },
         { 'Last Name' => 'Sawayn', 'City' => 'West Trinidad' }
+      ])
+
+    expect(@session).not_to have_table('Horizontal Headers', with_rows:
+      [
+        { 'Unmatched Header' => 'Thomas' }
       ])
   end
 
@@ -103,6 +108,11 @@ Capybara::SpecHelper.spec '#has_table?' do
         { 'First Name' => 'Danilo', 'Last Name' => 'Walpole', 'City' => 'Johnsonville' },
         { 'Last Name' => 'Sawayn', 'City' => 'West Trinidad' }
       ])
+
+    expect(@session).not_to have_table('Vertical Headers', with_cols:
+      [
+        { 'Unmatched Header' => 'Thomas' }
+      ])
   end
 
   it 'should be false if the table is not on the page' do
@@ -113,6 +123,7 @@ Capybara::SpecHelper.spec '#has_table?' do
     expect(@session.find(:table, 'Horizontal Headers')).to have_selector(:table_row, 'First Name' => 'Thomas', 'Last Name' => 'Walpole')
     expect(@session.find(:table, 'Horizontal Headers')).to have_selector(:table_row, 'Last Name' => 'Walpole')
     expect(@session.find(:table, 'Horizontal Headers')).not_to have_selector(:table_row, 'First Name' => 'Walpole')
+    expect(@session.find(:table, 'Horizontal Headers')).not_to have_selector(:table_row, 'Unmatched Header' => 'Thomas')
   end
 
   it 'should find row by cell values' do

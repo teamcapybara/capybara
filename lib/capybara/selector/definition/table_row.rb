@@ -7,7 +7,7 @@ Capybara.add_selector(:table_row, locator_type: [Array, Hash]) do
       locator.reduce(xpath) do |xp, (header, cell)|
         header_xp = XPath.ancestor(:table)[1].descendant(:tr)[1].descendant(:th)[XPath.string.n.is(header)]
         cell_xp = XPath.descendant(:td)[
-          XPath.string.n.is(cell) & XPath.position.equals(header_xp.preceding_sibling.count.plus(1))
+          XPath.string.n.is(cell) & header_xp.boolean & XPath.position.equals(header_xp.preceding_sibling.count.plus(1))
         ]
         xp.where(cell_xp)
       end
