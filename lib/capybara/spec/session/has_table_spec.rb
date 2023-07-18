@@ -116,7 +116,7 @@ Capybara::SpecHelper.spec '#has_table?' do
   end
 
   it 'should find row by cell values' do
-    expect(@session.find(:table, 'Horizontal Headers')).to have_selector(:table_row, %w[Thomas Walpole])
+    expect(@session.find(:table, 'Horizontal Headers')).to have_selector(:table_row, %w[Thomas Walpole Oceanside])
     expect(@session.find(:table, 'Horizontal Headers')).not_to have_selector(:table_row, %w[Walpole Thomas])
     expect(@session.find(:table, 'Horizontal Headers')).not_to have_selector(:table_row, %w[Other])
   end

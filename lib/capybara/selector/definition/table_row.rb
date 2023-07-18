@@ -14,7 +14,7 @@ Capybara.add_selector(:table_row, locator_type: [Array, Hash]) do
     else
       initial_td = XPath.descendant(:td)[XPath.string.n.is(locator.shift)]
       tds = locator.reverse.map { |cell| XPath.following_sibling(:td)[XPath.string.n.is(cell)] }
-                   .reduce { |xp, cell| xp.where(cell) }
+                   .reduce { |xp, cell| cell.where(xp) }
       xpath[initial_td[tds]]
     end
   end
