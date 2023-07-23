@@ -50,7 +50,7 @@ Capybara::SpecHelper.spec '#uncheck' do
 
     it 'should not accept partial matches when true' do
       expect do
-        @session.uncheck('Ham', exact:  true)
+        @session.uncheck('Ham', exact: true)
       end.to raise_error(Capybara::ElementNotFound)
     end
   end

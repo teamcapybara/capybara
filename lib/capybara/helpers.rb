@@ -78,7 +78,7 @@ module Capybara
       new_trace = trace.grep_v(filter) if new_trace.empty?
       new_trace = trace.dup if new_trace.empty?
 
-      new_trace.first.split(/:in /, 2).first
+      new_trace.first.split(':in ', 2).first
     end
 
     def warn(message, uplevel: 1)
