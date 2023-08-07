@@ -225,7 +225,7 @@ private
       native.remove
     else
       value.to_s.tap do |set_value|
-        if set_value.end_with?("\n") && form&.css('input, textarea')&.count
+        if set_value.end_with?("\n") && form&.css('input, textarea')&.count == 1
           native['value'] = set_value.to_s.chop
           Capybara::RackTest::Form.new(driver, form).submit(self)
         else
