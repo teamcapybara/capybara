@@ -163,6 +163,12 @@ Capybara::SpecHelper.spec 'node' do
       @session.find(:css, '#single_input').set("my entry\n")
       expect(extract_results(@session)['single_input']).to eq('my entry')
     end
+
+    it 'should not submit single text input forms if ended with \n and has multiple values' do
+      @session.visit('/form')
+      @session.find(:css, '#two_input_1').set("my entry\n")
+      expect(@session.find(:css, '#two_input_1').value).to eq("my entry\n")
+    end
   end
 
   describe '#tag_name' do
