@@ -83,6 +83,11 @@ module Capybara
       end
     end
 
+    # @!method have_element(locator = nil, **options, &optional_filter_block)
+    #   RSpec matcher for elements.
+    #
+    #   @see Capybara::Node::Matchers#has_element?
+
     # @!method have_link(locator = nil, **options, &optional_filter_block)
     #   RSpec matcher for links.
     #

@@ -503,6 +503,30 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
     end
   end
 
+  describe 'have_element matcher' do
+    let(:html) { '<img src="/img.jpg" alt="a JPEG"><img src="/img.png" alt="a PNG">' }
+
+    it 'gives proper description' do
+      expect(have_element('img').description).to eq('have element "img"')
+    end
+
+    it 'passes if there is such a element' do
+      expect(html).to have_element('img', src: '/img.jpg')
+    end
+
+    it 'fails if there is no such element' do
+      expect do
+        expect(html).to have_element('photo')
+      end.to raise_error(/expected to find element "photo"/)
+    end
+
+    it 'supports compounding' do
+      expect(html).to have_element('img', alt: 'a JPEG').and have_element('img', src: '/img.png')
+      expect(html).to have_element('photo').or have_element('img', src: '/img.jpg')
+      expect(html).to have_no_element('photo').and have_element('img', alt: 'a PNG')
+    end
+  end
+
   describe 'have_link matcher' do
     let(:html) { '<a href="#">Just a link</a><a href="#">Another link</a>' }
 
