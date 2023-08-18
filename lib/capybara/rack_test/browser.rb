@@ -35,7 +35,7 @@ class Capybara::RackTest::Browser
     path = request_path if path.nil? || path.empty?
     uri = build_uri(path)
     uri.query = '' if method.to_s.casecmp('get').zero?
-    env = {'HTTP_REFERER' => referer_url}
+    env = { 'HTTP_REFERER' => referer_url }
     env['CONTENT_TYPE'] = content_type if content_type
     process_and_follow_redirects(
       method,
