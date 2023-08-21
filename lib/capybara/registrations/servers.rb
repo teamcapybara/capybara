@@ -51,7 +51,7 @@ Capybara.register_server :puma do |app, port, host, **options| # rubocop:disable
   conf.options[:log_writer] = logger
 
   logger.log 'Capybara starting Puma...'
-  logger.log "* Version #{Puma::Const::PUMA_VERSION} , codename: #{Puma::Const::CODE_NAME}"
+  logger.log "* Version #{Puma::Const::PUMA_VERSION}, codename: #{Puma::Const::CODE_NAME}"
   logger.log "* Min threads: #{conf.options[:min_threads]}, max threads: #{conf.options[:max_threads]}"
 
   Puma::Server.new(
