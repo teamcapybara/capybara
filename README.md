@@ -30,7 +30,6 @@ If you and/or your company find value in Capybara and would like to contribute f
     - [Selecting the Driver](#selecting-the-driver)
     - [RackTest](#racktest)
     - [Selenium](#selenium)
-    - [Apparition](#apparition)
 - [The DSL](#the-dsl)
     - [Navigating](#navigating)
     - [Clicking links and buttons](#clicking-links-and-buttons)
@@ -179,7 +178,7 @@ to one specific driver. For example:
 ```ruby
 describe 'some stuff which requires js', js: true do
   it 'will use the default js driver'
-  it 'will switch to one specific driver', driver: :apparition
+  it 'will switch to one specific driver', driver: :selenium
 end
 ```
 
@@ -349,7 +348,7 @@ You can also change the driver temporarily (typically in the Before/setup and
 After/teardown blocks):
 
 ```ruby
-Capybara.current_driver = :apparition # temporarily select different driver
+Capybara.current_driver = :selenium # temporarily select different driver
 # tests here
 Capybara.use_default_driver       # switch back to default driver
 ```
@@ -404,15 +403,6 @@ to the browsers.  See the section on adding and configuring drivers.
 **Note**: drivers which run the server in a different thread may not share the
 same transaction as your tests, causing data not to be shared between your test
 and test server, see [Transactions and database setup](#transactions-and-database-setup) below.
-
-### <a name="apparition"></a>Apparition
-
-The [apparition driver](https://github.com/twalpole/apparition) is a new driver that allows you to run tests using Chrome in a headless
-or headed configuration. It attempts to provide backwards compatibility with the [Poltergeist driver API](https://github.com/teampoltergeist/poltergeist)
-and [capybara-webkit API](https://github.com/thoughtbot/capybara-webkit) while allowing for the use of modern JS/CSS. It
-uses CDP to communicate with Chrome, thereby obviating the need for chromedriver. This driver is being developed by the
-current developer of Capybara and will attempt to keep up to date with new Capybara releases. It will probably be moved into the
-teamcapybara repo once it reaches v1.0.
 
 ## <a name="the-dsl"></a>The DSL
 
