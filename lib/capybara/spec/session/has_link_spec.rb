@@ -42,7 +42,7 @@ Capybara::SpecHelper.spec '#has_link?' do
   it 'should raise an error if an invalid option is passed' do
     expect do
       expect(@session).to have_link('labore', invalid: true)
-    end.to raise_error(ArgumentError, 'Invalid option(s) :invalid, should be one of :above, :below, :left_of, :right_of, :near, :count, :minimum, :maximum, :between, :text, :id, :class, :style, :visible, :obscured, :exact, :exact_text, :normalize_ws, :match, :wait, :filter_set, :focused, :href, :alt, :title, :target, :download')
+    end.to raise_error(ArgumentError, 'Invalid option(s) :invalid, should be one of :above, :below, :left_of, :right_of, :near, :count, :minimum, :maximum, :between, :text, :id, :class, :style, :visible, :obscured, :exact, :exact_text, :normalize_ws, :match, :wait, :filter_set, :focused, :aria, :href, :alt, :title, :target, :download')
   end
 end
 

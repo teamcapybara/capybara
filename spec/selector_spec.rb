@@ -25,6 +25,8 @@ RSpec.describe Capybara do
             <div class="some random words" id="random_words">
               Something
             </div>
+            <div aria-label="Label" aria-labelledby="content random_words" aria-selected="true">
+            </div>
             <input id="2checkbox" class="2checkbox" type="checkbox"/>
             <input type="radio"/>
             <label for="my_text_input">My Text Input</label>
@@ -353,6 +355,18 @@ RSpec.describe Capybara do
 
         it 'accepts Regexp for CSS base selectors' do
           expect(string.find(:custom_css_selector, 'input', style: /30px/)[:title]).to eq 'Other button 1'
+        end
+      end
+
+      context 'with :aria option' do
+        it 'works with compound css selectors' do
+          expect(string.all(:custom_css_selector, 'div, h1', aria: { label: 'Label' }).size).to eq 1
+          expect(string.all(:custom_css_selector, 'div, h1', aria: { label: /label/i }).size).to eq 1
+          expect(string.all(:custom_css_selector, 'div, h1', aria: { selected: 'true' }).size).to eq 1
+        end
+
+        it 'works with encoded array values' do
+          expect(string.all(:custom_css_selector, 'div', aria: { labelledby: ['content', 'random_words'] }).size).to eq 1
         end
       end
 

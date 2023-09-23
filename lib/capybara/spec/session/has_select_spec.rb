@@ -182,7 +182,7 @@ Capybara::SpecHelper.spec '#has_select?' do
   it 'should raise an error if an invalid option is passed' do
     expect do
       expect(@session).to have_select('form_languages', invalid: true)
-    end.to raise_error(ArgumentError, 'Invalid option(s) :invalid, should be one of :above, :below, :left_of, :right_of, :near, :count, :minimum, :maximum, :between, :text, :id, :class, :style, :visible, :obscured, :exact, :exact_text, :normalize_ws, :match, :wait, :filter_set, :focused, :disabled, :name, :placeholder, :options, :enabled_options, :disabled_options, :selected, :with_selected, :multiple, :with_options')
+    end.to raise_error(ArgumentError, 'Invalid option(s) :invalid, should be one of :above, :below, :left_of, :right_of, :near, :count, :minimum, :maximum, :between, :text, :id, :class, :style, :visible, :obscured, :exact, :exact_text, :normalize_ws, :match, :wait, :filter_set, :focused, :aria, :disabled, :name, :placeholder, :options, :enabled_options, :disabled_options, :selected, :with_selected, :multiple, :with_options')
   end
 
   it 'should support locator-less usage' do
