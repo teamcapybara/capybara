@@ -25,6 +25,8 @@ RSpec.describe Capybara do
             <div class="some random words" id="random_words">
               Something
             </div>
+            <div data-one="1" data-two-words="2" data-json-object="{&quot;a&quot;:true}" data-json-array="[1,2,3]" data-boolean>
+            </div>
             <input id="2checkbox" class="2checkbox" type="checkbox"/>
             <input type="radio"/>
             <label for="my_text_input">My Text Input</label>
@@ -353,6 +355,38 @@ RSpec.describe Capybara do
 
         it 'accepts Regexp for CSS base selectors' do
           expect(string.find(:custom_css_selector, 'input', style: /30px/)[:title]).to eq 'Other button 1'
+        end
+      end
+
+      context 'with :data option' do
+        it 'works with compound css selectors' do
+          expect(string.all(:custom_css_selector, 'div, h1', data: { one: 1 }).size).to eq 1
+          expect(string.all(:custom_css_selector, 'div, h1', data: { one: '1' }).size).to eq 1
+          expect(string.all(:custom_css_selector, 'div, h1', data: { one: /1/ }).size).to eq 1
+          expect(string.all(:custom_css_selector, 'h1, div', data: { one: 1 }).size).to eq 1
+          expect(string.all(:custom_css_selector, 'h1, div', data: { one: '1' }).size).to eq 1
+          expect(string.all(:custom_css_selector, 'h1, div', data: { one: /1/ }).size).to eq 1
+        end
+
+        it 'works with underscored multi-word names' do
+          expect(string.all(:custom_css_selector, 'div', data: { two_words: 2 }).size).to eq 1
+          expect(string.all(:custom_css_selector, 'div', data: { two_words: '2' }).size).to eq 1
+          expect(string.all(:custom_css_selector, 'div', data: { two_words: /2/ }).size).to eq 1
+          expect(string.all(:custom_css_selector, 'div', data: { two_words: 2 }).size).to eq 1
+          expect(string.all(:custom_css_selector, 'div', data: { two_words: '2' }).size).to eq 1
+          expect(string.all(:custom_css_selector, 'div', data: { two_words: /2/ }).size).to eq 1
+        end
+
+        it 'works with boolean attributes' do
+          expect(string.all(:custom_css_selector, 'div', data: { boolean: true }).size).to eq 1
+        end
+
+        it 'works with encoded JSON values' do
+          json_object = { a: true }
+          json_array = [1, 2, 3]
+
+          expect(string.all(:custom_css_selector, 'div', data: { json_object: json_object }).size).to eq 1
+          expect(string.all(:custom_css_selector, 'div', data: { json_array: json_array }).size).to eq 1
         end
       end
 

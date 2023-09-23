@@ -8,6 +8,7 @@ require 'capybara/selector/definition'
 # All Selectors below support the listed selector specific filters in addition to the following system-wide filters
 #   * :id (String, Regexp, XPath::Expression) - Matches the id attribute
 #   * :class (String, Array<String | Regexp>, Regexp, XPath::Expression) - Matches the class(es) provided
+#   * :data (Hash<Symbol, Hash | Array | String | true | false>) - Matches the data-* attributes provided. Underscored keys will be transformed to dasherized counterparts (e.g. a `data: { value: 1 }` filter matches a `data-value="1"` attribute)
 #   * :style (String, Regexp, Hash<String, String>) - Match on elements style
 #   * :above (Element) - Match elements above the passed element on the page
 #   * :below (Element) - Match elements below the passed element on the page

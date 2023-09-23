@@ -9,7 +9,7 @@ module Capybara
 
       SPATIAL_KEYS = %i[above below left_of right_of near].freeze
       VALID_KEYS = SPATIAL_KEYS + COUNT_KEYS +
-                   %i[text id class style visible obscured exact exact_text normalize_ws match wait filter_set focused]
+                   %i[text id class style visible obscured exact exact_text normalize_ws match wait filter_set focused data]
       VALID_MATCH = %i[first smart prefer_exact one].freeze
 
       def initialize(*args,
@@ -79,6 +79,7 @@ module Capybara
 
         desc << " with id #{options[:id]}" if options[:id]
         desc << " with classes [#{Array(options[:class]).join(',')}]" if options[:class]
+        desc << " with data #{options[:data]}" if options[:data]
         desc << ' that is focused' if options[:focused]
         desc << ' that is not focused' if options[:focused] == false
 
@@ -446,6 +447,7 @@ module Capybara
         matches_visibility_filters?(node) &&
           matches_id_filter?(node) &&
           matches_class_filter?(node) &&
+          matches_data_filter?(node) &&
           matches_style_filter?(node) &&
           matches_focused_filter?(node) &&
           matches_text_filter?(node) &&
@@ -511,6 +513,26 @@ module Capybara
         return true unless use_default_focused_filter?
 
         (node == node.session.active_element) == options[:focused]
+      end
+
+      def matches_data_filter?(node)
+        options[:data].to_h.all? do |key, filter|
+          value = node["data-#{key.to_s.tr('_', '-')}"]
+
+          case filter
+          when Hash, Array
+            begin
+              JSON.parse(value, symbolize_names: true) == filter
+            rescue JSON::ParserError, TypeError
+              false
+            end
+          when Regexp then filter.match?(value)
+          when true then !value.nil?
+          when false then value.nil?
+          else
+            value.to_s == filter.to_s
+          end
+        end
       end
 
       def need_to_process_classes?
