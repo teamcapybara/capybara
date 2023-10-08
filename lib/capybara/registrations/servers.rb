@@ -27,19 +27,20 @@ Capybara.register_server :puma do |app, port, host, **options| # rubocop:disable
     require 'rack/handler/puma'
   rescue LoadError
     raise LoadError, 'Capybara is unable to load `puma` for its server, please add `puma` to your project or specify a different server via something like `Capybara.server = :webrick`.'
-  else
-    unless Rack::Handler::Puma.respond_to?(:config)
-      raise LoadError, 'Capybara requires `puma` version 3.8.0 or higher, please upgrade `puma` or register and specify your own server block'
-    end
+  end
+  puma_rack_handler = defined?(Rackup::Handler::Puma) ? Rackup::Handler::Puma : Rack::Handler::Puma
+
+  unless puma_rack_handler.respond_to?(:config)
+    raise LoadError, 'Capybara requires `puma` version 3.8.0 or higher, please upgrade `puma` or register and specify your own server block'
   end
 
   # If we just run the Puma Rack handler it installs signal handlers which prevent us from being able to interrupt tests.
   # Therefore construct and run the Server instance ourselves.
-  # Rack::Handler::Puma.run(app, { Host: host, Port: port, Threads: "0:4", workers: 0, daemon: false }.merge(options))
+  # puma_rack_handler.run(app, { Host: host, Port: port, Threads: "0:4", workers: 0, daemon: false }.merge(options))
   default_options = { Host: host, Port: port, Threads: '0:4', workers: 0, daemon: false }
   options = default_options.merge(options)
 
-  conf = Rack::Handler::Puma.config(app, options)
+  conf = puma_rack_handler.config(app, options)
   conf.clamp
 
   puma_ver = Gem::Version.new(Puma::Const::PUMA_VERSION)

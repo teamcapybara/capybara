@@ -118,6 +118,18 @@ RSpec.describe Capybara::Server do
     Capybara.server = :default
   end
 
+  it 'should not emit any warnings when booting puma' do
+    Capybara.server = :puma
+    app_proc = proc { |_env| [200, {}, ['Hello Puma!']] }
+    require 'puma'
+
+    expect {
+      described_class.new(app_proc).boot
+    }.not_to output.to_stderr
+  ensure
+    Capybara.server = :default
+  end
+
   it 'should support SSL' do
     key = File.join(Dir.pwd, 'spec', 'fixtures', 'key.pem')
     cert = File.join(Dir.pwd, 'spec', 'fixtures', 'certificate.pem')
