@@ -70,7 +70,8 @@ module Capybara
           desc << 'non-visible ' if visible == :hidden
         end
 
-        desc << "#{label} #{locator.inspect}"
+        desc << label.to_s
+        desc << " #{locator.inspect}" unless locator.nil?
 
         if show_for[:any]
           desc << " with#{' exact' if exact_text == true} text #{options[:text].inspect}" if options[:text]
