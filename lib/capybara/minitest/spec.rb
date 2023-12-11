@@ -96,6 +96,18 @@ module Capybara
       #   See {Capybara::Node::Matchers#has_no_field?}
 
       ##
+      # Expectation that there is element
+      #
+      # @!method must_have_element
+      #   See {Capybara::Node::Matchers#has_element?}
+
+      ##
+      # Expectation that there is no element
+      #
+      # @!method wont_have_element
+      #   See {Capybara::Node::Matchers#has_no_element?}
+
+      ##
       # Expectation that there is link
       #
       # @!method must_have_link

@@ -191,6 +191,19 @@ module Capybara
       #   See {Capybara::Node::Matchers#has_no_css?}
 
       ##
+      # Assert that provided element exists
+      #
+      # @!method assert_element
+      #   See {Capybara::Node::Matchers#has_element?}
+
+      ##
+      # Assert that provided element does not exist
+      #
+      # @!method assert_no_element
+      # @!method refute_element
+      #   See {Capybara::Node::Matchers#has_no_element?}
+
+      ##
       # Assert that provided link exists
       #
       # @!method assert_link
@@ -281,7 +294,7 @@ module Capybara
       # @!method assert_no_table
       #   See {Capybara::Node::Matchers#has_no_table?}
 
-      %w[xpath css link button field select table].each do |selector_type|
+      %w[xpath css element link button field select table].each do |selector_type|
         define_method "assert_#{selector_type}" do |*args, &optional_filter_block|
           subject, args = determine_subject(args)
           locator, options = extract_locator(args)

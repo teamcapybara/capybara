@@ -60,6 +60,13 @@ class MinitestTest < Minitest::Test
     refute_selector(:css, 'select#not_form_title')
   end
 
+  def test_assert_element
+    visit('/with_html')
+    assert_element('a', text: 'A link')
+    assert_element(count: 1) { |el| el.text == 'A link' }
+    assert_no_element(text: 'Not on page')
+  end
+
   def test_assert_link
     visit('/with_html')
     assert_link('A link')
@@ -163,6 +170,6 @@ RSpec.describe 'capybara/minitest' do
     reporter.start
     MinitestTest.run reporter, {}
     reporter.report
-    expect(output.string).to include('22 runs, 53 assertions, 0 failures, 0 errors, 1 skips')
+    expect(output.string).to include('23 runs, 56 assertions, 0 failures, 0 errors, 1 skips')
   end
 end

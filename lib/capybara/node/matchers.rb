@@ -324,6 +324,31 @@ module Capybara
 
       ##
       #
+      # Checks if the page or current node has a element with the given
+      # local name.
+      #
+      # @param [String] locator           The local name of a element to check for
+      # @option options [String, Regexp]  The attributes values of matching elements
+      # @return [Boolean]                 Whether it exists
+      #
+      def has_element?(locator = nil, **options, &optional_filter_block)
+        has_selector?(:element, locator, **options, &optional_filter_block)
+      end
+
+      ##
+      #
+      # Checks if the page or current node has no element with the given
+      # local name.
+      #
+      # @param (see #has_element?)
+      # @return [Boolean]            Whether it doesn't exist
+      #
+      def has_no_element?(locator = nil, **options, &optional_filter_block)
+        has_no_selector?(:element, locator, **options, &optional_filter_block)
+      end
+
+      ##
+      #
       # Checks if the page or current node has a link with the given
       # text or id.
       #
