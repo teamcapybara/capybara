@@ -233,6 +233,14 @@ Capybara::SpecHelper.spec '#find' do
     end.to raise_error(Capybara::ElementNotFound, 'Unable to find xpath "//div[@id=\\"nosuchthing\\"]"')
   end
 
+  context 'without locator' do
+    it 'should not output `nil` in the ElementNotFound message if nothing was found' do
+      expect do
+        @session.find(:label, text: 'no such thing').to be_nil
+      end.to raise_error(Capybara::ElementNotFound, 'Unable to find label')
+    end
+  end
+
   it 'should accept an XPath instance' do
     @session.visit('/form')
     @xpath = Capybara::Selector.new(:fillable_field, config: {}, format: :xpath).call('First Name')
