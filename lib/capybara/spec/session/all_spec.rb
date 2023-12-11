@@ -129,7 +129,7 @@ Capybara::SpecHelper.spec '#all' do
     end
 
     context 'with per session config', requires: [:psc] do
-      it 'should use the sessions ignore_hidden_elements', psc: true do
+      it 'should use the sessions ignore_hidden_elements', :psc do
         Capybara.ignore_hidden_elements = true
         @session.config.ignore_hidden_elements = false
         expect(Capybara.ignore_hidden_elements).to be(true)

@@ -72,7 +72,7 @@ module Capybara
             session.reset_session!
           end
 
-          before :each, psc: true do
+          before :each, :psc do
             SpecHelper.reset_threadsafe(bool: true, session: session)
           end
 

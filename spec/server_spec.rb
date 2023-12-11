@@ -123,9 +123,9 @@ RSpec.describe Capybara::Server do
     app_proc = proc { |_env| [200, {}, ['Hello Puma!']] }
     require 'puma'
 
-    expect {
+    expect do
       described_class.new(app_proc).boot
-    }.not_to output.to_stderr
+    end.not_to output.to_stderr
   ensure
     Capybara.server = :default
   end

@@ -116,7 +116,7 @@ module Capybara
         message << ' but there were no matches'
       else
         message << ", found #{count} #{Capybara::Helpers.declension('match', 'matches', count)}: " \
-                << full_results.map(&:text).map(&:inspect).join(', ')
+                << full_results.map { |r| r.text.inspect }.join(', ')
       end
       unless rest.empty?
         elements = rest.map { |el| el.text rescue '<<ERROR>>' }.map(&:inspect).join(', ') # rubocop:disable Style/RescueModifier

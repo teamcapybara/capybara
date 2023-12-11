@@ -18,6 +18,18 @@ AllCops:
 Capybara/NegationMatcher:
   Enabled: false
 
+RSpec/SpecFilePathFormat:
+  Enabled: false
+
+RSpec/SpecFilePathSuffix:
+  Enabled: false
+
+Capybara/RSpec/HaveSelector:
+  Enabled: false
+
+Capybara/SpecificFinders:
+  Enabled: false
+
 #################### Gemspec ###################
 
 Gemspec/DevelopmentDependencies:
@@ -171,6 +183,9 @@ Style/AccessorGrouping:
   Enabled: false
 
 Style/Alias:
+  Enabled: false
+
+Style/ArgumentsForwarding:
   Enabled: false
 
 Style/ClassAndModuleChildren:

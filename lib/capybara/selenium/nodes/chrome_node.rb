@@ -100,7 +100,7 @@ private
 
   def browser_version(to_float: true)
     caps = capabilities
-    ver = (caps[:browser_version] || caps[:version])
+    ver = caps[:browser_version] || caps[:version]
     ver = ver.to_f if to_float
     ver
   end

@@ -105,7 +105,7 @@ Capybara::SpecHelper.spec '#click_link' do
 
     it "should raise an error if no link's href matched the pattern" do
       expect { @session.click_link('labore', href: /invalid_pattern/) }.to raise_error(Capybara::ElementNotFound, %r{with href matching /invalid_pattern/})
-      expect { @session.click_link('labore', href: /.+d+/) }.to raise_error(Capybara::ElementNotFound, /#{Regexp.quote "with href matching /.+d+/"}/)
+      expect { @session.click_link('labore', href: /.+d+/) }.to raise_error(Capybara::ElementNotFound, /#{Regexp.quote 'with href matching /.+d+/'}/)
     end
 
     context 'href: nil' do
