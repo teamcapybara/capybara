@@ -649,7 +649,7 @@ end
 ```
 
 ```ruby
-dismiss_prompt('optional text', with: 'Linus Torvalds') do
+dismiss_prompt('optional text') do
   click_link('Show Prompt About Linux')
 end
 ```
