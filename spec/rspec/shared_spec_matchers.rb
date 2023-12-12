@@ -507,7 +507,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
     let(:html) { '<img src="/img.jpg" alt="a JPEG"><img src="/img.png" alt="a PNG">' }
 
     it 'gives proper description' do
-      expect(have_element('img').description).to eq('have element "img"')
+      expect(have_element('img').description).to eq('have visible element "img"')
     end
 
     it 'passes if there is such a element' do

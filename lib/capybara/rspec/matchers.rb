@@ -77,7 +77,7 @@ module Capybara
     #
     #   @see Capybara::Node::Matchers#matches_css?
 
-    %i[link button field select table].each do |selector|
+    %i[link button field select table element].each do |selector|
       define_method "have_#{selector}" do |locator = nil, **options, &optional_filter_block|
         Matchers::HaveSelector.new(selector, locator, **options, &optional_filter_block)
       end
@@ -166,7 +166,7 @@ module Capybara
 
     %w[selector css xpath text title current_path link button
        field checked_field unchecked_field select table
-       sibling ancestor].each do |matcher_type|
+       sibling ancestor element].each do |matcher_type|
       define_method "have_no_#{matcher_type}" do |*args, **kw_args, &optional_filter_block|
         Matchers::NegatedMatcher.new(send("have_#{matcher_type}", *args, **kw_args, &optional_filter_block))
       end
