@@ -140,13 +140,13 @@ Load RSpec 3.5+ support by adding the following line (typically to your
 require 'capybara/rspec'
 ```
 
-If you are using Rails, put your Capybara specs in `spec/features` or `spec/system` (only works
-if [you have it configured in
-RSpec](https://relishapp.com/rspec/rspec-rails/v/4-0/docs/directory-structure))
-and if you have your Capybara specs in a different directory, then tag the
-example groups with `type: :feature` or `type: :system` depending on which type of test you're writing.
+If you are using Rails, put your Capybara specs in `spec/features` or `spec/system` (only works if
+[you have it configured in RSpec](https://rspec.info/features/6-0/rspec-rails/directory-structure/))
+and if you have your Capybara specs in a different directory, then tag the example groups with
+`type: :feature` or `type: :system` depending on which type of test you're writing.
 
-If you are using Rails system specs please see [their documentation](https://relishapp.com/rspec/rspec-rails/docs/system-specs/system-spec#system-specs-driven-by-selenium-chrome-headless) for selecting the driver you wish to use.
+If you are using Rails system specs please see [their documentation](https://rspec.info/features/6-0/rspec-rails/system-specs/system-specs)
+for selecting the driver you wish to use.
 
 If you are not using Rails, tag all the example groups in which you want to use
 Capybara with `type: :feature`.
