@@ -271,7 +271,7 @@ module Capybara
 
           # Useful to people deploying to a subdirectory
           # and/or single page apps where only the url fragment changes
-          visit_uri_parts[:path] = base_uri.path + visit_uri.path
+          visit_uri_parts[:path] = ::Addressable::URI.join(base_uri, visit_uri).path
 
           visit_uri = base_uri.merge(visit_uri_parts)
         end
