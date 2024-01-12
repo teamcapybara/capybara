@@ -2,10 +2,17 @@
 
 require 'minitest'
 require 'capybara/dsl'
+require 'capybara/scoping'
 
 module Capybara
   module Minitest
     module Assertions
+      include Capybara::Scoping
+
+      def root_scope
+        page
+      end
+
       ##
       # Assert text exists
       #
@@ -384,7 +391,7 @@ module Capybara
         when ->(arg) { arg.respond_to?(:to_capybara_node) }
           [args.shift.to_capybara_node, args]
         else
-          [page, args]
+          [current_scope, args]
         end
       end
 

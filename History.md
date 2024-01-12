@@ -4,6 +4,10 @@ Release date: unreleased
 * Dropped support for Ruby 2.7, 3.0+ is now required
 * Dropped support for Selenium < 4.8
 
+### Added
+
+* Introduce `Capybara::Scoping` to share `#within` between `Capybara::Session` and `Capybara::Minitest::Assertions`
+
 # Version 3.39.2
 Release date: 2023-06-10
 

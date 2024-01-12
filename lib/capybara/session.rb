@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'capybara/session/matchers'
+require 'capybara/scoping'
 require 'addressable/uri'
 
 module Capybara
@@ -36,6 +37,7 @@ module Capybara
   # When using `capybara/dsl`, the {Session} is initialized automatically for you.
   #
   class Session
+    include Capybara::Scoping
     include Capybara::SessionMatchers
 
     NODE_METHODS = %i[
@@ -322,72 +324,6 @@ module Capybara
     #
     def active_element
       Capybara::Queries::ActiveElementQuery.new.resolve_for(self)[0].tap(&:allow_reload!)
-    end
-
-    ##
-    #
-    # Executes the given block within the context of a node. {#within} takes the
-    # same options as {Capybara::Node::Finders#find #find}, as well as a block. For the duration of the
-    # block, any command to Capybara will be handled as though it were scoped
-    # to the given element.
-    #
-    #     within(:xpath, './/div[@id="delivery-address"]') do
-    #       fill_in('Street', with: '12 Main Street')
-    #     end
-    #
-    # Just as with `#find`, if multiple elements match the selector given to
-    # {#within}, an error will be raised, and just as with `#find`, this
-    # behaviour can be controlled through the `:match` and `:exact` options.
-    #
-    # It is possible to omit the first parameter, in that case, the selector is
-    # assumed to be of the type set in {Capybara.configure default_selector}.
-    #
-    #     within('div#delivery-address') do
-    #       fill_in('Street', with: '12 Main Street')
-    #     end
-    #
-    # Note that a lot of uses of {#within} can be replaced more succinctly with
-    # chaining:
-    #
-    #     find('div#delivery-address').fill_in('Street', with: '12 Main Street')
-    #
-    # @overload within(*find_args)
-    #   @param (see Capybara::Node::Finders#all)
-    #
-    # @overload within(a_node)
-    #   @param [Capybara::Node::Base] a_node   The node in whose scope the block should be evaluated
-    #
-    # @raise  [Capybara::ElementNotFound]      If the scope can't be found before time expires
-    #
-    def within(*args, **kw_args)
-      new_scope = args.first.respond_to?(:to_capybara_node) ? args.first.to_capybara_node : find(*args, **kw_args)
-      begin
-        scopes.push(new_scope)
-        yield new_scope if block_given?
-      ensure
-        scopes.pop
-      end
-    end
-    alias_method :within_element, :within
-
-    ##
-    #
-    # Execute the given block within the a specific fieldset given the id or legend of that fieldset.
-    #
-    # @param [String] locator    Id or legend of the fieldset
-    #
-    def within_fieldset(locator, &block)
-      within(:fieldset, locator, &block)
-    end
-
-    ##
-    #
-    # Execute the given block within the a specific table given the id or caption of that table.
-    #
-    # @param [String] locator    Id or caption of the table
-    #
-    def within_table(locator, &block)
-      within(:table, locator, &block)
     end
 
     ##
@@ -766,6 +702,7 @@ module Capybara
     def document
       @document ||= Capybara::Node::Document.new(self, driver)
     end
+    alias root_scope document
 
     NODE_METHODS.each do |method|
       class_eval <<~METHOD, __FILE__, __LINE__ + 1
@@ -786,11 +723,6 @@ module Capybara
 
     def inspect
       %(#<Capybara::Session>)
-    end
-
-    def current_scope
-      scope = scopes.last
-      [nil, :frame].include?(scope) ? document : scope
     end
 
     ##
@@ -876,10 +808,6 @@ module Capybara
     def default_fn(extension)
       timestamp = Time.new.strftime('%Y%m%d%H%M%S')
       "capybara-#{timestamp}#{rand(10**10)}.#{extension}"
-    end
-
-    def scopes
-      @scopes ||= [nil]
     end
 
     def element_script_result(arg)
