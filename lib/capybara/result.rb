@@ -34,7 +34,7 @@ module Capybara
       @allow_reload = false
     end
 
-    def_delegators :full_results, :size, :length, :last, :values_at, :inspect, :sample
+    def_delegators :full_results, :size, :length, :last, :values_at, :inspect, :sample, :to_ary
 
     alias index find_index
 
