@@ -41,6 +41,10 @@ If you and/or your company find value in Capybara and would like to contribute f
     - [Scripting](#scripting)
     - [Modals](#modals)
     - [Debugging](#debugging)
+- [Selectors](#selectors)
+    - [Name](#selectors-name)
+    - [Locator](#selectors-locator)
+    - [Filters](#selectors-filters)
 - [Matching](#matching)
     - [Exactness](#exactness)
     - [Strategy](#strategy)
@@ -686,6 +690,148 @@ save_and_open_screenshot
 Screenshots are saved to `Capybara.save_path`, relative to the app directory.
 If you have required `capybara/rails`, `Capybara.save_path` will default to
 `tmp/capybara`.
+
+## <a name="selectors"></a>Selectors
+
+Helpers and matchers that accept Selectors share a common method signature that
+includes:
+
+1. a positional Name argument
+2. a positional Locator argument
+3. keyword Filter arguments
+4. a predicate Filter block argument
+
+These arguments are usually optional in one way or another.
+
+### <a name="selectors-name"></a>Name
+
+The name argument determines the Selector to use. The argument is optional when
+a helper explicitly conveys the selector name (for example, [`find_field`][]
+uses `:field`, [`find_link`][] uses `:link`, etc):
+
+```ruby
+page.html # => '<a href="/">Home</a>'
+
+page.find(:link) == page.find_link
+
+page.html # => '<input>'
+
+page.find(:field) == page.find_field
+```
+
+### <a name="selectors-locator"></a>Locator
+
+The locator argument usually represents information that can most meaningfully
+distinguish an element that matches the selector from an element that does not:
+
+```ruby
+page.html # => '<div id="greeting">Hello world</div>'
+
+page.find(:css, 'div').text     # => 'Hello world'
+page.find(:xpath, '//div').text # => 'Hello world'
+```
+
+General purpose finder methods like [`find`][] and [`all`][] can accept the
+locator as their first positional argument when the method can infer the default
+value from the [`Capybara.default_selector`][] configuration:
+
+```ruby
+page.html # => '<div id="greeting">Hello world</div>'
+
+Capybara.default_selector = :css
+
+page.find('div').text     # => 'Hello world'
+
+Capybara.default_selector = :xpath
+
+page.find('//div').text # => 'Hello world'
+```
+
+The locator argument's semantics are context-specific, and depend on the
+selector. The types of arguments are varied. Some selectors support `String` or
+`Regexp` arguments, while others like `:table_row` support `Array<String>` and
+`Hash<String, String>`:
+
+```ruby
+page.html # => '<label for="greeting">Greeting</label>
+                <input id="greeting" name="content">'
+
+# find by the <input> element's [id] attribute
+page.find(:id, 'greeting') == page.find_by_id('greeting') # => true
+
+# find by the <input> element's [id] attribute
+page.find(:field, 'greeting') == page.find_field('greeting') # => true
+
+# find by the <input> element's [name] attribute
+page.find(:field, 'content') == page.find_field('content') # => true
+
+# find by the <label> element's text
+page.find(:field, 'Greeting') == page.find_field('Greeting') # => true
+
+page.html # => '<table>
+                  <tr>
+                    <th>A</th>
+                    <th>B</th>
+                  </tr>
+                  <tr>
+                    <td>1</td>
+                    <td>2</td>
+                  </tr>
+                </table>'
+
+# find by <td> content
+page.find(:table_row, ['1', '2']) == page.find(:css, 'tr:last-of-type') # => true
+
+# find by <th> content paired with corresponding <td> content
+page.find(:table_row, 'A' => '1') == page.find(:table_row, 'B' => '2') # => true
+```
+
+### <a name="selectors-filters"></a> Filters
+
+All filters are optional. The supported set of keys is a mixture of both global
+and context-specific filters.The supported types of values depend on the
+context:
+
+```ruby
+page.html # => '<a href="/">Home</a>'
+
+# find by the [href] attribute
+page.find_link(href: '/') == page.find_link(text: 'Home') # => true
+
+page.html # => '<div id="element" data-attribute="value">Content</div>'
+
+# find by the [id] attribute
+page.find(id: 'element') == page.find(text: 'Content') # => true
+
+# find by the [data-attribute] attribute
+page.find(:element, 'data-attribute': /value/) == page.find(text: 'Content') # => true
+
+page.html # => '<input type="checkbox">'
+
+# find by the absence of the [checked] attribute
+page.find_field(checked: false) == page.find_field(unchecked: true) # => true
+```
+
+The predicate block is always optional. When there are results for a selector
+query, the block is called with each item in the result set. When the block
+evaluates to true, the item is included from the result set. Otherwise, the item
+is excluded:
+
+```ruby
+page.html # => '<input role="switch" type="checkbox" checked>'
+
+switch = page.find_field { |input| input["role"] == "switch" }
+field = page.find_field(checked: true)
+
+switch == field # => true
+```
+
+[`find`]: https://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Node/Finders:find
+[`all`]: https://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Node/Finders:all
+[`Capybara.default_selector`]: https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2Econfigure
+[`find_by_id`]: https://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Node/Finders:find_by_id
+[`find_field`]: https://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Node/Finders:find_field
+[`find_link`]: https://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Node/Finders:find_link
 
 ## <a name="matching"></a>Matching
 
