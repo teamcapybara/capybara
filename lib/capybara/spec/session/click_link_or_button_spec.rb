@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Capybara/ClickLinkOrButtonStyle
-
 Capybara::SpecHelper.spec '#click_link_or_button' do
   it 'should click on a link' do
     @session.visit('/with_html')
@@ -138,4 +136,3 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
     end
   end
 end
-# rubocop:enable Capybara/ClickLinkOrButtonStyle

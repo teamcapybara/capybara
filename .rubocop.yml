@@ -30,6 +30,9 @@ Capybara/RSpec/HaveSelector:
 Capybara/SpecificFinders:
   Enabled: false
 
+Capybara/ClickLinkOrButtonStyle:
+  Enabled: false
+
 #################### Gemspec ###################
 
 Gemspec/DevelopmentDependencies:
@@ -132,6 +135,9 @@ Naming/PredicateName:
 #################### Performance ####################
 
 Performance/MethodObjectAsBlock:
+  Enabled: false
+
+Performance/StringIdentifierArgument:
   Enabled: false
 
 #################### RSpec ####################
