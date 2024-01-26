@@ -740,7 +740,7 @@ distinguish an element that matches the selector from an element that does not:
 page.html # => '<div id="greeting">Hello world</div>'
 
 page.find(:css, 'div').text     # => 'Hello world'
-page.find(:xpath, '//div').text # => 'Hello world'
+page.find(:xpath, './/div').text # => 'Hello world'
 ```
 
 General purpose finder methods like [`find`][] and [`all`][] can accept the
@@ -756,7 +756,7 @@ page.find('div').text     # => 'Hello world'
 
 Capybara.default_selector = :xpath
 
-page.find('//div').text # => 'Hello world'
+page.find('.//div').text # => 'Hello world'
 ```
 
 The locator argument's semantics are context-specific, and depend on the

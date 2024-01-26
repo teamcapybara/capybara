@@ -24,7 +24,7 @@ require 'capybara/selector/definition'
 #   ```ruby
 #   page.html # => '<input>'
 #
-#   page.find :xpath, '//input'
+#   page.find :xpath, './/input'
 #   ```
 #
 # * **:css** - Select elements by CSS selector
