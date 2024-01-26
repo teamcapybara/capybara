@@ -3,6 +3,6 @@ source "https://rubygems.org"
 gem 'bundler', '< 3.0'
 gemspec path: '..'
 
-gem 'rack', '~>3.0.0'
+gem 'rack', '~>3.0'
 gem 'rackup'
-gem 'sinatra', github: 'dentarg/sinatra', branch: 'rack-3'
+gem 'sinatra', '~>4'
