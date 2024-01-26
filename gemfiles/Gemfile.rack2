@@ -1,0 +1,7 @@
+source "https://rubygems.org"
+
+gem 'bundler', '< 3.0'
+gemspec path: '..'
+
+gem 'rack', '~>2.0'
+gem 'sinatra', '~>3'
