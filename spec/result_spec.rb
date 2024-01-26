@@ -30,6 +30,15 @@ RSpec.describe Capybara::Result do
     result.last.text == 'Delta'
   end
 
+  it 'splats into multiple assignment' do
+    first, *rest, last = result
+
+    expect(first).to have_text 'Alpha'
+    expect(rest.first).to have_text 'Beta'
+    expect(rest.last).to have_text 'Gamma'
+    expect(last).to have_text 'Delta'
+  end
+
   it 'can supports values_at method' do
     expect(result.values_at(0, 2).map(&:text)).to eq(%w[Alpha Gamma])
   end

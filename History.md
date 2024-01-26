@@ -4,6 +4,10 @@ Release date: unreleased
 * Dropped support for Ruby 2.7, 3.0+ is now required
 * Dropped support for Selenium < 4.8
 
+### Added
+
+* Add `Capybara::Result#to_ary` to support multiple assignment
+
 # Version 3.39.2
 Release date: 2023-06-10
 
