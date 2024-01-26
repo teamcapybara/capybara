@@ -148,8 +148,8 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
     native_active_element.send_keys(*args)
   end
 
-  def save_screenshot(path, **_options)
-    browser.save_screenshot(path)
+  def save_screenshot(path, **options)
+    browser.save_screenshot(path, **options)
   end
 
   def reset!
