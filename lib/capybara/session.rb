@@ -376,8 +376,8 @@ module Capybara
     #
     # @param [String] locator    Id or legend of the fieldset
     #
-    def within_fieldset(locator, &block)
-      within(:fieldset, locator, &block)
+    def within_fieldset(locator, &)
+      within(:fieldset, locator, &)
     end
 
     ##
@@ -386,8 +386,8 @@ module Capybara
     #
     # @param [String] locator    Id or caption of the table
     #
-    def within_table(locator, &block)
-      within(:table, locator, &block)
+    def within_table(locator, &)
+      within(:table, locator, &)
     end
 
     ##
@@ -656,8 +656,8 @@ module Capybara
     #   @return [String]  the message shown in the modal
     #   @raise [Capybara::ModalNotFound]  if modal dialog hasn't been found
     #
-    def accept_alert(text = nil, **options, &blk)
-      accept_modal(:alert, text, options, &blk)
+    def accept_alert(text = nil, **options, &)
+      accept_modal(:alert, text, options, &)
     end
 
     ##
@@ -666,8 +666,8 @@ module Capybara
     #
     # @macro modal_params
     #
-    def accept_confirm(text = nil, **options, &blk)
-      accept_modal(:confirm, text, options, &blk)
+    def accept_confirm(text = nil, **options, &)
+      accept_modal(:confirm, text, options, &)
     end
 
     ##
@@ -676,8 +676,8 @@ module Capybara
     #
     # @macro modal_params
     #
-    def dismiss_confirm(text = nil, **options, &blk)
-      dismiss_modal(:confirm, text, options, &blk)
+    def dismiss_confirm(text = nil, **options, &)
+      dismiss_modal(:confirm, text, options, &)
     end
 
     ##
@@ -687,8 +687,8 @@ module Capybara
     # @macro modal_params
     # @option options [String] :with   Response to provide to the prompt
     #
-    def accept_prompt(text = nil, **options, &blk)
-      accept_modal(:prompt, text, options, &blk)
+    def accept_prompt(text = nil, **options, &)
+      accept_modal(:prompt, text, options, &)
     end
 
     ##
@@ -697,8 +697,8 @@ module Capybara
     #
     # @macro modal_params
     #
-    def dismiss_prompt(text = nil, **options, &blk)
-      dismiss_modal(:prompt, text, options, &blk)
+    def dismiss_prompt(text = nil, **options, &)
+      dismiss_modal(:prompt, text, options, &)
     end
 
     ##
@@ -797,7 +797,7 @@ module Capybara
     #
     # Yield a block using a specific maximum wait time.
     #
-    def using_wait_time(seconds, &block)
+    def using_wait_time(seconds, &)
       if Capybara.threadsafe
         begin
           previous_wait_time = config.default_max_wait_time
@@ -807,7 +807,7 @@ module Capybara
           config.default_max_wait_time = previous_wait_time
         end
       else
-        Capybara.using_wait_time(seconds, &block)
+        Capybara.using_wait_time(seconds, &)
       end
     end
 
@@ -846,12 +846,12 @@ module Capybara
       args.map { |arg| arg.is_a?(Capybara::Node::Element) ? arg.base : arg }
     end
 
-    def accept_modal(type, text_or_options, options, &blk)
-      driver.accept_modal(type, **modal_options(text_or_options, **options), &blk)
+    def accept_modal(type, text_or_options, options, &)
+      driver.accept_modal(type, **modal_options(text_or_options, **options), &)
     end
 
-    def dismiss_modal(type, text_or_options, options, &blk)
-      driver.dismiss_modal(type, **modal_options(text_or_options, **options), &blk)
+    def dismiss_modal(type, text_or_options, options, &)
+      driver.dismiss_modal(type, **modal_options(text_or_options, **options), &)
     end
 
     def modal_options(text = nil, **options)
@@ -943,9 +943,9 @@ module Capybara
       raise Capybara::WindowError, 'Could not find a window matching block/lambda'
     end
 
-    def synchronize_windows(options, &block)
+    def synchronize_windows(options, &)
       wait_time = Capybara::Queries::BaseQuery.wait(options, config.default_max_wait_time)
-      document.synchronize(wait_time, errors: [Capybara::WindowError], &block)
+      document.synchronize(wait_time, errors: [Capybara::WindowError], &)
     end
   end
 end

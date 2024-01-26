@@ -6,7 +6,7 @@ module Capybara
   module RSpecMatchers
     module Matchers
       class HaveSelector < CountableWrappedElementMatcher
-        def initialize(*args, **kw_args, &filter_block)
+        def initialize(*args, **kw_args, &)
           super
           return unless (@args.size < 2) && @kw_args.keys.any?(String)
 

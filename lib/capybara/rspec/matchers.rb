@@ -144,8 +144,8 @@ module Capybara
     # RSpec matcher for the current path.
     #
     # @see Capybara::SessionMatchers#assert_current_path
-    def have_current_path(path, **options, &optional_filter_block)
-      Matchers::HaveCurrentPath.new(path, **options, &optional_filter_block)
+    def have_current_path(path, **options, &)
+      Matchers::HaveCurrentPath.new(path, **options, &)
     end
 
     # RSpec matcher for element style.

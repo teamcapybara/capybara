@@ -11,12 +11,12 @@ module Capybara
         all.fetch(name.to_sym) { |sel_type| raise ArgumentError, "Unknown selector type (:#{sel_type})" }
       end
 
-      def add(name, **options, &block)
-        all[name.to_sym] = Definition.new(name.to_sym, **options, &block)
+      def add(name, **options, &)
+        all[name.to_sym] = Definition.new(name.to_sym, **options, &)
       end
 
-      def update(name, &block)
-        self[name].instance_eval(&block)
+      def update(name, &)
+        self[name].instance_eval(&)
       end
 
       def remove(name)
@@ -79,7 +79,7 @@ module Capybara
     end
 
     def expression_for(name, locator, config: @config, format: current_format, **options)
-      Selector.new(name, config: config, format: format).call(locator, **options)
+      Selector.new(name, config:, format:).call(locator, **options)
     end
 
     # @api private

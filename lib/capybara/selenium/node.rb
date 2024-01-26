@@ -462,7 +462,7 @@ private
   end
 
   def action_pause(action, duration)
-    action.pause(device: action.pointer_inputs.first, duration: duration)
+    action.pause(device: action.pointer_inputs.first, duration:)
   end
 
   def normalize_keys(keys)
@@ -476,8 +476,8 @@ private
     end
   end
 
-  def each_key(keys, &block)
-    normalize_keys(keys).each(&block)
+  def each_key(keys, &)
+    normalize_keys(keys).each(&)
   end
 
   def find_context

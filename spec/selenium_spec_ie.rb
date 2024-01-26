@@ -38,13 +38,13 @@ Capybara.register_driver :selenium_ie do |app|
     url = "http://#{selenium_host}:#{selenium_port}/wd/hub"
     Capybara::Selenium::Driver.new(app,
                                    browser: :remote,
-                                   options: options,
-                                   url: url)
+                                   options:,
+                                   url:)
   else
     Capybara::Selenium::Driver.new(
       app,
       browser: :ie,
-      options: options
+      options:
     )
   end
 end

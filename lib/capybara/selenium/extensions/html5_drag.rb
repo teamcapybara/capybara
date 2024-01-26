@@ -40,7 +40,7 @@ class Capybara::Selenium::Node
         driver.execute_script DROP_FILE, self, input
       else
         items = args.flat_map do |arg|
-          arg.map { |(type, data)| { type: type, data: data } }
+          arg.map { |(type, data)| { type:, data: } }
         end
         driver.execute_script DROP_STRING, items, self
       end

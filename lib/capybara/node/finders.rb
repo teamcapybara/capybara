@@ -48,7 +48,7 @@ module Capybara
       # @return [Capybara::Node::Element]      The found element
       # @raise  [Capybara::ElementNotFound]    If the element can't be found before time expires
       #
-      def find(*args, **options, &optional_filter_block)
+      def find(*args, **options, &)
         options[:session_options] = session_options
         count_options = options.slice(*Capybara::Queries::BaseQuery::COUNT_KEYS)
         unless count_options.empty?
@@ -57,7 +57,7 @@ module Capybara
             "Called from: #{Capybara::Helpers.filter_backtrace(caller)}"
           )
         end
-        synced_resolve Capybara::Queries::SelectorQuery.new(*args, **options, &optional_filter_block)
+        synced_resolve Capybara::Queries::SelectorQuery.new(*args, **options, &)
       end
 
       ##
@@ -78,9 +78,9 @@ module Capybara
       # @return [Capybara::Node::Element]      The found element
       # @raise  [Capybara::ElementNotFound]    If the element can't be found before time expires
       #
-      def ancestor(*args, **options, &optional_filter_block)
+      def ancestor(*args, **options, &)
         options[:session_options] = session_options
-        synced_resolve Capybara::Queries::AncestorQuery.new(*args, **options, &optional_filter_block)
+        synced_resolve Capybara::Queries::AncestorQuery.new(*args, **options, &)
       end
 
       ##
@@ -101,9 +101,9 @@ module Capybara
       # @return [Capybara::Node::Element]      The found element
       # @raise  [Capybara::ElementNotFound]    If the element can't be found before time expires
       #
-      def sibling(*args, **options, &optional_filter_block)
+      def sibling(*args, **options, &)
         options[:session_options] = session_options
-        synced_resolve Capybara::Queries::SiblingQuery.new(*args, **options, &optional_filter_block)
+        synced_resolve Capybara::Queries::SiblingQuery.new(*args, **options, &)
       end
 
       ##
@@ -132,8 +132,8 @@ module Capybara
       #   @option options [String, Array<String>, Regexp] class Match fields that match the class(es) passed
       # @return [Capybara::Node::Element]   The found element
       #
-      def find_field(locator = nil, **options, &optional_filter_block)
-        find(:field, locator, **options, &optional_filter_block)
+      def find_field(locator = nil, **options, &)
+        find(:field, locator, **options, &)
       end
 
       ##
@@ -154,8 +154,8 @@ module Capybara
       #   @option options [String, Array<String>, Regexp] class    Match links that match the class(es) provided
       # @return [Capybara::Node::Element]   The found element
       #
-      def find_link(locator = nil, **options, &optional_filter_block)
-        find(:link, locator, **options, &optional_filter_block)
+      def find_link(locator = nil, **options, &)
+        find(:link, locator, **options, &)
       end
 
       ##
@@ -181,8 +181,8 @@ module Capybara
       #   @option options [String, Array<String>, Regexp] class    Match buttons that match the class(es) provided
       # @return [Capybara::Node::Element]   The found element
       #
-      def find_button(locator = nil, **options, &optional_filter_block)
-        find(:button, locator, **options, &optional_filter_block)
+      def find_button(locator = nil, **options, &)
+        find(:button, locator, **options, &)
       end
 
       ##
@@ -195,8 +195,8 @@ module Capybara
       #
       # @return [Capybara::Node::Element]   The found element
       #
-      def find_by_id(id, **options, &optional_filter_block)
-        find(:id, id, **options, &optional_filter_block)
+      def find_by_id(id, **options, &)
+        find(:id, id, **options, &)
       end
 
       ##
@@ -290,9 +290,9 @@ module Capybara
       # @return [Capybara::Node::Element]            The found element or nil
       # @raise  [Capybara::ElementNotFound]          If element(s) matching the provided options can't be found before time expires
       #
-      def first(*args, **options, &optional_filter_block)
+      def first(*args, **options, &)
         options = { minimum: 1 }.merge(options) unless options_include_minimum?(options)
-        all(*args, **options, &optional_filter_block).first
+        all(*args, **options, &).first
       end
 
     private

@@ -56,8 +56,8 @@ module Capybara
       # @overload xpath()
       # @return [#call]                             The block that will be called to generate the XPath expression
       #
-      def xpath(*allowed_filters, &block)
-        expression(:xpath, allowed_filters, &block)
+      def xpath(*allowed_filters, &)
+        expression(:xpath, allowed_filters, &)
       end
 
       ##
@@ -74,8 +74,8 @@ module Capybara
       # @overload css()
       # @return [#call]                             The block that will be called to generate the CSS selector
       #
-      def css(*allowed_filters, &block)
-        expression(:css, allowed_filters, &block)
+      def css(*allowed_filters, &)
+        expression(:css, allowed_filters, &)
       end
 
       ##
@@ -197,8 +197,8 @@ module Capybara
         end.join
       end
 
-      def describe_node_filters(&block)
-        describe(:node_filters, &block)
+      def describe_node_filters(&)
+        describe(:node_filters, &)
       end
 
       ##

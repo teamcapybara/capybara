@@ -6,9 +6,9 @@ module Capybara
   module RSpecMatchers
     module Matchers
       class MatchStyle < WrappedElementMatcher
-        def initialize(styles = nil, **kw_args, &filter_block)
+        def initialize(styles = nil, **kw_args, &)
           styles, kw_args = kw_args, {} if styles.nil?
-          super(styles, **kw_args, &filter_block)
+          super(styles, **kw_args, &)
         end
 
         def element_matches?(el)
@@ -33,7 +33,7 @@ module Capybara
       ##
       # @deprecated
       class HaveStyle < MatchStyle
-        def initialize(*args, **kw_args, &filter_block)
+        def initialize(*args, **kw_args, &)
           warn 'HaveStyle matcher is deprecated, please use the MatchStyle matcher instead'
           super
         end

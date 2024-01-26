@@ -54,7 +54,7 @@ module Capybara
 
       def build_message(report_on_invisible)
         message = +''
-        unless (COUNT_KEYS & @options.keys).empty?
+        if COUNT_KEYS.intersect @options.keys
           message << " but found #{@count} #{Capybara::Helpers.declension('time', 'times', @count)}"
         end
         message << " in #{@actual_text.inspect}"
@@ -105,7 +105,7 @@ module Capybara
 
       def text(node: @node, query_type: @type)
         normalize_ws = options.fetch(:normalize_ws, session_options.default_normalize_ws)
-        node.text(query_type, normalize_ws: normalize_ws)
+        node.text(query_type, normalize_ws:)
       end
 
       def default_type

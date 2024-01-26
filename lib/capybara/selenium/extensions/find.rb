@@ -4,11 +4,11 @@ module Capybara
   module Selenium
     module Find
       def find_xpath(selector, uses_visibility: false, styles: nil, position: false, **_options)
-        find_by(:xpath, selector, uses_visibility: uses_visibility, texts: [], styles: styles, position: position)
+        find_by(:xpath, selector, uses_visibility:, texts: [], styles:, position:)
       end
 
       def find_css(selector, uses_visibility: false, texts: [], styles: nil, position: false, **_options)
-        find_by(:css, selector, uses_visibility: uses_visibility, texts: texts, styles: styles, position: position)
+        find_by(:css, selector, uses_visibility:, texts:, styles:, position:)
       end
 
     private
@@ -19,7 +19,7 @@ module Capybara
 
         if (els.size > 2) && !ENV['DISABLE_CAPYBARA_SELENIUM_OPTIMIZATIONS']
           els = filter_by_text(els, texts) unless texts.empty?
-          hints = gather_hints(els, uses_visibility: uses_visibility, styles: styles, position: position)
+          hints = gather_hints(els, uses_visibility:, styles:, position:)
         end
         els.map.with_index { |el, idx| build_node(el, hints[idx] || {}) }
       end

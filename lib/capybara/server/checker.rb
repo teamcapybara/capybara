@@ -10,10 +10,10 @@ module Capybara
         @ssl = false
       end
 
-      def request(&block)
-        ssl? ? https_request(&block) : http_request(&block)
+      def request(&)
+        ssl? ? https_request(&) : http_request(&)
       rescue *TRY_HTTPS_ERRORS
-        res = https_request(&block)
+        res = https_request(&)
         @ssl = true
         res
       end
@@ -24,16 +24,16 @@ module Capybara
 
     private
 
-      def http_request(&block)
-        make_request(read_timeout: 2, &block)
+      def http_request(&)
+        make_request(read_timeout: 2, &)
       end
 
-      def https_request(&block)
-        make_request(**ssl_options, &block)
+      def https_request(&)
+        make_request(**ssl_options, &)
       end
 
-      def make_request(**options, &block)
-        Net::HTTP.start(@host, @port, options.merge(max_retries: 0), &block)
+      def make_request(**options, &)
+        Net::HTTP.start(@host, @port, options.merge(max_retries: 0), &)
       end
 
       def ssl_options
