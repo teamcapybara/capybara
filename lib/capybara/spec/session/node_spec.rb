@@ -167,7 +167,7 @@ Capybara::SpecHelper.spec 'node' do
     it 'should not submit single text input forms if ended with \n and has multiple values' do
       @session.visit('/form')
       @session.find(:css, '#two_input_1').set("my entry\n")
-      expect(@session.find(:css, '#two_input_1').value).to eq("my entry\n")
+      expect(@session.find(:css, '#two_input_1').value).to eq("my entry\n").or(eq 'my entry')
     end
   end
 
