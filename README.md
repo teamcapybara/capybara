@@ -618,10 +618,10 @@ JS
 
 In drivers which support it, you can accept, dismiss and respond to alerts, confirms, and prompts.
 
-You can accept or dismiss alert messages by wrapping the code that produces an alert in a block:
+You can accept alert messages by wrapping the code that produces an alert in a block:
 
 ```ruby
-accept_alert do
+accept_alert 'optional text or regex' do
   click_link('Show Alert')
 end
 ```
@@ -629,7 +629,13 @@ end
 You can accept or dismiss a confirmation by wrapping it in a block, as well:
 
 ```ruby
-dismiss_confirm do
+accept_confirm 'optional text' do
+  click_link('Show Confirm')
+end
+```
+
+```ruby
+dismiss_confirm 'optional text' do
   click_link('Show Confirm')
 end
 ```
@@ -637,7 +643,13 @@ end
 You can accept or dismiss prompts as well, and also provide text to fill in for the response:
 
 ```ruby
-accept_prompt(with: 'Linus Torvalds') do
+accept_prompt('optional text', with: 'Linus Torvalds') do
+  click_link('Show Prompt About Linux')
+end
+```
+
+```ruby
+dismiss_prompt('optional text') do
   click_link('Show Prompt About Linux')
 end
 ```
