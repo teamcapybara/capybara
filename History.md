@@ -1,12 +1,24 @@
 #Version 3.40.0
-Release date: unreleased
+Release date: 2024-01-26
+
+### Changned
 
 * Dropped support for Ruby 2.7, 3.0+ is now required
 * Dropped support for Selenium < 4.8
+* Use the new headless option on chromedriver with registered selenium driver [Neil Carvalho]
 
 ### Added
 
-* Add `Capybara::Result#to_ary` to support multiple assignment
+* `Capybara::Result#to_ary` to support multiple assignment [Sean Doyle]
+* `has_element?` and related matchers [Sean Doyle]
+*  Rack 3 support
+
+### Fixed
+
+* Forward save_screenshot options to selenium - Issue 2738
+* Rack test - don't auto submit forms with multiple inputs [Mitchell Henke]
+* Table row selector matches cell values in order - Issue 2686 [Jeff Parr]
+* Table row selector fixes for first column - Issue 2685 [Jeff Par]
 
 # Version 3.39.2
 Release date: 2023-06-10
