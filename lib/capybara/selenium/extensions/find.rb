@@ -19,7 +19,12 @@ module Capybara
 
         if (els.size > 2) && !ENV['DISABLE_CAPYBARA_SELENIUM_OPTIMIZATIONS']
           els = filter_by_text(els, texts) unless texts.empty?
-          hints = gather_hints(els, uses_visibility: uses_visibility, styles: styles, position: position)
+          hints = begin
+            gather_hints(els, uses_visibility: uses_visibility, styles: styles, position: position)
+          rescue Selenium::WebDriver::Error::JavascriptError
+            # Unclear how this can happen but issue #2729 indicates it can
+            []
+          end
         end
         els.map.with_index { |el, idx| build_node(el, hints[idx] || {}) }
       end
