@@ -27,7 +27,7 @@ jobs:
         task: ["rack_smoke", "cucumber"]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -51,7 +51,7 @@ jobs:
         task: ["spec_chrome", "spec_firefox"]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -76,7 +76,7 @@ jobs:
         task: ["spec_chrome", "spec_firefox"]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install non-ruby dependencies
         run: |
           sudo apt-get update
@@ -98,7 +98,7 @@ jobs:
         ruby: ["3.0"]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -118,7 +118,7 @@ jobs:
         ruby: ["3.1"]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -141,7 +141,7 @@ jobs:
         task: ["spec_chrome", "spec_firefox"]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install non-ruby dependencies
         run: |
           sudo apt-get update
@@ -169,7 +169,7 @@ jobs:
         task: ["spec_rack"]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
