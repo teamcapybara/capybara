@@ -59,6 +59,34 @@ Capybara::SpecHelper.spec '#has_table?' do
       ])
   end
 
+  context 'with a table that has both horizontal and vertical headers' do
+    it 'should accept arrays representing rows' do
+      expect(@session).to have_table('Horizontal and Vertical Headers', rows:
+      [
+        %w[Tim London 555-1234],
+        %w[Joe Berlin 555-5678],
+      ])
+    end
+
+    it 'should key rows by vertical headers' do
+      expect(@session).to have_table('Horizontal and Vertical Headers', with_rows:
+      [
+        { 'Name' => 'Tim', 'City' => 'London', 'Phone' => '555-1234' },
+        { 'Name' => 'Joe', 'City' => 'Berlin', 'Phone' => '555-5678' },
+      ])
+    end
+
+    it 'should match all cols with array of cell values' do
+      expect(@session).to have_table('Horizontal and Vertical Headers', cols:
+        [
+          %w[Tim Joe],
+          %w[London Berlin],
+          %w[555-1234 555-5678],
+        ]
+      )
+    end
+  end
+
   it 'should match with vertical headers' do
     expect(@session).to have_table('Vertical Headers', with_cols:
       [
@@ -112,6 +140,15 @@ Capybara::SpecHelper.spec '#has_table?' do
     expect(@session).not_to have_table('Vertical Headers', with_cols:
       [
         { 'Unmatched Header' => 'Thomas' }
+      ])
+  end
+
+  it "should accept arrays representing TDs of rows with THs" do
+    expect(@session).to have_table('Vertical Headers', with_rows:
+      [
+        ["Thomas", "Danilo", "Vern", "Ratke", "Palmer"],
+        ["Walpole", "Wilkinson", "Konopelski", "Lawrence", "Sawayn"],
+        ["Oceanside", "Johnsonville", "Everette", "East Sorayashire", "West Trinidad"]
       ])
   end
 
