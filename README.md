@@ -766,7 +766,7 @@ selector. The types of arguments are varied. Some selectors support `String` or
 
 ```ruby
 page.html # => '<label for="greeting">Greeting</label>
-                <input id="greeting" name="content">'
+          #     <input id="greeting" name="content">'
 
 # find by the <input> element's [id] attribute
 page.find(:id, 'greeting') == page.find_by_id('greeting') # => true
@@ -781,15 +781,15 @@ page.find(:field, 'content') == page.find_field('content') # => true
 page.find(:field, 'Greeting') == page.find_field('Greeting') # => true
 
 page.html # => '<table>
-                  <tr>
-                    <th>A</th>
-                    <th>B</th>
-                  </tr>
-                  <tr>
-                    <td>1</td>
-                    <td>2</td>
-                  </tr>
-                </table>'
+          #       <tr>
+          #         <th>A</th>
+          #         <th>B</th>
+          #       </tr>
+          #       <tr>
+          #         <td>1</td>
+          #         <td>2</td>
+          #       </tr>
+          #     </table>'
 
 # find by <td> content
 page.find(:table_row, ['1', '2']) == page.find(:css, 'tr:last-of-type') # => true
