@@ -11,11 +11,13 @@ Capybara.add_selector(:table_row, locator_type: [Array, Hash]) do
         ]
         xp.where(cell_xp)
       end
-    else
+    elsif locator.is_a? Array
       initial_td = XPath.descendant(:td)[XPath.string.n.is(locator.shift)]
       tds = locator.reverse.map { |cell| XPath.following_sibling(:td)[XPath.string.n.is(cell)] }
                    .reduce { |xp, cell| cell.where(xp) }
       xpath[initial_td[tds]]
+    else
+      xpath
     end
   end
 end
