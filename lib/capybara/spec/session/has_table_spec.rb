@@ -131,6 +131,13 @@ Capybara::SpecHelper.spec '#has_table?' do
     expect(@session.find(:table, 'Horizontal Headers')).not_to have_selector(:table_row, %w[Walpole Thomas])
     expect(@session.find(:table, 'Horizontal Headers')).not_to have_selector(:table_row, %w[Other])
   end
+
+  it 'should find row by all rows without locator values' do
+    table = @session.find(:table, 'Horizontal Headers')
+
+    expect(table).to have_selector(:table_row)
+    expect(table).to have_selector(:table_row, count: 6)
+  end
 end
 
 Capybara::SpecHelper.spec '#has_no_table?' do
