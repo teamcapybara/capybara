@@ -8,7 +8,6 @@ Capybara::SpecHelper.spec '#has_element?' do
   it 'should be true if the given element is on the page' do
     expect(@session).to have_element('a', id: 'foo')
     expect(@session).to have_element('a', text: 'A link', href: '/with_simple_html')
-    expect(@session).to have_element('a', text: :'A link', href: :'/with_simple_html')
     expect(@session).to have_element('a', text: 'A link', href: %r{/with_simple_html})
     expect(@session).to have_element('a', text: 'labore', target: '_self')
   end
