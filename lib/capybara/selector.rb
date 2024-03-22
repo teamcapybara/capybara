@@ -42,7 +42,7 @@ require 'capybara/selector/definition'
 #   ```ruby
 #   page.html # => '<input id="field">'
 #
-#   page.find :id, 'content'
+#   page.find :id, 'field'
 #   ```
 #
 # * **:field** - Select field elements (input [not of type submit, image, or hidden], textarea, select)
