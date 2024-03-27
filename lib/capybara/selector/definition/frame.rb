@@ -5,7 +5,7 @@ Capybara.add_selector(:frame, locator_type: [String, Symbol]) do
     xpath = XPath.descendant(:iframe).union(XPath.descendant(:frame))
     unless locator.nil?
       locator_matchers = (XPath.attr(:id) == locator.to_s) | (XPath.attr(:name) == locator.to_s)
-      locator_matchers |= XPath.attr(test_id) == locator if test_id
+      locator_matchers |= XPath.attr(test_id) == locator.to_s if test_id
       xpath = xpath[locator_matchers]
     end
     xpath[find_by_attr(:name, name)]
