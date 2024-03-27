@@ -5,7 +5,7 @@ Capybara.add_selector(:table, locator_type: [String, Symbol]) do
     xpath = XPath.descendant(:table)
     unless locator.nil?
       locator_matchers = (XPath.attr(:id) == locator.to_s) | XPath.descendant(:caption).is(locator.to_s)
-      locator_matchers |= XPath.attr(test_id) == locator if test_id
+      locator_matchers |= XPath.attr(test_id) == locator.to_s if test_id
       xpath = xpath[locator_matchers]
     end
     xpath = xpath[XPath.descendant(:caption) == caption] if caption
