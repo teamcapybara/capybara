@@ -17,6 +17,8 @@ Capybara::SpecHelper.run_specs TestClass.new, 'DSL', capybara_skip: %i[
     pending "Rack < 2 doesn't support 308" if Gem.loaded_specs['rack'].version < Gem::Version.new('2.0.0')
   when /#attach_file with multipart form should send prior hidden field if no file submitted/
     skip 'Rack-test < 2 needs an empty file to detect multipart form' if Gem.loaded_specs['rack-test'].version < Gem::Version.new('2.0.0')
+  when /popover/
+    skip "Rack-test driver doesn't support popover functionality"
   end
 end
 
