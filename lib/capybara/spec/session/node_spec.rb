@@ -300,6 +300,13 @@ Capybara::SpecHelper.spec 'node' do
       expect(@session.find(:button, 'Should be clickable')).to be_visible
       expect(@session.find(:button, 'Should not be clickable')).not_to be_visible
     end
+
+    it 'works with popover parents' do
+      expect(@session.find(:id, 'popover_parent')).not_to be_visible
+      expect(@session.find(:id, 'popover_child')).not_to be_visible
+      @session.click_button('Show parent popover')
+      expect(@session.find(:id, 'popover_child', text: 'Popover Contents')).to be_visible
+    end
   end
 
   describe '#obscured?', requires: [:css] do
