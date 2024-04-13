@@ -348,7 +348,7 @@ private
   def clear_storage
     clear_session_storage unless options[:clear_session_storage] == false
     clear_local_storage unless options[:clear_local_storage] == false
-  rescue Selenium::WebDriver::Error::JavascriptError
+  rescue Selenium::WebDriver::Error::JavascriptError, Selenium::WebDriver::Error::WebDriverError
     # session/local storage may not be available if on non-http pages (e.g. about:blank)
   end
 
