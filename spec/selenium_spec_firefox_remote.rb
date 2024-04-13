@@ -40,7 +40,7 @@ Capybara.register_driver :selenium_firefox_remote do |app|
   Capybara::Selenium::Driver.new app,
                                  browser: :remote,
                                  options: browser_options,
-                                 url: url
+                                 url:
 end
 
 FIREFOX_REMOTE_DRIVER = :selenium_firefox_remote

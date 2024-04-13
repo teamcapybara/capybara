@@ -59,7 +59,7 @@ module Capybara
       end
 
       def process(alternation:)
-        strs = extract_strings(Regexp::Parser.parse(@regexp), alternation: alternation)
+        strs = extract_strings(Regexp::Parser.parse(@regexp), alternation:)
         strs = collapse(combine(strs).map(&:flatten))
         strs.each { |str| str.map!(&:upcase) } if @regexp.casefold?
         strs

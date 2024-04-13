@@ -15,15 +15,15 @@ module Capybara
         instance_eval(&block) if block
       end
 
-      def node_filter(names, *types, **options, &block)
+      def node_filter(names, *types, **options, &)
         Array(names).each do |name|
-          add_filter(name, Filters::NodeFilter, *types, **options, &block)
+          add_filter(name, Filters::NodeFilter, *types, **options, &)
         end
       end
       alias_method :filter, :node_filter
 
-      def expression_filter(name, *types, **options, &block)
-        add_filter(name, Filters::ExpressionFilter, *types, **options, &block)
+      def expression_filter(name, *types, **options, &)
+        add_filter(name, Filters::ExpressionFilter, *types, **options, &)
       end
 
       def describe(what = nil, &block)
@@ -75,8 +75,8 @@ module Capybara
           all.fetch(name.to_sym) { |set_name| raise ArgumentError, "Unknown filter set (:#{set_name})" }
         end
 
-        def add(name, &block)
-          all[name.to_sym] = FilterSet.new(name.to_sym, &block)
+        def add(name, &)
+          all[name.to_sym] = FilterSet.new(name.to_sym, &)
         end
 
         def remove(name)

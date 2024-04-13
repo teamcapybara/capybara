@@ -26,8 +26,8 @@ Capybara.register_driver :sauce_chrome do |app|
   url = 'https://ondemand.saucelabs.com:443/wd/hub'
 
   Capybara::Selenium::Driver.new(app,
-                                 browser: :remote, url: url,
-                                 capabilities: capabilities,
+                                 browser: :remote, url:,
+                                 capabilities:,
                                  options: Selenium::WebDriver::Chrome::Options.new(args: ['']))
 end
 

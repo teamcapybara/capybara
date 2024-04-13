@@ -127,7 +127,7 @@ private
     raise ArgumentError, "You may only upload files: #{local_file.inspect}" unless File.file?(local_file)
 
     file = ::Selenium::WebDriver::Zipper.zip_file(local_file)
-    bridge.http.call(:post, "session/#{bridge.session_id}/file", file: file)['value']
+    bridge.http.call(:post, "session/#{bridge.session_id}/file", file:)['value']
   end
 
   def browser_version

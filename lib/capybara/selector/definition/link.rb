@@ -3,11 +3,11 @@
 Capybara.add_selector(:link, locator_type: [String, Symbol]) do
   xpath do |locator, href: true, alt: nil, title: nil, target: nil, **|
     xpath = XPath.descendant(:a)
-    xpath = builder(xpath).add_attribute_conditions(href: href) unless href == false
+    xpath = builder(xpath).add_attribute_conditions(href:) unless href == false
 
     if enable_aria_role
       role_path = XPath.descendant[XPath.attr(:role).equals('link')]
-      role_path = builder(role_path).add_attribute_conditions(href: href) unless [true, false].include? href
+      role_path = builder(role_path).add_attribute_conditions(href:) unless [true, false].include? href
 
       xpath += role_path
     end
@@ -38,7 +38,7 @@ Capybara.add_selector(:link, locator_type: [String, Symbol]) do
   end
 
   expression_filter(:download, valid_values: [true, false, String]) do |expr, download|
-    builder(expr).add_attribute_conditions(download: download)
+    builder(expr).add_attribute_conditions(download:)
   end
 
   describe_expression_filters do |download: nil, **options|

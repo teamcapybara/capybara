@@ -584,7 +584,7 @@ Capybara::SpecHelper.spec 'node' do
         element.drag_to(target)
 
         conditions = %w[DragLeave Drop DragEnd].map do |text|
-          have_css('div.log', text: text)
+          have_css('div.log', text:)
         end
         expect(@session).to(conditions.reduce { |memo, cond| memo.and(cond) })
 

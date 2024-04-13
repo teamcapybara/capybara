@@ -181,7 +181,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
     switch_to_frame(:parent)
     begin
-      frame.base.obscured?(x: x, y: y)
+      frame.base.obscured?(x:, y:)
     ensure
       switch_to_frame(frame)
     end

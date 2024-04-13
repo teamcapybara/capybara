@@ -174,12 +174,12 @@ module Capybara
       # while JRuby >= 9.2.8.0 leaks threads when using lazy enumerators
       # https://github.com/teamcapybara/capybara/issues/2349
       # so disable the use and JRuby users will need to pay a performance penalty
-      def lazy_select_elements(&block)
-        @elements.select(&block).to_enum # non-lazy evaluation
+      def lazy_select_elements(&)
+        @elements.select(&).to_enum # non-lazy evaluation
       end
     else
-      def lazy_select_elements(&block)
-        @elements.lazy.select(&block)
+      def lazy_select_elements(&)
+        @elements.lazy.select(&)
       end
     end
   end
