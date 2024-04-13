@@ -63,7 +63,7 @@ require 'capybara/selector/definition'
 #
 #   ```ruby
 #   page.html # => '<label for="article_title">Title</label>
-#                   <input id="article_title" name="article[title]" value="Hello world">'
+#             #     <input id="article_title" name="article[title]" value="Hello world">'
 #
 #   page.find :field, 'article_title'
 #   page.find :field, 'article[title]'
@@ -79,8 +79,8 @@ require 'capybara/selector/definition'
 #
 #   ```ruby
 #   page.html # => '<fieldset disabled>
-#                     <legend>Fields (disabled)</legend>
-#                   </fieldset>'
+#             #       <legend>Fields (disabled)</legend>
+#             #     </fieldset>'
 #
 #   page.find :fieldset, 'Fields (disabled)', disabled: true
 #   ```
@@ -152,7 +152,7 @@ require 'capybara/selector/definition'
 #
 #   ```ruby
 #   page.html # => '<label for="article_body">Body</label>
-#                   <textarea id="article_body" name="article[body]"></textarea>'
+#             #     <textarea id="article_body" name="article[body]"></textarea>'
 #
 #   page.find :fillable_field, 'article_body'
 #   page.find :fillable_field, 'article[body]'
@@ -172,9 +172,9 @@ require 'capybara/selector/definition'
 #
 #   ```ruby
 #   page.html # => '<input type="radio" id="article_state_published" name="article[state]" value="published" checked>
-#                   <label for="article_state_published">Published</label>
-#                   <input type="radio" id="article_state_draft" name="article[state]" value="draft">
-#                   <label for="article_state_draft">Draft</label>'
+#             #     <label for="article_state_published">Published</label>
+#             #     <input type="radio" id="article_state_draft" name="article[state]" value="draft">
+#             #     <label for="article_state_draft">Draft</label>'
 #
 #   page.find :radio_button, 'article_state_published'
 #   page.find :radio_button, 'article[state]', option: 'published'
@@ -194,7 +194,7 @@ require 'capybara/selector/definition'
 #
 #   ```ruby
 #   page.html # => '<input type="checkbox" id="registration_terms" name="registration[terms]" value="true">
-#                   <label for="registration_terms">I agree to terms and conditions</label>'
+#             #     <label for="registration_terms">I agree to terms and conditions</label>'
 #
 #   page.find :checkbox, 'registration_terms'
 #   page.find :checkbox, 'registration[terms]'
@@ -217,10 +217,10 @@ require 'capybara/selector/definition'
 #
 #   ```ruby
 #   page.html # => '<label for="article_category">Category</label>
-#                   <select id="article_category" name="article[category]">
-#                     <option value="General" checked></option>
-#                     <option value="Other"></option>
-#                   </select>'
+#             #     <select id="article_category" name="article[category]">
+#             #       <option value="General" checked></option>
+#             #       <option value="Other"></option>
+#             #     </select>'
 #
 #   page.find :select, 'article_category'
 #   page.find :select, 'article[category]'
@@ -240,8 +240,8 @@ require 'capybara/selector/definition'
 #
 #   ```ruby
 #   page.html # => '<option value="General" checked></option>
-#                   <option value="Disabled" disabled></option>
-#                   <option value="Other"></option>'
+#             #     <option value="Disabled" disabled></option>
+#             #     <option value="Other"></option>'
 #
 #   page.find :option, 'General'
 #   page.find :option, 'General', selected: true
@@ -261,12 +261,12 @@ require 'capybara/selector/definition'
 #
 #   ```ruby
 #   page.html # => '<label for="ice_cream_flavor">Flavor</label>
-#                   <input list="ice_cream_flavors" id="ice_cream_flavor" name="ice_cream[flavor]">
-#                   <datalist id="ice_cream_flavors">
-#                     <option value="Chocolate"></option>
-#                     <option value="Strawberry"></option>
-#                     <option value="Vanilla"></option>
-#                   </datalist>'
+#             #     <input list="ice_cream_flavors" id="ice_cream_flavor" name="ice_cream[flavor]">
+#             #     <datalist id="ice_cream_flavors">
+#             #       <option value="Chocolate"></option>
+#             #       <option value="Strawberry"></option>
+#             #       <option value="Vanilla"></option>
+#             #     </datalist>'
 #
 #   page.find :datalist_input, 'ice_cream_flavor'
 #   page.find :datalist_input, 'ice_cream[flavor]'
@@ -283,11 +283,11 @@ require 'capybara/selector/definition'
 #
 #   ```ruby
 #   page.html # => '<datalist>
-#                     <option value="Chocolate"></option>
-#                     <option value="Strawberry"></option>
-#                     <option value="Vanilla"></option>
-#                     <option value="Forbidden" disabled></option>
-#                   </datalist>'
+#             #       <option value="Chocolate"></option>
+#             #       <option value="Strawberry"></option>
+#             #       <option value="Vanilla"></option>
+#             #       <option value="Forbidden" disabled></option>
+#             #     </datalist>'
 #
 #   page.find :datalist_option, 'Chocolate'
 #   page.find :datalist_option, 'Strawberry'
@@ -304,7 +304,7 @@ require 'capybara/selector/definition'
 #
 #   ```ruby
 #   page.html # => '<label for="article_banner_image">Banner Image</label>
-#                   <input type="file" id="article_banner_image" name="article[banner_image]">'
+#             #     <input type="file" id="article_banner_image" name="article[banner_image]">'
 #
 #   page.find :file_field, 'article_banner_image'
 #   page.find :file_field, 'article[banner_image]'
@@ -320,7 +320,7 @@ require 'capybara/selector/definition'
 #
 #   ```ruby
 #   page.html # => '<label for="article_title">Title</label>
-#                   <input id="article_title" name="article[title]">'
+#             #     <input id="article_title" name="article[title]">'
 #
 #   page.find :label, 'Title'
 #   page.find :label, 'Title', for: 'article_title'
@@ -338,20 +338,20 @@ require 'capybara/selector/definition'
 #
 #   ```ruby
 #   page.html # => '<table>
-#                     <caption>A table</caption>
-#                     <tr>
-#                       <th>A</th>
-#                       <th>B</th>
-#                     </tr>
-#                     <tr>
-#                       <td>1</td>
-#                       <td>2</td>
-#                     </tr>
-#                     <tr>
-#                       <td>3</td>
-#                       <td>4</td>
-#                     </tr>
-#                   </table>'
+#             #       <caption>A table</caption>
+#             #       <tr>
+#             #         <th>A</th>
+#             #         <th>B</th>
+#             #       </tr>
+#             #       <tr>
+#             #         <td>1</td>
+#             #         <td>2</td>
+#             #       </tr>
+#             #       <tr>
+#             #         <td>3</td>
+#             #         <td>4</td>
+#             #       </tr>
+#             #     </table>'
 #
 #   page.find :table, 'A table'
 #   page.find :table, with_rows: [
@@ -378,19 +378,19 @@ require 'capybara/selector/definition'
 #
 #   ```ruby
 #   page.html # => '<table>
-#                     <tr>
-#                       <th>A</th>
-#                       <th>B</th>
-#                     </tr>
-#                     <tr>
-#                       <td>1</td>
-#                       <td>2</td>
-#                     </tr>
-#                     <tr>
-#                       <td>3</td>
-#                       <td>4</td>
-#                     </tr>
-#                   </table>'
+#             #       <tr>
+#             #         <th>A</th>
+#             #         <th>B</th>
+#             #       </tr>
+#             #       <tr>
+#             #         <td>1</td>
+#             #         <td>2</td>
+#             #       </tr>
+#             #       <tr>
+#             #         <td>3</td>
+#             #         <td>4</td>
+#             #       </tr>
+#             #     </table>'
 #
 #   page.find :table_row, 'A' => '1', 'B' => '2'
 #   page.find :table_row, 'A' => '3', 'B' => '4'
