@@ -514,4 +514,13 @@ Capybara::SpecHelper.spec '#click_button' do
       end.to raise_error(Capybara::ElementNotFound)
     end
   end
+
+  it 'should work with popovers' do
+    @session.click_button('Show popover')
+    clickable = @session.find(:button, 'Should be clickable', visible: false)
+    expect(clickable).to be_visible
+    expect do
+      @session.click_button('Should be clickable')
+    end.not_to raise_error
+  end
 end

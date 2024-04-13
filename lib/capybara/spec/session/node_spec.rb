@@ -290,6 +290,22 @@ Capybara::SpecHelper.spec 'node' do
       descendants_css = '#closed_details > *:not(summary), #closed_details > *:not(summary) *'
       expect(@session).to have_no_css(descendants_css, visible: :visible)
         .and(have_css(descendants_css, visible: :hidden, count: 3))
+      sleep 20
+    end
+
+    it 'works with popover attribute' do
+      expect(@session.find(:button, 'Should not be clickable')).not_to be_visible
+      expect(@session.find(:button, 'Should be clickable')).not_to be_visible
+      @session.click_button('Show popover')
+      expect(@session.find(:button, 'Should be clickable')).to be_visible
+      expect(@session.find(:button, 'Should not be clickable')).not_to be_visible
+    end
+
+    it 'works with popover parents' do
+      expect(@session.find(:id, 'popover_parent')).not_to be_visible
+      expect(@session.find(:id, 'popover_child')).not_to be_visible
+      @session.click_button('Show parent popover')
+      expect(@session.find(:id, 'popover_child', text: 'Popover Contents')).to be_visible
     end
   end
 

@@ -200,6 +200,26 @@ banana</textarea>
   </div>
 </details>
 
+<div>
+  <div style="position: relative; overflow: hidden;">
+    <button popovertarget="show">Show popover</button>
+    <button popover id="not_shown">Should not be clickable</button>
+    <button popover id="show">Should be clickable</button>
+  </div>
+</div>
+
+<div>
+  <div style="position: relative; overflow: hidden;">
+    <button popovertarget="popover_parent">Show parent popover</button>
+    <div popover id="popover_parent">
+      <div id="popover_child">
+        Popover Contents
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <div style='height: 1000px'>spacer</div>
 
 <template id="template">
