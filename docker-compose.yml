@@ -2,12 +2,12 @@ version: "3"
 services:
   selenium_chrome:
     network_mode: "host"
-    image: "selenium/${SELENIUM_IMAGE:-standalone-chrome-debug}"
+    image: "selenium/${SELENIUM_IMAGE:-standalone-chrome}"
     volumes:
       - "/dev/shm:/dev/shm"
   selenium_firefox:
     network_mode: "host"
-    image: "selenium/${SELENIUM_IMAGE:-standalone-firefox-debug}"
+    image: "selenium/${SELENIUM_IMAGE:-standalone-firefox}"
     volumes:
       - "/dev/shm:/dev/shm"
     environment:
