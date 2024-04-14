@@ -15,9 +15,9 @@ module Capybara
         instance_eval(&block) if block
       end
 
-      def node_filter(names, *types, **options, &)
+      def node_filter(names, *types, **options, &filter_block)
         Array(names).each do |name|
-          add_filter(name, Filters::NodeFilter, *types, **options, &)
+          add_filter(name, Filters::NodeFilter, *types, **options, &filter_block)
         end
       end
       alias_method :filter, :node_filter
