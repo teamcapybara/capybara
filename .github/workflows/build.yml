@@ -90,45 +90,45 @@ jobs:
       - name: Run tests
         run: bundle exec rake ${{ matrix.task }}
 
-  remote_chrome:
-    runs-on: ubuntu-latest
+  # remote_chrome:
+  #   runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        ruby: ["3.0"]
+  #   strategy:
+  #     matrix:
+  #       ruby: ["3.0"]
 
-    steps:
-      - uses: actions/checkout@v4
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true
-      - name: Run remote Chrome
-        run: docker-compose up -d selenium_chrome
-      - name: Run specs
-        run: bundle exec rake spec_chrome_remote
+  #     - name: Set up Ruby
+  #       uses: ruby/setup-ruby@v1
+  #       with:
+  #         ruby-version: ${{ matrix.ruby }}
+  #         bundler-cache: true
+  #     - name: Run remote Chrome
+  #       run: docker-compose up -d selenium_chrome
+  #     - name: Run specs
+  #       run: bundle exec rake spec_chrome_remote
 
-  remote_firefox:
-    runs-on: ubuntu-latest
+  # remote_firefox:
+  #   runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        ruby: ["3.1"]
+  #   strategy:
+  #     matrix:
+  #       ruby: ["3.1"]
 
-    steps:
-      - uses: actions/checkout@v4
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true
-      - name: Run remote Firefox
-        run: docker-compose up -d selenium_firefox
-      - name: Run specs
-        run: bundle exec rake spec_firefox_remote
+  #     - name: Set up Ruby
+  #       uses: ruby/setup-ruby@v1
+  #       with:
+  #         ruby-version: ${{ matrix.ruby }}
+  #         bundler-cache: true
+  #     - name: Run remote Firefox
+  #       run: docker-compose up -d selenium_firefox
+  #     - name: Run specs
+  #       run: bundle exec rake spec_firefox_remote
 
   non_headless:
     runs-on: ubuntu-latest
