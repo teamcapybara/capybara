@@ -10,9 +10,9 @@ module Capybara
       end
     end
 
-    def within(*args, **kwargs, &)
+    def within(*args, **kwargs, &block)
       if block
-        within_element(*args, **kwargs, &)
+        within_element(*args, **kwargs, &block)
       else
         be_within(*args)
       end
