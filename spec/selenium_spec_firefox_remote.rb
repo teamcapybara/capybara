@@ -79,6 +79,10 @@ Capybara::SpecHelper.run_specs TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVE
     skip 'Not supported with this geckodriver version' if geckodriver_lt?('0.31.0', @session)
   when /Capybara::Session selenium node #set should submit single text input forms if ended with \\n/
     pending 'Firefox/geckodriver doesn\'t submit with values ending in \n'
+  when /Capybara::Session selenium_firefox_remote #click_button should work with popovers/
+    skip "Firefox doesn't currently support popover functionality"
+  when /popover/
+    pending "Firefox doesn't currently support popover functionality"
   end
 end
 
