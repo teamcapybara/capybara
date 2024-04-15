@@ -179,8 +179,8 @@ module Capybara
     # @param [Symbol] name    The name of the selector to add
     # @yield                  A block executed in the context of the new {Capybara::Selector}
     #
-    def add_selector(name, **options, &block)
-      Capybara::Selector.add(name, **options, &block)
+    def add_selector(name, **options, &)
+      Capybara::Selector.add(name, **options, &)
     end
 
     ##
@@ -197,8 +197,8 @@ module Capybara
     # @param [Symbol] name    The name of the selector to modify
     # @yield                  A block executed in the context of the existing {Capybara::Selector}
     #
-    def modify_selector(name, &block)
-      Capybara::Selector.update(name, &block)
+    def modify_selector(name, &)
+      Capybara::Selector.update(name, &)
     end
 
     def drivers
@@ -358,10 +358,10 @@ module Capybara
     def using_session(name_or_session, &block)
       previous_session = current_session
       previous_session_info = {
-        specified_session: specified_session,
-        session_name: session_name,
-        current_driver: current_driver,
-        app: app
+        specified_session:,
+        session_name:,
+        current_driver:,
+        app:
       }
       self.specified_session = self.session_name = nil
       if name_or_session.is_a? Capybara::Session

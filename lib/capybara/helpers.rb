@@ -82,7 +82,7 @@ module Capybara
     end
 
     def warn(message, uplevel: 1)
-      Kernel.warn(message, uplevel: uplevel)
+      Kernel.warn(message, uplevel:)
     end
 
     if defined?(Process::CLOCK_MONOTONIC_RAW)

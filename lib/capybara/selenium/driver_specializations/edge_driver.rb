@@ -106,7 +106,7 @@ private
     if browser.respond_to? :execute_cdp
       browser.execute_cdp(cmd, **params)
     else
-      args = { cmd: cmd, params: params }
+      args = { cmd:, params: }
       result = bridge.http.call(:post, "session/#{bridge.session_id}/ms/cdp/execute", args)
       result['value']
     end

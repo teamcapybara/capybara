@@ -88,12 +88,12 @@ module Capybara
           @matcher = matcher
         end
 
-        def matches?(actual, &filter_block)
-          @matcher.does_not_match?(actual, &filter_block)
+        def matches?(actual, &)
+          @matcher.does_not_match?(actual, &)
         end
 
-        def does_not_match?(actual, &filter_block)
-          @matcher.matches?(actual, &filter_block)
+        def does_not_match?(actual, &)
+          @matcher.matches?(actual, &)
         end
 
         def description

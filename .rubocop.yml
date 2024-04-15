@@ -8,7 +8,7 @@ require:
 AllCops:
   NewCops: enable
   DisabledByDefault: false
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.1
   Exclude:
       - 'vendor/**/*'
       - 'gemfiles/vendor/**/*'
@@ -132,6 +132,10 @@ Naming/PredicateName:
   Exclude:
     - '**/*/*matchers.rb'
 
+Naming/BlockForwarding:
+  Exclude:
+    - 'lib/capybara/node/matchers.rb'
+    - 'lib/capybara/node/finders.rb'
 #################### Performance ####################
 
 Performance/MethodObjectAsBlock:

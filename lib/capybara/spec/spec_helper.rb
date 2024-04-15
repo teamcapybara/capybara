@@ -73,11 +73,11 @@ module Capybara
           end
 
           before :each, :psc do
-            SpecHelper.reset_threadsafe(bool: true, session: session)
+            SpecHelper.reset_threadsafe(bool: true, session:)
           end
 
           after psc: true do
-            SpecHelper.reset_threadsafe(session: session)
+            SpecHelper.reset_threadsafe(session:)
           end
 
           before :each, :exact_false do

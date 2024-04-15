@@ -48,12 +48,12 @@ module Capybara
     end
 
     %i[css xpath].each do |selector|
-      define_method "have_#{selector}" do |expr, **options, &optional_filter_block|
-        Matchers::HaveSelector.new(selector, expr, **options, &optional_filter_block)
+      define_method "have_#{selector}" do |expr, **options, &filter_block|
+        Matchers::HaveSelector.new(selector, expr, **options, &filter_block)
       end
 
-      define_method "match_#{selector}" do |expr, **options, &optional_filter_block|
-        Matchers::MatchSelector.new(selector, expr, **options, &optional_filter_block)
+      define_method "match_#{selector}" do |expr, **options, &filter_block|
+        Matchers::MatchSelector.new(selector, expr, **options, &filter_block)
       end
     end
 
@@ -78,8 +78,8 @@ module Capybara
     #   @see Capybara::Node::Matchers#matches_css?
 
     %i[link button field select table element].each do |selector|
-      define_method "have_#{selector}" do |locator = nil, **options, &optional_filter_block|
-        Matchers::HaveSelector.new(selector, locator, **options, &optional_filter_block)
+      define_method "have_#{selector}" do |locator = nil, **options, &filter_block|
+        Matchers::HaveSelector.new(selector, locator, **options, &filter_block)
       end
     end
 
@@ -114,8 +114,8 @@ module Capybara
     #   @see Capybara::Node::Matchers#has_table?
 
     %i[checked unchecked].each do |state|
-      define_method "have_#{state}_field" do |locator = nil, **options, &optional_filter_block|
-        Matchers::HaveSelector.new(:field, locator, **options.merge(state => true), &optional_filter_block)
+      define_method "have_#{state}_field" do |locator = nil, **options, &filter_block|
+        Matchers::HaveSelector.new(:field, locator, **options.merge(state => true), &filter_block)
       end
     end
 
@@ -144,8 +144,8 @@ module Capybara
     # RSpec matcher for the current path.
     #
     # @see Capybara::SessionMatchers#assert_current_path
-    def have_current_path(path, **options, &optional_filter_block)
-      Matchers::HaveCurrentPath.new(path, **options, &optional_filter_block)
+    def have_current_path(path, **options, &)
+      Matchers::HaveCurrentPath.new(path, **options, &)
     end
 
     # RSpec matcher for element style.
@@ -167,15 +167,15 @@ module Capybara
     %w[selector css xpath text title current_path link button
        field checked_field unchecked_field select table
        sibling ancestor element].each do |matcher_type|
-      define_method "have_no_#{matcher_type}" do |*args, **kw_args, &optional_filter_block|
-        Matchers::NegatedMatcher.new(send("have_#{matcher_type}", *args, **kw_args, &optional_filter_block))
+      define_method "have_no_#{matcher_type}" do |*args, **kw_args, &filter_block|
+        Matchers::NegatedMatcher.new(send("have_#{matcher_type}", *args, **kw_args, &filter_block))
       end
     end
     alias_method :have_no_content, :have_no_text
 
     %w[selector css xpath].each do |matcher_type|
-      define_method "not_match_#{matcher_type}" do |*args, **kw_args, &optional_filter_block|
-        Matchers::NegatedMatcher.new(send("match_#{matcher_type}", *args, **kw_args, &optional_filter_block))
+      define_method "not_match_#{matcher_type}" do |*args, **kw_args, &filter_block|
+        Matchers::NegatedMatcher.new(send("match_#{matcher_type}", *args, **kw_args, &filter_block))
       end
     end
 
