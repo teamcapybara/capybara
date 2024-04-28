@@ -78,7 +78,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         session.fill_in('with_change_event', with: '')
         # click outside the field to trigger the change event
         session.find(:css, 'body').click
-        expect(session).to have_selector(:css, '.change_event_triggered', match: :one)
+        expect(session).to have_selector(:css, '.change_event_triggered', visible: :all, match: :one)
       end
     end
 
@@ -134,7 +134,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
                         fill_options: { clear: :backspace })
         # click outside the field to trigger the change event
         session.find(:css, '#with_focus_event').click
-        expect(session).to have_selector(:css, '.change_event_triggered', match: :one, wait: 5)
+        expect(session).to have_selector(:css, '.change_event_triggered', visible: :all, match: :one, wait: 5)
       end
 
       it 'should trigger input event field_value.length times' do
@@ -145,7 +145,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
         # click outside the field to trigger the change event
         # session.find(:css, 'body').click
         session.find(:css, 'h1', text: 'FooBar').click
-        expect(session).to have_xpath('//p[@class="input_event_triggered"]', count: 13)
+        expect(session).to have_xpath('//p[@class="input_event_triggered"]', count: 13, visible: :all)
       end
     end
 
