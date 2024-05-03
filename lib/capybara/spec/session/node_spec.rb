@@ -148,6 +148,8 @@ Capybara::SpecHelper.spec 'node' do
         @session.visit('/with_js')
         @session.find(:css, '#blank_content_editable').set('WYSIWYG')
         expect(@session.find(:css, '#blank_content_editable').text).to eq('WYSIWYG')
+        @session.find(:css, '#blank_content_editable').set('')
+        expect(@session.find(:css, '#blank_content_editable').text).to eq('')
       end
 
       it 'should allow me to change the contents of a child element' do
