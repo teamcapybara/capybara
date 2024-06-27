@@ -8,7 +8,7 @@ module Capybara
       class MatchStyle < WrappedElementMatcher
         def initialize(styles = nil, **kw_args, &filter_block)
           styles, kw_args = kw_args, {} if styles.nil?
-          super(styles, **kw_args, &filter_block)
+          super
         end
 
         def element_matches?(el)
