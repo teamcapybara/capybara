@@ -52,6 +52,11 @@ else
         base.include(::Capybara::RSpecMatcherProxies) if defined?(::RSpec::Matchers) && base.include?(::RSpec::Matchers)
         super
       end
+
+      def extended(base)
+        base.extend(::Capybara::RSpecMatcherProxies) if defined?(::RSpec::Matchers) && base.is_a?(::RSpec::Matchers)
+        super
+      end
     end
 
     def self.prepended(base)
