@@ -353,29 +353,21 @@ private
   end
 
   def clear_session_storage
-    if false # && @browser.respond_to? :session_storage
-      @browser.session_storage.clear
-    else
-      begin
-        @browser&.execute_script('window.sessionStorage.clear()')
-      rescue # rubocop:disable Style/RescueStandardError
-        unless options[:clear_session_storage].nil?
-          warn 'sessionStorage clear requested but is not supported by this driver'
-        end
+    begin
+      @browser&.execute_script('window.sessionStorage.clear()')
+    rescue # rubocop:disable Style/RescueStandardError
+      unless options[:clear_session_storage].nil?
+        warn 'sessionStorage clear requested but is not supported by this driver'
       end
     end
   end
 
   def clear_local_storage
-    if false # && @browser.respond_to? :local_storage
-      @browser.local_storage.clear
-    else
-      begin
-        @browser&.execute_script('window.localStorage.clear()')
-      rescue # rubocop:disable Style/RescueStandardError
-        unless options[:clear_local_storage].nil?
-          warn 'localStorage clear requested but is not supported by this driver'
-        end
+    begin
+      @browser&.execute_script('window.localStorage.clear()')
+    rescue # rubocop:disable Style/RescueStandardError
+      unless options[:clear_local_storage].nil?
+        warn 'localStorage clear requested but is not supported by this driver'
       end
     end
   end
