@@ -353,7 +353,7 @@ private
   end
 
   def clear_session_storage
-    if @browser.respond_to? :session_storage
+    if false # && @browser.respond_to? :session_storage
       @browser.session_storage.clear
     else
       begin
@@ -367,7 +367,7 @@ private
   end
 
   def clear_local_storage
-    if @browser.respond_to? :local_storage
+    if false # && @browser.respond_to? :local_storage
       @browser.local_storage.clear
     else
       begin
