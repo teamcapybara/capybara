@@ -23,6 +23,8 @@ Capybara.register_driver :selenium_chrome do |app|
   browser_options = Selenium::WebDriver::Chrome::Options.new.tap do |opts|
     # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
     opts.add_argument('--disable-site-isolation-trials')
+    # https://makandracards.com/makandra/621797-chrome-disable-choose-search-engine-popup-tests
+    opts.add_argument('--disable-search-engine-choice-screen')
   end
 
   Capybara::Selenium::Driver.new(app, **{ :browser => :chrome, options_key => browser_options })
@@ -36,6 +38,8 @@ Capybara.register_driver :selenium_chrome_headless do |app|
     opts.add_argument('--disable-gpu') if Gem.win_platform?
     # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
     opts.add_argument('--disable-site-isolation-trials')
+    # https://makandracards.com/makandra/621797-chrome-disable-choose-search-engine-popup-tests
+    opts.add_argument('--disable-search-engine-choice-screen')
   end
 
   Capybara::Selenium::Driver.new(app, **{ :browser => :chrome, options_key => browser_options })
