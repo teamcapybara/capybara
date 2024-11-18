@@ -37,6 +37,10 @@ Capybara::SpecHelper.spec '#has_button?' do
     expect(@session).to have_button('med', disabled: :all)
   end
 
+  it 'should be true for exact match if exact: true' do
+    expect(@session).to have_button('med', exact: true)
+  end
+
   it 'can verify button type' do
     expect(@session).to have_button('awe123', type: 'submit')
     expect(@session).not_to have_button('awe123', type: 'reset')
@@ -109,6 +113,10 @@ Capybara::SpecHelper.spec '#has_no_button?' do
 
   it 'should be false for disabled buttons if disabled: false' do
     expect(@session).to have_no_button('Disabled button', disabled: false)
+  end
+
+  it 'should be true for no exact match if exact: true' do
+    expect(@session).to have_no_button('button', exact: true)
   end
 
   it 'should be true for role=button when enable_aria_role: false' do
