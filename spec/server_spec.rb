@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'puma'
 
 RSpec.describe Capybara::Server do
   it 'should spool up a rack server' do
@@ -102,7 +103,6 @@ RSpec.describe Capybara::Server do
   it 'should call #clamp on the puma configuration to ensure that environment is a string' do
     Capybara.server = :puma
     app_proc = proc { |_env| [200, {}, ['Hello Puma!']] }
-    require 'puma'
     allow(Puma::Server).to receive(:new).and_wrap_original do |method, app, events, options|
       # If #clamp is not called on the puma config then this will be a Proc
       expect(options.fetch(:environment)).to be_a(String)
@@ -116,6 +116,25 @@ RSpec.describe Capybara::Server do
     )
   ensure
     Capybara.server = :default
+  end
+
+  it 'should ignore puma config files' do
+    Capybara.server = :puma
+    Dir.mkdir('config') unless Dir.exist?('config')
+    File.open('config/puma.rb', 'w') do |file|
+      file.puts 'debug' # puma default is debug: false, which we don't override
+    end
+    allow(Puma::Server).to receive(:new).and_call_original
+    app_proc = proc { |_env| [200, {}, ['Hello Puma!']] }
+    server = described_class.new(app_proc).boot
+    expect(Puma::Server).to have_received(:new).with(
+      anything,
+      anything,
+      satisfy { |opts| opts.final_options[:debug] == false }
+    )
+  ensure
+    Capybara.server = :default
+    FileUtils.rm_rf('config')
   end
 
   it 'should not emit any warnings when booting puma' do
