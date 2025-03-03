@@ -233,7 +233,7 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
   end
 
   def close_window(handle)
-    raise ArgumentError, 'Not allowed to close the primary window' if handle == window_handles.first
+    raise ArgumentError, 'Not allowed to close the primary window' if handle == browser.window_handle
 
     within_given_window(handle) do
       browser.close
