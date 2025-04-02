@@ -206,6 +206,12 @@ RSpec.describe Capybara::Selenium::Driver do
     it 'sets the http client read timeout' do
       expect(TestSessions::SeleniumFirefox.driver.browser.send(:bridge).http.read_timeout).to eq 31
     end
+
+    it 'does NOT block on slow resources' do
+      expect {
+        TestSessions::SeleniumFirefox.visit('/slow_resources')
+      }.to raise_error(Net::ReadTimeout)
+    end
   end
 end
 
