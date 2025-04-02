@@ -31,6 +31,10 @@ class TestApp < Sinatra::Base
     'Another World'
   end
 
+  get '/slow_resources' do
+    '<img src="https://httpstat.us/504?sleep=100000" />'
+  end
+
   get '/redirect' do
     redirect '/redirect_again'
   end
