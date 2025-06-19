@@ -19,6 +19,7 @@ class TestApp < Sinatra::Base
   set :static, true
   set :raise_errors, true
   set :show_exceptions, false
+  set :host_authorization, { permitted_hosts: [] }
 
   # Also check lib/capybara/spec/views/*.erb for pages not listed here
 
