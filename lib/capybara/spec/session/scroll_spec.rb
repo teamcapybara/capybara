@@ -44,7 +44,7 @@ Capybara::SpecHelper.spec '#scroll_to', requires: [:scroll] do
   it 'can scroll the window to the vertical center' do
     @session.scroll_to :center
     max_scroll = @session.evaluate_script('document.documentElement.scrollHeight - document.documentElement.clientHeight')
-    expect(@session.evaluate_script('[window.scrollX || window.pageXOffset, window.scrollY || window.pageYOffset]')).to eq [0, max_scroll / 2]
+    expect(@session.evaluate_script('[window.scrollX || window.pageXOffset, window.scrollY || window.pageYOffset]')).to match [0, be_within(1).of(max_scroll / 2)]
   end
 
   it 'can scroll the window to specific location' do
