@@ -177,11 +177,11 @@ module Capybara
       end
 
       def failure_message
-        +"expected to find #{applied_description}" << count_message
+        "expected to find #{applied_description}" << count_message
       end
 
       def negative_failure_message
-        +"expected not to find #{applied_description}" << count_message
+        "expected not to find #{applied_description}" << count_message
       end
 
     private

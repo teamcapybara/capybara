@@ -102,7 +102,7 @@ module Capybara
         respond_to?(:execute_script) ? self : driver
       end
 
-      def is_displayed_atom # rubocop:disable Naming/PredicateName
+      def is_displayed_atom # rubocop:disable Naming/PredicatePrefix
         @@is_displayed_atom ||= begin # rubocop:disable Style/ClassVars
           browser.send(:bridge).send(:read_atom, 'isDisplayed')
         rescue StandardError
