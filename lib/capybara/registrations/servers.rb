@@ -38,9 +38,11 @@ Capybara.register_server :puma do |app, port, host, **options| # rubocop:disable
   # Therefore construct and run the Server instance ourselves.
   # puma_rack_handler.run(app, { Host: host, Port: port, Threads: "0:4", workers: 0, daemon: false }.merge(options))
   default_options = { Host: host, Port: port, Threads: '0:4', workers: 0, daemon: false }
-  options = default_options.merge(options)
+  override_options = { config_files: ['-'] }
+  options = default_options.merge(options).merge(override_options)
 
   conf = puma_rack_handler.config(app, options)
+  conf.load
   conf.clamp
 
   puma_ver = Gem::Version.new(Puma::Const::PUMA_VERSION)
