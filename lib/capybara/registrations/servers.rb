@@ -11,8 +11,17 @@ Capybara.register_server :webrick do |app, port, host, **options|
   rescue LoadError
     # Rack 3 separated out the webrick handle - no way test currently in Capybaras automated
     # tests due to Sinatra not yet supporting Rack 3 - experimental
-    require 'rackup/handler/webrick'
-    Rackup
+    begin
+      # Rackup 2.2.0 has removed its dependency on webrick. The user
+      # must add it to their bundle themselves.
+      verbose, $VERBOSE = $VERBOSE, nil
+      require 'rackup/handler/webrick'
+      Rackup
+    rescue LoadError
+      raise LoadError, 'Capybara is unable to load `webrick` for its server, please add `webrick` to your project or specify a different server.'
+    ensure
+      $VERBOSE = verbose
+    end
   end
   options = { Host: host, Port: port, AccessLog: [], Logger: WEBrick::Log.new(nil, 0) }.merge(options)
   base_class::Handler::WEBrick.run(app, **options)
@@ -26,7 +35,7 @@ Capybara.register_server :puma do |app, port, host, **options| # rubocop:disable
   begin
     require 'rack/handler/puma'
   rescue LoadError
-    raise LoadError, 'Capybara is unable to load `puma` for its server, please add `puma` to your project or specify a different server via something like `Capybara.server = :webrick`.'
+    raise LoadError, 'Capybara is unable to load `puma` for its server, please add `puma` to your project or specify a different server.'
   end
   puma_rack_handler = defined?(Rackup::Handler::Puma) ? Rackup::Handler::Puma : Rack::Handler::Puma
 
