@@ -4,7 +4,6 @@ require 'rack/test'
 require 'rack/utils'
 require 'mini_mime'
 require 'nokogiri'
-require 'cgi'
 
 class Capybara::RackTest::Driver < Capybara::Driver::Base
   DEFAULT_OPTIONS = {
