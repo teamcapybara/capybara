@@ -533,7 +533,6 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           skip "This test doesn't support older browsers" if ie?(session)
 
           session.visit 'react'
-
           session.fill_in('Name:', with: 'abc')
           session.accept_prompt 'A name was submitted: abc' do
             session.click_button('Submit')
