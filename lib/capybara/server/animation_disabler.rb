@@ -50,7 +50,7 @@ module Capybara
       def directive_nonces(headers)
         headers.fetch('Content-Security-Policy', '')
                .split(';')
-               .map(&:split) # rubocop:disable Style/MapToHash
+               .map(&:split)
                .to_h do |s|
                  [
                    s[0], s[1..].filter_map do |value|

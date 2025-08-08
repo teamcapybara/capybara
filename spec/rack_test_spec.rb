@@ -39,6 +39,7 @@ end
 
 RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
   include Capybara::RSpecMatchers
+
   context 'with rack test driver' do
     let(:session) { TestSessions::RackTest }
 

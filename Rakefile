@@ -10,7 +10,7 @@ RuboCop::RakeTask.new
 
 desc 'Run all examples with Firefox'
 
-rspec_opts = %w[--color]
+rspec_opts = '--color'
 
 RSpec::Core::RakeTask.new(:spec_firefox) do |t|
   t.rspec_opts = rspec_opts

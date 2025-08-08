@@ -95,6 +95,7 @@ end
 
 RSpec.describe 'Capybara::Session with safari' do
   include Capybara::SpecHelper
+
   ['Capybara::Session', 'Capybara::Node', Capybara::RSpecMatchers].each do |examples|
     include_examples examples, TestSessions::Safari, SAFARI_DRIVER
   end

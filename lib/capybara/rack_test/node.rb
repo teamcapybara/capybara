@@ -225,7 +225,7 @@ private
       native.remove
     else
       value.to_s.tap do |set_value|
-        if set_value.end_with?("\n") && form&.css('input, textarea')&.count == 1
+        if set_value.end_with?("\n") && (form&.css('input, textarea')&.count == 1) # rubocop:disable Style/CollectionQuerying
           native['value'] = set_value.to_s.chop
           Capybara::RackTest::Form.new(driver, form).submit(self)
         else
@@ -293,7 +293,7 @@ protected
   end
 
   def text_or_password?
-    input_field? && (type == 'text' || type == 'password')
+    input_field? && %w[text password].include?(type)
   end
 
   def input_field?

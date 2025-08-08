@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Naming/PredicatePrefix
+
 require 'capybara/rspec/matchers/base'
 
 module Capybara
@@ -67,3 +69,5 @@ module Capybara
     end
   end
 end
+
+# rubocop:enable Naming/PredicatePrefix

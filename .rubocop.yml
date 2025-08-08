@@ -1,14 +1,14 @@
-require:
+plugins:
   - rubocop-minitest
   - rubocop-performance
   - rubocop-rake
-  - rubocop-rspec
   - rubocop-capybara
+  - rubocop-rspec
 
 AllCops:
   NewCops: enable
   DisabledByDefault: false
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.2
   Exclude:
       - 'vendor/**/*'
       - 'gemfiles/vendor/**/*'
@@ -22,6 +22,12 @@ RSpec/SpecFilePathFormat:
   Enabled: false
 
 RSpec/SpecFilePathSuffix:
+  Enabled: false
+
+Capybara/FindAllFirst:
+  Enabled: false
+
+Capybara/NegationMatcherAfterVisit:
   Enabled: false
 
 Capybara/RSpec/HaveSelector:
@@ -128,9 +134,11 @@ Naming/MethodParameterName:
     - 'y'
     - 'on'
 
-Naming/PredicateName:
+Naming/PredicatePrefix:
   Exclude:
     - '**/*/*matchers.rb'
+    - '**/*/matchers/base.rb'
+    - '**/*/matchers/match_style.rb'
 
 #################### Performance ####################
 
@@ -142,8 +150,8 @@ Performance/StringIdentifierArgument:
 
 #################### RSpec ####################
 
-RSpec/Capybara/FeatureMethods:
-  Enabled: false
+# Capybara/FeatureMethods:
+#   Enabled: false
 
 RSpec/ContextWording:
   Enabled: false
@@ -157,8 +165,8 @@ RSpec/ExampleLength:
 RSpec/ExampleWording:
   Enabled: false
 
-RSpec/FilePath:
-  Enabled: false
+# RSpec/FilePath:
+#   Enabled: false
 
 RSpec/InstanceVariable:
   AssignmentOnly: true
@@ -227,3 +235,31 @@ Style/SingleLineMethods:
 Style/SpecialGlobalVars:
   Exclude:
     - 'capybara.gemspec'
+
+### Enable and fix
+Style/KeywordArgumentsMerging:
+  Enabled: false
+
+Gemspec/AddRuntimeDependency:
+  Enabled: false
+
+Lint/UselessConstantScoping:
+  Enabled: false
+
+Naming/PredicateMethod:
+  Enabled: false
+
+RSpec/IncludeExamples:
+  Enabled: false
+
+Style/SuperArguments:
+  Enabled: false
+
+Style/FileNull:
+  Enabled: false
+
+Naming/BlockForwarding:
+  Enabled: false
+
+Style/ArrayIntersect:
+  Enabled: false

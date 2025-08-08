@@ -358,7 +358,7 @@ module Capybara
 
       def _reset_style(element)
         element.execute_script(RESET_STYLE_SCRIPT)
-      rescue StandardError # rubocop:disable Lint/SuppressedException swallow extra errors
+      rescue StandardError # rubocop:disable Lint/SuppressedException -- swallow extra errors
       end
 
       def _check_with_label(selector, checked, locator,

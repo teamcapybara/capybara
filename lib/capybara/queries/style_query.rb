@@ -27,8 +27,8 @@ module Capybara
       end
 
       def failure_message
-        +"Expected node to have styles #{@expected_styles.inspect}. " \
-         "Actual styles were #{@actual_styles.inspect}"
+        "Expected node to have styles #{@expected_styles.inspect}. " \
+          "Actual styles were #{@actual_styles.inspect}"
       end
 
     private

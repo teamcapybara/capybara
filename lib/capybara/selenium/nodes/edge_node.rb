@@ -105,6 +105,6 @@ private
   def native_displayed?
     (driver.options[:native_displayed] != false) &&
       # chromedriver_supports_displayed_endpoint? &&
-      (!ENV['DISABLE_CAPYBARA_SELENIUM_OPTIMIZATIONS'])
+      !ENV['DISABLE_CAPYBARA_SELENIUM_OPTIMIZATIONS']
   end
 end

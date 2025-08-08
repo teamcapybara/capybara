@@ -60,11 +60,11 @@ module Capybara
       # Generates a failure message from the query description and count options.
       #
       def failure_message
-        +"expected to find #{description}" << count_message
+        "expected to find #{description}" << count_message
       end
 
       def negative_failure_message
-        +"expected not to find #{description}" << count_message
+        "expected not to find #{description}" << count_message
       end
 
     private

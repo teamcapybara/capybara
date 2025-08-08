@@ -115,6 +115,7 @@ end
 
 RSpec.describe 'Capybara::Session with Internet Explorer', capybara_skip: skipped_tests do # rubocop:disable RSpec/MultipleDescribes
   include Capybara::SpecHelper
+
   ['Capybara::Session', 'Capybara::Node', Capybara::RSpecMatchers].each do |examples|
     include_examples examples, TestSessions::SeleniumIE, :selenium_ie
   end

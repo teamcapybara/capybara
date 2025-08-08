@@ -76,7 +76,7 @@ Capybara::SpecHelper.spec '#switch_to_window', requires: [:windows] do
 
     it 'should return window' do
       window = @session.switch_to_window { @session.title == 'Title of popup two' }
-      expect((@session.windows - [@window])).to include(window)
+      expect(@session.windows - [@window]).to include(window)
     end
 
     it "should raise error when invoked inside `within` as it's nonsense" do
