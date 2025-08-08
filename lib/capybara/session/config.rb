@@ -12,6 +12,9 @@ module Capybara
 
     attr_accessor(*OPTIONS)
 
+    URI_PARSER = defined?(::URI::RFC2396_PARSER) ? ::URI::RFC2396_PARSER : ::URI::DEFAULT_PARSER
+    private_constant :URI_PARSER
+
     ##
     # @!method always_include_port
     #   See {Capybara.configure}
@@ -83,7 +86,7 @@ module Capybara
 
     remove_method :app_host=
     def app_host=(url)
-      unless url.nil? || url.match?(URI::DEFAULT_PARSER.make_regexp)
+      unless url.nil? || url.match?(URI_PARSER.make_regexp)
         raise ArgumentError, "Capybara.app_host should be set to a url (http://www.example.com). Attempted to set #{url.inspect}."
       end
 
@@ -92,7 +95,7 @@ module Capybara
 
     remove_method :default_host=
     def default_host=(url)
-      unless url.nil? || url.match?(URI::DEFAULT_PARSER.make_regexp)
+      unless url.nil? || url.match?(URI_PARSER.make_regexp)
         raise ArgumentError, "Capybara.default_host should be set to a url (http://www.example.com). Attempted to set #{url.inspect}."
       end
 
