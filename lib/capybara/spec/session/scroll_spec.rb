@@ -75,7 +75,8 @@ Capybara::SpecHelper.spec '#scroll_to', requires: [:scroll] do
     scrolling_element.scroll_to(el, align: :center)
     el_center = el.evaluate_script('(function(rect){return (rect.top + rect.bottom)/2})(this.getBoundingClientRect())')
     scrollable_center = scrolling_element.evaluate_script('(this.clientHeight / 2) + this.getBoundingClientRect().top')
-    expect(el_center).to be_within(1).of(scrollable_center)
+    # Firefox reports floats and can be slightly outside 1 difference - make 2 instaed
+    expect(el_center).to be_within(2).of(scrollable_center)
   end
 
   it 'can scroll the scrolling element to the top' do

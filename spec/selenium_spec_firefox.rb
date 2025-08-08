@@ -187,8 +187,8 @@ RSpec.describe Capybara::Selenium::Driver do
         session.find(:css, '#set-storage').click
         session.reset!
         session.visit('/with_js')
-        expect(session.driver.browser.local_storage.keys).to be_empty
-        expect(session.driver.browser.session_storage.keys).to be_empty
+        expect(session.driver.browser.execute_script('return localStorage.length')).to eq(0)
+        expect(session.driver.browser.execute_script('return sessionStorage.length')).to eq(0)
       end
 
       it 'does not clear storage when false' do
@@ -197,8 +197,8 @@ RSpec.describe Capybara::Selenium::Driver do
         session.find(:css, '#set-storage').click
         session.reset!
         session.visit('/with_js')
-        expect(session.driver.browser.local_storage.keys).not_to be_empty
-        expect(session.driver.browser.session_storage.keys).not_to be_empty
+        expect(session.driver.browser.execute_script('return localStorage.length')).to eq(1)
+        expect(session.driver.browser.execute_script('return sessionStorage.length')).to eq(1)
       end
     end
   end
