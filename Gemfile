@@ -5,7 +5,6 @@ source 'https://rubygems.org'
 gem 'bundler', '< 3.0'
 gemspec
 
-gem 'rack', '< 3.0'
 gem 'xpath', github: 'teamcapybara/xpath'
 # gem 'rack-test', github: 'rack/rack-test'
 
