@@ -90,9 +90,9 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumFirefox, 'selenium', capyba
   when /Capybara::Session selenium node #set should submit single text input forms if ended with \\n/
     pending 'Firefox/geckodriver doesn\'t submit with values ending in \n'
   when /Capybara::Session selenium #click_button should work with popovers/
-    skip "Firefox doesn't currently support popover functionality"
+    skip "Firefox doesn't currently support popover functionality" if firefox_lt?(125, @session)
   when /popover/
-    pending "Firefox doesn't currently support popover functionality"
+    pending "Firefox doesn't currently support popover functionality" if firefox_lt?(125, @session)
   end
 end
 
