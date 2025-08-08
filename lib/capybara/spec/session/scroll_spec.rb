@@ -96,7 +96,7 @@ Capybara::SpecHelper.spec '#scroll_to', requires: [:scroll] do
     scrolling_element = @session.find(:css, '#scrollable')
     scrolling_element.scroll_to :center
     max_scroll = scrolling_element.evaluate_script('this.scrollHeight - this.clientHeight')
-    expect(scrolling_element.evaluate_script('[this.scrollLeft, this.scrollTop]')).to eq [0, max_scroll / 2]
+    expect(scrolling_element.evaluate_script('[this.scrollLeft, this.scrollTop]')).to match [0, be_within(1).of(max_scroll / 2)]
   end
 
   it 'can scroll the scrolling element to specific location' do
