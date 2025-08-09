@@ -367,6 +367,8 @@ private
   end
 
   def clear_local_storage
+    # selenium-webdriver 4.30.0 removed HTML5 storage accessors -- not really sure why
+    # can we replicate this robustly via CDP?
     if @browser.respond_to? :local_storage
       @browser.local_storage.clear
     else

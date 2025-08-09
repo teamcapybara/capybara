@@ -4,6 +4,7 @@ require 'spec_helper'
 
 RSpec.describe Capybara do
   include Capybara::RSpecMatchers
+
   describe '.string' do
     let :string do
       described_class.string <<-STRING

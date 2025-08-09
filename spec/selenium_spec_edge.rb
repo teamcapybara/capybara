@@ -54,6 +54,7 @@ end
 
 RSpec.describe 'Capybara::Session with Edge', capybara_skip: skipped_tests do
   include Capybara::SpecHelper
+
   ['Capybara::Session', 'Capybara::Node', Capybara::RSpecMatchers].each do |examples|
     include_examples examples, TestSessions::SeleniumEdge, :selenium_edge
   end

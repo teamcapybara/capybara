@@ -88,6 +88,7 @@ end
 
 RSpec.describe 'Capybara::Session with remote firefox' do
   include Capybara::SpecHelper
+
   ['Capybara::Session', 'Capybara::Node', Capybara::RSpecMatchers].each do |examples|
     include_examples examples, TestSessions::RemoteFirefox, FIREFOX_REMOTE_DRIVER
   end

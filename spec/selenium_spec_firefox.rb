@@ -90,14 +90,15 @@ Capybara::SpecHelper.run_specs TestSessions::SeleniumFirefox, 'selenium', capyba
   when /Capybara::Session selenium node #set should submit single text input forms if ended with \\n/
     pending 'Firefox/geckodriver doesn\'t submit with values ending in \n'
   when /Capybara::Session selenium #click_button should work with popovers/
-    skip "Firefox doesn't currently support popover functionality"
+    skip "Firefox doesn't currently support popover functionality" if firefox_lt?(125, @session)
   when /popover/
-    pending "Firefox doesn't currently support popover functionality"
+    pending "Firefox doesn't currently support popover functionality" if firefox_lt?(125, @session)
   end
 end
 
 RSpec.describe 'Capybara::Session with firefox' do # rubocop:disable RSpec/MultipleDescribes
   include Capybara::SpecHelper
+
   ['Capybara::Session', 'Capybara::Node', Capybara::RSpecMatchers].each do |examples|
     include_examples examples, TestSessions::SeleniumFirefox, :selenium_firefox
   end
@@ -186,8 +187,8 @@ RSpec.describe Capybara::Selenium::Driver do
         session.find(:css, '#set-storage').click
         session.reset!
         session.visit('/with_js')
-        expect(session.driver.browser.local_storage.keys).to be_empty
-        expect(session.driver.browser.session_storage.keys).to be_empty
+        expect(session.driver.browser.execute_script('return localStorage.length')).to eq(0)
+        expect(session.driver.browser.execute_script('return sessionStorage.length')).to eq(0)
       end
 
       it 'does not clear storage when false' do
@@ -196,8 +197,8 @@ RSpec.describe Capybara::Selenium::Driver do
         session.find(:css, '#set-storage').click
         session.reset!
         session.visit('/with_js')
-        expect(session.driver.browser.local_storage.keys).not_to be_empty
-        expect(session.driver.browser.session_storage.keys).not_to be_empty
+        expect(session.driver.browser.execute_script('return localStorage.length')).to eq(1)
+        expect(session.driver.browser.execute_script('return sessionStorage.length')).to eq(1)
       end
     end
   end
