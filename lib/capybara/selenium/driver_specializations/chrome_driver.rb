@@ -37,9 +37,8 @@ module Capybara::Selenium::Driver::ChromeDriver
     # Use instance variable directly so we avoid starting the browser just to reset the session
     return unless @browser
 
-    handle = browser.window_handle # Only fetch window handle once
-    switch_to_window(handle) # Should already be there, but ensure everything agrees
-    (window_handles - [handle]).each { |win| close_window(win) } # Close every window handle but the current one.
+    switch_to_window(window_handles.first)
+    window_handles.slice(1..).each { |win| close_window(win) }
     return super if chromedriver_version < 73
 
     timer = Capybara::Helpers.timer(expire_in: 10)
