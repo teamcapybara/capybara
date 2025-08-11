@@ -85,6 +85,16 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
     end
   end
 
+protected
+
+  def catch_error?(error, errors = nil)
+    # Selenium::WebDriver::Error::UnknownError:
+    #    unknown error: unhandled inspector error: {"code":-32000,"message":"Node with given id does not belong to the document"}
+    super ||
+      (error.is_a?(Selenium::WebDriver::Error::UnknownError) &&
+       error.message.include?('Node with given id does not belong to the document'))
+  end
+
 private
 
   def perform_legacy_drag(element, drop_modifiers)
