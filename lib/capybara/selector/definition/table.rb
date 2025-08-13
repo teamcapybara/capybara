@@ -52,6 +52,7 @@ Capybara.add_selector(:table, locator_type: [String, Symbol]) do
 
   expression_filter(:with_rows, valid_values: [Array]) do |xpath, rows|
     rows_conditions = rows.map { |row| match_row(row) }.reduce(:&)
+    
     xpath[rows_conditions]
   end
 
@@ -77,10 +78,25 @@ Capybara.add_selector(:table, locator_type: [String, Symbol]) do
       if row.is_a? Hash
         row_match_cells_to_headers(row)
       else
-        XPath.descendant(:td)[row_match_ordered_cells(row)]
+        XPath.descendant(:td, :th)[row_match_ordered_cells(row)]
       end
     ]
-    xp = xp[XPath.descendant(:td).count.equals(row.size)] if match_size
+
+    xp = xp[
+        # there's no THEAD for this TR
+        XPath.ancestor(:table)[XPath.child(:thead)].not
+        # expect as many TDs (and only TDs) as provided by the user
+        .and(XPath.descendant(:td).count.equals(row.size))
+        # bacause nodes other than TDs act as headers
+        .or(
+          # there's a THEAD for this TR
+          XPath.ancestor(:table)[XPath.child(:thead)]
+          # expect as many TDs or THs as provided by the user
+          .and(XPath.descendant(:td, :th).count.equals(row.size))
+          # because they are all considered row cells in that case
+        )
+    ] if match_size
+
     xp
   end
 
@@ -92,16 +108,17 @@ Capybara.add_selector(:table, locator_type: [String, Symbol]) do
   def row_match_cells_to_headers(row)
     row.map do |header, cell|
       header_xp = XPath.ancestor(:table)[1].descendant(:tr)[1].descendant(:th)[XPath.string.n.is(header)]
-      XPath.descendant(:td)[
+      XPath.descendant(:td, :th)[
         XPath.string.n.is(cell) & header_xp.boolean & XPath.position.equals(header_xp.preceding_sibling.count.plus(1))
       ]
     end.reduce(:&)
   end
 
   def row_match_ordered_cells(row)
-    row_conditions = row.map do |cell|
-      XPath.self(:td)[XPath.string.n.is(cell)]
+    row_conditions = row.map do |cell| 
+      XPath.self(:td, :th)[XPath.string.n.is(cell)]
     end
+   
     row_conditions.reverse.reduce do |cond, cell|
       cell[XPath.following_sibling[cond]]
     end
