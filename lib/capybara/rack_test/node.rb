@@ -271,6 +271,7 @@ private
   end
 
   def submits?
+    return false if disabled?
     (tag_name == 'input' && %w[submit image].include?(type)) || (tag_name == 'button' && [nil, 'submit'].include?(type))
   end
 

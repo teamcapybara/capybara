@@ -149,6 +149,12 @@ RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
           expect(session).not_to have_current_path(/foo|bar/)
         end
       end
+
+      it 'does not click disabled inputs or buttons' do
+        session.visit('/form')
+        session.find(:css, 'input[value="Disabled button"]').click
+        expect(session).to have_current_path('/form')
+      end
     end
 
     describe '#send_keys' do
