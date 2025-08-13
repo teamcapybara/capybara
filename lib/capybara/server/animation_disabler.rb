@@ -62,7 +62,7 @@ module Capybara
       end
 
       DISABLE_CSS_MARKUP_TEMPLATE = <<~CSS
-        %<selector>s, %<selector>s::before, %<selector>s::after {
+        %<selector>s, %<selector>s::before, %<selector>s::after, ::view-transition-group(*) {
            transition: none !important;
            animation-duration: 0s !important;
            animation-delay: 0s !important;
