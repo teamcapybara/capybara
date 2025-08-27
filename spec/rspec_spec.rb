@@ -45,6 +45,17 @@ RSpec.describe 'capybara/rspec' do
       expect(Capybara.current_driver).to eq(:culerity)
     end
 
+    context 'switches to the javascript driver when giving it as metadata before executing the around block', :js do
+      around do |spec|
+        @current_driver = Capybara.current_driver
+        spec.run
+      end
+
+      it 'switches the current driver before executing the around block' do
+        expect(@current_driver).to eq(Capybara.javascript_driver)
+      end
+    end
+
     describe '#all' do
       it 'allows access to the Capybara finder' do
         visit('/with_html')
