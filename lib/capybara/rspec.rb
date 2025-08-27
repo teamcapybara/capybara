@@ -15,17 +15,18 @@ RSpec.configure do |config|
 
   # The before and after blocks must run instantaneously, because Capybara
   # might not actually be used in all examples where it's included.
-  config.after do
-    if self.class.include?(Capybara::DSL)
-      Capybara.reset_sessions!
-      Capybara.use_default_driver
-    end
-  end
-
-  config.before do |example|
+  config.around do |example|
     if self.class.include?(Capybara::DSL)
       Capybara.current_driver = Capybara.javascript_driver if example.metadata[:js]
       Capybara.current_driver = example.metadata[:driver] if example.metadata[:driver]
+    end
+
+    example.run
+
+  ensure
+    if self.class.include?(Capybara::DSL)
+      Capybara.reset_sessions!
+      Capybara.use_default_driver
     end
   end
 end
