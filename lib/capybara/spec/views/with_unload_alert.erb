@@ -3,11 +3,16 @@
 <head>
   <script>
       window.onbeforeunload = function(e) {
+        e.preventDefault();
         return 'Unload?';
       };
   </script>
 </head>
 <body>
+  <form>
+    <label for="data">Data</label>
+    <input id="data" name="data" type="text">
+  </form>
   <div>This triggers an alert on unload</div>
 
   <a href="/">Go away</a>
