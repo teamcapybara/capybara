@@ -107,6 +107,7 @@ class MinitestTest < Minitest::Test
     assert_table('agent_table')
     assert_no_table('not_on_form')
     refute_table('not_on_form')
+    assert_selector(:table_row, 'First Name' => 'Thomas')
   end
 
   def test_assert_all_of_selectors
@@ -170,6 +171,6 @@ RSpec.describe 'capybara/minitest' do
     reporter.start
     MinitestTest.run reporter, {}
     reporter.report
-    expect(output.string).to include('23 runs, 56 assertions, 0 failures, 0 errors, 1 skips')
+    expect(output.string).to include('23 runs, 57 assertions, 0 failures, 0 errors, 1 skips')
   end
 end

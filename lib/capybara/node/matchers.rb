@@ -892,7 +892,7 @@ module Capybara
       def _set_query_session_options(*query_args)
         query_args, query_options = query_args.dup, {}
         # query_options = query_args.pop if query_options.empty? && query_args.last.is_a?(Hash)
-        query_options = query_args.pop if query_args.last.is_a?(Hash)
+        query_options = query_args.pop if query_args.last.is_a?(Hash) && query_args.last.keys.none?(String)
         query_options[:session_options] = session_options
         [query_args, query_options]
       end
