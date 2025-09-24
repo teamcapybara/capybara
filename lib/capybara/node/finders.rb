@@ -298,6 +298,8 @@ module Capybara
     private
 
       def synced_resolve(query)
+        Rails.logger.info("synced_resolve query: #{query.applied_description}")
+
         synchronize(query.wait) do
           if prefer_exact?(query)
             result = query.resolve_for(self, true)

@@ -80,7 +80,7 @@ module Capybara
         interval = session_options.default_retry_interval
         session.synchronized = true
         timer = Capybara::Helpers.timer(expire_in: seconds)
-        begin
+        result = begin
           yield
         rescue StandardError => e
           session.raise_server_error!
@@ -100,6 +100,10 @@ module Capybara
         ensure
           session.synchronized = false
         end
+
+        Rails.logger.info("Synchronize elapsed time: #{(timer.elapsed * 1_000).round} ms")
+
+        result
       end
 
       # @api private

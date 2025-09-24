@@ -113,6 +113,10 @@ module Capybara
         current - @start >= @expire_in
       end
 
+      def elapsed
+        current - @start
+      end
+
       def stalled?
         @start == current
       end
