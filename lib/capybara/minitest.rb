@@ -86,7 +86,26 @@ module Capybara
       # @!method assert_no_current_path
       #   See {Capybara::SessionMatchers#assert_no_current_path}
 
-      %w[text no_text title no_title current_path no_current_path].each do |assertion_name|
+      ##
+      # Assert all of the provided selectors exist on page
+      #
+      # @!method assert_all_of_selectors
+      #   See {Capybara::Node::Matchers#assert_all_of_selectors}
+
+      ##
+      # Assert none of the provided selectors exist on page
+      #
+      # @!method assert_none_of_selectors
+      #   See {Capybara::Node::Matchers#assert_none_of_selectors}
+
+      ##
+      # Assert any of the provided selectors exist on page
+      #
+      # @!method assert_any_of_selectors
+      #   See {Capybara::Node::Matchers#assert_any_of_selectors}
+
+      %w[text no_text title no_title current_path no_current_path
+         all_of_selectors none_of_selectors any_of_selectors].each do |assertion_name|
         class_eval <<-ASSERTION, __FILE__, __LINE__ + 1
           def assert_#{assertion_name}(*args, **kwargs, &optional_filter_block)
             self.assertions +=1
@@ -132,24 +151,6 @@ module Capybara
       #   See {Capybara::Node::Matchers#assert_not_matches_selector}
 
       ##
-      # Assert all of the provided selectors exist on page
-      #
-      # @!method assert_all_of_selectors
-      #   See {Capybara::Node::Matchers#assert_all_of_selectors}
-
-      ##
-      # Assert none of the provided selectors exist on page
-      #
-      # @!method assert_none_of_selectors
-      #   See {Capybara::Node::Matchers#assert_none_of_selectors}
-
-      ##
-      # Assert any of the provided selectors exist on page
-      #
-      # @!method assert_any_of_selectors
-      #   See {Capybara::Node::Matchers#assert_any_of_selectors}
-
-      ##
       # Assert element has the provided CSS styles
       #
       # @!method assert_matches_style
@@ -182,7 +183,6 @@ module Capybara
       #   See {Capybara::Node::Matchers#assert_no_ancestor}
 
       %w[selector no_selector matches_style
-         all_of_selectors none_of_selectors any_of_selectors
          matches_selector not_matches_selector
          sibling no_sibling ancestor no_ancestor].each do |assertion_name|
         class_eval <<-ASSERTION, __FILE__, __LINE__ + 1

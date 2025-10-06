@@ -123,7 +123,7 @@ class MinitestTest < Minitest::Test
   end
 
   def test_assert_all_of_selectors
-    assert_all_of_selectors(:css, 'select#form_other_title', 'input#form_last_name')
+    assert_all_of_selectors(:css, 'select#form_other_title', 'input#form_super_secret', visible: false)
   end
 
   def test_assert_none_of_selectors
