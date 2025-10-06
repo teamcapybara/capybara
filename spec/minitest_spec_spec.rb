@@ -95,7 +95,7 @@ class MinitestSpecTest < Minitest::Spec
   end
 
   it 'supports all_of_selectors expectations' do
-    _(page).must_have_all_of_selectors(:css, 'select#form_other_title', 'input#form_last_name')
+    _(page).must_have_all_of_selectors(:css, 'select#form_other_title', 'input#form_super_secret', visible: false)
   end
 
   it 'supports none_of_selectors expectations' do
