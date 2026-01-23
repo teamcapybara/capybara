@@ -47,7 +47,7 @@ module Capybara
       # @param [Integer] count     The actual number. Should be coercible via Integer()
       #
       def matches_count?(count)
-        return (Integer(options[:count]) == count) if options[:count]
+        return Integer(options[:count]) == count if options[:count]
         return false if options[:maximum] && (Integer(options[:maximum]) < count)
         return false if options[:minimum] && (Integer(options[:minimum]) > count)
         return false if options[:between] && !options[:between].include?(count)

@@ -78,6 +78,10 @@ Layout/LineLength:
 
 #################### Lint ####################
 
+Lint/Debugger:
+  Exclude:
+    - 'lib/capybara/session.rb'
+
 Lint/EmptyBlock:
   Exclude:
     - 'lib/capybara/spec/**/*'
@@ -171,6 +175,10 @@ RSpec/ExampleWording:
 RSpec/InstanceVariable:
   AssignmentOnly: true
 
+RSpec/LeakyLocalVariable:
+  Exclude:
+    - 'spec/selenium_spec_firefox.rb'
+
 RSpec/MultipleExpectations:
   Enabled: false
 
@@ -179,6 +187,11 @@ RSpec/NestedGroups:
 
 RSpec/NoExpectationExample:
   Enabled: false
+
+RSpec/Output:
+  Exclude:
+    - 'spec/selenium_spec_chrome_remote.rb'
+    - 'spec/selenium_spec_firefox_remote.rb'
 
 RSpec/PredicateMatcher:
   Exclude:
