@@ -47,6 +47,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('irb')
   s.add_development_dependency('launchy', ['>= 2.0.4'])
   s.add_development_dependency('minitest')
+  s.add_development_dependency('ostruct')
   s.add_development_dependency('puma')
   s.add_development_dependency('rackup')
   s.add_development_dependency('rake')
