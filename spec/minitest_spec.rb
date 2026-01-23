@@ -15,7 +15,7 @@ class MinitestTest < Minitest::Test
     Capybara.reset_sessions!
   end
 
-  def self.test_order
+  def self.run_order
     :sorted
   end
 
@@ -168,7 +168,7 @@ RSpec.describe 'capybara/minitest' do
     output = StringIO.new
     reporter = Minitest::SummaryReporter.new(output)
     reporter.start
-    MinitestTest.run reporter, {}
+    MinitestTest.run_suite reporter
     reporter.report
     expect(output.string).to include('23 runs, 56 assertions, 0 failures, 0 errors, 1 skips')
   end
