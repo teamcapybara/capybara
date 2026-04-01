@@ -25,6 +25,14 @@ class MinitestTest < Minitest::Test
     refute_text('Also Not on the page')
   end
 
+  def test_node_assert_text_counts_assertions
+    before_assertions = assertions
+
+    find(:css, 'form', text: 'Title').assert_text('Customer Email')
+
+    assert_equal before_assertions + 2, assertions
+  end
+
   def test_assert_title
     visit('/with_title')
     assert_title('Test Title')
@@ -170,6 +178,6 @@ RSpec.describe 'capybara/minitest' do
     reporter.start
     MinitestTest.run reporter, {}
     reporter.report
-    expect(output.string).to include('23 runs, 56 assertions, 0 failures, 0 errors, 1 skips')
+    expect(output.string).to include('24 runs, 58 assertions, 0 failures, 0 errors, 1 skips')
   end
 end
