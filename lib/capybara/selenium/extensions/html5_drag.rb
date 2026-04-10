@@ -243,7 +243,12 @@ class Capybara::Selenium::Node
       var dragEvent = new DragEvent('dragstart', dragStartOpts);
       source.dispatchEvent(dragEvent);
 
-      window.setTimeout(dragEnterTarget, step_delay);
+      // Yield once to the event loop so libraries that defer work after
+      // dragstart (e.g. react-dnd's publishDragSource via setTimeout(0))
+      // can complete before we dispatch dragenter.
+      window.setTimeout(function() {
+        window.setTimeout(dragEnterTarget, step_delay);
+      }, 0);
     JS
   end
 end
