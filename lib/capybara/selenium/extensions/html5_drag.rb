@@ -190,11 +190,12 @@ class Capybara::Selenium::Node
 
       function dragLeave(drop, dragOverOpts) {
         var dragLeaveOptions = Object.assign({}, opts, dragOverOpts);
-        var dragLeaveEvent = new DragEvent('dragleave', dragLeaveOptions);
-        target.dispatchEvent(dragLeaveEvent);
         if (drop) {
           var dropEvent = new DragEvent('drop', dragLeaveOptions);
           target.dispatchEvent(dropEvent);
+        } else {
+          var dragLeaveEvent = new DragEvent('dragleave', dragLeaveOptions);
+          target.dispatchEvent(dragLeaveEvent);
         }
         var dragEndEvent = new DragEvent('dragend', dragLeaveOptions);
         source.dispatchEvent(dragEndEvent);
