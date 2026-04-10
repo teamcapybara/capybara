@@ -155,6 +155,12 @@ class Capybara::Selenium::Node
         return new DOMPoint(pt.x,pt.y);
       }
 
+      function dispatchOnElement(pt, event) {
+        var el = document.elementFromPoint(pt.x, pt.y);
+        if (!el || !target.contains(el)) el = target;
+        el.dispatchEvent(event);
+      }
+
       function dragEnterTarget() {
         target.scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
         var targetRect = target.getBoundingClientRect();
@@ -171,12 +177,12 @@ class Capybara::Selenium::Node
         var entryPoint = pointOnRect(sourceCenter, targetRect)
         var enterOpts = Object.assign({clientX: entryPoint.x, clientY: entryPoint.y}, opts);
         var dragEnterEvent = new DragEvent('dragenter', enterOpts);
-        target.dispatchEvent(dragEnterEvent);
+        dispatchOnElement(entryPoint, dragEnterEvent);
 
         // fire 2 dragover events to simulate dragging with a direction
         var dragOverOpts = Object.assign({clientX: entryPoint.x, clientY: entryPoint.y}, opts);
         var dragOverEvent = new DragEvent('dragover', dragOverOpts);
-        target.dispatchEvent(dragOverEvent);
+        dispatchOnElement(entryPoint, dragOverEvent);
         window.setTimeout(dragOnTarget, step_delay);
       }
 
@@ -184,18 +190,19 @@ class Capybara::Selenium::Node
         var targetCenter = rectCenter(target.getBoundingClientRect());
         var dragOverOpts = Object.assign({clientX: targetCenter.x, clientY: targetCenter.y}, opts);
         var dragOverEvent = new DragEvent('dragover', dragOverOpts);
-        target.dispatchEvent(dragOverEvent);
+        dispatchOnElement(targetCenter, dragOverEvent);
         window.setTimeout(dragLeave, step_delay, dragOverEvent.defaultPrevented, dragOverOpts);
       }
 
       function dragLeave(drop, dragOverOpts) {
         var dragLeaveOptions = Object.assign({}, opts, dragOverOpts);
+        var pt = {x: dragOverOpts.clientX, y: dragOverOpts.clientY};
         if (drop) {
           var dropEvent = new DragEvent('drop', dragLeaveOptions);
-          target.dispatchEvent(dropEvent);
+          dispatchOnElement(pt, dropEvent);
         } else {
           var dragLeaveEvent = new DragEvent('dragleave', dragLeaveOptions);
-          target.dispatchEvent(dragLeaveEvent);
+          dispatchOnElement(pt, dragLeaveEvent);
         }
         var dragEndEvent = new DragEvent('dragend', dragLeaveOptions);
         source.dispatchEvent(dragEndEvent);
