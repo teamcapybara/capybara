@@ -374,6 +374,25 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
 
     # rubocop:disable RSpec/InstanceVariable
     describe 'Capybara#disable_animation' do
+      # Recover an animation session whose browser has died. Older geckodriver
+      # versions can discard browsing contexts under headless Firefox, raising
+      # NoSuchWindowError or corrupting the marionette connection. When that
+      # happens, quit the dead driver and spin up a fresh session so the next
+      # test can proceed rather than cascade-failing.
+      def recover_animation_session!(session_var, disable_value)
+        anim_session = instance_variable_get(session_var)
+        return unless anim_session
+
+        # window_handle is a lightweight check that the browser is responsive.
+        # It also triggers lazy browser creation on the first call.
+        anim_session.driver.browser.window_handle
+      rescue StandardError
+        # Any error means the browser is unusable — recreate the session.
+        begin; anim_session.driver.quit; rescue StandardError; nil; end
+        Capybara.disable_animation = disable_value
+        instance_variable_set(session_var, Capybara::Session.new(session.mode, TestApp.new))
+      end
+
       context 'when set to `true`' do
         before(:context) do # rubocop:disable RSpec/BeforeAfterAll
           skip "Safari doesn't support multiple sessions" if safari?(session)
@@ -381,6 +400,12 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           # it doesn't affect any of these tests because the settings are applied per-session
           Capybara.disable_animation = true
           @animation_session = Capybara::Session.new(session.mode, TestApp.new)
+        end
+
+        before { recover_animation_session!(:@animation_session, true) }
+
+        after(:context) do # rubocop:disable RSpec/BeforeAfterAll
+          @animation_session&.driver&.quit
         end
 
         it 'should add CSS to the <head> element' do
@@ -437,6 +462,12 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           @animation_session = Capybara::Session.new(session.mode, TestApp.new)
         end
 
+        before { recover_animation_session!(:@animation_session, false) }
+
+        after(:context) do # rubocop:disable RSpec/BeforeAfterAll
+          @animation_session&.driver&.quit
+        end
+
         it 'should scroll the page with a smooth animation', requires: [:js] do
           @animation_session.visit('with_animation')
           scroll_y = @animation_session.evaluate_script(<<~JS)
@@ -466,6 +497,12 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           @animation_session_with_matching_css = Capybara::Session.new(session.mode, TestApp.new)
         end
 
+        before { recover_animation_session!(:@animation_session_with_matching_css, '#with_animation a') }
+
+        after(:context) do # rubocop:disable RSpec/BeforeAfterAll
+          @animation_session_with_matching_css&.driver&.quit
+        end
+
         it 'should disable CSS transitions' do
           @animation_session_with_matching_css.visit('with_animation')
           sleep 1
@@ -484,10 +521,23 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
       context 'if we pass in css that does not match elements' do
         before(:context) do # rubocop:disable RSpec/BeforeAfterAll
           skip "Safari doesn't support multiple sessions" if safari?(session)
+          # Older geckodriver (via selenium-webdriver < 4.20) crashes the Firefox
+          # content process when any WebDriver command is sent while a CSS
+          # transition or animation is actively running. These tests verify that
+          # non-matching selectors leave animations enabled, which requires
+          # interacting with the page during active transitions.
+          skip 'geckodriver crashes during active CSS transitions (selenium-webdriver < 4.20)' \
+            if firefox?(session) && selenium_lt?('4.20', session)
           # NOTE: Although Capybara.SpecHelper.reset! sets Capybara.disable_animation to false,
           # it doesn't affect any of these tests because the settings are applied per-session
           Capybara.disable_animation = '.this-class-matches-nothing'
           @animation_session_without_matching_css = Capybara::Session.new(session.mode, TestApp.new)
+        end
+
+        before { recover_animation_session!(:@animation_session_without_matching_css, '.this-class-matches-nothing') }
+
+        after(:context) do # rubocop:disable RSpec/BeforeAfterAll
+          @animation_session_without_matching_css&.driver&.quit
         end
 
         it 'should not disable CSS transitions' do
