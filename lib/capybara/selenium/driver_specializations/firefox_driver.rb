@@ -49,6 +49,16 @@ module Capybara::Selenium::Driver::W3CFirefoxDriver
     switch_to_window(window_handles.first)
     window_handles.slice(1..).each { |win| close_window(win) }
     super
+  rescue *dead_browser_errors
+    # The window management calls above can raise dead-browser errors
+    # before super's own rescue has a chance to catch them.
+    quit
+  rescue Selenium::WebDriver::Error::UnknownError => e
+    # Corrupted marionette connections (e.g. from a crashed content process)
+    # produce UnknownError instead of the usual dead-browser errors.
+    raise unless e.message.include?('marionette')
+
+    quit
   end
 
   def refresh

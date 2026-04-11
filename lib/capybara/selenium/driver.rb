@@ -172,6 +172,10 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
       accept_unhandled_reset_alert
       # try cleaning up the browser again
       retry
+    rescue *dead_browser_errors
+      # Browser is unreachable or the session is invalid — quit so a
+      # fresh browser is started on the next interaction.
+      quit
     end
   end
 
@@ -312,6 +316,11 @@ class Capybara::Selenium::Driver < Capybara::Driver::Base
 
   def no_such_window_error
     Selenium::WebDriver::Error::NoSuchWindowError
+  end
+
+  def dead_browser_errors
+    [Selenium::WebDriver::Error::InvalidSessionIdError,
+     Selenium::WebDriver::Error::NoSuchWindowError]
   end
 
 private
