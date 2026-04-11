@@ -11,6 +11,14 @@ module Capybara::Selenium::Driver::ChromeDriver
     base.options[:native_displayed] = false if base.options[:native_displayed].nil?
   end
 
+  def invalid_element_errors
+    super.tap do |errors|
+      unless errors.include?(::Selenium::WebDriver::Error::UnknownError)
+        errors.push(::Selenium::WebDriver::Error::UnknownError)
+      end
+    end
+  end
+
   def fullscreen_window(handle)
     within_given_window(handle) do
       super

@@ -9,6 +9,14 @@ module Capybara::Selenium::Driver::EdgeDriver
     base.options[:native_displayed] = false if base.options[:native_displayed].nil?
   end
 
+  def invalid_element_errors
+    super.tap do |errors|
+      unless errors.include?(::Selenium::WebDriver::Error::UnknownError)
+        errors.push(::Selenium::WebDriver::Error::UnknownError)
+      end
+    end
+  end
+
   def fullscreen_window(handle)
     return super if edgedriver_version < 75
 
