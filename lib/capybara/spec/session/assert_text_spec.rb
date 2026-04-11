@@ -128,16 +128,16 @@ Capybara::SpecHelper.spec '#assert_text' do
 
   context 'with wait', requires: [:js] do
     it 'should find element if it appears before given wait duration' do
+      @session.visit('/with_js')
       Capybara.using_wait_time(0) do
-        @session.visit('/with_js')
         @session.find(:css, '#reload-list').click
         @session.find(:css, '#the-list').assert_text("Foo\nBar", wait: 0.9)
       end
     end
 
     it 'should raise error if it appears after given wait duration' do
+      @session.visit('/with_js')
       Capybara.using_wait_time(0) do
-        @session.visit('/with_js')
         @session.find(:css, '#reload-list').click
         el = @session.find(:css, '#the-list', visible: false)
         expect do
