@@ -154,10 +154,11 @@ RSpec.describe 'capybara/minitest/spec' do
   end
 
   it 'should support minitest spec' do
+    Minitest.seed ||= 0
     output = StringIO.new
     reporter = Minitest::SummaryReporter.new(output)
     reporter.start
-    MinitestSpecTest.run reporter, {}
+    MinitestSpecTest.run_suite reporter, {}
     reporter.report
     expect(output.string).to include('22 runs, 44 assertions, 1 failures, 0 errors, 1 skips')
     # Make sure error messages are displayed

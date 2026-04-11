@@ -49,7 +49,7 @@ module Capybara
         when XPath::Expression, Regexp
           attribute_conditions(class: classes)
         else
-          Array(classes).reject { |c| c.is_a? Regexp }.map do |klass|
+          Array(classes).grep_v(Regexp).map do |klass|
             if klass.match?(/^!(?!!!)/)
               !XPath.attr(:class).contains_word(klass.slice(1..))
             else

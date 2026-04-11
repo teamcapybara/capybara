@@ -78,6 +78,10 @@ Layout/LineLength:
 
 #################### Lint ####################
 
+Lint/Debugger:
+  Exclude:
+    - 'lib/capybara/session.rb'
+
 Lint/EmptyBlock:
   Exclude:
     - 'lib/capybara/spec/**/*'
@@ -153,6 +157,14 @@ Performance/StringIdentifierArgument:
 # Capybara/FeatureMethods:
 #   Enabled: false
 
+RSpec/LeakyLocalVariable:
+  Exclude:
+    - 'spec/**/*'
+
+RSpec/Output:
+  Exclude:
+    - 'spec/**/*'
+
 RSpec/ContextWording:
   Enabled: false
 
@@ -192,6 +204,15 @@ Security/YAMLLoad:
     - 'spec/**/*'
 
 #################### Style ####################
+
+Style/OneClassPerFile:
+  Exclude:
+    - 'lib/capybara/minitest/spec.rb'
+    - 'lib/capybara/rspec/matchers/match_style.rb'
+    - 'lib/capybara/selector/xpath_extensions.rb'
+    - 'lib/capybara/selenium/driver_specializations/firefox_driver.rb'
+    - 'lib/capybara/selenium/driver_specializations/internet_explorer_driver.rb'
+    - 'spec/**/*'
 
 Style/AccessorGrouping:
   Enabled: false
