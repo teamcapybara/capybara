@@ -513,6 +513,8 @@ module Capybara
       # @param [String] locator                         The label, name or id of a select box
       # @option options [Array] :options                Options which should be contained in this select box
       # @option options [Array] :with_options           Partial set of options which should be contained in this select box
+      # @option options [Array] :enabled_options        Exact match enabled options
+      # @option options [Array] :disabled_options       Exact match disabled options
       # @option options [String, Array] :selected       Options which should be selected
       # @option options [String, Array] :with_selected  Partial set of options which should minimally be selected
       # @return [Boolean]                               Whether it exists
