@@ -39,6 +39,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency('regexp_parser', ['>=1.5', '<3.0'])
   s.add_runtime_dependency('xpath', ['~>3.2'])
 
+  s.add_development_dependency('benchmark')
   s.add_development_dependency('byebug') unless RUBY_PLATFORM == 'java'
   s.add_development_dependency('coveralls')
   s.add_development_dependency('cucumber', ['>= 2.3.0'])
@@ -46,6 +47,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('irb')
   s.add_development_dependency('launchy', ['>= 2.0.4'])
   s.add_development_dependency('minitest')
+  s.add_development_dependency('ostruct')
   s.add_development_dependency('puma')
   s.add_development_dependency('rackup')
   s.add_development_dependency('rake')
