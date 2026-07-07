@@ -490,7 +490,7 @@ Capybara::SpecHelper.spec 'node' do
         src = @session.find('div', text: 'Item 1')
         target = @session.find('div', text: 'Item 3')
         src.drag_to target
-        expect(@session).to have_content(/Item 2.*Item 1/, normalize_ws: true)
+        expect(@session).to have_text(/Item 2.*Item 1/, normalize_ws: true)
       end
     end
 
@@ -629,7 +629,7 @@ Capybara::SpecHelper.spec 'node' do
           src = @session.find('div', text: 'Item 1')
           target = @session.find('div', text: 'Item 3')
           src.drag_to target
-          expect(@session).to have_content(/Item 3.*Item 1/, normalize_ws: true)
+          expect(@session).to have_text(/Item 3.*Item 1/, normalize_ws: true)
         end
       end
 

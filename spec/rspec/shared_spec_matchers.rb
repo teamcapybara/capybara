@@ -265,38 +265,38 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
   describe 'have_content matcher' do
     it 'gives proper description' do
-      expect(have_content('Text').description).to eq('have text "Text"')
+      expect(have_text('Text').description).to eq('have text "Text"')
     end
 
     context 'on a string' do
       context 'with should' do
         it 'passes if has_content? returns true' do
-          expect('<h1>Text</h1>').to have_content('Text')
+          expect('<h1>Text</h1>').to have_text('Text')
         end
 
         it 'passes if has_content? returns true using regexp' do
-          expect('<h1>Text</h1>').to have_content(/ext/)
+          expect('<h1>Text</h1>').to have_text(/ext/)
         end
 
         it 'fails if has_content? returns false' do
           expect do
-            expect('<h1>Text</h1>').to have_content('No such Text')
+            expect('<h1>Text</h1>').to have_text('No such Text')
           end.to raise_error(/expected to find text "No such Text" in "Text"/)
         end
       end
 
       context 'with should_not' do
         it 'passes if has_no_content? returns true' do
-          expect('<h1>Text</h1>').not_to have_content('No such Text')
+          expect('<h1>Text</h1>').not_to have_text('No such Text')
         end
 
         it 'passes because escapes any characters that would have special meaning in a regexp' do
-          expect('<h1>Text</h1>').not_to have_content('.')
+          expect('<h1>Text</h1>').not_to have_text('.')
         end
 
         it 'fails if has_no_content? returns false' do
           expect do
-            expect('<h1>Text</h1>').not_to have_content('Text')
+            expect('<h1>Text</h1>').not_to have_text('Text')
           end.to raise_error(/expected not to find text "Text" in "Text"/)
         end
       end
@@ -309,16 +309,16 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
       context 'with should' do
         it 'passes if has_content? returns true' do
-          expect(session).to have_content('This is a test')
+          expect(session).to have_text('This is a test')
         end
 
         it 'passes if has_content? returns true using regexp' do
-          expect(session).to have_content(/test/)
+          expect(session).to have_text(/test/)
         end
 
         it 'fails if has_content? returns false' do
           expect do
-            expect(session).to have_content('No such Text')
+            expect(session).to have_text('No such Text')
           end.to raise_error(/expected to find text "No such Text" in "(.*)This is a test(.*)"/)
         end
 
@@ -329,7 +329,7 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
           it 'fails if has_content? returns false' do
             expect do
-              expect(session).to have_content('No such Text')
+              expect(session).to have_text('No such Text')
             end.to raise_error(/expected to find text "No such Text" in "(.*)This is a test(.*)"/)
           end
         end
@@ -337,22 +337,22 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
 
       context 'with should_not' do
         it 'passes if has_no_content? returns true' do
-          expect(session).not_to have_content('No such Text')
+          expect(session).not_to have_text('No such Text')
         end
 
         it 'fails if has_no_content? returns false' do
           expect do
-            expect(session).not_to have_content('This is a test')
+            expect(session).not_to have_text('This is a test')
           end.to raise_error(/expected not to find text "This is a test"/)
         end
 
         it 'not_to have_content behaves the same as to have_no_content' do
           Capybara.using_wait_time(5) do
-            expect(session).to have_content('This is a test')
+            expect(session).to have_text('This is a test')
             start = Time.now
-            expect(session).to have_no_content('No such Text')
+            expect(session).to have_no_text('No such Text')
             to_time = Time.now
-            expect(session).not_to have_content('No such Text')
+            expect(session).not_to have_text('No such Text')
             not_to_time = Time.now
             expect(not_to_time - to_time).to be_within(0.5).of(to_time - start)
           end
@@ -361,9 +361,9 @@ RSpec.shared_examples Capybara::RSpecMatchers do |session, _mode|
     end
 
     it 'supports compounding' do
-      expect('<h1>Text</h1><h2>And</h2>').to have_content('Text').and have_content('And')
-      expect('<h1>Text</h1><h2>Or</h2>').to have_content('XYZ').or have_content('Or')
-      expect('<h1>Text</h1><h2>Or</h2>').to have_no_content('XYZ').and have_content('Or')
+      expect('<h1>Text</h1><h2>And</h2>').to have_text('Text').and have_text('And')
+      expect('<h1>Text</h1><h2>Or</h2>').to have_text('XYZ').or have_text('Or')
+      expect('<h1>Text</h1><h2>Or</h2>').to have_no_text('XYZ').and have_text('Or')
     end
   end
 

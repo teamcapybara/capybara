@@ -448,30 +448,30 @@ Capybara::SpecHelper.spec '#click_button' do
 
   it 'should follow redirects' do
     @session.click_button('Go FAR')
-    expect(@session).to have_content('You landed')
+    expect(@session).to have_text('You landed')
     expect(@session.current_url).to match(%r{/landed$})
   end
 
   it 'should follow temporary redirects that maintain method' do
     @session.click_button('Go 307')
-    expect(@session).to have_content('You post landed: TWTW')
+    expect(@session).to have_text('You post landed: TWTW')
   end
 
   it 'should follow permanent redirects that maintain method' do
     @session.click_button('Go 308')
-    expect(@session).to have_content('You post landed: TWTW')
+    expect(@session).to have_text('You post landed: TWTW')
   end
 
   it 'should post pack to the same URL when no action given' do
     @session.visit('/postback')
     @session.click_button('With no action')
-    expect(@session).to have_content('Postback')
+    expect(@session).to have_text('Postback')
   end
 
   it 'should post pack to the same URL when blank action given' do
     @session.visit('/postback')
     @session.click_button('With blank action')
-    expect(@session).to have_content('Postback')
+    expect(@session).to have_text('Postback')
   end
 
   it 'ignores disabled buttons' do

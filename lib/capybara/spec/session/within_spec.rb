@@ -10,27 +10,27 @@ Capybara::SpecHelper.spec '#within' do
       @session.within(:css, '#for_bar li:first-child') do
         @session.click_link('Go')
       end
-      expect(@session).to have_content('Bar')
+      expect(@session).to have_text('Bar')
     end
 
     it 'should assert content in the given scope' do
       @session.within(:css, '#for_foo') do
-        expect(@session).not_to have_content('First Name')
+        expect(@session).not_to have_text('First Name')
       end
-      expect(@session).to have_content('First Name')
+      expect(@session).to have_text('First Name')
     end
 
     it 'should accept additional options' do
       @session.within(:css, '#for_bar li', text: 'With Simple HTML') do
         @session.click_link('Go')
       end
-      expect(@session).to have_content('Bar')
+      expect(@session).to have_text('Bar')
     end
 
     it 'should reload the node if the page is changed' do
       @session.within(:css, '#for_foo') do
         @session.visit('/with_scope_other')
-        expect(@session).to have_content('Different text')
+        expect(@session).to have_text('Different text')
       end
     end
 
@@ -38,7 +38,7 @@ Capybara::SpecHelper.spec '#within' do
       @session.within(:css, '#for_bar') do
         @session.within(:css, 'form[action="/redirect"]') do
           @session.refresh
-          expect(@session).to have_content('First Name')
+          expect(@session).to have_text('First Name')
         end
       end
     end
@@ -69,7 +69,7 @@ Capybara::SpecHelper.spec '#within' do
       @session.within(:xpath, "//div[@id='for_bar']//li[contains(.,'With Simple HTML')]") do
         @session.click_link('Go')
       end
-      expect(@session).to have_content('Bar')
+      expect(@session).to have_text('Bar')
     end
   end
 
@@ -78,7 +78,7 @@ Capybara::SpecHelper.spec '#within' do
       @session.within("//div[@id='for_bar']//li[contains(.,'With Simple HTML')]") do
         @session.click_link('Go')
       end
-      expect(@session).to have_content('Bar')
+      expect(@session).to have_text('Bar')
     end
   end
 
@@ -89,7 +89,7 @@ Capybara::SpecHelper.spec '#within' do
       @session.within(node_of_interest) do
         @session.click_link('Go')
       end
-      expect(@session).to have_content('Bar')
+      expect(@session).to have_text('Bar')
     end
   end
 
@@ -102,7 +102,7 @@ Capybara::SpecHelper.spec '#within' do
       @session.within('#for_bar li', text: 'With Simple HTML') do
         @session.click_link('Go')
       end
-      expect(@session).to have_content('Bar')
+      expect(@session).to have_text('Bar')
     end
   end
 
@@ -113,7 +113,7 @@ Capybara::SpecHelper.spec '#within' do
           @session.click_link('Go')
         end
       end
-      expect(@session).to have_content('Another World')
+      expect(@session).to have_text('Another World')
     end
 
     it 'should respect the outer scope' do
@@ -122,7 +122,7 @@ Capybara::SpecHelper.spec '#within' do
           @session.click_link('Go')
         end
       end
-      expect(@session).to have_content('Hello world')
+      expect(@session).to have_text('Hello world')
     end
   end
 
@@ -162,7 +162,7 @@ Capybara::SpecHelper.spec '#within' do
   it 'should have #within_element as an alias' do
     expect(Capybara::Session.instance_method(:within)).to eq Capybara::Session.instance_method(:within_element)
     @session.within_element(:css, '#for_foo') do
-      expect(@session).not_to have_content('First Name')
+      expect(@session).not_to have_text('First Name')
     end
   end
 end

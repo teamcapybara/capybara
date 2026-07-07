@@ -5,7 +5,7 @@ When(/^I visit the (?:root|home) page$/) do
 end
 
 Then(/^I should see "([^"]*)"$/) do |text|
-  expect(page).to have_content(text)
+  expect(page).to have_text(text)
 end
 
 Then(/^Capybara should use the "([^"]*)" driver$/) do |driver|

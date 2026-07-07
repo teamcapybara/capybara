@@ -41,18 +41,18 @@ Capybara::SpecHelper.spec '#attach_file' do
     it 'should set a file path by id' do
       @session.attach_file 'form_document', with_os_path_separators(test_file_path)
       @session.click_button('Upload Single')
-      expect(@session).to have_content(File.read(test_file_path))
+      expect(@session).to have_text(File.read(test_file_path))
     end
 
     it 'should set a file path by label' do
       @session.attach_file 'Single Document', with_os_path_separators(test_file_path)
       @session.click_button('Upload Single')
-      expect(@session).to have_content(File.read(test_file_path))
+      expect(@session).to have_text(File.read(test_file_path))
     end
 
     it 'should not break if no file is submitted' do
       @session.click_button('Upload Single')
-      expect(@session).to have_content('No file uploaded')
+      expect(@session).to have_text('No file uploaded')
     end
 
     it 'should send prior hidden field if no file submitted' do
@@ -64,25 +64,25 @@ Capybara::SpecHelper.spec '#attach_file' do
     it 'should send content type text/plain when uploading a text file' do
       @session.attach_file 'Single Document', with_os_path_separators(test_file_path)
       @session.click_button 'Upload Single'
-      expect(@session).to have_content('text/plain')
+      expect(@session).to have_text('text/plain')
     end
 
     it 'should send content type image/jpeg when uploading an image' do
       @session.attach_file 'Single Document', with_os_path_separators(test_jpg_file_path)
       @session.click_button 'Upload Single'
-      expect(@session).to have_content('image/jpeg')
+      expect(@session).to have_text('image/jpeg')
     end
 
     it 'should not break when uploading a file without extension' do
       @session.attach_file 'Single Document', with_os_path_separators(no_extension_file_path)
       @session.click_button 'Upload Single'
-      expect(@session).to have_content(File.read(no_extension_file_path))
+      expect(@session).to have_text(File.read(no_extension_file_path))
     end
 
     it 'should not break when using HTML5 multiple file input' do
       @session.attach_file 'Multiple Documents', with_os_path_separators(test_file_path)
       @session.click_button('Upload Multiple')
-      expect(@session).to have_content(File.read(test_file_path))
+      expect(@session).to have_text(File.read(test_file_path))
       expect(@session.body).to include('1 | ') # number of files
     end
 
@@ -90,21 +90,21 @@ Capybara::SpecHelper.spec '#attach_file' do
       @session.attach_file('Multiple Documents',
                            [test_file_path, another_test_file_path].map { |f| with_os_path_separators(f) })
       @session.click_button('Upload Multiple')
-      expect(@session).to have_content('2 | ') # number of files
+      expect(@session).to have_text('2 | ') # number of files
       expect(@session.body).to include(File.read(test_file_path))
       expect(@session.body).to include(File.read(another_test_file_path))
     end
 
     it 'should not send anything when attaching no files to a multiple upload field' do
       @session.click_button('Upload Empty Multiple')
-      expect(@session).to have_content('Successfully ignored empty file field')
+      expect(@session).to have_text('Successfully ignored empty file field')
     end
 
     it 'should not append files to already attached' do
       @session.attach_file 'Multiple Documents', with_os_path_separators(test_file_path)
       @session.attach_file 'Multiple Documents', with_os_path_separators(another_test_file_path)
       @session.click_button('Upload Multiple')
-      expect(@session).to have_content('1 | ') # number of files
+      expect(@session).to have_text('1 | ') # number of files
       expect(@session.body).to include(File.read(another_test_file_path))
       expect(@session.body).not_to include(File.read(test_file_path))
     end

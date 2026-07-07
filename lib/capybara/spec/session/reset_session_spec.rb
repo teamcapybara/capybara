@@ -4,7 +4,7 @@ Capybara::SpecHelper.spec '#reset_session!' do
   it 'removes cookies from current domain' do
     @session.visit('/set_cookie')
     @session.visit('/get_cookie')
-    expect(@session).to have_content('test_cookie')
+    expect(@session).to have_text('test_cookie')
 
     @session.reset_session!
     @session.visit('/get_cookie')
@@ -16,7 +16,7 @@ Capybara::SpecHelper.spec '#reset_session!' do
     domains.each do |domain|
       @session.visit("http://#{domain}:#{@session.server.port}/set_cookie")
       @session.visit("http://#{domain}:#{@session.server.port}/get_cookie")
-      expect(@session).to have_content('test_cookie')
+      expect(@session).to have_text('test_cookie')
     end
     @session.reset_session!
     domains.each do |domain|
@@ -39,7 +39,7 @@ Capybara::SpecHelper.spec '#reset_session!' do
 
   it 'resets page body' do
     @session.visit('/with_html')
-    expect(@session).to have_content('This is a test')
+    expect(@session).to have_text('This is a test')
     expect(@session.find('.//h1').text).to include('This is a test')
 
     @session.reset_session!

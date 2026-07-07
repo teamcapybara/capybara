@@ -3,9 +3,9 @@
 Capybara::SpecHelper.spec '#visit' do
   it 'should fetch a response from the driver with a relative url' do
     @session.visit('/')
-    expect(@session).to have_content('Hello world!')
+    expect(@session).to have_text('Hello world!')
     @session.visit('/foo')
-    expect(@session).to have_content('Another World')
+    expect(@session).to have_text('Another World')
   end
 
   it 'should fetch a response from the driver with an absolute url with a port' do
@@ -14,9 +14,9 @@ Capybara::SpecHelper.spec '#visit' do
     root_uri = URI.parse(@session.current_url)
 
     @session.visit("http://#{root_uri.host}:#{root_uri.port}/")
-    expect(@session).to have_content('Hello world!')
+    expect(@session).to have_text('Hello world!')
     @session.visit("http://#{root_uri.host}:#{root_uri.port}/foo")
-    expect(@session).to have_content('Another World')
+    expect(@session).to have_text('Another World')
   end
 
   it "should fetch a response when absolute URI doesn't have a trailing slash" do
@@ -25,7 +25,7 @@ Capybara::SpecHelper.spec '#visit' do
     root_uri = URI.parse(@session.current_url)
 
     @session.visit("http://#{root_uri.host}:#{root_uri.port}")
-    expect(@session).to have_content('Hello world!')
+    expect(@session).to have_text('Hello world!')
   end
 
   it 'should fetch a response when sequentially visiting same destination with a target' do
@@ -64,11 +64,11 @@ Capybara::SpecHelper.spec '#visit' do
     it 'should fetch a response from the driver with an absolute url without a port' do
       @session.visit("http://#{root_uri.host}/")
       expect(URI.parse(@session.current_url).port).to eq(root_uri.port)
-      expect(@session).to have_content('Hello world!')
+      expect(@session).to have_text('Hello world!')
 
       @session.visit("http://#{root_uri.host}/foo")
       expect(URI.parse(@session.current_url).port).to eq(root_uri.port)
-      expect(@session).to have_content('Another World')
+      expect(@session).to have_text('Another World')
     end
 
     it 'should add the server port to a visited url if no port specified', requires: [:server] do
@@ -133,13 +133,13 @@ Capybara::SpecHelper.spec '#visit' do
       serverless_session = Capybara::Session.new(@session.mode, nil)
       Capybara.app_host = "http://#{@session.server.host}:#{@session.server.port}"
       serverless_session.visit('/foo')
-      expect(serverless_session).to have_content('Another World')
+      expect(serverless_session).to have_text('Another World')
     end
 
     it 'should visit a fully qualified URL' do
       serverless_session = Capybara::Session.new(@session.mode, nil)
       serverless_session.visit("http://#{@session.server.host}:#{@session.server.port}/foo")
-      expect(serverless_session).to have_content('Another World')
+      expect(serverless_session).to have_text('Another World')
     end
   end
 
@@ -148,7 +148,7 @@ Capybara::SpecHelper.spec '#visit' do
       another_session = Capybara::Session.new(@session.mode, @session.app.dup)
       Capybara.app_host = "http://#{@session.server.host}:#{@session.server.port}"
       another_session.visit('/foo')
-      expect(another_session).to have_content('Another World')
+      expect(another_session).to have_text('Another World')
       expect(another_session.current_url).to start_with(Capybara.app_host)
       expect(URI.parse(another_session.current_url).port).not_to eq another_session.server.port
       expect(URI.parse(another_session.current_url).port).to eq @session.server.port
@@ -157,49 +157,49 @@ Capybara::SpecHelper.spec '#visit' do
     it 'should append relative path', requires: [:server] do
       Capybara.app_host = "http://#{@session.server.host}:#{@session.server.port}/redirect/0"
       @session.visit('/times')
-      expect(@session).to have_content('redirection complete')
+      expect(@session).to have_text('redirection complete')
     end
 
     it 'should work if `app_host` has a trailing /', requires: [:server] do
       Capybara.app_host = "http://#{@session.server.host}:#{@session.server.port}/"
       @session.visit('/')
-      expect(@session).to have_content('Hello world!')
+      expect(@session).to have_text('Hello world!')
     end
   end
 
   it 'should send no referer when visiting a page' do
     @session.visit '/get_referer'
-    expect(@session).to have_content 'No referer'
+    expect(@session).to have_text 'No referer'
   end
 
   it 'should send no referer when visiting a second page' do
     @session.visit '/get_referer'
     @session.visit '/get_referer'
-    expect(@session).to have_content 'No referer'
+    expect(@session).to have_text 'No referer'
   end
 
   it 'should send a referer when following a link' do
     @session.visit '/referer_base'
     @session.find('//a[@href="/get_referer"]').click
-    expect(@session).to have_content %r{http://.*/referer_base}
+    expect(@session).to have_text %r{http://.*/referer_base}
   end
 
   it 'should preserve the original referer URL when following a redirect' do
     @session.visit('/referer_base')
     @session.find('//a[@href="/redirect_to_get_referer"]').click
-    expect(@session).to have_content %r{http://.*/referer_base}
+    expect(@session).to have_text %r{http://.*/referer_base}
   end
 
   it 'should send a referer when submitting a form' do
     @session.visit '/referer_base'
     @session.find('//input').click
-    expect(@session).to have_content %r{http://.*/referer_base}
+    expect(@session).to have_text %r{http://.*/referer_base}
   end
 
   it 'can set cookie if a blank path is specified' do
     @session.visit('')
     @session.visit('/get_cookie')
-    expect(@session).to have_content('root cookie')
+    expect(@session).to have_text('root cookie')
   end
 
   context 'with base element' do

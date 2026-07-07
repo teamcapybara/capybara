@@ -17,7 +17,7 @@ feature "Capybara's feature DSL" do
 
   scenario 'includes Capybara' do
     visit('/')
-    expect(page).to have_content('Hello world!')
+    expect(page).to have_text('Hello world!')
   end
 
   scenario 'preserves description' do |ex|
@@ -44,7 +44,7 @@ feature "Capybara's feature DSL" do
   feature 'nested features' do
     scenario 'work as expected' do
       visit '/'
-      expect(page).to have_content 'Hello world!'
+      expect(page).to have_text 'Hello world!'
     end
 
     scenario 'are marked in the metadata as capybara_feature' do |ex|

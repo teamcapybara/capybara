@@ -4,7 +4,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
   it 'should click on a link' do
     @session.visit('/with_html')
     @session.click_link_or_button('labore')
-    expect(@session).to have_content('Bar')
+    expect(@session).to have_text('Bar')
   end
 
   it 'should click on a button' do
@@ -52,7 +52,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
       it 'clicks on approximately matching link' do
         @session.visit('/with_html')
         @session.click_link_or_button('abore', exact: false)
-        expect(@session).to have_content('Bar')
+        expect(@session).to have_text('Bar')
       end
 
       it 'clicks on approximately matching button' do
@@ -110,7 +110,7 @@ Capybara::SpecHelper.spec '#click_link_or_button' do
     it 'happily clicks on links which incorrectly have the disabled attribute' do
       @session.visit('/with_html')
       @session.click_link_or_button('Disabled link')
-      expect(@session).to have_content('Bar')
+      expect(@session).to have_text('Bar')
     end
   end
 

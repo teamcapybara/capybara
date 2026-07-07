@@ -406,7 +406,7 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           @animation_session.visit('with_animation')
           sleep 1
           @animation_session.find_link('animate me away').right_click
-          expect(@animation_session).to have_content('Animation Ended', wait: 0.1)
+          expect(@animation_session).to have_text('Animation Ended', wait: 0.1)
         end
 
         it 'should scroll the page instantly', requires: [:js] do

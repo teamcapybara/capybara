@@ -111,7 +111,7 @@ RSpec.describe Capybara::Session do # rubocop:disable RSpec/MultipleDescribes
         session.visit('/form')
         session.attach_file 'form_document', test_jpg_file_path
         session.click_button('Upload Single')
-        expect(session).to have_content('Content-type: text/csv')
+        expect(session).to have_text('Content-type: text/csv')
       end
     end
 

@@ -24,7 +24,7 @@ Capybara::SpecHelper.spec '#current_url, #current_path, #current_host' do
     expect(@session.current_host).to eq("#{scheme}://#{s.host}") # no port
     expect(@session.current_path).to eq(path.split('#')[0])
     # Server should agree with us
-    expect(@session).to have_content("Current host is #{scheme}://#{s.host}:#{s.port}") if path == '/host'
+    expect(@session).to have_text("Current host is #{scheme}://#{s.host}:#{s.port}") if path == '/host'
   end
 
   def visit_host_links

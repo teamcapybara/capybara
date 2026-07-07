@@ -123,7 +123,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
         @session.within_window(-> { @session.title == 'Title of the first popup' }) do
           expect(@session).to have_css('#divInPopupOne')
         end
-        expect(@session).to have_content('My scoped content')
+        expect(@session).to have_text('My scoped content')
         expect(@session).not_to have_css('#openWindow')
       end
     end
