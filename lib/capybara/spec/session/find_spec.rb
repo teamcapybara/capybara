@@ -95,7 +95,7 @@ Capybara::SpecHelper.spec '#find' do
 
     it 'should not warn about locator' do
       expect { @session.find(:css, '#not_on_page') }.to raise_error Capybara::ElementNotFound do |e|
-        expect(e.message).not_to match(/you may be passing a CSS selector or XPath expression/)
+        expect(e.message).not_to include('you may be passing a CSS selector or XPath expression')
       end
     end
   end
@@ -498,7 +498,7 @@ Capybara::SpecHelper.spec '#find' do
 
     it 'should find the an element using the given locator' do
       @session.within(:xpath, "//div[@id='for_bar']") do
-        expect(@session.find('.//li[1]').text).to match(/With Simple HTML/)
+        expect(@session.find('.//li[1]').text).to include('With Simple HTML')
       end
     end
 

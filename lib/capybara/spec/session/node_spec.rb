@@ -1399,7 +1399,7 @@ Capybara::SpecHelper.spec 'node' do
         @session.find(:css, 'span')
       end.to(raise_error(TestApp::TestAppError) do |e|
         expect(e.cause).to be_a Capybara::CapybaraError
-        expect(e.cause.message).to match(/Your application server raised an error/)
+        expect(e.cause.message).to include('Your application server raised an error')
       end)
     end
 
@@ -1409,7 +1409,7 @@ Capybara::SpecHelper.spec 'node' do
         @session.find(:css, 'span')
       end.to(raise_error(TestApp::TestAppOtherError) do |e|
         expect(e.cause).to be_a Capybara::CapybaraError
-        expect(e.cause.message).to match(/Your application server raised an error/)
+        expect(e.cause.message).to include('Your application server raised an error')
       end)
     end
   end

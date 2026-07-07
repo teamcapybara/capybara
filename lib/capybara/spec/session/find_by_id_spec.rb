@@ -21,7 +21,7 @@ Capybara::SpecHelper.spec '#find_by_id' do
 
   context 'with :visible option' do
     it 'finds invisible elements when `false`' do
-      expect(@session.find_by_id('hidden_via_ancestor', visible: false).text(:all)).to match(/with hidden ancestor/)
+      expect(@session.find_by_id('hidden_via_ancestor', visible: false).text(:all)).to include('with hidden ancestor')
     end
 
     it "doesn't find invisible elements when `true`" do
