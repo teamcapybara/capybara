@@ -15,8 +15,9 @@ AllCops:
 
 #################### Capybara ##################
 
-Capybara/NegationMatcher:
+RSpec/MatchWithSimpleRegex:
   Enabled: false
+
 
 RSpec/SpecFilePathFormat:
   Enabled: false
@@ -27,16 +28,19 @@ RSpec/SpecFilePathSuffix:
 Capybara/FindAllFirst:
   Enabled: false
 
-Capybara/NegationMatcherAfterVisit:
+Capybara/RSpec/HaveContent:
+  Enabled: false
+
+Capybara/RSpec/NegationMatcher:
+  Enabled: false
+
+Capybara/RSpec/NegationMatcherAfterVisit:
   Enabled: false
 
 Capybara/RSpec/HaveSelector:
   Enabled: false
 
 Capybara/SpecificFinders:
-  Enabled: false
-
-Capybara/ClickLinkOrButtonStyle:
   Enabled: false
 
 #################### Gemspec ###################
@@ -276,3 +280,12 @@ Naming/BlockForwarding:
 
 Style/ArrayIntersect:
   Enabled: false
+
+Style/OneClassPerFile:
+  Exclude:
+    - 'lib/capybara/selenium/driver_specializations/firefox_driver.rb'
+    - 'lib/capybara/rspec/matchers/match_style.rb'
+    - 'lib/capybara/selector/xpath_extensions.rb'
+    - 'lib/capybara/minitest/spec.rb'
+    - 'lib/capybara/selenium/driver_specializations/internet_explorer_driver.rb'
+    - 'spec/rack_test_spec.rb'

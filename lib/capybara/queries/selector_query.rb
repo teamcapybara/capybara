@@ -502,7 +502,7 @@ module Capybara
           options[:class].match? node[:class]
         else
           classes = (node[:class] || '').split
-          options[:class].select { |c| c.is_a? Regexp }.all? do |r|
+          options[:class].grep(Regexp).all? do |r|
             classes.any? { |cls| r.match? cls }
           end
         end

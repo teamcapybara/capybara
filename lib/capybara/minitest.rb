@@ -21,13 +21,13 @@ module Capybara
 
       def called_from_minitest_assertion_wrapper?
         caller_locations(2, 5).any? do |loc|
-          loc.path&.end_with?("/capybara/minitest.rb")
+          loc.path&.end_with?('/capybara/minitest.rb')
         end
       end
 
       def increment_minitest_assertions
         test_context = Thread.current[:capybara_minitest_test_context]
-        return unless test_context&.respond_to?(:assertions) && test_context.respond_to?(:assertions=)
+        return unless test_context.respond_to?(:assertions) && test_context.respond_to?(:assertions=)
 
         test_context.assertions += 1
       end
@@ -437,4 +437,4 @@ end
 
 Capybara::Node::Matchers.prepend(Capybara::Minitest::NodeAssertionsCounter)
 
-::Minitest::Test.prepend(Capybara::Minitest::TestContextTracker)
+Minitest::Test.prepend(Capybara::Minitest::TestContextTracker)
