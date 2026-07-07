@@ -21,7 +21,7 @@ module Capybara
 
       def called_from_minitest_assertion_wrapper?
         caller_locations(2, 5).any? do |loc|
-          loc.path&.end_with?("/capybara/minitest.rb")
+          loc.path&.end_with?('/capybara/minitest.rb')
         end
       end
 
