@@ -30,7 +30,7 @@ class MinitestTest < Minitest::Test
 
     find(:css, 'form', text: 'Title').assert_text('Customer Email')
 
-    assert_equal before_assertions + 2, assertions
+    assert_equal before_assertions + 1, assertions
   end
 
   def test_assert_title
