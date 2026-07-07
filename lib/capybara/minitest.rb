@@ -2,9 +2,47 @@
 
 require 'minitest'
 require 'capybara/dsl'
+require 'capybara/node/matchers'
 
 module Capybara
   module Minitest
+    module NodeAssertionsCounter
+      def assert_text(...)
+        increment_minitest_assertions unless called_from_minitest_assertion_wrapper?
+        super
+      end
+
+      def assert_no_text(...)
+        increment_minitest_assertions unless called_from_minitest_assertion_wrapper?
+        super
+      end
+
+    private
+
+      def called_from_minitest_assertion_wrapper?
+        caller_locations(2, 5).any? do |loc|
+          loc.path&.end_with?("/capybara/minitest.rb")
+        end
+      end
+
+      def increment_minitest_assertions
+        test_context = Thread.current[:capybara_minitest_test_context]
+        return unless test_context&.respond_to?(:assertions) && test_context.respond_to?(:assertions=)
+
+        test_context.assertions += 1
+      end
+    end
+
+    module TestContextTracker
+      def run(...)
+        previous_context = Thread.current[:capybara_minitest_test_context]
+        Thread.current[:capybara_minitest_test_context] = self
+        super
+      ensure
+        Thread.current[:capybara_minitest_test_context] = previous_context
+      end
+    end
+
     module Assertions
       ##
       # Assert text exists
@@ -396,3 +434,7 @@ module Capybara
     end
   end
 end
+
+Capybara::Node::Matchers.prepend(Capybara::Minitest::NodeAssertionsCounter)
+
+::Minitest::Test.prepend(Capybara::Minitest::TestContextTracker)
