@@ -236,6 +236,15 @@ Style/NumericLiterals:
     - 'lib/capybara/spec/**/*'
     - 'spec/**/*'
 
+Style/OneClassPerFile:
+  Exclude:
+    - 'lib/capybara/minitest/spec.rb'
+    - 'lib/capybara/rspec/matchers/match_style.rb'
+    - 'lib/capybara/selector/xpath_extensions.rb'
+    - 'lib/capybara/selenium/driver_specializations/firefox_driver.rb'
+    - 'lib/capybara/selenium/driver_specializations/internet_explorer_driver.rb'
+    - 'spec/rack_test_spec.rb'
+
 Style/ParallelAssignment:
   Enabled: false
 
