@@ -27,7 +27,7 @@ module Capybara
 
       def increment_minitest_assertions
         test_context = Thread.current[:capybara_minitest_test_context]
-        return unless test_context&.respond_to?(:assertions) && test_context.respond_to?(:assertions=)
+        return unless test_context.respond_to?(:assertions) && test_context.respond_to?(:assertions=)
 
         test_context.assertions += 1
       end
