@@ -23,7 +23,7 @@ Capybara::SpecHelper.spec '#matches_style?', requires: [:css] do
     expect(@session.find(:css, '#first').matches_style?(display: /^in/)).to be false
   end
 
-  # rubocop:disable Capybara/MatchStyle
+  # rubocop:disable Capybara/RSpec/MatchStyle
   it 'deprecated has_style?' do
     expect { have_style(display: /^bl/) }.to \
       output(/have_style is deprecated/).to_stderr
@@ -33,5 +33,5 @@ Capybara::SpecHelper.spec '#matches_style?', requires: [:css] do
     el.has_style?('display' => /^bl/)
     expect(Capybara::Helpers).to have_received(:warn)
   end
-  # rubocop:enable Capybara/MatchStyle
+  # rubocop:enable Capybara/RSpec/MatchStyle
 end

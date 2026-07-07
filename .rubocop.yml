@@ -15,7 +15,7 @@ AllCops:
 
 #################### Capybara ##################
 
-Capybara/NegationMatcher:
+Capybara/RSpec/NegationMatcher:
   Enabled: false
 
 RSpec/SpecFilePathFormat:
@@ -27,7 +27,7 @@ RSpec/SpecFilePathSuffix:
 Capybara/FindAllFirst:
   Enabled: false
 
-Capybara/NegationMatcherAfterVisit:
+Capybara/RSpec/NegationMatcherAfterVisit:
   Enabled: false
 
 Capybara/RSpec/HaveSelector:
