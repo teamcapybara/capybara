@@ -437,4 +437,4 @@ end
 
 Capybara::Node::Matchers.prepend(Capybara::Minitest::NodeAssertionsCounter)
 
-::Minitest::Test.prepend(Capybara::Minitest::TestContextTracker)
+Minitest::Test.prepend(Capybara::Minitest::TestContextTracker)
