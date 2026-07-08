@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: ["3.2", "3.3", "3.4", "4.0"]
+        ruby: ["3.3", "3.4", "4.0"]
         task: ["rack_smoke", "cucumber"]
 
     steps:
@@ -47,7 +47,7 @@ jobs:
       # Ensure all jobs are run to completion
       fail-fast: false
       matrix:
-        ruby: ["4.0"]
+        ruby: ["3.4", "4.0"]
         task: ["spec_chrome", "spec_firefox"]
 
     steps:
@@ -72,7 +72,7 @@ jobs:
       # Ensure all jobs are run to completion
       fail-fast: false
       matrix:
-        ruby: ["4.0"]
+        ruby: ["3.3"]
         task: ["spec_chrome", "spec_firefox"]
 
     steps:
