@@ -19,6 +19,11 @@ class MinitestTest < Minitest::Test
     :sorted
   end
 
+  # Minitest < 6.0
+  def self.test_order
+    run_order
+  end
+
   def test_assert_text
     assert_text('Form', normalize_ws: false)
     assert_no_text('Not on the page')

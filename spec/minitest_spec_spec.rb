@@ -20,6 +20,11 @@ class MinitestSpecTest < Minitest::Spec
     :sorted
   end
 
+  # Minitest < 6.0
+  def self.test_order
+    run_order
+  end
+
   it 'supports text expectations' do
     _(page).must_have_text('Form', minimum: 1)
     _(page).wont_have_text('Not a form')
