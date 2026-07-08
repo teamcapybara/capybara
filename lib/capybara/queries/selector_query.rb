@@ -89,7 +89,7 @@ module Capybara
         when Regexp
           " with style attribute matching #{options[:style].inspect}"
         when Hash
-          " with styles #{options[:style].inspect}"
+          " with styles #{options[:style].transform_keys(&:to_s).inspect}"
         else ''
         end
 
