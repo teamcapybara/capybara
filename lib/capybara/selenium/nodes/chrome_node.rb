@@ -88,6 +88,11 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
 protected
 
   def catch_error?(error, errors = nil)
+    puts 'Chrome node specific catch_error?'
+    puts error.inspect
+    puts(error.is_a?(Selenium::WebDriver::Error::UnknownError) &&
+       error.message.include?('Node with given id does not belong to the document'))
+
     # Selenium::WebDriver::Error::UnknownError:
     #    unknown error: unhandled inspector error: {"code":-32000,"message":"Node with given id does not belong to the document"}
     super ||
