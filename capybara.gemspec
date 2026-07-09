@@ -41,7 +41,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency('benchmark')
   s.add_development_dependency('byebug') unless RUBY_PLATFORM == 'java'
-  s.add_development_dependency('coveralls')
+  s.add_development_dependency('coveralls_reborn')
   s.add_development_dependency('cucumber', ['>= 2.3.0'])
   s.add_development_dependency('erubi') # dependency specification needed by rbx
   s.add_development_dependency('irb')
@@ -59,7 +59,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rubocop-performance')
   s.add_development_dependency('rubocop-rake')
   s.add_development_dependency('rubocop-rspec', ['~>3.0'])
-  s.add_development_dependency('sauce_whisk')
+  # s.add_development_dependency('sauce_whisk')
   s.add_development_dependency('selenium_statistics')
   s.add_development_dependency('selenium-webdriver', ['~>4.8'])
   s.add_development_dependency('sinatra', ['>= 1.4.0'])
