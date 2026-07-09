@@ -103,13 +103,15 @@ class Capybara::Selenium::Node
 
     LEGACY_DRAG_CHECK = <<~JS
       (function(el){
+        var originalEl = el;
         if ([true, null].indexOf(window.capybara_mousedown_prevented) >= 0){
           return true;
         }
 
         do {
           if (el.draggable) return false;
-        } while (el = el.parentElement );
+        } while (el = el.parentElement);
+        if (originalEl.querySelector && originalEl.querySelector('[draggable="true"]')) return false;
         return true;
       })(arguments[0])
     JS
@@ -153,6 +155,12 @@ class Capybara::Selenium::Node
         return new DOMPoint(pt.x,pt.y);
       }
 
+      function dispatchOnElement(pt, event) {
+        var el = document.elementFromPoint(pt.x, pt.y);
+        if (!el || !target.contains(el)) el = target;
+        el.dispatchEvent(event);
+      }
+
       function dragEnterTarget() {
         target.scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
         var targetRect = target.getBoundingClientRect();
@@ -166,14 +174,15 @@ class Capybara::Selenium::Node
           opts[key + 'Key'] = true;
         }
 
-        var dragEnterEvent = new DragEvent('dragenter', opts);
-        target.dispatchEvent(dragEnterEvent);
+        var entryPoint = pointOnRect(sourceCenter, targetRect)
+        var enterOpts = Object.assign({clientX: entryPoint.x, clientY: entryPoint.y}, opts);
+        var dragEnterEvent = new DragEvent('dragenter', enterOpts);
+        dispatchOnElement(entryPoint, dragEnterEvent);
 
         // fire 2 dragover events to simulate dragging with a direction
-        var entryPoint = pointOnRect(sourceCenter, targetRect)
         var dragOverOpts = Object.assign({clientX: entryPoint.x, clientY: entryPoint.y}, opts);
         var dragOverEvent = new DragEvent('dragover', dragOverOpts);
-        target.dispatchEvent(dragOverEvent);
+        dispatchOnElement(entryPoint, dragOverEvent);
         window.setTimeout(dragOnTarget, step_delay);
       }
 
@@ -181,17 +190,19 @@ class Capybara::Selenium::Node
         var targetCenter = rectCenter(target.getBoundingClientRect());
         var dragOverOpts = Object.assign({clientX: targetCenter.x, clientY: targetCenter.y}, opts);
         var dragOverEvent = new DragEvent('dragover', dragOverOpts);
-        target.dispatchEvent(dragOverEvent);
+        dispatchOnElement(targetCenter, dragOverEvent);
         window.setTimeout(dragLeave, step_delay, dragOverEvent.defaultPrevented, dragOverOpts);
       }
 
       function dragLeave(drop, dragOverOpts) {
         var dragLeaveOptions = Object.assign({}, opts, dragOverOpts);
-        var dragLeaveEvent = new DragEvent('dragleave', dragLeaveOptions);
-        target.dispatchEvent(dragLeaveEvent);
+        var pt = {x: dragOverOpts.clientX, y: dragOverOpts.clientY};
         if (drop) {
           var dropEvent = new DragEvent('drop', dragLeaveOptions);
-          target.dispatchEvent(dropEvent);
+          dispatchOnElement(pt, dropEvent);
+        } else {
+          var dragLeaveEvent = new DragEvent('dragleave', dragLeaveOptions);
+          dispatchOnElement(pt, dragLeaveEvent);
         }
         var dragEndEvent = new DragEvent('dragend', dragLeaveOptions);
         source.dispatchEvent(dragEndEvent);
@@ -207,8 +218,15 @@ class Capybara::Selenium::Node
       var dt = new DataTransfer();
       var opts = { cancelable: true, bubbles: true, dataTransfer: dt };
 
-      while (source && !source.draggable) {
-        source = source.parentElement;
+      if (!source.draggable) {
+        var child = source.querySelector('[draggable="true"]');
+        if (child) {
+          source = child;
+        } else {
+          while (source && !source.draggable) {
+            source = source.parentElement;
+          }
+        }
       }
 
       if (source.tagName == 'A'){
@@ -220,10 +238,17 @@ class Capybara::Selenium::Node
         dt.setData('text', source.src);
       }
 
-      var dragEvent = new DragEvent('dragstart', opts);
+      var srcCenter = rectCenter(source.getBoundingClientRect());
+      var dragStartOpts = Object.assign({clientX: srcCenter.x, clientY: srcCenter.y}, opts);
+      var dragEvent = new DragEvent('dragstart', dragStartOpts);
       source.dispatchEvent(dragEvent);
 
-      window.setTimeout(dragEnterTarget, step_delay);
+      // Yield once to the event loop so libraries that defer work after
+      // dragstart (e.g. react-dnd's publishDragSource via setTimeout(0))
+      // can complete before we dispatch dragenter.
+      window.setTimeout(function() {
+        window.setTimeout(dragEnterTarget, step_delay);
+      }, 0);
     JS
   end
 end

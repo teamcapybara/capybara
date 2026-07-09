@@ -407,7 +407,11 @@ module Capybara
       # @param [Capybara::Node::Element] node     The element to drag to
       # @param [Hash] options  Driver specific options for dragging. May not be supported by all drivers.
       # @option options [Numeric] :delay   (0.05) When using Chrome/Firefox with Selenium and HTML5 dragging this is the number
-      #                                    of seconds between each stage of the drag.
+      #                                    of seconds between each stage of the drag. Libraries that use
+      #                                    requestAnimationFrame for hover scheduling (e.g. react-dnd) may require
+      #                                    `delay: 0` to prevent RAF callbacks and React effects from running
+      #                                    between events, which can cause listeners to be removed and reattached
+      #                                    mid-sequence.
       # @option options [Boolean] :html5   When using Chrome/Firefox with Selenium enables to force the use of HTML5
       #                                    (true) or legacy (false) dragging. If not specified the driver will attempt to
       #                                    detect the correct method to use.

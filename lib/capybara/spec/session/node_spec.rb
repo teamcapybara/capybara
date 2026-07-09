@@ -583,7 +583,7 @@ Capybara::SpecHelper.spec 'node' do
         target = @session.find('//div[@id="drop_html5"]')
         element.drag_to(target)
 
-        conditions = %w[DragLeave Drop DragEnd].map do |text|
+        conditions = %w[Drop DragEnd].map do |text|
           have_css('div.log', text: text)
         end
         expect(@session).to(conditions.reduce { |memo, cond| memo.and(cond) })
@@ -592,7 +592,6 @@ Capybara::SpecHelper.spec 'node' do
         drag_over_div = @session.first('//div[@class="log" and starts-with(text(), "DragOver")]')
         position = drag_over_div.text.sub('DragOver ', '')
 
-        expect(@session).to have_css('div.log', text: /DragLeave #{position}/, count: 1)
         expect(@session).to have_css('div.log', text: /Drop #{position}/, count: 1)
         expect(@session).to have_css('div.log', text: /DragEnd #{position}/, count: 1)
       end
@@ -689,6 +688,34 @@ Capybara::SpecHelper.spec 'node' do
 
         # Events are listed in reverse chronological order
         expect(@session).to have_text(/DragOver.*DragEnter/m)
+      end
+
+      it 'should set clientX/Y in dragstart events' do
+        @session.visit('/with_js')
+        element = @session.find('//div[@id="drag_html5"]')
+        target = @session.find('//div[@id="drop_html5"]')
+        element.drag_to(target)
+        expect(@session).to have_css('div.log',
+                                     text: /DragStart with client position: [1-9]\d*,[1-9]\d*/)
+      end
+
+      it 'should set clientX/Y in dragenter events' do
+        @session.visit('/with_js')
+        element = @session.find('//div[@id="drag_html5"]')
+        target = @session.find('//div[@id="drop_html5"]')
+        element.drag_to(target)
+        expect(@session).to have_css('div.log',
+                                     text: /DragEnter with client position: [1-9]\d*,[1-9]\d*/)
+      end
+
+      it 'should HTML5 drag and drop when selecting a wrapper of a draggable' do
+        @session.visit('/with_js')
+        wrapper = @session.find('//div[@id="drag_html5_wrapper"]')
+        target = @session.find('//div[@id="drop_html5"]')
+        wrapper.drag_to(target)
+        expect(@session).to have_xpath(
+          '//div[contains(., "HTML5 Dropped string: text/plain drag_html5_wrapped")]'
+        )
       end
     end
   end
