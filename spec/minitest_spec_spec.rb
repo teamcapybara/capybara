@@ -100,6 +100,7 @@ class MinitestSpecTest < Minitest::Spec
   end
 
   it 'supports all_of_selectors expectations' do
+    _(page).must_have_all_of_selectors(:css, 'select#form_other_title', 'input#form_last_name', visible: true)
     _(page).must_have_all_of_selectors(:css, 'select#form_other_title', 'input#form_super_secret', visible: false)
   end
 
@@ -164,7 +165,7 @@ RSpec.describe 'capybara/minitest/spec' do
     reporter.start
     MinitestSpecTest.run_suite reporter, {}
     reporter.report
-    expect(output.string).to include('22 runs, 44 assertions, 1 failures, 0 errors, 1 skips')
+    expect(output.string).to include('22 runs, 45 assertions, 1 failures, 0 errors, 1 skips')
     # Make sure error messages are displayed
     expect(output.string).to match(/expected to find select box "non_existing_form_title" .*but there were no matches/)
   end

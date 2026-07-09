@@ -158,7 +158,7 @@ module Capybara
       #
       def assert_all_of_selectors(*args, **options, &optional_filter_block)
         _verify_multiple(*args, **options) do |selector, locator, opts|
-          assert_selector(selector, locator, opts, &optional_filter_block)
+          assert_selector(selector, locator, opts.dup, &optional_filter_block)
         end
       end
 

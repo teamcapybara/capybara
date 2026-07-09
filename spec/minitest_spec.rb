@@ -123,6 +123,7 @@ class MinitestTest < Minitest::Test
   end
 
   def test_assert_all_of_selectors
+    assert_all_of_selectors(:css, 'select#form_other_title', 'input#form_last_name')
     assert_all_of_selectors(:css, 'select#form_other_title', 'input#form_super_secret', visible: false)
   end
 
@@ -183,6 +184,6 @@ RSpec.describe 'capybara/minitest' do
     reporter.start
     MinitestTest.run_suite reporter
     reporter.report
-    expect(output.string).to include('24 runs, 58 assertions, 0 failures, 0 errors, 1 skips')
+    expect(output.string).to include('24 runs, 59 assertions, 0 failures, 0 errors, 1 skips')
   end
 end
