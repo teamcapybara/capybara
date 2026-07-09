@@ -23,11 +23,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: ["3.2", "3.3", "3.4"]
+        ruby: ["3.3", "3.4", "4.0"]
         task: ["rack_smoke", "cucumber"]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -47,11 +47,11 @@ jobs:
       # Ensure all jobs are run to completion
       fail-fast: false
       matrix:
-        ruby: ["3.2"]
+        ruby: ["3.4", "4.0"]
         task: ["spec_chrome", "spec_firefox"]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -72,11 +72,11 @@ jobs:
       # Ensure all jobs are run to completion
       fail-fast: false
       matrix:
-        ruby: ["3.2"]
+        ruby: ["3.3"]
         task: ["spec_chrome", "spec_firefox"]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install non-ruby dependencies
         run: |
           sudo apt-get update
@@ -98,7 +98,7 @@ jobs:
   #       ruby: ["3.0"]
 
   #   steps:
-  #     - uses: actions/checkout@v4
+  #     - uses: actions/checkout@v6
 
   #     - name: Set up Ruby
   #       uses: ruby/setup-ruby@v1
@@ -118,7 +118,7 @@ jobs:
   #       ruby: ["3.1"]
 
   #   steps:
-  #     - uses: actions/checkout@v4
+  #     - uses: actions/checkout@v6
 
   #     - name: Set up Ruby
   #       uses: ruby/setup-ruby@v1
@@ -137,11 +137,11 @@ jobs:
       # Ensure all jobs are run to completion
       fail-fast: false
       matrix:
-        ruby: ["3.2"]
+        ruby: ["4.0"]
         task: ["spec_chrome", "spec_firefox"]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install non-ruby dependencies
         run: |
           sudo apt-get update
@@ -165,11 +165,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: ["3.4"]
+        ruby: ["4.0"]
         task: ["spec_rack"]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1

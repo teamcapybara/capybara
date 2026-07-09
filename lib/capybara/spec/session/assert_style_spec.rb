@@ -12,7 +12,7 @@ Capybara::SpecHelper.spec '#assert_matches_style', requires: [:css] do
     @session.visit('/with_html')
     expect do
       @session.find(:css, '#first').assert_matches_style(display: 'inline')
-    end.to raise_error(Capybara::ExpectationNotMet, 'Expected node to have styles {"display"=>"inline"}. Actual styles were {"display"=>"block"}')
+    end.to raise_error(Capybara::ExpectationNotMet, /Expected node to have styles \{"display"\s*=>\s*"inline"\}. Actual styles were \{"display"\s*=>\s*"block"\}/)
   end
 
   it 'should wait for style', requires: %i[css js] do

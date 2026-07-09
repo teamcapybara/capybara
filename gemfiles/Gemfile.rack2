@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem 'bundler', '< 3.0'
+gem 'bundler'
 gemspec path: '..'
 
 gem 'rack', '~>2.0'

@@ -16,8 +16,13 @@ class MinitestSpecTest < Minitest::Spec
     Capybara.reset_sessions!
   end
 
-  def self.test_order
+  def self.run_order
     :sorted
+  end
+
+  # Minitest < 6.0
+  def self.test_order
+    run_order
   end
 
   it 'supports text expectations' do
@@ -157,7 +162,7 @@ RSpec.describe 'capybara/minitest/spec' do
     output = StringIO.new
     reporter = Minitest::SummaryReporter.new(output)
     reporter.start
-    MinitestSpecTest.run reporter, {}
+    MinitestSpecTest.run_suite reporter, {}
     reporter.report
     expect(output.string).to include('22 runs, 44 assertions, 1 failures, 0 errors, 1 skips')
     # Make sure error messages are displayed

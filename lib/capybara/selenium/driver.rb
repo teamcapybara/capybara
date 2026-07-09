@@ -353,33 +353,22 @@ private
   end
 
   def clear_session_storage
-    if @browser.respond_to? :session_storage
-      @browser.session_storage.clear
-    else
-      begin
-        @browser&.execute_script('window.sessionStorage.clear()')
-      rescue # rubocop:disable Style/RescueStandardError
-        unless options[:clear_session_storage].nil?
-          warn 'sessionStorage clear requested but is not supported by this driver'
-        end
-      end
+    # selenium-webdriver 4.30.0 removed HTML5 storage accessors (local_storage/session_storage) -- not really sure why
+    # can we replicate this robustly via CDP?
+    @browser&.execute_script('window.sessionStorage.clear()')
+  rescue # rubocop:disable Style/RescueStandardError
+    unless options[:clear_session_storage].nil?
+      warn 'sessionStorage clear requested but is not supported by this driver'
     end
   end
 
   def clear_local_storage
-    # selenium-webdriver 4.30.0 removed HTML5 storage accessors -- not really sure why
+    # selenium-webdriver 4.30.0 removed HTML5 storage accessors (local_storage/session_storage) -- not really sure why
     # can we replicate this robustly via CDP?
-    if @browser.respond_to? :local_storage
-      @browser.local_storage.clear
-    else
-      begin
-        @browser&.execute_script('window.localStorage.clear()')
-      rescue # rubocop:disable Style/RescueStandardError
-        unless options[:clear_local_storage].nil?
-          warn 'localStorage clear requested but is not supported by this driver'
-        end
-      end
-    end
+
+    @browser&.execute_script('window.localStorage.clear()')
+  rescue # rubocop:disable Style/RescueStandardError
+    warn 'localStorage clear requested but is not supported by this driver' unless options[:clear_local_storage].nil?
   end
 
   def navigate_with_accept(url)

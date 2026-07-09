@@ -1205,9 +1205,22 @@ additional info about how the underlying driver can be configured.
 
 * When using Rack::Test, beware if attempting to visit absolute URLs. For
   example, a session might not be shared between visits to `posts_path`
-  and `posts_url`. If testing an absolute URL in an Action Mailer email,
-  set `default_url_options` to match the Rails default of
-  `www.example.com`.
+  and `posts_url`. Capybara feature tests **do not automatically use Rails’**
+  `default_url_options[:host]`. Instead, Capybara uses its own default host (often
+  `www.example.com` internally) when generating full URLs for `visit` or link-following,
+  which can differ from your Rails configuration. If you need URLs in your application
+  (e.g., in mailers or views) to match the host/port used by Capybara’s test server,
+  override `Rails.application.routes.default_url_options` dynamically in your test setup.
+  For example:  
+ 
+  ```ruby
+  RSpec.configure do |config|
+    config.before(:each, type: :system) do
+      Rails.application.routes.default_url_options[:host] = Capybara.current_session.server.host
+      Rails.application.routes.default_url_options[:port] = Capybara.current_session.server.port
+    end
+  end
+  ```
 
 * Server errors will only be raised in the session that initiates the server thread. If you
   are testing for specific server errors and using multiple sessions make sure to test for the

@@ -76,7 +76,7 @@ class Capybara::Selenium::EdgeNode < Capybara::Selenium::Node
         .each do |contains_emoji, inputs|
       if contains_emoji
         inputs.join.grapheme_clusters.chunk { |gc| gc.match?(/\p{Emoji Presentation}/) }
-              .each do |emoji, clusters|
+                                     .each do |emoji, clusters|
           if emoji
             driver.send(:execute_cdp, 'Input.insertText', text: clusters.join)
           else

@@ -15,8 +15,9 @@ AllCops:
 
 #################### Capybara ##################
 
-Capybara/NegationMatcher:
+RSpec/MatchWithSimpleRegex:
   Enabled: false
+
 
 RSpec/SpecFilePathFormat:
   Enabled: false
@@ -27,16 +28,19 @@ RSpec/SpecFilePathSuffix:
 Capybara/FindAllFirst:
   Enabled: false
 
-Capybara/NegationMatcherAfterVisit:
+Capybara/RSpec/HaveContent:
+  Enabled: false
+
+Capybara/RSpec/NegationMatcher:
+  Enabled: false
+
+Capybara/RSpec/NegationMatcherAfterVisit:
   Enabled: false
 
 Capybara/RSpec/HaveSelector:
   Enabled: false
 
 Capybara/SpecificFinders:
-  Enabled: false
-
-Capybara/ClickLinkOrButtonStyle:
   Enabled: false
 
 #################### Gemspec ###################
@@ -77,6 +81,10 @@ Layout/LineLength:
   Max: 120
 
 #################### Lint ####################
+
+Lint/Debugger:
+  Exclude:
+    - 'lib/capybara/session.rb'
 
 Lint/EmptyBlock:
   Exclude:
@@ -171,6 +179,10 @@ RSpec/ExampleWording:
 RSpec/InstanceVariable:
   AssignmentOnly: true
 
+RSpec/LeakyLocalVariable:
+  Exclude:
+    - 'spec/selenium_spec_firefox.rb'
+
 RSpec/MultipleExpectations:
   Enabled: false
 
@@ -179,6 +191,11 @@ RSpec/NestedGroups:
 
 RSpec/NoExpectationExample:
   Enabled: false
+
+RSpec/Output:
+  Exclude:
+    - 'spec/selenium_spec_chrome_remote.rb'
+    - 'spec/selenium_spec_firefox_remote.rb'
 
 RSpec/PredicateMatcher:
   Exclude:
@@ -263,3 +280,12 @@ Naming/BlockForwarding:
 
 Style/ArrayIntersect:
   Enabled: false
+
+Style/OneClassPerFile:
+  Exclude:
+    - 'lib/capybara/selenium/driver_specializations/firefox_driver.rb'
+    - 'lib/capybara/rspec/matchers/match_style.rb'
+    - 'lib/capybara/selector/xpath_extensions.rb'
+    - 'lib/capybara/minitest/spec.rb'
+    - 'lib/capybara/selenium/driver_specializations/internet_explorer_driver.rb'
+    - 'spec/rack_test_spec.rb'

@@ -2,7 +2,7 @@
 
 class NodeWrapper
   def initialize(element); @element = element end
-  def to_capybara_node(); @element end
+  def to_capybara_node; @element end
 end
 
 Capybara::SpecHelper.spec '#to_capybara_node' do

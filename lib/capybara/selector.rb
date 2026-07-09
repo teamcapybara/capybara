@@ -427,7 +427,7 @@ class Capybara::Selector; end # rubocop:disable Lint/EmptyClass
 
 Capybara::Selector::FilterSet.add(:_field) do
   node_filter(:checked, :boolean) { |node, value| !(value ^ node.checked?) }
-  node_filter(:unchecked, :boolean) { |node, value| (value ^ node.checked?) }
+  node_filter(:unchecked, :boolean) { |node, value| value ^ node.checked? }
   node_filter(:disabled, :boolean, default: false, skip_if: :all) { |node, value| !(value ^ node.disabled?) }
   node_filter(:valid, :boolean) { |node, value| node.evaluate_script('this.validity.valid') == value }
   node_filter(:name) { |node, value| !value.is_a?(Regexp) || value.match?(node[:name]) }

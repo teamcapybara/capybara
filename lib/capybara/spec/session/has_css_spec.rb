@@ -62,7 +62,7 @@ Capybara::SpecHelper.spec '#has_css?' do
 
       expect do
         expect(@session).to have_css('p', style: { 'line-height': '30px' })
-      end.to raise_error(RSpec::Expectations::ExpectationNotMetError, /with styles \{:"line-height"=>"30px"\}/)
+      end.to raise_error(RSpec::Expectations::ExpectationNotMetError, /with styles \{["']line-height["']\s*=>\s*["']30px["']\}/)
     end
   end
 

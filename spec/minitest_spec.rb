@@ -15,14 +15,27 @@ class MinitestTest < Minitest::Test
     Capybara.reset_sessions!
   end
 
-  def self.test_order
+  def self.run_order
     :sorted
+  end
+
+  # Minitest < 6.0
+  def self.test_order
+    run_order
   end
 
   def test_assert_text
     assert_text('Form', normalize_ws: false)
     assert_no_text('Not on the page')
     refute_text('Also Not on the page')
+  end
+
+  def test_node_assert_text_counts_assertions
+    before_assertions = assertions
+
+    find(:css, 'form', text: 'Title').assert_text('Customer Email')
+
+    assert_equal before_assertions + 1, assertions
   end
 
   def test_assert_title
@@ -168,8 +181,8 @@ RSpec.describe 'capybara/minitest' do
     output = StringIO.new
     reporter = Minitest::SummaryReporter.new(output)
     reporter.start
-    MinitestTest.run reporter, {}
+    MinitestTest.run_suite reporter
     reporter.report
-    expect(output.string).to include('23 runs, 56 assertions, 0 failures, 0 errors, 1 skips')
+    expect(output.string).to include('24 runs, 58 assertions, 0 failures, 0 errors, 1 skips')
   end
 end
