@@ -27,6 +27,23 @@ module Capybara
         @order = order
         @filter_cache = Hash.new { |hsh, key| hsh[key] = {} }
 
+        @selector = Selector.new(
+          find_selector(args[0].is_a?(Symbol) ? args.shift : args[0], session_options.default_selector),
+          config: {
+            enable_aria_label: enable_aria_label,
+            enable_aria_role: enable_aria_role,
+            test_id: test_id
+          },
+          format: selector_format
+        )
+        # Reset options for Hash accepting locators when it could be the locator
+        if args.empty? &&
+             @selector.locator_types&.include?(Hash) &&
+             !unhandled_options.empty?
+          args.push options
+          @options = {}
+        end
+
         if @options[:text].is_a?(Regexp) && [true, false].include?(@options[:exact_text])
           Capybara::Helpers.warn(
             "Boolean 'exact_text' option is not supported when 'text' option is a Regexp - ignoring"
@@ -35,16 +52,6 @@ module Capybara
 
         super(@options)
         self.session_options = session_options
-
-        @selector = Selector.new(
-          find_selector(args[0].is_a?(Symbol) ? args.shift : args[0]),
-          config: {
-            enable_aria_label: enable_aria_label,
-            enable_aria_role: enable_aria_role,
-            test_id: test_id
-          },
-          format: selector_format
-        )
 
         @locator = args.shift
         @filter_block = filter_block
@@ -232,11 +239,11 @@ module Capybara
         @applied_filters ||= []
       end
 
-      def find_selector(locator)
+      def find_selector(locator, default_selector = session_options.default_selector)
         case locator
         when Symbol then Selector[locator]
         else Selector.for(locator)
-        end || Selector[session_options.default_selector]
+        end || Selector[default_selector]
       end
 
       def find_nodes_by_selector_format(node, exact)
@@ -347,17 +354,20 @@ module Capybara
           raise ArgumentError, "Invalid option #{match.inspect} for :match, should be one of #{VALID_MATCH.map(&:inspect).join(', ')}"
         end
 
-        unhandled_options = @options.keys.reject do |option_name|
+        uho = unhandled_options
+        return if uho.empty?
+
+        invalid_names = uho.map(&:inspect).join(', ')
+        valid_names = (valid_keys - [:allow_self]).map(&:inspect).join(', ')
+        raise ArgumentError, "Invalid option(s) #{invalid_names}, should be one of #{valid_names}"
+      end
+
+      def unhandled_options
+        options.keys.reject do |option_name|
           valid_keys.include?(option_name) ||
             expression_filters.any? { |_name, ef| ef.handles_option? option_name } ||
             node_filters.any? { |_name, nf| nf.handles_option? option_name }
         end
-
-        return if unhandled_options.empty?
-
-        invalid_names = unhandled_options.map(&:inspect).join(', ')
-        valid_names = (valid_keys - [:allow_self]).map(&:inspect).join(', ')
-        raise ArgumentError, "Invalid option(s) #{invalid_names}, should be one of #{valid_names}"
       end
 
       def filtered_expression(expr)
