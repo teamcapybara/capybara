@@ -38,8 +38,8 @@ module Capybara
         )
         # Reset options for Hash accepting locators when it could be the locator
         if args.empty? &&
-             @selector.locator_types&.include?(Hash) &&
-             !unhandled_options.empty?
+           @selector.locator_types&.include?(Hash) &&
+           !unhandled_options.empty?
           args.push options
           @options = {}
         end
