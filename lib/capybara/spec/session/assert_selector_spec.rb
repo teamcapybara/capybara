@@ -11,6 +11,14 @@ Capybara::SpecHelper.spec '#assert_selector' do
     @session.assert_selector("//p[contains(.,'est')]")
   end
 
+  # This is experimental - may be removed in future versions
+  it 'should be possible to use Hash accepting selector with hash locator when no options passed' do
+    @session.visit('/tables')
+    @session.assert_selector(:table_row, { 'First Name' => 'Thomas' }, {})
+    @session.assert_selector(:table_row, 'First Name' => 'Thomas', 'Last Name' => 'Walpole')
+    expect { @session.assert_selector(:table_row, 'First Name' => 'Thomas', 'Last Name' => 'NotWalpole') }.to raise_error(Capybara::ElementNotFound)
+  end
+
   it 'should be false if the given selector is not on the page' do
     expect { @session.assert_selector(:xpath, '//abbr') }.to raise_error(Capybara::ElementNotFound)
     expect { @session.assert_selector(:css, 'p a#doesnotexist') }.to raise_error(Capybara::ElementNotFound)
