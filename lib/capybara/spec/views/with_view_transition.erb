@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <title>with_view_transition</title>
+    <script src="/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script language="javascript" type="text/javascript">
+      $(document).ready(function(){
+        const input = $("#button");
+        const message = $("#message");
+        input.hide();
+        message.hide();
+
+        $("#root").click(function(event){
+          document.startViewTransition(() => {
+            input.show();
+          });
+        });
+
+        input.click(function(event){
+          message.show();
+        });
+      });
+    </script>
+    <style>
+        ::view-transition-group(root) {
+            animation-duration: 5s;
+        }
+
+        @keyframes slide-in-from-right {
+            from {
+                transform: translateX(1000%);
+            }
+        }
+    </style>
+  </head>
+
+  <body id="with_view_transition">
+  <a id="root" href='#'>click me to show a form input</a>
+  <button id="button">Click me</button>
+  <span id="message">Button clicked</span>
+  </body>
+</html>
