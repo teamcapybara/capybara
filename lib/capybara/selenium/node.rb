@@ -401,11 +401,13 @@ private
       return false;
     JS
 
+    value = value.to_s
+
     # The action api has a speed problem but both chrome and firefox 58 raise errors
     # if we use the faster direct send_keys.  For now just send_keys to the element
     # we've already focused.
-    # native.send_keys(value.to_s)
-    browser_action.send_keys(value.to_s).perform if editable
+    # native.send_keys(value)
+    browser_action.send_keys(value.empty? ? :delete : value).perform if editable
   end
 
   def action_with_modifiers(click_options)
