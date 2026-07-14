@@ -131,46 +131,76 @@ RSpec.describe Capybara::Server do
   end
 
   context 'when server is Puma' do
-    before { Capybara.server = :puma, { Threads: '1:1', Silent: true } }
-    after { Capybara.server = :default }
-
-    it 'should count puma requests not yet passed to the app' do
-      events = Queue.new
-      release_body = Queue.new
-
+    let(:events) { Queue.new }
+    let(:release_body) { Queue.new }
+    let(:app) do
+      request_events = events
+      body_release = release_body
       blocking_body = Enumerator.new do |body|
-        events.push(:body_started)
-        release_body.pop
+        request_events.push(:body_started)
+        body_release.pop
         body << 'Hello Server!'
       end
 
-      app = proc do |env|
+      proc do |env|
         request = Rack::Request.new(env)
 
         if request.path == '/blocking_response'
           [200, {}, blocking_body]
         else
-          events.push(:queued_request_started)
+          request_events.push(:queued_request_started)
           [200, {}, ['Hello Server!']]
         end
       end
+    end
 
-      server = described_class.new(app).boot
-      middleware = server.send(:middleware)
+    before { Capybara.server = :puma, { Threads: '1:1', Silent: true } }
+    after { Capybara.server = :default }
 
-      blocking_socket = start_request(server, '/blocking_response')
-      expect(events.pop).to eq(:body_started)
+    shared_examples 'counting puma requests not yet passed to the app' do
+      it 'should count pending requests' do
+        server = servers.first
+        request_server = servers.last
 
-      queued_socket = start_request(server, '/queued_request')
+        expect(request_server.port).to eq(server.port)
 
-      expect(middleware.pending_requests?).to be(true)
+        middleware = server.send(:middleware)
 
-      release_body.push(true)
-      expect(events.pop).to eq(:queued_request_started)
-    ensure
-      release_body.push(true)
-      blocking_socket.close
-      queued_socket.close
+        blocking_socket = start_request(server, '/blocking_response')
+        expect(events.pop).to eq(:body_started)
+
+        queued_socket = start_request(request_server, '/queued_request')
+
+        expect(middleware.pending_requests?).to be(true)
+
+        release_body.push(true)
+        expect(events.pop).to eq(:queued_request_started)
+
+        blocking_socket.read
+        queued_socket.read
+
+        expect(middleware.pending_requests?).to be(false)
+      ensure
+        release_body.push(true)
+        blocking_socket.close
+        queued_socket.close
+      end
+    end
+
+    context 'with one server' do
+      let(:servers) { [described_class.new(app).boot] }
+
+      include_examples 'counting puma requests not yet passed to the app'
+    end
+
+    context 'when reusing the server' do
+      let!(:old_reuse_server) { Capybara.reuse_server }
+      let(:servers) { Array.new(2) { described_class.new(app).boot } }
+
+      before { Capybara.reuse_server = true }
+      after { Capybara.reuse_server = old_reuse_server }
+
+      include_examples 'counting puma requests not yet passed to the app'
     end
   end
 
