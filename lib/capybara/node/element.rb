@@ -349,6 +349,16 @@ module Capybara
 
       ##
       #
+      # Whether or not the element is enabled.
+      #
+      # @return [Boolean]     Whether the element is enabled
+      #
+      def enabled?
+        synchronize { base.native.enabled? }
+      end
+
+      ##
+      #
       # Whether or not the element is readonly.
       #
       # @return [Boolean]     Whether the element is readonly
