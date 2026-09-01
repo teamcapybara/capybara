@@ -354,7 +354,7 @@ module Capybara
       # @return [Boolean]     Whether the element is enabled
       #
       def enabled?
-        synchronize { base.enabled? }
+        synchronize { base.native.enabled? }
       end
 
       ##
