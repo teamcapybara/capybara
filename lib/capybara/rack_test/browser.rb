@@ -28,7 +28,12 @@ class Capybara::RackTest::Browser
 
   def refresh
     reset_cache!
-    request(last_request.fullpath, last_request.env)
+    # Use the snapshot MockSession took before the app processed the
+    # previous request, not last_request.env: the app may have mutated
+    # that hash in place while handling the request (e.g. stashing
+    # session/counter state directly on the env), and those mutations
+    # must not leak into the refreshed request.
+    request(last_request.fullpath, current_session.last_request_env.dup)
   end
 
   def submit(method, path, attributes, content_type: nil)
@@ -171,7 +176,7 @@ protected
 
   def build_rack_mock_session
     reset_host! unless current_host
-    Rack::MockSession.new(app, current_host)
+    MockSession.new(app, current_host)
   end
 
   def request_path
@@ -196,5 +201,18 @@ private
     build_uri(last_request.url).to_s
   rescue Rack::Test::Error
     ''
+  end
+end
+
+# Rack::Test::Session#process_request wraps the fully-built env in
+# last_request *before* calling the app, then hands the app that same
+# (mutable) hash. Snapshot it before the app can mutate it, so #refresh
+# has an env unaffected by whatever the app does to its copy.
+class Capybara::RackTest::Browser::MockSession < ::Rack::MockSession
+  attr_reader :last_request_env
+
+  def process_request(uri, env)
+    @last_request_env = env.dup
+    super
   end
 end
