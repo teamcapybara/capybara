@@ -325,7 +325,7 @@ module Capybara
 
       def expression_filters
         filters = @selector.expression_filters
-        filters.merge filter_set(options[:filter_set]).expression_filters if options.key?(:filter_set)
+        filters = filters.merge(filter_set(options[:filter_set]).expression_filters) if options.key?(:filter_set)
         filters
       end
 
