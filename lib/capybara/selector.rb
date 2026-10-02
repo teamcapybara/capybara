@@ -375,6 +375,8 @@ require 'capybara/selector/definition'
 #
 # * **:table_row** - Find table row
 #   * Locator: Array<String>, Hash<String, String> table row `<td>` contents - visibility of `<td>` elements is not considered
+#   * Filters:
+#       * :headers (Boolean, :only) - Match headers in addition to data rows? (Default: false)
 #
 #   ```ruby
 #   page.html # => '<table>
