@@ -1272,6 +1272,8 @@ bundle exec rake  # run the test suite with Firefox - requires `geckodriver` to 
 bundle exec rake spec_chrome # run the test suite with Chrome - require `chromedriver` to be installed
 ```
 
+To run test suite in headless mode, set `HEADLESS` environment variable.
+
 See
 [CONTRIBUTING.md](https://github.com/teamcapybara/capybara/blob/master/CONTRIBUTING.md)
 for how to send issues and pull requests.
