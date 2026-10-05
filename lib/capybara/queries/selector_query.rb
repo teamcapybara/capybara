@@ -675,9 +675,9 @@ module Capybara
         def line_segments
           [
             [Vector[top, left], Vector[top, right]],
-            [Vector[top, right], Vector[bottom, left]],
+            [Vector[top, right], Vector[bottom, right]],
             [Vector[bottom, left], Vector[bottom, right]],
-            [Vector[bottom, right], Vector[top, left]]
+            [Vector[bottom, left], Vector[top, left]]
           ]
         end
 
@@ -744,8 +744,8 @@ module Capybara
           end
 
           # finally do the division to get sc and tc
-          sc = sN.abs < Float::EPSILON ? 0.0 : sN / sD
-          tc = tN.abs < Float::EPSILON ? 0.0 : tN / tD
+          sc = sN.abs < Float::EPSILON ? 0.0 : sN.fdiv(sD)
+          tc = tN.abs < Float::EPSILON ? 0.0 : tN.fdiv(tD)
 
           # difference of the two closest points
           dP = w + (u * sc) - (v * tc)
