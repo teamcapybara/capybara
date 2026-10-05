@@ -17,7 +17,7 @@ Capybara.add_selector(:table_row, locator_type: [Array, Hash]) do
                            .reduce { |xp, cell| cell.where(xp) }
       xpath[initial_td[tds]]
     else
-      xpath
+      xpath.where(:td)
     end
   end
 end

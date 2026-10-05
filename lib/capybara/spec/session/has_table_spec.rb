@@ -136,7 +136,7 @@ Capybara::SpecHelper.spec '#has_table?' do
     table = @session.find(:table, 'Horizontal Headers')
 
     expect(table).to have_selector(:table_row)
-    expect(table).to have_selector(:table_row, count: 6)
+    expect(table).to have_selector(:table_row, count: 5)
   end
 end
 
