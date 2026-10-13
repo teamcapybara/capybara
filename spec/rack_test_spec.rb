@@ -248,6 +248,23 @@ RSpec.describe Capybara::RackTest::Driver do
     end
   end
 
+  describe '#refresh' do
+    it 'does not carry over env mutations the app made while processing the previous request' do
+      mutating_app = lambda do |env|
+        status = env['set'] ? 500 : 200
+        env['set'] = true
+        [status, { 'content-type' => 'text/html' }, ['']]
+      end
+      driver = described_class.new(mutating_app)
+
+      driver.visit('/')
+      expect(driver.response.status).to eq(200)
+
+      driver.refresh
+      expect(driver.response.status).to eq(200)
+    end
+  end
+
   describe ':redirect_limit option' do
     context 'with default redirect limit' do
       let(:driver) { described_class.new(TestApp) }
