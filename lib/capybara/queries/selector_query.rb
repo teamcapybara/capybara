@@ -191,7 +191,8 @@ module Capybara
       end
 
       def matching_text
-        options[:text] || options[:exact_text]
+        exact_text = options[:exact_text]
+        options[:text] || (exact_text if exact_text.is_a?(String))
       end
 
       def text_fragments

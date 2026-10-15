@@ -44,6 +44,12 @@ Capybara::SpecHelper.spec '#find_link' do
     end
   end
 
+  context 'with :exact_text option' do
+    it 'should find a link when true' do
+      expect(@session.find_link('A link', exact_text: true)[:href]).to match %r{/with_simple_html$}
+    end
+  end
+
   context 'without locator' do
     it 'should use options' do
       expect(@session.find_link(href: '#anchor').text).to eq 'Normal Anchor'
