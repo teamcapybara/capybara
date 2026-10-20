@@ -11,7 +11,26 @@ module Capybara
   class CapybaraError < StandardError; end
   class DriverNotFoundError < CapybaraError; end
   class FrozenInTime < CapybaraError; end
-  class ElementNotFound < CapybaraError; end
+
+  class ElementNotFound < CapybaraError
+    # Accepts a block computing the message lazily. Messages can be expensive to build
+    # (element texts, paths) and are discarded on every retry of Node::Base#synchronize.
+    def initialize(message = nil, &message_block)
+      super(message)
+      @message_block = message_block
+    end
+
+    def to_s
+      @message_block ? resolved_message : super
+    end
+
+  private
+
+    def resolved_message
+      @resolved_message ||= @message_block.call.to_s
+    end
+  end
+
   class ModalNotFound < CapybaraError; end
   class Ambiguous < ElementNotFound; end
   class ExpectationNotMet < ElementNotFound; end

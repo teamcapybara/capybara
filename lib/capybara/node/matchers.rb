@@ -109,7 +109,7 @@ module Capybara
       def assert_selector(*args, &optional_filter_block)
         _verify_selector_result(args, optional_filter_block) do |result, query|
           unless result.matches_count? && (result.any? || query.expects_none?)
-            raise Capybara::ExpectationNotMet, result.failure_message
+            raise(Capybara::ExpectationNotMet.new { result.failure_message })
           end
         end
       end
@@ -233,7 +233,7 @@ module Capybara
       def assert_no_selector(*args, &optional_filter_block)
         _verify_selector_result(args, optional_filter_block) do |result, query|
           if result.matches_count? && (!result.empty? || query.expects_none?)
-            raise Capybara::ExpectationNotMet, result.negative_failure_message
+            raise(Capybara::ExpectationNotMet.new { result.negative_failure_message })
           end
         end
       end
@@ -702,7 +702,7 @@ module Capybara
       def assert_text(type_or_text, *args, **opts)
         _verify_text(type_or_text, *args, **opts) do |count, query|
           unless query.matches_count?(count) && (count.positive? || query.expects_none?)
-            raise Capybara::ExpectationNotMet, query.failure_message
+            raise(Capybara::ExpectationNotMet.new { query.failure_message })
           end
         end
       end
@@ -718,7 +718,7 @@ module Capybara
       def assert_no_text(type_or_text, *args, **opts)
         _verify_text(type_or_text, *args, **opts) do |count, query|
           if query.matches_count?(count) && (count.positive? || query.expects_none?)
-            raise Capybara::ExpectationNotMet, query.negative_failure_message
+            raise(Capybara::ExpectationNotMet.new { query.negative_failure_message })
           end
         end
       end
@@ -768,7 +768,7 @@ module Capybara
       def assert_ancestor(*args, &optional_filter_block)
         _verify_selector_result(args, optional_filter_block, Capybara::Queries::AncestorQuery) do |result, query|
           unless result.matches_count? && (result.any? || query.expects_none?)
-            raise Capybara::ExpectationNotMet, result.failure_message
+            raise(Capybara::ExpectationNotMet.new { result.failure_message })
           end
         end
       end
@@ -776,7 +776,7 @@ module Capybara
       def assert_no_ancestor(*args, &optional_filter_block)
         _verify_selector_result(args, optional_filter_block, Capybara::Queries::AncestorQuery) do |result, query|
           if result.matches_count? && (!result.empty? || query.expects_none?)
-            raise Capybara::ExpectationNotMet, result.negative_failure_message
+            raise(Capybara::ExpectationNotMet.new { result.negative_failure_message })
           end
         end
       end
@@ -811,7 +811,7 @@ module Capybara
       def assert_sibling(*args, &optional_filter_block)
         _verify_selector_result(args, optional_filter_block, Capybara::Queries::SiblingQuery) do |result, query|
           unless result.matches_count? && (result.any? || query.expects_none?)
-            raise Capybara::ExpectationNotMet, result.failure_message
+            raise(Capybara::ExpectationNotMet.new { result.failure_message })
           end
         end
       end
@@ -819,7 +819,7 @@ module Capybara
       def assert_no_sibling(*args, &optional_filter_block)
         _verify_selector_result(args, optional_filter_block, Capybara::Queries::SiblingQuery) do |result, query|
           if result.matches_count? && (!result.empty? || query.expects_none?)
-            raise Capybara::ExpectationNotMet, result.negative_failure_message
+            raise(Capybara::ExpectationNotMet.new { result.negative_failure_message })
           end
         end
       end

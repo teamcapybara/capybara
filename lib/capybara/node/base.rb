@@ -87,14 +87,14 @@ module Capybara
           raise e unless catch_error?(e, errors)
 
           if driver.wait?
-            raise e if timer.expired?
+            raise_resolved(e) if timer.expired?
 
             sleep interval
             reload if session_options.automatic_reload
           else
             old_base = @base
             reload if session_options.automatic_reload
-            raise e if old_base == @base
+            raise_resolved(e) if old_base == @base
           end
           retry
         ensure
@@ -130,6 +130,13 @@ module Capybara
       end
 
     protected
+
+      # Lazily built messages (see Capybara::ElementNotFound) are rendered here, while the session
+      # is still synchronized, so that fetching element texts for the message does not wait again.
+      def raise_resolved(error)
+        error.message
+        raise error
+      end
 
       def catch_error?(error, errors = nil)
         errors ||= (driver.invalid_element_errors + [Capybara::ElementNotFound])
