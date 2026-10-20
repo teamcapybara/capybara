@@ -264,7 +264,7 @@ module Capybara
           synchronize(query.wait) do
             result = query.resolve_for(self)
             result.allow_reload! if allow_reload
-            raise Capybara::ExpectationNotMet, result.failure_message unless result.matches_count?
+            raise(Capybara::ExpectationNotMet.new { result.failure_message }) unless result.matches_count?
 
             result
           end
@@ -307,9 +307,11 @@ module Capybara
           end
 
           if ambiguous?(query, result)
-            raise Capybara::Ambiguous, "Ambiguous match, found #{result.size} elements matching #{query.applied_description}"
+            raise(Capybara::Ambiguous.new do
+              "Ambiguous match, found #{result.size} elements matching #{query.applied_description}"
+            end)
           end
-          raise Capybara::ElementNotFound, "Unable to find #{query.applied_description}" if result.empty?
+          raise(Capybara::ElementNotFound.new { "Unable to find #{query.applied_description}" }) if result.empty?
 
           result.first
         end.tap(&:allow_reload!)

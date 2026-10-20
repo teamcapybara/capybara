@@ -145,6 +145,23 @@ Capybara::SpecHelper.spec '#assert_text' do
         end.to raise_error(Capybara::ExpectationNotMet)
       end
     end
+
+    it 'should build the failure message once, not on every retry' do
+      messages = 0
+      allow(Capybara::Queries::TextQuery).to receive(:new).and_wrap_original do |original, *args, **options|
+        original.call(*args, **options).tap do |query|
+          allow(query).to receive(:failure_message).and_wrap_original do |failure_message|
+            messages += 1
+            failure_message.call
+          end
+        end
+      end
+      @session.visit('/with_js')
+      expect do
+        @session.assert_text('Not on the page', wait: 0.3)
+      end.to raise_error(Capybara::ExpectationNotMet, /expected to find text "Not on the page"/)
+      expect(messages).to eq 1
+    end
   end
 
   context 'with multiple count filters' do

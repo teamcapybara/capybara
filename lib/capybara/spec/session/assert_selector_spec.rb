@@ -69,6 +69,23 @@ Capybara::SpecHelper.spec '#assert_selector' do
         @session.assert_selector(:css, 'a#has-been-clicked', text: 'Has been clicked', wait: 2)
       end
     end
+
+    it 'should build the failure message once, not on every retry' do
+      messages = 0
+      allow(Capybara::Result).to receive(:new).and_wrap_original do |original, *args, **options|
+        original.call(*args, **options).tap do |result|
+          allow(result).to receive(:failure_message).and_wrap_original do |failure_message|
+            messages += 1
+            failure_message.call
+          end
+        end
+      end
+      @session.visit('/with_js')
+      expect do
+        @session.assert_selector(:css, 'a#not-on-the-page', wait: 0.3)
+      end.to raise_error(Capybara::ExpectationNotMet, /expected to find css "a#not-on-the-page"/)
+      expect(messages).to eq 1
+    end
   end
 end
 
