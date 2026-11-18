@@ -43,6 +43,7 @@ module Capybara::Selenium::Driver::EdgeDriver
 
     timer = Capybara::Helpers.timer(expire_in: 10)
     begin
+      origin = current_origin
       clear_storage unless uniform_storage_clear?
       @browser.navigate.to('about:blank')
       wait_for_empty_page(timer)
@@ -51,7 +52,7 @@ module Capybara::Selenium::Driver::EdgeDriver
       retry
     end
 
-    execute_cdp('Storage.clearDataForOrigin', origin: '*', storageTypes: storage_types_to_clear)
+    clear_browser_data(origin)
   end
 
   def download_path=(path)
@@ -64,6 +65,21 @@ module Capybara::Selenium::Driver::EdgeDriver
   end
 
 private
+
+  def clear_browser_data(origin)
+    execute_cdp('Storage.clearDataForOrigin', origin: '*', storageTypes: storage_types_to_clear)
+  rescue Selenium::WebDriver::Error::InvalidArgumentError
+    # Edge 158+ (Chromium 158+) rejects the '*' origin, so clear all cookies and the storage of the page being reset
+    execute_cdp('Network.clearBrowserCookies')
+    return unless origin && clear_all_storage?
+
+    execute_cdp('Storage.clearDataForOrigin', origin: origin, storageTypes: 'local_storage')
+  end
+
+  def current_origin
+    origin = Addressable::URI.parse(current_url)&.origin
+    origin if origin&.start_with?('http')
+  end
 
   def storage_types_to_clear
     types = ['cookies']
