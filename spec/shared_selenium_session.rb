@@ -383,6 +383,17 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           @animation_session = Capybara::Session.new(session.mode, TestApp.new)
         end
 
+        it 'should disable view transitions' do
+          @animation_session.visit('with_view_transition')
+          sleep 1
+          @animation_session.click_link('click me to show a form input')
+
+          expect do
+            @animation_session.click_button("button")
+          end.not_to raise_error
+          expect(@animation_session).to have_content("Button clicked")
+        end
+
         it 'should add CSS to the <head> element' do
           @animation_session.visit('with_animation')
 
@@ -478,6 +489,17 @@ RSpec.shared_examples 'Capybara::Session' do |session, mode|
           sleep 1
           @animation_session_with_matching_css.click_link('animate me away')
           expect(@animation_session_with_matching_css).to have_no_link('animate me away', wait: 0.5)
+        end
+
+        it 'should disable view transitions' do
+          @animation_session_with_matching_css.visit('with_view_transition')
+          sleep 1
+          @animation_session_with_matching_css.click_link('click me to show a form input')
+
+          expect do
+            @animation_session_with_matching_css.click_button("button")
+          end.not_to raise_error
+          expect(@animation_session_with_matching_css).to have_content("Button clicked")
         end
       end
 
