@@ -150,6 +150,12 @@ RSpec.describe 'Capybara::Session with chrome' do
     it 'sets the http client read timeout' do
       expect(TestSessions::Chrome.driver.browser.send(:bridge).http.read_timeout).to eq 30
     end
+
+    it 'does NOT block on slow resources' do
+      expect {
+        TestSessions::Chrome.visit('/slow_resources')
+      }.to raise_error(Net::ReadTimeout)
+    end
   end
 
   describe 'filling in Chrome-specific date and time fields with keystrokes' do
