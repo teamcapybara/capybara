@@ -114,6 +114,20 @@ RSpec.describe 'Capybara::Session with chrome' do
         expect(session.evaluate_script('Object.keys(sessionStorage)')).to be_empty
       end
 
+      it 'clears local storage for every origin visited' do
+        session = TestSessions::Chrome
+        origins = ['localhost', '127.0.0.1'].map { |host| "http://#{host}:#{session.server.port}" }
+        origins.each do |origin|
+          session.visit("#{origin}/with_js")
+          session.find(:css, '#set-storage').click
+        end
+        session.reset!
+        origins.each do |origin|
+          session.visit("#{origin}/with_js")
+          expect(session.evaluate_script('Object.keys(localStorage)')).to be_empty
+        end
+      end
+
       it 'does not clear storage when false' do
         session = Capybara::Session.new(:selenium_chrome_not_clear_storage, TestApp)
         session.visit('/with_js')

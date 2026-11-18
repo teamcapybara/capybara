@@ -51,7 +51,10 @@ module Capybara::Selenium::Driver::EdgeDriver
       retry
     end
 
-    execute_cdp('Storage.clearDataForOrigin', origin: '*', storageTypes: storage_types_to_clear)
+    # Chromium 158+ rejects `Storage.clearDataForOrigin` with the "*" origin, so clear every cookie
+    # and the local storage of each origin in this tab's history.
+    delete_all_cookies
+    clear_visited_local_storage if clear_all_storage?
   end
 
   def download_path=(path)
@@ -65,10 +68,23 @@ module Capybara::Selenium::Driver::EdgeDriver
 
 private
 
-  def storage_types_to_clear
-    types = ['cookies']
-    types << 'local_storage' if clear_all_storage?
-    types.join(',')
+  def clear_visited_local_storage
+    visited_origins.each do |origin|
+      execute_cdp('Storage.clearDataForOrigin', origin: origin, storageTypes: 'local_storage')
+    end
+  end
+
+  def visited_origins
+    execute_cdp('Page.getNavigationHistory')['entries'].filter_map { |entry| origin_of(entry['url']) }.uniq
+  end
+
+  def origin_of(url)
+    uri = URI.parse(url.to_s)
+    return unless %w[http https].include?(uri.scheme) && uri.host
+
+    "#{uri.scheme}://#{uri.host}#{":#{uri.port}" unless uri.port == uri.default_port}"
+  rescue URI::InvalidURIError
+    nil
   end
 
   def clear_all_storage?
