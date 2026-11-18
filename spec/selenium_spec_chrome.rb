@@ -143,6 +143,25 @@ RSpec.describe 'Capybara::Session with chrome' do
         expect(session.evaluate_script('Object.keys(localStorage)')).not_to be_empty
         expect(session.evaluate_script('Object.keys(sessionStorage)')).to be_empty
       end
+
+      it 'clears cookies and storage when Chrome rejects the wildcard origin' do
+        session = Capybara::Session.new(CHROME_DRIVER, TestApp)
+        allow(session.driver).to receive(:execute_cdp).and_call_original
+        allow(session.driver).to receive(:execute_cdp)
+          .with('Storage.clearDataForOrigin', hash_including(origin: '*'))
+          .and_raise(Selenium::WebDriver::Error::InvalidArgumentError, 'invalid argument: * is not a valid URL')
+        session.visit('/set_cookie')
+        session.visit('/with_js')
+        session.find(:css, '#set-storage').click
+        session.reset!
+        expect(session.driver).to have_received(:execute_cdp).with('Network.clearBrowserCookies')
+        session.visit('/get_cookie')
+        expect(session).to have_no_content('test_cookie')
+        session.visit('/with_js')
+        expect(session.evaluate_script('Object.keys(localStorage)')).to be_empty
+      ensure
+        session&.quit
+      end
     end
   end
 
